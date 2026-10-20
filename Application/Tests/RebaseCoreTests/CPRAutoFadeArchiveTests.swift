@@ -102,11 +102,34 @@ struct CPRAutoFadeArchiveTests {
         #expect(local.interpolators.count == 4 && local.interpolators[0]?.payloadByteCount == 4)
         #expect(local.interpolators.dropFirst().allSatisfy { $0 == nil })
         #expect(result.records.filter { $0.className == "MAutoFadeSetting" }.count == 1)
-        // This exact field reader retains duration bits even when flags bypass
-        // them. It makes no claim that a nonfinite duration is renderable.
-        let bits: UInt64 = 0x7ff8000000000012
-        let raw = try read(fixture(project: 0, durationBits: bits))
-        #expect(raw.projectSetting?.durationBits == bits)
+        // Finite values retain their bits; no smoothing/clamping is inferred.
+        for bits: UInt64 in [0, 0x8000000000000000, Double(0.01).nextUp.bitPattern] {
+            let raw = try read(fixture(project: 0, durationBits: bits))
+            #expect(raw.projectSetting?.durationBits == bits)
+        }
+    }
+
+    @Test func nonfiniteDurationsRejectAsExplicitApplicationPolicy() throws {
+        for bits: UInt64 in [0x7ff8000000000012, 0x7ff0000000000001,
+                            0x7ff0000000000000, 0xfff0000000000000] {
+            for flags: UInt16 in [0, 1] {
+                #expect(throws: CPRProjectError.self) { try read(fixture(project: flags, durationBits: bits)) }
+                #expect(throws: CPRProjectError.self) { try read(fixture(project: nil, local: flags, durationBits: bits)) }
+            }
+        }
+    }
+
+    @Test func keyedRootRequiresCountedEventTypeAndLoudnessRemainsNullOnly() throws {
+        for target in ["path", "pool", "automation", "resource"] {
+            #expect(throws: CPRProjectError.self) { try read(fixture(keyedTarget: target)) }
+            #expect(throws: CPRProjectError.self) { try read(fixture(loudnessTarget: target)) }
+        }
+        // A correct-looking event class introduced only in the ancillary root
+        // list cannot manufacture membership in the counted arrangement.
+        #expect(throws: CPRProjectError.self) { try read(fixture(keyedTarget: "outsideTrack")) }
+        #expect(throws: CPRProjectError.self) { try read(fixture(loudnessTarget: "audio")) }
+        let control = try read(fixture())
+        #expect(control.keyedEvents.count == 1 && control.loudness == nil)
     }
 
     @Test func baseVersionsAreResolvedFromHeadersNotPayloadStrings() throws {
@@ -159,7 +182,8 @@ struct CPRAutoFadeArchiveTests {
                          settingVersion: UInt16 = 0, curveVersion: UInt16 = 0,
                          attributeType: UInt16? = nil, duplicateAttribute: Bool = false,
                          extraTail: String = "", wrongRootTempo: Bool = false,
-                         negativeKeyCount: Bool = false, duplicateEventKey: Bool = false) -> Data {
+                         negativeKeyCount: Bool = false, duplicateEventKey: Bool = false,
+                         keyedTarget: String = "audio", loudnessTarget: String? = nil) -> Data {
         let f = AutoFadeFixture()
         func setting(_ label: String, _ flags: UInt16?) {
             guard let flags else { f.u32(0); return }
@@ -200,16 +224,17 @@ struct CPRAutoFadeArchiveTests {
                         if extraTail == "track" { f.u16(0) }
                     }
                 }
-                f.u32(0); f.u16(0); f.u32(0)
+                f.u32(0); f.u16(0); f.u32(keyedTarget == "outsideTrack" ? 1 : 0)
+                if keyedTarget == "outsideTrack" { f.object("outsideTrack", "MAudioTrackEvent", version: 1) {} }
                 f.object("path", "FNPath") {}
                 f.object("pool", "PPool", version: 5) {}
                 f.u32(0)
                 f.reference(wrongRootTempo ? "signature" : "tempo"); f.reference("signature")
                 if sharedSetting { f.reference("local") } else { setting("project", project) }
                 f.u16(negativeKeyCount ? 0xffff : duplicateEventKey ? 2 : 1)
-                f.u16(1); f.reference("audio")
+                f.u16(1); f.reference(keyedTarget)
                 if duplicateEventKey { f.u16(1); f.reference("audio") }
-                f.u32(0)
+                if let loudnessTarget { f.reference(loudnessTarget) } else { f.u32(0) }
                 if extraTail == "root" { f.u16(0) }
             }
         }

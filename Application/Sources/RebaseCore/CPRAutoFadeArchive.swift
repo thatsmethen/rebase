@@ -88,6 +88,16 @@ final class CPRAutoFadeArchive {
         // before reading opaque ancillary object definitions in the tails.
         let audioTracks = archive.objects.values.filter { $0.descriptor.className == "MAudioTrackEvent" }
             .sorted { $0.descriptor.objectOffset < $1.descriptor.objectOffset }
+        // The native root table requests MEvent. Accept only observed concrete
+        // track subclasses already entered through the counted hierarchy; an
+        // arbitrary ancillary object cannot satisfy that typed relationship.
+        let keyedTrackVersions = ["MFolderTrack": 0, "MDeviceTrackEvent": 0,
+            "MAudioTrackEvent": 1, "MMidiTrackEvent": 4, "MInstrumentTrackEvent": 4,
+            "MSamplerTrackEvent": 4, "MDrumTrackEvent": 4]
+        let countedTrackIDs = Set(archive.objects.values.compactMap { object -> Int? in
+            let record = object.descriptor
+            return keyedTrackVersions[record.className] == record.version ? record.identityOffset : nil
+        })
         var tracks: [Int: CPRSourceTrackAutoFade] = [:]
         for object in audioTracks {
             guard object.descriptor.version == 1 else { throw CPRProjectError.unsupported("Unverified audio-track version.") }
@@ -138,11 +148,18 @@ final class CPRAutoFadeArchive {
             guard keyed[key] == nil, let value = try object(&reader) else {
                 throw CPRProjectError.invalid("Duplicate key or null root event reference.")
             }
+            guard keyedTrackVersions[value.descriptor.className] == value.descriptor.version,
+                  countedTrackIDs.contains(value.descriptor.identityOffset) else {
+                throw CPRProjectError.unsupported("Root keyed events require verified counted track classes and versions.")
+            }
             // Preserve the archive record without inventing its editor/render
             // role. The downstream rendering gate must assess retained state.
             keyed[key] = value.descriptor
         }
         let loudness = try object(&reader)
+        guard loudness == nil else {
+            throw CPRProjectError.unsupported("Nonnull root loudness state has no verified class/version contract.")
+        }
         try finished(reader, "root auto-fade tail")
         // Newly entered header declarations must not revise base versions.
         try requireBaseVersions()
@@ -206,6 +223,11 @@ final class CPRAutoFadeArchive {
         if let cached = settingCache[object.descriptor.identityOffset] { return cached }
         var body = archive.body(object)
         let flags = try body.u16(), duration = try body.u64()
+        // Explicit application acceptance policy, including when flags are
+        // zero; this does not claim that the native raw reader rejects it.
+        guard Double(bitPattern: duration).isFinite else {
+            throw CPRProjectError.unsupported("Nonfinite auto-fade duration is outside the supported source-state domain.")
+        }
         var curves: [CPRObjectRecord?] = []
         for _ in 0..<4 {
             curves.append(try optional(&body, classes: ["MLinearInterpolator": 0])?.descriptor)

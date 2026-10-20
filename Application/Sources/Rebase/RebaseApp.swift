@@ -129,6 +129,11 @@ struct StudioView: View {
                 onImport: { session.confirmCPRImport(preview) },
                 onCancel: { session.cprImportPreview = nil })
         }
+        .sheet(item: $session.cprSourceAudioInspection, onDismiss: session.completeCPRSourceInspectionDismissal) { inspection in
+            CPRSourceAudioView(inspection: inspection,
+                onRender: { session.renderCPRSourceEvent(inspection.eventID) },
+                onClose: { session.cprSourceAudioInspection = nil })
+        }
         .background(Color(red: 0.075, green: 0.085, blue: 0.10))
         .tint(Color(red: 0.32, green: 0.75, blue: 0.83))
         .alert("Rebase", isPresented: Binding(get: { session.errorMessage != nil }, set: { if !$0 { session.errorMessage = nil } })) {
@@ -251,6 +256,7 @@ struct StudioView: View {
                     Button(session.project.attachedMedia(for: event) == nil ? "Attach Media…" : "Replace Attached Media…") {
                         session.attachSelectedCPRMedia()
                     }.font(.caption).disabled(event.files.count != 1 || event.segments.count != 1)
+                    Button("Inspect Source Audio…") { session.inspectSelectedCPRSourceAudio() }.font(.caption)
                     Text("Attachment checks the file format and source bounds. Native playback processing remains unresolved.")
                         .font(.system(size: 10)).foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)

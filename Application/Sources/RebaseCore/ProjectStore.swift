@@ -148,6 +148,24 @@ public enum ProjectStore {
         }
     }
 
+    /// Replays the frozen import before interpreting additional saved fields.
+    /// New source inspection never changes a historical report or playable Clip.
+    static func verifiedCPRSourceEvent(_ eventID: UUID, in project: Project, at root: URL) throws
+        -> (container: CPRContainer, retained: UnresolvedCPRAudioEvent, source: CPRSourceAudioEvent) {
+        try project.validate()
+        try validateNativeClockProvenance(project, at: root)
+        guard let retained = project.unresolvedAudioEvents.first(where: { $0.id == eventID }) else {
+            throw RebaseCoreError.invalidProject("Select a retained CPR audio event.")
+        }
+        let container = try CPRProject.readSource(root.appendingPathComponent(CPRProject.originalRelativePath))
+        guard container.sha256 == retained.sourceSHA256,
+              let source = try CPRAudioEventArchive.read(container: container).first(where: { $0.event == retained.event }),
+              source.clip == retained.clip, source.cluster.object == retained.cluster else {
+            throw RebaseCoreError.invalidProject("The source event no longer matches its preserved CPR identity.")
+        }
+        return (container, retained, source)
+    }
+
     public static func resolveMediaURL(_ path: String, projectRoot: URL) throws -> URL {
         let parts = path.split(separator: "/", omittingEmptySubsequences: false)
         guard parts.count >= 2, parts.first == "Media",

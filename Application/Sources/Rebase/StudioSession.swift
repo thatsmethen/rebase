@@ -19,6 +19,7 @@ final class StudioSession: ObservableObject {
     @Published var showTempoEditor = false
     @Published var showAutomationEditor = false
     @Published var cprImportPreview: CPRImportPreview?
+    @Published var cprSourceAudioInspection: CPRSourceAudioInspection?
     @Published private(set) var cprCompatibility: CPRInspection?
     @Published var status = "Ready"
     @Published var errorMessage: String?
@@ -32,6 +33,7 @@ final class StudioSession: ObservableObject {
     private var refreshTask: DispatchWorkItem?
     private var lastEditKey: String?
     private var lastEditTime = Date.distantPast
+    private var pendingCPRSourceRender: (eventID: UUID, project: Project, root: URL)?
 
     var canUndo: Bool { !undoStack.isEmpty }
     var canRedo: Bool { !redoStack.isEmpty }
@@ -83,9 +85,11 @@ final class StudioSession: ObservableObject {
         panel.canChooseDirectories = true
         panel.canChooseFiles = true
         panel.allowsMultipleSelection = false
-        guard panel.runModal() == .OK, let url = panel.url else { return }
-        if url.pathExtension.lowercased() == "cpr" { inspectCPRProject(url); return }
-        do { try load(url) } catch { show(error) }
+        panel.begin { [weak self] response in
+            guard let self, response == .OK, let url = panel.url else { return }
+            if url.pathExtension.lowercased() == "cpr" { self.inspectCPRProject(url); return }
+            do { try self.load(url) } catch { self.show(error) }
+        }
     }
     func openURL(_ url: URL) {
         if url.pathExtension.lowercased() == "cpr" { inspectCPRProject(url); return }
@@ -307,6 +311,43 @@ final class StudioSession: ObservableObject {
             changed()
             status = "Attached \(source.lastPathComponent) · native playback processing remains unresolved"
         } catch { show(error) }
+    }
+
+    func inspectSelectedCPRSourceAudio() {
+        guard let event = selectedUnresolvedEvent, projectRoot != nil else { return }
+        do {
+            cprSourceAudioInspection = try CPRSourceAudioInspection.inspect(eventID: event.id, in: project, at: projectRoot)
+        } catch { show(error) }
+    }
+
+    func renderCPRSourceEvent(_ eventID: UUID) {
+        guard let root = projectRoot else { return }
+        pendingCPRSourceRender = (eventID, project, root)
+        cprSourceAudioInspection = nil
+    }
+
+    func completeCPRSourceInspectionDismissal() {
+        guard let request = pendingCPRSourceRender else { return }
+        pendingCPRSourceRender = nil
+        // Open the native panel only after SwiftUI has ended its sheet session.
+        guard project == request.project, projectRoot == request.root,
+              let event = request.project.unresolvedAudioEvents.first(where: { $0.id == request.eventID }) else { return }
+        let panel = NSSavePanel()
+        panel.title = "Render Source Event"
+        panel.message = "Render the attached source and saved event gain at the original rate. Track effects, mixer and automation are not included."
+        panel.allowedContentTypes = [.wav]
+        panel.nameFieldStringValue = event.name.replacingOccurrences(of: "/", with: "-") + "-source-event.wav"
+        panel.begin { [weak self] response in
+            guard let self, response == .OK, let destination = panel.url else { return }
+            guard self.project == request.project, self.projectRoot == request.root else {
+                self.show(RebaseCoreError.invalidProject("The project changed while choosing the destination. Inspect the intended source event again."))
+                return
+            }
+            do {
+                let result = try CPRSourceEventRenderer.render(eventID: request.eventID, in: request.project, at: request.root, to: destination)
+                self.status = "Rendered source event · \(result.frameCount) frames at \(result.sampleRate) Hz · \(destination.lastPathComponent)"
+            } catch { self.show(error) }
+        }
     }
 
     func deleteSelected() {

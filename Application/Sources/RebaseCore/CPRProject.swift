@@ -260,7 +260,7 @@ public enum CPRProject {
             unsupported: recovery.unsupported, recoveredProject: recovery.project)
     }
 
-    private static func readSource(_ source: URL) throws -> CPRContainer {
+    static func readSource(_ source: URL) throws -> CPRContainer {
         let before = try FileManager.default.attributesOfItem(atPath: source.path)
         // A reused URL can cache a previous size after a deliberate file edit.
         // Refresh metadata before the bounded before/after identity check.
