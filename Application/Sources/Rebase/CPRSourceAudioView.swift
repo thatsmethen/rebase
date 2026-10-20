@@ -42,8 +42,8 @@ struct CPRSourceAudioView: View {
                 Text("Original source rate").tag(CPRSourceEventPlaybackMode.sourceRate)
                 Text("Project rate · native linear mode 0").tag(CPRSourceEventPlaybackMode.nativeMode0ProjectRate)
             }.pickerStyle(.menu).accessibilityLabel("Source event audition rate")
-            if playbackMode == .nativeMode0ProjectRate {
-                Text("Converts \(Int(inspection.sourceSampleRate ?? 0)) → \(Int(inspection.projectSampleRate)) Hz in blocks with the reconstructed stereo upsampler. This is an explicit mode choice; Reference’s default converter is unverified. Seeking restores conversion state from the event’s start. No extra tail samples are added.")
+            if playbackMode == .nativeMode0ProjectRate, playbackUnavailableReason == nil {
+                Text("Converts \(Int(inspection.sourceSampleRate ?? 0)) → \(Int(inspection.projectSampleRate)) Hz in blocks with the reconstructed stereo mode 0 converter. This is an explicit mode choice; Reference’s default converter is unverified. Seeking restores conversion state from the event’s start. No extra tail samples are added.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
             if let reason = playbackUnavailableReason,

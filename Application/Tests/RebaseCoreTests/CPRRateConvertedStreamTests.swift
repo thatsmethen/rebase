@@ -52,45 +52,61 @@ struct CPRRateConvertedStreamTests {
     }
 
     @Test func ConvertedBlocksPassThroughActualOfflinePlayerWithoutExtraTail() throws {
-        let stream = try CPRRateConvertedStream(source: source(), sourceRate: 44100, outputRate: 48000, gain: 1)
-        let start = stream.frameCount - 10_003
-        let expected = try collect(stream.cursor(from: start)).map(\.bitPattern)
-        let cursor = try stream.cursor(from: start)
-        let engine = AVAudioEngine(), player = AVAudioPlayerNode()
-        engine.attach(player); engine.connect(player, to: engine.mainMixerNode, format: stream.format)
-        player.volume = 1; engine.mainMixerNode.outputVolume = 1
-        try engine.enableManualRenderingMode(.offline, format: stream.format, maximumFrameCount: 256)
-        defer { player.stop(); engine.stop(); engine.disableManualRenderingMode() }
-        var queued = [AVAudioPCMBuffer]()
-        while let buffer = try cursor.nextBuffer() {
-            queued.append(buffer); player.scheduleBuffer(buffer, at: nil, options: [])
-        }
-        #expect(queued.count >= 2)
-        try engine.start(); player.play()
-        let output = try AudioPreparation.buffer(format: stream.format, frames: 256)
-        var position = 0, retries = 0
-        while position < 10_003 {
-            let request = AVAudioFrameCount(min(256, 10_003 - position))
-            let status = try engine.renderOffline(request, to: output)
-            if status == .cannotDoInCurrentContext && retries < 16 { retries += 1; continue }
-            #expect(status == .success && output.frameLength == request)
-            guard status == .success, output.frameLength > 0 else { return }
-            var matches = true
-            for frame in 0..<Int(output.frameLength) {
-                for channel in 0..<2 {
-                    if output.floatChannelData![channel][frame].bitPattern != expected[(position + frame) * 2 + channel] {
-                        matches = false
+        for outputRate in [48000.0, 32000.0, 16000.0] {
+            let stream = try CPRRateConvertedStream(source: source(), sourceRate: 44100, outputRate: outputRate, gain: 1)
+            let renderFrames = min(10_003, Int(stream.frameCount))
+            let start = stream.frameCount - Int64(renderFrames)
+            let expected = try collect(stream.cursor(from: start)).map(\.bitPattern)
+            let cursor = try stream.cursor(from: start)
+            let engine = AVAudioEngine(), player = AVAudioPlayerNode()
+            engine.attach(player); engine.connect(player, to: engine.mainMixerNode, format: stream.format)
+            player.volume = 1; engine.mainMixerNode.outputVolume = 1
+            try engine.enableManualRenderingMode(.offline, format: stream.format, maximumFrameCount: 256)
+            defer { player.stop(); engine.stop(); engine.disableManualRenderingMode() }
+            var queued = [AVAudioPCMBuffer]()
+            while let buffer = try cursor.nextBuffer() {
+                queued.append(buffer); player.scheduleBuffer(buffer, at: nil, options: [])
+            }
+            #expect(queued.count >= 2)
+            try engine.start(); player.play()
+            let output = try AudioPreparation.buffer(format: stream.format, frames: 256)
+            var position = 0, retries = 0
+            while position < renderFrames {
+                let request = AVAudioFrameCount(min(256, renderFrames - position))
+                let status = try engine.renderOffline(request, to: output)
+                if status == .cannotDoInCurrentContext && retries < 16 { retries += 1; continue }
+                #expect(status == .success && output.frameLength == request)
+                guard status == .success, output.frameLength > 0 else { return }
+                var matches = true
+                for frame in 0..<Int(output.frameLength) {
+                    for channel in 0..<2 {
+                        if output.floatChannelData![channel][frame].bitPattern != expected[(position + frame) * 2 + channel] {
+                            matches = false
+                        }
                     }
                 }
+                #expect(matches)
+                position += Int(output.frameLength)
             }
-            #expect(matches)
-            position += Int(output.frameLength)
+            #expect(position == renderFrames && cursor.isAtEnd)
+            var tailFrames = 0
+            while tailFrames < 257 {
+                let request = AVAudioFrameCount(min(256, 257 - tailFrames))
+                let status = try engine.renderOffline(request, to: output)
+                if status == .cannotDoInCurrentContext && retries < 16 { retries += 1; continue }
+                try #require(status == .success && output.frameLength == request)
+                for channel in 0..<2 {
+                    let samples = UnsafeBufferPointer(start: output.floatChannelData![channel], count: Int(request))
+                    #expect(samples.allSatisfy { $0 == 0 })
+                }
+                tailFrames += Int(request)
+            }
+            #expect(tailFrames == 257)
         }
-        #expect(position == 10_003 && cursor.isAtEnd)
     }
 
     @Test func UnsupportedRatesAndSampleDomainsStopWithoutSubstitutingAnotherConverter() throws {
-        for rate in [44100.0, 32000, 48000.5, Double.nan, Double.infinity, 192001] {
+        for rate in [44100.0, 7999, 48000.5, Double.nan, Double.infinity, 192001] {
             #expect(throws: RebaseCoreError.self) {
                 try CPRRateConvertedStream(source: source(frames: 8), sourceRate: 44100, outputRate: rate, gain: 1)
             }

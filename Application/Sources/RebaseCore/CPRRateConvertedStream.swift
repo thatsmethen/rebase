@@ -2,23 +2,28 @@ import AVFoundation
 import Foundation
 import RebaseTimingDSP
 
-/// Explicit mode-0 stereo upsampling of an immutable, verified source snapshot.
+/// Explicit mode-0 stereo conversion of an immutable, verified source snapshot.
 /// Source PCM remains resident; only the converted queue is bounded. Neither the
-/// backend choice, queue size nor reset-and-preroll seeking is a native host claim.
+/// backend choice, queue size, downsample memory layout/partitions nor
+/// reset-and-preroll seeking is a native host claim.
 struct CPRRateConvertedStream {
     static let inputBlockFrames = 8192
     let source: [Float]
     let format: AVAudioFormat
     let frameCount: Int64
     let gain: Float
-    let initialState: RBMode0State
+    enum ConverterState {
+        case up(RBMode0State)
+        case down(RBMode0DownState)
+    }
+    let initialState: ConverterState
 
     static func unavailableReason(sourceRate: Double, outputRate: Double) -> String? {
         guard sourceRate.isFinite, outputRate.isFinite,
               sourceRate.rounded() == sourceRate, outputRate.rounded() == outputRate,
               (8000...192000).contains(sourceRate), (8000...192000).contains(outputRate),
-              sourceRate < outputRate else {
-            return "Native mode 0 currently supports stereo upsampling to a higher integral project rate between 8 and 192 kHz."
+              sourceRate != outputRate else {
+            return "Native mode 0 requires different integral source and project rates between 8 and 192 kHz. Use original-rate audition when the rates match."
         }
         return nil
     }
@@ -29,16 +34,35 @@ struct CPRRateConvertedStream {
         }
         guard !source.isEmpty, source.count % 2 == 0, source.count <= 32_000_000,
               gain.isFinite, gain > 0 else { throw RebaseCoreError.mediaTooLarge }
-        var state = RBMode0State(), count = 0
-        guard rb_native_mode0_init(Float(sourceRate), Float(outputRate), 2, &state) == 0,
-              rb_native_mode0_count(&state, source.count / 2, &count) == 0,
-              count > 0, count <= 16_000_000 else {
+        let state: ConverterState
+        var count = 0
+        if sourceRate < outputRate {
+            var up = RBMode0State()
+            guard rb_native_mode0_init(Float(sourceRate), Float(outputRate), 2, &up) == 0,
+                  rb_native_mode0_count(&up, source.count / 2, &count) == 0 else {
+                throw Self.preparationError
+            }
+            state = .up(up)
+        } else {
+            var down = RBMode0DownState()
+            guard rb_native_mode0_down_init(Float(sourceRate), Float(outputRate), 2, &down) == 0,
+                  rb_native_mode0_down_count_blocks(&down, source.count / 2, Self.inputBlockFrames,
+                    UInt32(RB_MODE0_DOWN_OUTPUT_ABOVE), &count) == 0 else {
+                throw Self.preparationError
+            }
+            state = .down(down)
+        }
+        guard count > 0, count <= 16_000_000 else {
             throw RebaseCoreError.unsupportedAudio("The converted event exceeds the supported rate, frame count or floating-point environment.")
         }
         self.source = source; self.gain = gain; initialState = state
         frameCount = Int64(count)
         format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: outputRate,
                               channels: 2, interleaved: false)!
+    }
+
+    private static var preparationError: RebaseCoreError {
+        .unsupportedAudio("Native mode 0 could not prepare this event within its supported rate, block and floating-point domain.")
     }
 
     func cursor(from outputFrame: Int64) throws -> Cursor {
@@ -50,7 +74,7 @@ struct CPRRateConvertedStream {
 
     final class Cursor {
         private let stream: CPRRateConvertedStream
-        private var state: RBMode0State
+        private var state: ConverterState
         private var inputPosition = 0
         private var generatedFrames: Int64 = 0
         private var pending: [Float]?
@@ -104,29 +128,62 @@ struct CPRRateConvertedStream {
         private func convertNextInputBlock() throws -> [Float]? {
             let total = stream.source.count / 2
             while inputPosition < total {
-                let frames = min(CPRRateConvertedStream.inputBlockFrames, total - inputPosition)
-                var count = 0
-                guard rb_native_mode0_count(&state, frames, &count) == 0 else { throw conversionError }
-                // One source frame can emit zero; still call process to retain it.
-                var values = [Float](repeating: 0, count: max(2, count * 2))
-                var produced = 0
-                let status = stream.source.withUnsafeBufferPointer { source in
-                    values.withUnsafeMutableBufferPointer { output in
-                        rb_native_mode0_process(&state, source.baseAddress!.advanced(by: inputPosition * 2),
-                            frames, output.baseAddress, count, &produced)
+                let frames: Int
+                var values: [Float]
+                switch state {
+                case .up(var up):
+                    frames = min(CPRRateConvertedStream.inputBlockFrames, total - inputPosition)
+                    var count = 0, produced = 0
+                    guard rb_native_mode0_count(&up, frames, &count) == 0 else { throw conversionError }
+                    values = [Float](repeating: 0, count: max(2, count * 2))
+                    let status = stream.source.withUnsafeBufferPointer { source in
+                        values.withUnsafeMutableBufferPointer { output in
+                            rb_native_mode0_process(&up, source.baseAddress!.advanced(by: inputPosition * 2),
+                                frames, output.baseAddress, count, &produced)
+                        }
                     }
+                    guard status == 0, produced == count else { throw conversionError }
+                    values.removeLast(values.count - count * 2)
+                    state = .up(up)
+                case .down(var down):
+                    // The small-ratio native branch can read beyond a final
+                    // singleton with pending state. Rebalance that pair of
+                    // blocks, using the identical policy as count_blocks.
+                    frames = rb_native_mode0_down_next_block(total - inputPosition,
+                        CPRRateConvertedStream.inputBlockFrames)
+                    var count = 0, produced = 0
+                    let layout = UInt32(RB_MODE0_DOWN_OUTPUT_ABOVE)
+                    guard frames > 0,
+                          rb_native_mode0_down_count(&down, frames, layout, 0, &count) == 0 else {
+                        throw conversionError
+                    }
+                    // One arena establishes actual pointer order, independently
+                    // of the allocator. Output follows the entire input block.
+                    // Do not replace this with two unrelated Swift arrays.
+                    let inputSamples = frames * 2
+                    var arena = [Float](repeating: 0, count: inputSamples + max(2, count * 2))
+                    values = try arena.withUnsafeMutableBufferPointer { storage in
+                        let input = storage.baseAddress!
+                        let output = input.advanced(by: inputSamples)
+                        stream.source.withUnsafeBufferPointer {
+                            input.update(from: $0.baseAddress!.advanced(by: inputPosition * 2), count: inputSamples)
+                        }
+                        guard rb_native_mode0_down_process(&down, input, frames, output, count,
+                            layout, 0, &produced) == 0, produced == count else { throw conversionError }
+                        return Array(UnsafeBufferPointer(start: output, count: count * 2))
+                    }
+                    state = .down(down)
                 }
-                guard status == 0, produced == count else { throw conversionError }
                 inputPosition += frames
-                if count == 0 { continue }
-                values.removeLast(values.count - count * 2)
+                // A zero-output block still advances the native source state.
+                if values.isEmpty { continue }
                 // Native segment gain is a separate Float32 operation after the
                 // accessor's rate conversion. Do not move it to the source side.
                 let gainStatus = values.withUnsafeMutableBufferPointer {
                     rb_cpr_event_gain_f32($0.baseAddress, $0.count, stream.gain.bitPattern)
                 }
                 guard gainStatus == 0 else { throw conversionError }
-                generatedFrames += Int64(count)
+                generatedFrames += Int64(values.count / 2)
                 return values
             }
             return nil

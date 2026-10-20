@@ -316,4 +316,63 @@ struct CPRSourceEventPlaybackTests {
         try f.pcm.write(to: f.media)
         #expect(try snapshot(f.package) == before)
     }
+
+    @Test func DownsampledSourceEventMatchesIndependentBlockCountsAndPreservesProvenance() throws {
+        struct CountOracle: Decodable {
+            struct Vector: Decodable {
+                struct Call: Decodable { let output_frames: Int }
+                let source_rate, output_rate, input_frames, output_frames: Int
+                let calls: [Call]
+            }
+            let generator_sha256: String
+            let vectors: [Vector]
+        }
+        let evidence = workspace.appendingPathComponent("research/evidence/application/APP011/")
+        let bytes = try Data(contentsOf: evidence.appendingPathComponent("native-rate-down-count-oracle.json"))
+        #expect(cprSHA256(bytes) == "5398690aa9af6c45504e626439e0b12fc265bbb5c45f24bd2b9b833400ac11a7")
+        let oracle = try JSONDecoder().decode(CountOracle.self, from: bytes)
+        #expect(cprSHA256(try Data(contentsOf: evidence.appendingPathComponent("native-rate-down-count-oracle.py"))) == oracle.generator_sha256)
+        let f = try fixture()
+        defer { try? FileManager.default.removeItem(at: f.temporary) }
+        let before = try snapshot(f.package)
+        #expect(oracle.vectors.count == 2)
+        for vector in oracle.vectors {
+            #expect(vector.input_frames == frameCount && vector.source_rate == Int(rate))
+            var project = f.project
+            project.sampleRate = Double(vector.output_rate)
+            let inspection = try CPRSourceAudioInspection.inspect(eventID: f.eventID, in: project, at: f.package)
+            #expect(inspection.rateConvertedPlaybackUnavailableReason == nil)
+            let prepared = try CPRSourceEventPlayback.prepare(eventID: f.eventID, project: project,
+                root: f.package, mode: .nativeMode0ProjectRate)
+            #expect(prepared.info.frameCount == Int64(vector.output_frames))
+            #expect(prepared.info.sourceSampleRate == rate && prepared.info.sampleRate == project.sampleRate)
+            #expect(prepared.audio.clips.isEmpty && prepared.audio.nativeEventSelection != nil)
+            #expect(prepared.info.mediaSHA256 == cprSHA256(f.pcm))
+            let stream = try #require(prepared.audio.sourceEventStream)
+            let cursor = try stream.cursor(from: 0)
+            var delivered = 0
+            for call in vector.calls {
+                let buffer = try #require(try cursor.nextBuffer())
+                #expect(Int(buffer.frameLength) == call.output_frames)
+                #expect(buffer.format.sampleRate == project.sampleRate)
+                delivered += Int(buffer.frameLength)
+            }
+            #expect(delivered == vector.output_frames && cursor.isAtEnd)
+            #expect(try cursor.nextBuffer() == nil)
+            #expect(rejects { try project.requireResolvedAudioEvents() })
+            #expect(rejects { _ = try OfflineRenderer.render(project: project, projectRoot: f.package) })
+            #expect(try snapshot(f.package) == before)
+        }
+        var changed = f.pcm
+        changed[44] ^= 1
+        try changed.write(to: f.media)
+        var project = f.project
+        project.sampleRate = 32000
+        #expect(rejects {
+            _ = try CPRSourceEventPlayback.prepare(eventID: f.eventID, project: project,
+                root: f.package, mode: .nativeMode0ProjectRate)
+        })
+        try f.pcm.write(to: f.media)
+        #expect(try snapshot(f.package) == before)
+    }
 }
