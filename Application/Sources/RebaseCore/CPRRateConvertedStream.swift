@@ -8,7 +8,7 @@ import RebaseSoXR
 /// backend choice, queue size, downsample memory layout/partitions nor
 /// reset-and-preroll seeking is a native host claim.
 struct CPRRateConvertedStream {
-    enum Algorithm { case nativeMode0, nativeMode2 }
+    enum Algorithm { case nativeMode0, nativeMode1, nativeMode2 }
     static let inputBlockFrames = 8192
     let source: [Float]
     let format: AVAudioFormat
@@ -18,6 +18,7 @@ struct CPRRateConvertedStream {
         case up(RBMode0State)
         case down(RBMode0DownState)
         case mode2(sourceRate: Double)
+        case mode1(sourceRate: Double)
     }
     let initialState: ConverterState
 
@@ -43,7 +44,11 @@ struct CPRRateConvertedStream {
               gain.isFinite, gain > 0 else { throw RebaseCoreError.mediaTooLarge }
         let state: ConverterState
         var count = 0
-        if algorithm == .nativeMode2 {
+        if algorithm == .nativeMode1 {
+            let planner = try Mode1Converter(sourceRate: sourceRate, outputRate: outputRate)
+            count = try planner.count(totalInputFrames: source.count / 2)
+            state = .mode1(sourceRate: sourceRate)
+        } else if algorithm == .nativeMode2 {
             let planner = try Mode2Converter(sourceRate: sourceRate, outputRate: outputRate)
             count = try planner.count(totalInputFrames: source.count / 2)
             state = .mode2(sourceRate: sourceRate)
@@ -91,6 +96,7 @@ struct CPRRateConvertedStream {
         private var pending: [Float]?
         private let transfer: CPRLiveStereoTransfer
         private let mode2: Mode2Converter?
+        private let mode1: Mode1Converter?
         private(set) var deliveredFrames: Int64
         var isAtEnd: Bool { deliveredFrames == stream.frameCount }
 
@@ -99,6 +105,9 @@ struct CPRRateConvertedStream {
             if case .mode2(let sourceRate) = state {
                 mode2 = try Mode2Converter(sourceRate: sourceRate, outputRate: stream.format.sampleRate)
             } else { mode2 = nil }
+            if case .mode1(let sourceRate) = state {
+                mode1 = try Mode1Converter(sourceRate: sourceRate, outputRate: stream.format.sampleRate)
+            } else { mode1 = nil }
             transfer = try CPRLiveStereoTransfer()
             // The end has no samples and does not need expensive preroll.
             if first == stream.frameCount { inputPosition = stream.source.count / 2; return }
@@ -137,6 +146,7 @@ struct CPRRateConvertedStream {
             let frames = values.count / 2
             let buffer = try AudioPreparation.buffer(format: stream.format, frames: frames)
             try transfer.copy(values, to: buffer)
+            try CPRLiveCallbackAdapter.process(buffer)
             return buffer
         }
 
@@ -146,6 +156,13 @@ struct CPRRateConvertedStream {
                 let frames: Int
                 var values: [Float]
                 switch state {
+                case .mode1:
+                    frames = min(CPRRateConvertedStream.inputBlockFrames, total - inputPosition)
+                    guard let mode1 else { throw conversionError }
+                    values = try stream.source.withUnsafeBufferPointer {
+                        try mode1.process($0.baseAddress!.advanced(by: inputPosition * 2),
+                            frames: frames, final: inputPosition + frames == total)
+                    }
                 case .mode2:
                     frames = min(CPRRateConvertedStream.inputBlockFrames, total - inputPosition)
                     guard let mode2 else { throw conversionError }
@@ -253,6 +270,45 @@ struct CPRRateConvertedStream {
 
         private static var failure: RebaseCoreError {
             .unsupportedAudio("SoXR mode 2 could not preserve the reconstructed wrapper's sample, buffer or frame-count contract. Playback stopped.")
+        }
+    }
+
+    /// Native reset retains stale storage. Fresh cursor construction deliberately
+    /// uses create/destroy; seek preroll remains an explicit application policy.
+    private final class Mode1Converter {
+        private let handle: OpaquePointer
+
+        init(sourceRate: Double, outputRate: Double) throws {
+            var created: OpaquePointer?
+            let status = rb_native_mode1_create(sourceRate, outputRate, 2, &created)
+            guard status == 0, let created else { throw Self.failure }
+            handle = created
+        }
+
+        deinit { rb_native_mode1_destroy(handle) }
+
+        func count(totalInputFrames: Int) throws -> Int {
+            var count = 0
+            guard rb_native_mode1_count_blocks(handle, totalInputFrames,
+                CPRRateConvertedStream.inputBlockFrames, &count) == 0 else { throw Self.failure }
+            return count
+        }
+
+        func process(_ input: UnsafePointer<Float>, frames: Int, final: Bool) throws -> [Float] {
+            var count = 0, produced = 0
+            let terminal: UInt32 = final ? 1 : 0
+            guard rb_native_mode1_count(handle, frames, terminal, &count) == 0 else { throw Self.failure }
+            var output = [Float](repeating: 0, count: max(2, count * 2))
+            let status = output.withUnsafeMutableBufferPointer {
+                rb_native_mode1_process(handle, input, frames, $0.baseAddress, count, terminal, &produced)
+            }
+            guard status == 0, produced == count else { throw Self.failure }
+            output.removeLast(output.count - count * 2)
+            return output
+        }
+
+        private static var failure: RebaseCoreError {
+            .unsupportedAudio("Native mode 1 could not preserve the reconstructed filter's sample, buffer or frame-count contract. Playback stopped.")
         }
     }
 }

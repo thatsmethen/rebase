@@ -1,0 +1,15 @@
+// Explicit headers make new kernel APIs part of the module cache identity.
+// A directory umbrella can retain a cached module after a header is added.
+module RebaseTimingDSP {
+    header "cpr_event_pcm.h"
+    header "cpr_live_stereo_ring.h"
+    header "cpr_rate_budget.h"
+    header "cpr_timeline_selector.h"
+    header "native_callback_adapter.h"
+    header "native_rate_mode0.h"
+    header "native_rate_mode0_down.h"
+    header "native_rate_mode1.h"
+    header "native_rate_mode2.h"
+    header "native_tempo.h"
+    export *
+}

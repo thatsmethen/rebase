@@ -24,6 +24,7 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
     public let projectSampleRate: Double
     public let rateConvertedPlaybackUnavailableReason: String?
     public let mode2PlaybackUnavailableReason: String?
+    public let mode1PlaybackUnavailableReason: String?
 
     public static func inspect(eventID: UUID, in project: Project, at root: URL) throws -> CPRSourceAudioInspection {
         let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
@@ -34,6 +35,7 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
         let timelineReason: String?
         let rateReason: String?
         let mode2Reason: String?
+        let mode1Reason: String?
         var sourceRate: Double?
         do {
             let plan = try CPRSourceEventRenderPlan.make(source: source, retained: verified.retained, fades: fades)
@@ -43,9 +45,11 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
             rateReason = timelineReason ?? CPRRateConvertedStream.unavailableReason(sourceRate: Double(plan.rate), outputRate: project.sampleRate)
             mode2Reason = timelineReason ?? CPRRateConvertedStream.unavailableReason(
                 sourceRate: Double(plan.rate), outputRate: project.sampleRate, algorithm: .nativeMode2)
+            mode1Reason = timelineReason ?? CPRRateConvertedStream.unavailableReason(
+                sourceRate: Double(plan.rate), outputRate: project.sampleRate, algorithm: .nativeMode1)
         } catch {
             reason = error.localizedDescription; timelineReason = reason
-            rateReason = reason; mode2Reason = reason
+            rateReason = reason; mode2Reason = reason; mode1Reason = reason
         }
         return CPRSourceAudioInspection(eventID: eventID, name: verified.retained.name,
             sourceSHA256: verified.container.sha256, eventIdentity: source.event.identityOffset,
@@ -57,7 +61,7 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
             autoFadeSettingIdentity: setting?.object.identityOffset, localRenderUnavailableReason: reason,
             timelinePlaybackUnavailableReason: timelineReason, sourceSampleRate: sourceRate,
             projectSampleRate: project.sampleRate, rateConvertedPlaybackUnavailableReason: rateReason,
-            mode2PlaybackUnavailableReason: mode2Reason)
+            mode2PlaybackUnavailableReason: mode2Reason, mode1PlaybackUnavailableReason: mode1Reason)
     }
 }
 

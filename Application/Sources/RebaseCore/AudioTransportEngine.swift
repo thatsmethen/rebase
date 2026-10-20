@@ -18,12 +18,7 @@ public final class AudioTransportEngine {
     private var playbackGeneration: UInt64 = 0
     private var pendingPlayers = 0
     private var timelineElapsed = false
-    private var streamCursor: CPRRateConvertedStream.Cursor?
-    private var streamBuffers: [UUID: AVAudioPCMBuffer] = [:]
-    private var streamAtEnd = false
-    /// Refill runs on the main actor, outside the audio callback. Four source
-    /// blocks provide headroom, not a guarantee against arbitrary UI stalls.
-    private let streamQueueDepth = 4
+    private var streamQueue: CPRStreamPlaybackQueue?
     private var meterGeneration: UInt64 = 0
     private var meterTapInstalled = false
 
@@ -101,15 +96,33 @@ public final class AudioTransportEngine {
         stoppedPosition = startPosition
         guard schedule.startFrame < prepared.frameCount else { return }
         var scheduled: [(AVAudioPlayerNode, AVAudioPCMBuffer, TimeInterval)] = []
-        var firstStreamBuffers: [AVAudioPCMBuffer] = []
+        let generation = playbackGeneration
         if let stream = prepared.sourceEventStream {
             let cursor = try stream.cursor(from: schedule.startFrame)
-            for _ in 0..<streamQueueDepth {
-                guard let buffer = try cursor.nextBuffer() else { break }
-                firstStreamBuffers.append(buffer)
+            let player = players[0]
+            let queue = CPRStreamPlaybackQueue(nextBuffer: { try cursor.nextBuffer() },
+                schedule: { buffer, consumed in
+                    player.scheduleBuffer(buffer, at: nil, options: [],
+                        completionCallbackType: .dataPlayedBack) { _ in consumed() }
+                }, completion: { [weak self] result in
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self, self.running, self.playbackGeneration == generation else { return }
+                        switch result {
+                        case .success:
+                            self.pendingPlayers -= 1
+                            self.finishPlaybackIfReady()
+                        case .failure(let error):
+                            self.playbackFailure = error.localizedDescription
+                            self.stop()
+                        }
+                    }
+                })
+            streamQueue = queue
+            do { try queue.start() }
+            catch {
+                stop()
+                throw error
             }
-            streamCursor = cursor
-            streamAtEnd = cursor.isAtEnd
         }
         for span in schedule.spans {
             let playback = try AudioPlaybackSchedule.buffer(for: span, in: prepared)
@@ -119,17 +132,15 @@ public final class AudioTransportEngine {
         installMeterTap()
         do { try engine.start() }
         catch {
-            removeMeterTap()
+            stop()
             throw error
         }
         // The lead-in allows every node to receive the same future-clock origin.
         startHostTime = mach_absolute_time() + AVAudioTime.hostTime(forSeconds: 0.08)
-        let generation = playbackGeneration
-        pendingPlayers = scheduled.count
+        pendingPlayers = scheduled.count + (streamQueue == nil ? 0 : 1)
         timelineElapsed = false
         running = true
-        if streamCursor != nil {
-            for buffer in firstStreamBuffers { scheduleStreamBuffer(buffer, generation: generation) }
+        if streamQueue != nil {
             players[0].play(at: AVAudioTime(hostTime: startHostTime))
         }
         for (player, buffer, delay) in scheduled {
@@ -158,37 +169,9 @@ public final class AudioTransportEngine {
     private func finishPlaybackIfReady() {
         // Preserve silent project tails and wait for delivered player callbacks;
         // elapsed wall time alone must not cut off downstream audio.
-        guard running, timelineElapsed, pendingPlayers == 0,
-              streamCursor == nil || streamAtEnd else { return }
+        guard running, timelineElapsed, pendingPlayers == 0 else { return }
         stop()
         stoppedPosition = duration
-    }
-
-    private func scheduleStreamBuffer(_ buffer: AVAudioPCMBuffer, generation: UInt64) {
-        let id = UUID()
-        streamBuffers[id] = buffer
-        pendingPlayers += 1
-        players[0].scheduleBuffer(buffer, at: nil, options: [], completionCallbackType: .dataPlayedBack) { [weak self] _ in
-            DispatchQueue.main.async { [weak self] in
-                guard let self, self.running, self.playbackGeneration == generation,
-                      self.streamBuffers.removeValue(forKey: id) != nil else { return }
-                self.pendingPlayers -= 1
-                do {
-                    while self.streamBuffers.count < self.streamQueueDepth, !self.streamAtEnd {
-                        guard let next = try self.streamCursor?.nextBuffer() else {
-                            self.streamAtEnd = true
-                            break
-                        }
-                        self.scheduleStreamBuffer(next, generation: generation)
-                        self.streamAtEnd = self.streamCursor?.isAtEnd ?? true
-                    }
-                    self.finishPlaybackIfReady()
-                } catch {
-                    self.playbackFailure = error.localizedDescription
-                    self.stop()
-                }
-            }
-        }
     }
 
     public func stop() {
@@ -199,13 +182,12 @@ public final class AudioTransportEngine {
         running = false
         pendingPlayers = 0
         timelineElapsed = false
+        streamQueue?.cancel()
+        streamQueue = nil
         for player in players { player.stop() }
         engine.stop()
         removeMeterTap()
         playbackBuffers.removeAll()
-        streamBuffers.removeAll()
-        streamCursor = nil
-        streamAtEnd = false
         stoppedPosition = position
     }
 

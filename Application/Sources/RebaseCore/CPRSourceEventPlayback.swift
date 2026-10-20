@@ -4,12 +4,14 @@ import AVFoundation
 public enum CPRSourceEventPlaybackMode: String, CaseIterable, Equatable, Sendable {
     case sourceRate
     case nativeMode0ProjectRate
+    case nativeMode1ProjectRate
     case nativeMode2ProjectRate
 
     public var displayName: String {
         switch self {
         case .sourceRate: return "Stereo audition"
         case .nativeMode0ProjectRate: return "Native mode 0"
+        case .nativeMode1ProjectRate: return "Native mode 1"
         case .nativeMode2ProjectRate: return "SoXR mode 2"
         }
     }
@@ -46,7 +48,8 @@ enum CPRSourceEventPlayback {
         if mode != .sourceRate {
             let stream = try CPRRateConvertedStream(source: source.samples,
                 sourceRate: Double(plan.rate), outputRate: project.sampleRate, gain: plan.gain,
-                algorithm: mode == .nativeMode2ProjectRate ? .nativeMode2 : .nativeMode0)
+                algorithm: mode == .nativeMode2ProjectRate ? .nativeMode2 :
+                    mode == .nativeMode1ProjectRate ? .nativeMode1 : .nativeMode0)
             let info = CPRSourceEventPlaybackInfo(eventID: eventID, name: event.name,
                 sampleRate: project.sampleRate, sourceSampleRate: Double(plan.rate), mode: mode,
                 frameCount: stream.frameCount, sourceSHA256: source.sourceSHA256,

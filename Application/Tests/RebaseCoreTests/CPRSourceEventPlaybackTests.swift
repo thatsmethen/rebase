@@ -374,6 +374,63 @@ struct CPRSourceEventPlaybackTests {
         #expect(try snapshot(f.package) == before)
     }
 
+    @Test func NativeMode1MatchesIndependentFullSourceCountsAndPreservesCPRCustody() throws {
+        let f = try fixture(); defer { try? FileManager.default.removeItem(at: f.temporary) }
+        let before = try snapshot(f.package)
+        let oracleURL = workspace.appendingPathComponent("research/evidence/application/APP013/mode1-oracle.json")
+        let oracleData = try Data(contentsOf: oracleURL)
+        #expect(cprSHA256(oracleData) == "d985ab0b74146b093ccae9ca98edd5e8a7d78e904a35f6966ec841f98340d8a9")
+        let oracle = try #require(JSONSerialization.jsonObject(with: oracleData) as? [String: Any])
+        let rows = try #require(oracle["full_source_counts"] as? [[String: Any]])
+        #expect(rows.count == 4)
+        for row in rows {
+            let inputFrames = try #require(row["source_frames"] as? Int)
+            let sourceRate = try #require(row["source_rate"] as? Int)
+            let outputRate = try #require(row["output_rate"] as? Int)
+            let expectedCount = try #require(row["total_returned"] as? Int)
+            let steps = try #require(row["calls"] as? [[String: Any]])
+            let expectedBlocks = try steps.map { try #require($0["returned_frames"] as? Int) }.filter { $0 > 0 }
+            #expect(inputFrames == frameCount && sourceRate == 44100)
+            #expect(row["block_frames"] as? Int == CPRRateConvertedStream.inputBlockFrames)
+            var project = f.project; project.sampleRate = Double(outputRate)
+            let inspection = try CPRSourceAudioInspection.inspect(eventID: f.eventID, in: project, at: f.package)
+            #expect(inspection.mode1PlaybackUnavailableReason == nil)
+            let prepared = try CPRSourceEventPlayback.prepare(eventID: f.eventID, project: project,
+                root: f.package, mode: .nativeMode1ProjectRate)
+            #expect(prepared.info.mode == .nativeMode1ProjectRate)
+            #expect(prepared.info.sourceSampleRate == 44100 && prepared.info.sampleRate == Double(outputRate))
+            #expect(prepared.info.frameCount == Int64(expectedCount))
+            #expect(prepared.info.sourceSHA256 == project.unresolvedAudioEvents[0].sourceSHA256)
+            #expect(prepared.info.mediaSHA256 == cprSHA256(f.pcm))
+            #expect(prepared.audio.clips.isEmpty && prepared.audio.nativeEventSelection != nil)
+            let stream = try #require(prepared.audio.sourceEventStream)
+            let cursor = try stream.cursor(from: 0)
+            var counts = [Int]()
+            while let buffer = try cursor.nextBuffer() {
+                counts.append(Int(buffer.frameLength))
+                #expect(buffer.format.sampleRate == Double(outputRate))
+                #expect(buffer.format.channelCount == 2 && !buffer.format.isInterleaved)
+                for channel in 0..<2 {
+                    let samples = UnsafeBufferPointer(start: buffer.floatChannelData![channel],
+                        count: Int(buffer.frameLength))
+                    #expect(samples.allSatisfy { $0.isFinite })
+                }
+            }
+            #expect(counts == expectedBlocks && counts.reduce(0, +) == expectedCount)
+            #expect(cursor.isAtEnd && cursor.deliveredFrames == Int64(expectedCount))
+            #expect(project.unresolvedAudioEvents.count == 1 && project.tracks.flatMap(\.clips).isEmpty)
+            #expect(rejects { try project.requireResolvedAudioEvents() })
+        }
+        var changed = f.pcm; changed[changed.count - 1] ^= 1
+        try changed.write(to: f.media)
+        #expect(rejects {
+            _ = try CPRSourceEventPlayback.prepare(eventID: f.eventID, project: f.project,
+                root: f.package, mode: .nativeMode1ProjectRate)
+        })
+        try f.pcm.write(to: f.media)
+        #expect(try snapshot(f.package) == before)
+    }
+
     @Test func DownsampledSourceEventMatchesIndependentBlockCountsAndPreservesProvenance() throws {
         struct CountOracle: Decodable {
             struct Vector: Decodable {

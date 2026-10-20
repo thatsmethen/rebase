@@ -161,6 +161,9 @@ struct StudioView: View {
                 if info.mode == .nativeMode0ProjectRate {
                     Text("Native linear mode 0 · \(Int(info.sourceSampleRate)) → \(Int(info.sampleRate)) Hz · streamed stereo")
                         .font(.system(size: 11)).foregroundStyle(.secondary)
+                } else if info.mode == .nativeMode1ProjectRate {
+                    Text("Native sinc mode 1 · \(Int(info.sourceSampleRate)) → \(Int(info.sampleRate)) Hz · reconstructed filter")
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
                 } else if info.mode == .nativeMode2ProjectRate {
                     Text("SoXR mode 2 · \(Int(info.sourceSampleRate)) → \(Int(info.sampleRate)) Hz · reconstructed wrapper")
                         .font(.system(size: 11)).foregroundStyle(.secondary)
