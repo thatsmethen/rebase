@@ -71,7 +71,7 @@ public final class AudioTransportEngine {
     }
 
     private func install(_ next: PreparedProject) {
-        let count = next.sourceEventStream == nil ? next.clips.count : 1
+        let count = next.sourceEventStream == nil && next.nativeTimelineStream == nil ? next.clips.count : 1
         for _ in 0..<count {
             let player = AVAudioPlayerNode()
             engine.attach(player)
@@ -97,10 +97,19 @@ public final class AudioTransportEngine {
         guard schedule.startFrame < prepared.frameCount else { return }
         var scheduled: [(AVAudioPlayerNode, AVAudioPCMBuffer, TimeInterval)] = []
         let generation = playbackGeneration
-        if let stream = prepared.sourceEventStream {
+        let producer: CPRStreamPlaybackQueue.Producer?
+        if let stream = prepared.nativeTimelineStream {
             let cursor = try stream.cursor(from: schedule.startFrame)
+            producer = { try cursor.nextBuffer() }
+        } else if let stream = prepared.sourceEventStream {
+            let cursor = try stream.cursor(from: schedule.startFrame)
+            producer = { try cursor.nextBuffer() }
+        } else {
+            producer = nil
+        }
+        if let producer {
             let player = players[0]
-            let queue = CPRStreamPlaybackQueue(nextBuffer: { try cursor.nextBuffer() },
+            let queue = CPRStreamPlaybackQueue(nextBuffer: producer,
                 schedule: { buffer, consumed in
                     player.scheduleBuffer(buffer, at: nil, options: [],
                         completionCallbackType: .dataPlayedBack) { _ in consumed() }

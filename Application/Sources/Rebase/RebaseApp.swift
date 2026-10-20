@@ -158,7 +158,10 @@ struct StudioView: View {
                     Text("SOURCE EVENT AUDITION").font(.system(size: 10, weight: .bold, design: .monospaced)).tracking(1)
                     Text(info.name).font(.system(size: 12, weight: .semibold)).lineLimit(1)
                 }
-                if info.mode == .nativeMode0ProjectRate {
+                if info.mode == .nativeTimelineSourceRate {
+                    Text("Native timeline reader · \(Int(info.sampleRate)) Hz · direct stereo source reads")
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                } else if info.mode == .nativeMode0ProjectRate {
                     Text("Native linear mode 0 · \(Int(info.sourceSampleRate)) → \(Int(info.sampleRate)) Hz · streamed stereo")
                         .font(.system(size: 11)).foregroundStyle(.secondary)
                 } else if info.mode == .nativeMode1ProjectRate {

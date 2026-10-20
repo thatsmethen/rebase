@@ -3,6 +3,7 @@ import AVFoundation
 
 public enum CPRSourceEventPlaybackMode: String, CaseIterable, Equatable, Sendable {
     case sourceRate
+    case nativeTimelineSourceRate
     case nativeMode0ProjectRate
     case nativeMode1ProjectRate
     case nativeMode2ProjectRate
@@ -10,6 +11,7 @@ public enum CPRSourceEventPlaybackMode: String, CaseIterable, Equatable, Sendabl
     public var displayName: String {
         switch self {
         case .sourceRate: return "Stereo audition"
+        case .nativeTimelineSourceRate: return "Native timeline reader"
         case .nativeMode0ProjectRate: return "Native mode 0"
         case .nativeMode1ProjectRate: return "Native mode 1"
         case .nativeMode2ProjectRate: return "SoXR mode 2"
@@ -44,6 +46,21 @@ enum CPRSourceEventPlayback {
         }
         guard let event = project.unresolvedAudioEvents.first(where: { $0.id == eventID }), let placement = event.placement else {
             throw RebaseCoreError.invalidProject("The selected source event is no longer in this project.")
+        }
+        if mode == .nativeTimelineSourceRate {
+            // The ordinary channel reader uses absolute frame windows, not the
+            // audition FIFO. Source construction remains the closed zero-origin
+            // contract; synthetic descriptors do not broaden CPR admission.
+            let stream = try CPRNativeTimelineStream(sampleRate: Double(plan.rate), segments: [
+                .init(start: placement.position, length: placement.duration, offset: placement.offset,
+                      samples: source.samples, gain: plan.gain)
+            ])
+            let info = CPRSourceEventPlaybackInfo(eventID: eventID, name: event.name,
+                sampleRate: Double(plan.rate), sourceSampleRate: Double(plan.rate), mode: mode,
+                frameCount: stream.frameCount, sourceSHA256: source.sourceSHA256,
+                mediaSHA256: source.mediaSHA256)
+            return (info, PreparedProject(format: stream.format, frameCount: stream.frameCount,
+                clips: [], nativeTimelineStream: stream))
         }
         if mode != .sourceRate {
             let stream = try CPRRateConvertedStream(source: source.samples,

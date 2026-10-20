@@ -96,6 +96,7 @@ struct PreparedProject {
     let clips: [PreparedClip]
     var nativeEventSelection: CPRTimelineSelection.Segment? = nil
     var sourceEventStream: CPRRateConvertedStream? = nil
+    var nativeTimelineStream: CPRNativeTimelineStream? = nil
 }
 
 enum AudioPreparation {

@@ -8,7 +8,7 @@ struct CPRSourceAudioView: View {
 
     private var playbackUnavailableReason: String? {
         switch playbackMode {
-        case .sourceRate: return inspection.timelinePlaybackUnavailableReason
+        case .sourceRate, .nativeTimelineSourceRate: return inspection.timelinePlaybackUnavailableReason
         case .nativeMode0ProjectRate: return inspection.rateConvertedPlaybackUnavailableReason
         case .nativeMode2ProjectRate: return inspection.mode2PlaybackUnavailableReason
         case .nativeMode1ProjectRate: return inspection.mode1PlaybackUnavailableReason
@@ -45,10 +45,15 @@ struct CPRSourceAudioView: View {
             }
             Picker("Audition rate", selection: $playbackMode) {
                 Text("Original source rate").tag(CPRSourceEventPlaybackMode.sourceRate)
+                Text("Native timeline reader · original rate").tag(CPRSourceEventPlaybackMode.nativeTimelineSourceRate)
                 Text("Project rate · native linear mode 0").tag(CPRSourceEventPlaybackMode.nativeMode0ProjectRate)
                 Text("Project rate · native sinc mode 1").tag(CPRSourceEventPlaybackMode.nativeMode1ProjectRate)
                 Text("Project rate · SoXR mode 2").tag(CPRSourceEventPlaybackMode.nativeMode2ProjectRate)
             }.pickerStyle(.menu).accessibilityLabel("Source event audition rate")
+            if playbackMode == .nativeTimelineSourceRate, playbackUnavailableReason == nil {
+                Text("Reads absolute timeline frame windows with the reconstructed native segment bounds and source seeks. This source-rate mode plays only the verified event; general CPR placement and project processing remain unresolved.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            }
             if playbackMode == .nativeMode0ProjectRate, playbackUnavailableReason == nil {
                 Text("Converts \(Int(inspection.sourceSampleRate ?? 0)) → \(Int(inspection.projectSampleRate)) Hz in blocks with the reconstructed stereo mode 0 converter. This is an explicit mode choice; Reference’s default converter is unverified. Seeking restores conversion state from the event’s start. No extra tail samples are added.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
