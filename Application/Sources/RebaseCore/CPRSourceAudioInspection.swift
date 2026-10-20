@@ -19,6 +19,7 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
     public let autoFadeDuration: Double?
     public let autoFadeSettingIdentity: Int?
     public let localRenderUnavailableReason: String?
+    public let timelinePlaybackUnavailableReason: String?
 
     public static func inspect(eventID: UUID, in project: Project, at root: URL) throws -> CPRSourceAudioInspection {
         let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
@@ -26,10 +27,12 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
         let source = verified.source, track = fades.tracks[source.trackIdentity]
         let setting = fades.effectiveSetting(forTrackIdentity: source.trackIdentity)
         let reason: String?
+        let timelineReason: String?
         do {
-            _ = try CPRSourceEventRenderPlan.make(source: source, retained: verified.retained, fades: fades)
+            let plan = try CPRSourceEventRenderPlan.make(source: source, retained: verified.retained, fades: fades)
             reason = project.attachedMedia(for: verified.retained) == nil ? "Attach matching PCM24 WAV media first." : nil
-        } catch { reason = error.localizedDescription }
+            timelineReason = reason ?? (plan.channels == 2 ? nil : "Timeline audition currently requires a stereo source; native mono output routing is unresolved.")
+        } catch { reason = error.localizedDescription; timelineReason = reason }
         return CPRSourceAudioInspection(eventID: eventID, name: verified.retained.name,
             sourceSHA256: verified.container.sha256, eventIdentity: source.event.identityOffset,
             trackIdentity: source.trackIdentity, volume: Float(bitPattern: source.volumeBits),
@@ -37,7 +40,8 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
             hasExplicitFadeOut: source.fadeOut != nil, hasWarpState: source.attributes.contains { $0.name == "Warpscale" },
             autoFadeOrigin: track?.localSetting != nil ? "Track" : setting != nil ? "Project" : "Unresolved default",
             autoFadeFlags: setting?.flags, autoFadeDuration: setting.map { Double(bitPattern: $0.durationBits) },
-            autoFadeSettingIdentity: setting?.object.identityOffset, localRenderUnavailableReason: reason)
+            autoFadeSettingIdentity: setting?.object.identityOffset, localRenderUnavailableReason: reason,
+            timelinePlaybackUnavailableReason: timelineReason)
     }
 }
 

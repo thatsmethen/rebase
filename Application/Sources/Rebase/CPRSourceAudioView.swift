@@ -3,6 +3,7 @@ import RebaseCore
 
 struct CPRSourceAudioView: View {
     let inspection: CPRSourceAudioInspection
+    let onPlay: () -> Void
     let onRender: () -> Void
     let onClose: () -> Void
 
@@ -22,8 +23,8 @@ struct CPRSourceAudioView: View {
                 }
             }.font(.callout)
             Divider()
-            Text("Source-event render · Research").font(.headline)
-            Text("Reconstructs the attached source and saved event gain at the source sample rate. It assumes fresh source state with no external pitch context. Track effects, mixer, automation and full project playback remain unresolved.")
+            Text("Source-event audio · Research").font(.headline)
+            Text("Reconstructs this attached source and saved event gain at the source sample rate. It assumes fresh source state with no external pitch context. Timeline audition plays only this event, bypassing project effects, mixer, routing and automation. Full project playback remains unresolved.")
                 .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             if let reason = inspection.localRenderUnavailableReason {
                 Label(reason, systemImage: "info.circle").font(.callout).foregroundStyle(.orange)
@@ -32,6 +33,11 @@ struct CPRSourceAudioView: View {
                 Text("Exports a Float32 WAV from matching attached PCM24 WAV media. The event stays unresolved in the project.")
                     .font(.caption).foregroundStyle(.secondary)
             }
+            if let reason = inspection.timelinePlaybackUnavailableReason,
+               reason != inspection.localRenderUnavailableReason {
+                Label(reason, systemImage: "info.circle").font(.callout).foregroundStyle(.orange)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             Text("Source SHA-256 \(inspection.sourceSHA256)\nEvent \(inspection.eventIdentity) · Track \(inspection.trackIdentity)")
                 .font(.system(size: 10, design: .monospaced)).foregroundStyle(.secondary).textSelection(.enabled)
             HStack {
@@ -39,6 +45,10 @@ struct CPRSourceAudioView: View {
                 Spacer()
                 Button("Render Source Event…", action: onRender)
                     .disabled(inspection.localRenderUnavailableReason != nil)
+                    .buttonStyle(.bordered)
+                Button("Play Event on Timeline", action: onPlay)
+                    .disabled(inspection.timelinePlaybackUnavailableReason != nil)
+                    .help(inspection.timelinePlaybackUnavailableReason ?? "Audition only this source event using the timeline transport. Source and media are verified again before playback.")
                     .buttonStyle(.borderedProminent)
             }
         }.padding(28).frame(width: 600)

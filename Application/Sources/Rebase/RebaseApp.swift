@@ -43,7 +43,10 @@ struct RebaseApp: App {
                 Button("Convert Ambisonics…") { AmbisonicExport.present() }
             }
             CommandMenu("Transport") {
-                Button(session.isPlaying ? "Pause" : "Play") { session.togglePlayback() }.keyboardShortcut(.space, modifiers: [])
+                Button(session.isPlaying ? "Pause" : (session.sourceEventPlaybackInfo == nil ? "Play" : "Play Source Event")) { session.togglePlayback() }.keyboardShortcut(.space, modifiers: [])
+                if session.sourceEventPlaybackInfo != nil {
+                    Button("Exit Source Event Audition") { session.exitSourceEventAudition() }
+                }
                 Button("Return to Start") { session.returnToStart() }.keyboardShortcut(.home, modifiers: [])
                 Button("Split Selected Clip at Playhead") { session.splitSelected() }.keyboardShortcut("t")
                 Button("Delete Selected Clip") { session.deleteSelected() }.keyboardShortcut(.delete, modifiers: [])
@@ -71,6 +74,7 @@ struct StudioView: View {
     var body: some View {
         VStack(spacing: 0) {
             transport
+            if let info = session.sourceEventPlaybackInfo { sourceAuditionBanner(info) }
             Divider().overlay(line)
             HStack(spacing: 0) {
                 inspector.frame(width: 218)
@@ -117,7 +121,11 @@ struct StudioView: View {
                 Circle().fill(session.isPlaying ? Color.green : Color.gray).frame(width: 5, height: 5)
                 Text(session.status).lineLimit(1)
                 Spacer()
-                Text("\(session.project.tracks.count) tracks   ·   \(Int(session.project.sampleRate)) Hz   ·   Stereo out")
+                if let info = session.sourceEventPlaybackInfo {
+                    Text("1 source event   ·   \(Int(info.sampleRate)) Hz   ·   Stereo audition")
+                } else {
+                    Text("\(session.project.tracks.count) tracks   ·   \(Int(session.project.sampleRate)) Hz   ·   Stereo out")
+                }
             }.font(.system(size: 10, design: .monospaced)).foregroundStyle(.secondary).padding(.horizontal, 16).frame(height: 28)
         }
         .sheet(isPresented: $session.showTempoEditor) { TempoEditor(session: session) }
@@ -131,6 +139,7 @@ struct StudioView: View {
         }
         .sheet(item: $session.cprSourceAudioInspection, onDismiss: session.completeCPRSourceInspectionDismissal) { inspection in
             CPRSourceAudioView(inspection: inspection,
+                onPlay: { session.playCPRSourceEvent(inspection.eventID) },
                 onRender: { session.renderCPRSourceEvent(inspection.eventID) },
                 onClose: { session.cprSourceAudioInspection = nil })
         }
@@ -141,6 +150,31 @@ struct StudioView: View {
         } message: { Text(session.errorMessage ?? "") }
     }
 
+    private func sourceAuditionBanner(_ info: CPRSourceEventPlaybackInfo) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "headphones").font(.system(size: 17))
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: 8) {
+                    Text("SOURCE EVENT AUDITION").font(.system(size: 10, weight: .bold, design: .monospaced)).tracking(1)
+                    Text(info.name).font(.system(size: 12, weight: .semibold)).lineLimit(1)
+                }
+                Text("Only this event · fresh source state · project effects, mixer, routing and automation bypassed")
+                    .font(.system(size: 11)).foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 8)
+            Button("Exit Audition") { session.exitSourceEventAudition() }
+                .accessibilityLabel("Exit source event audition")
+                .help("Stop this event and return the transport to project playback")
+                .buttonStyle(.bordered)
+        }
+        .foregroundStyle(Color.cyan)
+        .padding(.horizontal, 20).padding(.vertical, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.cyan.opacity(0.09))
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Source event audition mode")
+    }
+
     private var transport: some View {
         HStack(spacing: 18) {
             HStack(spacing: 9) {
@@ -148,14 +182,18 @@ struct StudioView: View {
                 Text("REBASE").font(.system(size: 12, weight: .bold, design: .monospaced)).tracking(3)
             }.frame(width: 180, alignment: .leading)
             HStack(spacing: 4) {
-                Button { session.returnToStart() } label: { Image(systemName: "backward.end.fill").frame(width: 30, height: 30) }.help("Return to start")
-                Button { session.stop() } label: { Image(systemName: "stop.fill").frame(width: 30, height: 30) }.help("Stop")
+                Button { session.returnToStart() } label: { Image(systemName: "backward.end.fill").frame(width: 30, height: 30) }
+                    .help("Return to start").accessibilityLabel("Return to start")
+                Button { session.stop() } label: { Image(systemName: "stop.fill").frame(width: 30, height: 30) }
+                    .help("Stop").accessibilityLabel("Stop")
                 Button { session.togglePlayback() } label: {
                     Image(systemName: session.isPlaying ? "pause.fill" : "play.fill")
                         .foregroundStyle(session.isPlaying ? Color.black : Color.white)
                         .frame(width: 43, height: 32)
                         .background(session.isPlaying ? Color.cyan : Color.white.opacity(0.09), in: RoundedRectangle(cornerRadius: 5))
-                }.help("Play / pause · Space")
+                }
+                .help(session.sourceEventPlaybackInfo == nil ? "Play / pause · Space" : "Play / pause this source event · Space")
+                .accessibilityLabel(session.isPlaying ? "Pause" : (session.sourceEventPlaybackInfo == nil ? "Play" : "Play source event"))
             }.buttonStyle(.plain)
             Text(Self.timecode(session.playhead)).font(.system(size: 23, weight: .medium, design: .monospaced)).monospacedDigit().frame(width: 188)
             Divider().frame(height: 29)
@@ -180,7 +218,8 @@ struct StudioView: View {
 
     private var outputMeter: some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text("STEREO OUT").font(.system(size: 9, weight: .semibold)).foregroundStyle(.secondary)
+            Text(session.sourceEventPlaybackInfo == nil ? "STEREO OUT" : "EVENT OUT")
+                .font(.system(size: 9, weight: .semibold)).foregroundStyle(.secondary)
             ForEach(0..<2, id: \.self) { channel in
                 let peak = session.outputPeaks[channel]
                 let decibels = peak > 0 ? 20 * log10(Double(peak)) : -96

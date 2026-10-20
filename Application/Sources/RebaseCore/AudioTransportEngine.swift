@@ -15,6 +15,9 @@ public final class AudioTransportEngine {
     private var stoppedPosition: TimeInterval = 0
     private var running = false
     private var completionTask: Task<Void, Never>?
+    private var playbackGeneration: UInt64 = 0
+    private var pendingPlayers = 0
+    private var timelineElapsed = false
     private var meterGeneration: UInt64 = 0
     private var meterTapInstalled = false
 
@@ -36,16 +39,34 @@ public final class AudioTransportEngine {
         return min(duration, startPosition + elapsed)
     }
 
-    public var isPlaying: Bool { running && currentTime < duration }
+    public var isPlaying: Bool { running && engine.isRunning }
 
     public func configure(project: Project, projectRoot: URL) throws {
+        clearConfiguration()
+        let next = try AudioPreparation.prepare(project, root: projectRoot)
+        install(next)
+    }
+
+    /// Explicitly audition only the selected retained native event. Fresh source
+    /// proof and attached-media hashes are checked on each configuration.
+    @discardableResult
+    public func configureCPRSourceEvent(eventID: UUID, project: Project, projectRoot: URL) throws -> CPRSourceEventPlaybackInfo {
+        clearConfiguration()
+        let next = try CPRSourceEventPlayback.prepare(eventID: eventID, project: project, root: projectRoot)
+        install(next.audio)
+        return next.info
+    }
+
+    private func clearConfiguration() {
         stop()
         for player in players { engine.detach(player) }
         players.removeAll()
         playbackBuffers.removeAll()
         prepared = nil
         stoppedPosition = 0
-        let next = try AudioPreparation.prepare(project, root: projectRoot)
+    }
+
+    private func install(_ next: PreparedProject) {
         for _ in next.clips {
             let player = AVAudioPlayerNode()
             engine.attach(player)
@@ -58,35 +79,20 @@ public final class AudioTransportEngine {
     }
 
     public func play(from seconds: TimeInterval = 0) throws {
+        stop()
         guard let prepared else { throw RebaseCoreError.notConfigured }
         guard seconds.isFinite, seconds >= 0 else {
             throw RebaseCoreError.invalidProject("Playback position must be a nonnegative time.")
         }
-        stop()
-        startPosition = min(seconds, duration)
-        stoppedPosition = startPosition
-        guard startPosition < duration else { return }
         let sampleRate = prepared.format.sampleRate
-        let fromFrame = Int64((startPosition * sampleRate).rounded())
-        startPosition = Double(fromFrame) / sampleRate
+        let schedule = try AudioPlaybackSchedule.make(prepared, from: seconds)
+        startPosition = Double(schedule.startFrame) / sampleRate
+        stoppedPosition = startPosition
+        guard schedule.startFrame < prepared.frameCount else { return }
         var scheduled: [(AVAudioPlayerNode, AVAudioPCMBuffer, TimeInterval)] = []
-        for (clip, player) in zip(prepared.clips, players) {
-            let clipEnd = clip.startFrame + Int64(clip.buffer.frameLength)
-            guard clipEnd > fromFrame else { continue }
-            let skip = max(0, fromFrame - clip.startFrame)
-            let remaining = Int(clip.buffer.frameLength) - Int(skip)
-            let playback: AVAudioPCMBuffer
-            if skip == 0 {
-                playback = clip.buffer
-            } else {
-                playback = try AudioPreparation.buffer(format: prepared.format, frames: remaining)
-                for channel in 0..<2 {
-                    playback.floatChannelData![channel].update(
-                        from: clip.buffer.floatChannelData![channel].advanced(by: Int(skip)), count: remaining)
-                }
-            }
-            let delay = Double(max(0, clip.startFrame - fromFrame)) / sampleRate
-            scheduled.append((player, playback, delay))
+        for span in schedule.spans {
+            let playback = try AudioPlaybackSchedule.buffer(for: span, in: prepared)
+            scheduled.append((players[span.clipIndex], playback, Double(span.delayFrames) / sampleRate))
         }
         engine.prepare()
         installMeterTap()
@@ -97,27 +103,49 @@ public final class AudioTransportEngine {
         }
         // The lead-in allows every node to receive the same future-clock origin.
         startHostTime = mach_absolute_time() + AVAudioTime.hostTime(forSeconds: 0.08)
+        let generation = playbackGeneration
+        pendingPlayers = scheduled.count
+        timelineElapsed = false
+        running = true
         for (player, buffer, delay) in scheduled {
-            player.scheduleBuffer(buffer, at: nil, options: [])
+            player.scheduleBuffer(buffer, at: nil, options: [], completionCallbackType: .dataPlayedBack) { [weak self] _ in
+                // Stopping from a player callback can deadlock. Return first;
+                // stale callbacks from cancelled schedules cannot finish a new run.
+                DispatchQueue.main.async { [weak self] in
+                    guard let self, self.running, self.playbackGeneration == generation else { return }
+                    self.pendingPlayers -= 1
+                    self.finishPlaybackIfReady()
+                }
+            }
             player.play(at: AVAudioTime(hostTime: startHostTime + AVAudioTime.hostTime(forSeconds: delay)))
             playbackBuffers.append(buffer)
         }
-        running = true
         let wait = duration - startPosition + 0.08
         completionTask = Task { @MainActor [weak self] in
             do { try await Task.sleep(nanoseconds: UInt64(wait * 1_000_000_000)) }
             catch { return }
-            guard let self, !Task.isCancelled else { return }
-            self.stop()
-            self.stoppedPosition = self.duration
+            guard let self, !Task.isCancelled, self.playbackGeneration == generation else { return }
+            self.timelineElapsed = true
+            self.finishPlaybackIfReady()
         }
+    }
+
+    private func finishPlaybackIfReady() {
+        // Preserve silent project tails and wait for delivered player callbacks;
+        // elapsed wall time alone must not cut off downstream audio.
+        guard running, timelineElapsed, pendingPlayers == 0 else { return }
+        stop()
+        stoppedPosition = duration
     }
 
     public func stop() {
         let position = currentTime
+        playbackGeneration &+= 1
         completionTask?.cancel()
         completionTask = nil
         running = false
+        pendingPlayers = 0
+        timelineElapsed = false
         for player in players { player.stop() }
         engine.stop()
         removeMeterTap()

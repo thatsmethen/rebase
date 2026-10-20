@@ -10,25 +10,44 @@ public struct CPRSourceEventRenderResult: Equatable {
     public let outputSHA256: String
 }
 
+/// A verified, immutable source snapshot shared by export and event audition.
+/// Samples are interleaved at the saved source rate; no mixer policy is applied.
+struct CPRPreparedSourceEvent {
+    let plan: CPRSourceEventRenderPlan
+    let samples: [Float]
+    let sourceSHA256: String
+    let mediaSHA256: String
+}
+
 /// Research reconstruction of a single saved event, from explicitly attached
 /// media. No track effects, mixer, automation, runtime pitch context or project
 /// transport is restored. This never promotes an unresolved event to a Clip.
 public enum CPRSourceEventRenderer {
     public static func render(eventID: UUID, in project: Project, at root: URL, to destination: URL) throws
         -> CPRSourceEventRenderResult {
+        let output = destination.standardizedFileURL.resolvingSymlinksInPath()
+        let package = root.standardizedFileURL.resolvingSymlinksInPath()
+        guard output != package, !output.path.hasPrefix(package.path + "/") else {
+            throw RebaseCoreError.invalidProject("Save the rendered event outside its source project package.")
+        }
+        let prepared = try prepare(eventID: eventID, in: project, at: root)
+        let plan = prepared.plan
+        let wave = encodeWave(prepared.samples, plan: plan)
+        // Entire input, output and all checks complete before atomic publication.
+        try wave.write(to: output, options: .atomic)
+        return CPRSourceEventRenderResult(frameCount: plan.frames, sampleRate: plan.rate, channelCount: plan.channels,
+            sourceSHA256: prepared.sourceSHA256, mediaSHA256: prepared.mediaSHA256, outputSHA256: cprSHA256(wave))
+    }
+
+    static func prepare(eventID: UUID, in project: Project, at root: URL) throws -> CPRPreparedSourceEvent {
         let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
         let fades = try CPRAutoFadeArchive.read(container: verified.container)
         let plan = try CPRSourceEventRenderPlan.make(source: verified.source, retained: verified.retained, fades: fades)
         guard let attachment = project.attachedMedia(for: verified.retained) else {
-            throw RebaseCoreError.unsupportedAudio("Attach matching PCM24 WAV media before rendering this source event.")
+            throw RebaseCoreError.unsupportedAudio("Attach matching PCM24 WAV media before using this source event.")
         }
         try attachment.validate(reference: plan.file)
         let sourceURL = try ProjectStore.resolveMediaURL(attachment.mediaPath, projectRoot: root)
-        let output = destination.standardizedFileURL.resolvingSymlinksInPath()
-        let package = root.standardizedFileURL.resolvingSymlinksInPath()
-        guard output != package, !output.path.hasPrefix(package.path + "/"), output != sourceURL else {
-            throw RebaseCoreError.invalidProject("Save the rendered event outside its source project package.")
-        }
         let before = try FileManager.default.attributesOfItem(atPath: sourceURL.path)
         guard let size = (before[.size] as? NSNumber)?.intValue, size <= CPRAudioMediaValidation.maximumBytes else {
             throw RebaseCoreError.mediaTooLarge
@@ -40,16 +59,17 @@ public enum CPRSourceEventRenderer {
         guard data.count == size, cprSHA256(data) == attachment.mediaSHA256,
               before[.systemFileNumber] as? NSNumber == after[.systemFileNumber] as? NSNumber,
               before[.modificationDate] as? Date == after[.modificationDate] as? Date else {
-            throw RebaseCoreError.invalidProject("The attached media changed. Attach the intended file again before rendering.")
+            throw RebaseCoreError.invalidProject("The attached media changed. Attach the intended file again before using this source event.")
         }
-        let wave = try renderPCM24Wave(data, plan: plan)
-        // Entire input, output and all checks complete before atomic publication.
-        try wave.write(to: output, options: .atomic)
-        return CPRSourceEventRenderResult(frameCount: plan.frames, sampleRate: plan.rate, channelCount: plan.channels,
-            sourceSHA256: verified.container.sha256, mediaSHA256: attachment.mediaSHA256, outputSHA256: cprSHA256(wave))
+        return CPRPreparedSourceEvent(plan: plan, samples: try decodePCM24(data, plan: plan),
+            sourceSHA256: verified.container.sha256, mediaSHA256: attachment.mediaSHA256)
     }
 
     static func renderPCM24Wave(_ data: Data, plan: CPRSourceEventRenderPlan) throws -> Data {
+        encodeWave(try decodePCM24(data, plan: plan), plan: plan)
+    }
+
+    private static func decodePCM24(_ data: Data, plan: CPRSourceEventRenderPlan) throws -> [Float] {
         func invalid() -> RebaseCoreError { .unsupportedAudio("Source rendering supports bounded little-endian PCM24 WAV files matching the saved rate, channels and exact frame count.") }
         func u16(_ offset: Int) -> UInt16 { UInt16(data[offset]) | UInt16(data[offset+1]) << 8 }
         func u32(_ offset: Int) -> UInt32 { UInt32(data[offset]) | UInt32(data[offset+1]) << 8 | UInt32(data[offset+2]) << 16 | UInt32(data[offset+3]) << 24 }
@@ -87,11 +107,15 @@ public enum CPRSourceEventRenderer {
         guard status == 0 else {
             throw RebaseCoreError.unsupportedAudio("Source rendering requires round-to-nearest mode and a gain that keeps PCM24 samples in the normal Float32 range.")
         }
+        return values
+    }
+
+    private static func encodeWave(_ values: [Float], plan: CPRSourceEventRenderPlan) -> Data {
         func le<T: FixedWidthInteger>(_ value: T) -> Data {
             var little = value.littleEndian
             return withUnsafeBytes(of: &little) { Data($0) }
         }
-        let byteCount = count * 4
+        let byteCount = values.count * 4
         // IEEE-float WAVEFORMATEX with fact sample count. File structure is our
         // explicit writer contract, not a reconstruction of Reference metadata.
         var wave = Data("RIFF".utf8) + le(UInt32(50 + byteCount)) + Data("WAVEfmt ".utf8)

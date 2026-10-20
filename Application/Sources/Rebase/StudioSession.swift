@@ -20,6 +20,7 @@ final class StudioSession: ObservableObject {
     @Published var showAutomationEditor = false
     @Published var cprImportPreview: CPRImportPreview?
     @Published var cprSourceAudioInspection: CPRSourceAudioInspection?
+    @Published private(set) var sourceEventPlaybackInfo: CPRSourceEventPlaybackInfo?
     @Published private(set) var cprCompatibility: CPRInspection?
     @Published var status = "Ready"
     @Published var errorMessage: String?
@@ -33,13 +34,17 @@ final class StudioSession: ObservableObject {
     private var refreshTask: DispatchWorkItem?
     private var lastEditKey: String?
     private var lastEditTime = Date.distantPast
-    private var pendingCPRSourceRender: (eventID: UUID, project: Project, root: URL)?
+    private enum CPRSourceAction { case render, audition }
+    private var sourceInspectionContext: (eventID: UUID, project: Project, root: URL)?
+    private var pendingCPRSourceAction: (action: CPRSourceAction, eventID: UUID, project: Project, root: URL)?
+    private var sourceAuditionContext: (project: Project, root: URL)?
 
     var canUndo: Bool { !undoStack.isEmpty }
     var canRedo: Bool { !redoStack.isEmpty }
     var selectedTrack: Track? { project.tracks.first { $0.id == selectedTrackID } }
     var selectedClip: Clip? { project.tracks.flatMap(\.clips).first { $0.id == selectedClipID } }
     var selectedUnresolvedEvent: UnresolvedCPRAudioEvent? { project.unresolvedAudioEvents.first { $0.id == selectedClipID } }
+    var transportDuration: Double { sourceEventPlaybackInfo == nil ? project.duration : engine.duration }
 
     init() {
         newProject()
@@ -50,13 +55,13 @@ final class StudioSession: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0 / 30, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 guard let self, self.isPlaying else { return }
-                self.playhead = min(self.project.duration, self.engine.currentTime)
+                self.playhead = min(self.transportDuration, self.engine.currentTime)
                 self.outputPeaks = self.engine.outputPeaks
-                if !self.engine.isPlaying || self.playhead >= self.project.duration {
+                if !self.engine.isPlaying {
                     self.engine.stop()
                     self.isPlaying = false
                     self.outputPeaks = [0, 0]
-                    self.status = "Stopped"
+                    self.status = self.sourceEventPlaybackInfo == nil ? "Stopped" : "Source event audition ended"
                 }
             }
         }
@@ -64,6 +69,7 @@ final class StudioSession: ObservableObject {
 
     func newProject() {
         guard confirmProjectReplacement() else { return }
+        invalidateSourceAudition()
         stop()
         do {
             let support = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
@@ -101,6 +107,7 @@ final class StudioSession: ObservableObject {
         guard confirmProjectReplacement() else { return }
         let loaded = try ProjectStore.load(from: root)
         let compatibility = try CPRProject.compatibilityReport(from: root)
+        invalidateSourceAudition()
         stop()
         project = loaded; projectRoot = root
         cprCompatibility = compatibility
@@ -153,6 +160,7 @@ final class StudioSession: ObservableObject {
             var saved = project
             saved.name = destination.deletingPathExtension().lastPathComponent
             try ProjectStore.save(saved, to: destination)
+            invalidateSourceAudition()
             project = saved; projectRoot = destination
             isScratch = false; isDirty = false; status = "Saved \(project.name)"
             return true
@@ -209,12 +217,17 @@ final class StudioSession: ObservableObject {
     }
 
     func selectClip(_ id: UUID?) {
+        if let info = sourceEventPlaybackInfo, id != info.eventID { exitSourceEventAudition() }
         selectedClipID = id
         if let id, let t = project.tracks.first(where: {
             $0.clips.contains { $0.id == id } || $0.unresolvedAudioEvents.contains { $0.id == id }
         }) { selectedTrackID = t.id }
     }
     func selectTrack(_ id: UUID) {
+        if let info = sourceEventPlaybackInfo,
+           !project.tracks.contains(where: { $0.id == id && $0.unresolvedAudioEvents.contains(where: { $0.id == info.eventID }) }) {
+            exitSourceEventAudition()
+        }
         selectedTrackID = id
         guard let track = selectedTrack else { selectedClipID = nil; return }
         if !track.clips.contains(where: { $0.id == selectedClipID }),
@@ -229,6 +242,10 @@ final class StudioSession: ObservableObject {
 
     func togglePlayback() {
         if isPlaying { stopKeepingPosition(); return }
+        if let info = sourceEventPlaybackInfo {
+            configureSourceAudition(info.eventID, at: playhead, play: true, rewindAtEnd: true)
+            return
+        }
         do { try project.requireResolvedAudioEvents() } catch { show(error); return }
         guard project.duration > 0, projectRoot != nil else { status = "Import audio before playback"; return }
         do {
@@ -236,25 +253,83 @@ final class StudioSession: ObservableObject {
             if playhead >= project.duration { playhead = 0 }
             try engine.configure(project: project, projectRoot: projectRoot)
             try engine.play(from: playhead)
-            isPlaying = true; status = "Playing"
+            isPlaying = engine.isPlaying; status = isPlaying ? "Playing" : "Stopped"
         } catch { show(error); isPlaying = false }
     }
 
-    func stop() { refreshTask?.cancel(); engine.stop(); isPlaying = false; outputPeaks = [0, 0]; playhead = 0; status = "Stopped" }
+    func stop() {
+        refreshTask?.cancel(); engine.stop(); isPlaying = false; outputPeaks = [0, 0]; playhead = 0
+        status = sourceEventPlaybackInfo == nil ? "Stopped" : "Source event audition stopped"
+    }
     func returnToStart() {
+        if sourceEventPlaybackInfo != nil { seek(0); return }
         let resume = isPlaying
         stop()
         if resume { togglePlayback() }
     }
     private func stopKeepingPosition() {
-        if isPlaying { playhead = min(project.duration, engine.currentTime) }
-        engine.stop(); isPlaying = false; outputPeaks = [0, 0]; status = "Paused"
+        if isPlaying { playhead = min(transportDuration, engine.currentTime) }
+        engine.stop(); isPlaying = false; outputPeaks = [0, 0]
+        status = sourceEventPlaybackInfo == nil ? "Paused" : "Source event audition paused"
     }
     func seek(_ seconds: Double) {
+        guard seconds.isFinite else { return }
         let resume = isPlaying
         stopKeepingPosition()
+        if let info = sourceEventPlaybackInfo {
+            configureSourceAudition(info.eventID, at: max(0, seconds), play: resume, rewindAtEnd: false)
+            return
+        }
         playhead = max(0, seconds)
         if resume { togglePlayback() }
+    }
+
+    func exitSourceEventAudition() {
+        invalidateSourceAudition()
+        status = "Source event audition ended · project playback selected"
+    }
+
+    private func invalidateSourceAudition() {
+        pendingCPRSourceAction = nil
+        sourceInspectionContext = nil
+        if sourceEventPlaybackInfo != nil {
+            stopKeepingPosition(); refreshTask?.cancel()
+            status = "Stopped · project playback selected"
+        }
+        sourceEventPlaybackInfo = nil
+        sourceAuditionContext = nil
+    }
+
+    private func configureSourceAudition(_ eventID: UUID, at seconds: Double, play: Bool, rewindAtEnd: Bool) {
+        do {
+            guard let root = projectRoot, selectedClipID == eventID else {
+                throw SessionError.message("Select and inspect the source event again before auditioning it.")
+            }
+            if let context = sourceAuditionContext {
+                guard project == context.project, root == context.root else {
+                    throw SessionError.message("The project changed. Inspect the source event again before auditioning it.")
+                }
+            }
+            refreshTask?.cancel()
+            // Recheck preserved source proof and attached bytes for every resume or seek.
+            let info = try engine.configureCPRSourceEvent(eventID: eventID, project: project, projectRoot: root)
+            sourceEventPlaybackInfo = info
+            sourceAuditionContext = (project, root)
+            playhead = min(engine.duration, max(0, seconds))
+            if play {
+                if rewindAtEnd && playhead >= engine.duration { playhead = 0 }
+                try engine.play(from: playhead)
+                playhead = min(engine.duration, engine.currentTime)
+            }
+            isPlaying = engine.isPlaying
+            outputPeaks = [0, 0]
+            status = isPlaying ? "Auditioning source event · \(info.name)" :
+                (playhead >= engine.duration ? "Source event audition ended" : "Source event audition paused")
+        } catch {
+            invalidateSourceAudition()
+            engine.stop(); isPlaying = false; outputPeaks = [0, 0]
+            show(error)
+        }
     }
 
     func moveClip(_ id: UUID, to position: Double) {
@@ -317,21 +392,41 @@ final class StudioSession: ObservableObject {
         guard let event = selectedUnresolvedEvent, projectRoot != nil else { return }
         do {
             cprSourceAudioInspection = try CPRSourceAudioInspection.inspect(eventID: event.id, in: project, at: projectRoot)
+            sourceInspectionContext = (event.id, project, projectRoot)
         } catch { show(error) }
     }
 
     func renderCPRSourceEvent(_ eventID: UUID) {
-        guard let root = projectRoot else { return }
-        pendingCPRSourceRender = (eventID, project, root)
+        queueCPRSourceAction(.render, eventID: eventID)
+    }
+
+    func playCPRSourceEvent(_ eventID: UUID) {
+        queueCPRSourceAction(.audition, eventID: eventID)
+    }
+
+    private func queueCPRSourceAction(_ action: CPRSourceAction, eventID: UUID) {
+        guard let context = sourceInspectionContext, context.eventID == eventID,
+              context.project == project, context.root == projectRoot, selectedClipID == eventID else {
+            cprSourceAudioInspection = nil
+            show(SessionError.message("The selection or project changed. Inspect the intended source event again."))
+            return
+        }
+        pendingCPRSourceAction = (action, eventID, context.project, context.root)
         cprSourceAudioInspection = nil
     }
 
     func completeCPRSourceInspectionDismissal() {
-        guard let request = pendingCPRSourceRender else { return }
-        pendingCPRSourceRender = nil
-        // Open the native panel only after SwiftUI has ended its sheet session.
-        guard project == request.project, projectRoot == request.root,
+        sourceInspectionContext = nil
+        guard let request = pendingCPRSourceAction else { return }
+        pendingCPRSourceAction = nil
+        // Begin the requested action only after SwiftUI has ended its sheet session.
+        guard project == request.project, projectRoot == request.root, selectedClipID == request.eventID,
               let event = request.project.unresolvedAudioEvents.first(where: { $0.id == request.eventID }) else { return }
+        if case .audition = request.action {
+            invalidateSourceAudition()
+            configureSourceAudition(request.eventID, at: playhead, play: true, rewindAtEnd: true)
+            return
+        }
         let panel = NSSavePanel()
         panel.title = "Render Source Event"
         panel.message = "Render the attached source and saved event gain at the original rate. Track effects, mixer and automation are not included."
@@ -470,7 +565,7 @@ final class StudioSession: ObservableObject {
         if root.pathExtension != "rebaseproj" { root.appendPathExtension("rebaseproj") }
         do {
             let loaded = try DAWProject.importProject(from: source, to: root)
-            stop(); project = loaded; projectRoot = root
+            invalidateSourceAudition(); stop(); project = loaded; projectRoot = root
             cprCompatibility = nil
             isScratch = false; isDirty = false; undoStack = []; redoStack = []
             selectedTrackID = loaded.tracks.first?.id; selectedClipID = loaded.tracks.first?.clips.first?.id
@@ -549,7 +644,7 @@ final class StudioSession: ObservableObject {
         do {
             let result = try CPRProject.importProject(from: preview.source, to: root,
                 allowPartial: true, expectedSHA256: preview.sourceSHA256)
-            stop(); project = result.project; projectRoot = root
+            invalidateSourceAudition(); stop(); project = result.project; projectRoot = root
             cprCompatibility = result.report
             isScratch = false; isDirty = false; undoStack = []; redoStack = []; waveformPeaks = [:]
             selectedTrackID = project.tracks.first?.id
@@ -560,6 +655,7 @@ final class StudioSession: ObservableObject {
     }
 
     private func remember(key: String? = nil) {
+        invalidateSourceAudition()
         let now = Date()
         if let key, key == lastEditKey, now.timeIntervalSince(lastEditTime) < 0.5 {
             lastEditTime = now
@@ -572,6 +668,7 @@ final class StudioSession: ObservableObject {
     }
     func undo() {
         guard let previous = undoStack.popLast() else { return }
+        invalidateSourceAudition()
         lastEditKey = nil
         redoStack.append(project); project = previous; reconcileSelection(); rebuildWaveforms()
         status = "Undid last edit"
@@ -579,12 +676,14 @@ final class StudioSession: ObservableObject {
     }
     func redo() {
         guard let next = redoStack.popLast() else { return }
+        invalidateSourceAudition()
         lastEditKey = nil
         undoStack.append(project); project = next; reconcileSelection(); rebuildWaveforms()
         status = "Redid last edit"
         changed()
     }
     private func changed() {
+        invalidateSourceAudition()
         isDirty = true
         // Scratch sessions retain a recovery copy. Named projects change on Save.
         if isScratch {

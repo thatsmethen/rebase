@@ -94,6 +94,7 @@ struct PreparedProject {
     let format: AVAudioFormat
     let frameCount: Int64
     let clips: [PreparedClip]
+    var nativeEventSelection: CPRTimelineSelection.Segment? = nil
 }
 
 enum AudioPreparation {
