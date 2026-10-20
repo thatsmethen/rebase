@@ -99,6 +99,7 @@ struct StudioView: View {
                     Divider().overlay(line)
                     TimelineView(project: session.project, selectedClipID: session.selectedClipID,
                                  selectedTrackID: session.selectedTrackID, playhead: session.playhead,
+                                 sourceAudition: session.sourceEventPlaybackInfo,
                                  waveformPeaks: session.waveformPeaks, musicalRuler: $session.musicalRuler,
                                  snapMode: $session.snapMode, gridRelative: $session.gridRelative,
                                  onSelectClip: { session.selectClip($0) },

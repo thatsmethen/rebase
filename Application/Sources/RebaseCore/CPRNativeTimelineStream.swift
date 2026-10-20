@@ -5,8 +5,8 @@ import RebaseTimingDSP
 /// Absolute-frame, direct stereo reader. The recovered native window and seek
 /// operations are separate from Rebase's worker scheduling and device output.
 /// Descriptors here are already-constructed PAudioSegment values, not raw CPR
-/// fields. Only the existing verified zero-origin source plan constructs them
-/// from a real project. Synthetic descriptors exercise wider reader behavior.
+/// fields. The separately verified placed-source plan constructs them from a preserved
+/// CPR. Synthetic descriptors additionally exercise multiple-segment behavior.
 struct CPRNativeTimelineStream {
     struct Segment {
         let start: Double
@@ -49,7 +49,7 @@ struct CPRNativeTimelineStream {
             guard rb_cpr_timeline_quantize(period, source.start, &first) == 0,
                   rb_cpr_timeline_quantize(period, end, &last) == 0,
                   rb_cpr_timeline_quantize(period, source.offset, &offset) == 0,
-                  first >= previousEnd, last > first, last <= 16_000_000,
+                  first >= previousEnd, last > first, last <= Int64(sampleRate) * 86_400,
                   offset >= 0, offset <= Int64(source.samples.count / 2),
                   last - first <= Int64(source.samples.count / 2) - offset else { throw Self.invalid }
             // Reject unsupported arithmetic before live scheduling. The actual

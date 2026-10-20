@@ -25,6 +25,8 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
     public let rateConvertedPlaybackUnavailableReason: String?
     public let mode2PlaybackUnavailableReason: String?
     public let mode1PlaybackUnavailableReason: String?
+    public let nativeTimelinePlaybackUnavailableReason: String?
+    public let nativeTimelineRange: CPRSourceEventTimelineRange?
 
     public static func inspect(eventID: UUID, in project: Project, at root: URL) throws -> CPRSourceAudioInspection {
         let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
@@ -51,6 +53,18 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
             reason = error.localizedDescription; timelineReason = reason
             rateReason = reason; mode2Reason = reason; mode1Reason = reason
         }
+        let nativeReason: String?
+        let nativeRange: CPRSourceEventTimelineRange?
+        do {
+            let plan = try CPRPlacedSourceEventPlan.make(container: verified.container, source: source,
+                retained: verified.retained, fades: fades)
+            sourceRate = Double(plan.media.rate)
+            nativeRange = plan.range
+            nativeReason = project.attachedMedia(for: verified.retained) == nil ? "Attach matching PCM24 WAV media first." : nil
+        } catch {
+            nativeReason = error.localizedDescription
+            nativeRange = nil
+        }
         return CPRSourceAudioInspection(eventID: eventID, name: verified.retained.name,
             sourceSHA256: verified.container.sha256, eventIdentity: source.event.identityOffset,
             trackIdentity: source.trackIdentity, volume: Float(bitPattern: source.volumeBits),
@@ -61,7 +75,8 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
             autoFadeSettingIdentity: setting?.object.identityOffset, localRenderUnavailableReason: reason,
             timelinePlaybackUnavailableReason: timelineReason, sourceSampleRate: sourceRate,
             projectSampleRate: project.sampleRate, rateConvertedPlaybackUnavailableReason: rateReason,
-            mode2PlaybackUnavailableReason: mode2Reason, mode1PlaybackUnavailableReason: mode1Reason)
+            mode2PlaybackUnavailableReason: mode2Reason, mode1PlaybackUnavailableReason: mode1Reason,
+            nativeTimelinePlaybackUnavailableReason: nativeReason, nativeTimelineRange: nativeRange)
     }
 }
 
@@ -83,6 +98,24 @@ struct CPRSourceEventRenderPlan {
               placement.offset.bitPattern == 0, source.eventWord == 0,
               source.startBits == 0, source.offsetBits == 0 else {
             throw unsupported("Source rendering requires a direct audio track with verified zero-origin source timing.")
+        }
+        let media = try completeMedia(source: source, retained: retained, fades: fades)
+        guard Double(bitPattern: source.lengthBits) == Double(media.frames),
+              case .scalar(tag: 10, bits: let scalar) = source.clipDatum,
+              placement.duration.bitPattern == ((Double(bitPattern: scalar) * Double(media.frames)) / 1.0).bitPattern else {
+            throw unsupported("Source rendering requires one complete PCM24 segment at its original sample rate.")
+        }
+        return media
+    }
+
+    /// Validates the complete immutable media and processing state separately
+    /// from event coordinates. Callers must additionally prove their own timing
+    /// contract; this alone never admits an event to playback or export.
+    static func completeMedia(source: CPRSourceAudioEvent, retained: UnresolvedCPRAudioEvent,
+                              fades: CPRSourceAutoFadeArchive) throws -> CPRSourceEventRenderPlan {
+        func unsupported(_ message: String) -> RebaseCoreError { .unsupportedAudio(message) }
+        guard source.root == fades.root else {
+            throw unsupported("Source and effective fades must belong to the same saved project.")
         }
         guard source.fadeIn == nil, source.fadeOut == nil, source.invertedWord == 0,
               source.priority == 1, source.lane == 0, source.legacyLane == 0 else {
@@ -110,11 +143,10 @@ struct CPRSourceEventRenderPlan {
               segment.streamIdentity == file.object.identityOffset, segment.storedStart == 0, segment.storedOffset == 0,
               file.sampleSize == 24, (1...2).contains(file.channels), Int(file.frameSize) == Int(file.channels) * 3,
               let frames = Int(exactly: segment.storedLength), frames > 0, frames <= 16_000_000,
-              file.frameCount == segment.storedLength, Double(bitPattern: source.lengthBits) == Double(frames),
+              file.frameCount == segment.storedLength,
               let rate = UInt32(exactly: file.sampleRate), (8_000...192_000).contains(rate),
               case .scalar(tag: 10, bits: let scalar) = source.clipDatum,
-              Double(bitPattern: scalar).bitPattern == (1 / Double(rate)).bitPattern,
-              placement.duration.bitPattern == ((Double(bitPattern: scalar) * Double(frames)) / 1.0).bitPattern else {
+              Double(bitPattern: scalar).bitPattern == (1 / Double(rate)).bitPattern else {
             throw unsupported("Source rendering requires one complete PCM24 segment at its original sample rate.")
         }
         _ = try CPRSegmentReadPlan.project(segment: segment, clusterPosition: 0, requestedFrames: frames,

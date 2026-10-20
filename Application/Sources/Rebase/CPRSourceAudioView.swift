@@ -8,7 +8,8 @@ struct CPRSourceAudioView: View {
 
     private var playbackUnavailableReason: String? {
         switch playbackMode {
-        case .sourceRate, .nativeTimelineSourceRate: return inspection.timelinePlaybackUnavailableReason
+        case .sourceRate: return inspection.timelinePlaybackUnavailableReason
+        case .nativeTimelineSourceRate: return inspection.nativeTimelinePlaybackUnavailableReason
         case .nativeMode0ProjectRate: return inspection.rateConvertedPlaybackUnavailableReason
         case .nativeMode2ProjectRate: return inspection.mode2PlaybackUnavailableReason
         case .nativeMode1ProjectRate: return inspection.mode1PlaybackUnavailableReason
@@ -51,8 +52,13 @@ struct CPRSourceAudioView: View {
                 Text("Project rate · SoXR mode 2").tag(CPRSourceEventPlaybackMode.nativeMode2ProjectRate)
             }.pickerStyle(.menu).accessibilityLabel("Source event audition rate")
             if playbackMode == .nativeTimelineSourceRate, playbackUnavailableReason == nil {
-                Text("Reads absolute timeline frame windows with the reconstructed native segment bounds and source seeks. This source-rate mode plays only the verified event; general CPR placement and project processing remain unresolved.")
+                Text("Reconstructs this event’s saved start, trim and source offset using the preserved source clock, then reads absolute timeline windows at the source rate. Project tempo edits do not alter this audition. Track effects, mixing and routing remain bypassed.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            }
+            if playbackMode == .nativeTimelineSourceRate, let range = inspection.nativeTimelineRange {
+                Text(String(format: "Source timeline · start %.6f s · duration %.6f s · media offset %.6f s", range.position, range.duration, range.offset))
+                    .font(.caption.monospacedDigit()).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             if playbackMode == .nativeMode0ProjectRate, playbackUnavailableReason == nil {
                 Text("Converts \(Int(inspection.sourceSampleRate ?? 0)) → \(Int(inspection.projectSampleRate)) Hz in blocks with the reconstructed stereo mode 0 converter. This is an explicit mode choice; Reference’s default converter is unverified. Seeking restores conversion state from the event’s start. No extra tail samples are added.")

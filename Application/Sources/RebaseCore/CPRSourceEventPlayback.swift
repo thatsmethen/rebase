@@ -19,6 +19,14 @@ public enum CPRSourceEventPlaybackMode: String, CaseIterable, Equatable, Sendabl
     }
 }
 
+/// Ephemeral source interpretation; it never overwrites frozen import timing.
+public struct CPRSourceEventTimelineRange: Equatable {
+    public let contract: String
+    public let position: Double
+    public let duration: Double
+    public let offset: Double
+}
+
 public struct CPRSourceEventPlaybackInfo: Equatable {
     public let eventID: UUID
     public let name: String
@@ -28,6 +36,7 @@ public struct CPRSourceEventPlaybackInfo: Equatable {
     public let frameCount: Int64
     public let sourceSHA256: String
     public let mediaSHA256: String
+    public var timelineRange: CPRSourceEventTimelineRange? = nil
     public var duration: Double { Double(frameCount) / sampleRate }
 }
 
@@ -38,6 +47,25 @@ enum CPRSourceEventPlayback {
     static func prepare(eventID: UUID, project: Project, root: URL,
                         mode: CPRSourceEventPlaybackMode = .sourceRate) throws
         -> (info: CPRSourceEventPlaybackInfo, audio: PreparedProject) {
+        if mode == .nativeTimelineSourceRate {
+            let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
+            let fades = try CPRAutoFadeArchive.read(container: verified.container)
+            let placed = try CPRPlacedSourceEventPlan.make(container: verified.container,
+                source: verified.source, retained: verified.retained, fades: fades)
+            let source = try CPRSourceEventRenderer.prepareMedia(plan: placed.media, retained: verified.retained,
+                sourceSHA256: verified.container.sha256, in: project, at: root)
+            let stream = try CPRNativeTimelineStream(sampleRate: Double(placed.media.rate), segments: [
+                .init(start: placed.range.position, length: placed.range.duration, offset: placed.range.offset,
+                      samples: source.samples, gain: placed.media.gain)
+            ])
+            var info = CPRSourceEventPlaybackInfo(eventID: eventID, name: verified.retained.name,
+                sampleRate: Double(placed.media.rate), sourceSampleRate: Double(placed.media.rate), mode: mode,
+                frameCount: stream.frameCount, sourceSHA256: source.sourceSHA256,
+                mediaSHA256: source.mediaSHA256)
+            info.timelineRange = placed.range
+            return (info, PreparedProject(format: stream.format, frameCount: stream.frameCount,
+                clips: [], nativeTimelineStream: stream))
+        }
         let source = try CPRSourceEventRenderer.prepare(eventID: eventID, in: project, at: root,
             applyEventGain: mode == .sourceRate)
         let plan = source.plan
@@ -46,21 +74,6 @@ enum CPRSourceEventPlayback {
         }
         guard let event = project.unresolvedAudioEvents.first(where: { $0.id == eventID }), let placement = event.placement else {
             throw RebaseCoreError.invalidProject("The selected source event is no longer in this project.")
-        }
-        if mode == .nativeTimelineSourceRate {
-            // The ordinary channel reader uses absolute frame windows, not the
-            // audition FIFO. Source construction remains the closed zero-origin
-            // contract; synthetic descriptors do not broaden CPR admission.
-            let stream = try CPRNativeTimelineStream(sampleRate: Double(plan.rate), segments: [
-                .init(start: placement.position, length: placement.duration, offset: placement.offset,
-                      samples: source.samples, gain: plan.gain)
-            ])
-            let info = CPRSourceEventPlaybackInfo(eventID: eventID, name: event.name,
-                sampleRate: Double(plan.rate), sourceSampleRate: Double(plan.rate), mode: mode,
-                frameCount: stream.frameCount, sourceSHA256: source.sourceSHA256,
-                mediaSHA256: source.mediaSHA256)
-            return (info, PreparedProject(format: stream.format, frameCount: stream.frameCount,
-                clips: [], nativeTimelineStream: stream))
         }
         if mode != .sourceRate {
             let stream = try CPRRateConvertedStream(source: source.samples,

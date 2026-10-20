@@ -44,7 +44,16 @@ public enum CPRSourceEventRenderer {
         let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
         let fades = try CPRAutoFadeArchive.read(container: verified.container)
         let plan = try CPRSourceEventRenderPlan.make(source: verified.source, retained: verified.retained, fades: fades)
-        guard let attachment = project.attachedMedia(for: verified.retained) else {
+        return try prepareMedia(plan: plan, retained: verified.retained, sourceSHA256: verified.container.sha256,
+                                in: project, at: root, applyEventGain: applyEventGain)
+    }
+
+    /// Copies and checks the entire declared PCM source. A separately validated
+    /// timing plan decides which frames the event consumes.
+    static func prepareMedia(plan: CPRSourceEventRenderPlan, retained: UnresolvedCPRAudioEvent,
+                             sourceSHA256: String, in project: Project, at root: URL,
+                             applyEventGain: Bool = false) throws -> CPRPreparedSourceEvent {
+        guard let attachment = project.attachedMedia(for: retained) else {
             throw RebaseCoreError.unsupportedAudio("Attach matching PCM24 WAV media before using this source event.")
         }
         try attachment.validate(reference: plan.file)
@@ -63,7 +72,7 @@ public enum CPRSourceEventRenderer {
             throw RebaseCoreError.invalidProject("The attached media changed. Attach the intended file again before using this source event.")
         }
         return CPRPreparedSourceEvent(plan: plan, samples: try decodePCM24(data, plan: plan, applyEventGain: applyEventGain),
-            sourceSHA256: verified.container.sha256, mediaSHA256: attachment.mediaSHA256)
+            sourceSHA256: sourceSHA256, mediaSHA256: attachment.mediaSHA256)
     }
 
     static func renderPCM24Wave(_ data: Data, plan: CPRSourceEventRenderPlan) throws -> Data {

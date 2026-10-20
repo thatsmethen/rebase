@@ -238,7 +238,7 @@ struct CPRNativeTimelineStreamTests {
         #expect(try Data(contentsOf: original) == originalData)
     }
 
-    @Test func SourceBackedNonzeroCPRControlRemainsUnplacedAndUnplayable() throws {
+    @Test func SourceBackedNonzeroCPRControlStaysUnplacedAndRequiresMedia() throws {
         let temporary = FileManager.default.temporaryDirectory.appendingPathComponent("TimelineUnplaced-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: temporary, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: temporary) }
@@ -260,6 +260,8 @@ struct CPRNativeTimelineStreamTests {
         let event = try #require(imported.project.unresolvedAudioEvents.first)
         #expect(event.sourceSHA256 == cprSHA256(derived) && event.rawStartBits == Double(44100).bitPattern)
         #expect(event.placement == nil && imported.project.tracks.flatMap(\.clips).isEmpty)
+        // Frozen V4 remains unplaced. Playback still needs an explicit media
+        // attachment; APP015 separately tests admitted nonzero attached events.
         #expect(rejects {
             _ = try CPRSourceEventPlayback.prepare(eventID: event.id, project: imported.project, root: package,
                                                   mode: .nativeTimelineSourceRate)
