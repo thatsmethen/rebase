@@ -122,7 +122,7 @@ struct StudioView: View {
                 Text(session.status).lineLimit(1)
                 Spacer()
                 if let info = session.sourceEventPlaybackInfo {
-                    Text("1 source event   ·   \(Int(info.sampleRate)) Hz   ·   \(info.mode == .sourceRate ? "Stereo audition" : "Native mode 0")")
+                    Text("1 source event   ·   \(Int(info.sampleRate)) Hz   ·   \(info.mode.displayName)")
                 } else {
                     Text("\(session.project.tracks.count) tracks   ·   \(Int(session.project.sampleRate)) Hz   ·   Stereo out")
                 }
@@ -160,6 +160,9 @@ struct StudioView: View {
                 }
                 if info.mode == .nativeMode0ProjectRate {
                     Text("Native linear mode 0 · \(Int(info.sourceSampleRate)) → \(Int(info.sampleRate)) Hz · streamed stereo")
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                } else if info.mode == .nativeMode2ProjectRate {
+                    Text("SoXR mode 2 · \(Int(info.sourceSampleRate)) → \(Int(info.sampleRate)) Hz · reconstructed wrapper")
                         .font(.system(size: 11)).foregroundStyle(.secondary)
                 }
                 Text("Only this event · fresh source state · project effects, mixer, routing and automation bypassed")

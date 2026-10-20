@@ -7,7 +7,11 @@ struct CPRSourceAudioView: View {
     @State private var playbackMode: CPRSourceEventPlaybackMode = .sourceRate
 
     private var playbackUnavailableReason: String? {
-        playbackMode == .sourceRate ? inspection.timelinePlaybackUnavailableReason : inspection.rateConvertedPlaybackUnavailableReason
+        switch playbackMode {
+        case .sourceRate: return inspection.timelinePlaybackUnavailableReason
+        case .nativeMode0ProjectRate: return inspection.rateConvertedPlaybackUnavailableReason
+        case .nativeMode2ProjectRate: return inspection.mode2PlaybackUnavailableReason
+        }
     }
     let onRender: () -> Void
     let onClose: () -> Void
@@ -41,9 +45,14 @@ struct CPRSourceAudioView: View {
             Picker("Audition rate", selection: $playbackMode) {
                 Text("Original source rate").tag(CPRSourceEventPlaybackMode.sourceRate)
                 Text("Project rate · native linear mode 0").tag(CPRSourceEventPlaybackMode.nativeMode0ProjectRate)
+                Text("Project rate · SoXR mode 2").tag(CPRSourceEventPlaybackMode.nativeMode2ProjectRate)
             }.pickerStyle(.menu).accessibilityLabel("Source event audition rate")
             if playbackMode == .nativeMode0ProjectRate, playbackUnavailableReason == nil {
                 Text("Converts \(Int(inspection.sourceSampleRate ?? 0)) → \(Int(inspection.projectSampleRate)) Hz in blocks with the reconstructed stereo mode 0 converter. This is an explicit mode choice; Reference’s default converter is unverified. Seeking restores conversion state from the event’s start. No extra tail samples are added.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            }
+            if playbackMode == .nativeMode2ProjectRate, playbackUnavailableReason == nil {
+                Text("Reconstructs the native mode 2 wrapper using public SoXR 0.1.3 at \(Int(inspection.projectSampleRate)) Hz. Seeking rebuilds state from the event’s start. Reference sample equivalence remains unverified.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
             if let reason = playbackUnavailableReason,

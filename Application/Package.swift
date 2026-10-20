@@ -1,5 +1,9 @@
 // swift-tools-version: 6.0
 import PackageDescription
+import Foundation
+
+let soxrLibraryDirectory = URL(fileURLWithPath: #filePath)
+    .deletingLastPathComponent().appendingPathComponent(".build-soxr/install/lib").path
 
 let package = Package(
     name: "Rebase",
@@ -16,7 +20,16 @@ let package = Package(
         .target(name: "RebaseTimingDSP", publicHeadersPath: "include", cSettings: [
             .unsafeFlags(["-fno-fast-math", "-ffp-contract=off", "-frounding-math"])
         ]),
-        .target(name: "RebaseCore", dependencies: ["ZIPFoundation", "RebaseAmbiDSP", "RebaseTimingDSP"]),
+        .target(name: "RebaseSoXR", dependencies: ["RebaseTimingDSP"],
+                publicHeadersPath: "include", cSettings: [
+            .unsafeFlags(["-fno-fast-math", "-ffp-contract=off", "-frounding-math"])
+        ], linkerSettings: [
+            .linkedLibrary("soxr"),
+            .unsafeFlags(["-L", soxrLibraryDirectory,
+                          "-Xlinker", "-rpath", "-Xlinker", "@executable_path/../Frameworks",
+                          "-Xlinker", "-rpath", "-Xlinker", soxrLibraryDirectory])
+        ]),
+        .target(name: "RebaseCore", dependencies: ["ZIPFoundation", "RebaseAmbiDSP", "RebaseTimingDSP", "RebaseSoXR"]),
         .executableTarget(name: "Rebase", dependencies: ["RebaseCore", "RebaseDSP"]),
         .testTarget(name: "RebaseCoreTests", dependencies: ["RebaseCore", "RebaseDSP"])
     ],

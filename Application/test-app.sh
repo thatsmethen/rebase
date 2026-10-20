@@ -1,6 +1,7 @@
 #!/bin/sh
 set -eu
 cd "$(dirname "$0")"
+sh ThirdParty/build-soxr.sh
 DEVELOPER_ROOT=$(xcode-select -p)
 case "$DEVELOPER_ROOT" in
     */CommandLineTools)

@@ -4,6 +4,15 @@ import AVFoundation
 public enum CPRSourceEventPlaybackMode: String, CaseIterable, Equatable, Sendable {
     case sourceRate
     case nativeMode0ProjectRate
+    case nativeMode2ProjectRate
+
+    public var displayName: String {
+        switch self {
+        case .sourceRate: return "Stereo audition"
+        case .nativeMode0ProjectRate: return "Native mode 0"
+        case .nativeMode2ProjectRate: return "SoXR mode 2"
+        }
+    }
 }
 
 public struct CPRSourceEventPlaybackInfo: Equatable {
@@ -34,9 +43,10 @@ enum CPRSourceEventPlayback {
         guard let event = project.unresolvedAudioEvents.first(where: { $0.id == eventID }), let placement = event.placement else {
             throw RebaseCoreError.invalidProject("The selected source event is no longer in this project.")
         }
-        if mode == .nativeMode0ProjectRate {
+        if mode != .sourceRate {
             let stream = try CPRRateConvertedStream(source: source.samples,
-                sourceRate: Double(plan.rate), outputRate: project.sampleRate, gain: plan.gain)
+                sourceRate: Double(plan.rate), outputRate: project.sampleRate, gain: plan.gain,
+                algorithm: mode == .nativeMode2ProjectRate ? .nativeMode2 : .nativeMode0)
             let info = CPRSourceEventPlaybackInfo(eventID: eventID, name: event.name,
                 sampleRate: project.sampleRate, sourceSampleRate: Double(plan.rate), mode: mode,
                 frameCount: stream.frameCount, sourceSHA256: source.sourceSHA256,
