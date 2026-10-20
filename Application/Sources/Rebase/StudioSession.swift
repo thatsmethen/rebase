@@ -34,7 +34,7 @@ final class StudioSession: ObservableObject {
     private var refreshTask: DispatchWorkItem?
     private var lastEditKey: String?
     private var lastEditTime = Date.distantPast
-    private enum CPRSourceAction { case render, audition }
+    private enum CPRSourceAction { case render, audition(CPRSourceEventPlaybackMode) }
     private var sourceInspectionContext: (eventID: UUID, project: Project, root: URL)?
     private var pendingCPRSourceAction: (action: CPRSourceAction, eventID: UUID, project: Project, root: URL)?
     private var sourceAuditionContext: (project: Project, root: URL)?
@@ -61,6 +61,11 @@ final class StudioSession: ObservableObject {
                     self.engine.stop()
                     self.isPlaying = false
                     self.outputPeaks = [0, 0]
+                    if let failure = self.engine.playbackFailure {
+                        self.invalidateSourceAudition()
+                        self.show(SessionError.message(failure))
+                        return
+                    }
                     self.status = self.sourceEventPlaybackInfo == nil ? "Stopped" : "Source event audition ended"
                 }
             }
@@ -243,7 +248,7 @@ final class StudioSession: ObservableObject {
     func togglePlayback() {
         if isPlaying { stopKeepingPosition(); return }
         if let info = sourceEventPlaybackInfo {
-            configureSourceAudition(info.eventID, at: playhead, play: true, rewindAtEnd: true)
+            configureSourceAudition(info.eventID, mode: info.mode, at: playhead, play: true, rewindAtEnd: true)
             return
         }
         do { try project.requireResolvedAudioEvents() } catch { show(error); return }
@@ -277,7 +282,7 @@ final class StudioSession: ObservableObject {
         let resume = isPlaying
         stopKeepingPosition()
         if let info = sourceEventPlaybackInfo {
-            configureSourceAudition(info.eventID, at: max(0, seconds), play: resume, rewindAtEnd: false)
+            configureSourceAudition(info.eventID, mode: info.mode, at: max(0, seconds), play: resume, rewindAtEnd: false)
             return
         }
         playhead = max(0, seconds)
@@ -300,7 +305,7 @@ final class StudioSession: ObservableObject {
         sourceAuditionContext = nil
     }
 
-    private func configureSourceAudition(_ eventID: UUID, at seconds: Double, play: Bool, rewindAtEnd: Bool) {
+    private func configureSourceAudition(_ eventID: UUID, mode: CPRSourceEventPlaybackMode, at seconds: Double, play: Bool, rewindAtEnd: Bool) {
         do {
             guard let root = projectRoot, selectedClipID == eventID else {
                 throw SessionError.message("Select and inspect the source event again before auditioning it.")
@@ -312,7 +317,7 @@ final class StudioSession: ObservableObject {
             }
             refreshTask?.cancel()
             // Recheck preserved source proof and attached bytes for every resume or seek.
-            let info = try engine.configureCPRSourceEvent(eventID: eventID, project: project, projectRoot: root)
+            let info = try engine.configureCPRSourceEvent(eventID: eventID, project: project, projectRoot: root, mode: mode)
             sourceEventPlaybackInfo = info
             sourceAuditionContext = (project, root)
             playhead = min(engine.duration, max(0, seconds))
@@ -400,8 +405,8 @@ final class StudioSession: ObservableObject {
         queueCPRSourceAction(.render, eventID: eventID)
     }
 
-    func playCPRSourceEvent(_ eventID: UUID) {
-        queueCPRSourceAction(.audition, eventID: eventID)
+    func playCPRSourceEvent(_ eventID: UUID, mode: CPRSourceEventPlaybackMode) {
+        queueCPRSourceAction(.audition(mode), eventID: eventID)
     }
 
     private func queueCPRSourceAction(_ action: CPRSourceAction, eventID: UUID) {
@@ -422,9 +427,9 @@ final class StudioSession: ObservableObject {
         // Begin the requested action only after SwiftUI has ended its sheet session.
         guard project == request.project, projectRoot == request.root, selectedClipID == request.eventID,
               let event = request.project.unresolvedAudioEvents.first(where: { $0.id == request.eventID }) else { return }
-        if case .audition = request.action {
+        if case .audition(let mode) = request.action {
             invalidateSourceAudition()
-            configureSourceAudition(request.eventID, at: playhead, play: true, rewindAtEnd: true)
+            configureSourceAudition(request.eventID, mode: mode, at: playhead, play: true, rewindAtEnd: true)
             return
         }
         let panel = NSSavePanel()

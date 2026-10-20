@@ -20,6 +20,9 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
     public let autoFadeSettingIdentity: Int?
     public let localRenderUnavailableReason: String?
     public let timelinePlaybackUnavailableReason: String?
+    public let sourceSampleRate: Double?
+    public let projectSampleRate: Double
+    public let rateConvertedPlaybackUnavailableReason: String?
 
     public static func inspect(eventID: UUID, in project: Project, at root: URL) throws -> CPRSourceAudioInspection {
         let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
@@ -28,11 +31,15 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
         let setting = fades.effectiveSetting(forTrackIdentity: source.trackIdentity)
         let reason: String?
         let timelineReason: String?
+        let rateReason: String?
+        var sourceRate: Double?
         do {
             let plan = try CPRSourceEventRenderPlan.make(source: source, retained: verified.retained, fades: fades)
+            sourceRate = Double(plan.rate)
             reason = project.attachedMedia(for: verified.retained) == nil ? "Attach matching PCM24 WAV media first." : nil
             timelineReason = reason ?? (plan.channels == 2 ? nil : "Timeline audition currently requires a stereo source; native mono output routing is unresolved.")
-        } catch { reason = error.localizedDescription; timelineReason = reason }
+            rateReason = timelineReason ?? CPRRateConvertedStream.unavailableReason(sourceRate: Double(plan.rate), outputRate: project.sampleRate)
+        } catch { reason = error.localizedDescription; timelineReason = reason; rateReason = reason }
         return CPRSourceAudioInspection(eventID: eventID, name: verified.retained.name,
             sourceSHA256: verified.container.sha256, eventIdentity: source.event.identityOffset,
             trackIdentity: source.trackIdentity, volume: Float(bitPattern: source.volumeBits),
@@ -41,7 +48,8 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
             autoFadeOrigin: track?.localSetting != nil ? "Track" : setting != nil ? "Project" : "Unresolved default",
             autoFadeFlags: setting?.flags, autoFadeDuration: setting.map { Double(bitPattern: $0.durationBits) },
             autoFadeSettingIdentity: setting?.object.identityOffset, localRenderUnavailableReason: reason,
-            timelinePlaybackUnavailableReason: timelineReason)
+            timelinePlaybackUnavailableReason: timelineReason, sourceSampleRate: sourceRate,
+            projectSampleRate: project.sampleRate, rateConvertedPlaybackUnavailableReason: rateReason)
     }
 }
 

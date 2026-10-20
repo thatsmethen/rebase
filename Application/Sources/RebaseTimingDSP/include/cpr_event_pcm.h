@@ -9,4 +9,7 @@
    Returns 0 on success; invalid inputs are rejected before writing output. */
 int rb_cpr_event_pcm24_f32(const uint8_t *input, float *output,
                          size_t sample_count, uint32_t gain_bits);
+/* Separate binary32 event gain after rate conversion. In-place, finite
+   normal-or-zero samples/results only. Failure leaves samples unchanged. */
+int rb_cpr_event_gain_f32(float *samples, size_t sample_count, uint32_t gain_bits);
 #endif

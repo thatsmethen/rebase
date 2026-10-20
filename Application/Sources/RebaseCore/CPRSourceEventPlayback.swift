@@ -1,10 +1,17 @@
 import Foundation
 import AVFoundation
 
+public enum CPRSourceEventPlaybackMode: String, CaseIterable, Equatable, Sendable {
+    case sourceRate
+    case nativeMode0ProjectRate
+}
+
 public struct CPRSourceEventPlaybackInfo: Equatable {
     public let eventID: UUID
     public let name: String
     public let sampleRate: Double
+    public let sourceSampleRate: Double
+    public let mode: CPRSourceEventPlaybackMode
     public let frameCount: Int64
     public let sourceSHA256: String
     public let mediaSHA256: String
@@ -15,15 +22,29 @@ public struct CPRSourceEventPlaybackInfo: Equatable {
 /// The source operation is reconstructed; AVAudioEngine transport is an
 /// application implementation and does not establish Reference device behavior.
 enum CPRSourceEventPlayback {
-    static func prepare(eventID: UUID, project: Project, root: URL) throws
+    static func prepare(eventID: UUID, project: Project, root: URL,
+                        mode: CPRSourceEventPlaybackMode = .sourceRate) throws
         -> (info: CPRSourceEventPlaybackInfo, audio: PreparedProject) {
-        let source = try CPRSourceEventRenderer.prepare(eventID: eventID, in: project, at: root)
+        let source = try CPRSourceEventRenderer.prepare(eventID: eventID, in: project, at: root,
+            applyEventGain: mode == .sourceRate)
         let plan = source.plan
         guard plan.channels == 2 else {
             throw RebaseCoreError.unsupportedAudio("Timeline audition currently requires a stereo source; native mono output routing is unresolved.")
         }
         guard let event = project.unresolvedAudioEvents.first(where: { $0.id == eventID }), let placement = event.placement else {
             throw RebaseCoreError.invalidProject("The selected source event is no longer in this project.")
+        }
+        if mode == .nativeMode0ProjectRate {
+            let stream = try CPRRateConvertedStream(source: source.samples,
+                sourceRate: Double(plan.rate), outputRate: project.sampleRate, gain: plan.gain)
+            let info = CPRSourceEventPlaybackInfo(eventID: eventID, name: event.name,
+                sampleRate: project.sampleRate, sourceSampleRate: Double(plan.rate), mode: mode,
+                frameCount: stream.frameCount, sourceSHA256: source.sourceSHA256,
+                mediaSHA256: source.mediaSHA256)
+            return (info, PreparedProject(format: stream.format, frameCount: stream.frameCount,
+                clips: [], nativeEventSelection: CPRTimelineSelection.Segment(
+                    start: placement.position, length: placement.duration, successor: -1),
+                sourceEventStream: stream))
         }
         // The source plan admits only a complete, zero-origin segment. Do not
         // pass this audio through Rebase's clip resampler, pan or automation.
@@ -36,7 +57,8 @@ enum CPRSourceEventPlayback {
             channels[1][frame] = source.samples[frame * 2 + 1]
         }
         let info = CPRSourceEventPlaybackInfo(eventID: eventID, name: event.name,
-            sampleRate: Double(plan.rate), frameCount: Int64(plan.frames),
+            sampleRate: Double(plan.rate), sourceSampleRate: Double(plan.rate), mode: mode,
+            frameCount: Int64(plan.frames),
             sourceSHA256: source.sourceSHA256, mediaSHA256: source.mediaSHA256)
         return (info, PreparedProject(format: format, frameCount: Int64(plan.frames),
                                      clips: [PreparedClip(startFrame: 0, buffer: buffer)],

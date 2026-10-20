@@ -3,7 +3,12 @@ import RebaseCore
 
 struct CPRSourceAudioView: View {
     let inspection: CPRSourceAudioInspection
-    let onPlay: () -> Void
+    let onPlay: (CPRSourceEventPlaybackMode) -> Void
+    @State private var playbackMode: CPRSourceEventPlaybackMode = .sourceRate
+
+    private var playbackUnavailableReason: String? {
+        playbackMode == .sourceRate ? inspection.timelinePlaybackUnavailableReason : inspection.rateConvertedPlaybackUnavailableReason
+    }
     let onRender: () -> Void
     let onClose: () -> Void
 
@@ -24,7 +29,7 @@ struct CPRSourceAudioView: View {
             }.font(.callout)
             Divider()
             Text("Source-event audio · Research").font(.headline)
-            Text("Reconstructs this attached source and saved event gain at the source sample rate. It assumes fresh source state with no external pitch context. Timeline audition plays only this event, bypassing project effects, mixer, routing and automation. Full project playback remains unresolved.")
+            Text("Reconstructs this attached source and saved event gain with fresh source state and no external pitch context. Original-rate audition preserves the source sample rate. Timeline audition plays only this event, bypassing project effects, mixer, routing and automation. Full project playback remains unresolved.")
                 .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             if let reason = inspection.localRenderUnavailableReason {
                 Label(reason, systemImage: "info.circle").font(.callout).foregroundStyle(.orange)
@@ -33,7 +38,15 @@ struct CPRSourceAudioView: View {
                 Text("Exports a Float32 WAV from matching attached PCM24 WAV media. The event stays unresolved in the project.")
                     .font(.caption).foregroundStyle(.secondary)
             }
-            if let reason = inspection.timelinePlaybackUnavailableReason,
+            Picker("Audition rate", selection: $playbackMode) {
+                Text("Original source rate").tag(CPRSourceEventPlaybackMode.sourceRate)
+                Text("Project rate · native linear mode 0").tag(CPRSourceEventPlaybackMode.nativeMode0ProjectRate)
+            }.pickerStyle(.menu).accessibilityLabel("Source event audition rate")
+            if playbackMode == .nativeMode0ProjectRate {
+                Text("Converts \(Int(inspection.sourceSampleRate ?? 0)) → \(Int(inspection.projectSampleRate)) Hz in blocks with the reconstructed stereo upsampler. This is an explicit mode choice; Reference’s default converter is unverified. Seeking restores conversion state from the event’s start. No extra tail samples are added.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            }
+            if let reason = playbackUnavailableReason,
                reason != inspection.localRenderUnavailableReason {
                 Label(reason, systemImage: "info.circle").font(.callout).foregroundStyle(.orange)
                     .fixedSize(horizontal: false, vertical: true)
@@ -46,9 +59,9 @@ struct CPRSourceAudioView: View {
                 Button("Render Source Event…", action: onRender)
                     .disabled(inspection.localRenderUnavailableReason != nil)
                     .buttonStyle(.bordered)
-                Button("Play Event on Timeline", action: onPlay)
-                    .disabled(inspection.timelinePlaybackUnavailableReason != nil)
-                    .help(inspection.timelinePlaybackUnavailableReason ?? "Audition only this source event using the timeline transport. Source and media are verified again before playback.")
+                Button("Play Event on Timeline") { onPlay(playbackMode) }
+                    .disabled(playbackUnavailableReason != nil)
+                    .help(playbackUnavailableReason ?? "Audition only this source event using the timeline transport. Source and media are verified again before playback.")
                     .buttonStyle(.borderedProminent)
             }
         }.padding(28).frame(width: 600)

@@ -122,7 +122,7 @@ struct StudioView: View {
                 Text(session.status).lineLimit(1)
                 Spacer()
                 if let info = session.sourceEventPlaybackInfo {
-                    Text("1 source event   ·   \(Int(info.sampleRate)) Hz   ·   Stereo audition")
+                    Text("1 source event   ·   \(Int(info.sampleRate)) Hz   ·   \(info.mode == .sourceRate ? "Stereo audition" : "Native mode 0")")
                 } else {
                     Text("\(session.project.tracks.count) tracks   ·   \(Int(session.project.sampleRate)) Hz   ·   Stereo out")
                 }
@@ -139,7 +139,7 @@ struct StudioView: View {
         }
         .sheet(item: $session.cprSourceAudioInspection, onDismiss: session.completeCPRSourceInspectionDismissal) { inspection in
             CPRSourceAudioView(inspection: inspection,
-                onPlay: { session.playCPRSourceEvent(inspection.eventID) },
+                onPlay: { session.playCPRSourceEvent(inspection.eventID, mode: $0) },
                 onRender: { session.renderCPRSourceEvent(inspection.eventID) },
                 onClose: { session.cprSourceAudioInspection = nil })
         }
@@ -157,6 +157,10 @@ struct StudioView: View {
                 HStack(spacing: 8) {
                     Text("SOURCE EVENT AUDITION").font(.system(size: 10, weight: .bold, design: .monospaced)).tracking(1)
                     Text(info.name).font(.system(size: 12, weight: .semibold)).lineLimit(1)
+                }
+                if info.mode == .nativeMode0ProjectRate {
+                    Text("Native linear mode 0 · \(Int(info.sourceSampleRate)) → \(Int(info.sampleRate)) Hz · streamed stereo")
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
                 }
                 Text("Only this event · fresh source state · project effects, mixer, routing and automation bypassed")
                     .font(.system(size: 11)).foregroundStyle(.secondary)

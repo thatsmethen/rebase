@@ -17,8 +17,8 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 <key>CFBundleName</key><string>Rebase</string>
 <key>CFBundleDisplayName</key><string>Rebase</string>
 <key>CFBundleIdentifier</key><string>org.rebase.rebase</string>
-<key>CFBundleVersion</key><string>9</string>
-<key>CFBundleShortVersionString</key><string>0.9.0</string>
+<key>CFBundleVersion</key><string>10</string>
+<key>CFBundleShortVersionString</key><string>0.10.0</string>
 <key>CFBundleExecutable</key><string>Rebase</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>

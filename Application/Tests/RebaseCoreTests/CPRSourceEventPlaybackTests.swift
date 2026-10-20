@@ -1,6 +1,7 @@
 import AVFoundation
 import Foundation
 import Testing
+import RebaseTimingDSP
 @testable import RebaseCore
 
 /// Application audition and scheduling tests. Synthetic PCM is attached to a
@@ -265,5 +266,54 @@ struct CPRSourceEventPlaybackTests {
             guard output.frameLength > 0 else { return }
         }
         #expect(position == 257)
+    }
+
+    @Test func NativeMode0StreamsAtProjectRateAndRetainsSourceBarriers() throws {
+        let f = try fixture(); defer { try? FileManager.default.removeItem(at: f.temporary) }
+        let before = try snapshot(f.package)
+        let prepared = try CPRSourceEventPlayback.prepare(eventID: f.eventID, project: f.project,
+            root: f.package, mode: .nativeMode0ProjectRate)
+        #expect(prepared.info.mode == .nativeMode0ProjectRate)
+        #expect(prepared.info.sourceSampleRate == 44100 && prepared.info.sampleRate == 48000)
+        #expect(prepared.info.frameCount == 1_151_999)
+        #expect(prepared.audio.clips.isEmpty && prepared.audio.nativeEventSelection != nil)
+        let stream = try #require(prepared.audio.sourceEventStream)
+        let raw = try CPRSourceEventRenderer.prepare(eventID: f.eventID, in: f.project, at: f.package, applyEventGain: false)
+        #expect(raw.samples.map(\.bitPattern) == expectedBits(f.pcm))
+        // Kernel correctness has an independent rational oracle. This separate
+        // integration control checks full-file decode, source block partitioning,
+        // frame-count propagation and gain wiring against one contiguous call.
+        var state = RBMode0State(), count = 0
+        #expect(rb_native_mode0_init(44100, 48000, 2, &state) == 0)
+        var expected = [Float](repeating: 0, count: Int(stream.frameCount) * 2)
+        #expect(rb_native_mode0_process(&state, raw.samples, frameCount, &expected, Int(stream.frameCount), &count) == 0)
+        #expect(count == Int(stream.frameCount))
+        let cursor = try stream.cursor(from: 0)
+        var at = 0, blocks = 0
+        while let block = try cursor.nextBuffer() {
+            #expect(block.format.sampleRate == 48000 && block.frameLength > 0 && block.frameLength <= 8917)
+            var matches = true
+            for frame in 0..<Int(block.frameLength) {
+                for channel in 0..<2 {
+                    if block.floatChannelData![channel][frame].bitPattern != expected[(at + frame) * 2 + channel].bitPattern {
+                        matches = false
+                    }
+                }
+            }
+            #expect(matches)
+            at += Int(block.frameLength); blocks += 1
+        }
+        #expect(at == 1_151_999 && blocks == 130 && cursor.isAtEnd)
+        #expect(try stream.cursor(from: stream.frameCount).nextBuffer() == nil)
+        #expect(throws: RebaseCoreError.self) { try stream.cursor(from: -1) }
+        #expect(throws: RebaseCoreError.self) { try stream.cursor(from: stream.frameCount + 1) }
+        #expect(rejects { try f.project.requireResolvedAudioEvents() })
+        #expect(rejects { _ = try OfflineRenderer.render(project: f.project, projectRoot: f.package) })
+        #expect(try snapshot(f.package) == before)
+        var changed = f.pcm; changed[44] ^= 1; try changed.write(to: f.media)
+        #expect(rejects { _ = try CPRSourceEventPlayback.prepare(eventID: f.eventID, project: f.project,
+            root: f.package, mode: .nativeMode0ProjectRate) })
+        try f.pcm.write(to: f.media)
+        #expect(try snapshot(f.package) == before)
     }
 }

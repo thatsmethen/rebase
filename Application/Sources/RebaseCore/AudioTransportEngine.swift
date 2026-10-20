@@ -18,12 +18,19 @@ public final class AudioTransportEngine {
     private var playbackGeneration: UInt64 = 0
     private var pendingPlayers = 0
     private var timelineElapsed = false
+    private var streamCursor: CPRRateConvertedStream.Cursor?
+    private var streamBuffers: [UUID: AVAudioPCMBuffer] = [:]
+    private var streamAtEnd = false
+    /// Refill runs on the main actor, outside the audio callback. Four source
+    /// blocks provide headroom, not a guarantee against arbitrary UI stalls.
+    private let streamQueueDepth = 4
     private var meterGeneration: UInt64 = 0
     private var meterTapInstalled = false
 
     /// Linear left/right peaks from the latest delivered mixer tap buffer.
     /// These measure the engine mix, not the DAC or speakers. Values may exceed 1.
     public private(set) var outputPeaks: [Float] = [0, 0]
+    public private(set) var playbackFailure: String?
 
     public init() {}
 
@@ -50,9 +57,10 @@ public final class AudioTransportEngine {
     /// Explicitly audition only the selected retained native event. Fresh source
     /// proof and attached-media hashes are checked on each configuration.
     @discardableResult
-    public func configureCPRSourceEvent(eventID: UUID, project: Project, projectRoot: URL) throws -> CPRSourceEventPlaybackInfo {
+    public func configureCPRSourceEvent(eventID: UUID, project: Project, projectRoot: URL,
+                                       mode: CPRSourceEventPlaybackMode = .sourceRate) throws -> CPRSourceEventPlaybackInfo {
         clearConfiguration()
-        let next = try CPRSourceEventPlayback.prepare(eventID: eventID, project: project, root: projectRoot)
+        let next = try CPRSourceEventPlayback.prepare(eventID: eventID, project: project, root: projectRoot, mode: mode)
         install(next.audio)
         return next.info
     }
@@ -64,10 +72,12 @@ public final class AudioTransportEngine {
         playbackBuffers.removeAll()
         prepared = nil
         stoppedPosition = 0
+        playbackFailure = nil
     }
 
     private func install(_ next: PreparedProject) {
-        for _ in next.clips {
+        let count = next.sourceEventStream == nil ? next.clips.count : 1
+        for _ in 0..<count {
             let player = AVAudioPlayerNode()
             engine.attach(player)
             engine.connect(player, to: engine.mainMixerNode, format: next.format)
@@ -80,6 +90,7 @@ public final class AudioTransportEngine {
 
     public func play(from seconds: TimeInterval = 0) throws {
         stop()
+        playbackFailure = nil
         guard let prepared else { throw RebaseCoreError.notConfigured }
         guard seconds.isFinite, seconds >= 0 else {
             throw RebaseCoreError.invalidProject("Playback position must be a nonnegative time.")
@@ -90,6 +101,16 @@ public final class AudioTransportEngine {
         stoppedPosition = startPosition
         guard schedule.startFrame < prepared.frameCount else { return }
         var scheduled: [(AVAudioPlayerNode, AVAudioPCMBuffer, TimeInterval)] = []
+        var firstStreamBuffers: [AVAudioPCMBuffer] = []
+        if let stream = prepared.sourceEventStream {
+            let cursor = try stream.cursor(from: schedule.startFrame)
+            for _ in 0..<streamQueueDepth {
+                guard let buffer = try cursor.nextBuffer() else { break }
+                firstStreamBuffers.append(buffer)
+            }
+            streamCursor = cursor
+            streamAtEnd = cursor.isAtEnd
+        }
         for span in schedule.spans {
             let playback = try AudioPlaybackSchedule.buffer(for: span, in: prepared)
             scheduled.append((players[span.clipIndex], playback, Double(span.delayFrames) / sampleRate))
@@ -107,6 +128,10 @@ public final class AudioTransportEngine {
         pendingPlayers = scheduled.count
         timelineElapsed = false
         running = true
+        if streamCursor != nil {
+            for buffer in firstStreamBuffers { scheduleStreamBuffer(buffer, generation: generation) }
+            players[0].play(at: AVAudioTime(hostTime: startHostTime))
+        }
         for (player, buffer, delay) in scheduled {
             player.scheduleBuffer(buffer, at: nil, options: [], completionCallbackType: .dataPlayedBack) { [weak self] _ in
                 // Stopping from a player callback can deadlock. Return first;
@@ -133,9 +158,37 @@ public final class AudioTransportEngine {
     private func finishPlaybackIfReady() {
         // Preserve silent project tails and wait for delivered player callbacks;
         // elapsed wall time alone must not cut off downstream audio.
-        guard running, timelineElapsed, pendingPlayers == 0 else { return }
+        guard running, timelineElapsed, pendingPlayers == 0,
+              streamCursor == nil || streamAtEnd else { return }
         stop()
         stoppedPosition = duration
+    }
+
+    private func scheduleStreamBuffer(_ buffer: AVAudioPCMBuffer, generation: UInt64) {
+        let id = UUID()
+        streamBuffers[id] = buffer
+        pendingPlayers += 1
+        players[0].scheduleBuffer(buffer, at: nil, options: [], completionCallbackType: .dataPlayedBack) { [weak self] _ in
+            DispatchQueue.main.async { [weak self] in
+                guard let self, self.running, self.playbackGeneration == generation,
+                      self.streamBuffers.removeValue(forKey: id) != nil else { return }
+                self.pendingPlayers -= 1
+                do {
+                    while self.streamBuffers.count < self.streamQueueDepth, !self.streamAtEnd {
+                        guard let next = try self.streamCursor?.nextBuffer() else {
+                            self.streamAtEnd = true
+                            break
+                        }
+                        self.scheduleStreamBuffer(next, generation: generation)
+                        self.streamAtEnd = self.streamCursor?.isAtEnd ?? true
+                    }
+                    self.finishPlaybackIfReady()
+                } catch {
+                    self.playbackFailure = error.localizedDescription
+                    self.stop()
+                }
+            }
+        }
     }
 
     public func stop() {
@@ -150,6 +203,9 @@ public final class AudioTransportEngine {
         engine.stop()
         removeMeterTap()
         playbackBuffers.removeAll()
+        streamBuffers.removeAll()
+        streamCursor = nil
+        streamAtEnd = false
         stoppedPosition = position
     }
 

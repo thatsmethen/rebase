@@ -39,7 +39,8 @@ public enum CPRSourceEventRenderer {
             sourceSHA256: prepared.sourceSHA256, mediaSHA256: prepared.mediaSHA256, outputSHA256: cprSHA256(wave))
     }
 
-    static func prepare(eventID: UUID, in project: Project, at root: URL) throws -> CPRPreparedSourceEvent {
+    static func prepare(eventID: UUID, in project: Project, at root: URL,
+                        applyEventGain: Bool = true) throws -> CPRPreparedSourceEvent {
         let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
         let fades = try CPRAutoFadeArchive.read(container: verified.container)
         let plan = try CPRSourceEventRenderPlan.make(source: verified.source, retained: verified.retained, fades: fades)
@@ -61,7 +62,7 @@ public enum CPRSourceEventRenderer {
               before[.modificationDate] as? Date == after[.modificationDate] as? Date else {
             throw RebaseCoreError.invalidProject("The attached media changed. Attach the intended file again before using this source event.")
         }
-        return CPRPreparedSourceEvent(plan: plan, samples: try decodePCM24(data, plan: plan),
+        return CPRPreparedSourceEvent(plan: plan, samples: try decodePCM24(data, plan: plan, applyEventGain: applyEventGain),
             sourceSHA256: verified.container.sha256, mediaSHA256: attachment.mediaSHA256)
     }
 
@@ -69,7 +70,7 @@ public enum CPRSourceEventRenderer {
         encodeWave(try decodePCM24(data, plan: plan), plan: plan)
     }
 
-    private static func decodePCM24(_ data: Data, plan: CPRSourceEventRenderPlan) throws -> [Float] {
+    private static func decodePCM24(_ data: Data, plan: CPRSourceEventRenderPlan, applyEventGain: Bool = true) throws -> [Float] {
         func invalid() -> RebaseCoreError { .unsupportedAudio("Source rendering supports bounded little-endian PCM24 WAV files matching the saved rate, channels and exact frame count.") }
         func u16(_ offset: Int) -> UInt16 { UInt16(data[offset]) | UInt16(data[offset+1]) << 8 }
         func u32(_ offset: Int) -> UInt32 { UInt32(data[offset]) | UInt32(data[offset+1]) << 8 | UInt32(data[offset+2]) << 16 | UInt32(data[offset+3]) << 24 }
@@ -101,7 +102,7 @@ public enum CPRSourceEventRenderer {
         let status = data.withUnsafeBytes { input in
             values.withUnsafeMutableBufferPointer { output in
                 rb_cpr_event_pcm24_f32(input.baseAddress!.advanced(by: samples.lowerBound).assumingMemoryBound(to: UInt8.self),
-                    output.baseAddress!, count, plan.gain.bitPattern)
+                    output.baseAddress!, count, (applyEventGain ? plan.gain : Float(1)).bitPattern)
             }
         }
         guard status == 0 else {
