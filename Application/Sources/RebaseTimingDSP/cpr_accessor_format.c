@@ -3,6 +3,7 @@
 #include <float.h>
 #include <math.h>
 #include <stdint.h>
+#include <string.h>
 
 #pragma STDC FENV_ACCESS ON
 #pragma STDC FP_CONTRACT OFF
@@ -47,6 +48,27 @@ int rb_cpr_accessor_pcm24_roundtrip(float *samples, size_t count) {
         int32_t integer = packed24(scaled);
         volatile float decoded = (float)integer * 0x1p-23f;
         samples[i] = decoded;
+    }
+    return 0;
+}
+
+int rb_cpr_accessor_gain_f32(float *samples, size_t count, uint32_t gain_bits) {
+    float gain;
+    memcpy(&gain, &gain_bits, sizeof(gain));
+    if (!samples || count == 0 || count > 32000000 ||
+        !isfinite(gain) || (gain != 0.0f && !isnormal(gain))) return 1;
+    if (!nearest_environment()) return 2;
+    for (size_t i = 0; i < count; ++i) {
+        if (!isfinite(samples[i]) || (samples[i] != 0.0f && !isnormal(samples[i])))
+            return 1;
+        volatile float result = samples[i] * gain;
+        if (!isfinite(result) || (result != 0.0f && !isnormal(result))) return 1;
+    }
+    if (gain != 1.0f) {
+        for (size_t i = 0; i < count; ++i) {
+            volatile float result = samples[i] * gain;
+            samples[i] = result;
+        }
     }
     return 0;
 }

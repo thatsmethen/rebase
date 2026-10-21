@@ -31,16 +31,18 @@ final class CPRNativeAudioAccessor {
     private(set) var firstConvertedRead = true
     private(set) var terminalSeen = false
     private(set) var failed = false
+    private(set) var gain: Float
 
     init(source: [Float], sourceRate: Double, outputRate: Double,
          sourceFormat: SourceFormat = .float32, converter: Converter = .mode2,
-         mode2BudgetAvailable: Bool = true) throws {
+         mode2BudgetAvailable: Bool = true, gain: Float = 1) throws {
         var probe = RBAccessorSeek()
         guard sourceRate.isFinite, outputRate.isFinite,
               Double(Float(sourceRate)) == sourceRate, Double(Float(outputRate)) == outputRate,
               rb_cpr_accessor_seek(Float(sourceRate).bitPattern, Float(outputRate).bitPattern,
                                    0, &probe) == 0,
-              !source.isEmpty, source.count % 2 == 0, source.count <= 32_000_000 else {
+              !source.isEmpty, source.count % 2 == 0, source.count <= 32_000_000,
+              Self.supportsGain(gain, pcm24EqualRate: sourceFormat == .pcm24 && sourceRate == outputRate) else {
             throw Self.unsupported
         }
         for value in source {
@@ -60,11 +62,30 @@ final class CPRNativeAudioAccessor {
         self.sourceRate = Float(sourceRate); self.outputRate = Float(outputRate)
         self.sourceFormat = sourceFormat; self.converter = converter
         self.mode2BudgetAvailable = mode2BudgetAvailable
+        self.gain = gain
     }
 
     deinit {
         if let mode1Handle { rb_native_mode1_destroy(mode1Handle) }
         if let mode2Handle { rb_native_mode2_destroy(mode2Handle) }
+    }
+
+    /// The native setter changes only the gain field. The next read copies it
+    /// into the retained converter; neither history nor the first flag resets.
+    func setGain(_ value: Float) throws {
+        guard !failed, !terminalSeen,
+              Self.supportsGain(value, pcm24EqualRate: sourceFormat == .pcm24 && sourceRate == outputRate)
+        else { throw Self.unsupported }
+        gain = value
+    }
+
+    private static func supportsGain(_ value: Float, pcm24EqualRate: Bool) -> Bool {
+        guard value.isFinite, value == 0 || value.isNormal else { return false }
+        // Equal-rate PCM24 fast paths fold gain into either 2^-23 or 2^-31.
+        // In this domain both scales stay normal and their power-of-two
+        // rearrangement is exact. Smaller nonzero gains need the actual native
+        // scalar/SIMD selection; do not silently pick one of those paths.
+        return !pcm24EqualRate || value == 0 || abs(value) >= 0x1p-95
     }
 
     /// Native Float32 ratio, separately widened for both frame conversions.
@@ -100,7 +121,7 @@ final class CPRNativeAudioAccessor {
             // Cleared even when the native count helper returns zero. Seeking
             // does not restore it. This is distinct from backend availability.
             firstConvertedRead = false
-        } else if sourceFormat == .pcm24 {
+        } else if sourceFormat == .pcm24 || gain != 1 {
             firstConvertedRead = false
         }
         if budget == 0 {
@@ -112,29 +133,42 @@ final class CPRNativeAudioAccessor {
         let terminal = converting && actual == available && first && actual < budget
         let start = Int(sourcePosition) * 2
         var values = Array(source[start..<(start + actual * 2)])
-        if converting {
-            // Existing kernels deliberately exclude continuation after a
-            // terminal call. Native mode1 has no done guard; mode2 additionally
-            // depends on its backend's EOF lifecycle. Never reset to hide this.
-            do {
+        do {
+            // The generic native converter applies destination-format gain
+            // before upsampling, and after source-format downsampling. A gain
+            // change therefore enters retained filter history only on the up
+            // path. Equal-rate fast paths agree in the admitted gain domain.
+            if sourceRate <= outputRate { try applyGain(to: &values) }
+            if converting {
+                // Existing kernels deliberately exclude continuation after a
+                // terminal call. Native mode1 has no done guard; mode2 additionally
+                // depends on its backend's EOF lifecycle. Never reset to hide this.
                 values = try process(values, terminal: terminal)
                 if sourceFormat == .pcm24 && sourceRate > outputRate && !values.isEmpty {
                     guard rb_cpr_accessor_pcm24_roundtrip(&values, values.count) == 0 else {
                         throw Self.unsupported
                     }
                 }
-            } catch {
-                // A backend may already have changed state. No retry of a
-                // partially processed conversion is promised by this wrapper.
-                failed = true
-                throw error
             }
+            if sourceRate > outputRate { try applyGain(to: &values) }
+        } catch {
+            // A backend may already have changed state. No retry of a
+            // partially processed conversion is promised by this wrapper.
+            failed = true
+            throw error
         }
         sourcePosition += Int64(actual)
         terminalSeen = terminal
         return Read(samples: values, requestedOutputFrames: requestedFrames,
                     budgetSourceFrames: budget, actualSourceFrames: actual,
                     firstCall: first, terminal: terminal)
+    }
+
+    private func applyGain(to values: inout [Float]) throws {
+        guard gain != 1, !values.isEmpty else { return }
+        guard rb_cpr_accessor_gain_f32(&values, values.count, gain.bitPattern) == 0 else {
+            throw Self.unsupported
+        }
     }
 
     private func process(_ input: [Float], terminal: Bool) throws -> [Float] {
