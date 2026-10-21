@@ -27,6 +27,8 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
     public let mode1PlaybackUnavailableReason: String?
     public let nativeTimelinePlaybackUnavailableReason: String?
     public let nativeTimelineRange: CPRSourceEventTimelineRange?
+    public let nativeProjectClockPlaybackUnavailableReason: String?
+    public let nativeProjectClockRange: CPRSourceEventTimelineRange?
 
     public static func inspect(eventID: UUID, in project: Project, at root: URL) throws -> CPRSourceAudioInspection {
         let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
@@ -65,6 +67,18 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
             nativeReason = error.localizedDescription
             nativeRange = nil
         }
+        let projectClockReason: String?
+        let projectClockRange: CPRSourceEventTimelineRange?
+        do {
+            let plan = try CPRPlacedSourceEventPlan.make(container: verified.container, source: source,
+                retained: verified.retained, fades: fades, timelineRate: project.sampleRate)
+            sourceRate = Double(plan.media.rate)
+            projectClockRange = plan.range
+            projectClockReason = project.attachedMedia(for: verified.retained) == nil ? "Attach matching PCM24 WAV media first." : nil
+        } catch {
+            projectClockReason = error.localizedDescription
+            projectClockRange = nil
+        }
         return CPRSourceAudioInspection(eventID: eventID, name: verified.retained.name,
             sourceSHA256: verified.container.sha256, eventIdentity: source.event.identityOffset,
             trackIdentity: source.trackIdentity, volume: Float(bitPattern: source.volumeBits),
@@ -76,7 +90,8 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
             timelinePlaybackUnavailableReason: timelineReason, sourceSampleRate: sourceRate,
             projectSampleRate: project.sampleRate, rateConvertedPlaybackUnavailableReason: rateReason,
             mode2PlaybackUnavailableReason: mode2Reason, mode1PlaybackUnavailableReason: mode1Reason,
-            nativeTimelinePlaybackUnavailableReason: nativeReason, nativeTimelineRange: nativeRange)
+            nativeTimelinePlaybackUnavailableReason: nativeReason, nativeTimelineRange: nativeRange,
+            nativeProjectClockPlaybackUnavailableReason: projectClockReason, nativeProjectClockRange: projectClockRange)
     }
 }
 

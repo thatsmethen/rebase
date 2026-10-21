@@ -10,6 +10,7 @@ struct CPRSourceAudioView: View {
         switch playbackMode {
         case .sourceRate: return inspection.timelinePlaybackUnavailableReason
         case .nativeTimelineSourceRate: return inspection.nativeTimelinePlaybackUnavailableReason
+        case .nativeTimelineProjectClock: return inspection.nativeProjectClockPlaybackUnavailableReason
         case .nativeMode0ProjectRate: return inspection.rateConvertedPlaybackUnavailableReason
         case .nativeMode2ProjectRate: return inspection.mode2PlaybackUnavailableReason
         case .nativeMode1ProjectRate: return inspection.mode1PlaybackUnavailableReason
@@ -47,6 +48,7 @@ struct CPRSourceAudioView: View {
             Picker("Audition rate", selection: $playbackMode) {
                 Text("Original source rate").tag(CPRSourceEventPlaybackMode.sourceRate)
                 Text("Native timeline reader · original rate").tag(CPRSourceEventPlaybackMode.nativeTimelineSourceRate)
+                Text("Native timeline reader · project clock, unconverted").tag(CPRSourceEventPlaybackMode.nativeTimelineProjectClock)
                 Text("Project rate · native linear mode 0").tag(CPRSourceEventPlaybackMode.nativeMode0ProjectRate)
                 Text("Project rate · native sinc mode 1").tag(CPRSourceEventPlaybackMode.nativeMode1ProjectRate)
                 Text("Project rate · SoXR mode 2").tag(CPRSourceEventPlaybackMode.nativeMode2ProjectRate)
@@ -59,6 +61,15 @@ struct CPRSourceAudioView: View {
                 Text(String(format: "Source timeline · start %.6f s · duration %.6f s · media offset %.6f s", range.position, range.duration, range.offset))
                     .font(.caption.monospacedDigit()).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+            }
+            if playbackMode == .nativeTimelineProjectClock {
+                Text("Reads source frames at this Rebase project’s \(Int(inspection.projectSampleRate)) Hz clock without conversion. A different source rate changes speed and pitch. Saved source timing is preserved; Rebase supplies the clock rate because the original project rate is not yet recovered.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                if let range = inspection.nativeProjectClockRange {
+                    Text(String(format: "Project clock · start %.6f s · duration %.6f s · saved offset %.6f s", range.position, range.duration, range.offset))
+                        .font(.caption.monospacedDigit()).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             if playbackMode == .nativeMode0ProjectRate, playbackUnavailableReason == nil {
                 Text("Converts \(Int(inspection.sourceSampleRate ?? 0)) → \(Int(inspection.projectSampleRate)) Hz in blocks with the reconstructed stereo mode 0 converter. This is an explicit mode choice; Reference’s default converter is unverified. Seeking restores conversion state from the event’s start. No extra tail samples are added.")

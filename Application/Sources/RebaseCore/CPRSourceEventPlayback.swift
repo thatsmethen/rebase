@@ -4,6 +4,7 @@ import AVFoundation
 public enum CPRSourceEventPlaybackMode: String, CaseIterable, Equatable, Sendable {
     case sourceRate
     case nativeTimelineSourceRate
+    case nativeTimelineProjectClock
     case nativeMode0ProjectRate
     case nativeMode1ProjectRate
     case nativeMode2ProjectRate
@@ -12,6 +13,7 @@ public enum CPRSourceEventPlaybackMode: String, CaseIterable, Equatable, Sendabl
         switch self {
         case .sourceRate: return "Stereo audition"
         case .nativeTimelineSourceRate: return "Native timeline reader"
+        case .nativeTimelineProjectClock: return "Native project clock · unconverted"
         case .nativeMode0ProjectRate: return "Native mode 0"
         case .nativeMode1ProjectRate: return "Native mode 1"
         case .nativeMode2ProjectRate: return "SoXR mode 2"
@@ -47,19 +49,20 @@ enum CPRSourceEventPlayback {
     static func prepare(eventID: UUID, project: Project, root: URL,
                         mode: CPRSourceEventPlaybackMode = .sourceRate) throws
         -> (info: CPRSourceEventPlaybackInfo, audio: PreparedProject) {
-        if mode == .nativeTimelineSourceRate {
+        if mode == .nativeTimelineSourceRate || mode == .nativeTimelineProjectClock {
             let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
             let fades = try CPRAutoFadeArchive.read(container: verified.container)
             let placed = try CPRPlacedSourceEventPlan.make(container: verified.container,
-                source: verified.source, retained: verified.retained, fades: fades)
+                source: verified.source, retained: verified.retained, fades: fades,
+                timelineRate: mode == .nativeTimelineProjectClock ? project.sampleRate : nil)
             let source = try CPRSourceEventRenderer.prepareMedia(plan: placed.media, retained: verified.retained,
                 sourceSHA256: verified.container.sha256, in: project, at: root)
-            let stream = try CPRNativeTimelineStream(sampleRate: Double(placed.media.rate), segments: [
+            let stream = try CPRNativeTimelineStream(sampleRate: placed.timelineRate, segments: [
                 .init(start: placed.range.position, length: placed.range.duration, offset: placed.range.offset,
-                      samples: source.samples, gain: placed.media.gain)
+                      samples: source.samples, gain: placed.media.gain, sourceRate: Double(placed.media.rate))
             ])
             var info = CPRSourceEventPlaybackInfo(eventID: eventID, name: verified.retained.name,
-                sampleRate: Double(placed.media.rate), sourceSampleRate: Double(placed.media.rate), mode: mode,
+                sampleRate: placed.timelineRate, sourceSampleRate: Double(placed.media.rate), mode: mode,
                 frameCount: stream.frameCount, sourceSHA256: source.sourceSHA256,
                 mediaSHA256: source.mediaSHA256)
             info.timelineRange = placed.range

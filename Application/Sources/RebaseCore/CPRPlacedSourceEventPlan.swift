@@ -2,16 +2,19 @@ import Foundation
 import RebaseTimingDSP
 
 /// Fresh saved-source interpretation, separate from frozen V4 recovery. This
-/// reconstructs one direct event with a source-rate builder context and fresh
-/// track-resource state. It is not the hosted project/channel configuration.
+/// reconstructs one direct event with an explicit builder/reader rate context
+/// and fresh track-resource state. The context is not recovered CPR project state.
 struct CPRPlacedSourceEventPlan {
     static let contract = "cpr-15.0.30.287-direct-source-segment-v1"
+    static let projectClockContract = "cpr-15.0.30.287-direct-project-clock-segment-v1"
     let media: CPRSourceEventRenderPlan
     let range: CPRSourceEventTimelineRange
+    let timelineRate: Double
 
     static func make(container: CPRContainer, source: CPRSourceAudioEvent,
                      retained: UnresolvedCPRAudioEvent,
-                     fades: CPRSourceAutoFadeArchive) throws -> CPRPlacedSourceEventPlan {
+                     fades: CPRSourceAutoFadeArchive,
+                     timelineRate suppliedRate: Double? = nil) throws -> CPRPlacedSourceEventPlan {
         func unsupported(_ message: String) -> RebaseCoreError { .unsupportedAudio(message) }
         guard source.eventWord == 0,
               source.ancestorTracks.count == 1,
@@ -42,6 +45,10 @@ struct CPRPlacedSourceEventPlan {
             throw unsupported("The source track does not resolve an accepted native tempo clock.")
         }
         let media = try CPRSourceEventRenderPlan.completeMedia(source: source, retained: retained, fades: fades)
+        let timelineRate = suppliedRate ?? Double(media.rate)
+        guard timelineRate.rounded() == timelineRate, (8_000...192_000).contains(timelineRate) else {
+            throw unsupported("Native timeline playback requires a whole project clock rate from 8000 to 192000 Hz.")
+        }
         guard media.channels == 2 else {
             throw unsupported("Native timeline audition requires stereo PCM24 media; mono routing is unresolved.")
         }
@@ -66,7 +73,7 @@ struct CPRPlacedSourceEventPlan {
         let end = start + duration
         var projection = RBTimelineBuilderProjection()
         guard rb_cpr_timeline_builder_project(start, end, sourceOffset, start, end,
-                    Double(media.rate), &projection) == RB_TIMELINE_BUILDER_OK,
+                    timelineRate, &projection) == RB_TIMELINE_BUILDER_OK,
               projection.disposition == RB_TIMELINE_BUILDER_SEGMENT else {
             throw unsupported("The source event is outside the supported native segment-construction range.")
         }
@@ -77,12 +84,13 @@ struct CPRPlacedSourceEventPlan {
         guard rb_cpr_timeline_quantize(projection.period, projection.start, &first) == 0,
               rb_cpr_timeline_quantize(projection.period, projection.getterEnd, &last) == 0,
               rb_cpr_timeline_quantize(projection.period, projection.sourceOffset, &seek) == 0,
-              first >= 0, last > first, last <= Int64(media.rate) * 86_400,
+              first >= 0, last > first, last <= Int64(timelineRate) * 86_400,
               seek >= 0, seek <= Int64(media.frames), last - first <= Int64(media.frames) - seek else {
-            throw unsupported("The reconstructed native source window exceeds the attached media or timeline bounds.")
+            throw unsupported("The unconverted timeline window exceeds the attached media or timeline bounds at this clock rate. Complete source reads are required; missing frames are not padded.")
         }
         return CPRPlacedSourceEventPlan(media: media,
-            range: CPRSourceEventTimelineRange(contract: contract, position: projection.start,
-                duration: projection.length, offset: projection.sourceOffset))
+            range: CPRSourceEventTimelineRange(contract: suppliedRate == nil ? contract : projectClockContract,
+                position: projection.start, duration: projection.length, offset: projection.sourceOffset),
+            timelineRate: timelineRate)
     }
 }

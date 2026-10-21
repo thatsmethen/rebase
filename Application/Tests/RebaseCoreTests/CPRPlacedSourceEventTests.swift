@@ -249,6 +249,110 @@ struct CPRPlacedSourceEventTests {
         #expect(try snapshot(package) == after)
     }
 
+    @Test func ExplicitProjectClockReadsUnconvertedPCMAndKeepsSavedTiming() throws {
+        let folder = try temporary(); defer { try? FileManager.default.removeItem(at: folder) }
+        // The preserved clock maps 960 ticks to 1.5 seconds; 4410/44100
+        // source frames span 0.1 seconds and 882/44100 offset is 0.02 seconds.
+        // These integer expectations do not invoke the production quantizer.
+        let bytes = try changed(original(), start: Double(960).bitPattern,
+            length: Double(4410).bitPattern, offset: Double(882).bitPattern)
+        let mediaURL = folder.appendingPathComponent("Synthetic.wav"), pcm = media()
+        try pcm.write(to: mediaURL)
+        let (baseline, package, id) = try imported(bytes, mediaURL: mediaURL, folder: folder, name: "ProjectClock")
+        for (rate, first, last, offset): (Double, Int64, Int64, Int64) in [
+            (32000,48000,51200,640), (48000,72000,76800,960), (88200,132300,141120,1764)
+        ] {
+            var project = baseline
+            try project.convertToApplicationTiming()
+            try project.replaceTempoMap(TempoMap(events: [TempoEvent(beat: 0, bpm: 37)]))
+            project.sampleRate = rate
+            try ProjectStore.save(project, to: package)
+            let before = try snapshot(package)
+            let inspected = try CPRSourceAudioInspection.inspect(eventID: id, in: project, at: package)
+            #expect(inspected.nativeProjectClockPlaybackUnavailableReason == nil)
+            let prepared = try CPRSourceEventPlayback.prepare(eventID: id, project: project, root: package,
+                mode: .nativeTimelineProjectClock)
+            let stream = try #require(prepared.audio.nativeTimelineStream)
+            let range = try #require(prepared.info.timelineRange)
+            #expect(prepared.info.mode == .nativeTimelineProjectClock)
+            #expect(prepared.info.sampleRate == rate && prepared.info.sourceSampleRate == 44100)
+            #expect(prepared.info.frameCount == last && stream.frameCount == last)
+            #expect(prepared.info.sourceSHA256 == cprSHA256(bytes) && prepared.info.mediaSHA256 == cprSHA256(pcm))
+            #expect(range == inspected.nativeProjectClockRange)
+            #expect(range.contract == CPRPlacedSourceEventPlan.projectClockContract)
+            #expect(abs(range.position - 1.5) < 1 / rate && abs(range.duration - 0.1) < 1 / rate)
+            #expect(abs(range.offset - 0.02) < 1 / rate)
+            #expect(prepared.audio.sourceEventStream == nil && prepared.audio.clips.isEmpty)
+            for block in [257,4096] {
+                let cursor = try stream.cursor(from: 0); var position: Int64 = 0
+                while let output = try cursor.nextBuffer(maximumFrames: block) {
+                    check(output, at: position, first: first, last: last, offset: offset)
+                    position += Int64(output.frameLength)
+                }
+                #expect(position == last && cursor.isAtEnd)
+            }
+            for position in [first - 1, first, first + 1, last - 1, last] {
+                let cursor = try stream.cursor(from: position)
+                if let output = try cursor.nextBuffer(maximumFrames: 257) {
+                    check(output, at: position, first: first, last: last, offset: offset)
+                } else { #expect(position == last) }
+            }
+            #expect(try ProjectStore.load(from: package) == project)
+            #expect(try snapshot(package) == before)
+            #expect(project.unresolvedAudioEvents == baseline.unresolvedAudioEvents && project.tracks.flatMap(\.clips).isEmpty)
+        }
+    }
+
+    @Test func EqualExplicitClockMatchesOriginalRateAndInvalidClockFails() throws {
+        let folder = try temporary(); defer { try? FileManager.default.removeItem(at: folder) }
+        let bytes = try changed(original(), start: Double(960).bitPattern,
+            length: Double(4410).bitPattern, offset: Double(882).bitPattern)
+        let mediaURL = folder.appendingPathComponent("Synthetic.wav"); try media().write(to: mediaURL)
+        var (project, package, id) = try imported(bytes, mediaURL: mediaURL, folder: folder, name: "EqualClock")
+        project.sampleRate = 44100
+        let a = try CPRSourceEventPlayback.prepare(eventID: id, project: project, root: package, mode: .nativeTimelineSourceRate)
+        let b = try CPRSourceEventPlayback.prepare(eventID: id, project: project, root: package, mode: .nativeTimelineProjectClock)
+        #expect(a.info.frameCount == b.info.frameCount)
+        let ar = try #require(a.info.timelineRange), br = try #require(b.info.timelineRange)
+        #expect(ar.position.bitPattern == br.position.bitPattern && ar.duration.bitPattern == br.duration.bitPattern
+            && ar.offset.bitPattern == br.offset.bitPattern)
+        for prepared in [a,b] {
+            let cursor = try #require(prepared.audio.nativeTimelineStream).cursor(from: 66149)
+            check(try #require(try cursor.nextBuffer(maximumFrames: 4096)), at: 66149,
+                first: 66150, last: 70560, offset: 882)
+        }
+        for rate in [Double.nan, .infinity, 0, 7999, 48000.5, 192001] {
+            project.sampleRate = rate
+            #expect(rejects { _ = try CPRSourceEventPlayback.prepare(eventID: id, project: project, root: package,
+                mode: .nativeTimelineProjectClock) })
+        }
+    }
+
+    @Test func ProjectClockDeclinesIncompleteRawReadsWithoutChangingSource() throws {
+        let folder = try temporary(); defer { try? FileManager.default.removeItem(at: folder) }
+        let mediaURL = folder.appendingPathComponent("Synthetic.wav"); try media().write(to: mediaURL)
+        var (project, package, id) = try imported(original(), mediaURL: mediaURL, folder: folder, name: "Capacity")
+        let before = try snapshot(package)
+        project.sampleRate = 48000
+        // The complete saved 24-second event has 1,058,400 source frames.
+        // The 48 kHz window requires 1,152,000 raw frames, a native short-read
+        // failure rather than permission to repeat, resample or invent silence.
+        let inspection = try CPRSourceAudioInspection.inspect(eventID: id, in: project, at: package)
+        #expect(inspection.nativeProjectClockPlaybackUnavailableReason != nil && inspection.nativeProjectClockRange == nil)
+        #expect(inspection.nativeTimelinePlaybackUnavailableReason == nil)
+        #expect(rejects { _ = try CPRSourceEventPlayback.prepare(eventID: id, project: project, root: package,
+            mode: .nativeTimelineProjectClock) })
+        project.sampleRate = 32000
+        let prepared = try CPRSourceEventPlayback.prepare(eventID: id, project: project, root: package,
+            mode: .nativeTimelineProjectClock)
+        #expect(prepared.info.frameCount == 768000 && prepared.info.duration == 24)
+        let stream = try #require(prepared.audio.nativeTimelineStream)
+        let cursor = try stream.cursor(from: 767999)
+        check(try #require(try cursor.nextBuffer()), at: 767999, first: 0, last: 768000, offset: 0)
+        #expect(try cursor.nextBuffer() == nil)
+        #expect(try snapshot(package) == before)
+    }
+
     @Test func UnknownAncestorsTrackShiftDatumsClockAndSourceBoundsReject() throws {
         let original = try original(), parsed = try source(original)
         let container = try CPRProject.readContainer(original), fades = try CPRAutoFadeArchive.read(container: container)

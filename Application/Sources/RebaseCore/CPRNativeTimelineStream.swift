@@ -14,6 +14,7 @@ struct CPRNativeTimelineStream {
         let offset: Double
         let samples: [Float]
         let gain: Float
+        let sourceRate: Double
     }
 
     private struct BoundSegment {
@@ -37,6 +38,8 @@ struct CPRNativeTimelineStream {
         var totalSamples = 0
         for source in segments {
             guard source.start >= 0, source.length > 0, source.offset >= 0,
+                  source.sourceRate.rounded() == source.sourceRate,
+                  (8_000...192_000).contains(source.sourceRate),
                   source.gain.isNormal, source.gain > 0,
                   !source.samples.isEmpty, source.samples.count % 2 == 0,
                   source.samples.count <= 32_000_000 - totalSamples else { throw Self.invalid }
@@ -76,7 +79,7 @@ struct CPRNativeTimelineStream {
     }
 
     private static var invalid: RebaseCoreError {
-        .unsupportedAudio("The native timeline reader requires ordered, nonoverlapping stereo source segments with matching rates, complete media and finite supported frame bounds.")
+        .unsupportedAudio("The native timeline reader requires ordered, nonoverlapping stereo source segments, complete source reads and finite supported frame bounds.")
     }
 
     final class Cursor {
@@ -142,16 +145,16 @@ struct CPRNativeTimelineStream {
                         throw CPRNativeTimelineStream.invalid
                     }
                     let count = Int(plan.readFrames)
-                    // Retain the accessor for the active descriptor. This
-                    // admitted equal-rate source has no filter;
-                    // differing-rate accessor state is tested independently
-                    // until its upstream timeline context is bound.
+                    // The ordinary native reader does not set accessor rate.
+                    // Its source-owned rate therefore stays unchanged even
+                    // when the timeline consumes these raw frames at a different
+                    // clock rate. No rate conversion is inserted here.
                     let accessor: CPRNativeAudioAccessor
                     if let cached = activeAccessor { accessor = cached.accessor }
                     else {
                         accessor = try CPRNativeAudioAccessor(source: source.samples,
-                            sourceRate: stream.format.sampleRate,
-                            outputRate: stream.format.sampleRate)
+                            sourceRate: source.sourceRate,
+                            outputRate: source.sourceRate)
                         activeAccessor = (index, accessor)
                     }
                     _ = try accessor.seek(to: plan.sourceSeek)

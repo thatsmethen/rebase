@@ -43,7 +43,7 @@ struct CPRNativeTimelineStreamTests {
             (16400, 101, 19, 1, stereo(128, seed: 777))]
         let segments = rows.map { start, length, offset, gain, samples in
             CPRNativeTimelineStream.Segment(start: Double(start) / rate, length: Double(length) / rate,
-                offset: Double(offset) / rate, samples: samples, gain: gain)
+                offset: Double(offset) / rate, samples: samples, gain: gain, sourceRate: rate)
         }
         var expected = [UInt32](repeating: 0, count: 16501 * 2)
         for (start, length, offset, gain, samples) in rows {
@@ -72,8 +72,8 @@ struct CPRNativeTimelineStreamTests {
         let rate = 8192.0
         let first = stereo(9, seed: 5), second = stereo(9, seed: 701)
         let stream = try CPRNativeTimelineStream(sampleRate: rate, segments: [
-            .init(start: 0.25 / rate, length: 3.5 / rate, offset: 1.25 / rate, samples: first, gain: 1),
-            .init(start: 4.25 / rate, length: 3.5 / rate, offset: 2.25 / rate, samples: second, gain: 1)])
+            .init(start: 0.25 / rate, length: 3.5 / rate, offset: 1.25 / rate, samples: first, gain: 1, sourceRate: rate),
+            .init(start: 4.25 / rate, length: 3.5 / rate, offset: 2.25 / rate, samples: second, gain: 1, sourceRate: rate)])
         // Native independently rounds each concrete start/end getter: [0,4),[4,8).
         let expected = Array(first[2..<10]) + Array(second[4..<12])
         #expect(stream.frameCount == 8)
@@ -89,7 +89,7 @@ struct CPRNativeTimelineStreamTests {
         let source = stereo(16, seed: 77)
         func segment(start: Double = 0, length: Double = 8 / 8192, offset: Double = 0,
                      gain: Float = 1, samples: [Float]? = nil) -> CPRNativeTimelineStream.Segment {
-            .init(start: start, length: length, offset: offset, samples: samples ?? source, gain: gain)
+            .init(start: start, length: length, offset: offset, samples: samples ?? source, gain: gain, sourceRate: 8192)
         }
         for rate in [Double.nan, .infinity, 0, 7999, 8192.5, 192001] {
             #expect(rejects { _ = try CPRNativeTimelineStream(sampleRate: rate, segments: [segment()]) })
