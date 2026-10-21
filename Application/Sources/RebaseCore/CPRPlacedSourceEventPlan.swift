@@ -3,13 +3,30 @@ import RebaseTimingDSP
 
 /// Fresh saved-source interpretation, separate from frozen V4 recovery. This
 /// reconstructs one direct event with an explicit builder/reader rate context
-/// and fresh track-resource state. The context is not recovered CPR project state.
+/// and fresh track-resource state. Supplied application clocks and independently
+/// recovered saved audio configuration have distinct interpretation contracts.
 struct CPRPlacedSourceEventPlan {
     static let contract = "cpr-15.0.30.287-direct-source-segment-v1"
     static let projectClockContract = "cpr-15.0.30.287-direct-project-clock-segment-v1"
+    static let savedProjectClockContract = "cpr-15.0.30.287-direct-saved-project-clock-segment-v1"
     let media: CPRSourceEventRenderPlan
     let range: CPRSourceEventTimelineRange
     let timelineRate: Double
+
+    static func makeSavedProjectClock(container: CPRContainer, source: CPRSourceAudioEvent,
+                                     retained: UnresolvedCPRAudioEvent, fades: CPRSourceAutoFadeArchive) throws
+        -> (plan: CPRPlacedSourceEventPlan, setup: CPRProjectAudioSetup) {
+        let setup = try CPRProjectAudioSetup.read(container: container)
+        guard setup.root == source.root else {
+            throw CPRProjectError.invalid("The saved audio setup and source event belong to different arrangement roots.")
+        }
+        let rate = try setup.supportedSampleRate()
+        let supplied = try make(container: container, source: source, retained: retained,
+                                fades: fades, timelineRate: rate)
+        let range = CPRSourceEventTimelineRange(contract: savedProjectClockContract,
+            position: supplied.range.position, duration: supplied.range.duration, offset: supplied.range.offset)
+        return (CPRPlacedSourceEventPlan(media: supplied.media, range: range, timelineRate: rate), setup)
+    }
 
     static func make(container: CPRContainer, source: CPRSourceAudioEvent,
                      retained: UnresolvedCPRAudioEvent,

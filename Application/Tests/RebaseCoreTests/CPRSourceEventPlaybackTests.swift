@@ -58,7 +58,10 @@ struct CPRSourceEventPlaybackTests {
             }
             let selected = temporary.appendingPathComponent("Synthetic seek markers.wav")
             try pcm.write(to: selected)
-            let project = try ProjectStore.attachCPRAudioMedia(from: selected, to: event.id, in: imported.project, at: package)
+            var project = try ProjectStore.attachCPRAudioMedia(from: selected, to: event.id, in: imported.project, at: package)
+            // This suite deliberately exercises an explicit application clock
+            // different from the source. V5 now recovers the saved 44100 Hz rate.
+            project.sampleRate = 48000
             try ProjectStore.save(project, to: package)
             let attachment = try #require(project.cprMediaAttachments.first)
             return Fixture(temporary: temporary, package: package, project: project, eventID: event.id,

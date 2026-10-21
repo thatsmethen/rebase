@@ -50,9 +50,13 @@ final class CPRProjectTests {
     /// Explicit historical interpretation, never a current report with a relabeled profile.
     private func v2Report(from source: URL, version: Int = 2) throws -> CPRInspection {
         let parsed = try CPRProject.readContainer(Data(contentsOf: source))
-        let decoded = try version == 2
-            ? CPRRecoveryV2(container: parsed).decode(sourceName: source.lastPathComponent)
-            : CPRRecoveryV3(container: parsed).decode(sourceName: source.lastPathComponent)
+        let decoded: (recovery: CPRRecoveryResult, clock: NativeTempoClock?)
+        switch version {
+        case 2: decoded = try CPRRecoveryV2(container: parsed).decode(sourceName: source.lastPathComponent)
+        case 3: decoded = try CPRRecoveryV3(container: parsed).decode(sourceName: source.lastPathComponent)
+        case 4: decoded = try CPRRecoveryV4(container: parsed).decode(sourceName: source.lastPathComponent)
+        default: throw CPRProjectError.invalid("Unsupported historical test profile.")
+        }
         let recovered = decoded.recovery
         return CPRInspection(schemaVersion: 2, interpretationProfile: "cpr-static-subset-v\(version)", nativeClock: decoded.clock,
             sourceName: source.lastPathComponent, sourceSHA256: parsed.sha256,
@@ -118,7 +122,7 @@ final class CPRProjectTests {
             let bytes = container(section("UnknownRoot", "OpaqueClass", Data([0x01, 0x02, 0x03])))
             try bytes.write(to: path)
             let report = try CPRProject.inspect(from: path)
-            #expect(report.schemaVersion == 2 && report.interpretationProfile == "cpr-static-subset-v4")
+            #expect(report.schemaVersion == 2 && report.interpretationProfile == CPRProject.currentInterpretationProfile)
             #expect(report.sourceSHA256 == digest(bytes))
             #expect(!report.canImport && report.recoveredProject == nil && report.recoveredTracks.isEmpty)
             #expect(!report.unsupported.isEmpty && report.applicationDefaults.isEmpty)
@@ -287,7 +291,7 @@ final class CPRProjectTests {
             let output = directory.appendingPathComponent("Profile.rebaseproj")
             let imported = try CPRProject.importProject(from: source, to: output, allowPartial: true)
             #expect(imported.report.schemaVersion == 2)
-            #expect(imported.report.interpretationProfile == "cpr-static-subset-v4")
+            #expect(imported.report.interpretationProfile == CPRProject.currentInterpretationProfile)
             let reportURL = output.appendingPathComponent(CPRProject.reportRelativePath)
             let currentProjectBytes = try Data(contentsOf: output.appendingPathComponent("Project.json"))
             let originalReport = try Data(contentsOf: reportURL)
@@ -295,12 +299,14 @@ final class CPRProjectTests {
             let frozen = try CPRRecoveryV1(container: CPRProject.readContainer(sourceBytes)).decode(sourceName: source.lastPathComponent)
             let frozenV2 = try v2Report(from: source)
             let frozenV3 = try v2Report(from: source, version: 3)
+            let frozenV4 = try v2Report(from: source, version: 4)
             for (schema, profile) in [(1, nil as String?), (1, "cpr-static-subset-v1"),
                                       (2, "cpr-static-subset-v1"), (2, "cpr-static-subset-v2"),
-                                      (2, "cpr-static-subset-v3"), (2, "cpr-static-subset-v4")] {
+                                      (2, "cpr-static-subset-v3"), (2, "cpr-static-subset-v4"), (2, "cpr-static-subset-v5")] {
                 // Profile declarations select their real baseline; relabeling a
                 // current report must not manufacture a historical interpretation.
-                let report = profile == "cpr-static-subset-v4" ? imported.report :
+                let report = profile == "cpr-static-subset-v5" ? imported.report :
+                    profile == "cpr-static-subset-v4" ? frozenV4 :
                     profile == "cpr-static-subset-v3" ? frozenV3 :
                     profile == "cpr-static-subset-v2" ? frozenV2 : CPRInspection(
                     schemaVersion: schema, interpretationProfile: profile, nativeClock: nil,
@@ -319,7 +325,7 @@ final class CPRProjectTests {
             }
             for (schema, profile) in [(1, "unknown-profile" as String?), (2, "unknown-profile"),
                                       (2, nil), (3, "cpr-static-subset-v1"), (0, nil),
-                                      (1, "cpr-static-subset-v2"), (1, "cpr-static-subset-v3"), (1, "cpr-static-subset-v4")] {
+                                      (1, "cpr-static-subset-v2"), (1, "cpr-static-subset-v3"), (1, "cpr-static-subset-v4"), (1, "cpr-static-subset-v5")] {
                 var object = originalObject
                 object["schemaVersion"] = schema
                 object["interpretationProfile"] = profile
@@ -391,7 +397,7 @@ final class CPRProjectTests {
             #expect(parsed.sections.count == 7)
             #expect(parsed.originalBytes == source)
             let inspection = try CPRProject.inspect(from: cprReference.appendingPathComponent(name))
-            #expect(inspection.interpretationProfile == "cpr-static-subset-v4")
+            #expect(inspection.interpretationProfile == CPRProject.currentInterpretationProfile)
             #expect(inspection.sourceSHA256 == digest(source))
             #expect(!inspection.recoveredTracks.isEmpty && !inspection.metadataFacts.isEmpty)
             #expect(inspection.recoveredTracks.filter { $0.kind == "Audio" }.count == inspection.recoveredTrackCount)
@@ -403,7 +409,8 @@ final class CPRProjectTests {
                 #expect(recovered.signatureMap.events.count == 1)
                 #expect(recovered.signatureMap.events[0].numerator == 4 && recovered.signatureMap.events[0].denominator == 4)
                 #expect(!inspection.applicationDefaults.contains { $0.contains("4/4") })
-                #expect(inspection.applicationDefaults.contains { $0.contains("48 kHz") })
+                #expect(!inspection.applicationDefaults.contains { $0.contains("48 kHz") })
+                #expect(recovered.sampleRate == 44100)
             }
             if name == "Stereo Mastering.cpr" {
                 #expect(inspection.canImport)
@@ -503,7 +510,7 @@ final class CPRProjectTests {
             let output = directory.appendingPathComponent("NativeClock.rebaseproj")
             let result = try CPRProject.importProject(from: source, to: output, allowPartial: true,
                                                       expectedSHA256: inspection.sourceSHA256)
-            #expect(result.report.interpretationProfile == "cpr-static-subset-v4")
+            #expect(result.report.interpretationProfile == CPRProject.currentInterpretationProfile)
             #expect(result.report.nativeClock?.interpretationProfile == "cpr-static-subset-v2")
             var loaded = try ProjectStore.load(from: output)
             #expect(loaded.tempoMap.nativeClock?.fixedBPMBits == 0x42fd0000)
@@ -577,12 +584,17 @@ final class CPRProjectTests {
                 #expect(historical.nativeObjects == frozenV3.nativeObjects)
                 // V4 adds the source audio event while the independently
                 // recovered fixed clock and signature interpretation stay exact.
-                var priorSubset = imported.project
+                let frozenV4 = try v2Report(from: source, version: 4)
+                var priorSubset = try #require(frozenV4.recoveredProject)
                 #expect(priorSubset.unresolvedAudioEvents.count == 1)
                 #expect(priorSubset.unresolvedAudioEvents[0].placement == nil)
                 for index in priorSubset.tracks.indices { priorSubset.tracks[index].unresolvedAudioEvents = [] }
                 #expect(historical.recoveredProject == priorSubset)
-                #expect(historical.recoveredFacts == imported.report.recoveredFacts.filter { !$0.hasPrefix("Recovered 1 unresolved audio event") })
+                #expect(historical.recoveredFacts == frozenV4.recoveredFacts.filter { !$0.hasPrefix("Recovered 1 unresolved audio event") })
+                var expectedV5 = try #require(frozenV4.recoveredProject)
+                #expect(expectedV5.sampleRate == 48000)
+                expectedV5.sampleRate = 44100
+                #expect(imported.project == expectedV5)
                 #expect(historical.nativeObjects.allSatisfy { imported.report.nativeObjects.contains($0) })
                 let loaded = try ProjectStore.load(from: destination)
                 #expect(loaded.tempoMap.nativeClock?.fixedBPMBits == 0x42fd0000)

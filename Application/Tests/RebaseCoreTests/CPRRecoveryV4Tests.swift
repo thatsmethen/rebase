@@ -212,7 +212,7 @@ struct CPRRecoveryV4Tests {
             let bytes = try source(name), package = root.appendingPathComponent(name + ".rebaseproj")
             let imported = try CPRProject.importProject(from: sourceURL(name), to: package,
                                                         allowPartial: true, expectedSHA256: cprSHA256(bytes))
-            #expect(imported.report.interpretationProfile == "cpr-static-subset-v4")
+            #expect(imported.report.interpretationProfile == CPRProject.currentInterpretationProfile)
             #expect(imported.project.unresolvedAudioEvents.count == 1)
             let originalURL = package.appendingPathComponent(CPRProject.originalRelativePath)
             let reportURL = package.appendingPathComponent(CPRProject.reportRelativePath)

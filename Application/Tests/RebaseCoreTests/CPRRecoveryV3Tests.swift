@@ -182,7 +182,7 @@ final class CPRRecoveryV3Tests {
         let source = root.appendingPathComponent("Map.cpr"), destination = root.appendingPathComponent("Map.rebaseproj")
         let bytes = fixture(); try bytes.write(to: source)
         let imported = try CPRProject.importProject(from: source, to: destination, allowPartial: true)
-        #expect(imported.report.interpretationProfile == "cpr-static-subset-v4")
+        #expect(imported.report.interpretationProfile == CPRProject.currentInterpretationProfile)
         #expect(imported.project.tempoMap.nativeClock?.mapRecords?.count == 2)
         #expect(try ProjectStore.load(from: destination) == imported.project)
         #expect(try CPRProject.compatibilityReport(from: destination) == imported.report)

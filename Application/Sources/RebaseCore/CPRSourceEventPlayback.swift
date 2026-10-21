@@ -5,6 +5,7 @@ public enum CPRSourceEventPlaybackMode: String, CaseIterable, Equatable, Sendabl
     case sourceRate
     case nativeTimelineSourceRate
     case nativeTimelineProjectClock
+    case nativeTimelineSavedProjectClock
     case nativeMode0ProjectRate
     case nativeMode1ProjectRate
     case nativeMode2ProjectRate
@@ -14,6 +15,7 @@ public enum CPRSourceEventPlaybackMode: String, CaseIterable, Equatable, Sendabl
         case .sourceRate: return "Stereo audition"
         case .nativeTimelineSourceRate: return "Native timeline reader"
         case .nativeTimelineProjectClock: return "Native project clock · unconverted"
+        case .nativeTimelineSavedProjectClock: return "Saved project clock · unconverted"
         case .nativeMode0ProjectRate: return "Native mode 0"
         case .nativeMode1ProjectRate: return "Native mode 1"
         case .nativeMode2ProjectRate: return "SoXR mode 2"
@@ -39,6 +41,7 @@ public struct CPRSourceEventPlaybackInfo: Equatable {
     public let sourceSHA256: String
     public let mediaSHA256: String
     public var timelineRange: CPRSourceEventTimelineRange? = nil
+    public var savedProjectAudioSetup: CPRProjectAudioSetup? = nil
     public var duration: Double { Double(frameCount) / sampleRate }
 }
 
@@ -49,12 +52,21 @@ enum CPRSourceEventPlayback {
     static func prepare(eventID: UUID, project: Project, root: URL,
                         mode: CPRSourceEventPlaybackMode = .sourceRate) throws
         -> (info: CPRSourceEventPlaybackInfo, audio: PreparedProject) {
-        if mode == .nativeTimelineSourceRate || mode == .nativeTimelineProjectClock {
+        if mode == .nativeTimelineSourceRate || mode == .nativeTimelineProjectClock || mode == .nativeTimelineSavedProjectClock {
             let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
             let fades = try CPRAutoFadeArchive.read(container: verified.container)
-            let placed = try CPRPlacedSourceEventPlan.make(container: verified.container,
-                source: verified.source, retained: verified.retained, fades: fades,
-                timelineRate: mode == .nativeTimelineProjectClock ? project.sampleRate : nil)
+            let placed: CPRPlacedSourceEventPlan
+            let savedSetup: CPRProjectAudioSetup?
+            if mode == .nativeTimelineSavedProjectClock {
+                let saved = try CPRPlacedSourceEventPlan.makeSavedProjectClock(container: verified.container,
+                    source: verified.source, retained: verified.retained, fades: fades)
+                placed = saved.plan; savedSetup = saved.setup
+            } else {
+                placed = try CPRPlacedSourceEventPlan.make(container: verified.container,
+                    source: verified.source, retained: verified.retained, fades: fades,
+                    timelineRate: mode == .nativeTimelineProjectClock ? project.sampleRate : nil)
+                savedSetup = nil
+            }
             let source = try CPRSourceEventRenderer.prepareMedia(plan: placed.media, retained: verified.retained,
                 sourceSHA256: verified.container.sha256, in: project, at: root)
             let stream = try CPRNativeTimelineStream(sampleRate: placed.timelineRate, segments: [
@@ -66,6 +78,7 @@ enum CPRSourceEventPlayback {
                 frameCount: stream.frameCount, sourceSHA256: source.sourceSHA256,
                 mediaSHA256: source.mediaSHA256)
             info.timelineRange = placed.range
+            info.savedProjectAudioSetup = savedSetup
             return (info, PreparedProject(format: stream.format, frameCount: stream.frameCount,
                 clips: [], nativeTimelineStream: stream))
         }

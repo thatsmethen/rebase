@@ -394,6 +394,77 @@ struct CPRPlacedSourceEventTests {
         #expect(zeroPlan.range.position.bitPattern == 0 && zeroPlan.range.offset.bitPattern == 0)
     }
 
+    @Test func SavedProjectClockDrivesUnconvertedPCMAndSurvivesApplicationEdits() throws {
+        let folder = try temporary(); defer { try? FileManager.default.removeItem(at: folder) }
+        let mediaURL = folder.appendingPathComponent("Synthetic.wav"); try media().write(to: mediaURL)
+        for (rate, first, last, offset): (Float, Int64, Int64, Int64) in [
+            (32000,48000,51200,640), (48000,72000,76800,960), (88200,132300,141120,1764)
+        ] {
+            var bytes = try changed(original(),start:Double(960).bitPattern,
+                length:Double(4410).bitPattern,offset:Double(882).bitPattern)
+            // Independently pinned LoFi setup field address, before importing.
+            put(rate.bitPattern,at:0x13b503,in:&bytes)
+            let (baseline,package,id) = try imported(bytes,mediaURL:mediaURL,folder:folder,name:"Saved\(Int(rate))")
+            #expect(baseline.sampleRate == Double(rate))
+            var edited = baseline
+            try edited.convertToApplicationTiming()
+            try edited.replaceTempoMap(TempoMap(events:[TempoEvent(beat:0,bpm:37)]))
+            edited.sampleRate = 44100
+            try ProjectStore.save(edited,to:package)
+            let before = try snapshot(package), loaded = try ProjectStore.load(from:package)
+            let prepared = try CPRSourceEventPlayback.prepare(eventID:id,project:loaded,root:package,mode:.nativeTimelineSavedProjectClock)
+            #expect(prepared.info.sampleRate == Double(rate) && prepared.info.sourceSampleRate == 44100)
+            #expect(prepared.info.frameCount == last && prepared.info.mode == .nativeTimelineSavedProjectClock)
+            let stream = try #require(prepared.audio.nativeTimelineStream)
+            for block in [257,4096] {
+                let cursor = try stream.cursor(from:0); var position:Int64 = 0
+                while let output = try cursor.nextBuffer(maximumFrames:block) {
+                    check(output,at:position,first:first,last:last,offset:offset)
+                    position += Int64(output.frameLength)
+                }
+                #expect(position == last && cursor.isAtEnd)
+            }
+            for seek in [first-1,first,last-1,last] {
+                let cursor = try stream.cursor(from:seek)
+                if let output = try cursor.nextBuffer(maximumFrames:257) {
+                    check(output,at:seek,first:first,last:last,offset:offset)
+                } else { #expect(seek == last) }
+            }
+            let explicit = try CPRSourceEventPlayback.prepare(eventID:id,project:loaded,root:package,mode:.nativeTimelineProjectClock)
+            #expect(explicit.info.sampleRate == 44100 && explicit.info.frameCount == 70560)
+            #expect(explicit.info.timelineRange?.contract != prepared.info.timelineRange?.contract)
+            let inspected = try CPRSourceAudioInspection.inspect(eventID:id,in:loaded,at:package)
+            #expect(inspected.nativeSavedProjectClockRange == prepared.info.timelineRange)
+            #expect(inspected.nativeSavedProjectClockPlaybackUnavailableReason == nil)
+            #expect(try inspected.savedProjectAudioSetup?.supportedSampleRate() == Double(rate))
+            #expect(rejects { _ = try OfflineRenderer.render(project:loaded,projectRoot:package) })
+            #expect(try snapshot(package) == before)
+        }
+    }
+
+    @Test func UnsupportedSavedFactorCannotSelectDefaultRateAndCustodyIsRechecked() throws {
+        let folder = try temporary(); defer { try? FileManager.default.removeItem(at:folder) }
+        let mediaURL = folder.appendingPathComponent("Synthetic.wav"); try media().write(to:mediaURL)
+        var bytes = try original()
+        put(Double(1.001).bitPattern,at:0x13b52f,in:&bytes)
+        let (project,package,id) = try imported(bytes,mediaURL:mediaURL,folder:folder,name:"Factor")
+        #expect(project.sampleRate == 48000)
+        let before = try snapshot(package)
+        let inspected = try CPRSourceAudioInspection.inspect(eventID:id,in:project,at:package)
+        #expect(inspected.savedProjectAudioSetup?.factorBits == Double(1.001).bitPattern)
+        #expect(inspected.nativeSavedProjectClockPlaybackUnavailableReason != nil)
+        #expect(inspected.nativeSavedProjectClockRange == nil)
+        #expect(rejects { _ = try CPRSourceEventPlayback.prepare(eventID:id,project:project,root:package,mode:.nativeTimelineSavedProjectClock) })
+        #expect(try CPRSourceEventPlayback.prepare(eventID:id,project:project,root:package,mode:.nativeTimelineSourceRate).info.sampleRate == 44100)
+        #expect(try snapshot(package) == before)
+        let originalURL = package.appendingPathComponent(CPRProject.originalRelativePath)
+        put(Double(1).bitPattern,at:0x13b52f,in:&bytes)
+        try bytes.write(to:originalURL)
+        // A newly admissible factor is still rejected when it disagrees with
+        // the preserved source/report proof. There is no cached setup fallback.
+        #expect(rejects { _ = try CPRSourceEventPlayback.prepare(eventID:id,project:project,root:package,mode:.nativeTimelineSavedProjectClock) })
+    }
+
     @Test func FreshProofMediaAndRejectedPublicationLeavePackageIntact() throws {
         let folder = try temporary(); defer { try? FileManager.default.removeItem(at: folder) }
         let derived = try changed(original(),start:Double(960).bitPattern,length:Double(8193).bitPattern,offset:Double(441).bitPattern)

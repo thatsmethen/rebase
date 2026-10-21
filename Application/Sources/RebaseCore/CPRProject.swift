@@ -63,6 +63,8 @@ public struct CPRInspection: Codable, Equatable {
     public let applicationDefaults: [String]
     public let unsupported: [CPRUnsupportedItem]
     public let recoveredProject: Project?
+    /// Added by V5 only. A missing field in historical reports remains nil.
+    public var audioSetup: CPRProjectAudioSetup? = nil
     public var canImport: Bool { recoveredProject != nil }
     public var recoveredTrackCount: Int { recoveredProject?.tracks.count ?? 0 }
     public var recoveredClipCount: Int { recoveredProject?.tracks.flatMap(\.clips).count ?? 0 }
@@ -89,7 +91,7 @@ public enum CPRProject {
     public static let maximumFileBytes = 268_435_456
     public static let originalRelativePath = "Compatibility/CPR/Original.cpr"
     public static let reportRelativePath = "Compatibility/CPR/ImportReport.json"
-    public static let currentInterpretationProfile = "cpr-static-subset-v4"
+    public static let currentInterpretationProfile = "cpr-static-subset-v5"
     private static let maximumSections = 4096
     private static let maximumNameBytes = 4096
     private static let maximumReportBytes = 8_388_608
@@ -216,7 +218,7 @@ public enum CPRProject {
         return report
     }
 
-    private enum Interpretation { case v1, v2, v3, v4 }
+    private enum Interpretation { case v1, v2, v3, v4, v5 }
 
     private static func interpretation(schemaVersion: Int, declaredProfile: String?) throws -> Interpretation {
         guard schemaVersion == 1 || schemaVersion == 2 else {
@@ -230,6 +232,7 @@ public enum CPRProject {
         case "cpr-static-subset-v2" where schemaVersion == 2: return .v2
         case "cpr-static-subset-v3" where schemaVersion == 2: return .v3
         case "cpr-static-subset-v4" where schemaVersion == 2: return .v4
+        case "cpr-static-subset-v5" where schemaVersion == 2: return .v5
         default: throw CPRProjectError.unsupported("Compatibility interpretation profile \(profile) is not supported.")
         }
     }
@@ -238,6 +241,7 @@ public enum CPRProject {
                                 declaredProfile: String? = currentInterpretationProfile) throws -> CPRInspection {
         let recovery: CPRRecoveryResult
         let nativeClock: NativeTempoClock?
+        var audioSetup: CPRProjectAudioSetup?
         switch try interpretation(schemaVersion: schemaVersion, declaredProfile: declaredProfile) {
         case .v1:
             recovery = try CPRRecoveryV1(container: container).decode(sourceName: sourceName)
@@ -251,13 +255,16 @@ public enum CPRProject {
         case .v4:
             let decoded = try CPRRecoveryV4(container: container).decode(sourceName: sourceName)
             recovery = decoded.recovery; nativeClock = decoded.clock
+        case .v5:
+            let decoded = try CPRRecoveryV5(container: container).decode(sourceName: sourceName)
+            recovery = decoded.recovery; nativeClock = decoded.clock; audioSetup = decoded.audioSetup
         }
         return CPRInspection(schemaVersion: schemaVersion, interpretationProfile: declaredProfile, nativeClock: nativeClock,
             sourceName: sourceName, sourceSHA256: container.sha256,
             sourceByteCount: container.originalBytes.count, sections: container.sections,
             recoveredFacts: recovery.facts, metadataFacts: recovery.metadata, recoveredTracks: recovery.tracks,
             nativeObjects: recovery.objects, applicationDefaults: recovery.defaults,
-            unsupported: recovery.unsupported, recoveredProject: recovery.project)
+            unsupported: recovery.unsupported, recoveredProject: recovery.project, audioSetup: audioSetup)
     }
 
     static func readSource(_ source: URL) throws -> CPRContainer {

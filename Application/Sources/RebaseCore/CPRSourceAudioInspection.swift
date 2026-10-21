@@ -29,6 +29,9 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
     public let nativeTimelineRange: CPRSourceEventTimelineRange?
     public let nativeProjectClockPlaybackUnavailableReason: String?
     public let nativeProjectClockRange: CPRSourceEventTimelineRange?
+    public let savedProjectAudioSetup: CPRProjectAudioSetup?
+    public let nativeSavedProjectClockPlaybackUnavailableReason: String?
+    public let nativeSavedProjectClockRange: CPRSourceEventTimelineRange?
 
     public static func inspect(eventID: UUID, in project: Project, at root: URL) throws -> CPRSourceAudioInspection {
         let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
@@ -79,6 +82,21 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
             projectClockReason = error.localizedDescription
             projectClockRange = nil
         }
+        var savedSetup: CPRProjectAudioSetup?
+        let savedClockReason: String?
+        let savedClockRange: CPRSourceEventTimelineRange?
+        do {
+            // Retain raw source configuration for inspection even when its rate
+            // or factor is outside the narrower playback policy.
+            savedSetup = try CPRProjectAudioSetup.read(container: verified.container)
+            let saved = try CPRPlacedSourceEventPlan.makeSavedProjectClock(container: verified.container,
+                source: source, retained: verified.retained, fades: fades)
+            savedClockRange = saved.plan.range
+            savedClockReason = project.attachedMedia(for: verified.retained) == nil ? "Attach matching PCM24 WAV media first." : nil
+        } catch {
+            savedClockReason = error.localizedDescription
+            savedClockRange = nil
+        }
         return CPRSourceAudioInspection(eventID: eventID, name: verified.retained.name,
             sourceSHA256: verified.container.sha256, eventIdentity: source.event.identityOffset,
             trackIdentity: source.trackIdentity, volume: Float(bitPattern: source.volumeBits),
@@ -91,7 +109,9 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
             projectSampleRate: project.sampleRate, rateConvertedPlaybackUnavailableReason: rateReason,
             mode2PlaybackUnavailableReason: mode2Reason, mode1PlaybackUnavailableReason: mode1Reason,
             nativeTimelinePlaybackUnavailableReason: nativeReason, nativeTimelineRange: nativeRange,
-            nativeProjectClockPlaybackUnavailableReason: projectClockReason, nativeProjectClockRange: projectClockRange)
+            nativeProjectClockPlaybackUnavailableReason: projectClockReason, nativeProjectClockRange: projectClockRange,
+            savedProjectAudioSetup: savedSetup, nativeSavedProjectClockPlaybackUnavailableReason: savedClockReason,
+            nativeSavedProjectClockRange: savedClockRange)
     }
 }
 

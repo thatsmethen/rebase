@@ -11,6 +11,7 @@ struct CPRSourceAudioView: View {
         case .sourceRate: return inspection.timelinePlaybackUnavailableReason
         case .nativeTimelineSourceRate: return inspection.nativeTimelinePlaybackUnavailableReason
         case .nativeTimelineProjectClock: return inspection.nativeProjectClockPlaybackUnavailableReason
+        case .nativeTimelineSavedProjectClock: return inspection.nativeSavedProjectClockPlaybackUnavailableReason
         case .nativeMode0ProjectRate: return inspection.rateConvertedPlaybackUnavailableReason
         case .nativeMode2ProjectRate: return inspection.mode2PlaybackUnavailableReason
         case .nativeMode1ProjectRate: return inspection.mode1PlaybackUnavailableReason
@@ -25,6 +26,10 @@ struct CPRSourceAudioView: View {
             Text(inspection.name).font(.headline).textSelection(.enabled)
             Text("Saved Reference event settings").font(.caption).foregroundStyle(.secondary)
             Grid(alignment: .leading, horizontalSpacing: 28, verticalSpacing: 10) {
+                if let setup = inspection.savedProjectAudioSetup {
+                    row("Saved project rate", String(format: "%.9g Hz · factor %.9g",
+                        Double(Float(bitPattern: setup.baseRateBits)), Double(bitPattern: setup.factorBits)))
+                }
                 row("Event gain", String(format: "%.6g", Double(inspection.volume)))
                 row("Phase inversion", inspection.inverted ? "Enabled" : "Off")
                 row("Explicit fade in / out", "\(inspection.hasExplicitFadeIn ? "Present" : "None") / \(inspection.hasExplicitFadeOut ? "Present" : "None")")
@@ -48,7 +53,8 @@ struct CPRSourceAudioView: View {
             Picker("Audition rate", selection: $playbackMode) {
                 Text("Original source rate").tag(CPRSourceEventPlaybackMode.sourceRate)
                 Text("Native timeline reader · original rate").tag(CPRSourceEventPlaybackMode.nativeTimelineSourceRate)
-                Text("Native timeline reader · project clock, unconverted").tag(CPRSourceEventPlaybackMode.nativeTimelineProjectClock)
+                Text("Native timeline reader · Rebase clock, unconverted").tag(CPRSourceEventPlaybackMode.nativeTimelineProjectClock)
+                Text("Native timeline reader · saved CPR clock, unconverted").tag(CPRSourceEventPlaybackMode.nativeTimelineSavedProjectClock)
                 Text("Project rate · native linear mode 0").tag(CPRSourceEventPlaybackMode.nativeMode0ProjectRate)
                 Text("Project rate · native sinc mode 1").tag(CPRSourceEventPlaybackMode.nativeMode1ProjectRate)
                 Text("Project rate · SoXR mode 2").tag(CPRSourceEventPlaybackMode.nativeMode2ProjectRate)
@@ -63,10 +69,19 @@ struct CPRSourceAudioView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             if playbackMode == .nativeTimelineProjectClock {
-                Text("Reads source frames at this Rebase project’s \(Int(inspection.projectSampleRate)) Hz clock without conversion. A different source rate changes speed and pitch. Saved source timing is preserved; Rebase supplies the clock rate because the original project rate is not yet recovered.")
+                Text("Reads source frames at this Rebase project’s \(Int(inspection.projectSampleRate)) Hz clock without conversion. A different source rate changes speed and pitch. Saved source timing is preserved; this option uses the current Rebase rate, including any edits since import.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                 if let range = inspection.nativeProjectClockRange {
                     Text(String(format: "Project clock · start %.6f s · duration %.6f s · saved offset %.6f s", range.position, range.duration, range.offset))
+                        .font(.caption.monospacedDigit()).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            if playbackMode == .nativeTimelineSavedProjectClock {
+                Text("Uses the project rate saved in the original CPR. Rebase rate and tempo edits do not alter this audition. Source frames remain unconverted, so a different source rate changes speed and pitch. Live Reference device settings are not reconstructed.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                if let range = inspection.nativeSavedProjectClockRange {
+                    Text(String(format: "Saved CPR clock · start %.6f s · duration %.6f s · saved offset %.6f s", range.position, range.duration, range.offset))
                         .font(.caption.monospacedDigit()).foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
