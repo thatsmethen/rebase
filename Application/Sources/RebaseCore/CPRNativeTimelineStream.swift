@@ -82,6 +82,7 @@ struct CPRNativeTimelineStream {
     final class Cursor {
         private let stream: CPRNativeTimelineStream
         private var segmentIndex = 0
+        private var activeAccessor: (segment: Int, accessor: CPRNativeAudioAccessor)?
         private(set) var deliveredFrames: Int64
         var isAtEnd: Bool { deliveredFrames == stream.frameCount }
 
@@ -109,6 +110,13 @@ struct CPRNativeTimelineStream {
             var position = first
             var index = segmentIndex
             while position < end {
+                // The native lease survives another block selecting the same
+                // descriptor, and ends when selection changes (including nil).
+                // A dictionary of every visited segment would retain history
+                // beyond the native last-descriptor cache's lifetime.
+                if activeAccessor?.segment != index || index >= stream.segments.count {
+                    activeAccessor = nil
+                }
                 var plan = RBTimelinePlan()
                 let status: Int32
                 if index < stream.segments.count {
@@ -134,22 +142,33 @@ struct CPRNativeTimelineStream {
                         throw CPRNativeTimelineStream.invalid
                     }
                     let count = Int(plan.readFrames)
-                    // This immutable memory backend returns the full requested
-                    // interval. Native transient I/O retry is tested separately;
-                    // no invented retry/error is emitted by this backend.
+                    // Retain the accessor for the active descriptor. This
+                    // admitted equal-rate source has no filter;
+                    // differing-rate accessor state is tested independently
+                    // until its upstream timeline context is bound.
+                    let accessor: CPRNativeAudioAccessor
+                    if let cached = activeAccessor { accessor = cached.accessor }
+                    else {
+                        accessor = try CPRNativeAudioAccessor(source: source.samples,
+                            sourceRate: stream.format.sampleRate,
+                            outputRate: stream.format.sampleRate)
+                        activeAccessor = (index, accessor)
+                    }
+                    _ = try accessor.seek(to: plan.sourceSeek)
+                    let read = try accessor.read(requestedFrames: count)
+                    var decision = RBTimelineReadDecision()
+                    guard rb_cpr_timeline_read_result(Int32(count), plan.readBegin, plan.segmentStart,
+                        0, Int32(read.returnedOutputFrames), &decision) == 0,
+                        decision.action == RB_TIMELINE_READ_COMPLETE else { throw CPRNativeTimelineStream.invalid }
                     for channel in 0..<2 {
                         let output = channels[channel].advanced(by: Int(plan.readOffset))
                         for frame in 0..<count {
-                            output[frame] = source.samples[(Int(plan.sourceSeek) + frame) * 2 + channel]
+                            output[frame] = read.samples[frame * 2 + channel]
                         }
                         guard rb_cpr_event_gain_f32(output, count, source.gain.bitPattern) == 0 else {
                             throw CPRNativeTimelineStream.invalid
                         }
                     }
-                    var decision = RBTimelineReadDecision()
-                    guard rb_cpr_timeline_read_result(Int32(count), plan.readBegin, plan.segmentStart,
-                        0, Int32(count), &decision) == 0,
-                        decision.action == RB_TIMELINE_READ_COMPLETE else { throw CPRNativeTimelineStream.invalid }
                 }
                 guard plan.nextCursor > position || plan.stopAfter != 0 else { throw CPRNativeTimelineStream.invalid }
                 position = plan.nextCursor
