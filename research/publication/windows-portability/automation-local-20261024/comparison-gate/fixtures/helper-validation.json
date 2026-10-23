@@ -1,0 +1,24 @@
+{
+  "schema": "rebase.local-session-automation-validation.v1",
+  "status": "passed",
+  "scope": "Actual normal Release helper on macOS arm64; no Windows or audio-device execution claim",
+  "helper": {
+    "bytes": 2259072,
+    "sha256": "2909ad4d45e3721f427157651c317d695d95020b60e9447998dfca4c17284595",
+    "configuration": "Release, ordinary production flags"
+  },
+  "wrapper": {
+    "path": "Application/scripts/check-session-protocol.py",
+    "sha256": "0af693a65ed487c4979546bf6d6d477efac574ea8d8401dcb522b49372971282"
+  },
+  "report": {
+    "name": "helper-protocol-01.json",
+    "sha256": "e4f6ef07348d060a3531681e81a4c1dbe72579fcd006b12cc7583666af7e6f06",
+    "checks": 169,
+    "automation_checks_added": 78
+  },
+  "python_version": "3.12.4",
+  "privacy_blockers": 0,
+  "privacy_review_records": 0,
+  "command": "python3 Application/scripts/check-session-protocol.py --helper <ordinary-Release-helper> --example \"Application/Examples/Rebase Preview.rebaseproj\" --source-project Application/Tests/Fixtures/SourceAudition/AuthoredSource.rebaseproj --source-media Application/Tests/Fixtures/SourceAudition/SelectedSource.wav --source-lock Application/Tests/Fixtures/SourceAudition/expected.json --report <ignored-local-work>/helper-protocol-01.json"
+}

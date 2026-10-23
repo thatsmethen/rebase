@@ -1,0 +1,80 @@
+{
+  "schema": "rebase.windows-root-visual-review.v1",
+  "source_commit": "32e6d37fd4afb96f4957f5d715df8af09afa4bce",
+  "run_id": 40040015003,
+  "method": "Direct inspection of all twelve original native WPF client PNGs through local image viewing.",
+  "images": [
+    {
+      "file": "native-app-visual.png",
+      "sha256": "92837bc71574a1b95e4114e05f545fea9e38897ad25dcc095ea864f1c7885d7f",
+      "observation": "Four compact track rows, real waveforms, Inspector automation entry, channel strips and transport fit in the client."
+    },
+    {
+      "file": "native-source-visual.png",
+      "sha256": "8f46fd96682f1184139ae372443599eca8d585a8c67011b6ca8ac8c7a4eaaa69",
+      "observation": "Source attachment, audition and export remain visible in the scrolling Inspector, with separate project-playback limitation. Shortcut help may require scrolling."
+    },
+    {
+      "file": "native-timeline-scroll-visual.png",
+      "sha256": "f81d162a9a99b537d973d355c3445d5739c9806be3eaad16a97938907d471f07",
+      "observation": "Horizontal scrolling moves the events while track headers and the ruler corner remain fixed."
+    },
+    {
+      "file": "native-workspace-normal-visual.png",
+      "sha256": "d6f02ff5491ec7cc2aac96b35544d45d44c2facfdba9c0dc8652a3134857bfd3",
+      "observation": "Four normal-height rows fit with the Inspector and mixer retained."
+    },
+    {
+      "file": "native-workspace-expanded-visual.png",
+      "sha256": "fe749e25219e7d03aaa5839b5d927bb199f3f3889148a67f2c261ddab4ab7b09",
+      "observation": "Hiding side and lower panels expands the timeline and its row dividers to the available width."
+    },
+    {
+      "file": "native-top-rows-long-names-visual.png",
+      "sha256": "386098c635f898c16dd14c34dabd1dd37fa32c9a95f5ea6dc4e593df11e223cb",
+      "observation": "Long project and event names truncate inside their cells while ordinary timing values remain visible."
+    },
+    {
+      "file": "native-top-rows-wide-visual.png",
+      "sha256": "386098c635f898c16dd14c34dabd1dd37fa32c9a95f5ea6dc4e593df11e223cb",
+      "observation": "The wider-window request remains constrained to the original observed client; no wider-desktop evidence is claimed."
+    },
+    {
+      "file": "native-cpr-review-visual.png",
+      "sha256": "e0a3943d8698f6132b752149f5fdfda7778e2d66a1925e31239943c510403ca0",
+      "observation": "Source identity, scrollable report, pagination and Cancel/Import controls fit in the captured client."
+    },
+    {
+      "file": "native-cpr-review-minimum-error-visual.png",
+      "sha256": "4262f6bbe96ace30489893b705f4a82f28f01251535f790ff9409f9759e39b54",
+      "observation": "The changed-source message wraps beside complete Cancel/Import buttons at minimum size."
+    },
+    {
+      "file": "native-automation-minimum-visual.png",
+      "sha256": "4be3c65f97bb63bc2ecb1467e54a952cb0eef2a28e4d63f27efb8f2d37cd200f",
+      "observation": "The volume curve, five-point list, exact fields, interpolation selector, point actions and history/Close footer fit at the minimum window size."
+    },
+    {
+      "file": "native-automation-invalid-visual.png",
+      "sha256": "5408fd5a73fcc13cfebaebd8b422a8deb3e4b7968d9ad084d2b4755fdbb6d16f",
+      "observation": "NaN remains visible in the draft value field; the finite-value validation message and footer remain fully visible."
+    },
+    {
+      "file": "native-automation-read-off-visual.png",
+      "sha256": "7574078f4c9f7b99551202ec4cf43cabfc1274c9ab0c97e7b6e9bd8dfd06726d",
+      "observation": "Read is visibly off, stored points remain listed, the disabled Hold curve and dashed manual-value line are visible, and explanatory text states the manual playback value."
+    }
+  ],
+  "acceptance": "No clipped required actions, validation messages, missing backgrounds or timeline alignment defects observed in the twelve exercised client states.",
+  "automation_client_pixels": [
+    664,
+    521
+  ],
+  "limitations": [
+    "Client captures exclude the native operating-system frame.",
+    "Physical input, file dialogs and audio-device output remain unverified.",
+    "The source Inspector scrolls; not every help line fits at once.",
+    "The wider-window request remained constrained; no wider-screen validation.",
+    "This scoped editor and workflow acceptance does not establish full Windows parity or reference fidelity."
+  ]
+}

@@ -1,0 +1,619 @@
+{
+  "schema": "rebase.authored-comparison-gate-controls.v1",
+  "evidence_class": "authored-gate-control",
+  "platform_execution_claim": false,
+  "scope": "Four labelled lane records are constructed from one actual macOS helper receipt. No Windows execution is implied.",
+  "source_session": {
+    "path": "research/publication/windows-portability/automation-local-20261024/comparison-gate/fixtures/helper-protocol.json",
+    "sha256": "e4f6ef07348d060a3531681e81a4c1dbe72579fcd006b12cc7583666af7e6f06"
+  },
+  "instrument_sources": [
+    {
+      "path": ".local/work/automation-comparison-public-harness-verification/instrument/Application/scripts/compare-portable-renders.py",
+      "sha256": "9aff194fc252f7915e9dcaa61debcc74f723b59a038deb9711713b8d0777852e"
+    },
+    {
+      "path": ".local/work/automation-comparison-public-harness-verification/instrument/Application/scripts/windows_automation_gate.py",
+      "sha256": "ab8926d0e10af4c843c7314997d7adfbf9d1aa8ed10114774192ea33972655c2"
+    }
+  ],
+  "cases": 66,
+  "matched": 66,
+  "unexpected": [],
+  "checks": [
+    {
+      "name": "valid-four-lanes",
+      "expected": "accept",
+      "exit_code": 0,
+      "observed": "passed",
+      "expectation_matched": true,
+      "error": null,
+      "result_sha256": "d5c37dba6c662411890c2f6fadfc0f2fd4efb36faae5cf1d386ad14b02dc53ff"
+    },
+    {
+      "name": "missing-lane",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Expected exactly Windows/macOS Debug and Release render records",
+      "result_sha256": "ddfdf4b932940faef36e8fe1e8d31f07e9a5af6d819069457df5c15b745378a1"
+    },
+    {
+      "name": "duplicate-lane",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Expected exactly Windows/macOS Debug and Release render records",
+      "result_sha256": "ddfdf4b932940faef36e8fe1e8d31f07e9a5af6d819069457df5c15b745378a1"
+    },
+    {
+      "name": "extra-lane",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Expected exactly Windows/macOS Debug and Release render records",
+      "result_sha256": "ddfdf4b932940faef36e8fe1e8d31f07e9a5af6d819069457df5c15b745378a1"
+    },
+    {
+      "name": "malformed-render-json",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Missing or malformed receipt: example-render.json",
+      "result_sha256": "4c5b8f61e5d9e098878143b036b86ff46f641d495406228aebc7c3fe4db94f6b"
+    },
+    {
+      "name": "malformed-lane-json",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Missing or malformed receipt: conformance.json",
+      "result_sha256": "7f238ab70a6c0d3cae1a8b60fb48b4e15b49d6b0f8e0427e96a40111cf84ef78"
+    },
+    {
+      "name": "malformed-session-json",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Missing or malformed receipt: session-protocol.json",
+      "result_sha256": "ef5e15582746fe037b912ecfb74ad1a04b7f3ebdf4d767a9c551713e1b19be50"
+    },
+    {
+      "name": "missing-conformance",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Missing or malformed receipt: conformance.json",
+      "result_sha256": "7f238ab70a6c0d3cae1a8b60fb48b4e15b49d6b0f8e0427e96a40111cf84ef78"
+    },
+    {
+      "name": "missing-session-protocol",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Missing or malformed receipt: session-protocol.json",
+      "result_sha256": "ef5e15582746fe037b912ecfb74ad1a04b7f3ebdf4d767a9c551713e1b19be50"
+    },
+    {
+      "name": "missing-render-field",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Render or lock identity is missing or malformed",
+      "result_sha256": "3252cff0b37bb7721de6a979b475261b4bb6dfced66aa8661df73e9e76b0e4fd"
+    },
+    {
+      "name": "missing-automation",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Packaged automation commands did not complete every required control",
+      "result_sha256": "a2e817b9843f470092e88d3e5a082d3f605838c1f7513e82153e84ab777bd996"
+    },
+    {
+      "name": "missing-lane-summary",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Packaged automation commands did not complete every required control",
+      "result_sha256": "a2e817b9843f470092e88d3e5a082d3f605838c1f7513e82153e84ab777bd996"
+    },
+    {
+      "name": "failed-lane-status",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation comparison needs a successful source-matched session for every lane",
+      "result_sha256": "c0f48ad858cce88eed0a0292d54f48ef2104c6cd74e78cc9061ace5c1f06d73e"
+    },
+    {
+      "name": "missing-lane-status",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation comparison needs a successful source-matched session for every lane",
+      "result_sha256": "c0f48ad858cce88eed0a0292d54f48ef2104c6cd74e78cc9061ace5c1f06d73e"
+    },
+    {
+      "name": "failed-session-status",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation comparison needs a successful source-matched session for every lane",
+      "result_sha256": "c0f48ad858cce88eed0a0292d54f48ef2104c6cd74e78cc9061ace5c1f06d73e"
+    },
+    {
+      "name": "missing-session-status",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation comparison needs a successful source-matched session for every lane",
+      "result_sha256": "c0f48ad858cce88eed0a0292d54f48ef2104c6cd74e78cc9061ace5c1f06d73e"
+    },
+    {
+      "name": "source-commit-mismatch",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation comparison needs a successful source-matched session for every lane",
+      "result_sha256": "c0f48ad858cce88eed0a0292d54f48ef2104c6cd74e78cc9061ace5c1f06d73e"
+    },
+    {
+      "name": "source-platform-mismatch",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation comparison needs a successful source-matched session for every lane",
+      "result_sha256": "c0f48ad858cce88eed0a0292d54f48ef2104c6cd74e78cc9061ace5c1f06d73e"
+    },
+    {
+      "name": "source-configuration-mismatch",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation comparison needs a successful source-matched session for every lane",
+      "result_sha256": "c0f48ad858cce88eed0a0292d54f48ef2104c6cd74e78cc9061ace5c1f06d73e"
+    },
+    {
+      "name": "source-architecture-mismatch",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation comparison needs a successful source-matched session for every lane",
+      "result_sha256": "c0f48ad858cce88eed0a0292d54f48ef2104c6cd74e78cc9061ace5c1f06d73e"
+    },
+    {
+      "name": "edited-wav-divergence",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Edited/restored automation output differs across platform or configuration",
+      "result_sha256": "dc7c3cbffceb133e1e140682b2e9377aaeab9d1924dc59b6cfee8ebf49ef800d"
+    },
+    {
+      "name": "edited-pcm-divergence",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Edited/restored automation output differs across platform or configuration",
+      "result_sha256": "dc7c3cbffceb133e1e140682b2e9377aaeab9d1924dc59b6cfee8ebf49ef800d"
+    },
+    {
+      "name": "restored-wav-divergence",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation render did not change and then restore the locked original bytes",
+      "result_sha256": "cd0dd320637101779ed7820f0cb78742e13cdd602c55204ee068af7af7948d3f"
+    },
+    {
+      "name": "summary-receipt-divergence",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation conformance summary differs from its actual process receipt",
+      "result_sha256": "e7628fff8dfce53f21f87fde4515461eafdd73c503cb7ccce4461eba8814c2e0"
+    },
+    {
+      "name": "automation-gate-false",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Packaged automation commands did not complete every required control",
+      "result_sha256": "a2e817b9843f470092e88d3e5a082d3f605838c1f7513e82153e84ab777bd996"
+    },
+    {
+      "name": "automation-gate-missing",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Packaged automation commands did not complete every required control",
+      "result_sha256": "a2e817b9843f470092e88d3e5a082d3f605838c1f7513e82153e84ab777bd996"
+    },
+    {
+      "name": "automation-gate-numeric-true",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Packaged automation commands did not complete every required control",
+      "result_sha256": "a2e817b9843f470092e88d3e5a082d3f605838c1f7513e82153e84ab777bd996"
+    },
+    {
+      "name": "automation-malformed-hash",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation render identity is missing or malformed",
+      "result_sha256": "62e688724c6830c1e79fdb7154c0509e973097fb07288cfcc3ee760c8c600e4a"
+    },
+    {
+      "name": "automation-unchanged-render",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation render did not change and then restore the locked original bytes",
+      "result_sha256": "cd0dd320637101779ed7820f0cb78742e13cdd602c55204ee068af7af7948d3f"
+    },
+    {
+      "name": "automation-wrong-original-identity",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation receipt is not bound to the authored track and lane",
+      "result_sha256": "7c57dd9155d875898fe5df8b541b9ea8e2f7798bbd9ad1a8cdebc7b29543a300"
+    },
+    {
+      "name": "automation-point-count-bool",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation protocol receipt has incomplete counts or an unsupported evidence claim",
+      "result_sha256": "48eceea438f7cf8cdc068d00cda646dc4cf178580a744d5f642e032e058e8075"
+    },
+    {
+      "name": "automation-missing-mutations",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation protocol receipt has incomplete counts or an unsupported evidence claim",
+      "result_sha256": "48eceea438f7cf8cdc068d00cda646dc4cf178580a744d5f642e032e058e8075"
+    },
+    {
+      "name": "automation-missing-invalid-controls",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Automation protocol receipt has incomplete counts or an unsupported evidence claim",
+      "result_sha256": "48eceea438f7cf8cdc068d00cda646dc4cf178580a744d5f642e032e058e8075"
+    },
+    {
+      "name": "original-lock-not-matched",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Every render must match the predeclared example lock",
+      "result_sha256": "492d6214b98c54d851eafb1d0ae7e32328ea98f04b1de3cbfd3f3ebd7bf0ce19"
+    },
+    {
+      "name": "original-file-not-regular",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Every render must verify regular-file publication and preservation on overwrite refusal",
+      "result_sha256": "4581b0de01e4816e93a310bf8e85a7cc47583c657b19893154c2112e00bd8f6a"
+    },
+    {
+      "name": "original-overwrite-unverified",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Every render must verify regular-file publication and preservation on overwrite refusal",
+      "result_sha256": "4581b0de01e4816e93a310bf8e85a7cc47583c657b19893154c2112e00bd8f6a"
+    },
+    {
+      "name": "unsupported-render-schema",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Unsupported receipt schema: example-render.json",
+      "result_sha256": "7ba73d23f617ca9c0e596b4a97d0107401086c1146b31c41e681a7a960c58739"
+    },
+    {
+      "name": "unsupported-lane-schema",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Unsupported receipt schema: conformance.json",
+      "result_sha256": "82000bd79b5561362fc268433cdfb83b76f46d292e8f468d78f96ba5a97a5f1f"
+    },
+    {
+      "name": "unsupported-session-schema",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Unsupported receipt schema: session-protocol.json",
+      "result_sha256": "f57c703253c8bf6809f223b6c3ad5250be288f9e3c6256b1709da698b3a176bf"
+    },
+    {
+      "name": "common-original-pcm-diverges-from-lock",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Render fields differ from the actual predeclared example lock",
+      "result_sha256": "3482e264085c9c502458dd2237786b5fcb86abe10bde75e2815e65a91dfaff79"
+    },
+    {
+      "name": "common-original-lock-digest-malformed",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Render or lock identity is missing or malformed",
+      "result_sha256": "3252cff0b37bb7721de6a979b475261b4bb6dfced66aa8661df73e9e76b0e4fd"
+    },
+    {
+      "name": "common-original-frame-count-negative",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Render dimensions must be positive integers",
+      "result_sha256": "62b196ca7c6ea0f04595da355e305cd65abdb07409d4e22672e7c93b08463d28"
+    },
+    {
+      "name": "common-source-identity-null",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Render source identity differs from the comparison checkout",
+      "result_sha256": "71da6f9cbaf795ff78c3f849bc062dfd1878c46574a7369f2a582c573b1d8c68"
+    },
+    {
+      "name": "common-source-identity-malformed",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Render source identity differs from the comparison checkout",
+      "result_sha256": "71da6f9cbaf795ff78c3f849bc062dfd1878c46574a7369f2a582c573b1d8c68"
+    },
+    {
+      "name": "source-common-valid-sha-not-checkout",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Render source identity differs from the comparison checkout",
+      "result_sha256": "71da6f9cbaf795ff78c3f849bc062dfd1878c46574a7369f2a582c573b1d8c68"
+    },
+    {
+      "name": "unsupported-matching-architecture",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Render record has an unsupported platform, architecture or configuration",
+      "result_sha256": "074d0fc64a3a4a4dfbf931f781dd78ee9ae14e55bc6641752962e9d57cfdd67f"
+    },
+    {
+      "name": "session-original-wav-mismatch",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Session original render differs from its lane's locked render",
+      "result_sha256": "b58a181a2c911fbb93ef37e6e060e53f6d6fe55605c00d57c9bc8bf343687a1c"
+    },
+    {
+      "name": "session-original-pcm-mismatch",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Session original render differs from its lane's locked render",
+      "result_sha256": "b58a181a2c911fbb93ef37e6e060e53f6d6fe55605c00d57c9bc8bf343687a1c"
+    },
+    {
+      "name": "session-original-frames-mismatch",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Session original render differs from its lane's locked render",
+      "result_sha256": "b58a181a2c911fbb93ef37e6e060e53f6d6fe55605c00d57c9bc8bf343687a1c"
+    },
+    {
+      "name": "session-original-frames-bool",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Session original render differs from its lane's locked render",
+      "result_sha256": "b58a181a2c911fbb93ef37e6e060e53f6d6fe55605c00d57c9bc8bf343687a1c"
+    },
+    {
+      "name": "session-checks-empty",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Session receipt has no complete nonempty check inventory",
+      "result_sha256": "9e55efbe3c685786920279fde426ffda37bc6d8a1fcb07a735f70b474a491c05"
+    },
+    {
+      "name": "session-checks-repeat-observation",
+      "expected": "accept",
+      "exit_code": 0,
+      "observed": "passed",
+      "expectation_matched": true,
+      "error": null,
+      "result_sha256": "d5c37dba6c662411890c2f6fadfc0f2fd4efb36faae5cf1d386ad14b02dc53ff"
+    },
+    {
+      "name": "session-checks-nonstring",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Session receipt has no complete nonempty check inventory",
+      "result_sha256": "9e55efbe3c685786920279fde426ffda37bc6d8a1fcb07a735f70b474a491c05"
+    },
+    {
+      "name": "render-numeric-type-float",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Render dimensions must be positive integers",
+      "result_sha256": "62b196ca7c6ea0f04595da355e305cd65abdb07409d4e22672e7c93b08463d28"
+    },
+    {
+      "name": "common-positive-frames-diverge",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Render fields differ from the actual predeclared example lock",
+      "result_sha256": "3482e264085c9c502458dd2237786b5fcb86abe10bde75e2815e65a91dfaff79"
+    },
+    {
+      "name": "render-flag-numeric-true",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Every render must verify regular-file publication and preservation on overwrite refusal",
+      "result_sha256": "4581b0de01e4816e93a310bf8e85a7cc47583c657b19893154c2112e00bd8f6a"
+    },
+    {
+      "name": "render-digest-uppercase",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Render or lock identity is missing or malformed",
+      "result_sha256": "3252cff0b37bb7721de6a979b475261b4bb6dfced66aa8661df73e9e76b0e4fd"
+    },
+    {
+      "name": "lane-summary-gate-numeric-true",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Packaged automation commands did not complete every required control",
+      "result_sha256": "a2e817b9843f470092e88d3e5a082d3f605838c1f7513e82153e84ab777bd996"
+    },
+    {
+      "name": "common-wav-bytes-zero",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Render dimensions must be positive integers",
+      "result_sha256": "62b196ca7c6ea0f04595da355e305cd65abdb07409d4e22672e7c93b08463d28"
+    },
+    {
+      "name": "common-wav-bytes-too-small",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Rendered WAV size cannot contain its declared PCM",
+      "result_sha256": "0fbc85fa484526e521d2678c30bb6b36a3eaf5ccb0386ab7f97df5b1e505eb89"
+    },
+    {
+      "name": "missing-render-schema",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Unsupported receipt schema: example-render.json",
+      "result_sha256": "7ba73d23f617ca9c0e596b4a97d0107401086c1146b31c41e681a7a960c58739"
+    },
+    {
+      "name": "missing-lane-schema",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Unsupported receipt schema: conformance.json",
+      "result_sha256": "82000bd79b5561362fc268433cdfb83b76f46d292e8f468d78f96ba5a97a5f1f"
+    },
+    {
+      "name": "missing-session-schema",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Unsupported receipt schema: session-protocol.json",
+      "result_sha256": "f57c703253c8bf6809f223b6c3ad5250be288f9e3c6256b1709da698b3a176bf"
+    },
+    {
+      "name": "render-json-array",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Unsupported receipt schema: example-render.json",
+      "result_sha256": "7ba73d23f617ca9c0e596b4a97d0107401086c1146b31c41e681a7a960c58739"
+    },
+    {
+      "name": "render-json-nonfinite",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Missing or malformed receipt: example-render.json",
+      "result_sha256": "4c5b8f61e5d9e098878143b036b86ff46f641d495406228aebc7c3fe4db94f6b"
+    },
+    {
+      "name": "render-json-duplicate-key",
+      "expected": "reject",
+      "exit_code": 1,
+      "observed": "failed",
+      "expectation_matched": true,
+      "error": "Missing or malformed receipt: example-render.json",
+      "result_sha256": "4c5b8f61e5d9e098878143b036b86ff46f641d495406228aebc7c3fe4db94f6b"
+    }
+  ]
+}

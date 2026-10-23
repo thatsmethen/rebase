@@ -1,0 +1,48 @@
+{
+  "schema": "rebase.comparison-gate-validation.v1",
+  "status": "passed",
+  "evidence_class": "authored-gate-control",
+  "platform_execution_claim": false,
+  "scope": "Synthetic admission/rejection controls using one actual macOS Release helper receipt; no Windows or cross-platform execution evidence.",
+  "first_observation": {
+    "path": "results-01.json",
+    "sha256": "8bfae6992c5d7646f35616bd8864085975bbce32b5c565248307c4b8c0f948ad",
+    "cases": 44,
+    "matched": 35,
+    "false_accepts": 9
+  },
+  "intermediate_observation": {
+    "path": "expanded-controls-02/results-02.json",
+    "sha256": "090a1b23020808eb3b0ce9d0b3245d4d8d95766cdfa82feee10838aa10f834e9",
+    "cases": 66,
+    "matched": 65,
+    "finding": "Unique check labels were an invalid assumption: real CPR controls repeat descriptive check names. This overstrict check was removed; original outcome retained."
+  },
+  "final_observation": {
+    "path": "expanded-controls-03/results-03.json",
+    "sha256": "6aa12aea7a1cf20c6da38dc67241ec224fa8a1f94a6fb027c61ab308fb7f9b1a",
+    "cases": 66,
+    "matched": 66,
+    "accept_controls": 2,
+    "reject_controls": 64
+  },
+  "instrument_sources": [
+    {
+      "path": "Application/scripts/compare-portable-renders.py",
+      "sha256": "9aff194fc252f7915e9dcaa61debcc74f723b59a038deb9711713b8d0777852e"
+    },
+    {
+      "path": "Application/scripts/windows_automation_gate.py",
+      "sha256": "ab8926d0e10af4c843c7314997d7adfbf9d1aa8ed10114774192ea33972655c2"
+    }
+  ],
+  "source_session": {
+    "path": ".local/work/rebase-automation-protocol-20261024/helper-protocol-01.json",
+    "sha256": "e4f6ef07348d060a3531681e81a4c1dbe72579fcd006b12cc7583666af7e6f06"
+  },
+  "boundaries": [
+    "Inputs are explicitly authored and labelled; platform names do not describe actual execution.",
+    "Earlier inputs, results and instrument snapshots were preserved without replacement.",
+    "The existing predeclared example/source locks were not changed."
+  ]
+}

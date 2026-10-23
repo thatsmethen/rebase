@@ -1,0 +1,50 @@
+{
+  "schema": "rebase.portable-render-comparison.v1",
+  "status": "passed",
+  "scope": "Cross-platform authored-example render only; no device playback or reference fidelity claim",
+  "matching_fields": {
+    "frames": -1,
+    "channels": 2,
+    "sample_rate": 48000,
+    "bits_per_sample": 32,
+    "pcm_sha256": "f51a6801100ba715e589fcd9d99be2c0c81f6911972548a4c64fff73ff60c8d4",
+    "wav_sha256": "13edfc233369484ff5c88aa4e4ca8a2f013d7c2ac3f21a0c7881e00dc3e457b9",
+    "wav_bytes": 7680058,
+    "commit": "0ecf4a813f19760e8e00f6b72ea28d8d3d719bfe",
+    "expected_render_lock_sha256": "9eb7d9851e28eb6144ba74ba97913e2b0721e7f47a91026d7c58e76d025afebc"
+  },
+  "lanes": [
+    {
+      "platform": "Darwin",
+      "architecture": "arm64",
+      "configuration": "Debug"
+    },
+    {
+      "platform": "Darwin",
+      "architecture": "arm64",
+      "configuration": "Release"
+    },
+    {
+      "platform": "Windows",
+      "architecture": "AMD64",
+      "configuration": "Debug"
+    },
+    {
+      "platform": "Windows",
+      "architecture": "AMD64",
+      "configuration": "Release"
+    }
+  ],
+  "automation_matching_fields": {
+    "edited_wav_sha256": "53445382282de96e9a575ea8910be28146c3916512fdf246fab43a595d598abe",
+    "edited_pcm_sha256": "b924da7269d472b3f710b95207955adea9f63d8e231edb323e22cfcc795712c8",
+    "restored_wav_sha256": "13edfc233369484ff5c88aa4e4ca8a2f013d7c2ac3f21a0c7881e00dc3e457b9",
+    "restored_pcm_sha256": "f51a6801100ba715e589fcd9d99be2c0c81f6911972548a4c64fff73ff60c8d4",
+    "original_track_id": "E9248787-2BD4-5154-BC3E-33DB07F554DF",
+    "original_lane_id": "341A2F47-7AF1-5130-B074-93C1A0B354ED",
+    "original_point_count": 5,
+    "mutation_count": 10,
+    "invalid_requests_checked": 15
+  },
+  "automation_scope": "Actual edited and restored authored-project WAV/PCM bytes; original locks remain unchanged. No device audio or reference equivalence claim."
+}
