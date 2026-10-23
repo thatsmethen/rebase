@@ -4,7 +4,7 @@ This experimental x64 preview is intended for Windows 11. It includes its requir
 
 ## Open the app
 
-1. Download `Rebase-0.21.1-windows-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.1).
+1. Download `Rebase-0.21.1-windows-preview.2-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.2).
 2. Use **Extract All** to unpack the complete archive.
 3. Open **Rebase.exe** inside the extracted `Rebase` folder. Keep the DLLs, notices and `Examples` folder beside the executable.
 4. Choose **File → Open example**. The four-track beat opens as a separate editable copy.

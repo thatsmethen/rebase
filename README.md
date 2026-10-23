@@ -14,9 +14,9 @@ Windows development follows the [Windows reference interface](docs/development/w
 
 ## Release
 
-**[Download Rebase for Windows](https://github.com/thatsmethen/rebase/releases/download/v0.21.1-windows-preview.1/Rebase-0.21.1-windows-x64.zip)**
+**[Download Rebase for Windows](https://github.com/thatsmethen/rebase/releases/download/v0.21.1-windows-preview.2/Rebase-0.21.1-windows-preview.2-x64.zip)**
 
-The **Windows x64 development preview** includes its runtimes and the example beat. Extract the entire archive, open `Rebase.exe`, and choose **File → Open example**. See the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.1) and [Windows installation guide](docs/install/windows.md). This unsigned preview targets Windows 11; native automated checks ran on Windows Server 2025. Audio-device output and physical input still need interactive verification.
+The **Windows x64 development preview** includes its runtimes and the example beat. Extract the entire archive, open `Rebase.exe`, and choose **File → Open example**. See the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.2) and [Windows installation guide](docs/install/windows.md). This unsigned preview targets Windows 11; native automated checks ran on Windows Server 2025. Audio-device output and physical input still need interactive verification.
 
 **[Download Rebase for Mac](https://github.com/thatsmethen/rebase/releases/download/v0.21.1/Rebase-0.21.1-macos-arm64.zip)**
 
@@ -26,7 +26,7 @@ The Mac app includes the [example beat](Application/Examples/README.md) shown be
 
 ## Screenshots
 
-The Windows preview, showing the included four-track beat, real waveforms, inspector, musical ruler and mixer. This is the actual opened application's client-area render from the native Windows validation run.
+The Windows preview, showing the included four-track beat, real waveforms, separate Channel and Inspector, compact controls, musical ruler and mixer. This is the actual opened application's client-area render from the native Windows validation run.
 
 ![Rebase Windows arrangement, inspector and mixer](docs/screenshots/windows-arrangement.png)
 

@@ -36,4 +36,6 @@ These records concern the authored Rebase implementation running on Windows. The
 
 New runs receive separate records. A later passing run does not rewrite a failed observation or turn a component check into full application parity. The current feature acceptance plan is the [Windows parity ledger](../../../docs/development/windows-parity.md).
 
+[Windows preview 2 publication](release-v0.21.1-windows-preview.2.json) records the exact released `8c6ec4b` build, five asset digests and unauthenticated accessibility checks. The [release upload controls](release-upload-controls-20261023/README.md) preserve the local transfer timeout, the runner's refusal of the incomplete asset, the successful subsequent upload and 66 no-network validation controls. The newer `53141c1` importer is tested source work and is not retroactively included in that release ZIP.
+
 The [local portable CPR import controls](cpr-import-local-20261023/observation.json) retain two raw test reports and exact source hashes. Seven authored cases passed in the macOS portable target; the normal macOS core focused run executed 19 cases with seven explicit private-fixture skips and zero failures. This verifies the shared filesystem adaptation locally; it does not yet establish Windows execution or a Windows review/import interface.

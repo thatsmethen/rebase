@@ -1,6 +1,6 @@
 # Windows parity
 
-The behavior comparison baseline is the macOS **0.21.1** application, including its bundled example beat. The visual target is the [Cubase Pro 15.0.30 Windows interface](windows-ui-fidelity.md). The [Windows development preview](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.1) includes the native WPF package, shared waveforms, musical ruler and bounded source-event journey. The captured selector/header defects have been corrected; exact reference fidelity remains open. The public repository, research export, and existing Mac downloads remain available.
+The behavior comparison baseline is the macOS **0.21.1** application, including its bundled example beat. The visual target is the [Cubase Pro 15.0.30 Windows interface](windows-ui-fidelity.md). The [Windows development preview](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.2) includes the native WPF package, shared waveforms, musical ruler and bounded source-event journey. The captured selector/header defects have been corrected; exact reference fidelity remains open. The public repository, research export, and existing Mac downloads remain available.
 
 ## Shared implementation
 
