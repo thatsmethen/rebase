@@ -19,7 +19,7 @@ def main():
     out = Path(sys.argv[1]).resolve()
     out.mkdir(parents=True, exist_ok=False)
     env = dict(os.environ)
-    env.setdefault("GHIDRA_INSTALL_DIR", str(root / ".tools/ghidra"))
+    env.setdefault("GHIDRA_INSTALL_DIR", str(root / ".local/tools/ghidra"))
     env.setdefault("JAVA_HOME", "/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home")
     env.setdefault("GHIDRA_HEADLESS_MAXMEM", "8G")
     env.setdefault("REA_GHIDRA_STARTUP_TIMEOUT_MS", "1200000")
@@ -27,7 +27,7 @@ def main():
     responses = queue.Queue()
     with (out / "server.stderr").open("w") as stderr:
         server = subprocess.Popen(
-            ["node", str(root / ".tools/rea/node_modules/rea-agents/scripts/rea.mjs"), "mcp"],
+            ["node", str(root / ".local/tools/rea/node_modules/rea-agents/scripts/rea.mjs"), "mcp"],
             stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=stderr,
             text=True, bufsize=1, env=env, cwd=root,
         )

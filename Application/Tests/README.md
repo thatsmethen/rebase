@@ -19,21 +19,23 @@ test lanes.
 
 ## Optional private fixture lane
 
-Researchers who already have the required inputs can keep them outside this
-checkout and run:
+Researchers who already have the required inputs can keep them in the ignored
+`.local/fixtures/` directory inside this checkout and run:
 
 ```sh
-sh Application/Tests/run-tests.sh --with-research /absolute/external/fixtures
+sh Application/Tests/run-tests.sh --with-research "$PWD/.local/fixtures"
 ```
 
 Equivalently, the original test runner accepts the environment setting:
 
 ```sh
-REBASE_RESEARCH_ROOT=/absolute/external/fixtures sh Application/test-app.sh
+REBASE_RESEARCH_ROOT="$PWD/.local/fixtures" sh Application/test-app.sh
 ```
 
-The root must be an existing absolute directory outside the source checkout,
-including after resolving symlinks. An invalid explicit setting fails the
+The root must be an existing absolute directory. Inside this checkout, it must
+resolve beneath the ignored `.local/` directory; all other checkout paths are
+rejected. External directories remain supported for existing setups. Symlinks
+are resolved before checking these boundaries. An invalid explicit setting fails the
 configuration test. A configured directory enables every fixture test; a missing
 file, changed digest, or incompatible record then fails the relevant test. This
 prevents an incomplete private run from silently becoming a successful public
@@ -75,5 +77,5 @@ contents. The optional lane neither downloads these inputs nor executes a
 reference application. Passing it establishes the assertions in these tests,
 not complete project or runtime equivalence.
 
-Do not copy private fixtures into this repository. An external fixture view may
-use symlinks to an existing private archive while preserving its original bytes.
+Never commit private fixtures. An ignored `.local/fixtures/` view may use
+relative symlinks into `.local/archives/` while preserving the original bytes.

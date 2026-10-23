@@ -1,0 +1,123 @@
+{
+  "schema": "rebase.single-workspace-validation.v1",
+  "created_at_utc": "2026-10-23T22:43:10.678234+00:00",
+  "base_commit": "5dd3beb2538024a85143af984105fe6d2daea943",
+  "status": "passed",
+  "scope": "Local workspace consolidation, private fixture root admission, local release staging and REA startup. This is not a new application compatibility or reference-runtime result.",
+  "source_files": [
+    {
+      "path": ".gitignore",
+      "sha256": "2a8205f627e6aabc8ebe6129b6239a5369ef06d32617ee75e78cacc919073928"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "4cc099455763fae1acee258d540f4a56ad488447ea79052b0f8842c79daeb2d4"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha256": "4537631ad1ce083fd48eb5eee223a7861971fd1a7932aae8eb61a0eb6df31ccf"
+    },
+    {
+      "path": "README.md",
+      "sha256": "871b5a0030c5f7e7f273a430b17c58b268910a5faa2635108bfd5bfc63b87eac"
+    },
+    {
+      "path": "Application/Tests/README.md",
+      "sha256": "01f58125d96bc51fb2ab2910eac3b3f289d46f0af8f7cf71f1a26c5c02ff27ef"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/PrivateResearchFixtures.swift",
+      "sha256": "fafff2fe17b315997e3f5c9cf258f7462e4ee188f0da724d41289f7b4d0b8674"
+    },
+    {
+      "path": "Application/Tests/run-tests.sh",
+      "sha256": "161486f10d42fe9036524ff507d704e6590718aa9b5dee92bac2f26ac82c0c8a"
+    },
+    {
+      "path": "Application/build-release.sh",
+      "sha256": "020e6d5e21cf2d03b5e06d17a3a8776c9129a28bf6b907ebbcdfe91b273c0385"
+    },
+    {
+      "path": "scripts/rea_session.py",
+      "sha256": "5af593f4162469856fb8e95ba66fb90285611c01f5255c3507aca3a39f5cc83d"
+    }
+  ],
+  "migration": {
+    "canonical_checkout": "repository root",
+    "older_working_copies_retained": true,
+    "private_storage": ".local/",
+    "private_storage_ignored": true,
+    "active_head_preserved_at_move": true,
+    "archive_heads_and_tracked_changes_preserved": true,
+    "moved_directory_identity_preserved": true,
+    "historical_evidence_contents_rewritten": false,
+    "fixture_view_resolved_relative_links": 7,
+    "sibling_workspaces_remaining": 0,
+    "publication_visibility_changed": false
+  },
+  "checks": {
+    "fixture_configuration_public": {
+      "passed": 4,
+      "failed": 0
+    },
+    "fixture_configuration_local_private": {
+      "passed": 4,
+      "failed": 0,
+      "fixture_root": ".local/fixtures/"
+    },
+    "release_staging_boundaries": {
+      "outside_locations_rejected": 2,
+      "existing_directory_overwrite_rejected": true
+    },
+    "staged_package_graph": "all declared test source directories present",
+    "macos_release_build": {
+      "passed": true,
+      "path": ".local/builds/macos/release-complete-tests/Application/dist/Rebase.app",
+      "binary_sha256": "36ab72e9194c2a66569534f682e53a984bd0176e4afb0d063f8de38f10f95f8f",
+      "built_in_bundle_audit_passed": true,
+      "ad_hoc_signature_verified": true,
+      "configured_privacy_blockers": 0,
+      "warnings": "Compiler/linker diagnostics referenced remapped module-cache paths absent during debug-symbol processing; the build, bundle audit and strict signature verification passed.",
+      "gui_runtime_checked": false
+    },
+    "rea_startup": {
+      "exit_code": 0,
+      "version": "6.7.0",
+      "listed_tools": 207,
+      "methods": [
+        "initialize",
+        "tools/list",
+        "tools/call close_binary"
+      ],
+      "target_opened": false
+    },
+    "retained_research_export": {
+      "verified_files": 4347,
+      "verified_bytes": 66621108,
+      "omitted_artifacts_not_verified": 20432
+    }
+  },
+  "private_logs": [
+    {
+      "name": "fixture-tests.log",
+      "sha256": "b8ba0132da4760372cc55caf8c2977cb47e1d9f03490bf98e0b4bd5c9c49a8a3"
+    },
+    {
+      "name": "local-fixture-tests.log",
+      "sha256": "7d0a65d0b9afbb2d71501b7ae31cf61f8f1cb213528c0fbffdd28019b3b0c1df"
+    },
+    {
+      "name": "macos-release-final.log",
+      "sha256": "b4d0fe42d7a6393c663ed470320bbfc2bb5a873ae37f0f64dbdc48d03c63f2cb"
+    },
+    {
+      "name": "release-boundary-controls.json",
+      "sha256": "b641298b0fc6dd853870a3d5b9f7eaffa75f91bcd8e34c807e8047fdaf13d766"
+    }
+  ],
+  "limitations": [
+    "Original private logs and archives remain ignored, rather than being published.",
+    "The local configuration checks do not execute all private fixture comparisons.",
+    "The macOS release build was audited locally and has not replaced a public release asset."
+  ]
+}

@@ -1,12 +1,13 @@
 #!/bin/sh
-# Copy only release inputs into a fresh neutral workspace, then build there.
+# Stage only release inputs inside this checkout, then build with path remapping.
 set -eu
 cd "$(dirname "$0")"
 if [ "$#" -gt 1 ]; then
-    printf 'Usage: %s [new-neutral-workspace]\n' "$0" >&2
+    printf 'Usage: %s [new-local-build-directory]\n' "$0" >&2
     exit 2
 fi
-WORKSPACE=${1:-/private/tmp/rebase-release-build}
+REPOSITORY=$(cd .. && pwd -P)
+WORKSPACE=${1:-"$REPOSITORY/.local/builds/macos/release"}
 python3 - "$PWD" "$WORKSPACE" <<'PY'
 from pathlib import Path
 import re
@@ -15,11 +16,11 @@ import sys
 
 source = Path(sys.argv[1])
 workspace = Path(sys.argv[2]).resolve()
-if workspace.parent != Path('/private/tmp') or not re.fullmatch(r'rebase-release-build(?:-[a-z0-9-]+)?', workspace.name):
-    raise SystemExit('Use /private/tmp/rebase-release-build or that path with a lowercase neutral suffix')
+if workspace.parent != (source.parent / '.local' / 'builds' / 'macos') or not re.fullmatch(r'release(?:-[a-z0-9-]+)?', workspace.name):
+    raise SystemExit("Use this checkout's .local/builds/macos/release directory, optionally with a lowercase suffix")
 if workspace.exists():
-    raise SystemExit('Release workspace already exists; choose a fresh neutral suffix')
-required = ('Sources', 'Tests/RebaseCoreTests', 'ThirdParty', 'Assets', 'Examples', 'Package.swift', 'Package.resolved',
+    raise SystemExit('Release staging directory already exists; choose a fresh lowercase suffix')
+required = ('Sources', 'Tests', 'ThirdParty', 'Assets', 'Examples', 'Package.swift', 'Package.resolved',
             'build-app.sh', 'package-release.sh', 'release-support.py',
             'export-build-manifest.py', 'INSTALL.md')
 for name in required:
@@ -41,4 +42,4 @@ export TMPDIR="$WORKSPACE/tmp/"
 export CLANG_MODULE_CACHE_PATH="$WORKSPACE/cache/clang"
 export SWIFTPM_MODULECACHE_OVERRIDE="$WORKSPACE/cache/swift"
 sh "$WORKSPACE/Application/build-app.sh"
-printf 'Neutral release bundle: %s/Application/dist/Rebase.app\n' "$WORKSPACE"
+printf 'Local release bundle: %s/Application/dist/Rebase.app\n' "$WORKSPACE"

@@ -23,10 +23,16 @@ sh Application/Tests/run-tests.sh --public --filter CPRTrackOverlapNormalizerTes
 An optional fixture lane is available for developers who already have the recorded inputs:
 
 ```sh
-sh Application/Tests/run-tests.sh --with-research /absolute/external/fixtures
+sh Application/Tests/run-tests.sh --with-research "$PWD/.local/fixtures"
 ```
 
-See [the test guide](Application/Tests/README.md) for the exact layout and checks. Keep these fixtures outside the checkout. A configured but incomplete fixture root fails the relevant tests; this lane neither downloads nor executes the reference application.
+See [the test guide](Application/Tests/README.md) for the exact layout and checks. Keep these fixtures in the ignored `.local/fixtures/` directory inside this checkout. A configured but incomplete fixture root fails the relevant tests; this lane neither downloads nor executes the reference application.
+
+## One workspace
+
+Keep macOS, Windows, shared code and publishable research in this repository. Use the same checkout for local development and collaboration. Put private inputs in `.local/fixtures/`, tools in `.local/tools/`, task scratch data in `.local/work/`, and retained working copies in `.local/archives/`. The entire `.local/` directory is ignored; never force-add its contents. Release staging stays under `.local/builds/`. Generated build directories are not additional source checkouts.
+
+Preserve original evidence bytes and historical path records when relocating files. Use an active fixture view with relative links into the local archive, rather than rewriting research records. Review public derivatives before adding them under `research/`.
 
 ## Find the code
 

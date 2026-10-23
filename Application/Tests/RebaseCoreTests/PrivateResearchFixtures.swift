@@ -1,12 +1,13 @@
 import Foundation
 import Testing
 
-/// Optional, read-only inputs owned by the researcher, never by this checkout.
+/// Optional, read-only inputs owned by the researcher. They may live outside
+/// the checkout or inside its ignored .local directory, never in tracked source.
 /// An unset variable disables only explicitly marked tests. A configured but
 /// incomplete fixture set fails its reads and existing digest checks normally.
 enum PrivateResearchFixtures {
     static let environmentName = "REBASE_RESEARCH_ROOT"
-    static let reason: Comment = "Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout."
+    static let reason: Comment = "Requires private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory inside this checkout's ignored .local directory or outside the checkout."
     static let checkout = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
         .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
 
@@ -16,7 +17,7 @@ enum PrivateResearchFixtures {
         var errorDescription: String? {
             switch self {
             case .notAbsolute: "REBASE_RESEARCH_ROOT must be an absolute path, or unset for the public test run."
-            case .insideCheckout: "REBASE_RESEARCH_ROOT must resolve outside the source checkout."
+            case .insideCheckout: "REBASE_RESEARCH_ROOT must resolve inside the checkout's ignored .local directory or outside the checkout; other source-checkout directories are not allowed."
             case .notDirectory: "REBASE_RESEARCH_ROOT must identify an existing directory."
             case .invalidTemplateName: "Recorded template source must end in a named .cpr file."
             }
@@ -28,7 +29,13 @@ enum PrivateResearchFixtures {
         guard value.hasPrefix("/") else { throw ConfigurationError.notAbsolute }
         let directory = URL(fileURLWithPath: value, isDirectory: true).standardizedFileURL.resolvingSymlinksInPath()
         let source = checkout.standardizedFileURL.resolvingSymlinksInPath()
-        guard directory.path != source.path, !directory.path.hasPrefix(source.path + "/") else {
+        // Resolve the selected root first. Do not resolve the allowed .local
+        // prefix separately: a .local symlink into tracked source must not make
+        // that source directory an allowed research location.
+        let local = source.appendingPathComponent(".local", isDirectory: true)
+        let insideSource = directory.path == source.path || directory.path.hasPrefix(source.path + "/")
+        let insideLocal = directory.path == local.path || directory.path.hasPrefix(local.path + "/")
+        guard !insideSource || insideLocal else {
             throw ConfigurationError.insideCheckout
         }
         var isDirectory: ObjCBool = false
@@ -75,12 +82,19 @@ enum PrivateResearchFixtures {
 }
 
 struct PrivateResearchFixtureConfigurationTests {
+    private func scratchDirectory() throws -> URL {
+        let directory = PrivateResearchFixtures.checkout.appendingPathComponent(".local/work/private-fixture-controls", isDirectory: true)
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        return directory
+    }
+
     @Test func explicitlyConfiguredResearchRootMustBeValid() throws {
         try PrivateResearchFixtures.validateEnvironment()
     }
 
     @Test func absentRelativeMissingAndCheckoutLocalRootsHaveDistinctOutcomes() throws {
-        let temporary = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let temporary = try scratchDirectory()
         let checkout = temporary.appendingPathComponent("source", isDirectory: true)
         let outside = temporary.appendingPathComponent("fixtures", isDirectory: true)
         try FileManager.default.createDirectory(at: checkout, withIntermediateDirectories: true)
@@ -103,6 +117,44 @@ struct PrivateResearchFixtureConfigurationTests {
         try Data([1]).write(to: file)
         #expect(throws: PrivateResearchFixtures.ConfigurationError.self) {
             try PrivateResearchFixtures.resolveRoot(file.path, checkout: checkout)
+        }
+    }
+
+    @Test func ignoredLocalResearchAllowsResolvedPrivateRootsButNotSourceAliases() throws {
+        let temporary = try scratchDirectory()
+        defer { try? FileManager.default.removeItem(at: temporary) }
+        let checkout = temporary.appendingPathComponent("source", isDirectory: true)
+        let local = checkout.appendingPathComponent(".local", isDirectory: true)
+        let fixtures = local.appendingPathComponent("fixtures", isDirectory: true)
+        let tracked = checkout.appendingPathComponent("Application", isDirectory: true)
+        let sibling = checkout.appendingPathComponent(".local-other", isDirectory: true)
+        let outside = temporary.appendingPathComponent("outside", isDirectory: true)
+        for directory in [fixtures, tracked, sibling, outside] {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        }
+        for allowed in [local, fixtures, outside] {
+            #expect(try PrivateResearchFixtures.resolveRoot(allowed.path, checkout: checkout) == allowed.resolvingSymlinksInPath())
+        }
+        let sourceAlias = local.appendingPathComponent("source-alias")
+        try FileManager.default.createSymbolicLink(at: sourceAlias, withDestinationURL: tracked)
+        for rejected in [tracked, sibling, sourceAlias] {
+            #expect(throws: PrivateResearchFixtures.ConfigurationError.self) {
+                try PrivateResearchFixtures.resolveRoot(rejected.path, checkout: checkout)
+            }
+        }
+        for (name, destination) in [("private-alias", fixtures), ("outside-alias", outside)] {
+            let alias = local.appendingPathComponent(name)
+            try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: destination)
+            #expect(try PrivateResearchFixtures.resolveRoot(alias.path, checkout: checkout) == destination.resolvingSymlinksInPath())
+        }
+
+        let redirectedCheckout = temporary.appendingPathComponent("redirected-source", isDirectory: true)
+        let redirectedTarget = redirectedCheckout.appendingPathComponent("Application", isDirectory: true)
+        try FileManager.default.createDirectory(at: redirectedTarget, withIntermediateDirectories: true)
+        let redirectedLocal = redirectedCheckout.appendingPathComponent(".local")
+        try FileManager.default.createSymbolicLink(at: redirectedLocal, withDestinationURL: redirectedTarget)
+        #expect(throws: PrivateResearchFixtures.ConfigurationError.self) {
+            try PrivateResearchFixtures.resolveRoot(redirectedLocal.path, checkout: redirectedCheckout)
         }
     }
 

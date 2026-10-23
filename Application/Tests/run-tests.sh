@@ -5,7 +5,7 @@ set -eu
 case "${1-}" in
     --with-research)
         if [ "$#" -lt 2 ]; then
-            echo 'Usage: run-tests.sh --with-research /absolute/external/root [swift test options]' >&2
+            echo 'Usage: run-tests.sh --with-research /absolute/private/fixture-root [swift test options]' >&2
             exit 2
         fi
         case "$2" in
