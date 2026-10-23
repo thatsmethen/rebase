@@ -4,7 +4,7 @@ This experimental x64 preview is intended for Windows 11. It includes its requir
 
 ## Open the app
 
-1. Download `Rebase-0.21.1-windows-preview.2-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.2).
+1. Download `Rebase-0.21.1-windows-preview.3-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.3).
 2. Use **Extract All** to unpack the complete archive.
 3. Open **Rebase.exe** inside the extracted `Rebase` folder. Keep the DLLs, notices and `Examples` folder beside the executable.
 4. Choose **File → Open example**. The four-track beat opens as a separate editable copy.
@@ -14,6 +14,15 @@ The preview is unsigned. Its release page includes the archive's SHA-256 checksu
 
 To reopen a saved project, choose **File → Open project…**, enter its `.rebaseproj` folder, and select `Project.json`. To share a project, copy the complete project folder, including its media and compatibility data.
 
+## Review and import a CPR project
+
+1. Choose **File → Import CPR…** and select the source project.
+2. Review the recovered tracks, editable clips, retained source events and unsupported data. Large reports use **Previous** and **Next**; each page can also scroll vertically.
+3. Choose **Import Supported Data** to accept the partial recovery. Save or explicitly discard any current unsaved changes when prompted.
+4. Choose a new `.rebaseproj` folder name. Existing files and folders are never replaced.
+
+The project keeps the original CPR file and its import report. **File → Import Report…** reopens that preserved baseline; later edits do not rewrite it. Cancel leaves the current project unchanged. Unresolved audio remains unresolved until its supported source workflow is completed; import does not restore effects, routing or other unsupported processing.
+
 ## Audio output
 
 Current playback requires a Float32 stereo output endpoint at the same sample rate as the project. The included beat uses **48 kHz**. Rebase reports an unavailable or incompatible output instead of silently converting the audio. General device-rate conversion is still being implemented.
@@ -22,7 +31,9 @@ Source-event audition uses the saved source rate and a separate event-local posi
 
 ## What has been checked
 
-The release's Windows build runs on a Windows Server 2025 GitHub runner. It checks the shared project/audio code, the opened WPF application's exercised controls, the packaged runtime dependencies and the unchanged example audio. Screenshots render the actual application's client area and exclude the operating-system frame.
+Preview.3 comes from commit `aaa7c3c6` and [native Windows run 39966842279](../../research/publication/windows-portability/application-run-39966842279/observation.json) on a Windows Server 2025 GitHub runner. It passed 68 actual-window checks, 155 host controls and 91 packaged-helper checks. The shared Release gate executed 90 tests with one explicit opt-in skip and no failures. The [downloaded archive audit](../../research/publication/windows-portability/application-run-39966842279/candidate-review.json) verified its file manifest, runtime dependencies and unchanged example audio.
+
+[Five screenshots](../screenshots/README.md) show the actual application's client area, including CPR review at normal and minimum window sizes. They exclude the operating-system frame.
 
 Physical mouse/keyboard input, native file dialogs and sound through a real audio device still require interactive Windows verification. Recording, plugins, automation editing and the remaining Mac workflows are not yet integrated. The [parity ledger](../development/windows-parity.md) records those boundaries.
 
