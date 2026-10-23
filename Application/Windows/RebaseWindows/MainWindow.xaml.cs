@@ -33,7 +33,7 @@ public partial class MainWindow : Window
     private static extern int DwmSetWindowAttribute(IntPtr window, uint attribute, ref int value, uint bytes);
     public MainWindow()
     {
-        InitializeComponent(); DataContext = model;
+        InitializeComponent(); DataContext = model; InitializeWorkspaceLayout();
         SourceInitialized += (_, _) =>
         {
             // Documented DWM opt-in keeps the native caption/resize behavior.
@@ -76,19 +76,15 @@ public partial class MainWindow : Window
             Mixer.IsEnabled = !model.Busy;
             ChannelSurface.IsEnabled = !model.Busy;
             SourcePanel.IsEnabled = !model.Busy;
+            RefreshEditingAvailability();
             InspectorTrackControls.IsEnabled = !model.Busy && model.SelectedTrack is not null;
             UndoButton.IsEnabled = !model.Busy && model.State.CanUndo;
             RedoButton.IsEnabled = !model.Busy && model.State.CanRedo;
-            if (!model.Busy && mixerFocus is not null)
-            {
-                Control? restore = mixerSliders.GetValueOrDefault(mixerFocus) ?? (Control?)mixerValues.GetValueOrDefault(mixerFocus);
-                mixerFocus = null;
-                if (restore is not null) Dispatcher.BeginInvoke(() => restore.Focus(), DispatcherPriority.Input);
-            }
+            RestoreMixerFocus();
             if (!model.Busy && inspectorFocus is { } inspectorRestore)
             {
                 inspectorFocus = null;
-                Dispatcher.BeginInvoke(() => inspectorRestore.Focus(), DispatcherPriority.Input);
+                Dispatcher.BeginInvoke(() => { if (inspectorRestore.IsVisible && inspectorRestore.IsEnabled) inspectorRestore.Focus(); }, DispatcherPriority.Input);
             }
         }
     }
@@ -136,12 +132,13 @@ public partial class MainWindow : Window
         try
         {
             var events = model.SourceEvents;
-            SourcePanel.Visibility = events.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
+            SourceSection.Visibility = events.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
             SourceEventsBox.ItemsSource = events;
             SourceEventsBox.SelectedItem = events.FirstOrDefault(item => item.Id == model.State.Selection.ClipID);
             SourceMediaInfo.Text = model.SelectedSourceEvent?.MediaStatus ?? "Select a retained event to attach matching PCM or audition its source.";
         }
         finally { updatingSourceList = false; }
+        RefreshEditingAvailability();
         TransportContextName.Text = model.TransportContext;
         RefreshMixer();
     }
@@ -166,12 +163,12 @@ public partial class MainWindow : Window
     {
         var accent = new SolidColorBrush(TimelineView.TrackColors[index % TimelineView.TrackColors.Length]);
         var prefix = selectedStrip ? "channel:" : "";
-        var faderHeight = selectedStrip ? 200 : 110;
-        var panel = new Grid { Width = 84, Height = faderHeight + 99, Margin = new Thickness(3, 1, 3, 1) };
+        var faderHeight = selectedStrip ? 200 : mixerFaderHeight;
+        var panel = new Grid { Width = selectedStrip ? 84 : 72, Height = faderHeight + 99, Margin = new Thickness(3, 1, 3, 1) };
         foreach (var height in new double[] { 25, 23, faderHeight + 6, 20, 25 }) panel.RowDefinitions.Add(new RowDefinition { Height = new GridLength(height) });
         var flags = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
-        var mute = new CheckBox { Content = "M", IsChecked = track.IsMuted, ToolTip = "Mute " + track.Name, MinWidth = 35, Margin = new Thickness(1), Padding = new Thickness(4, 2, 4, 2) };
-        var solo = new CheckBox { Content = "S", IsChecked = track.IsSolo, ToolTip = "Solo " + track.Name, MinWidth = 35, Margin = new Thickness(1), Padding = new Thickness(4, 2, 4, 2) };
+        var mute = new CheckBox { Content = "M", IsChecked = track.IsMuted, ToolTip = "Mute " + track.Name, MinWidth = selectedStrip ? 35 : 29, Margin = new Thickness(1), Padding = new Thickness(4, 2, 4, 2) };
+        var solo = new CheckBox { Content = "S", IsChecked = track.IsSolo, ToolTip = "Solo " + track.Name, MinWidth = selectedStrip ? 35 : 29, Margin = new Thickness(1), Padding = new Thickness(4, 2, 4, 2) };
         AutomationProperties.SetName(mute, "Mute " + track.Name); AutomationProperties.SetName(solo, "Solo " + track.Name);
         // Subscribe after loading state, so a refresh never sends an edit.
         RoutedEventHandler muteChanged = async (_, _) => await model.Command("toggleMute", trackID: track.Id);
@@ -188,7 +185,7 @@ public partial class MainWindow : Window
             Orientation = Orientation.Vertical, Width = 28, Height = faderHeight, HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(4, 2, 0, 2) };
         gain.Tag = prefix + track.Id + ":gain"; mixerSliders[(string)gain.Tag] = gain;
         AutomationProperties.SetName(gain, track.Name + " gain decibels"); fader.Children.Add(gain);
-        var scale = new FaderScale(gain) { Width = 35, Height = faderHeight, Margin = new Thickness(36, 2, 0, 2), HorizontalAlignment = HorizontalAlignment.Left, IsHitTestVisible = false };
+        var scale = new FaderScale(gain) { Width = selectedStrip ? 35 : 25, Height = faderHeight, Margin = new Thickness(selectedStrip ? 36 : 34, 2, 0, 2), HorizontalAlignment = HorizontalAlignment.Left, IsHitTestVisible = false };
         fader.Children.Add(scale);
         var value = new TextBox { Text = track.GainDB.ToString("0.00", CultureInfo.CurrentCulture), FontFamily = new FontFamily("Consolas"), TextAlignment = TextAlignment.Center,
             MinHeight = 18, Height = 18, Margin = new Thickness(4, 1, 4, 1), Padding = new Thickness(2, 0, 2, 0), FontSize = 10, Tag = prefix + track.Id + ":gainValue", ToolTip = "Volume in dB. Enter to apply; Escape to cancel." };
@@ -214,7 +211,7 @@ public partial class MainWindow : Window
             Style = (Style)FindResource("AccentSurfaceButton"), HorizontalContentAlignment = HorizontalAlignment.Left, Padding = new Thickness(4, 2, 4, 2), Margin = new Thickness(0), MinHeight = 22,
             Background = accent, BorderBrush = Brushes.Transparent, Foreground = Brushes.Black };
         select.Click += async (_, _) => await model.Command("selectTrack", trackID: track.Id); Grid.SetRow(select, 4); panel.Children.Add(select);
-        return new Border { Child = panel, VerticalAlignment = selectedStrip ? VerticalAlignment.Bottom : VerticalAlignment.Stretch, Background = new SolidColorBrush(track.Id == model.State.Selection.TrackID ? Color.FromRgb(86, 91, 94) : Color.FromRgb(47, 51, 54)),
+        return new Border { Child = panel, VerticalAlignment = VerticalAlignment.Bottom, Background = new SolidColorBrush(track.Id == model.State.Selection.TrackID ? Color.FromRgb(86, 91, 94) : Color.FromRgb(47, 51, 54)),
             Margin = new Thickness(0, 0, 2, 0), BorderThickness = new Thickness(1), BorderBrush = (Brush)FindResource("HairlineBrush") };
     }
     private async Task CommitMixerSlider(Slider control, string command, string trackID)
@@ -237,7 +234,7 @@ public partial class MainWindow : Window
     private static string PanText(double value) => Math.Abs(value) < 0.005 ? "Center" : (value < 0 ? "L " : "R ") + Math.Abs(value * 100).ToString("0", CultureInfo.CurrentCulture);
     private void TimelineViewportChanged(object sender, SizeChangedEventArgs e)
     {
-        if (Timeline is not null) Timeline.SetViewport(Math.Max(0, e.NewSize.Width - 9));
+        if (Timeline is not null) Timeline.SetViewport(Math.Max(0, e.NewSize.Width - 9), Math.Max(0, e.NewSize.Height - 9));
     }
     private static double Number(TextBox box)
     {
@@ -382,6 +379,7 @@ public partial class MainWindow : Window
     {
         if (model.Busy) return;
         if (e.OriginalSource is TextBox || e.OriginalSource is System.Windows.Controls.Primitives.TextBoxBase || e.OriginalSource is ComboBox) return;
+        if (e.Key == Key.Space && Keyboard.FocusedElement is System.Windows.Controls.Primitives.ButtonBase) return;
         if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.S) { e.Handled = true; await Guard(async () => { await Save(); }); }
         else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.Z) { e.Handled = true; await model.Command("undo"); }
         else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.Y) { e.Handled = true; await model.Command("redo"); }

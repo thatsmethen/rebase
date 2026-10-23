@@ -30,6 +30,13 @@ public partial class MainWindow
         var faderScaleReceipt = new List<object>();
         object? channelAlignment = null;
         object? cprReviewReceipt = null;
+        object? workspaceReceipt = null, workspaceSourceOnly = null;
+        var workspaceStates = new List<object>();
+        var workspaceTargets = new List<object>();
+        var workspaceFaders = new List<object>();
+        var workspaceCaptureSafety = new List<object>();
+        string? workspaceInitialHash = null;
+        object? workspaceSplitter = null;
         RenderSnapshot? sourceReceipt = null;
         int exit = 1;
         try
@@ -62,7 +69,7 @@ public partial class MainWindow
             , timeline_scroll = timelineScrollReceipt, timeline_scroll_screenshot = "native-timeline-scroll-visual.png"
             , window_bounds = windowBounds
             , musical_ruler = musicalRulerReceipt, fader_scale = faderScaleReceipt, channel_alignment = channelAlignment
-            , cpr_review = cprReviewReceipt
+            , cpr_review = cprReviewReceipt, workspace = workspaceReceipt
         };
         try { await File.WriteAllTextAsync(artifact, JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true })); }
         catch (IOException) { return 2; }
@@ -88,6 +95,7 @@ public partial class MainWindow
                 SelectedChannel.Content is not null &&
                 Timeline.TrackHeaders.Single(header => Equals(header.Tag, originalTrack.Id)) is Grid { Background: SolidColorBrush selectedHeader } &&
                 selectedHeader.Color == Color.FromRgb(87, 92, 95), "selection-synchronized-across-panes");
+            await WorkspaceScenario();
 
             var targetGain = originalTrack.GainDB >= 24 ? 23 : originalTrack.GainDB + 1;
             stage = "inspector-volume-shared-edit";
@@ -264,6 +272,27 @@ public partial class MainWindow
                 Assert(accessibleItemName == model.SelectedSourceEvent!.DisplayName &&
                     Descendants<TextBlock>(SourceEventsBox).Any(text => text.Text == model.SelectedSourceEvent.DisplayName && text.ActualWidth > 0 && text.ActualHeight > 0) &&
                     SelectionName.Text == model.SelectedSourceEvent.Name && !MoveBox.IsEnabled && !TrimBox.IsEnabled, "source-selection-labels");
+                var sourceOnlyBefore = SessionHash();
+                foreach (var button in new[] { SplitToolbarButton, DeleteToolbarButton, SplitInspectorButton, DeleteInspectorButton, MoveButton })
+                {
+                    if (button.IsEnabled) throw new InvalidOperationException("An ordinary edit action is enabled for a retained source event.");
+                    try { ((IInvokeProvider)new ButtonAutomationPeer(button).GetPattern(PatternInterface.Invoke)).Invoke(); throw new InvalidOperationException("A disabled source-only edit action accepted invocation."); }
+                    catch (System.Windows.Automation.ElementNotEnabledException) { }
+                }
+                Key(MoveBox, System.Windows.Input.Key.Enter); Key(TrimBox, System.Windows.Input.Key.Enter);
+                Assert(!SplitMenuItem.IsEnabled && !DeleteMenuItem.IsEnabled && !ClipInspector.IsEnabled && sourceOnlyBefore == SessionHash(), "workspace-source-only-actions");
+                var sourceOnlyAfter = SessionHash();
+                var eventID = model.SelectedSourceEvent!.Id;
+                var sourceTrackID = model.State.Selection.TrackID;
+                ((IExpandCollapseProvider)new ExpanderAutomationPeer(SourceSection).GetPattern(PatternInterface.ExpandCollapse)).Collapse();
+                await model.Command("selectTrack", trackID: sourceTrackID);
+                // A programmatic selection event exercises the same handler as
+                // the source list; it is not a physical click on hidden content.
+                SourceEventsBox.SelectedItem = model.SourceEvents.Single(source => source.Id == eventID);
+                await Until(() => !model.Busy && model.SelectedSourceEvent?.Id == eventID && SourceSection.IsExpanded, "source-auto-expand");
+                Assert(SourceSection.IsExpanded && SourcePanel.IsVisible, "workspace-source-auto-expand");
+                workspaceSourceOnly = new { before_sha256 = sourceOnlyBefore, after_sha256 = sourceOnlyAfter, ordinary_actions_disabled = true, source_expanded = true,
+                    auto_expand_input = "Programmatic source-list SelectionChanged event through the shared session" };
                 stage = "source-media-ui-attachment";
                 smokeAttachPath = sourceMedia;
                 await Invoke(AttachSourceButton);
@@ -352,7 +381,138 @@ public partial class MainWindow
             channelAlignment = new { selected_nameplate_bottom = selectedBottom, mixer_nameplate_bottom = mixerBottom };
             stage = "capture-window-visual";
             await Capture("native-app-visual.png");
+            workspaceReceipt = new { initial_state_sha256 = workspaceInitialHash, states = workspaceStates, event_targets = workspaceTargets,
+                splitter = workspaceSplitter, source_only = workspaceSourceOnly, capture_safety = workspaceCaptureSafety,
+                toolbar_controls = new[] { (FrameworkElement)RowDensityBox, LeftZoneToggle, MixerZoneToggle }.Select(control => new { name = control.Name,
+                    x = BoundsOf(control).X, y = BoundsOf(control).Y, width = control.ActualWidth, height = control.ActualHeight }).ToArray(),
+                screenshots = new { normal = "native-workspace-normal-visual.png", expanded = "native-workspace-expanded-visual.png" },
+                input_evidence = "UIA and injected routed keyboard events; no physical input" };
             checks.Add("window-visual-artifact-written"); stage = "completed";
+        }
+        string SessionHash() => Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(model.State, ProtocolJson.Options)))).ToLowerInvariant();
+        Rect BoundsOf(FrameworkElement element) => element.IsVisible ? element.TransformToAncestor((FrameworkElement)Content).TransformBounds(new Rect(element.RenderSize)) : new Rect(0, 0, 0, 0);
+        static object Box(Rect rectangle) => new { x = rectangle.X, y = rectangle.Y, width = rectangle.Width, height = rectangle.Height };
+        async Task WorkspaceScenario()
+        {
+            workspaceInitialHash = SessionHash();
+            void Record(string name)
+            {
+                if (SessionHash() != workspaceInitialHash) throw new InvalidOperationException("A workspace presentation change modified the shared project state.");
+                workspaceStates.Add(new { name, state_sha256 = SessionHash(), revision = model.State.Revision,
+                    selected_track_id = model.State.Selection.TrackID, selected_clip_id = model.State.Selection.ClipID,
+                    row_height = Timeline.RowHeight, left_visible = leftZoneVisible, mixer_visible = mixerZoneVisible,
+                    left_width = ChannelColumn.ActualWidth + InspectorColumn.ActualWidth, horizontal_offset = TimelineScroll.HorizontalOffset,
+                    timeline = Box(BoundsOf(TimelineScroll)), mixer = Box(BoundsOf(MixerZone)), headers = Timeline.TrackHeaders.Select(header => Box(BoundsOf(header))).ToArray() });
+            }
+            void CheckRowsAndTargets()
+            {
+                var rows = Timeline.TrackHeaders;
+                if (rows.Count != 4 || rows.Any(row => Math.Abs(row.ActualHeight - Timeline.RowHeight) > 0.5)) throw new InvalidOperationException("Track row density does not match actual row geometry.");
+                for (var i = 0; i < rows.Count; i++)
+                {
+                    if (i > 0 && Math.Abs(BoundsOf(rows[i]).Y - BoundsOf(rows[i - 1]).Y - Timeline.RowHeight) > 0.5) throw new InvalidOperationException("Track row baselines are inconsistent.");
+                    foreach (var control in Descendants<Control>(rows[i]).Where(control => control is Button or CheckBox))
+                    {
+                        var box = control.TransformToAncestor(rows[i]).TransformBounds(new Rect(control.RenderSize));
+                        if (box.Top < 0 || box.Bottom > rows[i].ActualHeight + 0.5) throw new InvalidOperationException("Track controls overflow their row.");
+                    }
+                }
+                var button = Timeline.Children.OfType<Button>().First();
+                bool Hit(Point point)
+                {
+                    DependencyObject? target = button.InputHitTest(point) as DependencyObject;
+                    while (target is not null && target != button) target = VisualTreeHelper.GetParent(target);
+                    return target == button;
+                }
+                var moveX = button.ActualWidth / 2; var trimX = button.ActualWidth - TimelineView.TrimHitWidth / 2;
+                var moveHit = Hit(new Point(moveX, button.ActualHeight / 2)); var trimHit = Hit(new Point(trimX, button.ActualHeight / 2));
+                if (!moveHit || !trimHit || button.ActualHeight < 30 || moveX >= button.ActualWidth - TimelineView.TrimHitWidth)
+                    throw new InvalidOperationException("Event move and trim hit areas are not usable.");
+                workspaceTargets.Add(new { row_height = Timeline.RowHeight, event_width = button.ActualWidth, event_height = button.ActualHeight,
+                    move_x = moveX, trim_x = trimX, trim_width = TimelineView.TrimHitWidth, move_hit = moveHit, trim_hit = trimHit });
+            }
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            Assert(Timeline.RowHeight == 44 && RowDensityBox.SelectedIndex == 0 && TimelineScroll.ViewportHeight >= Timeline.TracksBottom, "workspace-compact-default");
+            CheckRowsAndTargets(); Record("compact");
+            await SelectComboItem(RowDensityBox, 1); CheckRowsAndTargets(); Record("normal");
+            Assert(Timeline.RowHeight == 68 && TimelineScroll.ViewportHeight >= Timeline.TracksBottom, "workspace-normal-density");
+            await Until(() => Timeline.PopulatedWaveformCount == model.Project!.Tracks.Sum(track => track.Clips.Length), "workspace-normal-waveforms");
+            await Capture("native-workspace-normal-visual.png");
+            await SelectComboItem(RowDensityBox, 0);
+            checks.Add("workspace-event-hit-targets");
+
+            var section = (IExpandCollapseProvider)new ExpanderAutomationPeer(EventEditingSection).GetPattern(PatternInterface.ExpandCollapse);
+            section.Collapse(); await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            if (SplitInspectorButton.IsVisible || DeleteInspectorButton.IsVisible) throw new InvalidOperationException("Collapsed event section still displays actions.");
+            section.Expand(); await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            Assert(SplitInspectorButton.IsVisible && DeleteInspectorButton.IsVisible && SessionHash() == workspaceInitialHash, "workspace-inspector-sections");
+
+            foreach (var (name, target) in new (string, UIElement)[] { ("inspector", InspectorGainSlider), ("timeline", Timeline.Children.OfType<Button>().First()), ("mixer", mixerSliders[model.SelectedTrack!.Id + ":gain"]) })
+            {
+                if (!target.CaptureMouse()) throw new InvalidOperationException("Could not establish the programmatic capture control.");
+                try
+                {
+                    Toggle(LeftZoneToggle); Toggle(MixerZoneToggle); RowDensityBox.SelectedIndex = 1;
+                    var retained = target.IsMouseCaptured;
+                    if (!retained || !leftZoneVisible || !mixerZoneVisible || Timeline.RowHeight != 44 || RowDensityBox.SelectedIndex != 0)
+                        throw new InvalidOperationException("A layout change interrupted an active control capture.");
+                    workspaceCaptureSafety.Add(new { surface = name, capture_before = true, capture_after = retained, layout_refused = true });
+                }
+                finally { target.ReleaseMouseCapture(); }
+            }
+            checks.Add("workspace-active-capture-preserved");
+            SpaceToggle(LeftZoneToggle); await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle); Record("left-hidden");
+            if (leftZoneVisible || ChannelColumn.ActualWidth != 0 || InspectorColumn.ActualWidth != 0) throw new InvalidOperationException("Hiding the left zone left occupied columns.");
+            SpaceToggle(MixerZoneToggle); await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle); Record("panes-hidden");
+            if (mixerZoneVisible || MixerRow.ActualHeight != 0 || MixerDividerRow.ActualHeight != 0) throw new InvalidOperationException("Hiding the lower zone left occupied rows.");
+            await Capture("native-workspace-expanded-visual.png");
+            SpaceToggle(LeftZoneToggle); SpaceToggle(MixerZoneToggle); await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle); Record("restored");
+            Assert(leftZoneVisible && mixerZoneVisible && SessionHash() == workspaceInitialHash, "workspace-keyboard-pane-toggles");
+            checks.Add("workspace-pane-state-preserved");
+
+            var initialMixerHeight = MixerRow.ActualHeight;
+            MixerSplitter.Focus();
+            for (var i = 0; i < 60; i++) SplitterKey(System.Windows.Input.Key.Down);
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var minimum = MixerRow.ActualHeight; Record("splitter-minimum"); MeasureFader();
+            for (var i = 0; i < 60; i++) SplitterKey(System.Windows.Input.Key.Up);
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var maximum = MixerRow.ActualHeight; var arrangementMinimum = ArrangementRow.ActualHeight; Record("splitter-maximum"); MeasureFader();
+            Assert(Math.Abs(minimum - MixerRow.MinHeight) <= 0.5 && Math.Abs(maximum - MixerRow.MaxHeight) <= 0.5 &&
+                maximum > minimum && arrangementMinimum >= 219.5 && MixerSplitter.IsKeyboardFocused, "workspace-splitter-bounds");
+            workspaceSplitter = new { minimum_height = MixerRow.MinHeight, maximum_height = MixerRow.MaxHeight, minimum_actual = minimum,
+                maximum_actual = maximum, arrangement_minimum_actual = arrangementMinimum, keyboard_focus_preserved = MixerSplitter.IsKeyboardFocused, faders = workspaceFaders };
+            MixerRow.Height = new GridLength(initialMixerHeight); savedMixerHeight = initialMixerHeight;
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle); Record("splitter-restored");
+            checks.Add("workspace-resized-fader-geometry"); checks.Add("workspace-visual-artifacts");
+
+            void MeasureFader()
+            {
+                var slider = mixerSliders[model.SelectedTrack!.Id + ":gain"];
+                var scale = Descendants<FaderScale>(Mixer.Children[0]).Single();
+                var track = (Track)slider.Template.FindName("PART_Track", slider);
+                var thumbY = track.Thumb.TranslatePoint(new Point(track.Thumb.ActualWidth / 2, track.Thumb.ActualHeight / 2), scale).Y;
+                var tickY = scale.TickY(slider.Value) ?? throw new InvalidOperationException("The resized fader has no scale geometry.");
+                var plate = Descendants<Button>(Mixer.Children[0]).Single();
+                var plateBox = plate.TransformToAncestor(MixerScroll).TransformBounds(new Rect(plate.RenderSize));
+                if (Math.Abs(tickY - thumbY) > 0.5 || plateBox.Top < 0 || plateBox.Bottom > MixerScroll.ActualHeight + 0.5)
+                    throw new InvalidOperationException("Resizing the mixer clipped a nameplate or misaligned a fader scale.");
+                workspaceFaders.Add(new { zone_height = MixerRow.ActualHeight, fader_height = slider.ActualHeight, value = slider.Value, tick_y = tickY, thumb_y = thumbY });
+            }
+            void SplitterKey(Key key)
+            {
+                MixerSplitter.RaiseEvent(new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(this), Environment.TickCount, key) { RoutedEvent = Keyboard.KeyDownEvent });
+                UpdateLayout();
+            }
+            void SpaceToggle(CheckBox control)
+            {
+                control.Focus();
+                var preview = new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(this), Environment.TickCount, System.Windows.Input.Key.Space) { RoutedEvent = Keyboard.PreviewKeyDownEvent };
+                control.RaiseEvent(preview);
+                if (preview.Handled) throw new InvalidOperationException("Transport consumed Space intended for a workspace toggle.");
+                control.RaiseEvent(new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(this), Environment.TickCount, System.Windows.Input.Key.Space) { RoutedEvent = Keyboard.KeyDownEvent });
+                control.RaiseEvent(new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(this), Environment.TickCount, System.Windows.Input.Key.Space) { RoutedEvent = Keyboard.KeyUpEvent });
+            }
         }
         Point Origin(FrameworkElement element) => element.TransformToAncestor(this).Transform(new Point());
         async Task CPRImportScenario()

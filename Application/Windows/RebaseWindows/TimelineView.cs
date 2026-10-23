@@ -9,7 +9,10 @@ namespace Rebase.Windows;
 
 public sealed class TimelineView : Canvas
 {
-    private const double Header = 198, Row = 68, Ruler = 26;
+    private const double Header = 198, Ruler = 26;
+    private double rowHeight = 44;
+    internal double RowHeight => rowHeight;
+    internal const double TrimHitWidth = 10;
     public static readonly Color[] TrackColors = [Color.FromRgb(177, 201, 102), Color.FromRgb(141, 175, 210), Color.FromRgb(209, 175, 101), Color.FromRgb(166, 151, 207)];
     private readonly Dictionary<string, WaveformVisual> waveformViews = [];
     private readonly List<FrameworkElement> headers = [];
@@ -19,7 +22,7 @@ public sealed class TimelineView : Canvas
     private readonly TextBlock rulerMode = new() { FontSize = 10, Margin = new Thickness(20, 5, 0, 0), Foreground = Brushes.Silver, IsHitTestVisible = false };
     private readonly Border headerCorner = new() { Width = Header, Height = Ruler, Background = new SolidColorBrush(Color.FromRgb(46, 49, 52)), BorderBrush = new SolidColorBrush(Color.FromRgb(29, 31, 33)), BorderThickness = new Thickness(0, 0, 1, 1) };
     private IReadOnlyDictionary<string, float[]> peaks = new Dictionary<string, float[]>();
-    private double viewport, currentPosition, horizontalOffset;
+    private double viewport, viewportHeight, currentPosition, horizontalOffset;
     private readonly Line playhead = new() { Stroke = Brushes.White, StrokeThickness = 1.5, IsHitTestVisible = false };
     private ProjectView? project;
     private string? selected, selectedTrack;
@@ -34,7 +37,20 @@ public sealed class TimelineView : Canvas
     {
         project = value; selected = selectedID; selectedTrack = selectedTrackID; pixels = pixelsPerSecond; Rebuild();
     }
-    public void SetViewport(double width) { viewport = width; Width = Math.Max(viewport, Header + Math.Max(24, project?.Duration ?? 24) * pixels + 40); }
+    public void SetRowHeight(double value)
+    {
+        if (value is not (44 or 68)) throw new ArgumentOutOfRangeException(nameof(value));
+        if (value == rowHeight) return;
+        if (IsMouseCaptureWithin) throw new InvalidOperationException("Finish the event drag before changing row density.");
+        rowHeight = value; Rebuild();
+    }
+    public void SetViewport(double width, double height)
+    {
+        viewport = width; viewportHeight = height;
+        Width = Math.Max(viewport, Header + Math.Max(24, project?.Duration ?? 24) * pixels + 40);
+        Height = Math.Max(viewportHeight, Ruler + Math.Max(4, project?.Tracks.Length ?? 0) * rowHeight);
+        RebuildRuler(); SetPosition(currentPosition);
+    }
     // Keep one vertical coordinate system for headers and events. Opaque header
     // panels counter the horizontal scroll; their controls stay hit-testable and
     // the event canvas/ruler scroll underneath without a second vertical viewer.
@@ -60,7 +76,7 @@ public sealed class TimelineView : Canvas
         foreach (var (id, visual) in waveformViews) visual.SetPeaks(peaks.TryGetValue(id, out var data) ? data : []);
     }
     public int PopulatedWaveformCount => waveformViews.Values.Count(view => view.HasPeaks && view.ActualWidth > 0 && view.ActualHeight > 0);
-    public double TracksBottom => Ruler + (project?.Tracks.Length ?? 0) * Row;
+    public double TracksBottom => Ruler + (project?.Tracks.Length ?? 0) * rowHeight;
     public void SetPosition(double seconds)
     {
         currentPosition = seconds;
@@ -81,24 +97,25 @@ public sealed class TimelineView : Canvas
         waveformViews.Clear();
         var duration = Math.Max(24, project?.Duration ?? 24);
         Width = Math.Max(viewport, Header + duration * pixels + 40);
-        Height = Ruler + Math.Max(4, project?.Tracks.Length ?? 0) * Row;
+        Height = Math.Max(viewportHeight, Ruler + Math.Max(4, project?.Tracks.Length ?? 0) * rowHeight);
         RebuildRuler();
         if (project is not null)
         {
             for (var index = 0; index < project.Tracks.Length; ++index)
             {
-                var track = project.Tracks[index]; var top = Ruler + index * Row;
-                var divider = new Line { X1 = 0, X2 = Width, Y1 = top + Row, Y2 = top + Row, Stroke = new SolidColorBrush(Color.FromRgb(41, 43, 45)), IsHitTestVisible = false };
+                var compact = rowHeight == 44;
+                var track = project.Tracks[index]; var top = Ruler + index * rowHeight;
+                var divider = new Line { X1 = 0, X2 = Width, Y1 = top + rowHeight, Y2 = top + rowHeight, Stroke = new SolidColorBrush(Color.FromRgb(41, 43, 45)), IsHitTestVisible = false };
                 Children.Add(divider);
-                var header = new Grid { Width = Header, Height = Row, Background = new SolidColorBrush(track.Id == selectedTrack ? Color.FromRgb(87, 92, 95) : Color.FromRgb(52, 55, 58)), Tag = track.Id };
+                var header = new Grid { Width = Header, Height = rowHeight, Background = new SolidColorBrush(track.Id == selectedTrack ? Color.FromRgb(87, 92, 95) : Color.FromRgb(52, 55, 58)), Tag = track.Id };
                 header.Children.Add(new Border { Background = new SolidColorBrush(TrackColors[index % TrackColors.Length]), Width = 13, HorizontalAlignment = HorizontalAlignment.Left });
                 header.Children.Add(new Border { BorderBrush = new SolidColorBrush(Color.FromRgb(29, 31, 33)), BorderThickness = new Thickness(0, 0, 1, 1), IsHitTestVisible = false });
-                var name = new Button { Content = track.Name, HorizontalContentAlignment = HorizontalAlignment.Left, FontSize = 11, Width = Header - 33, Height = 25, Padding = new Thickness(3),
-                    Margin = new Thickness(21, 2, 3, 0), HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent };
+                var name = new Button { Content = track.Name, HorizontalContentAlignment = HorizontalAlignment.Left, FontSize = compact ? 10 : 11, Width = Header - 33, Height = compact ? 20 : 25, MinHeight = compact ? 20 : 25, Padding = new Thickness(3, 1, 3, 1),
+                    Margin = new Thickness(21, compact ? 0 : 2, 3, 0), HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent };
                 name.Click += (_, _) => TrackSelected?.Invoke(track.Id); header.Children.Add(name);
-                var flags = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(23, 32, 0, 0), VerticalAlignment = VerticalAlignment.Top };
-                var mute = new CheckBox { Content = "M", IsChecked = track.IsMuted, Padding = new Thickness(4, 1, 4, 1), MinWidth = 25, Margin = new Thickness(1), ToolTip = "Mute " + track.Name };
-                var solo = new CheckBox { Content = "S", IsChecked = track.IsSolo, Padding = new Thickness(4, 1, 4, 1), MinWidth = 25, Margin = new Thickness(1), ToolTip = "Solo " + track.Name };
+                var flags = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(23, compact ? 21 : 32, 0, 0), VerticalAlignment = VerticalAlignment.Top };
+                var mute = new CheckBox { Content = "M", IsChecked = track.IsMuted, Padding = new Thickness(4, 1, 4, 1), MinWidth = 25, Height = compact ? 18 : 22, FontSize = compact ? 10 : 11, Margin = new Thickness(1), ToolTip = "Mute " + track.Name };
+                var solo = new CheckBox { Content = "S", IsChecked = track.IsSolo, Padding = new Thickness(4, 1, 4, 1), MinWidth = 25, Height = compact ? 18 : 22, FontSize = compact ? 10 : 11, Margin = new Thickness(1), ToolTip = "Solo " + track.Name };
                 AutomationProperties.SetName(mute, "Mute " + track.Name); AutomationProperties.SetName(solo, "Solo " + track.Name);
                 RoutedEventHandler muteChanged = (_, _) => TrackFlagChanged?.Invoke(track.Id, false);
                 RoutedEventHandler soloChanged = (_, _) => TrackFlagChanged?.Invoke(track.Id, true);
@@ -110,9 +127,9 @@ public sealed class TimelineView : Canvas
                 {
                     var color = TrackColors[index % TrackColors.Length];
                     var content = new Grid { IsHitTestVisible = false };
-                    content.RowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
+                    content.RowDefinitions.Add(new RowDefinition { Height = new GridLength(compact ? 16 : 20) });
                     content.RowDefinitions.Add(new RowDefinition());
-                    content.Children.Add(new TextBlock { Text = clip.Name, Foreground = Brushes.Black, TextTrimming = TextTrimming.CharacterEllipsis, Margin = new Thickness(6, 2, 4, 0), FontSize = 11 });
+                    content.Children.Add(new TextBlock { Text = clip.Name, Foreground = Brushes.Black, TextTrimming = TextTrimming.CharacterEllipsis, Margin = new Thickness(6, compact ? 0 : 2, 4, 0), FontSize = compact ? 10 : 11 });
                     var waveform = new WaveformVisual();
                     waveform.SetPeaks(peaks.TryGetValue(clip.Id, out var data) ? data : []);
                     Grid.SetRow(waveform, 1); content.Children.Add(waveform); waveformViews[clip.Id] = waveform;
@@ -120,7 +137,7 @@ public sealed class TimelineView : Canvas
                     {
                         Content = content,
                         Style = (Style)FindResource("AccentSurfaceButton"),
-                        Width = Math.Max(16, clip.Duration * pixels), Height = Row - 10, Padding = new Thickness(0),
+                        Width = Math.Max(16, clip.Duration * pixels), Height = rowHeight - (compact ? 6 : 10), Padding = new Thickness(0),
                         Margin = new Thickness(0), HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch,
                         Background = new SolidColorBrush(color), Foreground = Brushes.Black,
                         BorderThickness = new Thickness(1),
@@ -129,11 +146,11 @@ public sealed class TimelineView : Canvas
                         ToolTip = $"{clip.Name} · {clip.Position:0.###}s · {clip.Duration:0.###}s. Drag to move; drag the right edge to trim."
                     };
                     AutomationProperties.SetName(button, $"{track.Name}, {clip.Name}, starts {clip.Position:0.###} seconds, duration {clip.Duration:0.###} seconds");
-                    SetLeft(button, Header + clip.Position * pixels); SetTop(button, top + 5); Children.Add(button);
+                    SetLeft(button, Header + clip.Position * pixels); SetTop(button, top + (compact ? 3 : 5)); Children.Add(button);
                     Point start = default; bool dragging = false, trim = false;
                     button.PreviewMouseLeftButtonDown += (_, e) =>
                     {
-                        start = e.GetPosition(this); trim = e.GetPosition(button).X > button.ActualWidth - 10;
+                        start = e.GetPosition(this); trim = e.GetPosition(button).X > button.ActualWidth - TrimHitWidth;
                         dragging = true; button.CaptureMouse(); e.Handled = true;
                     };
                     button.PreviewMouseMove += (_, e) =>

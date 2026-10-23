@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "suite": "windows-compact-workspace-local-crossbuild",
+  "created_utc": "2026-10-23T19:20:28.767592+00:00",
+  "base_commit": "c005c4c777931f44999af5f0c228371c5973ca30",
+  "build": {
+    "command": "dotnet build Application/Windows/RebaseWindows/RebaseWindows.csproj -c Release --no-restore --verbosity quiet",
+    "sdk": "10.0.100",
+    "host": "macOS arm64",
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0,
+    "reported_elapsed_seconds": 2.98
+  },
+  "diff_check": "passed",
+  "sources": [
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml",
+      "sha256": "df94ff43c3c2c268f67ceebad8de0cef3c32999a72131f26556fbeaded33a9eb"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml.cs",
+      "sha256": "814e2b82b1ace56d863ddc1ec53d8e211156ac1881eca3569edda38cf2e13536"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.Layout.cs",
+      "sha256": "29e7f1d81da38679fe51c60b11ca45ba3974b85e72eef346b085690c649f3e84"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/TimelineView.cs",
+      "sha256": "bab96064439934221a4fa04790249c356adfeb62595ae08dc9f69ef56d502b90"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/WindowSmoke.cs",
+      "sha256": "b7bf6f56b2ebe209db4f8d1dbe4573a28daff9068b1b15727eaae1608d895d1f"
+    }
+  ],
+  "native_windows_tested": false,
+  "new_native_workspace_check_count": 12,
+  "new_client_tree_capture_count": 2,
+  "boundaries": [
+    "Crossbuild is not Windows runtime or visual acceptance.",
+    "Native smoke uses UI Automation and injected routed input, not physical input.",
+    "Existing portable host controls unchanged; not rerun for this WPF-only slice."
+  ]
+}

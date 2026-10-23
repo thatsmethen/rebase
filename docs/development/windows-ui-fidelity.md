@@ -52,3 +52,12 @@ The Windows reference remains the whole-window target. Inspection of the retaine
 3. **Top rows and event information.** Tighten the toolbar, status and event-info rows without losing readable fields, command access or Enter/Escape behavior. Keep the empty-selection state compact.
 
 Routing, inserts, record/monitor state, automation read/write, per-channel meters, marker/arranger tracks, Control Room and cycle/locator behavior still need implementation. Their absence is a functional fidelity gap as well as a visual one. New surfaces require working shared behavior and interaction checks; the reviewed CPR import milestone does not satisfy these UI acceptance criteria.
+
+
+## Compact workspace candidate
+
+The next source candidate adds Compact (44 DIP) and Normal (68 DIP) track rows, left-zone and mixer visibility controls, a bounded lower-zone splitter, narrower mixer strips with resizing faders, and expandable Event editing/source sections. These change presentation only. Selection, history and shared project state must stay unchanged through density and pane changes. Ordinary clip actions are disabled for a retained source-only selection; choosing a new retained event expands its source section.
+
+The [local readiness record](../../research/publication/windows-portability/workspace-local-20261024/observation.json) records a successful WPF Release crossbuild and 57 authored receipt-gate controls. These are not Windows runtime or visual acceptance. The native scenario adds 12 checks, two additional client images, measured rows/hit areas, pane transitions, splitter/fader geometry and session-state hashes. Windows execution and independent review are pending. Preview 3 remains the published tested download until that candidate passes its own review.
+
+The top row heights are unchanged in this slice. Further toolbar density, panel sizing, reference control behavior and the functional gaps listed above remain open.

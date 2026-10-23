@@ -234,6 +234,185 @@ def require_musical_ruler(smoke):
         raise RuntimeError("Musical ruler labels do not match the authored 96 BPM example")
 
 
+WORKSPACE_CHECKS = {
+    "workspace-compact-default", "workspace-normal-density", "workspace-event-hit-targets",
+    "workspace-inspector-sections", "workspace-keyboard-pane-toggles", "workspace-pane-state-preserved",
+    "workspace-splitter-bounds", "workspace-resized-fader-geometry", "workspace-source-only-actions",
+    "workspace-source-auto-expand", "workspace-visual-artifacts", "workspace-active-capture-preserved",
+}
+
+
+def require_workspace_layout(smoke, evidence):
+    """Require measured native geometry and session invariants, not only check labels."""
+    receipt = smoke.get("workspace", {})
+    bounds = smoke.get("window_bounds", {})
+
+    def fail(message):
+        raise RuntimeError("Workspace receipt: " + message)
+
+    def number(value):
+        if type(value) not in (int, float) or not math.isfinite(value):
+            fail("non-finite geometry")
+        return value
+
+    def near(first, last):
+        return abs(number(first) - number(last)) <= 0.5
+
+    def sha(value):
+        if not isinstance(value, str) or len(value) != 64 or set(value) - set("0123456789abcdef"):
+            fail("invalid state SHA-256")
+        return value
+
+    def rectangle(value, *, visible=True):
+        if not isinstance(value, dict):
+            fail("missing measured rectangle")
+        x, y, width, height = (number(value.get(key)) for key in ("x", "y", "width", "height"))
+        if width < 0 or height < 0 or (visible and (width <= 0 or height <= 0)):
+            fail("empty visible rectangle")
+        if visible and (x < -0.5 or y < -0.5 or x + width > number(bounds.get("client_width")) + 0.5
+                        or y + height > number(bounds.get("client_height")) + 0.5):
+            fail("visible rectangle outside captured client")
+        return value
+
+    if not WORKSPACE_CHECKS.issubset(smoke.get("checks", [])):
+        fail("missing native workspace checks")
+    if receipt.get("input_evidence") != "UIA and injected routed keyboard events; no physical input":
+        fail("input evidence boundary is missing")
+    screenshots = receipt.get("screenshots", {})
+    if screenshots != {"normal": "native-workspace-normal-visual.png", "expanded": "native-workspace-expanded-visual.png"}:
+        fail("missing density and expanded workspace captures")
+    for filename in screenshots.values():
+        require_window_visual(evidence / filename, bounds)
+    toolbar = receipt.get("toolbar_controls", [])
+    if (not isinstance(toolbar, list) or len(toolbar) != 3
+            or {control.get("name") for control in toolbar} != {"RowDensityBox", "LeftZoneToggle", "MixerZoneToggle"}):
+        fail("workspace toolbar controls were not measured")
+    for control in toolbar:
+        rectangle(control)
+        if control["height"] < 24 or control["width"] < 24:
+            fail("workspace toolbar control has an unusable hit area")
+    for first, second in zip(sorted(toolbar, key=lambda item: item["x"]), sorted(toolbar, key=lambda item: item["x"])[1:]):
+        if first["x"] + first["width"] > second["x"] + 0.5:
+            fail("workspace toolbar controls overlap")
+    captures = receipt.get("capture_safety", [])
+    if (not isinstance(captures, list) or len(captures) != 3
+            or {entry.get("surface") for entry in captures} != {"inspector", "timeline", "mixer"}
+            or any(entry.get(key) is not True for entry in captures
+                   for key in ("capture_before", "capture_after", "layout_refused"))):
+        fail("active inspector, timeline and mixer captures were not preserved")
+
+    state_hash = sha(receipt.get("initial_state_sha256"))
+    expected_names = {"compact", "normal", "left-hidden", "panes-hidden", "restored",
+                      "splitter-minimum", "splitter-maximum", "splitter-restored"}
+    records = receipt.get("states", [])
+    if (not isinstance(records, list) or len(records) != len(expected_names)
+            or any(not isinstance(item, dict) for item in records)
+            or {item.get("name") for item in records} != expected_names):
+        fail("missing or duplicated measured workspace states")
+    states = {item["name"]: item for item in records}
+    initial = states["compact"]
+    if (type(initial.get("revision")) is not int or initial["revision"] < 1
+            or any(not isinstance(initial.get(key), str) or not initial[key]
+                   for key in ("selected_track_id", "selected_clip_id"))):
+        fail("missing selected session identity")
+    for state in records:
+        if (sha(state.get("state_sha256")) != state_hash
+                or any(state.get(key) != initial[key] for key in ("revision", "selected_track_id", "selected_clip_id"))
+                or type(state.get("revision")) is not int):
+            fail("layout changed project, history, transport or selection state")
+        row_height = number(state.get("row_height"))
+        if row_height not in (44, 68):
+            fail("unsupported measured row density")
+        if (type(state.get("left_visible")) is not bool or type(state.get("mixer_visible")) is not bool
+                or not near(state.get("left_width"), 286 if state["left_visible"] else 0)
+                or not near(state.get("horizontal_offset"), initial.get("horizontal_offset"))
+                or number(state["horizontal_offset"]) < 0):
+            fail("pane extent or timeline scroll changed unexpectedly")
+        timeline = rectangle(state.get("timeline"))
+        mixer = rectangle(state.get("mixer"), visible=state["mixer_visible"])
+        if state["mixer_visible"]:
+            if (not 195.5 <= mixer["height"] <= 376.5 or not near(mixer["x"], timeline["x"])
+                    or not near(mixer["width"], timeline["width"])
+                    or not near(mixer["y"], timeline["y"] + timeline["height"] + 5)):
+                fail("mixer and arrangement geometry do not share a usable split")
+        elif not near(mixer["height"], 0):
+            fail("hidden mixer retained height")
+        if number(timeline["height"]) < 219.5:
+            fail("splitter collapsed the arrangement below its minimum")
+        headers = state.get("headers", [])
+        if not isinstance(headers, list) or len(headers) != 4:
+            fail("four authored track rows were not measured")
+        for index, header in enumerate(headers):
+            rectangle(header)
+            if (not near(header["width"], 198) or not near(header["height"], row_height)
+                    or not near(header["x"], headers[0]["x"])
+                    or not near(header["y"], headers[0]["y"] + index * row_height)
+                    or header["x"] < timeline["x"] - 0.5 or header["x"] + header["width"] > timeline["x"] + timeline["width"] + 0.5
+                    or header["y"] < timeline["y"] - 0.5 or header["y"] + header["height"] > timeline["y"] + timeline["height"] + 0.5):
+                fail("track header dimensions do not follow row density")
+        if not 24 <= headers[0]["y"] - timeline["y"] <= 29 or not -0.5 <= headers[0]["x"] - timeline["x"] <= 2:
+            fail("track rows are detached from the visible timeline ruler")
+    if initial["row_height"] != 44 or states["normal"]["row_height"] != 68:
+        fail("compact default and normal density were not exercised")
+    for name, state in states.items():
+        if (state["left_visible"] != (name not in {"left-hidden", "panes-hidden"})
+                or state["mixer_visible"] != (name != "panes-hidden")):
+            fail("expected pane visibility transition was not observed")
+    hidden, empty = states["left-hidden"], states["panes-hidden"]
+    if (not near(hidden["timeline"]["width"] - initial["timeline"]["width"], initial["left_width"])
+            or not near(initial["timeline"]["x"] - hidden["timeline"]["x"], initial["left_width"])
+            or not near(empty["timeline"]["height"] - hidden["timeline"]["height"], hidden["mixer"]["height"] + 5)
+            or not near(empty["timeline"]["width"], hidden["timeline"]["width"])):
+        fail("hiding panes did not return their measured space to the timeline")
+    for name in ("normal", "restored", "splitter-restored"):
+        if any(not near(states[name][zone][key], initial[zone][key])
+               for zone in ("timeline", "mixer") for key in ("x", "y", "width", "height")):
+            fail("restored panes or density did not preserve workspace bounds")
+
+    targets = receipt.get("event_targets", [])
+    if (not isinstance(targets, list) or len(targets) != 2
+            or {item.get("row_height") for item in targets} != {44, 68}):
+        fail("both density hit targets were not measured")
+    for item in targets:
+        width, height, move, trim, trim_width = (number(item.get(key)) for key in
+                                               ("event_width", "event_height", "move_x", "trim_x", "trim_width"))
+        if (width < 16 or not near(height, 38 if item["row_height"] == 44 else 58)
+                or not near(trim_width, 10) or not 0 <= move < width - trim_width < trim < width
+                or item.get("move_hit") is not True or item.get("trim_hit") is not True):
+            fail("event move and trim targets are not distinct native hit regions")
+    if not near(targets[0]["event_width"], targets[1]["event_width"]):
+        fail("row density changed event time geometry")
+
+    split = receipt.get("splitter", {})
+    minimum, maximum = number(split.get("minimum_height")), number(split.get("maximum_height"))
+    total_height = initial["timeline"]["height"] + initial["mixer"]["height"] + 5
+    if (not near(minimum, 196) or not near(maximum, max(196, min(376, total_height - 225)))
+            or maximum - minimum < 10 or not near(split.get("minimum_actual"), minimum)
+            or not near(split.get("maximum_actual"), maximum)
+            or not near(states["splitter-minimum"]["mixer"]["height"], minimum)
+            or not near(states["splitter-maximum"]["mixer"]["height"], maximum)
+            or not near(split.get("arrangement_minimum_actual"), states["splitter-maximum"]["timeline"]["height"])
+            or split.get("keyboard_focus_preserved") is not True):
+        fail("splitter limits and keyboard focus were not exercised")
+    faders = split.get("faders", [])
+    if not isinstance(faders, list) or len(faders) != 2:
+        fail("missing fader geometry at both splitter limits")
+    for entry, height in zip(faders, (minimum, maximum)):
+        fader_height = number(entry.get("fader_height"))
+        value, tick, thumb = (number(entry.get(key)) for key in ("value", "tick_y", "thumb_y"))
+        if (not near(entry.get("zone_height"), height) or not 60 <= fader_height <= 240
+                or not -96 <= value <= 24 or not 0 <= tick <= fader_height
+                or not 0 <= thumb <= fader_height or not near(tick, thumb)):
+            fail("resized fader thumb and scale disagree")
+    if number(faders[1]["fader_height"]) <= number(faders[0]["fader_height"]):
+        fail("mixer fader height did not follow the splitter")
+    source = receipt.get("source_only", {})
+    if (sha(source.get("before_sha256")) != sha(source.get("after_sha256"))
+            or source.get("ordinary_actions_disabled") is not True or source.get("source_expanded") is not True
+            or source.get("auto_expand_input") != "Programmatic source-list SelectionChanged event through the shared session"):
+        fail("source-only selection changed state or exposed ordinary event actions")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
@@ -456,6 +635,7 @@ def main():
             raise RuntimeError("Fader scale does not match observed native thumb geometry")
         require_pinned_header_scroll(smoke)
         require_musical_ruler(smoke)
+        require_workspace_layout(smoke, evidence)
         modules = {"process": validate_modules(smoke.pop("process_modules", None), stage, windows,
                                                {"rebase.exe", "coreclr.dll", "rebasewindowsaudio.dll"}),
                    "helper": validate_modules(smoke.pop("helper_modules", None), stage, windows,
