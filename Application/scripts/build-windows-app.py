@@ -383,13 +383,24 @@ def main():
                            "inspector-pan-shared-edit", "inspector-mute-shared-edit", "inspector-solo-shared-edit",
                            "source-selection-labels", "mixer-mute-shared-edit", "track-solo-shared-edit",
                            "mixer-volume-shared-edit-and-undo",
-                           "musical-ruler-shared-96bpm", "musical-ruler-seconds-toggle"}
+                           "musical-ruler-shared-96bpm", "musical-ruler-seconds-toggle",
+                           "selection-synchronized-across-panes", "channel-volume-shared-edit", "channel-volume-undo",
+                           "channel-pan-shared-edit", "channel-mute-shared-edit", "fader-scale-matches-value",
+                           "mixer-numeric-volume-commit", "mixer-numeric-volume-invalid-preserved", "mixer-numeric-volume-cancel",
+                           "numeric-event-enter-and-undo", "numeric-event-cancel", "numeric-event-invalid-preserved",
+                           "numeric-trim-enter-and-undo", "numeric-tempo-enter-and-undo", "numeric-seek-and-cancel"}
         if (smoke.get("source_journey_tested") is not True or not required_checks.issubset(smoke["checks"])
                 or smoke.get("source_screenshot") != "native-source-visual.png"
                 or smoke.get("source_output_sha256") != expected_source["outputSHA256"]
                 or smoke.get("source_sha256") != expected_source["sourceSHA256"]
                 or smoke.get("media_sha256") != expected_source["mediaSHA256"]):
             raise RuntimeError("Source-event or waveform window checks are incomplete")
+        scale = smoke.get("fader_scale", [])
+        if (len(scale) != 6 or {(entry.get("selected_channel"), entry.get("value")) for entry in scale} !=
+                {(side, value) for side in (False, True) for value in (-96, 0, 24)} or
+                any(type(entry.get(key)) not in (int, float) or not math.isfinite(entry[key]) for entry in scale for key in ("tick_y", "thumb_y")) or
+                any(abs(entry["tick_y"] - entry["thumb_y"]) > 0.5 for entry in scale)):
+            raise RuntimeError("Fader scale does not match observed native thumb geometry")
         require_pinned_header_scroll(smoke)
         require_musical_ruler(smoke)
         modules = {"process": validate_modules(smoke.pop("process_modules", None), stage, windows,

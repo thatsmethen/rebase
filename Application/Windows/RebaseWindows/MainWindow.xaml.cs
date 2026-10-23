@@ -18,6 +18,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer timer = new() { Interval = TimeSpan.FromMilliseconds(80) };
     private bool closeFinished, closing, updatingSourceList, updatingInspector;
     private readonly Dictionary<string, Slider> mixerSliders = [];
+    private readonly Dictionary<string, TextBox> mixerValues = [];
     private string? mixerFocus;
     private FrameworkElement? inspectorFocus;
     private bool mixerRefreshPending;
@@ -47,7 +48,8 @@ public partial class MainWindow : Window
         Timeline.TrackFlagChanged += async (id, solo) => await model.Command(solo ? "toggleSolo" : "toggleMute", trackID: id);
         TimelineScroll.ScrollChanged += (_, _) => Timeline.SetHorizontalOffset(TimelineScroll.HorizontalOffset);
         timer.Tick += async (_, _) => await model.Poll(); timer.Start();
-        Mixer.LostMouseCapture += (_, _) => { if (mixerRefreshPending && !Mixer.IsMouseCaptureWithin) RefreshMixer(); };
+        Mixer.LostMouseCapture += (_, _) => FinishMixerCapture();
+        SelectedChannel.LostMouseCapture += (_, _) => FinishMixerCapture();
         RefreshDocument();
     }
     private void ModelChanged(object? sender, PropertyChangedEventArgs e)
@@ -68,14 +70,16 @@ public partial class MainWindow : Window
             ArrangementActions.IsEnabled = !model.Busy;
             EditSurface.IsEnabled = !model.Busy;
             Mixer.IsEnabled = !model.Busy;
+            ChannelSurface.IsEnabled = !model.Busy;
             SourcePanel.IsEnabled = !model.Busy;
             InspectorTrackControls.IsEnabled = !model.Busy && model.SelectedTrack is not null;
             UndoButton.IsEnabled = !model.Busy && model.State.CanUndo;
             RedoButton.IsEnabled = !model.Busy && model.State.CanRedo;
-            if (!model.Busy && mixerFocus is not null && mixerSliders.TryGetValue(mixerFocus, out var restore))
+            if (!model.Busy && mixerFocus is not null)
             {
+                Control? restore = mixerSliders.GetValueOrDefault(mixerFocus) ?? (Control?)mixerValues.GetValueOrDefault(mixerFocus);
                 mixerFocus = null;
-                Dispatcher.BeginInvoke(() => restore.Focus(), DispatcherPriority.Input);
+                if (restore is not null) Dispatcher.BeginInvoke(() => restore.Focus(), DispatcherPriority.Input);
             }
             if (!model.Busy && inspectorFocus is { } inspectorRestore)
             {
@@ -87,7 +91,7 @@ public partial class MainWindow : Window
     private void RefreshDocument()
     {
         if (Timeline is null) return;
-        Timeline.SetProject(model.Project, model.State.Selection.ClipID, Zoom.Value);
+        Timeline.SetProject(model.Project, model.State.Selection.ClipID, model.State.Selection.TrackID, Zoom.Value);
         Timeline.SetWaveforms(model.WaveformPeaks);
         model.SetRulerViewport(Zoom.Value, Math.Max(24, model.Project?.Duration ?? 24));
         RefreshRuler();
@@ -98,6 +102,10 @@ public partial class MainWindow : Window
         SelectionName.Text = model.SelectedClip?.Name ?? model.SelectedSourceEvent?.Name ?? "None";
         ProjectName.Text = model.Project?.Name ?? "Untitled";
         InspectorTrack.Text = model.SelectedTrack?.Name ?? "No track selected";
+        ChannelTrack.Text = model.SelectedTrack?.Name ?? "No selection";
+        var selectedIndex = Array.FindIndex(model.Project?.Tracks ?? [], track => track.Id == model.State.Selection.TrackID);
+        var selectedBrush = new SolidColorBrush(selectedIndex < 0 ? Color.FromRgb(69, 74, 78) : TimelineView.TrackColors[selectedIndex % TimelineView.TrackColors.Length]);
+        ChannelTrackPlate.Background = InspectorTrackPlate.Background = selectedBrush;
         InspectorTrackInfo.Text = model.SelectedSourceEvent is not null ? "Retained source event" : model.SelectedTrack is null ? "Open a project to begin" : "Audio track";
         InspectorGain.Text = model.SelectedTrack is null ? "—" : $"{model.SelectedTrack.GainDB:0.0} dB";
         InspectorPan.Text = model.SelectedTrack is null ? "—" : PanText(model.SelectedTrack.Pan);
@@ -133,57 +141,77 @@ public partial class MainWindow : Window
         TransportContextName.Text = model.TransportContext;
         RefreshMixer();
     }
+    private void FinishMixerCapture()
+    {
+        if (mixerRefreshPending && !Mixer.IsMouseCaptureWithin && !SelectedChannel.IsMouseCaptureWithin) RefreshMixer();
+    }
     private void RefreshMixer()
     {
-        if (Mixer.IsMouseCaptureWithin) { mixerRefreshPending = true; return; }
+        if (Mixer.IsMouseCaptureWithin || SelectedChannel.IsMouseCaptureWithin) { mixerRefreshPending = true; return; }
         mixerRefreshPending = false;
-        if (Keyboard.FocusedElement is Slider { Tag: string key } && mixerSliders.ContainsKey(key)) mixerFocus = key;
-        Mixer.Children.Clear(); mixerSliders.Clear();
+        if (Keyboard.FocusedElement is Control { Tag: string key } && (mixerSliders.ContainsKey(key) || mixerValues.ContainsKey(key))) mixerFocus = key;
+        Mixer.Children.Clear(); SelectedChannel.Content = null; mixerSliders.Clear(); mixerValues.Clear();
         var tracks = model.Project?.Tracks ?? [];
-        for (int index = 0; index < tracks.Length; index++) AddChannel(tracks[index], index);
+        for (int index = 0; index < tracks.Length; index++)
+        {
+            Mixer.Children.Add(CreateChannel(tracks[index], index, false));
+            if (tracks[index].Id == model.State.Selection.TrackID) SelectedChannel.Content = CreateChannel(tracks[index], index, true);
+        }
     }
-    private void AddChannel(TrackView track, int index)
+    private Border CreateChannel(TrackView track, int index, bool selectedStrip)
     {
         var accent = new SolidColorBrush(TimelineView.TrackColors[index % TimelineView.TrackColors.Length]);
-        var panel = new Grid { Width = 84, Height = 209, Margin = new Thickness(3, 1, 3, 1) };
-        panel.RowDefinitions.Add(new RowDefinition { Height = new GridLength(25) });
-        panel.RowDefinitions.Add(new RowDefinition { Height = new GridLength(23) });
-        panel.RowDefinitions.Add(new RowDefinition { Height = new GridLength(116) });
-        panel.RowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
-        panel.RowDefinitions.Add(new RowDefinition { Height = new GridLength(25) });
+        var prefix = selectedStrip ? "channel:" : "";
+        var faderHeight = selectedStrip ? 200 : 110;
+        var panel = new Grid { Width = 84, Height = faderHeight + 99, Margin = new Thickness(3, 1, 3, 1) };
+        foreach (var height in new double[] { 25, 23, faderHeight + 6, 20, 25 }) panel.RowDefinitions.Add(new RowDefinition { Height = new GridLength(height) });
         var flags = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
         var mute = new CheckBox { Content = "M", IsChecked = track.IsMuted, ToolTip = "Mute " + track.Name, MinWidth = 35, Margin = new Thickness(1), Padding = new Thickness(4, 2, 4, 2) };
         var solo = new CheckBox { Content = "S", IsChecked = track.IsSolo, ToolTip = "Solo " + track.Name, MinWidth = 35, Margin = new Thickness(1), Padding = new Thickness(4, 2, 4, 2) };
         AutomationProperties.SetName(mute, "Mute " + track.Name); AutomationProperties.SetName(solo, "Solo " + track.Name);
-        // Subscribe after initial state assignment: pointer, keyboard and UIA
-        // toggles commit, while rebuilding controls from a reply does not edit.
+        // Subscribe after loading state, so a refresh never sends an edit.
         RoutedEventHandler muteChanged = async (_, _) => await model.Command("toggleMute", trackID: track.Id);
         RoutedEventHandler soloChanged = async (_, _) => await model.Command("toggleSolo", trackID: track.Id);
-        mute.Checked += muteChanged; mute.Unchecked += muteChanged;
-        solo.Checked += soloChanged; solo.Unchecked += soloChanged;
+        mute.Checked += muteChanged; mute.Unchecked += muteChanged; solo.Checked += soloChanged; solo.Unchecked += soloChanged;
         flags.Children.Add(mute); flags.Children.Add(solo); panel.Children.Add(flags);
         var pan = new CommitSlider { Style = (Style)FindResource(typeof(Slider)), Minimum = -1, Maximum = 1, Value = track.Pan, SmallChange = 0.01, LargeChange = 0.1, Height = 20, Margin = new Thickness(5, 0, 5, 0), ToolTip = PanText(track.Pan) };
-        pan.Tag = track.Id + ":pan"; mixerSliders[(string)pan.Tag] = pan;
+        pan.Tag = prefix + track.Id + ":pan"; mixerSliders[(string)pan.Tag] = pan;
         Grid.SetRow(pan, 1); panel.Children.Add(pan); AutomationProperties.SetName(pan, track.Name + " pan");
         pan.ValueChanged += (_, _) => pan.ToolTip = PanText(pan.Value);
         pan.ValueCommitted += async (_, _) => await CommitMixerSlider(pan, "setPan", track.Id);
         var fader = new Grid { Background = new SolidColorBrush(Color.FromRgb(30, 33, 35)), Margin = new Thickness(5, 1, 5, 1) }; Grid.SetRow(fader, 2); panel.Children.Add(fader);
         var gain = new CommitSlider { Style = (Style)FindResource(typeof(Slider)), Minimum = -96, Maximum = 24, Value = track.GainDB, SmallChange = 0.5, LargeChange = 6,
-            Orientation = Orientation.Vertical, Width = 28, Height = 110, HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(10, 2, 0, 2) };
-        gain.Tag = track.Id + ":gain"; mixerSliders[(string)gain.Tag] = gain;
+            Orientation = Orientation.Vertical, Width = 28, Height = faderHeight, HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(4, 2, 0, 2) };
+        gain.Tag = prefix + track.Id + ":gain"; mixerSliders[(string)gain.Tag] = gain;
         AutomationProperties.SetName(gain, track.Name + " gain decibels"); fader.Children.Add(gain);
-        fader.Children.Add(new TextBlock { Text = "+24\n\n0\n\n−48\n\n−96", FontSize = 8, Foreground = (Brush)FindResource("MutedBrush"), Margin = new Thickness(45, 2, 0, 0), IsHitTestVisible = false });
-        var value = new TextBlock { Text = track.GainDB.ToString("0.00", CultureInfo.CurrentCulture), FontFamily = new FontFamily("Consolas"), HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, FontSize = 10 };
+        var scale = new FaderScale(gain) { Width = 35, Height = faderHeight, Margin = new Thickness(36, 2, 0, 2), HorizontalAlignment = HorizontalAlignment.Left, IsHitTestVisible = false };
+        fader.Children.Add(scale);
+        var value = new TextBox { Text = track.GainDB.ToString("0.00", CultureInfo.CurrentCulture), FontFamily = new FontFamily("Consolas"), TextAlignment = TextAlignment.Center,
+            MinHeight = 18, Height = 18, Margin = new Thickness(4, 1, 4, 1), Padding = new Thickness(2, 0, 2, 0), FontSize = 10, Tag = prefix + track.Id + ":gainValue", ToolTip = "Volume in dB. Enter to apply; Escape to cancel." };
+        AutomationProperties.SetName(value, track.Name + " volume value decibels"); mixerValues[(string)value.Tag] = value;
         Grid.SetRow(value, 3); panel.Children.Add(value);
         gain.ValueChanged += (_, _) => value.Text = gain.Value.ToString("0.00", CultureInfo.CurrentCulture);
         gain.ValueCommitted += async (_, _) => await CommitMixerSlider(gain, "setGain", track.Id);
+        value.PreviewKeyDown += async (_, e) =>
+        {
+            if (e.Key == Key.Escape) { value.Text = gain.Value.ToString("0.00", CultureInfo.CurrentCulture); value.SelectAll(); e.Handled = true; }
+            if (e.Key != Key.Enter) return;
+            e.Handled = true;
+            if (!double.TryParse(value.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out var number) || !double.IsFinite(number) || number < gain.Minimum || number > gain.Maximum)
+            {
+                value.Text = gain.Value.ToString("0.00", CultureInfo.CurrentCulture); value.SelectAll();
+                model.Report(new InvalidOperationException("Volume must be a finite value from -96 to +24 dB.")); return;
+            }
+            mixerFocus = (string)value.Tag;
+            await model.Command("setGain", trackID: track.Id, value: number);
+        };
+        value.LostKeyboardFocus += (_, _) => value.Text = gain.Value.ToString("0.00", CultureInfo.CurrentCulture);
         var select = new Button { Content = new TextBlock { Text = track.Name, Foreground = Brushes.Black, FontSize = 10, TextTrimming = TextTrimming.CharacterEllipsis },
-            Style = (Style)FindResource("AccentSurfaceButton"),
-            HorizontalContentAlignment = HorizontalAlignment.Left, Padding = new Thickness(4, 2, 4, 2), Margin = new Thickness(0), MinHeight = 22,
+            Style = (Style)FindResource("AccentSurfaceButton"), HorizontalContentAlignment = HorizontalAlignment.Left, Padding = new Thickness(4, 2, 4, 2), Margin = new Thickness(0), MinHeight = 22,
             Background = accent, BorderBrush = Brushes.Transparent, Foreground = Brushes.Black };
         select.Click += async (_, _) => await model.Command("selectTrack", trackID: track.Id); Grid.SetRow(select, 4); panel.Children.Add(select);
-        Mixer.Children.Add(new Border { Child = panel, Background = new SolidColorBrush(track.Id == model.State.Selection.TrackID ? Color.FromRgb(86, 91, 94) : Color.FromRgb(47, 51, 54)),
-            Margin = new Thickness(0, 0, 2, 0), BorderThickness = new Thickness(1), BorderBrush = (Brush)FindResource("HairlineBrush") });
+        return new Border { Child = panel, Background = new SolidColorBrush(track.Id == model.State.Selection.TrackID ? Color.FromRgb(86, 91, 94) : Color.FromRgb(47, 51, 54)),
+            Margin = new Thickness(0, 0, 2, 0), BorderThickness = new Thickness(1), BorderBrush = (Brush)FindResource("HairlineBrush") };
     }
     private async Task CommitMixerSlider(Slider control, string command, string trackID)
     {

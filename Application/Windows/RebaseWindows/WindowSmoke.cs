@@ -4,6 +4,8 @@ using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -25,6 +27,7 @@ public partial class MainWindow
         object? timelineScrollReceipt = null;
         object? windowBounds = null;
         object? musicalRulerReceipt = null;
+        var faderScaleReceipt = new List<object>();
         RenderSnapshot? sourceReceipt = null;
         int exit = 1;
         try
@@ -56,7 +59,7 @@ public partial class MainWindow
             , dark_caption_hresult = darkCaptionResult, native_frame_visual_tested = false
             , timeline_scroll = timelineScrollReceipt, timeline_scroll_screenshot = "native-timeline-scroll-visual.png"
             , window_bounds = windowBounds
-            , musical_ruler = musicalRulerReceipt
+            , musical_ruler = musicalRulerReceipt, fader_scale = faderScaleReceipt
         };
         try { await File.WriteAllTextAsync(artifact, JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true })); }
         catch (IOException) { return 2; }
@@ -77,6 +80,12 @@ public partial class MainWindow
             await Until(() => model.State.Selection.ClipID == first.Id && !model.Busy, stage);
             Assert(model.SelectedClip is not null, "clip-selection");
             var originalTrack = model.SelectedTrack!;
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            Assert(ChannelTrack.Text == originalTrack.Name && InspectorTrack.Text == originalTrack.Name &&
+                SelectedChannel.Content is not null &&
+                Timeline.TrackHeaders.Single(header => Equals(header.Tag, originalTrack.Id)) is Grid { Background: SolidColorBrush selectedHeader } &&
+                selectedHeader.Color == Color.FromRgb(87, 92, 95), "selection-synchronized-across-panes");
+
             var targetGain = originalTrack.GainDB >= 24 ? 23 : originalTrack.GainDB + 1;
             stage = "inspector-volume-shared-edit";
             InspectorGainSlider.Focus();
@@ -107,6 +116,55 @@ public partial class MainWindow
                 mixerSliders[originalTrack.Id + ":gain"].IsKeyboardFocusWithin;
             await Invoke(UndoButton); await Until(() => model.SelectedTrack?.GainDB == originalTrack.GainDB && !model.Busy, stage);
             Assert(mixerEditSynchronized && InspectorGainSlider.Value == originalTrack.GainDB && mixerSliders[originalTrack.Id + ":gain"].Value == originalTrack.GainDB, "mixer-volume-shared-edit-and-undo");
+            stage = "channel-volume-shared-edit-and-undo";
+            RangeValue(mixerSliders["channel:" + originalTrack.Id + ":gain"]).SetValue(targetGain);
+            await Until(() => model.SelectedTrack?.GainDB == targetGain && !model.Busy, stage);
+            Assert(InspectorGainSlider.Value == targetGain && mixerSliders[originalTrack.Id + ":gain"].Value == targetGain &&
+                mixerSliders["channel:" + originalTrack.Id + ":gain"].Value == targetGain, "channel-volume-shared-edit");
+            await Invoke(UndoButton); await Until(() => model.SelectedTrack?.GainDB == originalTrack.GainDB && !model.Busy, stage);
+            Assert(mixerSliders["channel:" + originalTrack.Id + ":gain"].Value == originalTrack.GainDB, "channel-volume-undo");
+            stage = "channel-pan-shared-edit";
+            RangeValue(mixerSliders["channel:" + originalTrack.Id + ":pan"]).SetValue(targetPan);
+            await Until(() => model.SelectedTrack?.Pan == targetPan && !model.Busy, stage);
+            Assert(InspectorPanSlider.Value == targetPan && mixerSliders[originalTrack.Id + ":pan"].Value == targetPan, "channel-pan-shared-edit");
+            await Invoke(UndoButton); await Until(() => model.SelectedTrack?.Pan == originalTrack.Pan && !model.Busy, stage);
+            stage = "channel-mute-shared-edit";
+            Toggle(Descendants<CheckBox>(SelectedChannel).Single(control => System.Windows.Automation.AutomationProperties.GetName(control) == "Mute " + originalTrack.Name));
+            await Until(() => model.SelectedTrack?.IsMuted == !originalTrack.IsMuted && !model.Busy, stage);
+            Assert(InspectorMute.IsChecked == !originalTrack.IsMuted && MixerFlag("Mute " + originalTrack.Name).IsChecked == !originalTrack.IsMuted, "channel-mute-shared-edit");
+            await Invoke(UndoButton); await Until(() => model.SelectedTrack?.IsMuted == originalTrack.IsMuted && !model.Busy, stage);
+            stage = "fader-scale-matches-value";
+            foreach (var db in new double[] { -96, 0, 24 })
+            {
+                RangeValue(mixerSliders["channel:" + originalTrack.Id + ":gain"]).SetValue(db);
+                await Until(() => model.SelectedTrack?.GainDB == db && !model.Busy, stage);
+                await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+                foreach (var selectedStrip in new[] { false, true })
+                {
+                    var slider = mixerSliders[(selectedStrip ? "channel:" : "") + originalTrack.Id + ":gain"];
+                    var scale = selectedStrip ? Descendants<FaderScale>(SelectedChannel).Single() : Descendants<FaderScale>(Mixer.Children[0]).Single();
+                    var track = (Track)slider.Template.FindName("PART_Track", slider);
+                    var thumbY = track.Thumb.TranslatePoint(new Point(track.Thumb.ActualWidth / 2, track.Thumb.ActualHeight / 2), scale).Y;
+                    var tickY = scale.TickY(db);
+                    if (tickY is null || Math.Abs(tickY.Value - thumbY) > 0.5) throw new InvalidOperationException("Fader tick does not align with its actual thumb.");
+                    faderScaleReceipt.Add(new { selected_channel = selectedStrip, value = db, tick_y = tickY.Value, thumb_y = thumbY });
+                }
+                await Invoke(UndoButton); await Until(() => model.SelectedTrack?.GainDB == originalTrack.GainDB && !model.Busy, stage);
+            }
+            checks.Add("fader-scale-matches-value");
+            stage = "mixer-numeric-volume-commit";
+            var gainField = mixerValues[originalTrack.Id + ":gainValue"];
+            gainField.Focus(); gainField.Text = targetGain.ToString(System.Globalization.CultureInfo.CurrentCulture); Key(gainField, System.Windows.Input.Key.Enter);
+            await Until(() => model.SelectedTrack?.GainDB == targetGain && !model.Busy, stage);
+            Assert(InspectorGainSlider.Value == targetGain && mixerSliders["channel:" + originalTrack.Id + ":gain"].Value == targetGain, "mixer-numeric-volume-commit");
+            await Invoke(UndoButton); await Until(() => model.SelectedTrack?.GainDB == originalTrack.GainDB && !model.Busy, stage);
+            var revisionBeforeInvalid = model.State.Revision;
+            gainField = mixerValues[originalTrack.Id + ":gainValue"];
+            gainField.Text = "NaN"; Key(gainField, System.Windows.Input.Key.Enter);
+            Assert(model.State.Revision == revisionBeforeInvalid && model.SelectedTrack?.GainDB == originalTrack.GainDB &&
+                gainField.Text == originalTrack.GainDB.ToString("0.00", System.Globalization.CultureInfo.CurrentCulture), "mixer-numeric-volume-invalid-preserved");
+            gainField.Text = "17"; Key(gainField, System.Windows.Input.Key.Escape);
+            Assert(model.State.Revision == revisionBeforeInvalid && gainField.Text == originalTrack.GainDB.ToString("0.00", System.Globalization.CultureInfo.CurrentCulture), "mixer-numeric-volume-cancel");
             stage = "inspector-mute-shared-edit"; Toggle(InspectorMute);
             await Until(() => model.SelectedTrack?.IsMuted == !originalTrack.IsMuted && !model.Busy, stage);
             Assert(InspectorMute.IsChecked == !originalTrack.IsMuted && MixerFlag("Mute " + originalTrack.Name).IsChecked == !originalTrack.IsMuted, "inspector-mute-shared-edit");
@@ -124,6 +182,37 @@ public partial class MainWindow
             await Until(() => model.SelectedTrack?.IsSolo == !originalTrack.IsSolo && !model.Busy, stage);
             Assert(InspectorSolo.IsChecked == !originalTrack.IsSolo && MixerFlag("Solo " + originalTrack.Name).IsChecked == !originalTrack.IsSolo, "track-solo-shared-edit");
             await Invoke(UndoButton); await Until(() => model.SelectedTrack?.IsSolo == originalTrack.IsSolo && !model.Busy, "restore-track-solo");
+            stage = "numeric-event-enter-and-undo";
+            MoveBox.Focus(); MoveBox.Text = (first.Position + 0.125).ToString(System.Globalization.CultureInfo.CurrentCulture); Key(MoveBox, System.Windows.Input.Key.Enter);
+            await Until(() => model.SelectedClip?.Position == first.Position + 0.125 && !model.Busy, stage);
+            await Invoke(UndoButton); await Until(() => model.SelectedClip?.Position == first.Position && !model.Busy, stage);
+            Assert(model.SelectedClip!.Position == first.Position, "numeric-event-enter-and-undo");
+            stage = "numeric-event-cancel-and-invalid";
+            var beforeNumeric = model.State.Revision;
+            MoveBox.Text = "23"; Key(MoveBox, System.Windows.Input.Key.Escape);
+            Assert(model.State.Revision == beforeNumeric && MoveBox.Text == first.Position.ToString("0.######", System.Globalization.CultureInfo.CurrentCulture), "numeric-event-cancel");
+            MoveBox.Text = "NaN"; Key(MoveBox, System.Windows.Input.Key.Enter);
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            Assert(model.State.Revision == beforeNumeric && model.SelectedClip?.Position == first.Position, "numeric-event-invalid-preserved");
+            Key(MoveBox, System.Windows.Input.Key.Escape);
+            stage = "numeric-trim-enter-and-undo";
+            TrimBox.Text = (first.Position + first.Duration - 0.125).ToString(System.Globalization.CultureInfo.CurrentCulture); Key(TrimBox, System.Windows.Input.Key.Enter);
+            await Until(() => model.SelectedClip?.Duration == first.Duration - 0.125 && !model.Busy, stage);
+            await Invoke(UndoButton); await Until(() => model.SelectedClip?.Duration == first.Duration && !model.Busy, stage);
+            checks.Add("numeric-trim-enter-and-undo");
+            stage = "numeric-tempo-enter-and-undo";
+            var tempo = model.Project!.Tempo;
+            TempoBox.Text = (tempo + 1).ToString(System.Globalization.CultureInfo.CurrentCulture); Key(TempoBox, System.Windows.Input.Key.Enter);
+            await Until(() => model.Project?.Tempo == tempo + 1 && !model.Busy, stage);
+            await Invoke(UndoButton); await Until(() => model.Project?.Tempo == tempo && !model.Busy, stage);
+            checks.Add("numeric-tempo-enter-and-undo");
+            stage = "numeric-seek-and-cancel";
+            var beforeSeek = model.State.Revision;
+            PositionBox.Text = "1"; Key(PositionBox, System.Windows.Input.Key.Enter);
+            await Until(() => model.Position == 1 && !model.Busy, stage);
+            PositionBox.Text = "19"; Key(PositionBox, System.Windows.Input.Key.Escape);
+            Assert(model.State.Revision == beforeSeek && model.Position == 1 && PositionBox.Text == 1d.ToString("0.000", System.Globalization.CultureInfo.CurrentCulture), "numeric-seek-and-cancel");
+            PositionBox.Text = "0"; Key(PositionBox, System.Windows.Input.Key.Enter); await Until(() => model.Position == 0 && !model.Busy, stage);
             stage = "move-button"; MoveBox.Text = (first.Position + 0.25).ToString(System.Globalization.CultureInfo.CurrentCulture); await Invoke(MoveButton);
             await Until(() => model.SelectedClip?.Position == first.Position + 0.25 && !model.Busy, stage);
             Assert(model.State.Dirty, "move-changes-document");
@@ -284,6 +373,11 @@ public partial class MainWindow
         }
         static IRangeValueProvider RangeValue(Slider slider) => (IRangeValueProvider)(UIElementAutomationPeer.CreatePeerForElement(slider)
             ?? throw new InvalidOperationException("Slider has no automation peer.")).GetPattern(PatternInterface.RangeValue);
+        void Key(UIElement control, Key key)
+        {
+            var args = new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(this), Environment.TickCount, key) { RoutedEvent = Keyboard.PreviewKeyDownEvent };
+            control.RaiseEvent(args);
+        }
         static void Toggle(CheckBox control) => ((IToggleProvider)new CheckBoxAutomationPeer(control).GetPattern(PatternInterface.Toggle)).Toggle();
         async Task SelectComboItem(ComboBox control, int index)
         {

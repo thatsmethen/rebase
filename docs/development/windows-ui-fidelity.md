@@ -28,3 +28,12 @@ The preview follows the reference's compact top rows, neutral graphite event dis
 The musical ruler is shared application display policy, not a claim about undocumented reference UI rounding. No source events become resolved merely because the ruler can display their timing.
 
 Compare each subsequent actual Windows build with the reference at a recorded size. A WPF visual-tree PNG does not validate the operating-system title bar, physical input, native file dialogs, or human comprehension. Keep those limits alongside the result.
+
+
+## Follow-up implementation awaiting native acceptance
+
+The next candidate adds a separate selected Channel strip and colored Inspector plate, synchronized track-header selection, a compact vector toolbar, and Enter/Escape event/tempo/position fields. The Channel and lower mixer share command/history behavior. The gain value can also be typed directly.
+
+The old manually spaced fader labels were incorrect for the existing slider. The candidate derives each tick from the actual WPF Track/Thumb geometry and current linear-dB mapping. It does not substitute an unmeasured reference taper. Native smoke now compares tick and thumb coordinates at -96, 0 and +24 dB in both fader sizes, and exercises Channel synchronization plus numeric commit/reject/cancel journeys.
+
+Local cross-compilation has zero warnings/errors and 91 portable controls pass. Native application checks and fresh image review are required before accepting or distributing this follow-up. The published preview remains unchanged.

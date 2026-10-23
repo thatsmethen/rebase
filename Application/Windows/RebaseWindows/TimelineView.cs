@@ -9,7 +9,7 @@ namespace Rebase.Windows;
 
 public sealed class TimelineView : Canvas
 {
-    private const double Header = 228, Row = 68, Ruler = 26;
+    private const double Header = 198, Row = 68, Ruler = 26;
     public static readonly Color[] TrackColors = [Color.FromRgb(177, 201, 102), Color.FromRgb(141, 175, 210), Color.FromRgb(209, 175, 101), Color.FromRgb(166, 151, 207)];
     private readonly Dictionary<string, WaveformVisual> waveformViews = [];
     private readonly List<FrameworkElement> headers = [];
@@ -22,7 +22,7 @@ public sealed class TimelineView : Canvas
     private double viewport, currentPosition, horizontalOffset;
     private readonly Line playhead = new() { Stroke = Brushes.White, StrokeThickness = 1.5, IsHitTestVisible = false };
     private ProjectView? project;
-    private string? selected;
+    private string? selected, selectedTrack;
     private double pixels = 40;
     public event Action<string>? ClipSelected;
     public event Action<string, double, bool>? ClipDragged;
@@ -30,9 +30,9 @@ public sealed class TimelineView : Canvas
     public event Action<string>? TrackSelected;
     public event Action<string, bool>? TrackFlagChanged;
     public TimelineView() { Background = new SolidColorBrush(Color.FromRgb(75, 77, 80)); ClipToBounds = true; MouseLeftButtonDown += EmptyClick; headerCorner.Child = rulerMode; }
-    public void SetProject(ProjectView? value, string? selectedID, double pixelsPerSecond)
+    public void SetProject(ProjectView? value, string? selectedID, string? selectedTrackID, double pixelsPerSecond)
     {
-        project = value; selected = selectedID; pixels = pixelsPerSecond; Rebuild();
+        project = value; selected = selectedID; selectedTrack = selectedTrackID; pixels = pixelsPerSecond; Rebuild();
     }
     public void SetViewport(double width) { viewport = width; Width = Math.Max(viewport, Header + Math.Max(24, project?.Duration ?? 24) * pixels + 40); }
     // Keep one vertical coordinate system for headers and events. Opaque header
@@ -90,7 +90,7 @@ public sealed class TimelineView : Canvas
                 var track = project.Tracks[index]; var top = Ruler + index * Row;
                 var divider = new Line { X1 = 0, X2 = Width, Y1 = top + Row, Y2 = top + Row, Stroke = new SolidColorBrush(Color.FromRgb(41, 43, 45)), IsHitTestVisible = false };
                 Children.Add(divider);
-                var header = new Grid { Width = Header, Height = Row, Background = new SolidColorBrush(Color.FromRgb(52, 55, 58)) };
+                var header = new Grid { Width = Header, Height = Row, Background = new SolidColorBrush(track.Id == selectedTrack ? Color.FromRgb(87, 92, 95) : Color.FromRgb(52, 55, 58)), Tag = track.Id };
                 header.Children.Add(new Border { Background = new SolidColorBrush(TrackColors[index % TrackColors.Length]), Width = 13, HorizontalAlignment = HorizontalAlignment.Left });
                 header.Children.Add(new Border { BorderBrush = new SolidColorBrush(Color.FromRgb(29, 31, 33)), BorderThickness = new Thickness(0, 0, 1, 1), IsHitTestVisible = false });
                 var name = new Button { Content = track.Name, HorizontalContentAlignment = HorizontalAlignment.Left, FontSize = 11, Width = Header - 33, Height = 25, Padding = new Thickness(3),
