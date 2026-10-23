@@ -43,7 +43,9 @@ Do not declare parity from a successful component build. The next compatibility 
 
 ### Next: reviewed CPR import
 
-The shared parser, recovery profiles and historical report replay already compile portably. `CPRProject.importProject` still excludes portable builds, and the Windows file picker currently accepts only an existing Rebase manifest. Expose the same inspect → review → explicitly accepted partial import journey as the Mac app, using the existing Windows-aware `ProjectFileIO` new-directory publication helpers.
+The shared parser, recovery profiles, historical report replay and `CPRProject.importProject` now compile portably. The importer uses exclusive staging and the existing Windows-aware `ProjectFileIO` publication helpers; it verifies the staged model and exact original/report bytes before publishing without replacement. [Local authored controls](../../research/publication/windows-portability/cpr-import-local-20261023/observation.json) passed through both the portable and native macOS core targets. Native Windows execution is still pending for this candidate.
+
+The Windows file picker currently accepts only an existing Rebase manifest. The next integration exposes the same inspect → review → explicitly accepted partial import journey as the Mac app through the session and interface.
 
 Bind review confirmation to the source path/name/hash and interpretation profile, reject changed input, preserve the full original and report, and never replace an existing destination. Inspection/cancellation must leave the active project/history unchanged; import must preserve dirty-project protection and only switch state after successful validated publication. Historical reports retain their original frozen interpretation.
 

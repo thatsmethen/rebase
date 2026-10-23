@@ -41,7 +41,7 @@ let portableTargets: [Target] = [
     .executableTarget(name: "RebaseSessionCLI", dependencies: ["RebasePortable"]),
     .testTarget(name: "RebasePortableTests", dependencies: ["RebasePortable", "RebaseTimingDSP"],
                 path: "Tests", exclude: ["RebaseCoreTests", "PortableDSP", "Fixtures", "run-tests.sh", "README.md"],
-                sources: ["RebasePortableTests", "SharedEditingTests", "SharedDocumentTests", "SharedCPRAudioTests", "SharedWaveformTests", "SharedMusicalRulerTests"])
+                sources: ["RebasePortableTests", "SharedEditingTests", "SharedDocumentTests", "SharedCPRAudioTests", "SharedCPRImportTests", "SharedWaveformTests", "SharedMusicalRulerTests"])
 ]
 
 let package = Package(
@@ -73,7 +73,7 @@ let package = Package(
         .executableTarget(name: "Rebase", dependencies: ["RebaseCore", "RebaseDSP"]),
         .testTarget(name: "RebaseCoreTests", dependencies: ["RebaseCore", "RebaseDSP"],
                     path: "Tests", exclude: ["RebasePortableTests", "PortableDSP", "Fixtures", "run-tests.sh", "README.md"],
-                    sources: ["RebaseCoreTests", "SharedEditingTests", "SharedDocumentTests", "SharedCPRAudioTests", "SharedWaveformTests", "SharedMusicalRulerTests"])
+                    sources: ["RebaseCoreTests", "SharedEditingTests", "SharedDocumentTests", "SharedCPRAudioTests", "SharedCPRImportTests", "SharedWaveformTests", "SharedMusicalRulerTests"])
     ],
     swiftLanguageModes: [.v5]
 )

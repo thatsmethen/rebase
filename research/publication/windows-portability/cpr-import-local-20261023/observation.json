@@ -1,0 +1,110 @@
+{
+  "schema": "rebase.local-import-observation.v1",
+  "recorded_at_utc": "2026-10-23T12:02:31.573661+00:00",
+  "evidence_class": "authored-implementation-runtime-controls",
+  "host": "macOS arm64",
+  "toolchain": "Apple Swift 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+  "configuration": "Debug",
+  "parent_commit": "8c6ec4b8a41f31ec0472a3cbeaa3d6c652a9474e",
+  "sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "sha256": "ebab0cda9a77713beb2eef055df61e8de8933f7eb32600018dff23ea7b11dc25"
+    },
+    {
+      "path": "Application/Package.swift",
+      "sha256": "dd96cebf22424ee2ebf1d43bea63a21658ee34b97921cc89b372b5a9500c964d"
+    },
+    {
+      "path": "Application/Tests/SharedCPRImportTests/SharedCPRImportTests.swift",
+      "sha256": "f46e9ee0cfdd622b540b195f66cec532a108f836089a5b8fbaac7fc4b3a711e6"
+    }
+  ],
+  "results": [
+    {
+      "path": "tests-debug.xml",
+      "bytes": 1247,
+      "sha256": "d0f39f25348a37e13241fc6db7b125b9fc87691994b208d3ca687c5c39fcf3b0",
+      "reported": 7,
+      "executed": 7,
+      "skipped": 0,
+      "failures": 0
+    },
+    {
+      "path": "tests-macos-core.xml",
+      "bytes": 4885,
+      "sha256": "39eb786613b7340155550578b81d035f6048ec874037a51eb34eb3d2c823402c",
+      "reported": 26,
+      "executed": 19,
+      "skipped": 7,
+      "failures": 0
+    }
+  ],
+  "findings": [
+    "The same importer now compiles in portable and macOS core targets.",
+    "Exclusive private staging and no-replacement directory publication preserve existing destinations.",
+    "Authored controls cover Unicode paths, explicit partial acceptance, changed source after review, exact original/report preservation, retained import baseline after edits, tamper rejection and failed-publication cleanup.",
+    "The local dangling-destination-link control executes on macOS only."
+  ],
+  "boundaries": [
+    "The input archives are independently authored controls, not proprietary runtime observations.",
+    "Windows runtime and filesystem/reparse cases have not executed for this candidate.",
+    "The Windows session and interface do not yet expose reviewed raw CPR import.",
+    "The existing public API retains its optional expectedSHA256 argument; a future review-confirmation command must require and bind it.",
+    "The seven core skips require external private fixtures and are not passing executions."
+  ],
+  "test_commands": [
+    {
+      "working_directory": "Application",
+      "environment": {
+        "REBASE_PORTABLE_ONLY": "1"
+      },
+      "argv": [
+        "swift",
+        "test",
+        "--scratch-path",
+        "<scratch>/build",
+        "-c",
+        "debug",
+        "--filter",
+        "SharedCPRImportTests",
+        "--xunit-output",
+        "<scratch>/tests-debug.xml",
+        "--disable-xctest",
+        "--enable-swift-testing",
+        "-Xswiftc",
+        "-F",
+        "-Xswiftc",
+        "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+        "-Xswiftc",
+        "-Xfrontend",
+        "-Xswiftc",
+        "-disable-cross-import-overlays",
+        "-Xswiftc",
+        "-plugin-path",
+        "-Xswiftc",
+        "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing",
+        "-Xlinker",
+        "-rpath",
+        "-Xlinker",
+        "/Library/Developer/CommandLineTools/Library/Developer/Frameworks"
+      ]
+    },
+    {
+      "working_directory": "Application",
+      "unset_environment": [
+        "REBASE_PORTABLE_ONLY",
+        "REBASE_RESEARCH_ROOT"
+      ],
+      "argv": [
+        "sh",
+        "Tests/run-tests.sh",
+        "--public",
+        "--filter",
+        "SharedCPRImportTests|CPRProjectTests",
+        "--xunit-output",
+        "<scratch>/tests-macos-core.xml"
+      ]
+    }
+  ]
+}

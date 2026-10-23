@@ -148,9 +148,14 @@ public enum CPRProject {
         return try inspect(container: container, sourceName: source.lastPathComponent)
     }
 
-    #if !REBASE_PORTABLE
     public static func importProject(from source: URL, to destination: URL,
                                      allowPartial: Bool = false, expectedSHA256: String? = nil) throws -> CPRImportResult {
+        // Canonicalize the parent, never an existing destination. Publication
+        // must retain the caller's final component and never follow/replace it.
+        try requireNew(destination)
+        let parent = try ProjectFileIO.canonicalRoot(destination.deletingLastPathComponent())
+        try ProjectFileIO.requireRealDirectory(parent)
+        let destination = parent.appendingPathComponent(destination.lastPathComponent)
         try requireNew(destination)
         let container = try readSource(source)
         if let expectedSHA256, container.sha256 != expectedSHA256 {
@@ -170,25 +175,29 @@ public enum CPRProject {
             throw CPRProjectError.unsupported("The compatibility report exceeds 8 MiB; no project was published.")
         }
         let manager = FileManager.default
-        let staging = destination.deletingLastPathComponent().appendingPathComponent(".rebase-cpr-" + UUID().uuidString)
+        let staging = parent.appendingPathComponent(".rebase-cpr-" + UUID().uuidString)
+        try ProjectFileIO.createNewDirectory(staging)
+        // Cleanup owns only the directory successfully created by this call.
         defer { try? manager.removeItem(at: staging) }
-        try manager.createDirectory(at: staging, withIntermediateDirectories: false, attributes: [.posixPermissions: 0o700])
-        try manager.createDirectory(at: staging.appendingPathComponent("Media"), withIntermediateDirectories: false)
-        try manager.createDirectory(at: staging.appendingPathComponent("Compatibility/CPR"), withIntermediateDirectories: true)
-        try container.originalBytes.write(to: staging.appendingPathComponent(originalRelativePath), options: .atomic)
-        try reportBytes.write(to: staging.appendingPathComponent(reportRelativePath), options: .atomic)
+        try ProjectFileIO.requireRealDirectory(staging)
+        try ProjectFileIO.createNewDirectory(staging.appendingPathComponent("Media"))
+        try ProjectFileIO.createNewDirectory(staging.appendingPathComponent("Compatibility"))
+        try ProjectFileIO.createNewDirectory(staging.appendingPathComponent("Compatibility/CPR"))
+        // These files are private until the completed sibling directory is
+        // published. Avoid Foundation's Windows atomic-copy fallback here.
+        try container.originalBytes.write(to: staging.appendingPathComponent(originalRelativePath), options: .withoutOverwriting)
+        try reportBytes.write(to: staging.appendingPathComponent(reportRelativePath), options: .withoutOverwriting)
         try ProjectStore.save(project, to: staging)
-        _ = try ProjectStore.load(from: staging)
-        guard cprSHA256(try Data(contentsOf: staging.appendingPathComponent(originalRelativePath))) == report.sourceSHA256 else {
-            throw CPRProjectError.invalid("The preserved source failed its byte-integrity check.")
+        guard try ProjectStore.load(from: staging) == project,
+              try Data(contentsOf: staging.appendingPathComponent(originalRelativePath)) == container.originalBytes,
+              try Data(contentsOf: staging.appendingPathComponent(reportRelativePath)) == reportBytes,
+              try compatibilityReport(from: staging) == report else {
+            throw CPRProjectError.invalid("The staged project, preserved source, or import report failed its integrity check.")
         }
-        _ = try compatibilityReport(from: staging)
         try requireNew(destination)
-        try manager.moveItem(at: staging, to: destination)
+        try ProjectFileIO.publishNewDirectory(staging, to: destination)
         return CPRImportResult(project: project, report: report, originalRelativePath: originalRelativePath)
     }
-
-    #endif
 
     /// Reads the historical import report and verifies its preserved source.
     /// The report describes the import baseline, not subsequent project edits.
