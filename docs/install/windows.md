@@ -4,7 +4,7 @@ This experimental x64 preview is intended for Windows 11. It includes its requir
 
 ## Open the app
 
-1. Download `Rebase-0.21.1-windows-preview.4-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.4).
+1. Download `Rebase-0.21.1-windows-preview.5-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.5).
 2. Use **Extract All** to unpack the complete archive.
 3. Open **Rebase.exe** inside the extracted `Rebase` folder. Keep the DLLs, notices and `Examples` folder beside the executable.
 4. Choose **File → Open example**. The four-track beat opens as a separate editable copy.
@@ -35,7 +35,7 @@ Source-event audition uses the saved source rate and a separate event-local posi
 
 ## What has been checked
 
-Preview.4 comes from commit `6289343` and [native Windows run 40021483751](../../research/publication/windows-portability/application-run-40021483751/observation.json) on a Windows Server 2025 GitHub runner. It passed 80 actual-window checks, 155 host controls and 91 packaged-helper checks. The shared Release gate executed 90 tests with one explicit opt-in skip and no failures. The [downloaded archive audit](../../research/publication/windows-portability/application-run-40021483751/candidate-review.json) verified its file manifest, runtime dependencies and unchanged example audio.
+Preview.5 comes from commit `5dd3beb` and [native Windows run 40033023717](../../research/publication/windows-portability/application-run-40033023717/observation.json) on a Windows Server 2025 GitHub runner. It passed 87 actual-window checks, 155 host controls and 91 packaged-helper checks. The shared Release gate executed 90 tests with one explicit opt-in skip and no failures. The [downloaded archive audit](../../research/publication/windows-portability/application-run-40033023717/candidate-review.json) verified its file manifest, runtime dependencies and unchanged example audio.
 
 [Seven screenshots](../screenshots/README.md) show the actual application's client area, including CPR review at normal and minimum window sizes. They exclude the operating-system frame.
 
