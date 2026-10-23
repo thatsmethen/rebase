@@ -110,14 +110,16 @@ def main():
                 command = ["swift", "test", "--scratch-path", str(build), "-c", args.configuration.lower(),
                            "--filter", "RebasePortableTests", "--xunit-output", str(out / "tests.xml")]
                 if os.name == "nt" and args.configuration == "Release":
-                    # Swift Build 6.4.1 emits no Windows linker argument for
-                    # DEAD_CODE_STRIPPING=NO. LINK still defaults to /OPT:REF
-                    # without /DEBUG, so explicitly retain test discovery
-                    # metadata. Keep -O and the executed-test gate unchanged.
-                    # Production product builds below keep their normal link.
-                    command += ["--disable-dead-strip", "-Xlinker", "/OPT:NOREF", "--verbose"]
+                    # Swift Build generates an empty public test-anchor call
+                    # to load the test DLL. Prevent cross-module elimination
+                    # of that call while retaining -O within every module.
+                    # NOREF alone did not restore discovery. Production
+                    # products below keep their normal compiler/link flags.
+                    command += ["--disable-dead-strip", "-Xlinker", "/OPT:NOREF",
+                                "-Xswiftc", "-disable-cmo", "--verbose"]
                     report["test_link_dead_strip_disabled"] = True
                     report["test_linker_options"] = ["/OPT:NOREF"]
+                    report["test_compiler_options"] = ["-disable-cmo"]
                 if sys.platform == "darwin":
                     developer = run(["xcode-select", "-p"], "developer-directory").strip()
                     # Match test-app.sh only for a local Command Line Tools
@@ -138,8 +140,23 @@ def main():
                            "--xunit-output", str(out / "tests.xml")]
             run(command, "tests")
             if args.kind == "swift" and os.name == "nt" and args.configuration == "Release":
+                # Keep generated entrypoints and PE evidence even if discovery
+                # is empty, without uploading build trees or test binaries.
+                sources = []
+                for name in ("test_anchor.swift", "test_entry_point.swift"):
+                    for path in sorted(build.rglob(name)):
+                        sources.append({"path": str(path.relative_to(build)),
+                                        "source": clean(path.read_text(encoding="utf-8"))})
+                (out / "test-generated-sources.json").write_text(
+                    json.dumps(sources, indent=2) + "\n", encoding="utf-8")
+                for name in ("RebasePortableTests.dll", "RebasePortableTests-test-runner.exe"):
+                    paths = list(build.rglob(name))
+                    if len(paths) != 1:
+                        raise RuntimeError("Expected exactly one test product: " + name)
+                    run(["dumpbin", "/headers", "/imports", str(paths[0])], "test-pe-" + name)
                 run(["swift", "test", "list", "--scratch-path", str(build), "-c", "release",
-                     "--skip-build", "--disable-dead-strip", "-Xlinker", "/OPT:NOREF"], "test-discovery")
+                     "--skip-build", "--disable-dead-strip", "-Xlinker", "/OPT:NOREF",
+                     "-Xswiftc", "-disable-cmo"], "test-discovery")
             if args.kind == "swift":
                 configuration = args.configuration.lower()
                 run(["swift", "build", "--scratch-path", str(build), "-c", configuration,

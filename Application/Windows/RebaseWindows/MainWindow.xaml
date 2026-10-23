@@ -4,11 +4,11 @@
         Closing="ClosingWindow" PreviewKeyDown="KeyPressed">
   <DockPanel>
     <Border DockPanel.Dock="Bottom" Background="#232A34" Padding="12,8">
-      <TextBlock Text="{Binding Status}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+      <TextBlock Text="{Binding Status}" Foreground="#EDF1F5" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
     </Border>
     <StackPanel x:Name="CommandSurface" DockPanel.Dock="Top" Background="#20252E">
       <WrapPanel Margin="8,6">
-        <TextBlock Text="REBASE" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0,22,0" />
+        <TextBlock Text="REBASE" Foreground="#EDF1F5" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0,22,0" />
         <Button x:Name="ExampleButton" Content="Open example" Click="OpenExample" />
         <Button Content="Open project…" Click="OpenProject" />
         <Button Content="Save" Click="SaveProject" />
@@ -32,15 +32,15 @@
     <Border x:Name="EditSurface" DockPanel.Dock="Bottom" Background="#1C222B" Padding="12,10">
       <StackPanel>
         <WrapPanel>
-          <Label Content="Selected clip" /><TextBlock x:Name="SelectionName" Text="None" VerticalAlignment="Center" MinWidth="160" Margin="8,0" />
+          <Label Content="Selected clip" /><TextBlock x:Name="SelectionName" Text="None" Foreground="#EDF1F5" VerticalAlignment="Center" MinWidth="160" Margin="8,0" />
           <Label Content="Move to (s)" /><TextBox x:Name="MoveBox" Width="75" Text="0" AutomationProperties.Name="Selected clip start seconds" /><Button x:Name="MoveButton" Content="Move" Click="MoveClip" />
           <Label Content="End (s)" /><TextBox x:Name="TrimBox" Width="75" Text="0" AutomationProperties.Name="Selected clip end seconds" /><Button Content="Trim" Click="TrimClip" />
           <Button Content="Split at playhead" Click="SplitClip" /><Button Content="Delete clip" Click="DeleteClip" />
         </WrapPanel>
         <WrapPanel Margin="0,8,0,0">
-          <Label Content="Submitted peaks" /><TextBlock Text="L" VerticalAlignment="Center" Margin="8,0" />
+          <Label Content="Submitted peaks" /><TextBlock Text="L" Foreground="#EDF1F5" VerticalAlignment="Center" Margin="8,0" />
           <ProgressBar Width="150" Height="12" Minimum="0" Maximum="1" Value="{Binding PeakLeft, Mode=OneWay}" AutomationProperties.Name="Left submitted peak" />
-          <TextBlock Text="R" VerticalAlignment="Center" Margin="12,0,8,0" />
+          <TextBlock Text="R" Foreground="#EDF1F5" VerticalAlignment="Center" Margin="12,0,8,0" />
           <ProgressBar Width="150" Height="12" Minimum="0" Maximum="1" Value="{Binding PeakRight, Mode=OneWay}" AutomationProperties.Name="Right submitted peak" />
           <TextBlock x:Name="ProjectInfo" Text="No project loaded" Foreground="#A5B1C2" VerticalAlignment="Center" Margin="22,0" />
         </WrapPanel>
