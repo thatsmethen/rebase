@@ -108,21 +108,48 @@ final class StudioSession: ObservableObject {
         do { try load(url) } catch { show(error) }
     }
 
-    private func load(_ url: URL) throws {
+    func openExampleBeat() {
+        do {
+            guard let resources = Bundle.main.resourceURL else {
+                throw SessionError.message("The example beat is missing from this app. Download the complete Rebase app release and try again.")
+            }
+            let example = resources.appendingPathComponent("Examples/Rebase Preview.rebaseproj", isDirectory: true)
+            guard FileManager.default.fileExists(atPath: example.appendingPathComponent(ProjectStore.manifestName).path) else {
+                throw SessionError.message("The example beat is missing from this app. Download the complete Rebase app release and try again.")
+            }
+            let support = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let sessions = support.appendingPathComponent("Rebase/Sessions", isDirectory: true)
+            try FileManager.default.createDirectory(at: sessions, withIntermediateDirectories: true,
+                                                    attributes: [.posixPermissions: 0o700])
+            let scratch = sessions.appendingPathComponent("\(UUID().uuidString).rebaseproj", isDirectory: true)
+            var opened = false
+            defer { if !opened { try? FileManager.default.removeItem(at: scratch) } }
+            // The bundled project stays pristine. Edits and recovery saves use
+            // this independent copy; Save asks where to keep the new project.
+            try FileManager.default.copyItem(at: example, to: scratch)
+            guard try load(scratch, asScratch: true) else { return }
+            opened = true
+            status = "Opened example beat — press Space to play"
+        } catch { show(error) }
+    }
+
+    @discardableResult
+    private func load(_ url: URL, asScratch: Bool = false) throws -> Bool {
         let root = url.lastPathComponent == "Project.json" ? url.deletingLastPathComponent() : url
-        guard confirmProjectReplacement() else { return }
+        guard confirmProjectReplacement() else { return false }
         let loaded = try ProjectStore.load(from: root)
         let compatibility = try CPRProject.compatibilityReport(from: root)
         invalidateSourceAudition()
         stop()
         project = loaded; projectRoot = root
         cprCompatibility = compatibility
-        isScratch = false; isDirty = false
+        isScratch = asScratch; isDirty = false
         undoStack = []; redoStack = []; waveformPeaks = [:]
         selectedTrackID = loaded.tracks.first?.id
         selectedClipID = loaded.tracks.first?.clips.first?.id ?? loaded.tracks.first?.unresolvedAudioEvents.first?.id
         rebuildWaveforms()
         status = "Opened \(loaded.name)"
+        return true
     }
 
     @discardableResult

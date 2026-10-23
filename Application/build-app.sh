@@ -6,6 +6,10 @@ if [ ! -s "$ICON" ]; then
     printf 'Missing application icon: %s\n' "$ICON" >&2
     exit 1
 fi
+if [ ! -s "Examples/Rebase Preview.rebaseproj/Project.json" ]; then
+    printf 'Missing bundled example project\n' >&2
+    exit 1
+fi
 sh ThirdParty/build-soxr.sh
 build_swift_release() {
     swift build -c release \
@@ -25,6 +29,8 @@ APP="$PWD/dist/Rebase.app"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources" "$APP/Contents/Frameworks"
 cp "$BIN_DIR/Rebase" "$APP/Contents/MacOS/Rebase"
 cp "$ICON" "$APP/Contents/Resources/Rebase.icns"
+rm -rf "$APP/Contents/Resources/Examples"
+cp -R Examples "$APP/Contents/Resources/Examples"
 install_name_tool -delete_rpath "$PWD/.build-soxr/install/lib" "$APP/Contents/MacOS/Rebase"
 python3 - "$APP/Contents/MacOS/Rebase" <<'PY'
 import re
@@ -56,8 +62,8 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 <key>CFBundleName</key><string>Rebase</string>
 <key>CFBundleDisplayName</key><string>Rebase</string>
 <key>CFBundleIdentifier</key><string>org.rebaseproject.Rebase</string>
-<key>CFBundleVersion</key><string>21</string>
-<key>CFBundleShortVersionString</key><string>0.21.0</string>
+<key>CFBundleVersion</key><string>22</string>
+<key>CFBundleShortVersionString</key><string>0.21.1</string>
 <key>CFBundleExecutable</key><string>Rebase</string>
 <key>CFBundleIconFile</key><string>Rebase.icns</string>
 <key>CFBundlePackageType</key><string>APPL</string>

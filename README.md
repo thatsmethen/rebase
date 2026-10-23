@@ -12,7 +12,11 @@ The research identifies its reference software and retains its original terminol
 
 ## Release
 
-**Rebase 0.21.0** targets **Apple Silicon (arm64), macOS 14 or later**. Download the app and checksums from the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.0), and follow the [installation guide](Application/INSTALL.md). This is an experimental build, ad hoc signed and not notarized.
+**[Download Rebase for Mac](https://github.com/thatsmethen/rebase/releases/download/v0.21.1/Rebase-0.21.1-macos-arm64.zip)**
+
+**Rebase 0.21.1** targets **Apple Silicon (arm64), macOS 14 or later**. Download the app and checksums from the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1), and follow the [installation guide](Application/INSTALL.md). This is an experimental build, ad hoc signed and not notarized.
+
+The app includes the [example beat](Application/Examples/README.md) shown below. Choose **File → Open Example Beat**, then press Space. Save keeps an editable copy in your chosen location.
 
 ## Screenshots
 

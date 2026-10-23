@@ -25,6 +25,7 @@ struct RebaseApp: App {
             CommandGroup(replacing: .newItem) {
                 Button("New Project") { session.newProject() }.keyboardShortcut("n")
                 Button("Open Project…") { session.openProject() }.keyboardShortcut("o")
+                Button("Open Example Beat") { session.openExampleBeat() }
             }
             CommandGroup(replacing: .saveItem) {
                 Button("Save Project") { session.saveProject() }.keyboardShortcut("s")
@@ -338,6 +339,9 @@ struct StudioView: View {
                 Text("Start with sound.").font(.system(size: 19, weight: .medium))
                 Text("Import audio to create your first track. Arrange clips, shape the mix, then export.").font(.system(size: 12)).foregroundStyle(.secondary).lineSpacing(4)
                 Button("Import Audio…") { session.importAudio() }.buttonStyle(.borderedProminent)
+                if session.project.tracks.isEmpty {
+                    Button("Open Example Beat") { session.openExampleBeat() }.buttonStyle(.borderless)
+                }
             }
             Spacer()
             Text("Space  Play / pause\n⌘T  Split at playhead\n⌘I  Import audio").font(.system(size: 10, design: .monospaced)).lineSpacing(6).foregroundStyle(.tertiary)

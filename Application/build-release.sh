@@ -19,7 +19,7 @@ if workspace.parent != Path('/private/tmp') or not re.fullmatch(r'rebase-release
     raise SystemExit('Use /private/tmp/rebase-release-build or that path with a lowercase neutral suffix')
 if workspace.exists():
     raise SystemExit('Release workspace already exists; choose a fresh neutral suffix')
-required = ('Sources', 'Tests/RebaseCoreTests', 'ThirdParty', 'Assets', 'Package.swift', 'Package.resolved',
+required = ('Sources', 'Tests/RebaseCoreTests', 'ThirdParty', 'Assets', 'Examples', 'Package.swift', 'Package.resolved',
             'build-app.sh', 'package-release.sh', 'release-support.py',
             'export-build-manifest.py', 'INSTALL.md')
 for name in required:

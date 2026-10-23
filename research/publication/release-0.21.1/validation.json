@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "version": "0.21.1",
+  "date": "2026-10-23",
+  "change": "Bundle the original synthetic example and open fresh editable scratch copies from File menu or empty project",
+  "release": {
+    "architecture": "arm64",
+    "archive": {
+      "bytes": 13841915,
+      "name": "Rebase-0.21.1-macos-arm64.zip",
+      "sha256": "111b7c4b440cb44244bd20d3c0bad6a2d87a1d442d728bdce6662eb503de6af3"
+    },
+    "build": "22",
+    "bundle_entries": 181,
+    "example": {
+      "files": 5,
+      "manifest_sha256": "de62d0ef9106e35b6ffe6fd982b9f92f6879fa8184a625636657c61b0377a748",
+      "project": "Rebase Preview.rebaseproj"
+    },
+    "executable_sha256": "e72c9f3793df38f7a1cb3d86065e467dde1b49c9d90d0a3007b6bd25e4494422",
+    "icon_sha256": "6ee8c3bd7a7ba7ca6726eacb66f7c49e1b1567ecc8af70f01a16379f0c3aa7af",
+    "metadata_policy": "File bytes, Unix modes and symlink targets only; no xattrs, ACLs, AppleDouble, ZIP extra fields, ownership fields or comments",
+    "minimum_macos": "14.0",
+    "notarization_performed": false,
+    "signature_verified_after_extraction": true,
+    "source_bundle_unchanged": true,
+    "third_party_notices_sha256": "3329168fa78dc5f228727f66cb486c5616885d8d201987a5d4b4159c8264c71b",
+    "version": "0.21.1",
+    "zip_timestamps_utc": "2000-01-01T00:00:00Z"
+  },
+  "changed_source_identities": [
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "sha256": "d655a9da5ca7dd864ad8dbdb14358a341db8433e0effa6d5909c4538aaad4145"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "sha256": "665c33db41219438768d9359d0b59bb534554bef450986793a495fd0b1617f37"
+    },
+    {
+      "path": "Application/build-app.sh",
+      "sha256": "d505299c6341c0529cee952738a4b5ce06732192f5c52f6e2dc9d2728b74dbcf"
+    },
+    {
+      "path": "Application/build-release.sh",
+      "sha256": "cb05ebd2b397f16c28922fda0997074d7e25661235bd1e5796222db5b96577e5"
+    },
+    {
+      "path": "Application/package-release.sh",
+      "sha256": "d73eab3672377fa2009d7e43f3ba7cf250ca27402774ff7b011f605a0d7f292f"
+    },
+    {
+      "path": "Application/Examples/example.json",
+      "sha256": "de62d0ef9106e35b6ffe6fd982b9f92f6879fa8184a625636657c61b0377a748"
+    },
+    {
+      "path": "Application/Examples/generate_demo.py",
+      "sha256": "1e97c7f740c33ac20464caa7a0e235836f3178d86adef150a170d115fa02e82d"
+    }
+  ],
+  "validation": {
+    "release_compile": true,
+    "independent_example_review": {
+      "files_identical_to_screenshot_example": 5,
+      "bytes": 15365303,
+      "tracks": 4,
+      "clips": 11,
+      "all_wav_headers_and_clip_intervals_valid": true,
+      "generator_hash_matches": true
+    },
+    "gui": {
+      "opened_from_empty_project_button": true,
+      "tracks": 4,
+      "tempo": 96,
+      "playing_transport_seconds_observed": 0.394,
+      "stereo_output_peaks_observed": [
+        0.096066,
+        0.094935
+      ],
+      "stop_returns_to_zero": true,
+      "save_prompts_for_destination": true,
+      "save_panel_cancelled": true,
+      "file_menu_example_command_present": true,
+      "keep_editing_preserves_muted_track": true,
+      "discard_then_reopen_restores_unmuted_original": true,
+      "bundled_project_and_media_hashes_unchanged_after_edits": true
+    },
+    "package": {
+      "example_manifest_and_source_bytes_checked": true,
+      "archive_contents_modes_symlinks_verified_after_extraction": true,
+      "strict_deep_signature_verified_after_extraction": true
+    },
+    "privacy": {
+      "release_asset_scan_blockers": 0,
+      "release_asset_scan_review_records": 0,
+      "zip_and_all_four_delivery_files_scanned": true,
+      "known_private_literal_check_on_staged_files": "passed"
+    }
+  },
+  "test_scope": "Targeted release compile, authored-media identity checks, actual GUI lifecycle/playback observations and archive/signature checks. Core implementation is unchanged from 0.21.0; previous full core test results are historical and were not rerun for this UI/resource patch. Output-meter observation does not measure physical audio output or reference equivalence.",
+  "reference_runtime_comparisons": 0
+}

@@ -84,6 +84,18 @@ if digest(resources / "Rebase.icns") != digest(root / "Assets/Rebase.icns"):
 for relative in ("SOXR-NOTICES.txt", "soxr-0.1.3/LICENCE", "soxr-0.1.3/COPYING.LGPL"):
     if (resources / "ThirdParty" / relative).read_bytes() != (root / "ThirdParty" / relative).read_bytes():
         raise SystemExit(f"Bundled third-party notice changed: {relative}")
+example_manifest = json.loads((resources / "Examples/example.json").read_text())
+example_root = resources / "Examples" / example_manifest["project"]
+for item in example_manifest["files"]:
+    relative = Path(item["path"])
+    if relative.is_absolute() or ".." in relative.parts:
+        raise SystemExit("Unsafe bundled example path")
+    path = example_root / relative
+    if not path.is_file() or path.stat().st_size != item["bytes"] or digest(path) != item["sha256"]:
+        raise SystemExit(f"Bundled example differs from manifest: {relative}")
+for path in (root / "Examples").rglob("*"):
+    if path.is_file() and path.read_bytes() != (resources / "Examples" / path.relative_to(root / "Examples")).read_bytes():
+        raise SystemExit("Bundled example differs from release source inputs")
 zip_license = (root / ".build/checkouts/ZIPFoundation/LICENSE").read_bytes()
 if zip_license not in (resources / "ThirdPartyNotices.txt").read_bytes():
     raise SystemExit("Bundled notices do not contain the complete ZIPFoundation license")
@@ -161,6 +173,7 @@ with tempfile.TemporaryDirectory(prefix=".rebase-release-", dir=output.parent) a
         "executable_sha256": digest(executable), "icon_sha256": digest(resources / "Rebase.icns"),
         "bundle_entries": len(before), "third_party_notices_sha256": digest(resources / "ThirdPartyNotices.txt"),
         "zip_timestamps_utc": "2000-01-01T00:00:00Z",
+        "example": {"project": example_manifest["project"], "files": len(example_manifest["files"]), "manifest_sha256": digest(resources / "Examples/example.json")},
     }
     (delivery / "release-manifest.json").write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
     delivery.rename(output)
