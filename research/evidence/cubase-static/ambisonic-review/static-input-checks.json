@@ -1,0 +1,400 @@
+{
+  "recorded_at_utc": "2026-10-19T05:34:21.663541+00:00",
+  "scope": "Independent source-byte and retained-analysis consistency checks, not target execution.",
+  "target_executed": false,
+  "source_sha256_verified": "e803dd1390ee7989306b15c0fccca52e5d3097ae7a489dc6834f82b50ba485c5",
+  "arm64_sha256_verified": "e8341c6b31ac6b65cf7e8c18bdfbaa18ac24b20160b4287dc385b202eb29b883",
+  "exact_architecture_slice_match": true,
+  "finalized_contract_integrity": {
+    "function_ranges_checked": 17,
+    "functions_checked": 16,
+    "range_digests_and_source_mappings_match": true,
+    "finding_evidence_ids_checked": 16,
+    "external_reference_digests_checked": 4
+  },
+  "constant_tables": {
+    "address": "0x18d15c",
+    "length": 388,
+    "sha256": "c49accecf95f469477a7f57bcc31e6e35ff5d51ee1ff63479b9268bb5a3fc874",
+    "rea_read_equals_source": true,
+    "map_low_first_order": [
+      0,
+      3,
+      1,
+      2
+    ],
+    "map_high_first_order": [
+      0,
+      2,
+      3,
+      1
+    ],
+    "first_order_maps_are_inverses": true,
+    "gain_low_first_order": [
+      1.4142135623730951,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "gain_high_first_order": [
+      0.7071067811865475,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "w_gain_binary64_le_hex": [
+      "cd3b7f669ea0f63f",
+      "cc3b7f669ea0e63f"
+    ],
+    "w_gain_binary32_values": [
+      1.4142135381698608,
+      0.7071067690849304
+    ],
+    "w_gain_binary32_le_hex": [
+      "f304b53f",
+      "f304353f"
+    ],
+    "reverse_gain_differs_from_sqrt_half_binary64": true
+  },
+  "relevant_vtable_slots": [
+    {
+      "slot_address": "0x1d7678",
+      "target": "0x154a8c",
+      "source_bytes_match": true,
+      "independently_mapped_file_offset": 1930872
+    },
+    {
+      "slot_address": "0x1d76b0",
+      "target": "0x154b64",
+      "source_bytes_match": true,
+      "independently_mapped_file_offset": 1930928
+    },
+    {
+      "slot_address": "0x1d7798",
+      "target": "0x154d4c",
+      "source_bytes_match": true,
+      "independently_mapped_file_offset": 1931160
+    },
+    {
+      "slot_address": "0x1d77d0",
+      "target": "0x154e28",
+      "source_bytes_match": true,
+      "independently_mapped_file_offset": 1931216
+    }
+  ],
+  "entire_vtable_read_equals_raw_source": false,
+  "vtable_note": "Four relevant slots match original source bytes. Other read bytes differ; REA reads initialized analysis memory including loader fixups. Do not claim full read equality.",
+  "synthetic_numeric_checks": {
+    "meaning": "Arithmetic sanity checks only; not observed Accelerate or Cubase behavior.",
+    "unit_w_float32_two_step_roundtrip": 0.9999999403953552,
+    "unit_w_float64_two_step_roundtrip": 1.0,
+    "no_exact_roundtrip_claim": true
+  },
+  "inputs": [
+    {
+      "file": "../ambisonic/arm64-derivation.json",
+      "bytes": 782,
+      "sha256": "642ad86e7dc1425b0ef0d1211a601141b71629fcc5c234f73368b2e5f6bb2ac9"
+    },
+    {
+      "file": "../ambisonic/conversion-constant-tables.json",
+      "bytes": 10912,
+      "sha256": "bc39325209b98bf77b657e681318b54f3b5c09039a8ed03c41767888581667b1",
+      "evidence_id": "ev_09a304b26aa532665dd8e142be4a83de850d646aa7ce8238f872572631180f40",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": null
+    },
+    {
+      "file": "../ambisonic/conversion-tables-file-mapping.json",
+      "bytes": 7536,
+      "sha256": "e810281ca95299047179fe3a7c0bccd8c7cd09971adaae481ee126f3296e1dd7",
+      "evidence_id": "ev_6e6928d6e60d413fb6454b767470c06f1afcc9d0ff8caddbbfa66759077c242f",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": null
+    },
+    {
+      "file": "../ambisonic/direction-parameter-consumer.json",
+      "bytes": 788541,
+      "sha256": "462b034dfe906c7426e7cc4f71f0e9bb9de2b70a831851ba7dd465a074d8b82b",
+      "evidence_id": "ev_4f992b72aec563124a5a8828c9cd9e5f2f704d1b44726ce440a62470f802581a",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": {
+        "status": "partial",
+        "limitations": [
+          "Ghidra's callee inventory omits targets of 6 call reference(s) or decoded call(s) without destinations."
+        ],
+        "limited_directions": [
+          "callees"
+        ],
+        "diagnostics": [
+          "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+        ]
+      }
+    },
+    {
+      "file": "../ambisonic/float-channel-permutation-function.json",
+      "bytes": 503647,
+      "sha256": "8715aaf3268fa46159c210b93fad84f91ba2f9c72e0fc4d496436a2e007aba3e",
+      "evidence_id": "ev_8c579cccb9a2999385243abde3a396b6762626d8537f036a621e1114ecf7caae",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": {
+        "status": "complete",
+        "diagnostics": [
+          "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+        ]
+      }
+    },
+    {
+      "file": "../ambisonic/float-conversion-process-function.json",
+      "bytes": 234545,
+      "sha256": "54e4acee827b1f59e7a80858d40438834d034673b47667de45e039fd42b2e2ae",
+      "evidence_id": "ev_cbbaed7434362e2b7f9465cdd773e5f1931f9d2c60ed615262d8668b8ab47c5b",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": {
+        "status": "complete",
+        "diagnostics": [
+          "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+        ]
+      }
+    },
+    {
+      "file": "../ambisonic/float-buffer-copy-function.json",
+      "bytes": 275151,
+      "sha256": "94fda0f6ff6b77e4d95deee1c4dfd7f034a485bea9649361a44553d115b9317a",
+      "evidence_id": "ev_da781b019e3e65787f4007c055181ae257d7fadad31f0fa739442f5efebce5a8",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": {
+        "status": "complete",
+        "diagnostics": [
+          "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+        ]
+      }
+    },
+    {
+      "file": "../ambisonic/float-bypass-process-function.json",
+      "bytes": 222311,
+      "sha256": "b7dbf3a21bff3e8658f39b46daa6df05192c959986a43183b2f7be78e35d54d8",
+      "evidence_id": "ev_063e0b7e04af9cb4b264e12a6356f32e8fe4053282baab3e4ecf408e3a20c765",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": {
+        "status": "complete",
+        "diagnostics": [
+          "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+        ]
+      }
+    },
+    {
+      "file": "../ambisonic/double-channel-permutation-function.json",
+      "bytes": 503679,
+      "sha256": "6aebce2e199e6f7ae24648192cce288ce3c4d5746c92435befec49d0b072e185",
+      "evidence_id": "ev_eeb71a978aabe2b0b5741cba344e76f07768355f52ecc4eb92ab4a7c67d7e608",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": {
+        "status": "complete",
+        "diagnostics": [
+          "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+        ]
+      }
+    },
+    {
+      "file": "../ambisonic/double-conversion-process-function.json",
+      "bytes": 231999,
+      "sha256": "cdd578dc4320199fd0a9d7bbd049477f42f026d0eccee71d0e5d035fd09dce44",
+      "evidence_id": "ev_8e7f749a08b569b58f88bdce179c6bae9ec267805ccf38c75456169dc0791c70",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": {
+        "status": "complete",
+        "diagnostics": [
+          "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+        ]
+      }
+    },
+    {
+      "file": "../ambisonic/double-buffer-copy-function.json",
+      "bytes": 411549,
+      "sha256": "021afffe053938e346e644c11b9de173d26d6a17c057d432dbcc4943c6baac4f",
+      "evidence_id": "ev_440191a53535ba55af7157734fa32e827d5e3ea6c215bc7d160a26a1abe2cd67",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": {
+        "status": "complete",
+        "diagnostics": [
+          "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+        ]
+      }
+    },
+    {
+      "file": "../ambisonic/processor-process-function.json",
+      "bytes": 1937177,
+      "sha256": "87b619703b894bfb64d178b770f3d5c72175ade5dd2a46c467036476d6b63fa1",
+      "evidence_id": "ev_b2f398cfea2637930a17064bd1032da4610f721ee69cf9bb6c19f2986c2d29ae",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": {
+        "status": "partial",
+        "limitations": [
+          "Ghidra's callee inventory omits targets of 1 call reference(s) or decoded call(s) without destinations."
+        ],
+        "limited_directions": [
+          "callees"
+        ],
+        "diagnostics": [
+          "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+        ]
+      }
+    },
+    {
+      "file": "../ambisonic/processor-bus-arrangement-function.json",
+      "bytes": 1899396,
+      "sha256": "69a39139f48467730f772ad5dd244c68cd63e506a3f872372175eb0d0a36a198",
+      "evidence_id": "ev_73aeb3d9d98e4c9487109124edfcbe9e3c56df077156d651ebc77b36c4421da3",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": {
+        "status": "partial",
+        "limitations": [
+          "Ghidra's callee inventory omits targets of 8 call reference(s) or decoded call(s) without destinations."
+        ],
+        "limited_directions": [
+          "callees"
+        ],
+        "diagnostics": [
+          "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+        ]
+      }
+    },
+    {
+      "file": "../ambisonic/processor-activation-function.json",
+      "bytes": 1007600,
+      "sha256": "bb538ce7880177aef67bc7392b1d4ed6405006ae08e40f5f4f98fd6dc9edbf60",
+      "evidence_id": "ev_71427cb4c15b53d125dbb8f414f8827d185a7297fbf0057f99e8618a075b5860",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": {
+        "status": "partial",
+        "limitations": [
+          "Ghidra's callee inventory omits targets of 4 call reference(s) or decoded call(s) without destinations."
+        ],
+        "limited_directions": [
+          "callees"
+        ],
+        "diagnostics": [
+          "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+        ]
+      }
+    },
+    {
+      "file": "../ambisonic/algorithm-vtables.json",
+      "bytes": 12288,
+      "sha256": "363c1e86a518df7fbead5577d2a8365318095762e83fadf049a24f75997b4ff7",
+      "evidence_id": "ev_67b1cf21639caa0a645eeab97a1aee8058a304392abf536219d78ba63c42642f",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": null
+    },
+    {
+      "file": "../ambisonic/conversion-registration-function.json",
+      "bytes": 255694,
+      "sha256": "4e7813e1db6bf3b4746007194d426a63211ede7e96f07422162c0c0d15a620bc",
+      "evidence_id": "ev_d578ced36109309b2d97def7d5bd6b2f22f7bbbe5a03eec57a2a7b4a85f45c8d",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "relationship_coverage": {
+        "status": "partial",
+        "limitations": [
+          "Ghidra's callee inventory omits targets of 7 call reference(s) or decoded call(s) without destinations."
+        ],
+        "limited_directions": [
+          "callees"
+        ],
+        "diagnostics": [
+          "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+        ]
+      }
+    },
+    {
+      "file": "../ambisonic/external-abi-references.json",
+      "bytes": 1633,
+      "sha256": "749976d30c520be3af730c06050e10df757f74dbe7daa711c5f1b1737d4c3310"
+    },
+    {
+      "file": "../ambisonic/reference-ivstaudioprocessor.h",
+      "bytes": 24135,
+      "sha256": "6289b19c8300fb381da7688414fae52d5ca139371f910830532204b860bd6549"
+    },
+    {
+      "file": "../ambisonic/reference-ivstparameterchanges.h",
+      "bytes": 6258,
+      "sha256": "4f177d8f9e207fc4f247fde5aebfbdf863d02bced08a6c2d21d759f043eea3dd"
+    },
+    {
+      "file": "../ambisonic/reference-vdsp-vsmul.md",
+      "bytes": 2514,
+      "sha256": "55d3cdfd0780a431e84e365794d54802e4e7663ef835297cb991582774e50087"
+    },
+    {
+      "file": "../ambisonic/first-order-finding.json",
+      "bytes": 16195,
+      "sha256": "26464fd1f96d299710c49a7b0735882d3095725449c0368ba894794a9ac791f9"
+    },
+    {
+      "file": "../ambisonic/first-order-byte-ranges.json",
+      "bytes": 14723,
+      "sha256": "a58036a05a6d65107e12d61a3ec08b10cf01a31eeab780b70dc7b3db6050a685"
+    }
+  ]
+}

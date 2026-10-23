@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "status": "passed_no_contrary_reading_in_scoped_chain",
+  "scope": "Independent read-only rate ownership review. No application code or target execution.",
+  "source_and_evidence": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass3/native-10036e858.txt",
+      "bytes": 2946,
+      "sha256": "9080dac3676f16a738b23e9d75708a26fc5920514bea0fa39f58045799b15374"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass3/native-101d3eb24.txt",
+      "bytes": 32209,
+      "sha256": "f86f3a3d20b211e5703d4b4cbe18e8b38b224ddda152fffe7790c5ddacccd252"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass2/native-1003704d4.txt",
+      "bytes": 294,
+      "sha256": "013979aecd5264c4d17f27282ae859bf911fc52536f7a7a9a155c46619bc5804"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass1/native-1001139d0.txt",
+      "bytes": 774,
+      "sha256": "7d64ca8658ef5ff65372e6cf4309348cabd8b2fa5b4cf0de58865fe165e2d380"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/original-bindings.json",
+      "bytes": 16630,
+      "sha256": "98934540b6bb586f5f55f40eef27803a01519d7167974f78252d6b7485a9c64f"
+    }
+  ],
+  "verification": {
+    "original_instruction_words": 788,
+    "original_dispatch_cells": 27,
+    "original_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "conclusions": [
+    "10036e858 reads accessor+28 then reader+8 owner, invokes that owner+140 and stores returned Float32 at accessor+30. It does not obtain a project rate here.",
+    "Actual rate setter1003704d4 stores Float32 at+30. Ordinary creation/configuration101d3f040..0b4 invokes +150,+100,+130,+120, not this +f0 setter.",
+    "1001139d0 can release an old nonnil +78 through virtual+10, then stores new pointer. There is no direct rate/format setter in that function; release callbacks are a distinct boundary."
+  ],
+  "limits": [
+    "Reader-owner current rate, builder context rate, global reader datum and project/device rate remain separate.",
+    "This review does not establish that arbitrary selected streams use the raw AudioCluster owner or file metadata; direct cluster linkage and upstream cache/processed-stream branches are the author study\u2019s separate conditions.",
+    "No inference that every timeline accessor is matching-rate, or that hosted placement/conversion is complete."
+  ]
+}

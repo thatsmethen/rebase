@@ -1,0 +1,33 @@
+{
+  "reason": "Independent native review discovered a product/version compatibility path may remove the typed container before replacement. Unconditional precedence expectation in the earlier synthetic record is withdrawn; original file/record preserved.",
+  "prior_record": {
+    "path": "research/evidence/application/APP004/synthetic-signature-precedence.json",
+    "sha256": "64ab7f0c15a30473b540e602634d6700d83b00201584eeaeedd7e7c5e8bb9d00"
+  },
+  "negative_control": {
+    "path": "research/evidence/application/APP004/Synthetic Signature Precedence.cpr",
+    "sha256": "bf761a0fdca8ea5ec044172abc08b63174180211cf3ab23c55241fc5806e7f8e",
+    "expected": "Explicit unsupported signature compatibility due to conflicting compact4/4 andtyped7/8. No recovered meter claim; any4/4 appmeter must remain labeled applicationdefault."
+  },
+  "positive_control": {
+    "path": "research/evidence/application/APP004/Synthetic Concordant 7-8.cpr",
+    "sha256": "3f430d7eecbf89e5e4485a4405b07f379a5cbd95fb784e5f6c1e6959b8881d49",
+    "derived_from": "bf761a0fdca8ea5ec044172abc08b63174180211cf3ab23c55241fc5806e7f8e",
+    "further_mutations": [
+      {
+        "field": "compact numerator",
+        "offset": 1039,
+        "before_hex": "0004",
+        "after_hex": "0007"
+      },
+      {
+        "field": "compact denominator",
+        "offset": 1041,
+        "before_hex": "0004",
+        "after_hex": "0008"
+      }
+    ],
+    "expected": "Recover7/8atprojectorigin becausebothsinglecompactandtypedrepresentationsagree; retain126.5nativefixedclock. TypedPosition1920 remainsnon-authoritativewhenBar0 present withintypedbranch."
+  },
+  "classification": "Synthetic mutation controls, not target-generated project outputs or Cubase runtime comparisons."
+}

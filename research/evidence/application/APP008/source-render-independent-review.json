@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "review_id": "APP008-SOURCE-RENDER-INDEPENDENT-REVIEW-001",
+  "created_utc": "2026-10-20T00:09:42.844259+00:00",
+  "reviewer": "fidelity_protocol",
+  "status": "No remaining actionable defect found in the reviewed conditional source-event path after two corrections; native automatic-fade owner closure remains pending.",
+  "scope": {
+    "operation": "Read-only review of source inspection, preserved-source verification, selected-media snapshot validation, bounded RIFF PCM24 reader, Float32 conversion/event-gain kernel and atomic output publication.",
+    "interpretation": "Explicit reconstruction of one saved event under fresh normal source restoration, zero-origin source coordinates, matching source/output rate, full successful reads, supported no-processing state and explicit Float32 output. This is not ordinary project transport or hosted Cubase output.",
+    "fresh_state_conditions": [
+      "No callback or later mutation changing the reconstructed event, its selected stream or effective settings.",
+      "No external runtime pitch-analysis/context state. The child-class gate excludes unsupported serialized pitch children; it does not observe or prove runtime packed pitch flags.",
+      "Source-effective automatic-fade flags must be explicitly zero under the separately verified owner relationship."
+    ],
+    "excluded": [
+      "Whole-track/mixer/automation/routing/plugin processing, overlap selection, arbitrary host state and runtime callbacks.",
+      "General fades, warp/pitch/loop/replacement layers, rate conversion, general source formats, partial reads and cancellation.",
+      "Actual Cubase runtime PCM comparison or sample-resampler fidelity."
+    ],
+    "reviewer_authorship_note": "CPRAutoFadeArchive.swift is included as dependency context. The reviewer authored that decoder, so this record does not characterize its internal implementation as independently authored/reviewed evidence."
+  },
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 6987,
+      "sha256": "284faa13042067f64c8871fa1e1970d1d41ea1f384bd70150877a10268026e1e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 6981,
+      "sha256": "6ce793eebc2a5943bffda12dcb38cfa5ceb6febb77276b5cf10da1604c34e199"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 13673,
+      "sha256": "e426e17e26303faa9752f049652c4c08c5365e3c97c606cec387a05b1a504d39"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_event_pcm.c",
+      "bytes": 1644,
+      "sha256": "1de71e140a6cf22e9abf48158c2935324deb91c1a7f6f986523d9b9fea7b3c33"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_event_pcm.h",
+      "bytes": 550,
+      "sha256": "b7638d7d5d7b1f9885c38b5be50de1f958df906e4913a2a9f56bcaca6d2af19b"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceEventRendererTests.swift",
+      "bytes": 11881,
+      "sha256": "5f1dc23fe71cff8679d44ef6340f15e16bf9d4c146eb9273512083420885d837"
+    }
+  ],
+  "context_sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRAutoFadeArchive.swift",
+      "bytes": 15962,
+      "sha256": "b2cfa53d6e66461e792c31b80c0821a118fa6dbecf77b58843c97ebe5b83fae4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioEventArchive.swift",
+      "bytes": 20165,
+      "sha256": "4dd8369fe4cc35c969da0909cc4ec835dc7c5c951197eb0fec9ae23bec7b7421"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioMediaAttachment.swift",
+      "bytes": 5034,
+      "sha256": "32ae14bc2db468a1ccb3ba9f15e090ff94c01ab79add0d5d9e1504cadb9f6e92"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "bytes": 13611,
+      "sha256": "5c7837be4d55f371591fcee99cb6663aaf4f346832a21180d46568193ad3fd1d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/UnresolvedCPRAudioEvent.swift",
+      "bytes": 3139,
+      "sha256": "9986f9e3c05cf3c0b949ef8b7ddad7ad0c49d1b17aa38f85d6644896fff26e34"
+    }
+  ],
+  "native_and_source_evidence": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/finding.json",
+      "bytes": 33370,
+      "sha256": "f3ec20b3e9b3412a30a4451a920f1c68bbd95b41906dda4a432139a5f8f23da4"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/finding.json",
+      "bytes": 42305,
+      "sha256": "7a493eaca5021ef876a557ec4159c82df5aa51554f13995f57f14e0670140623"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/pcm24-float32/finding.json",
+      "bytes": 10785,
+      "sha256": "698f1f9fac7d3947f513ad25dbed67e5d6425eb31dfd91c99832b77aa7b231f3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/finding.json",
+      "bytes": 39071,
+      "sha256": "af7178337889b779e4d37e2ac55e9eb41087c3fced9b54a0ec15e63e4204cd82"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/finding.json",
+      "bytes": 17257,
+      "sha256": "b3ed0ab7f758c91a65620dcc829be02e51684c7887e4561f9107d22fc0365c38"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/source-forward-probe.json",
+      "bytes": 106578,
+      "sha256": "946f5ce59e3f3e977b9da1a4a5a8b1a040aa6dde90b9b0698f92eb3d91acb456"
+    }
+  ],
+  "fixed_findings": [
+    {
+      "id": "SR-1",
+      "severity": "correctness",
+      "status": "fixed_and_source_rechecked",
+      "location": "CPRSourceAudioInspection.swift: CPRSourceEventRenderPlan.make clip-state gate",
+      "problem": "The plan initially accepted arbitrary opaque clip children while the no-processing selector contract requires unsupported serialized pitch state to be absent. CPRAudioEventArchive intentionally preserves child descriptors without interpreting their processing.",
+      "correction": "Every accepted clip child must now have class MHitPointEvent, version 3 and payloadByteCount 26. Other classes, versions and extents remain unsupported. The external/no-pitch call-time assumption stays explicit.",
+      "evidence": "Renderer-selection R5/R6 and original LoFi child records; peer native reviewer confirmed 214 MHitPointEvent v3 children of 26-byte payloads.",
+      "regression_source": "ForwardSourcePlanRejectsEnabledFadesWarpAndInversion includes a same-size unknown child-class declaration mutation and requires rejection.",
+      "test_execution_by_this_review": false
+    },
+    {
+      "id": "SR-2",
+      "severity": "crash",
+      "status": "fixed_and_source_rechecked",
+      "location": "CPRSourceAudioInspection.swift: CPRSourceEventRenderPlan.make media-format guard",
+      "problem": "The original guard evaluated Int16 channels * 3 before rejecting channels outside 1...2. Frozen V4 intentionally retains unusual source metadata, so a source channels value 32767 could reach inspection and trap instead of failing closed.",
+      "correction": "The 1...2 range check now precedes frame-size arithmetic, and multiplication is widened to Int.",
+      "regression_source": "ForwardSourcePlanRejectsEnabledFadesWarpAndInversion mutates the source AudioFile channels field at payloadOffset+12 to 0x7fff and requires rejection.",
+      "test_execution_by_this_review": false
+    }
+  ],
+  "verified_code_properties": [
+    "ProjectStore.verifiedCPRSourceEvent validates the in-memory project, replays the frozen compatibility baseline, then reads original CPR bytes and checks their digest plus event/clip/cluster identities. Retained events remain bound to their original imported track.",
+    "Public rendering validates the selected attachment metadata, resolves contained media, reads a bounded byte snapshot and verifies its recorded SHA256 before decoding or publishing output.",
+    "RIFF length, chunk bounds including padding, unique fmt/data chunks, accepted format lengths, PCM tag, exact channel/rate/frame-byte layout and data frame count are checked before indexed sample access.",
+    "Frame/channel bounds keep the reachable sample count and RIFF output byte counts within checked implementation limits.",
+    "The C kernel decodes signed little-endian 24-bit samples exactly to Float32, then uses a separate Float32 gain multiply for nonunity gain. It rejects non-nearest rounding and gains outside its normal-or-zero arithmetic domain before writing output.",
+    "The plan gain floor now matches the kernel floor Float.leastNormalMagnitude * 8388608. The greatest finite positive Float gain cannot overflow when multiplied by a PCM24 sample whose absolute value is at most one.",
+    "The complete input and output are validated/constructed before Data.write with atomic publication. Failures before publication leave an existing destination untouched.",
+    "Source-project output containment is rejected; the operation does not modify the frozen report/original source or promote the unresolved source event into a playable Clip. Ordinary project playback/export refusal remains separate."
+  ],
+  "remaining_caveats": [
+    {
+      "id": "SR-READY-1",
+      "severity": "nonblocking_readiness",
+      "observation": "CPRSourceAudioInspection returns localRenderUnavailableReason=nil whenever the source plan succeeds and an attachment row exists. It does not at that point read/hash the attached file or establish that its container is accepted PCM24 RIFF.",
+      "example": "A previously attached file that later goes missing/changes, or a matching PCM24 AIFF accepted by the general attachment API, can appear ready until rendering is attempted.",
+      "safety_behavior": "Rendering still validates the actual byte snapshot/hash and rejects unsupported WAV structure before atomic publication. No output-integrity failure was found.",
+      "suggestion": "A later readiness preflight may reuse actual-media/container checks or distinguish source-state eligibility from current media readiness; do not weaken the rendering checks."
+    }
+  ],
+  "open_native_gate": {
+    "automatic_fade_owner_relationship": "Pending the peer native owner/playlist closure at this review snapshot. This review does not infer closure from passing application tests or from zero saved flags alone.",
+    "event_rendering_finding_status_at_read": "draft pending external source-auto-fade seal; native evidence complete and verified"
+  },
+  "validation": {
+    "method": "Source and retained evidence inspection; fixes re-read and exact current hashes captured.",
+    "application_tests_run_by_this_review": 0,
+    "target_executions": 0,
+    "cubase_runtime_comparisons": 0,
+    "parent_test_activity": "Parent is independently rerunning tests/builds. No result from that in-progress run is promoted by this review.",
+    "writes": "Only this new review JSON; no Application, package or historical sealed evidence changes."
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "kind": "Finite supplied-state controls for observed branches and value ownership",
+  "target_executed": false,
+  "branch_controls": [
+    {
+      "label": "pre baseline",
+      "inputs": {},
+      "expected": "silence wrapper",
+      "actual": "silence wrapper"
+    },
+    {
+      "label": "initial station count zero",
+      "inputs": {
+        "installed": 0
+      },
+      "expected": "no replacement",
+      "actual": "no replacement"
+    },
+    {
+      "label": "excluded low bit",
+      "inputs": {
+        "excluded": 1
+      },
+      "expected": "no replacement",
+      "actual": "no replacement"
+    },
+    {
+      "label": "excluded even nonzero",
+      "inputs": {
+        "excluded": 2
+      },
+      "expected": "silence wrapper",
+      "actual": "silence wrapper"
+    },
+    {
+      "label": "post field absent",
+      "inputs": {
+        "post": 1
+      },
+      "expected": "no replacement",
+      "actual": "no replacement"
+    },
+    {
+      "label": "post field low bit",
+      "inputs": {
+        "post": 1,
+        "post_field": 1
+      },
+      "expected": "backend wrapper",
+      "actual": "backend wrapper"
+    },
+    {
+      "label": "post field even nonzero",
+      "inputs": {
+        "post": 1,
+        "post_field": 2
+      },
+      "expected": "silence wrapper",
+      "actual": "silence wrapper"
+    },
+    {
+      "label": "kind boundary2",
+      "inputs": {
+        "kind": 2
+      },
+      "expected": "silence wrapper",
+      "actual": "silence wrapper"
+    },
+    {
+      "label": "kind boundary3",
+      "inputs": {
+        "kind": 3
+      },
+      "expected": "no replacement",
+      "actual": "no replacement"
+    },
+    {
+      "label": "signed negative kind",
+      "inputs": {
+        "kind": -1
+      },
+      "expected": "silence wrapper",
+      "actual": "silence wrapper"
+    },
+    {
+      "label": "missing returned backend",
+      "inputs": {
+        "post": 1,
+        "post_field": 1,
+        "backend": false
+      },
+      "expected": "no replacement",
+      "actual": "no replacement"
+    },
+    {
+      "label": "missing clip in silence branch",
+      "inputs": {
+        "clip": false
+      },
+      "expected": "no replacement",
+      "actual": "no replacement"
+    }
+  ],
+  "data_flow_controls": [
+    {
+      "source_rate": 44100.0,
+      "requested_device_rate": 48000,
+      "requested_factor": 1,
+      "request_product": 48000,
+      "silence_rate_bits": "472c4400",
+      "curve_rate_bits": "472c4400",
+      "supplied_backend_return_rate": 48000.0,
+      "post_snapshot_bits": "473b8000"
+    },
+    {
+      "source_rate": 44100.0,
+      "requested_device_rate": 48000,
+      "requested_factor": 1,
+      "request_product": 48000,
+      "silence_rate_bits": "472c4400",
+      "curve_rate_bits": "472c4400",
+      "supplied_backend_return_rate": 44100.0,
+      "post_snapshot_bits": "472c4400"
+    },
+    {
+      "source_rate": 48000.0,
+      "requested_device_rate": 44100,
+      "requested_factor": 1,
+      "request_product": 44100,
+      "silence_rate_bits": "473b8000",
+      "curve_rate_bits": "473b8000",
+      "supplied_backend_return_rate": 44100.0,
+      "post_snapshot_bits": "472c4400"
+    },
+    {
+      "source_rate": 32000.0,
+      "requested_device_rate": 48000,
+      "requested_factor": 1.001,
+      "request_product": 48047.99999999999,
+      "silence_rate_bits": "46fa0000",
+      "curve_rate_bits": "46fa0000",
+      "supplied_backend_return_rate": 96000.0,
+      "post_snapshot_bits": "47bb8000"
+    }
+  ],
+  "passed": true,
+  "limits": [
+    "These controls exercise an authored statement of the inspected host predicates; they do not execute or test a proprietary provider.",
+    "Backend returned rate is an independent supplied input. A request at provider+0xa8 is not assumed to force its returned stream+0x38 rate.",
+    "General input validity, external callbacks, project preparation and output samples remain outside these controls."
+  ]
+}

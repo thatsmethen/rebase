@@ -1,0 +1,73 @@
+{
+  "status": "working_contract_pending_independent_numerical_review",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "target_execution": false,
+  "scope": "Concrete mode1 Float32 packet and sample-producing branch, with fixed-rate mono/stereo reconstruction. No assertion that this is the active backend in every hosted Cubase context.",
+  "dispatch": {
+    "vtable": "0x1044618f0",
+    "float32_slot": "0x40",
+    "packet": "0x10030af58",
+    "kernel": "0x10030b8a8",
+    "factory": "0x10030a008",
+    "selection": "Explicit mode1, or mode2 factory returning nil; broader host selection is independently documented in rate-selection."
+  },
+  "fields": {
+    "0x8": "u32 input capacity initially65536",
+    "0x10": "binary64 phase",
+    "0x18": "binary64 step",
+    "0x20": "coefficient[32769]",
+    "0x28": "difference[32769]",
+    "0x30": "per-channel binary64 storage",
+    "0x38": "per-channel working cursors",
+    "0x40": "i64 cumulative real input frames",
+    "0x48": "i64 cumulative generated frames before terminal trim",
+    "0x50": "binary64 outputRate/sourceRate",
+    "0x58": "i32 channels",
+    "0x5c": "fresh byte"
+  },
+  "coefficient_contract": {
+    "entries": 32769,
+    "step": "RN64(512 / ratio)",
+    "cutoff": "ratio<1 ? RN64(ratio*0.5) : 0.5",
+    "beta_bits": "0x4021eb851eb851ec",
+    "beta_decimal": 8.96,
+    "half_beta_bits": "0x4011eb851eb851ec",
+    "epsilon_bits": "0x3b92e3b40a0e9b4f",
+    "series": "term=sum=index=1; do { q=RN64(half/index); index=RN64(index+1); q=RN64(q*q); term=RN64(term*q); sum=RN64(sum+term); } while(term>=RN64(sum*epsilon))",
+    "sinc": "h[0]=1; increment=RN64(RN64(RN64(cutoff+cutoff)*piBits400921fb54442d18)*2^-9); h[i]=RN64(system_sin(RN64(i*increment))/RN64(i*increment)), i1..32768. Native pair invokes second index before first.",
+    "window": "r=RN64(i*2^-15); radial=FSQRT(FMA(-r,r,1)); half=RN64(RN64(radial*beta)*0.5); h[i]=RN64(h[i]*RN64(series(half)*RN64(1/series(halfBeta))))",
+    "normalization": "sum is ordered RN64 addition h[512],h[1024],...,h[32768]; scale=RN64(1/FMA(sum,2,1)); each h[i]=RN64(h[i]*scale).",
+    "difference": "d[i]=RN64(h[i+1]-h[i]), i0..32767; d[32768]=-h[32768]",
+    "math_boundary": "Exact original indirect symbol resolves to _sin. Reconstruction uses host C sin; neither target execution nor equivalence of every OS/libm implementation has been demonstrated.",
+    "early_label_correction": "An early message called beta8.6. Original MOVKs and implementation constants decode8.96; candidate always used original bits. Corrected before oracle validation or sealing."
+  },
+  "sample_contract": {
+    "fresh": "Fresh prefix64 doubles equals first Float32 widened, or zero for NULL; input begins storage[64], logical consumed counter starts64. Fresh flag clears even on a zero call.",
+    "later": "Input begins storage[128], logical consumed counter starts0. Working sample center always restarts storage[64].",
+    "terminal": "Append64 copies of the positive call last Float32 frame, or zero for NULL/zero call. Local input limit increases64; cumulative real input does not.",
+    "phase": "While trunc_i64(phase)>=512 and logical index<local limit: phase=RN64(phase-512); increment logical index and every channel center. Then emit a whole channel frame if logical index<limit; phase=RN64(phase+step); repeat.",
+    "left_taps": "m=trunc_i32(phase); f=RN64(phase-Double(m)); acc=+0; for k0..63, w=FMA(f,d[m+512k],h[m+512k]); acc=FMA(center[-k],w,acc).",
+    "right_taps": "q=RN64(512-phase); m=trunc_i32(q); f=RN64(q-Double(m)); for k0..63, w=FMA(f,d[m+512k],h[m+512k]); acc=FMA(center[k+1],w,acc). Only then narrow Float32.",
+    "carry": "Copy128 doubles starting center-64 into each buffer beginning. Storage outside copied region is retained.",
+    "count": "Always add generated frames to cumulative generated. Terminal target=trunc_i64(RN64(ratio*Double(cumulative real input))); if target<new cumulative generated, return max(current generated+target-new cumulative generated,0); otherwise return current generated. Retained generated counter is not reduced.",
+    "reset": "0x10030aeb8 clears phase and both native counters, sets fresh1; it does not clear storage/tables. Destroy/create is required for a genuinely fresh reconstruction seek.",
+    "resize": "For caller n>capacity, packet changes capacity=n+1024 then reallocates zero-filled channel buffers, without resetting phase/counters/fresh. Fixed channel count subset avoids reconfiguration/free-count uncertainty.",
+    "partition": "Short first blocks are supported and may retain zero/stale gaps. No partition invariance is asserted."
+  },
+  "defensive_contract": {
+    "rates": "Integral8000..192000 inclusive, channels1 or2; equal rates retain filtering; nearest-even and noFTZ/FIZ.",
+    "limits": "At most1m caller input frames,16m cumulative real input and visible output. Native valid internal storage extents checked before any mutation.",
+    "native_bounds": "Nonfresh terminal input in [capacity-62,capacity] would write beyond capacity+129 doubles; reject transactionally. Calls n>capacity grow by1024 and may be safe. App8192 blocks are within initial capacity.",
+    "zero": "Zero calls require NULL source. Zero nonfinal calls reproduce state mutation. One terminal call permitted, then reset/create; repeated native terminal behavior is outside wrapper policy.",
+    "samples": "Finite normal-or-zero Float32 inputs and generated outputs; nonzero subnormal output rejects. All failures preserve caller output/count and state.",
+    "publication": "Only returned region is copied to caller. Native generated writes outside returned region are not claimed as compatible ABI side effects."
+  },
+  "custody_summary": {
+    "new_functions": 10,
+    "reused_functions": 5,
+    "original_native_words": 1091,
+    "rea_instruction_addresses": 1084,
+    "bytes_verified": 4364
+  },
+  "open_review": "Independent coefficient/sample oracle, current application integration review, and final source snapshots pending."
+}

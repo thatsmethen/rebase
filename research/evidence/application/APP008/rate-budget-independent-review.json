@@ -1,0 +1,104 @@
+{
+  "id": "APP008-INDEPENDENT-RATE-BUDGET-REVIEW",
+  "at_utc": "2026-10-19T14:33:50.180014+00:00",
+  "status": "passed_no_actionable_defect_in_declared_domain",
+  "scope": "Read-only source/API review plus separate optimized execution of the self-authored C arithmetic kernel against exact-Fraction controls. No Application mutation, backend or proprietary target execution.",
+  "source_and_evidence_pins": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_rate_budget.c",
+      "sha256": "76cbf90501ed9512057da1f91fb725e26d07b538f444d5a911926e0587e111fb",
+      "bytes": 5789
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_rate_budget.h",
+      "sha256": "3110d27e2ab99a18d3b26722e489b6b5b492648a7ba57e9a1b0e5e938ccf170e",
+      "bytes": 1528
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateReadBudget.swift",
+      "sha256": "cdc56ac4a12d2a386dc7b5c7864220762d7e187c7fb258d71ee9639d0a87523e",
+      "bytes": 4141
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRateReadBudgetTests.swift",
+      "sha256": "fac825d568adecf5e80b9607ded9ab0e5f0a92b6093ac7d964ff561707233b64",
+      "bytes": 11180
+    },
+    {
+      "path": "Application/Package.swift",
+      "sha256": "4297b2e7061c7ff2428713fc926219c44835b492f49edaa75f6e87c42aba0391",
+      "bytes": 1165
+    },
+    {
+      "path": "research/evidence/application/APP008/rate-budget-tests-round4.log",
+      "sha256": "ac814f1b4d545ddcee778b45fac57cb73898a41671f6cc5beeae74528c919e98",
+      "bytes": 3460
+    },
+    {
+      "path": "research/evidence/application/APP008/rate-budget-kernel-check.json",
+      "sha256": "beaf686e2c1995c8f06c2ce119887903f818e3d1490938028dc30d2a315442dd",
+      "bytes": 4121
+    },
+    {
+      "path": "research/evidence/application/APP008/reviewer-rate-budget-check.json",
+      "sha256": "645f7af1bfe8d3aec03e8481cdb8759d70130f79a3053a5f2eb72150d437f50c",
+      "bytes": 4170
+    }
+  ],
+  "accepted_findings": [
+    "Positive normal binary32 rates are admitted by exact exponent/sign bits. Widening to binary64 preserves their exact values. Signed zero, subnormals, infinities and NaNs are rejected before arithmetic.",
+    "Nearest rounding is required before any result, including equal-rate fast path. Equal positive-normal bits correspond exactly to equal finite values; native equal-rate arithmetic shortcut ignores conditional allowance.",
+    "The two rounded ratios are separately divided from widened inputs. Initial input product is separately rounded before upward integral rounding. Reverse rounded product is truncated, not ceiled, and the first conversion is checked before search.",
+    "Mode2 allowance is an explicit conditional branch, not an availability assertion. Padding is ceil(rounded output/input ratio)*2048. Signed32 addition and conversion bounds are checked before publication.",
+    "Binary search preserves native count result within the bounded domain; correctionDecrements records logical native decrements, not search evaluations. It does not assert that a one-decrement sample observation is a general theorem.",
+    "Reverse product in [INT32_MAX,INT32_MAX+1) is correctly admitted because truncation still fits; product>=2^31 rejects. Initial upward-rounded ceiling must be<=INT32_MAX.",
+    "Source frames may be zero for a positive request. Swift API preserves the zero rather than imposing a minimum, and validates Int32 exact conversion before calling C.",
+    "Errors do not publish a partial result or mutate caller output. Swift exposes only source, allowance and adjusted-output counts; diagnostics remain internal and API comments exclude actual produced samples, buffer capacity, backend readiness and resampling."
+  ],
+  "binary_search_equivalence": {
+    "domain": "Fixed finite positive binary64 reverse ratio q; integer candidates0..k0 with k0<=INT32_MAX. RN multiplication nearest-even; initial reverse product is finite, nonnegative and<2^31.",
+    "proof": [
+      "Integer candidates convert to binary64 exactly. For q>0, exact q*k is nondecreasing in k. IEEE nearest-even rounding is monotone, and truncation of these nonnegative finite products is monotone.",
+      "The native loop decreases k from k0 until reverse(k)<=N. If k0 passes it returns directly. If it fails, reverse(0)=0<=N and k0 is a failing upper bound.",
+      "Candidate loop maintains passing low and failing high, using midpoint strictly between when distance>1. Hence high-low decreases, and final low is the largest passing integer in0..k0, exactly the native first passing descending count.",
+      "Because all later candidates are smaller than k0, their rounded products cannot exceed the already-validated initial product, so remaining integer conversions stay representable. high-low<=INT32_MAX and low+(high-low)/2<=high avoid signed overflow.",
+      "At most31 midpoint evaluations plus initial/final checks gives<=33; verified controls reach33. Counts are not inferred from search iteration count."
+    ],
+    "nonclaim": "This proof does not cover changed ratios, non-nearest modes, saturated native FCVT behavior, invalid counts or backend state."
+  },
+  "independent_execution": {
+    "check": {
+      "path": "research/evidence/application/APP008/reviewer-rate-budget-check.json",
+      "sha256": "645f7af1bfe8d3aec03e8481cdb8759d70130f79a3053a5f2eb72150d437f50c",
+      "bytes": 4170
+    },
+    "controls": {
+      "path": "research/evidence/application/APP008/reviewer-rate-budget-controls.json",
+      "sha256": "03cb3c1f1c72f85c5f39e521d0fc905dafdb444edfc7f652622dce9a82c9a474",
+      "bytes": 761704
+    },
+    "retained_controls": 244,
+    "additional_controls": 1743,
+    "accepted": 1283,
+    "rejected": 704,
+    "corrected_cases": 512,
+    "maximum_search_evaluations": 33,
+    "details": "Independent exact Fraction instruction arithmetic uses a literal decrement loop, while the candidate uses binary search. Exact intermediate ratios and initial product bits, counts, three rejected non-nearest modes, unchanged error output, unknown branch and null output were checked. Optimized emitted assembly retains FDIV/FMUL/FRINTP/FCVTZS and no fused add/subtract."
+  },
+  "original_author_tests": {
+    "scope": "Read test source and retained successful seven-test log; no redundant SwiftPM rerun. Separate C compile/run above provides independent arithmetic execution.",
+    "log": {
+      "path": "research/evidence/application/APP008/rate-budget-tests-round4.log",
+      "sha256": "ac814f1b4d545ddcee778b45fac57cb73898a41671f6cc5beeae74528c919e98",
+      "bytes": 3460
+    }
+  },
+  "boundaries": [
+    "Supported ratio [0.01,100], normal input rates, nearest rounding and native representable signed32 count operations are deliberate candidate restrictions, not native rejection claims.",
+    "New boundary cases are deterministic analytical controls, not observed Cubase output. Sampled maxcorrection1 is not used as a correctness bound.",
+    "The kernel computes a requested source budget only. It does not establish mode2 availability, first-call state, allocation sizes, source position, actual backend read count, SoXR input-used/output-produced or PCM samples.",
+    "No caller currently earns native event playback permission from this arithmetic helper alone."
+  ],
+  "production_edits": 0,
+  "target_executions": 0
+}

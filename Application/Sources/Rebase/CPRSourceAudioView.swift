@@ -12,6 +12,7 @@ struct CPRSourceAudioView: View {
         case .nativeTimelineSourceRate: return inspection.nativeTimelinePlaybackUnavailableReason
         case .nativeTimelineProjectClock: return inspection.nativeProjectClockPlaybackUnavailableReason
         case .nativeTimelineSavedProjectClock: return inspection.nativeSavedProjectClockPlaybackUnavailableReason
+        case .nativeTrackSavedProjectClock: return inspection.nativeTrackPlaybackUnavailableReason
         case .nativeMode0ProjectRate: return inspection.rateConvertedPlaybackUnavailableReason
         case .nativeMode2ProjectRate: return inspection.mode2PlaybackUnavailableReason
         case .nativeMode1ProjectRate: return inspection.mode1PlaybackUnavailableReason
@@ -24,7 +25,7 @@ struct CPRSourceAudioView: View {
         VStack(alignment: .leading, spacing: 18) {
             Text("Source Audio").font(.title2.bold())
             Text(inspection.name).font(.headline).textSelection(.enabled)
-            Text("Saved Reference event settings").font(.caption).foregroundStyle(.secondary)
+            Text("Saved source event settings").font(.caption).foregroundStyle(.secondary)
             Grid(alignment: .leading, horizontalSpacing: 28, verticalSpacing: 10) {
                 if let setup = inspection.savedProjectAudioSetup {
                     row("Saved project rate", String(format: "%.9g Hz · factor %.9g",
@@ -40,8 +41,8 @@ struct CPRSourceAudioView: View {
                 }
             }.font(.callout)
             Divider()
-            Text("Source-event audio · Research").font(.headline)
-            Text("Reconstructs this attached source and saved event gain with fresh source state and no external pitch context. Original-rate audition preserves the source sample rate. Timeline audition plays only this event, bypassing project effects, mixer, routing and automation. Full project playback remains unresolved.")
+            Text("Source audio · Research").font(.headline)
+            Text("Reconstructs attached sources and saved event gains with fresh source state. Event modes play only the selected event. Complete-track mode requires every saved contributor to be supported and attached. Project effects, mixer, routing and automation are bypassed; full project playback remains unresolved.")
                 .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             if let reason = inspection.localRenderUnavailableReason {
                 Label(reason, systemImage: "info.circle").font(.callout).foregroundStyle(.orange)
@@ -55,6 +56,7 @@ struct CPRSourceAudioView: View {
                 Text("Native timeline reader · original rate").tag(CPRSourceEventPlaybackMode.nativeTimelineSourceRate)
                 Text("Native timeline reader · Rebase clock, unconverted").tag(CPRSourceEventPlaybackMode.nativeTimelineProjectClock)
                 Text("Native timeline reader · saved CPR clock, unconverted").tag(CPRSourceEventPlaybackMode.nativeTimelineSavedProjectClock)
+                Text("Complete source track · saved CPR clock, unconverted").tag(CPRSourceEventPlaybackMode.nativeTrackSavedProjectClock)
                 Text("Project rate · native linear mode 0").tag(CPRSourceEventPlaybackMode.nativeMode0ProjectRate)
                 Text("Project rate · native sinc mode 1").tag(CPRSourceEventPlaybackMode.nativeMode1ProjectRate)
                 Text("Project rate · SoXR mode 2").tag(CPRSourceEventPlaybackMode.nativeMode2ProjectRate)
@@ -78,7 +80,7 @@ struct CPRSourceAudioView: View {
                 }
             }
             if playbackMode == .nativeTimelineSavedProjectClock {
-                Text("Uses the project rate saved in the original CPR. Rebase rate and tempo edits do not alter this audition. Source frames remain unconverted, so a different source rate changes speed and pitch. Live Reference device settings are not reconstructed.")
+                Text("Uses the project rate saved in the original CPR. Rebase rate and tempo edits do not alter this audition. Source frames remain unconverted, so a different source rate changes speed and pitch. Reference device settings are not reconstructed.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                 if let range = inspection.nativeSavedProjectClockRange {
                     Text(String(format: "Saved CPR clock · start %.6f s · duration %.6f s · saved offset %.6f s", range.position, range.duration, range.offset))
@@ -86,8 +88,21 @@ struct CPRSourceAudioView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
+            if playbackMode == .nativeTrackSavedProjectClock {
+                Text("Uses saved priority, source order and overlap tolerance to select audible fragments. Surviving fragments derive their offsets from the original event. Uses the saved CPR clock without rate conversion and a fresh default track-filtering context. Project effects, routing and live device state remain unresolved.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                if let count = inspection.nativeTrackEventCount,
+                   let fragments = inspection.nativeTrackFragmentCount {
+                    Text("Complete counted track · \(count) source event\(count == 1 ? "" : "s") · \(fragments) audible fragment\(fragments == 1 ? "" : "s")")
+                        .font(.caption.monospacedDigit()).foregroundStyle(.secondary)
+                }
+                if let omitted = inspection.nativeTrackSnappedEmptyFragmentCount, omitted > 0 {
+                    Text("\(omitted) short fragment\(omitted == 1 ? "" : "s") rounded to zero frames by source-clock placement.")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+            }
             if playbackMode == .nativeMode0ProjectRate, playbackUnavailableReason == nil {
-                Text("Converts \(Int(inspection.sourceSampleRate ?? 0)) → \(Int(inspection.projectSampleRate)) Hz in blocks with the reconstructed stereo mode 0 converter. This is an explicit mode choice; Reference’s default converter is unverified. Seeking restores conversion state from the event’s start. No extra tail samples are added.")
+                Text("Converts \(Int(inspection.sourceSampleRate ?? 0)) → \(Int(inspection.projectSampleRate)) Hz in blocks with the reconstructed stereo mode 0 converter. This is an explicit mode choice; the reference default converter is unverified. Seeking restores conversion state from the event’s start. No extra tail samples are added.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
             if playbackMode == .nativeMode2ProjectRate, playbackUnavailableReason == nil {
@@ -111,9 +126,9 @@ struct CPRSourceAudioView: View {
                 Button("Render Source Event…", action: onRender)
                     .disabled(inspection.localRenderUnavailableReason != nil)
                     .buttonStyle(.bordered)
-                Button("Play Event on Timeline") { onPlay(playbackMode) }
+                Button(playbackMode == .nativeTrackSavedProjectClock ? "Play Complete Track" : "Play Event on Timeline") { onPlay(playbackMode) }
                     .disabled(playbackUnavailableReason != nil)
-                    .help(playbackUnavailableReason ?? "Audition only this source event using the timeline transport. Source and media are verified again before playback.")
+                    .help(playbackUnavailableReason ?? "Audition the selected source scope using the timeline transport. Every included source and attached media file is verified again before playback.")
                     .buttonStyle(.borderedProminent)
             }
         }.padding(28).frame(width: 600)

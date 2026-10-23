@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "scope": "Optimized authored C against independent raw-word FIFO oracle; no target code or hardware",
+  "source_sha256": "d9ac1d96873fe79ed313ed80fc7b53498b6764cac0ebd356626a407002ac389a",
+  "header_sha256": "a2a7091e77813800edcde35f58b570dce9a7fae2b27cede3c89515eeaefcba4a",
+  "script_sha256": "c8a8b60a7a71842d933ab8dacb2a362a70e3d4ca15ee5ea120bf73f46419b8eb",
+  "compiler": "Apple clang version 17.0.0 (clang-1700.4.4.1)",
+  "command": [
+    "clang",
+    "-std=c11",
+    "-O3",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "-frounding-math",
+    "-dynamiclib",
+    "-I",
+    "/workspace/rebase/Application/Sources/RebaseTimingDSP/include",
+    "/workspace/rebase/Application/Sources/RebaseTimingDSP/cpr_live_stereo_ring.c",
+    "-o",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/live-consumer/candidate-ring.dylib"
+  ],
+  "operation_count": 1200,
+  "branch_counts": {
+    "write": 401,
+    "would_block": 399,
+    "normal": 290,
+    "hold": 39,
+    "drain": 23,
+    "stop": 48,
+    "zero": 68
+  },
+  "submitted_frames": 786822,
+  "consumed_frames": 771629,
+  "timeline_frames": 1632592,
+  "all_output_words_sha256": "6d85a3468a17e25ffd53638267fbafa1721409669bebec992f1731364c3efb7b",
+  "operations_sha256": "c982dc2bec24fbe487b3706650ed5e4546b543f9b87956bc1d75c82a4bcfa696",
+  "target_execution_count": 0
+}

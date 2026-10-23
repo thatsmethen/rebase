@@ -1,0 +1,194 @@
+{
+  "id": "CPR-RATE-DOWN-001",
+  "status": "contract verified statically; candidate and independent oracle integration pending coordinated final seal",
+  "scope": "Cubase15.0.30.287 arm64 mode0 Float32 mono/stereo finite equal/downsample sample-producing branches. This is a conditional reconstruction of inner arithmetic; it is not the default selected backend or live-host equivalence.",
+  "target_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "target_execution_count": 0,
+  "custody": {
+    "new": {
+      "functions": 3,
+      "source_bytes": 1636,
+      "native_words": 409,
+      "rea_instruction_addresses": 409,
+      "records": 6
+    },
+    "reused": {
+      "functions": 11,
+      "source_bytes": 1480,
+      "native_words": 370,
+      "rea_instruction_addresses": 363,
+      "records": 22
+    },
+    "all": {
+      "functions": 14,
+      "source_bytes": 3116,
+      "native_words": 779,
+      "rea_instruction_addresses": 772,
+      "records": 28
+    }
+  },
+  "rea_evidence_ids_by_entry": {
+    "0x1003108f0": [
+      "ev_53757646f2b3f91dd47d68fd0c04f890109b2eb634309df215ebed9c46c3f51e",
+      "ev_ccc97be684325c31c730e22edbc62d7695da5220753b81a4597c87a634c26ef5"
+    ],
+    "0x100310b84": [
+      "ev_612ee5ffbaa9d672bab2f400693eb8880ca140c22a17d85153db896b8471f140",
+      "ev_71481e45c743465e4f822cd6af6605f4547e44db4b2c6e651b7df9528bba24a7"
+    ],
+    "0x10031179c": [
+      "ev_82dae1305076efd7b3b60fe01677ac77efd6850b7a7bbf5697db552e0cafba43",
+      "ev_94518628fb953e8d8177296a91c7e55be54ba38e73e882dd27cf9821234c9894"
+    ],
+    "0x10030a008": [
+      "ev_1c59ce4eac494e6ec54c9b61ee125d15828e94229425932c882439db63117511",
+      "ev_f5b79328734512c4e8e2d197ad22e3942b70eaa4fe4c1e34f61d42daf4ecfb61"
+    ],
+    "0x10030c4a4": [
+      "ev_3e35cc979a1f525c952de7621b9672d70d98cd2a126a35e76ab73fed8dbfc788",
+      "ev_d17c583d60f8f24112aa318969c71bc0fd5deedeeafb73ba5b2cd7f2d30816da"
+    ],
+    "0x10030de00": [
+      "ev_3f1ba89066083e15e7e373a151ab9b8a5d4ad44eb05f3f07797cdc33e6555606",
+      "ev_af2eb40607ffac57b1a69e82174a2e32efa5e054ab7d6ee957f265bfc66fcc5c"
+    ],
+    "0x10030ffb0": [
+      "ev_99abe545b9ef6ee9d314e95a758150b75a3d63a815ebd49a74e08b10ae0ab5ec",
+      "ev_f0858e670c03fa36fa65808e98e0a4204b56f375bff21535ca3d101939e40be6"
+    ],
+    "0x10030a534": [
+      "ev_783af97eb13276876698d1ac201125672b0531de8d206a25069c6be2b6339bc8",
+      "ev_c919585cdd3db1c1005a0ed453660f3d8be21da9905dcb803d9e2ed47cfbc3a4"
+    ],
+    "0x10030a3bc": [
+      "ev_8787cf7d7b0dd10974f64ad54310eddb1d9ae48ec747f7e66eed9e8b1d434be6",
+      "ev_a4e00183de1a5ad729983e5336f1d0683993212d4f9407f3b4c54f84c71dd9ca"
+    ],
+    "0x10030c5b8": [
+      "ev_25cd6c8dff5c776a8df39dd3668fd624f3076e832c88191edeffd9cd6c06de4c",
+      "ev_93c03998372b6281353737fc1ceceae20cc3c244b3ab007bd3cffb00d97f2658"
+    ],
+    "0x10030c5c8": [
+      "ev_9d7ab8031d842a318f6cf117824b3fc84453a70e35579fc2a723a3c1be3d0e0c",
+      "ev_dff13dede49f56c53b48cebd070d565ff5a58cdf3da1d56ec3a356bc201a8f20"
+    ],
+    "0x10030c620": [
+      "ev_466cacd8b038b072d98b01347b43016efb0a60bf38854e7e1f7f4d40a21f95b5",
+      "ev_8f5d31af2779029ebc9c3e32b63e2b6077bc4956ce76b6a91032a0b71a694899"
+    ],
+    "0x10030c664": [
+      "ev_8459873d97c57211f20129be19cc84c86cdc06a7f417a1b350a53656bac8abce",
+      "ev_ece834db203a0f844f77d8361e83fe997b6bbf6ca81b6fc1f44489604bf1f438"
+    ],
+    "0x10030c66c": [
+      "ev_0ad4d65a93d37c73546e5d5aeeaeaa98d28688ea72c471d1ab445396a4ebb50d",
+      "ev_3a660c6708e94d78b81ef616e830cca361486f4fb10323c16a71f506903872ae"
+    ]
+  },
+  "dispatch": {
+    "packet_entry": "10030de00 forwards pointer0,pointer8,count+10 and flushByte+14 to10030ffb0",
+    "early_return": "signed input count<=0 returns0 before state mutation or flush handling",
+    "step": "child+8 = one RN64 division of widened source/output Float32 rates",
+    "state": {
+      "phase": "child+10 binary64",
+      "history_pointer": "child+18,channels binary64 values",
+      "channels": "child+20 signed32",
+      "pending": "child+24 byte"
+    },
+    "reset": "phase=1,history=positivezero,pending=0 via10030c66c",
+    "small_ratio": "1<=step<2: mono1003108f0,stereo100310b84",
+    "large_ratio": "step>=2: mono1003100dc..134 plus100310160..1e8,stereo10031179c",
+    "equal_rate": "Step1 uses small-ratio arithmetic. It is not a copy and must not be substituted for the application existing equal-rate source path."
+  },
+  "arithmetic": {
+    "rounding": "RN64 and RN32 mean IEEE nearest/even with denormal flushing disabled; each indicated arithmetic operation rounds separately. FMA is a single rounding of product+addend. Input samples are Float32.",
+    "interpolate": "complement=RN64(1-phase); product=RN64(phase*Double(next)); mixed=FMA64(complement,Double(previous),product); emitted=RN32(mixed)",
+    "small_ratio": [
+      "delta=RN64(step+(-1)). At entry phase<1 and pending: interpolate RN32(history) with input[0], then narrow result toFloat32 and widen back toDouble history; phase=RN64(phase+delta).",
+      "If that phase>=1: phase=RN64(phase+(-1)); emit the narrowed history; consume one input frame. Otherwise carry a local queued=true.",
+      "For each available adjacent input pair while phase<1: compute interpolation; if queued, emit old history then retain the new mixed value as unrounded binary64; otherwise emit RN32(mixed). Advance one input and phase=RN64(delta+phase).",
+      "When phase>=1, subtract1, skip one input, and emit queued history once if present; clear local queued. Continue while native remaining-pair counter is positive.",
+      "At terminal local queued=true, native compares unsigned outputcursor<=inputcursor. Entire disjoint output BELOW input admits one additional queued output and two external helpers; ABOVE excludes both. This reconstruction records the sample/count semantics but does not execute diagnostic helpers.",
+      "Final pending equals !lastSkip. If !lastSkip, history is overwritten with the input at final cursor. Otherwise existing binary64 history is preserved. phase stored exactly.",
+      "If initial pending/phase consumes the sole logical input, tail dereferences the next frame outside that count. This is an observed bound, not asserted product bug: allocation/lookahead authority is unbound. Defensive wrapper rejects with LOOKAHEAD before changes."
+    ],
+    "large_ratio": [
+      "If phase<0 and pending, interpolate prior history against first new frame and emit one. Mono uses w=RN64(phase+1), product=RN64(w*first), FMSUB equivalent FMA64(-phase,RN32(history),product). Stereo uses oldWeight=RN64(1-RN64(phase+1)),newWeight=RN64(1-oldWeight),then separately rounded product+FMA. Preserve the extra stereo subtraction.",
+      "Advance phase=RN64(step+phase). For floor(phase)<inputFrames-1, index=FCVTMS(phase),fraction=RN64(phase-index),emit interpolation of input[index] and input[index+1],advance phase=RN64(step+phase). FCVTMS is floor, not C truncation for negative values.",
+      "Store phase=RN64(phase-inputFrames),pending=(phase<0),history=Double(last input frame)."
+    ],
+    "flush": "W4 forwarded but not read in the complete mono/stereo admitted bodies. No input means no state change/output, even flush1. No invented tail or last-frame padding.",
+    "partition": "No partition invariance is asserted for small ratios. Queue and terminal ordering cause measurable count/sample differences. Application aggregate count and processing use the identical explicit partition rule."
+  },
+  "application_policy": {
+    "chosen_layout": "ABOVE; one allocated arena with input first and disjoint output after all logical input bytes",
+    "partition": "up to8192 source frames; if remaining==8193, take8191 then2; total input1 can produce0. Generic count_blocks requires limit>=3 and uses remaining==limit+1?limit-1:min(remaining,limit).",
+    "unsupported": "No unprovided lookahead, full-host allocator or callback invariance, arbitrary channels, nonfinite samples, denormal output, out-of-domain rates, downsample anti-alias-quality claim, default-mode selection, source-clock selection, live timeline/backend equivalence. App source equal-rate remains the existing route.",
+    "gain": "Previously bound offline inner consumer reads converted PCM before separateFloat32 segment gain; this is independent from live-backend integration."
+  },
+  "candidate": {
+    "files": [
+      {
+        "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0_down.c",
+        "bytes": 10145,
+        "sha256": "e85877ab7c33c8ef9c6bf16124125504a545e3a057e4d3ec6838729bd0df676f"
+      },
+      {
+        "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0_down.h",
+        "bytes": 2587,
+        "sha256": "852af4ccba424e561634949674d2fd9788715fb2ac68e9bf4e5d8082e3adea3c"
+      }
+    ],
+    "bounds": "8000<=output<=source<=192000 Float32;channels1/2;finite normal-or-zero Float32 input/output;historyfinitebinary64;16m input/result cap;roundnearest,FTZ/FIZdisabled. All errors transactional on caller state/output/count; explicit layout validates actual disjoint placement. Count query does not assert sample-domain validity.",
+    "control_report": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/controls.json",
+      "bytes": 2931,
+      "sha256": "af27ee7f71d66c14ff79acb0e351ce455334e3189eac30e8b11ad803ac7ab2bb"
+    }
+  },
+  "limitations": [
+    "Raw REA imports omit external code, global state, RTTI and imports. Dispatcher tail branches can appear as halt_baddata in pseudocode; original instructions and separately analyzed child bodies establish actual branch targets.",
+    "Generated pseudocode is neither original source nor bit-faithful arithmetic. Contracts preserve original FMUL/FMA/FCVT/floor sequence, including binary64 queued history.",
+    "BELOW diagnostic helper side effects are not reconstructed; ABOVE app policy excludes that branch. No claim actual Cubase buffer placement is ABOVE.",
+    "The three new functions and retained provenance were inspected statically. All executed numerical controls run our reconstruction or independent mathematical oracle only."
+  ],
+  "sessions": {
+    "new_analysis_session": 6817,
+    "new_analysis_closed": true,
+    "canonical_import_session": 59283,
+    "canonical_import_closed": true,
+    "imported_records": 28
+  },
+  "references": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/verification.json",
+      "bytes": 11334,
+      "sha256": "4fb31f4f8119bed7bbb26e575b0852eaa71c28b1072e2df453cf066645e1db4d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/original-bindings.json",
+      "bytes": 10991,
+      "sha256": "e49ae446b4b7e03f74eaefc5f2599cb58e59b07df309aa0d4fbc05ea468d7233"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/evidence-bundle.json",
+      "bytes": 3777137,
+      "sha256": "53ba4189f2dd3817c3a7bf1efde642a5aad9453dfd4596c57d57d420d1ddbc5d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/evidence-import.json",
+      "bytes": 367,
+      "sha256": "47e98dbebdb4f28d72cd2daa9215ab9faf5bb105749b818178784e424a8805f0"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/finding.json",
+      "bytes": 13251,
+      "sha256": "45501887e870d544f0a185fddbfe97488681338a2757ca24221bc426b49f8a89"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/finalization-finding.json",
+      "bytes": 10963,
+      "sha256": "c1f3d17a0d56dcd19ebbdd01fe3c42aa2007eab572b9f01373f0c426d14dd4ec"
+    }
+  ]
+}

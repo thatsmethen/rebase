@@ -1,0 +1,29 @@
+{
+  "id": "APP016-RECORD-FIRST-FAILURE",
+  "command": "python3 research/evidence/application/APP016/seal_development.py --record",
+  "result": "AssertionError: Application/Tests/RebaseCoreTests/CPRNativeAudioAccessorTests.swift",
+  "scope": "Review pin verification failed before any record outputs or source snapshots were written.",
+  "script_at_attempt": {
+    "path": "research/evidence/application/APP016/seal-development-first-attempt.txt",
+    "bytes": 7899,
+    "sha256": "4c3d80df335d13c61bb77779cbbd7ab9f3e8d1569e952e193ed1b1caf727c421"
+  },
+  "original_review": {
+    "path": "research/evidence/application/APP016/accessor-ownership-integration-review.json",
+    "bytes": 10278,
+    "sha256": "043a7ea7815eccab5516b2418be86a4c47873e2762a582455dc583c79443e0db"
+  },
+  "final_test": {
+    "path": "Application/Tests/RebaseCoreTests/CPRNativeAudioAccessorTests.swift",
+    "bytes": 13713,
+    "sha256": "732bbe5def2c32bc892bf08a3fe971cacbc9f05ec720535dcbd206d37041ef13"
+  },
+  "cause": "Earlier ownership review pinned a pre-final test. Preserve that review and obtain a separate final-source addendum; do not weaken hash checking.",
+  "outputs_absent": [
+    "record-native-integrity.json",
+    "development-validation.json",
+    "final-source-snapshot",
+    "final-source-manifest.json",
+    "test-build-snapshot"
+  ]
+}

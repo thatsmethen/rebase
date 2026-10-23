@@ -1,0 +1,177 @@
+{
+  "id": "CPR-NATIVE-JUMP-MAP-001",
+  "revision": 1,
+  "created_utc": "2026-10-19T13:24:17.256572+00:00",
+  "source": {
+    "path": "research/targets/derived/Cubase15-arm64",
+    "bytes": 85691328,
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "status": "Bounded serialized-source recovery and native arithmetic implemented; full hosted Cubase equivalence remains unverified.",
+  "scope": "MTempoTrackEvent version3, one/two canonical jump records, exact supported track/variation/default item attributes, source-linked timing authority, nearest-rounding bounded arithmetic.",
+  "interpretation_boundary": "The imported descriptor is a reconstruction of preserved serialized records under recovered default local semantics. It is not a measurement of the effective clock in a running extensible Cubase host. Replacement providers, registered factories and observers remain real unmeasured context.",
+  "contract": {
+    "profile": "cpr-static-subset-v3",
+    "numeric_contract": "cubase-15.0.30.287-arm64-jump-map-v1",
+    "ticks_per_quarter": 480,
+    "source_record_layout": "u32 period bits, u64 seconds bits, u64 tick bits, u16 kind;22bytes perrecord; direct positive f32period widened to f64.",
+    "accepted": "one or two kind0 records; firstA/B exactly+0; strictly increasing secondA/B; secondA must bitwise equal native cache recurrence with separate subtract/multiply/divide/add;20..400displayBPM; bounded finite normal-or-zero arithmetic in nearest rounding.",
+    "forward_positive": "Select old point at exact seconds knot; separate subtraction/division, fma(q,480,B), floor(fma(raw,1000,0.5))/1000.",
+    "inverse": "Select new point at exact tick knot; separate subtraction,multiplication,division,addition.",
+    "zero": "Forward explicit zero branch preserves negativezero; inverse yields positivezero. Quantization is lossy: no inverse/forward identity claim.",
+    "source_binding": "Descriptor includes source SHA,tempo identity and record offsets/raw bits; active saved descriptor must equal source replay; display events must agree.",
+    "cache_boundary": "Accepted canonical anchors make retained-cache and recovered default recomputation branches numerically agree. Unknown host state may still alter actual runtime contents; no global invariance assertion."
+  },
+  "prospective_gate_disposition": [
+    {
+      "gate": "M1",
+      "status": "closed for exact accepted source subset",
+      "basis": "Default NoteData v2/v3 materialization and attachment traced; count/key/type/value/full-consumption allowlist. Unknown or nondefault itemattrs reject. Concrete list receivers and Lock key registration bound."
+    },
+    {
+      "gate": "M2",
+      "status": "default local lifecycle bounded; hosted override remains unverified",
+      "basis": "Archivefactory creates empty list; ordered append restores records; nullalternate singleton retains nonemptylist; nameref/dirty/owner bookkeeping is retained in findings. Default enabled TrackLoopHandler construction has no observed direct timing mutation. Real replaceable root/provider/factory/observer context is outside claim."
+    },
+    {
+      "gate": "M3",
+      "status": "implemented and independently checked within declared domain",
+      "basis": "Original periodbits retained;105 mapvectors,30 internal quantizer controls,3rawFMA controls,68rejections and36fixedregressions. Optimized instructions reviewed. Some discriminator vectors test internal primitives outside importer domain and do not authorize import."
+    },
+    {
+      "gate": "M4",
+      "status": "closed for count1/2 strictordered kind0",
+      "basis": "Four missing concrete iterator methods traced with originalvtablelinkage; before/at/after knot verified by analyticalcontrols. Count>=3 andduplicates unsupported."
+    },
+    {
+      "gate": "M5",
+      "status": "canonical equality policy implemented",
+      "basis": "SourceA must equal recomputedA bitwise; oneULP perturbation rejects without rewriting source or substituting fixedBPM. No claim of arbitrary host lifecycle invariance."
+    },
+    {
+      "gate": "M6",
+      "status": "open and deliberately unimplemented",
+      "basis": "Ramps and associated library/threshold/fullFP contracts remain unresolved; kind!=0rejects."
+    }
+  ],
+  "factory_results": {
+    "all_pinned_templates": 10,
+    "map_descriptors_recovered": 6,
+    "fixed_descriptors_unchanged": 4,
+    "examples": [
+      "LoFi stores0.75/0.5 periods, origin and600s/384000ticks; app displaysbeat0at80BPM andbeat800at120BPM.",
+      "Stereo Mastering stores equal0.5periods and600s/576000ticks; equal-rate fixture is not sufficient segment-selection evidence.",
+      "Piano/Rhythm/String direct0x3ee540f5period is retained, rather than substituting inactive135BPM. Instrument-only projects still do not gain fake audio tracks."
+    ]
+  },
+  "application": {
+    "path": "Application/dist/Rebase.app",
+    "version": "0.5.0",
+    "validation": "research/evidence/application/APP005/application-validation.json",
+    "historical_contracts": "V1/V2 interpreters and prior fixed-clock contract retained; expanded recovery dispatches throughV3.",
+    "user_controls": "Native timing protected until explicit Use Rebase Timing; cancel,apply,undo,redo and exportgate observed. Save/reopenbinds originalsource/report.",
+    "current_import_limit": "Empty audio-track skeletons plus supported timing/origin signature. Actual audio/MIDIevents,media,mixer,plugins and completeCPRwriting remain unresolved."
+  },
+  "evidence": [
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/attributes/finding.json",
+      "bytes": 28679,
+      "sha256": "aefec343335ed49c179cb117ae00756fdfaf6c1d97a6e34e4216048f7cb570b3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/variation/finding.json",
+      "bytes": 16591,
+      "sha256": "ab8dda077be616e163094ff88e078c1e53b971f9234d0585d4d3a6be78c89ab5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/finding.json",
+      "bytes": 12973,
+      "sha256": "d5b75db7c23c2ddcf44ebc9dd9bd3f566a147567a682407ae157eb149b6686e4"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/kernel-integration.json",
+      "bytes": 5142,
+      "sha256": "291a51b5978ad16726ac9cedb171318c6aab008454f424c7059cf034b8d0a9ee"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/optimized-map-kernel-comparison.json",
+      "bytes": 34484,
+      "sha256": "dfaa294926c456b5344be8c7863b076bec442edd35a00df33d627de057a68857"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list/final-linkage.json",
+      "bytes": 11796,
+      "sha256": "d9180d502407880be1f1638b1ccdc3866e90a04ac9dc29f6244c6b71e70e77b8"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list/evidence-import.json",
+      "bytes": 367,
+      "sha256": "deaa9b58295f8cd3c8643d0cd660f7617812ca2f636fcd99131f5c1e4c916f39"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/finding.json",
+      "bytes": 10051,
+      "sha256": "3cebe4a30032890aa741fd399e1812c4ce06c19fcc46180ac658f0afe541dedb"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/final-verification.json",
+      "bytes": 67352,
+      "sha256": "99e772cb84a06eac863e84fb733c406877396f6ddcd060853222e327e6f340be"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/host-gate-service/finding.json",
+      "bytes": 13905,
+      "sha256": "4c6cf13504d95a59e39dc928cf0b9d07c58f0b57011568d36bf650bf478ea6ba"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/host-gate-global/finding.json",
+      "bytes": 27410,
+      "sha256": "1ca8f3794f6764c810baaa0ec834731763bb74651e98e6e5f3477d4ff1be2374"
+    },
+    {
+      "path": "research/evidence/application/APP005/map-bridge-source-review.json",
+      "bytes": 5784,
+      "sha256": "6c333d91adb6dc1042295328a01c10f5e760f7d1f639d3e14c6af235706690a8"
+    },
+    {
+      "path": "research/evidence/application/APP005/map-bridge-source-review-addendum.json",
+      "bytes": 9906,
+      "sha256": "696564089d1ed15b5fb8392f95f66056e4d19ee6b7461e629c055bb86342e0f6"
+    },
+    {
+      "path": "research/evidence/application/APP005/map-tests-preservation-review.json",
+      "bytes": 5433,
+      "sha256": "f0cd0b5e3258583ff6e3a57572364576e66fe1de3848e6401d3e570fa9b9bd1c"
+    },
+    {
+      "path": "research/evidence/application/APP005/core-tests-final.log",
+      "bytes": 21236,
+      "sha256": "3c06f7eb932f4be3cd128cc39ff92ad9bcb1db931510c05833ddf3a39dca3e4a"
+    },
+    {
+      "path": "research/evidence/application/APP005/gui-observations.json",
+      "bytes": 10344,
+      "sha256": "52238098d5a0ae2d2abd02c522fdf9c5e8b8ab0e02b6863520112b61f33f0fae"
+    },
+    {
+      "path": "research/evidence/application/APP005/build-identity.json",
+      "bytes": 1982,
+      "sha256": "ae1a820d59d616104c9ef0f36090430af12266310b2c8963c247aa435357f7e8"
+    }
+  ],
+  "custody_corrections": [
+    "Original failed factory query caused by transient diskexhaustion remains retained; separately pinned retry succeeded. Never count process exit as a successful functionquery.",
+    "Initial numericliteraltestcompilefailure retained; later108tests passed.",
+    "Misleading cache diagnostic and stale conversion/undo/redo footers found by GUI checks were corrected with original observations retained."
+  ],
+  "limits": [
+    "Static derivation, analytical oracle, self-authored app tests and Rebase GUI observations are distinct evidence classes.",
+    "No targetFPCR measurement, target execution, Cubase projectroundtrip or reference conformance.",
+    "No generalcount3plus,ramp,negative timeline,nondefault scoreattr,alternatevariation or arbitraryhost support.",
+    "The full application reconstruction goal remains active and very incomplete."
+  ],
+  "target_executed": false,
+  "reference_runtime_comparisons": 0,
+  "full_product_completion": false,
+  "next": "Bind audio-event datum/timebase,Start/Length/Offset and single-segment source-frame mapping; build evidenced event placement and explicit missing-media/relink behavior into a new compatibility profile."
+}

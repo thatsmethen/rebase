@@ -1,0 +1,131 @@
+{
+  "status": "passed",
+  "target_executions": 0,
+  "scope": "Own candidate arithmetic, transactional rejection and FP environment controls; not native runtime equivalence.",
+  "inputs": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/gain-order-stage-oracle.json",
+      "bytes": 1115416,
+      "sha256": "e28870caa88a1eda66d8cc77eaf804ea513695e3fc3694ee77d719f2d1799cc1"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/gain-order-stage-oracle.py",
+      "bytes": 5753,
+      "sha256": "0a3998fd94a13231fea4c9758f96deab77b1fce48436592cd86a6c6b878338fe"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/check_candidate.py",
+      "bytes": 6186,
+      "sha256": "6f73bd283109d4609e19b62aee788e064f963f5679d98b7aa9a8293099485a22"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/controls.c",
+      "bytes": 121092,
+      "sha256": "1b27ba6b13546623189e667787d6a072c5974f7f158810909754f97006ad4968"
+    }
+  ],
+  "reviewed_sources": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/candidate/cpr_accessor_format.c",
+      "bytes": 2665,
+      "sha256": "2ffadf89dba582bb7b17dedb732655ed83a2e403ebd351b313d5f2d0d65c6b92"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/candidate/cpr_accessor_format.h",
+      "bytes": 1239,
+      "sha256": "bc4c2facbd574bc81359c4ef40b859cc98a8c0b3a5c944692f8b463147e390bd"
+    }
+  ],
+  "commands": [
+    [
+      "clang",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-frounding-math",
+      "-I",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/candidate",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/controls.c",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/candidate/cpr_accessor_format.c",
+      "-o",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/optimized"
+    ],
+    [
+      "clang",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-frounding-math",
+      "-I",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/candidate",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/controls.c",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/candidate/cpr_accessor_format.c",
+      "-fsanitize=undefined",
+      "-fno-sanitize-recover=all",
+      "-o",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/ubsan"
+    ]
+  ],
+  "results": [
+    {
+      "configuration": "optimized",
+      "result": {
+        "passed": true,
+        "gain_vectors": 3168,
+        "q24_gain_vectors": 96,
+        "assertions": 117593,
+        "FP_rejections": 7,
+        "ignored_FPCR_bits": 0
+      },
+      "executable": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/optimized",
+        "bytes": 67048,
+        "sha256": "3074a4a8e8b2d36e010ba70c59afbb671d5e69e4b66a247e1ec5e9586a39b940"
+      },
+      "build_log": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/optimized-build.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "run_log": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/optimized-run.log",
+        "bytes": 118,
+        "sha256": "9daaafbd650a9baf3fd50bc05411fa650ac979729bc2ed9781f5b443d9b625b0"
+      }
+    },
+    {
+      "configuration": "ubsan",
+      "result": {
+        "passed": true,
+        "gain_vectors": 3168,
+        "q24_gain_vectors": 96,
+        "assertions": 117593,
+        "FP_rejections": 7,
+        "ignored_FPCR_bits": 0
+      },
+      "executable": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/ubsan",
+        "bytes": 84072,
+        "sha256": "18359371d8ec61885ca90b4b82359ba2b88fd26419b898cb92f8dd813cc25c13"
+      },
+      "build_log": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/ubsan-build.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "run_log": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/ubsan-run.log",
+        "bytes": 118,
+        "sha256": "9daaafbd650a9baf3fd50bc05411fa650ac979729bc2ed9781f5b443d9b625b0"
+      }
+    }
+  ]
+}

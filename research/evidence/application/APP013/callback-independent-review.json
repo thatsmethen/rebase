@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "status": "independent_callback_value_controls_pass_no_open_actionable_finding",
+  "scope": "Explicit numeric window/admission/prefix and Float32 postprocess operations from inspected native callback adapter. No native scheduler/transport state inferred.",
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_callback_adapter.c",
+      "bytes": 7718,
+      "sha256": "5571b47c55c7b9f8360ac7bf7daced681e93b98f1348ff2585f2b75b7330d74b"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_callback_adapter.h",
+      "bytes": 3863,
+      "sha256": "15c3d1a6f7ac1310d4c0c1ade8b86c0e593f8bfab0c0a8eeb8a55b93140ad02f"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRLiveCallbackAdapter.swift",
+      "bytes": 1312,
+      "sha256": "f9c4ac8cfa03fa3aeb5fcd23c112a254916a6bf480899c60c3925f357b3120a3"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "bytes": 16107,
+      "sha256": "01654e81697d79c6bb2244c004580ffee8b5d202dd64a54f14f84db4098516ce"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeCallbackAdapterTests.swift",
+      "bytes": 9249,
+      "sha256": "46fbe3a28fd2f8c29cc63412c33b7b67dcbfa318689cddf95640a848361e7575"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRLiveCallbackAdapterTests.swift",
+      "bytes": 2603,
+      "sha256": "2ebc43674ad46c15b05523d459c10e08b0a9f368dcdaa5216d2c5b45a5cd8297"
+    },
+    {
+      "path": "Application/Package.swift",
+      "bytes": 1868,
+      "sha256": "95831a7c96a4a59f60c97045a07e392ded69271a2c8fa1f53db97d10db843458"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "research/evidence/application/APP013/callback-adapter-oracle.py",
+      "bytes": 7265,
+      "sha256": "8d96b89ea9494e0a0d31faf64e7118d5b1949ef2e88f8787c81005f4cd50f483"
+    },
+    {
+      "path": "research/evidence/application/APP013/callback-adapter-oracle.json",
+      "bytes": 272487,
+      "sha256": "47fbe487b5665fbf211b0b097f744f9c70f17bf5ebf37b41ccadf617b9aeb923"
+    },
+    {
+      "path": "research/evidence/application/APP013/verify-callback-instructions.py",
+      "bytes": 1844,
+      "sha256": "a0b79a77ea15c04e5958ce383c21d6cd90493a6b1e6c79b526bce5df5edef010"
+    },
+    {
+      "path": "research/evidence/application/APP013/callback-instruction-verification.json",
+      "bytes": 4074,
+      "sha256": "db977080d96433e0b0049959cf78b57dae67aadd4212c7b17223641a1ff1e1e7"
+    },
+    {
+      "path": "research/evidence/application/APP013/independent-kernels-final.log",
+      "bytes": 12600,
+      "sha256": "ffcee37ef9b8f6b81b82ad5530e4fae007444b9f774a3bd711992b1e77ab33d6"
+    },
+    {
+      "path": "research/evidence/application/APP013/independent-kernels-final-02.log",
+      "bytes": 8127,
+      "sha256": "2cbb114d614e7c16c6d02fd295af2e868a638df225e12bb2d7b987061cdb7ffc"
+    }
+  ],
+  "original_bytes": {
+    "ranges": 15,
+    "instruction_words": 423,
+    "bytes": 1692,
+    "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "independent_oracle": {
+    "method": "Integer/Fraction IEEE nearest-ties-even operations, exact FMA then signed truncation, rawword classification, Float32 alternating arithmetic. No candidate library loaded.",
+    "windows": 126,
+    "fma_vs_split_discriminators": 16,
+    "separate_reciprocal_offset_vectors": 45,
+    "raw_plane_cases": 97,
+    "prefix_cases": 48,
+    "admission_combinations": 63
+  },
+  "test_result": {
+    "own_tests": 4,
+    "combined_tests": 10,
+    "combined_suites": 2,
+    "seconds": 0.393,
+    "log": "independent-kernels-final-02.log"
+  },
+  "source_bindings_reviewed": [
+    "101f2c440 admits a nonnull callback with result bit0 or forced state; prefix handling later uses the full result for nonzero.",
+    "Start uses one FMADD(offset,rate,0.5), then FCVTZS signed64; end adds sign-extended32 block count. The Float adapter forwards start,end,signed16 channels and planes at wrapper+28 into callback slot0.",
+    "101f17eb8 stores offsetFrames multiplied by rateStruct+8 when the rate condition is positive.102fc7564 returns engine+268;102fc756c stores rate field0 and separately rounded1/rate in field1.",
+    "The first plane last sample alone selects nonzero subnormal versus exponent-all-ones action. Both101f16534 and1037dffcc alternate Float32 add/sub per channel, with addition on an odd-length final sample.",
+    "Prefix zeroing follows the sentinel action and begins at wrapper+8 frame offset; it must not occur first or inspect all planes to choose the action."
+  ],
+  "application_review": [
+    "CPRLiveCallbackAdapter requires nonempty planar stereo Float32 and calls the helper with prefix0/offset0.",
+    "The converted cursor applies gain, ring copy, then the callback adapter. Rebase owns block partitions, and a seek produces a freshly reconstructed suffix.",
+    "Existing converter sample-domain guards reject nonzero subnormals and nonfinite values before this adapter. Its correction and zero branches are tested separately and directly, not claimed as observed GUI conditions.",
+    "Buffer return is withheld on helper error; the caller discards the failed cursor."
+  ],
+  "corrected_findings": [
+    {
+      "kind": "FP_architecture_scope",
+      "detail": "Initial helper accepted non-arm64 without equivalent flush controls. Reviewer flagged this; final helper rejects unsupported architectures for floating operations. Current arm64 numerical behavior is unchanged."
+    },
+    {
+      "kind": "test_metadata_count",
+      "detail": "First test attempt expected12 deliberately searched FMA controls, but the base grid contained4 additional discriminators. All numerical assertions already passed. Recounted16, corrected only the assertion, and preserved the first log."
+    }
+  ],
+  "limitations": [
+    "Positive finite rate>=1 and explicit context input; no native latency, device callback partition or actual transport position recovered.",
+    "Native conversion and addition overflow cases reject instead of saturating or wrapping.",
+    "The alternating branch excludes nonfinite other samples; unchanged and zero branches retain or clear raw bits as declared.",
+    "No runtime Cubase execution or callback delivery comparison; application queue and manual AV tests are separate.",
+    "The ordinary timeline/source-provider connection remains a separate native study edge."
+  ],
+  "actionable_findings_open": []
+}

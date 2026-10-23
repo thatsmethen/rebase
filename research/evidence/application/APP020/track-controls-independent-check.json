@@ -1,0 +1,178 @@
+{
+  "status": "passed bounded symbolic-control verification",
+  "target_executed": false,
+  "classification": "app-parser and independent sample-composition controls, not native-valid CPR",
+  "controls": [
+    {
+      "name": "two-events",
+      "count": 2,
+      "events": [
+        {
+          "identity": 742,
+          "first": 66150,
+          "end": 242550,
+          "source": 88200
+        },
+        {
+          "identity": 1323,
+          "first": 352800,
+          "end": 573300,
+          "source": 396900
+        }
+      ],
+      "chronological": true,
+      "disjoint": true,
+      "unknown_classes": [],
+      "references_checked": 9
+    },
+    {
+      "name": "three-events",
+      "count": 3,
+      "events": [
+        {
+          "identity": 742,
+          "first": 66150,
+          "end": 242550,
+          "source": 88200
+        },
+        {
+          "identity": 1323,
+          "first": 352800,
+          "end": 573300,
+          "source": 396900
+        },
+        {
+          "identity": 1657,
+          "first": 705600,
+          "end": 793800,
+          "source": 793800
+        }
+      ],
+      "chronological": true,
+      "disjoint": true,
+      "unknown_classes": [],
+      "references_checked": 11
+    },
+    {
+      "name": "unknown-child",
+      "count": 3,
+      "events": [
+        {
+          "identity": 742,
+          "first": 66150,
+          "end": 242550,
+          "source": 88200
+        },
+        {
+          "identity": 1323,
+          "first": 352800,
+          "end": 573300,
+          "source": 396900
+        }
+      ],
+      "chronological": true,
+      "disjoint": true,
+      "unknown_classes": [
+        "UnverifiedControlEvent"
+      ],
+      "references_checked": 9
+    },
+    {
+      "name": "reverse-order",
+      "count": 2,
+      "events": [
+        {
+          "identity": 742,
+          "first": 352800,
+          "end": 573300,
+          "source": 396900
+        },
+        {
+          "identity": 1324,
+          "first": 66150,
+          "end": 242550,
+          "source": 88200
+        }
+      ],
+      "chronological": false,
+      "disjoint": false,
+      "unknown_classes": [],
+      "references_checked": 9
+    },
+    {
+      "name": "overlap",
+      "count": 2,
+      "events": [
+        {
+          "identity": 742,
+          "first": 66150,
+          "end": 242550,
+          "source": 88200
+        },
+        {
+          "identity": 1323,
+          "first": 198450,
+          "end": 418950,
+          "source": 396900
+        }
+      ],
+      "chronological": true,
+      "disjoint": false,
+      "unknown_classes": [],
+      "references_checked": 9
+    },
+    {
+      "name": "touching",
+      "count": 2,
+      "events": [
+        {
+          "identity": 742,
+          "first": 66150,
+          "end": 242550,
+          "source": 88200
+        },
+        {
+          "identity": 1323,
+          "first": 242550,
+          "end": 463050,
+          "source": 396900
+        }
+      ],
+      "chronological": true,
+      "disjoint": true,
+      "unknown_classes": [],
+      "references_checked": 9
+    },
+    {
+      "name": "missing-counted-event",
+      "result": "reduced count leaves unconsumed object bytes",
+      "unconsumed": 334
+    }
+  ],
+  "sample_values_checked": 2116800,
+  "signed24_extrema": [
+    -524288,
+    524287
+  ],
+  "source_and_evidence": [
+    {
+      "path": "research/evidence/application/APP020/verify_track_controls.py",
+      "bytes": 5880,
+      "sha256": "772a9125cf8da751b6cc2021018f19ffbbb27845d982e37ea9aeba4646a750ad"
+    },
+    {
+      "path": "scripts/cpr_probe.py",
+      "bytes": 25831,
+      "sha256": "502a5d53c1a6135e40c0c220c99f4f509f30ccaa30cbe5a63ec5ab4b752ec63b"
+    },
+    {
+      "path": "research/evidence/application/APP020/track-controls-01/manifest.json",
+      "bytes": 59073,
+      "sha256": "f812252f276daafb49a9b7a5fed808d87e608744e218369f9d275e4e10f23b15"
+    }
+  ],
+  "limitations": [
+    "No current Swift importer or playback API was invoked by this verifier; parent integration tests must establish those results.",
+    "Minimal opaque ancillary bodies are not proved native-valid. Counted relationships and signal expectations do not establish Cubase execution or roundtrip compatibility."
+  ]
+}

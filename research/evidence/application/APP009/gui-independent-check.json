@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "checked_utc": "2026-10-20T01:00:46.077275+00:00",
+  "status": "Seven claimed outcome groups supported; one minor stale-footer observation retained.",
+  "method": "Independent read of retained AX snapshots and screenshot plus fresh file hashes; reviewer did not operate the GUI. Snapshots support states, not an independently replayed action history.",
+  "groups": [
+    {
+      "group": "open and inspect",
+      "supported": true,
+      "records": [
+        "final-gui-open.ax.txt",
+        "final-gui-inspection.ax.txt"
+      ],
+      "observed": "Loaded unresolved source and matching synthetic attachment; inspection exposes bounded event audition and retains full-project caveat."
+    },
+    {
+      "group": "play pause seek resume end",
+      "supported": true,
+      "records": [
+        "final-gui-playing.ax.txt",
+        "final-gui-paused.ax.txt",
+        "final-gui-paused-seek.ax.txt",
+        "final-gui-resumed.ax.txt",
+        "final-gui-natural-end.ax.txt"
+      ],
+      "observed": "Playing has nonzero stereo peaks; pause clears peaks; seek16s resumes at16.265s; natural completion shows24s and ended status."
+    },
+    {
+      "group": "restart return stop past-end",
+      "supported": true,
+      "records": [
+        "final-gui-restart-at-end.ax.txt",
+        "final-gui-return-to-start.ax.txt",
+        "final-gui-stop.ax.txt",
+        "final-gui-seek-past-end.ax.txt"
+      ],
+      "observed": "Restart and Return resume near zero; Stop retains audition mode at zero; past-end seek remains stopped at24s."
+    },
+    {
+      "group": "tamper rejection mode clearing restoration",
+      "supported": true,
+      "records": [
+        "final-gui-changed-media-rejected.ax.txt",
+        "final-gui-rejected-mode-cleared.ax.txt",
+        "final-gui-restored-media-playing.ax.txt"
+      ],
+      "observed": "Changed-media alert is followed by project mode with zero peaks; restored media plays again."
+    },
+    {
+      "group": "project playback and export barriers",
+      "supported": true,
+      "records": [
+        "final-gui-project-play-refused.ax.txt",
+        "final-gui-project-export-refused.ax.txt"
+      ],
+      "observed": "Both full-project operations retain the explicit unresolved-event rejection."
+    },
+    {
+      "group": "edit exits and undo stays out",
+      "supported": true,
+      "records": [
+        "final-gui-edit-exits-audition.ax.txt",
+        "final-gui-undo-stays-project-mode.ax.txt"
+      ],
+      "observed": "Edit and Undo snapshots show project transport, no audition banner and zero peaks. The edit snapshot retains a stale paused-audition footer; Undo replaces it."
+    },
+    {
+      "group": "explicit exit",
+      "supported": true,
+      "records": [
+        "final-gui-exit-audition.ax.txt"
+      ],
+      "observed": "Explicit Exit clears audition mode and identifies project playback selection."
+    }
+  ],
+  "minor_observations": [
+    {
+      "record": "final-gui-edit-exits-audition.ax.txt",
+      "detail": "Mode clears correctly but footer still says Source event audition paused beside48,000Hz/project output. Undo and explicit Exit statuses are accurate. No stale audio execution is established by this text."
+    }
+  ],
+  "package": {
+    "path": "research/evidence/application/APP009/LoFi Timeline QA.rebaseproj",
+    "exact_file_set": true,
+    "files_unchanged": 5,
+    "files": [
+      {
+        "path": "Compatibility/CPR/ImportReport.json",
+        "bytes": 93659,
+        "sha256": "27bfde03bdf769d3f7bc2fa55ae3382da2458f63967479781250242e054de45e",
+        "unchanged": true
+      },
+      {
+        "path": "Compatibility/CPR/Original.cpr",
+        "bytes": 1333360,
+        "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
+        "unchanged": true
+      },
+      {
+        "path": "Media/E99146CF-145D-4666-A6AD-692D42DB59A6.wav",
+        "bytes": 6350444,
+        "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a",
+        "unchanged": true
+      },
+      {
+        "path": "Media/FA176CB1-13E5-489A-8AA4-FE0DEFE4A6C0.wav",
+        "bytes": 6350444,
+        "sha256": "daeffe7263203465791405ffb2c3e87e905d27a99d306e91ba3d80e3ae722290",
+        "unchanged": true
+      },
+      {
+        "path": "Project.json",
+        "bytes": 5723,
+        "sha256": "e1b066328e3cfe60e7475c7dd9c0f5ecae34e24f74996e7342709628271b4ebc",
+        "unchanged": true
+      }
+    ]
+  },
+  "binary": {
+    "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 4775808,
+    "sha256": "00d22d2969e3f13671c3f8ed93151035789885a6ac1d28b8fcd77cd665288fa9"
+  },
+  "build_record": {
+    "path": "research/evidence/application/APP009/gui-final-build.json",
+    "bytes": 188,
+    "sha256": "16c6a1888c00dd0ca260524c5a852f32b62504cc93becba3816827444d26074a"
+  },
+  "baseline": {
+    "path": "research/evidence/application/APP009/gui-package-before.json",
+    "bytes": 1144,
+    "sha256": "879f49d90c0b970161d68648cce744185ef08a4e0a93fd2a3a8eade1479f7e30"
+  },
+  "tests": {
+    "path": "research/evidence/application/APP009/core-tests-final.log",
+    "bytes": 33612,
+    "sha256": "c20534e359c5a43ee41f26f4bf4d2f2178e46b9baeaadb9ed47c2bfd4b6ff7b7",
+    "result": "171 tests in25 suites passed"
+  },
+  "tamper_control": {
+    "path": "research/evidence/application/APP009/final-gui-tamper-control.json",
+    "bytes": 442,
+    "sha256": "2b402a007f91a4f640db89377a2a81addd814cacba29989bcc2692014c2231ea",
+    "changed_byte_hash_recomputed": true,
+    "media_restored": true
+  },
+  "evidence": [
+    {
+      "path": "research/evidence/application/APP009/final-gui-changed-media-rejected.ax.txt",
+      "bytes": 394,
+      "sha256": "4b2ec7bd2949f020b3eb9dc4f96d68554d43a716febaa1fa5551e665bc52b3c0"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-edit-exits-audition.ax.txt",
+      "bytes": 5079,
+      "sha256": "a328b94c2050c1fd628b600ef96eda35831ea57d5013bd1d77705224c6d5d91e"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-exit-audition.ax.txt",
+      "bytes": 5108,
+      "sha256": "227fa2ee32c753be13f1af89661a08162e9f2273d83abcbe97a1360984b94c45"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-inspection.ax.txt",
+      "bytes": 1215,
+      "sha256": "a465e41a0ef3f0ee3443ff4a8becc6c457ea4213b9d655a2c16eb74f0d11f1aa"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-natural-end.ax.txt",
+      "bytes": 5779,
+      "sha256": "d6689dd582b4408a6a80b1632f0fe6f327d4c617c5ef5c9e4952eaa8ee6495a3"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-open.ax.txt",
+      "bytes": 5325,
+      "sha256": "761738e719ac729a685b02eb0ad408d9046d2f8b21513f020f68f690df3f1321"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-paused-seek.ax.txt",
+      "bytes": 5781,
+      "sha256": "c75c56b084e296a87adff892b0c57943eeefce95a24bb769cde7691c4688ffae"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-paused.ax.txt",
+      "bytes": 5781,
+      "sha256": "f094b8ee13e0d5d589ded1e895918f2aaf7133830e0964216699f33b04afe6a5"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-playing.ax.txt",
+      "bytes": 5803,
+      "sha256": "5968277c93796192e54adccb70a170d29f384b42e485e5d512d12fb9c78a7ec4"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-project-export-refused.ax.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-project-play-refused.ax.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-rejected-mode-cleared.ax.txt",
+      "bytes": 5080,
+      "sha256": "06235a5605a59a9bfba13749e5fb309116135fe4877f4ec5acac7622d04b92f7"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-restart-at-end.ax.txt",
+      "bytes": 5803,
+      "sha256": "3d8c31ca9f269931be7c517de27ddda97969d78d4009a42830ea0a2330e2c096"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-restored-media-playing.ax.txt",
+      "bytes": 5554,
+      "sha256": "054f9faf1ee79be227c4858f159db180b2547a438e3dce2bfdbebafe74c836e1"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-resumed.ax.txt",
+      "bytes": 5803,
+      "sha256": "a3292811438b3c1fa66842b875a7d223819cc5efab529736c593f039a370e3f7"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-return-to-start.ax.txt",
+      "bytes": 5803,
+      "sha256": "2a89a73323336888b18fae558674260f82a6e3be83678f7aa000781db88017f2"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-seek-past-end.ax.txt",
+      "bytes": 5530,
+      "sha256": "6e273ce215a02c43fa5628b58db6b76bc44d528ff13d6e309a64e67389771257"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-stop.ax.txt",
+      "bytes": 5781,
+      "sha256": "90647080ed7d96de87438e68631d3af6dd37a0e94661058168cd08bea40d1006"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-undo-stays-project-mode.ax.txt",
+      "bytes": 5067,
+      "sha256": "edfe3844443c4c05f666aa5e385c2130e462175fb112145cb2c98871105580a9"
+    },
+    {
+      "path": "research/evidence/application/APP009/final-gui-playing.png",
+      "bytes": 387588,
+      "sha256": "20fdd1c4c49a26cb71700db3cc2fc8ac2cabe7db40f05b101e514ff382e5b4ae"
+    }
+  ],
+  "visual_check": "Playing screenshot shows explicit source-event audition banner, Pause, nonzero L/R meter bars, unresolved-event block and synthetic user-selected attachment.",
+  "limits": [
+    "Meter/AX observations are application-engine evidence, not captured DAC samples or Cubase runtime output.",
+    "The attachment is synthetic; project signal-path fidelity is not established."
+  ],
+  "target_execution_count": 0,
+  "cubase_runtime_comparisons": 0
+}

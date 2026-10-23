@@ -1,0 +1,743 @@
+{
+  "finding_id": "CPR-AUDIO-SELECTOR-001",
+  "revision": 1,
+  "created_utc": "2026-10-19T14:12:02.002366+00:00",
+  "status": "verified bounded static stream-selection contract; timeline PCM and target runtime remain unverified",
+  "target": {
+    "path": "/workspace/rebase/research/targets/derived/Cubase15-arm64",
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "question": "Can stored stretch presets be distinguished from an active processing request for the pinned LoFi and Classic events, and where does the chosen stream go?",
+  "answer": "Yes at a concrete conditional selector. The LoFi source-state predicates can cause10021225c to return the exact existing AudioCluster pointer. Classic requests processing because Warpscale is present, but successful processing is not established. This does not by itself promote imported events to playable timeline clips.",
+  "contracts": [
+    {
+      "id": "R1",
+      "claim": "10021225c is a concrete event-to-AudioStream selector. It starts with event virtual+0x258 clip and clip+0x188 cluster, then considers pre-replacement, volume-curve, inversion, pitch analysis, warp configuration and post-replacement in that order. A nil optional result preserves the preceding stream pointer. The final pointer is retained and returned.",
+      "evidence": [
+        {
+          "entry": "0x10021225c",
+          "evidence_ids": [
+            "ev_856f627131f06ddb17c33f1f90a4a7e582530f0fbe3137045bda656f982809ac",
+            "ev_da2dfbd50676da95d96a8ae5a2bc32a13a3a9fb1e7432e22a39a876cbd96a6e1"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1002125e0",
+          "evidence_ids": [
+            "ev_5e7c03e9604547f70fc54334322f711c17bb1a8dfc034437f1916d6e77a2563f",
+            "ev_93211b0a2bf39bb875f75909b708693cb29783c390c6f7dc4c301ff46b918ebb"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1002126dc",
+          "evidence_ids": [
+            "ev_d78f6acfef7d252971c8680ab0617896b5fd93788a0ee9b4893b1cc716402d45",
+            "ev_dac28cf6925cc55a7317a8ce1516ed5328cdcac9b0408954433243caacc8aae8"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x100213d2c",
+          "evidence_ids": [
+            "ev_2a47c4593c254973c41bb9bf3b3cbcd4b50d664f2070d1b0aa0effc0b45cd30c",
+            "ev_492595a6896d0e4a0aa7628d6641c20bfdfd6eead97a07a443d4f56555e57fcc"
+          ],
+          "new_capture": true
+        }
+      ],
+      "limits": [
+        "This function is not by itself the entire timeline renderer. Encoded direct-call candidates do not enumerate indirect consumers.",
+        "100211a7c additionally honors an existing event AudioStream cache and a caller flag; its cache key initialization and lifecycle are not included in this direct-selector contract."
+      ]
+    },
+    {
+      "id": "R2",
+      "claim": "The volume-curve selector1002125e0 calls1000eac74, then adapter virtual+0x38. Concrete adapter constructor10010fc64 uses vtable104435d30; +0x38=1001104c0 returns (vectorEnd-vectorBegin)>>5. It creates a curve stream only for signed count>=1. Empty point storage returns nil. Event inversion uses concrete MAudioEvent+0x500=1000eaf6c, reading event byte+0xa0; zero does not create the phase-inversion layer.",
+      "evidence": [
+        {
+          "entry": "0x1002125e0",
+          "evidence_ids": [
+            "ev_5e7c03e9604547f70fc54334322f711c17bb1a8dfc034437f1916d6e77a2563f",
+            "ev_93211b0a2bf39bb875f75909b708693cb29783c390c6f7dc4c301ff46b918ebb"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1000eac74",
+          "evidence_ids": [
+            "ev_3fca3bee37b808410fea7439f8520a25190cca928dbd2a68ab615588b49d545e",
+            "ev_6590f1a29d0f31a85debefd52b40e7dcdb69c9d2339d60a62ec3c9e6624617c7"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x10010fc64",
+          "evidence_ids": [
+            "ev_5578888a3dccf6d6cc14341e81629be0020b69b769c82479e1667b2a3ff09946",
+            "ev_63c03680dfe98c595f4278a1041446b17ed28fbef75ae192614bb08c0f615651"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1001104c0",
+          "evidence_ids": [
+            "ev_b38148651d53d580f77b5b280db05e36081e7ae80e82451ee1f3ae288feb2ed4",
+            "ev_cf56795b1da3a806a7e9f6a234f246afa13699dc2effa4f0dca829691b51eb55"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1000eaf6c",
+          "evidence_ids": [
+            "ev_494515c1a13a1059a4f61afc0dbc4982c8153d8e3afb55031853b0e2ed0433b2",
+            "ev_4b5b9e051057a640b4ab986ccf036c8f66d5a9971e547154496a1ecfed3ba2cd"
+          ],
+          "new_capture": false
+        }
+      ],
+      "limits": [
+        "The empty serialized node is consistent with this gate under unchanged valid restored storage; callbacks or later edits may change the point storage or inversion byte.",
+        "The different audition path constructs its curve wrapper even for a nonnil empty adapter; this report does not assert identity for that wrapper."
+      ]
+    },
+    {
+      "id": "R3",
+      "claim": "The pre/post source substitution1004642e0 returns nil for an event whose numeric-attribute collection is empty. The post call (third argument1) immediately rejects absence of key0x74616462. The pre call reaches100427434; absence of its first numeric key invokes102221d24, which sets the string data pointer to zero, and the predicate returnsfalse before consulting source replacement objects. Key0x63747861, if present, separately short-circuits replacement.",
+      "evidence": [
+        {
+          "entry": "0x1004642e0",
+          "evidence_ids": [
+            "ev_2c7d4474613e6b9bca1409da86cdc2499c0c97b639cb64ad58aa6dca9521a69b",
+            "ev_99eb1739c2e66b2fe8d75abcf0e400c0c49943cad8f424579e3bf97575b5cbb6"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x100427434",
+          "evidence_ids": [
+            "ev_5ca01cbf045b5d6e08b3ee2e460d137a6af645616320368aef5ac2b1e1956f82",
+            "ev_9ecbe2ce69ea08a168e9c3e1932468b4bae0f874e01ae8982d78a3bcd68e251f"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x102221d24",
+          "evidence_ids": [
+            "ev_670af61801cecaff370fe4c07cd9d737b5378ed01c6ea28a1030e8242085d5b0",
+            "ev_a383b3b8220418b746ad5f8f4b75d73910ce3d04230cb7e4e9378c7c39d3b143"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1000e8b84",
+          "evidence_ids": [
+            "ev_00497a9b419ce6ecdabdb5f984448201f4db71ab01441b4e9f9058fd47edc866",
+            "ev_dda1aa36c0aa577dbf0efbf24795d5c0c036c923a6a7d8d3fd90ddaa348fc692"
+          ],
+          "new_capture": false
+        }
+      ],
+      "limits": [
+        "This is a call-time collection predicate. The serialized count0 alone does not prove a previously existing collection was cleared. Fresh object and unchanged restored-state requirements remain explicit.",
+        "Manager initialization or arbitrary host mutation is not claimed harmless; no whole-host invariance is needed or established."
+      ]
+    },
+    {
+      "id": "R4",
+      "claim": "1002bf008 obtains the StretchPreset interface through100300eb0. If absent it returns nil. Otherwise it chooses flags0x34 when BypassWarping is absent, or0x38 when present; feature-enabled/non-BypassPitch adds0xc0. It forwards preset,event,context,flags and optional packed pitch flags to1002bade4. That helper checks1002bb004 before constructing the processing configuration; false returns nil.1002126dc propagates a nil config as no new stream layer.",
+      "evidence": [
+        {
+          "entry": "0x1002bf008",
+          "evidence_ids": [
+            "ev_2599a96313b6bd041206a542e3db7cb7f08a2f121e85c93bfe36c96e9adfbf3b",
+            "ev_908e992b589cb02b4f5ae792c8893832344bbcece4c8b3392237eb7bb7ec9bde"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x100300eb0",
+          "evidence_ids": [
+            "ev_349b2a2105e44ea9e676f05004e045cc43758f06c2887a61cf839851b6ba81bd",
+            "ev_ed035e11bb8eab947c3b9ee99c9808a36d96cce47a75949e82432a205ed2a918"
+          ],
+          "new_capture": false
+        },
+        {
+          "entry": "0x100301744",
+          "evidence_ids": [
+            "ev_4d08d7402d31697096576f22a7e1b937996c847916499e915326acd1827d26ca",
+            "ev_9c9b270140a1b2cd4b167572f3b631be8f09c8eb655f4dbdf75289a675444f04"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x10073d1a4",
+          "evidence_ids": [
+            "ev_2043ea7ec40c050b610dcfe4db9a6ed62f3661d2c5816bc98e0a86018481ef53",
+            "ev_79d14f8755c53f0d3d0759b8ac93c17b74f7350e6f40b70fb0cfee5657bfc85e"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1002bade4",
+          "evidence_ids": [
+            "ev_2494b6faad2132dd7ecf7f9bbc12342daa699f7606ef4aef1f3b133b24a9ed58",
+            "ev_52cf30ec41f46d3ecf632cfc6f87088d79263cad3e1cecd1a3e387098179f4d7"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1002bb004",
+          "evidence_ids": [
+            "ev_d40de043340a529f75c8f9526b48bb9af666aac7399b00289e26141f45ee2a7e",
+            "ev_e9e9504e93c707de8ecb4ff4e233af6c6e42b7354b2f99060ada5b2b7883f88d"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1002126dc",
+          "evidence_ids": [
+            "ev_d78f6acfef7d252971c8680ab0617896b5fd93788a0ee9b4893b1cc716402d45",
+            "ev_dac28cf6925cc55a7317a8ce1516ed5328cdcac9b0408954433243caacc8aae8"
+          ],
+          "new_capture": true
+        }
+      ],
+      "limits": [
+        "The raw decompiler infers void return for1002bf008, but original instructions leave the callee return inX0 through the epilogue. The conclusion uses original instructions, not that inferred C signature.",
+        "A present preset is necessary for this configuration path but does not make1002bb004 true."
+      ]
+    },
+    {
+      "id": "R5",
+      "claim": "For an actual MAudioEvent with nonnil clip, flags0x34 or0xf4, event factor keys0x46746950 and0x46727453 absent (both getters return exactFloat64 1), TransposeLock present, Warpscale absent and all low five packed pitch-analysis bytes zero when supplied,1002bb004 returnsfalse. The local predicate skips the context-transpose service when TransposeLock is present. For0x34 it reaches false after the no-Warpscale checks;0xf4 checks pitch bytes0..2 and reachesfalse when those arezero. Requiring all fivezero is a stronger sufficient condition and also avoids the earlier pitch stream layer in10021225c.",
+      "evidence": [
+        {
+          "entry": "0x1002bb004",
+          "evidence_ids": [
+            "ev_d40de043340a529f75c8f9526b48bb9af666aac7399b00289e26141f45ee2a7e",
+            "ev_e9e9504e93c707de8ecb4ff4e233af6c6e42b7354b2f99060ada5b2b7883f88d"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1000eae1c",
+          "evidence_ids": [
+            "ev_02b44d48a0c6c7d157eddd34e7e339b497e601233b376a5613513c4fe42c9aae",
+            "ev_e243556076d9ad95c2963dfba5d384d2ab413156aa9d352a878f5aec9a7c0ada"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1000edb70",
+          "evidence_ids": [
+            "ev_5e61374bfd615689caed1b12e8fdda61f5324957996c67289e68ed648b253ea8",
+            "ev_68a5453ca4a64354ac9c1677f2988a43858f342240799fc7de11ef5fcff8b6a5"
+          ],
+          "new_capture": false
+        },
+        {
+          "entry": "0x1000f8f80",
+          "evidence_ids": [
+            "ev_361fb7cfd2f21ac01b373b06f79e203d88f88043487c2dcdf40d598b3ac7a93f",
+            "ev_fe82f7aac2284585c173584e746a913844f4f1f1bd7522ac6aae9f5931b1be0e"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x10030132c",
+          "evidence_ids": [
+            "ev_7916852a513bbca71cbdc5de472900793531fe7d52a95a66214c8565c49863f2",
+            "ev_8490ed2e44e051a3470e89500f2b287c2dc4fffb76469dc376909317f3362f20"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x100301634",
+          "evidence_ids": [
+            "ev_7aa3a7e407ddcf4ba075d86ff3e176b6a48c96d118a7bd2f6cc6ec9419a5af71",
+            "ev_cc688ae7ea3f838ba51448267efbcf2872d6afa2b42b4028abba6aa05bd728e8"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x100301694",
+          "evidence_ids": [
+            "ev_1b766acfb39d5c6961a5c158de5ef8960c65e238ebcb36281ed8048ed6368a98",
+            "ev_83e2e27d364afc570c3ebea06d03cca0290fbde542a93c53335615a4b76d5fa0"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x100091dac",
+          "evidence_ids": [
+            "ev_5885652a5db833ff0b1f199c383a7679b9aa5e4497735410bcffa527500d5f11",
+            "ev_aa4d9d9c4c0983a8b2815f7de200ccd2d57b7913a1afdf2c52726bbbea85bc39"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x103105d1c",
+          "evidence_ids": [
+            "ev_b01f9bf2c707b6a61ab91dd3ad19c8a64a9edbd47a8ccd0f5eb6a7ec50460957",
+            "ev_e442bf4cdc4f2554974baab7554e43724633cd02e3fb9a8fb5fe7144eafdff8f"
+          ],
+          "new_capture": false
+        },
+        {
+          "entry": "0x10073b9cc",
+          "evidence_ids": [
+            "ev_c280d2adb5b632e40331c7fe68230ff54f4f8ae5e64829ff7b23e160db35d011",
+            "ev_e103984ec6dbc4a024ae05ceaa9c9d4877844a256c200071b66199166b554370"
+          ],
+          "new_capture": false
+        }
+      ],
+      "instruction_order": [
+        "1002bb208: factor46746950; FCMP against exact1, B.NE requests processing.",
+        "1002bb224: factor46727453; FCMP against exact1; unequal requests processing.",
+        "1002bb24c/250: TransposeLock predicate true skips context-transpose lookup.",
+        "1002bb1a8/1ac: Warpscale presence true requests processing.",
+        "0xf4 route1002bb1d8..1f4 checks bytes0,1,2; zero returnsfalse.",
+        "0x34 route1002bb330\u2192370 returnsfalse."
+      ],
+      "limits": [
+        "No theorem about generic time stretching is substituted for this branch. NaN factors take the not-equal processing branch; they are excluded from the stated unit-factor condition.",
+        "Valid object storage, successful normal helper returns and no state mutation invalidating these predicates during the selection call are prerequisites."
+      ]
+    },
+    {
+      "id": "R6",
+      "claim": "The retained LoFi source has zero event numeric attributes, inversion0, empty volume-curve children, TransposeLock=1, no Warpscale, no BypassWarping/BypassPitch and no serialized NoteEvent/MicroPitchChangeFactors. Together with fresh normal restoration and the explicitly stated call-time no-pitch predicate, R1-R5 yield the exact clip+0x188 cluster pointer, with no optional selector layer. Classic House contains Warpscale and therefore reaches the processing-needed branch under flags0x34/0xf4.",
+      "evidence": [
+        {
+          "entry": "0x10021225c",
+          "evidence_ids": [
+            "ev_856f627131f06ddb17c33f1f90a4a7e582530f0fbe3137045bda656f982809ac",
+            "ev_da2dfbd50676da95d96a8ae5a2bc32a13a3a9fb1e7432e22a39a876cbd96a6e1"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1002bb004",
+          "evidence_ids": [
+            "ev_d40de043340a529f75c8f9526b48bb9af666aac7399b00289e26141f45ee2a7e",
+            "ev_e9e9504e93c707de8ecb4ff4e233af6c6e42b7354b2f99060ada5b2b7883f88d"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x10073b9cc",
+          "evidence_ids": [
+            "ev_c280d2adb5b632e40331c7fe68230ff54f4f8ae5e64829ff7b23e160db35d011",
+            "ev_e103984ec6dbc4a024ae05ceaa9c9d4877844a256c200071b66199166b554370"
+          ],
+          "new_capture": false
+        },
+        {
+          "entry": "0x1000e9148",
+          "evidence_ids": [
+            "ev_923fe6a4a4b36e560f04eeef0b2a603e3e82e64c1c06b9965025f9b82680f53f",
+            "ev_9c78cf23546acda2b3c73bb5ab9ef90491b365134e2e0fef0a76c47bdb9ac5a3"
+          ],
+          "new_capture": false
+        },
+        {
+          "entry": "0x101700aac",
+          "evidence_ids": [
+            "ev_cd0bdf475be4412f5650de9822a2f62e93a9ec63bbdd2d3a762ccbeed6968797",
+            "ev_dbcdd01572d63d26a23ad83fe3d4ea5af2b2508403ffd3502c6d7a1898fa113a"
+          ],
+          "new_capture": false
+        }
+      ],
+      "limits": [
+        "Classic reaching processing-needed does not prove successful preset materialization, enabled backend, a specific output transform or audible stretch.",
+        "The LoFi conclusion is a conditional reconstruction contract for the pinned source state, not an observation of Cubase output and not proof of all restored host state."
+      ]
+    },
+    {
+      "id": "R7",
+      "claim": "There are actual stream consumers beyond property display:10046e60c (pointer in AXtStreamAccessor vtable) calls1002129a4\u219210021225c and feeds the chosen stream into10036e458 with format5 and flag1, producing an AudioAccessor-derived interface.100124214 and100124418 similarly call the selector then100369440\u2192100369314.100369314 builds an AudioCluster containing one AClusterSegment with Stream=input,Offset0,Length=input+0x148(),Start0.",
+      "evidence": [
+        {
+          "entry": "0x10046e60c",
+          "evidence_ids": [
+            "ev_52e2642e36f33840801586611ebca36745c7e7ee4bd9d2e2d62481496477454a",
+            "ev_af3f95a5813962541c9f060a6cd0a02b25b5dc5ba79729a8e7daee7ac3c985bb"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1002129a4",
+          "evidence_ids": [
+            "ev_d823201b8ee37da17d71a2a8bc6fd23ff12facfcee69b5fbf77b07dd14291c4f",
+            "ev_fad0e84ef1e3c82af6aeda50a69d393473398d7eaf987049ae451393f9743b01"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x100124214",
+          "evidence_ids": [
+            "ev_7741aafac5f3bd45436971c6fe4765c0b0e10343f839dd48a46e9d1a7df33705",
+            "ev_a97bfafdc94aebfaf11a9f12cf55896a9e8377f3111ac7194c381073e40fbee0"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x100124418",
+          "evidence_ids": [
+            "ev_42676b5d51335997c4a320193e40b7338e1f910024513672f9fde9c95010a6c9",
+            "ev_7b830d7db52836f4f2cf4c7089bd8ba26580099625dee6a4ceb9eb2c8b9d9abf"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x100369440",
+          "evidence_ids": [
+            "ev_0198ad53369d454a99925a04f5c857fa3b6200ab5f3f0e7738f8aeb34a4b438f",
+            "ev_4d737e710034c6478a7c7f96b65d665a517fc2bb6e483648b15c15ea11fd03d0"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x100369314",
+          "evidence_ids": [
+            "ev_0b2a0104d6b927d208596e718d90011e5f92c96ba803617b568ed4053e1932dd",
+            "ev_350e456105bf89fbed516e44defbdc47cc4abcff76ff2f9a84eabd0aae56888f"
+          ],
+          "new_capture": true
+        }
+      ],
+      "limits": [
+        "10046e60c can clone/change event/clip state before the selector under its own flag; this is a consumer linkage, not a guarantee it uses unmodified project state.",
+        "The complete timeline event gain/fade/loop/mute/mixer path remains unbound. Source-accessor reachability alone is not final PCM fidelity."
+      ]
+    },
+    {
+      "id": "R8",
+      "claim": "A distinct AudioProcess::Audition::Manager path10197f2b4 selects a stream using10197f900, supplies event Float32 Volume to StreamPlayer+0x38, and forwards source/sink accessors to process virtual+0x188 through1019b6168. The concrete default StreamPlayer factory101955e44\u219210197fef4 and vtable1046b2f50 bind volume setter101981424 and write callback1019808e8. The callback applies a Float32 multiply by stored event volume; mono input first multiplies by another stored scalar+0x60 in a separate FMUL.",
+      "evidence": [
+        {
+          "entry": "0x10197f2b4",
+          "evidence_ids": [
+            "ev_186a9b0393495e21ef6fd764803c12dd74da0c82a1530f5845343d9e793a9ee3",
+            "ev_d72b836471cbebbef9bb0026cd01d9f3bcd690d6c1c41b832139d969919cbdd0"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x10197f900",
+          "evidence_ids": [
+            "ev_4c8802925a8b1e291511a077071d6b0580bd608960df64341b95c40ce2b5eed8",
+            "ev_526b93fd03937a7c1884a4da77193244ae51e0d9ef5d9e24ab66fdaa3d48085d"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x10197e560",
+          "evidence_ids": [
+            "ev_8550f1ee928d125891bf6217a94a4ba75423feb4bdebf23a36ea1aa50fdf4383",
+            "ev_e9d0dac9a3ac7c77221a74c5127192bfe48615a854efb8ca798f795073488ea3"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x10197ea60",
+          "evidence_ids": [
+            "ev_63c4308965ca0800b1acd3e054ccf9ce8370bcb0bf7c40f2475bd9da98f0b8f7",
+            "ev_6cf30383eaa1760a3c8373980699732ba7ded5e7cbd45733dab616cb123b3653"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x101955a00",
+          "evidence_ids": [
+            "ev_59891423064db2604bf0d2edd86749d3d91506c5031835f8989271fc87412f01",
+            "ev_c6e64eae3db46f7a93161851ce69529cc76964bb1fd5298ba0b46f104f9e1170"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x101955e44",
+          "evidence_ids": [
+            "ev_abc7dd71257a8fdff2890a4a671528b075a090e6b3b40a83e4196cb982f281da",
+            "ev_ccbba872ad65bf124e5fb5d9a474ae8134b9cb0446d6ca6b145abf6f15456776"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x10195ef64",
+          "evidence_ids": [
+            "ev_1630cb51729b7e6c57865be3860f00373e309ef1b1f5bad439e488751e7a545f",
+            "ev_856407306f7e6fb70278bf3b86802cbc8c4b7db848d41f7d15c7e5b6a6435131"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x10197fef4",
+          "evidence_ids": [
+            "ev_0fd8f019227bd08d5c26b5fef1d704f0b7869e8ef7bfa0faad96d1c1b9f5ccbc",
+            "ev_bf48ada8c3d709a9a54f80f87d01e4a495432408afab609e50cd5579e5abb248"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x101981424",
+          "evidence_ids": [
+            "ev_07d14c04546da91f2bbd1767825c02c1a7941095be4edb7769e6940a461f7f84",
+            "ev_71a3e37fd0d3812845c2397fd5ecd83147aa88910efb005bd1d92f8cfd6eba86"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1019808e8",
+          "evidence_ids": [
+            "ev_1ef4b691fcb9d1c16c7d4c7672281a3d0766b4dc075d32c5348e3754da5c5715",
+            "ev_f25829ab900c2b45fd8371cd1a3632e19eed8d2d3746135c4d819a1fecc8b851"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1019b6168",
+          "evidence_ids": [
+            "ev_09f2e7420919552655b0e92dd751a03897ac4f885709da9626715ec1763de9d9",
+            "ev_5fcf76752d02cecb996cc19c86c953961b76559507bfcf73b9d18042eb0de7e1"
+          ],
+          "new_capture": true
+        },
+        {
+          "entry": "0x1000eaf54",
+          "evidence_ids": [
+            "ev_4e9d4a2ce7d09078e3558deb3f114678c63de93d36055ae3884d935cf01b413d",
+            "ev_5f62472e8d946146e4608360d5af9b02250834145fdbd12739f2667c3091fdb0"
+          ],
+          "new_capture": false
+        }
+      ],
+      "limits": [
+        "This is explicitly the audition subsystem, not a timeline route proof. Its process+0x188 implementation and nonnil empty curve-wrapper processing remain unbound.",
+        "The second mono scalar is not assigned a pan/volume meaning without its setter. Multiplication order is retained and not algebraically collapsed.",
+        "No real audio was played or target output recorded."
+      ]
+    }
+  ],
+  "source_observations": [
+    {
+      "source": {
+        "path": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Classic House.cpr",
+        "sha256": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892",
+        "bytes": 1197444
+      },
+      "event_body_offset": 207293,
+      "event_end": 211847,
+      "event_body_sha256": "c2feb5d89dfb27f28539f287af1df4ce6f4bb5686f83dde204e98bb9abdc45ba",
+      "clip_body_offset": 207371,
+      "clip_end": 211705,
+      "event_fields": {
+        "Additional Attributes": 0,
+        "Priority": 1,
+        "SnapPoint": 0.0,
+        "Lane": 0,
+        "Volume": 1.0,
+        "Inverted": 0
+      },
+      "source_flags_word": 0,
+      "fade_in": "null",
+      "fade_out": "null",
+      "volume_curve_children": 0,
+      "edit_history": {
+        "offset": 211699,
+        "end": 211705,
+        "hex": "000100000000",
+        "sha256": "01cf85cfeb36d628ca2e6f583fa2331be029b6b28e877e1008fb3f862306c086",
+        "list_word": 1,
+        "count": 0,
+        "exact_tail_consumption": true
+      },
+      "named_clip_attribute_names": [
+        "AUID",
+        "GridDef",
+        "HPFilterMode",
+        "HPPeakThreshold",
+        "HPThreshold",
+        "SampleEditorModelData",
+        "StretchPreset",
+        "TransposeLock",
+        "Warpscale"
+      ],
+      "hitpoint_object_count_in_exact_clip_structure": 84,
+      "note": "All offsets/field hashes, both Lane reads and curve datum are preserved in fixture-fields.json. Native labels identify properties; they do not establish a rendered signal."
+    },
+    {
+      "source": {
+        "path": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/LoFi Hip Hop.cpr",
+        "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
+        "bytes": 1333360
+      },
+      "event_body_offset": 197765,
+      "event_end": 206473,
+      "event_body_sha256": "b680870ff2855f1792068d92710c89e73e18f33f67ac5df3c7736f5296ddc89c",
+      "clip_body_offset": 197843,
+      "clip_end": 206340,
+      "event_fields": {
+        "Additional Attributes": 0,
+        "Priority": 1,
+        "SnapPoint": 0.0,
+        "Lane": 0,
+        "Volume": 1.0,
+        "Inverted": 0
+      },
+      "source_flags_word": 0,
+      "fade_in": "null",
+      "fade_out": "null",
+      "volume_curve_children": 0,
+      "edit_history": {
+        "offset": 206334,
+        "end": 206340,
+        "hex": "000100000000",
+        "sha256": "01cf85cfeb36d628ca2e6f583fa2331be029b6b28e877e1008fb3f862306c086",
+        "list_word": 1,
+        "count": 0,
+        "exact_tail_consumption": true
+      },
+      "named_clip_attribute_names": [
+        "AUID",
+        "GridDef",
+        "HPFilterMode",
+        "HPPeakThreshold",
+        "HPThreshold",
+        "StretchPreset",
+        "TransposeLock"
+      ],
+      "hitpoint_object_count_in_exact_clip_structure": 214,
+      "note": "All offsets/field hashes, both Lane reads and curve datum are preserved in fixture-fields.json. Native labels identify properties; they do not establish a rendered signal."
+    }
+  ],
+  "admissibility": {
+    "conditional_direct_selector": [
+      "Pinned MAudioEvent v6 / PAudioClip v4 and validated nonnil cluster.",
+      "Fresh normal restoration; numeric event attributes empty at selector time; inversion0; curve adapter count0.",
+      "No BypassWarping and no Warpscale; TransposeLock present.",
+      "Factors46746950/46727453 absent and therefore exact1; pitch-analysis low five byteszero if feature path runs.",
+      "No host/user mutation invalidating those conditions during selector/helpers; successful normal calls and valid storage."
+    ],
+    "not_authorized_by_this_evidence": [
+      "Timeline PCM placement/gain/fade/loop/mute/overlap or mixer conformance.",
+      "Classic plain-source playback.",
+      "Rate conversion or arbitrary source formats.",
+      "Protected VSTsound extraction or availability of referenced audio.",
+      "Target runtime equivalence or all-host callback invariance."
+    ]
+  },
+  "next_discriminating_edges": [
+    {
+      "entry": "0x10020f2e8",
+      "why": "Native10020ee24 calls this finite8,376-byte routine, which has six calls to100211a7c. Inspect its event gain/fade/loop conditions and return/write consumer; likely better next event-local rendering question than arbitrary host registries.",
+      "status": "LC_FUNCTION_STARTS/call words only; no new REA dossier for this entry in this report."
+    },
+    {
+      "entry": "0x1019b6168 virtual+0x188",
+      "why": "Concrete audition source/sink processing body would close a narrower source-audition candidate; must not call it timeline proof.",
+      "status": "dispatch receiver not yet bound"
+    },
+    {
+      "entry": "0x10046e60c returned adjusted interface",
+      "why": "A concrete event-stream\u2192AudioAccessor consumer is known; its callback/use remains separate from full timeline selection.",
+      "status": "constructor call and pointer adjustment retained; no full interface read trace"
+    }
+  ],
+  "verification": {
+    "new": {
+      "functions": 53,
+      "source_bytes": 22784,
+      "native_words": 5696,
+      "rea_instruction_addresses": 4818,
+      "unique_evidence_ids": 106
+    },
+    "reused": {
+      "functions": 9,
+      "bytes": 1284,
+      "native_words": 321,
+      "rea_instruction_addresses": 291
+    },
+    "canonical_records": 124,
+    "target_executions": 0,
+    "native_runtime_comparisons": 0,
+    "closed_capture_sessions": 17,
+    "evidence_import_closed": true,
+    "provider": "Ghidra12.1.4 through pinned REA6.7.0, default raw arm64 profile,2GiB limit"
+  },
+  "raw_slice_limitations": [
+    "Each raw slice loses Mach-O imports/globaldata/vtables/unwind/neighbors; original mapped cells/bytes separately bind referenced claims.",
+    "LC_FUNCTION_STARTS intervals can contain disconnected exception tails. REA covers4,818 of5,696 original instruction words; missing words are preserved in native output, not presented as decompiled.",
+    "Raw halt_baddata at valid external tails does not indicate invalid Cubase code.",
+    "Pseudocode has inferred types/signatures and is not original source, guaranteed compilable or generally bit-faithful. FP claims use original FMUL/FCMP instructions."
+  ],
+  "artifacts": {
+    "verification.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/verification.json",
+      "sha256": "83e56c70afcf90b8fe87256283085f65437917280ae10bf099b5a21ff7f51ce5",
+      "bytes": 37493
+    },
+    "support-verification.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/support-verification.json",
+      "sha256": "d0860a5b1f888ca4f4f566d743d367eff952553ef784a382c3f29f17ced0f757",
+      "bytes": 21716
+    },
+    "final-linkage.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/final-linkage.json",
+      "sha256": "903d490a600a3d87d9b6139e7cf34aaffff9cefc9a12e35bdcfc09334d527f95",
+      "bytes": 14027
+    },
+    "evidence-bundle.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/evidence-bundle.json",
+      "sha256": "0a01081bd638951403e83af963b7b196370b7f1c1f77c8de4c02800132cf7d28",
+      "bytes": 32053320
+    },
+    "evidence-import.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/evidence-import.json",
+      "sha256": "4501c9da345c14efb53c3d6760208329b3d0fa5fc21d0833092be947893bce5f",
+      "bytes": 371
+    },
+    "import.log": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/import.log",
+      "sha256": "e5e366ad536ba0bf63942a0c7358cd06188bd39dea6e2f0fee79bb25d7110c7e",
+      "bytes": 91
+    }
+  },
+  "external_references": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/finding.json",
+      "sha256": "12ce949821b80d579cb69ba0cca51bd20e5adcfad99f7ae26d36c3cb15c4a2f9",
+      "bytes": 28600
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/manifest.json",
+      "sha256": "d8702ad1ac913c1f1eaadbb512ca521ccbc069995f2a5846ccb0ce62062c3f34",
+      "bytes": 101355
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/fixture-fields.json",
+      "sha256": "c8904e51484ed3f658273bc3fc030abe9b33c325a6ce2de4024fdd76ec0b3183",
+      "bytes": 24620
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/warp-fields.json",
+      "sha256": "5d1464724b5c4b143b810f286b7f9ed5a54858449de839c1aa3135a9aa5a2928",
+      "bytes": 1988
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/finding.json",
+      "sha256": "af7178337889b779e4d37e2ac55e9eb41087c3fced9b54a0ec15e63e4204cd82",
+      "bytes": 39071
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/finding.json",
+      "sha256": "b3ed0ab7f758c91a65620dcc829be02e51684c7887e4561f9107d22fc0365c38",
+      "bytes": 17257
+    }
+  ]
+}

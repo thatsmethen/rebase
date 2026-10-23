@@ -45,6 +45,7 @@ final class StudioSession: ObservableObject {
     var selectedClip: Clip? { project.tracks.flatMap(\.clips).first { $0.id == selectedClipID } }
     var selectedUnresolvedEvent: UnresolvedCPRAudioEvent? { project.unresolvedAudioEvents.first { $0.id == selectedClipID } }
     var transportDuration: Double { sourceEventPlaybackInfo == nil ? project.duration : engine.duration }
+    private var sourceScope: String { sourceEventPlaybackInfo?.auditionScope ?? "Source event" }
 
     init() {
         newProject()
@@ -66,7 +67,7 @@ final class StudioSession: ObservableObject {
                         self.show(SessionError.message(failure))
                         return
                     }
-                    self.status = self.sourceEventPlaybackInfo == nil ? "Stopped" : "Source event audition ended"
+                    self.status = self.sourceEventPlaybackInfo == nil ? "Stopped" : "\(self.sourceScope) audition ended"
                 }
             }
         }
@@ -264,7 +265,7 @@ final class StudioSession: ObservableObject {
 
     func stop() {
         refreshTask?.cancel(); engine.stop(); isPlaying = false; outputPeaks = [0, 0]; playhead = 0
-        status = sourceEventPlaybackInfo == nil ? "Stopped" : "Source event audition stopped"
+        status = sourceEventPlaybackInfo == nil ? "Stopped" : "\(sourceScope) audition stopped"
     }
     func returnToStart() {
         if sourceEventPlaybackInfo != nil { seek(0); return }
@@ -275,7 +276,7 @@ final class StudioSession: ObservableObject {
     private func stopKeepingPosition() {
         if isPlaying { playhead = min(transportDuration, engine.currentTime) }
         engine.stop(); isPlaying = false; outputPeaks = [0, 0]
-        status = sourceEventPlaybackInfo == nil ? "Paused" : "Source event audition paused"
+        status = sourceEventPlaybackInfo == nil ? "Paused" : "\(sourceScope) audition paused"
     }
     func seek(_ seconds: Double) {
         guard seconds.isFinite else { return }
@@ -290,8 +291,9 @@ final class StudioSession: ObservableObject {
     }
 
     func exitSourceEventAudition() {
+        let scope = sourceScope
         invalidateSourceAudition()
-        status = "Source event audition ended · project playback selected"
+        status = "\(scope) audition ended · project playback selected"
     }
 
     private func invalidateSourceAudition() {
@@ -328,8 +330,8 @@ final class StudioSession: ObservableObject {
             }
             isPlaying = engine.isPlaying
             outputPeaks = [0, 0]
-            status = isPlaying ? "Auditioning source event · \(info.name)" :
-                (playhead >= engine.duration ? "Source event audition ended" : "Source event audition paused")
+            status = isPlaying ? "Auditioning \(info.auditionScope.lowercased()) · \(info.name)" :
+                (playhead >= engine.duration ? "\(info.auditionScope) audition ended" : "\(info.auditionScope) audition paused")
         } catch {
             invalidateSourceAudition()
             engine.stop(); isPlaying = false; outputPeaks = [0, 0]
@@ -592,7 +594,7 @@ final class StudioSession: ObservableObject {
 
     func importCPRProject() {
         let panel = NSOpenPanel()
-        panel.title = "Import Reference Project"
+        panel.title = "Import CPR Project"
         panel.allowedContentTypes = [UTType(filenameExtension: "cpr") ?? .data]
         panel.allowsMultipleSelection = false
         guard panel.runModal() == .OK, let source = panel.url else { return }
@@ -628,7 +630,7 @@ final class StudioSession: ObservableObject {
             defaults: report.applicationDefaults, canImport: report.canImport && !historical,
             recoveryDescription: historical
                 ? "Supported data recovered from \(report.sourceName). This is a partial import."
-                : "Review the data Rebase can restore from this file. Native Reference features listed below remain in the preserved source.",
+                : "Review the data Rebase can restore from this file. Native features listed below remain in the preserved source.",
             isImportReport: historical)
     }
 
@@ -642,7 +644,7 @@ final class StudioSession: ObservableObject {
     private func performCPRImport(_ preview: CPRImportPreview) {
         guard confirmProjectReplacement() else { return }
         let panel = NSSavePanel()
-        panel.title = "Save Imported Reference Project"
+        panel.title = "Save Imported CPR Project"
         panel.nameFieldStringValue = preview.source.deletingPathExtension().lastPathComponent + ".rebaseproj"
         guard panel.runModal() == .OK, var root = panel.url else { return }
         if root.pathExtension != "rebaseproj" { root.appendPathExtension("rebaseproj") }

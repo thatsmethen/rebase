@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "finding_id": "CPR-LIVE-STEREO-RING-001",
+  "created_utc": "2026-10-20T07:41:59.730411+00:00",
+  "status": "sealed bounded static contract and independently tested reconstruction",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "target_execution": false,
+  "cubase_runtime_comparisons": 0,
+  "claims": [
+    {
+      "id": "LIVE1",
+      "classification": "concrete native receiver and registration",
+      "claim": "The captured stereo transfer belongs to VSTAudioStreamPlayer, with a callback registered on a VstOpTrack receiver.",
+      "addresses": [
+        "1003838f0",
+        "104467eb0",
+        "104468148",
+        "104468198",
+        "1003841a0",
+        "101df4ea4"
+      ],
+      "details": [
+        "Factory 1003838f0 allocates 0x68 bytes and assigns the primary vptr plus writer interface at this+0x20 and callback interface at this+0x50. Original RTTI names VSTAudioStreamPlayer.",
+        "Successful open allocates one 32-byte ring record per channel. Each owns 32768 four-byte samples, capacity at ring+0x10, write index at +0x14 and read index at +0x18, initially zero.",
+        "Open requires flag bit 1 and inactive state. Its direct-ready branch obtains a receiver through global105010970 virtual+0x508, then calls 101df4ea4 with this+0x50. That helper checks literal VstOpTrack and stores the callback at receiver+0x230.",
+        "Callback slot0 is 1003849e8, which subtracts 0x50 and invokes 100384638. Writer interface slot0x18 is 100384ce4, which subtracts 0x20 and tails to 100384ac4.",
+        "Format-property getters return 32 bits and kind2, consistent with the separately established Float32 descriptor. The transfer itself uses four-byte loads/stores. Sample rate is queried dynamically by 10038509c and is not assumed to be 44100."
+      ]
+    },
+    {
+      "id": "LIVE2",
+      "classification": "bounded native producer value operation",
+      "claim": "Active, non-stopped stereo writes scatter interleaved frames into separate left/right rings without sample arithmetic.",
+      "addresses": [
+        "100384ac4",
+        "100384b24..100384bb0",
+        "100384c28..100384c90"
+      ],
+      "equation": [
+        "C=32768. Available=(W-R+C)%C; empty W==R means available0. Free=C-Available.",
+        "Before each frame, native requires Free>=trunc(Float32(C)*0.5)=16384.",
+        "For each admitted frame: left[W]=input[2*i], right[W]=input[2*i+1], each as an exact 32-bit copy; W=(W+1)%C.",
+        "A complete successful positive request increments submitted counter this+0x38 by the requested count."
+      ],
+      "details": [
+        "The inclusive pre-frame threshold allows 16385 frames from empty: the final accepted frame begins with exactly16384 free slots.",
+        "Native full-space handling polls/sleeps and can return after partial work or an asynchronous stop. Those behaviors are outside the candidate's atomic nonblocking request contract.",
+        "Native entry stop returns INT32_MIN. An inactive player can return the requested count without enqueueing. Candidate write explicitly represents only the active/non-stopped branch.",
+        "The mono producer multiplies by this+0x60; stereo does not. Mono and channel-count mismatch are excluded."
+      ]
+    },
+    {
+      "id": "LIVE3",
+      "classification": "bounded native consumer value operation",
+      "claim": "The callback uses only end-start to request frames; it does not use the absolute start to seek.",
+      "addresses": [
+        "100384638",
+        "100384650..1003846f8",
+        "1003847b0..1003848c8",
+        "1003849bc..1003849e8",
+        "103881008"
+      ],
+      "equation": [
+        "N is the native signed32 interpretation of end-start; the admitted domain requires the difference to be representable and 0<=N<=32768.",
+        "Stopped: zero all N output frames, advance timeline counter this+0x40 by N, leave read indices unchanged.",
+        "Available>=N: copy N left/right words from matching ring read indices with wrap, advance R by N and timeline by N.",
+        "Available<N and drain==0: zero the complete output block; leave R and timeline unchanged.",
+        "Available<N and drain!=0: zero the block, overwrite the available prefix with queued stereo samples, advance R by Available and timeline by requested N."
+      ],
+      "details": [
+        "Original Mach-O indirect symbols bind stub103881008 to _bzero. Zero-filled samples are positive-zero bits.",
+        "For coherent stereo rings, both channels preserve their exact sample words and order. No gain, clipping or conversion occurs in these branches.",
+        "Drain byte this+0x49 is set/cleared by 100383688 while waiting on submitted/timeline counters plus a separate latency query. That waiting policy and latency are not reconstructed.",
+        "Alternate callback100384a64/primary+0x1f8 applies external postprocessing102fd9e40 after the transfer; it is excluded."
+      ]
+    },
+    {
+      "id": "LIVE4",
+      "classification": "original-image correction and remaining linkage",
+      "claim": "The earlier AXt accessor argument5 is an open-flags argument; it does not itself establish Float32 format.",
+      "addresses": [
+        "10046e60c",
+        "10036e458",
+        "1004705b0",
+        "10036eff0",
+        "1001ffef0..1001fff0c",
+        "104feb498",
+        "103927150"
+      ],
+      "details": [
+        "Renderer-selection claimR7 described argument5 to10036e458 as format5. The captured constructor instead inspects argument>>1 and forwards the same argument to the source's open slot+0xf8. The earlier sealed artifact is preserved; this statement corrects that inference.",
+        "The AXt-derived read thunk reaches10036eff0, but this does not tie its output to this VSTAudioStreamPlayer or to ordinary MAudioTrack playback.",
+        "The unresolved selector IID now has exact initializer-bound bytes77b644ae362b4a198c9d3164152e968f at103927150 copied into104feb498. Additional concrete QI sites are retained, but no default timeline-to-player route is claimed."
+      ]
+    }
+  ],
+  "admitted_domain": [
+    "Successful initialized player state with exactly two source/output channels and coherent per-channel indices/capacities.",
+    "Serial value operations with stable state and source buffers throughout each call; no concurrent native producer/consumer mutation.",
+    "Fixed32768 capacity; counts0...32768; nonnegative counters and checked signed64 arithmetic; disjoint valid arrays/state/result.",
+    "Candidate accepts arbitrary four-byte sample words because this stereo branch only transfers bits. Finite-audio admission remains the separate application preparation responsibility."
+  ],
+  "reconstruction": {
+    "api": [
+      "rb_cpr_live_ring_init",
+      "rb_cpr_live_ring_reset",
+      "rb_cpr_live_ring_write",
+      "rb_cpr_live_ring_consume"
+    ],
+    "files": [
+      {
+        "path": "Application/Sources/RebaseTimingDSP/cpr_live_stereo_ring.c",
+        "bytes": 6008,
+        "sha256": "d9ac1d96873fe79ed313ed80fc7b53498b6764cac0ebd356626a407002ac389a"
+      },
+      {
+        "path": "Application/Sources/RebaseTimingDSP/include/cpr_live_stereo_ring.h",
+        "bytes": 2813,
+        "sha256": "a2a7091e77813800edcde35f58b570dce9a7fae2b27cede3c89515eeaefcba4a"
+      },
+      {
+        "path": "Application/Tests/RebaseCoreTests/CPRLiveStereoRingTests.swift",
+        "bytes": 9244,
+        "sha256": "198f65e6bb966038be8e8a4c503ee9d5e604e610ee34bdc5dbc376e99c719f04"
+      }
+    ],
+    "atomic_write": "Whole request must satisfy frames<=Free-16384+1. Otherwise return WOULD_BLOCK with all state/storage untouched. This conservative admission replaces native blocking/retry.",
+    "reset": "Indices and counters become zero; storage remains unchanged. Fresh-state application operation, not a proved native seek lifecycle.",
+    "errors": "Input/range/alignment/overlap/counter checks precede writes. Failure preserves state/storage/output/result.",
+    "application_composition": "Root integrates this normal stereo transfer after a separately selected rate/sample producer, splitting converted output into chunks<=8192. The AVAudioPlayerNode queue, four-buffer policy, reset/preroll and device path are explicit application choices."
+  },
+  "controls": {
+    "optimized_C": "Passed1200 independently modeled raw-word FIFO operations; 401 writes,399 whole-request rejections,290 normal reads,39 holding underruns,23 draining underruns,48 stopped reads and68 zero-length operations.",
+    "data": "Every output word compared, including signed zero, subnormal, infinity and NaN bit patterns; no floating arithmetic is expected.",
+    "discriminators": [
+      "16385 accepted vs16386 rejected from empty",
+      "multiple capacity wraps",
+      "absolute callback start independent of ring read position",
+      "hold vs drain vs stopped index/timeline behavior",
+      "distinct left/right patterns",
+      "pre-write range/alias/overflow rejection"
+    ],
+    "Swift": "Five focused test methods authored. Coordinated application suite result belongs to APP010 and is not asserted by this study.",
+    "independent_review": "Peer source/integer review found no actionable candidate defect in the declared domain. That review did not independently verify the original native instruction evidence.",
+    "scope": "Execution of authored reconstruction only; no proprietary code, hardware capture or runtime conformance comparison."
+  },
+  "custody": {
+    "function_intervals": 45,
+    "unique_entry_addresses": 44,
+    "source_bytes": 6512,
+    "native_words": 1628,
+    "rea_dossiers": 28,
+    "rea_instruction_addresses": 1218,
+    "unique_evidence_records": 54
+  },
+  "sessions": {
+    "raw_capture_clients": 5,
+    "isolated_clients_closed": true,
+    "imported_records": 54,
+    "import_client_closed": true,
+    "duplicate_capture": "100384624 appears twice. Canonical bundle retains first record; verification proves only local_path differs and raw bytes are identical."
+  },
+  "limitations": [
+    "The actual upstream invocation of VstOpTrack+0x230, engine scheduling/threading and connection from MAudioTrack selector to this player remain unresolved.",
+    "No native seek, exact device block size, asynchronous stop lifecycle, driver latency, real-time safety or default-engine route claim.",
+    "No native blocking/retry/partial-write emulation, mono gain, mismatched channel counts or alternate postprocessing path.",
+    "Raw Ghidra slices omit globals/imported code/RTTI/unwind. Original-image bindings are authority; C-like pseudocode is not bit-faithful compilable source.",
+    "No complete DAW routing, plugins, PDC, automation or full-project playback fidelity claim."
+  ],
+  "prospective_disconfirming_cases": [
+    "A verified upstream caller selects only alternate callback+8 or uses a different class/receiver; the plain callback composition would need revision.",
+    "Divergent channel indices or live mutation during a request would invalidate the coherent serial value-operation domain.",
+    "An exact corresponding runtime test disagrees at threshold, wrap, underflow or stop boundaries; runtime comparison remains prospective."
+  ],
+  "references": {
+    "source_custody": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-consumer/verification.json",
+      "bytes": 28684,
+      "sha256": "bff703c3f3f114188f05febc087f8b60d14c4cc2739daa802afdecd6ba8b7cde"
+    },
+    "original_dispatch_and_imports": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-consumer/original-bindings.json",
+      "bytes": 14407,
+      "sha256": "7e88a39621c408989b6a18d3099fd0b9062808588c4879dc5dc23032e0366653"
+    },
+    "canonical_evidence": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-consumer/evidence-bundle.json",
+      "bytes": 6987693,
+      "sha256": "6594c8cc753761b860b0976f3471b60ad13157f5457e92c815c0ca2b711c00f5"
+    },
+    "canonical_import": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-consumer/evidence-import.json",
+      "bytes": 367,
+      "sha256": "2ef7ef44319cccb02f12a772e8f37997cf2c2f4cf352e5ebf22ed15ca93b165b"
+    },
+    "independent_FIFO_control": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-consumer/candidate-ring-check.json",
+      "bytes": 1455,
+      "sha256": "ae06f23b8556bde0787bccc87f3fcc39f428c263f715d1c55177cfc6c9be3297"
+    },
+    "independent_FIFO_generator": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-consumer/check_ring.py",
+      "bytes": 6083,
+      "sha256": "c8a8b60a7a71842d933ab8dacb2a362a70e3d4ca15ee5ea120bf73f46419b8eb"
+    },
+    "prior_selector_study": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-playback/finding.json",
+      "bytes": 12437,
+      "sha256": "a2c2172126e9df179c8724a5605a6ad57039208a701a592aa95ef7dfce4cabca"
+    },
+    "prior_renderer_selection": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/finding.json",
+      "bytes": 33370,
+      "sha256": "f3ec20b3e9b3412a30a4451a920f1c68bbd95b41906dda4a432139a5f8f23da4"
+    },
+    "IID_initializer": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-consumer/selector-iid-constant.json",
+      "bytes": 716,
+      "sha256": "0ada062ae7537ad805934a6e4488eb9b2365987d6b8de593cbd8a57a1ba4a591"
+    }
+  }
+}

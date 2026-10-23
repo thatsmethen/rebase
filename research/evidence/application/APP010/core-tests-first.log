@@ -1,0 +1,93 @@
+[0/1] Planning build
+Building for debugging...
+[0/12] Write sources
+[3/12] Compiling RebaseTimingDSP cpr_live_stereo_ring.c
+[4/12] Compiling RebaseTimingDSP native_rate_mode0.c
+[5/12] Compiling RebaseTimingDSP cpr_event_pcm.c
+[6/12] Write swift-version--1AB21518FC5DEDBE.txt
+[8/40] Compiling RebaseCore CPRClockRoles.swift
+[9/40] Compiling RebaseCore CPRLiveStereoTransfer.swift
+[10/40] Compiling RebaseCore CPRTimelineSelection.swift
+[11/40] Compiling RebaseCore DAWProject.swift
+[12/40] Compiling RebaseCore AmbisonicConverter.swift
+[13/40] Compiling RebaseCore AudioTransportEngine.swift
+[14/40] Compiling RebaseCore Automation.swift
+[15/40] Compiling RebaseCore CPRAudioEventArchive.swift
+[16/40] Compiling RebaseCore ProjectStore.swift
+[17/40] Compiling RebaseCore CPRSignatureRecovery.swift
+[18/40] Compiling RebaseCore CPRSourceAudioInspection.swift
+[19/40] Compiling RebaseCore CPRRecoveryV4.swift
+[20/40] Compiling RebaseCore CPRSegmentReadPlan.swift
+[21/40] Emitting module RebaseCore
+[22/40] Compiling RebaseCore Project.swift
+[23/40] Compiling RebaseCore CPRRateReadBudget.swift
+[24/40] Compiling RebaseCore CPRRecoveryV1.swift
+[25/40] Compiling RebaseCore MusicalTime.swift
+[26/40] Compiling RebaseCore NativeTempoClock.swift
+[27/40] Compiling RebaseCore CPRProject.swift
+[28/40] Compiling RebaseCore CPRRateConvertedStream.swift
+[29/40] Compiling RebaseCore CPRAudioMediaAttachment.swift
+[30/40] Compiling RebaseCore CPRAutoFadeArchive.swift
+[31/40] Compiling RebaseCore CPRSourceEventPlayback.swift
+[32/40] Compiling RebaseCore CPRSourceEventRenderer.swift
+[33/40] Compiling RebaseCore OfflineRenderer.swift
+[34/40] Compiling RebaseCore CPRRecoveryV2.swift
+[35/40] Compiling RebaseCore CPRRecoveryV3.swift
+[36/41] Compiling RebaseCore UnresolvedCPRAudioEvent.swift
+[37/79] Compiling RebaseCoreTests ProjectStoreTests.swift
+[38/79] Compiling RebaseCoreTests RecoveredDSPTests.swift
+[39/80] Compiling RebaseCoreTests TestSupport.swift
+[40/80] Compiling RebaseCoreTests NativeMapClockTests.swift
+[41/80] Compiling RebaseCoreTests NativeMapKernelTests.swift
+[42/80] Compiling RebaseCoreTests CPRRateConvertedStreamTests.swift
+[43/80] Compiling RebaseCoreTests CPRRateReadBudgetTests.swift
+[44/80] Compiling RebaseCoreTests CPRAudioMediaAttachmentTests.swift
+[45/80] Compiling RebaseCoreTests CPRAutoFadeArchiveTests.swift
+[46/80] Compiling RebaseCoreTests AmbisonicConverterTests.swift
+[47/80] Compiling RebaseCoreTests AudioValidityTests.swift
+[48/80] Compiling RebaseCoreTests CPRRecoveryV3Tests.swift
+[49/80] Compiling RebaseCoreTests CPRRecoveryV4Tests.swift
+[50/80] Compiling Rebase AmbisonicExport.swift
+[51/80] Compiling Rebase StudioSession.swift
+[52/80] Compiling Rebase RebaseApp.swift
+[53/80] Compiling Rebase MixerView.swift
+[54/80] Compiling Rebase CPRImportReview.swift
+[55/80] Emitting module Rebase
+[56/80] Compiling Rebase TimelineView.swift
+[57/80] Compiling Rebase ProjectEditors.swift
+[58/80] Compiling Rebase CPRSourceAudioView.swift
+[58/80] Write Objects.LinkFileList
+[59/80] Linking Rebase
+[60/80] Applying Rebase
+[62/80] Compiling RebaseCoreTests CPRSourceEventPlaybackTests.swift
+[63/80] Compiling RebaseCoreTests CPRSourceEventRendererTests.swift
+[64/80] Compiling RebaseCoreTests NativeRateMode0Tests.swift
+[65/80] Compiling RebaseCoreTests NativeTempoClockTests.swift
+[66/80] Compiling RebaseCoreTests OfflineRendererTests.swift
+[67/80] Compiling RebaseCoreTests ProjectBehaviorTests.swift
+[68/80] Compiling RebaseCoreTests AutomationTests.swift
+[69/80] Compiling RebaseCoreTests CPRAudioEventArchiveTests.swift
+[70/80] Emitting module RebaseCoreTests
+[71/80] Compiling RebaseCoreTests CPRTimelineSelectionTests.swift
+[72/80] Compiling RebaseCoreTests DAWProjectTests.swift
+[73/80] Compiling RebaseCoreTests CPRLiveStereoRingTests.swift
+/workspace/rebase/Application/Tests/RebaseCoreTests/CPRLiveStereoRingTests.swift:47:9: error: the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions
+ 45 |     }
+ 46 |     private func words(first: Int, count: Int) -> [UInt32] {
+ 47 |         (first..<(first + count)).flatMap { i -> [UInt32] in
+    |         `- error: the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions
+ 48 |             // Distinct channels, signs and negative-zero positions.
+ 49 |             [i % 11 == 0 ? 0x80000000 : 0x3f000000 | UInt32(i & 0x7fffff),
+[74/80] Compiling RebaseCoreTests CPRProjectTests.swift
+/workspace/rebase/Application/Tests/RebaseCoreTests/CPRLiveStereoRingTests.swift:47:9: error: the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions
+ 45 |     }
+ 46 |     private func words(first: Int, count: Int) -> [UInt32] {
+ 47 |         (first..<(first + count)).flatMap { i -> [UInt32] in
+    |         `- error: the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions
+ 48 |             // Distinct channels, signs and negative-zero positions.
+ 49 |             [i % 11 == 0 ? 0x80000000 : 0x3f000000 | UInt32(i & 0x7fffff),
+[75/80] Compiling RebaseCoreTests CPRSegmentReadPlanTests.swift
+[76/80] Compiling RebaseCoreTests CPRSignatureRecoveryTests.swift
+[77/80] Compiling RebaseCoreTests InvalidClipIntervalTests.swift
+[78/80] Compiling RebaseCoreTests MusicalTimeTests.swift
+error: fatalError

@@ -1,0 +1,47 @@
+{
+  "created_utc": "2026-10-19T07:56:52.554961+00:00",
+  "scope": "Synthetic application clip-interval validation and existing core regression tests; no target or hardware execution",
+  "command": [
+    "/bin/sh",
+    "Application/test-app.sh"
+  ],
+  "exit_code": 0,
+  "log": "research/evidence/application/APP001/core-tests-interval-output.log",
+  "log_sha256": "36cbec31a261fecf0cc551f63773f7c39620ec64e4f1deeaf7a6103068544cbe",
+  "new_cases": [
+    "finite sourceOffset1e20 and greatestFiniteMagnitude reject before integer frame conversion",
+    "source interval starts at/passes end of media rejects onload",
+    "exact boundary interval loads and renders selected samples",
+    "same-media cache still validates each clip"
+  ],
+  "files": [
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "sha256": "418c3206a56cb4f6741272f566b298faf29a5c8d3750537dffec9718b78d3d86"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/OfflineRenderer.swift",
+      "sha256": "47aae4fddf451231baa9289cbeaec82141ade8919eadc442c7bc0ca7844ee6c8"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "sha256": "e8cce93c2a07e0e1752cc37f270396a99e34fb3e4bf8905e63033eeb6490a6ee"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "sha256": "8e07ab0ff73d120f88efcc8f509cf7b2ebbbbe5c8f9bccd89caacc6d906ab048"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/InvalidClipIntervalTests.swift",
+      "sha256": "7ddee37b29c522c0f326cf72babd5b17c874d5fbd8eaa8959f029c00650dbc7c"
+    },
+    {
+      "path": "Application/test-app.sh",
+      "sha256": "7ef1ac6cd8482f3c356478793f747ccc8ddb6c4de203b663ec8e52339efe6115"
+    }
+  ],
+  "status": "Passed",
+  "tests_passed": 23,
+  "new_test_methods": 4,
+  "suites": 5
+}

@@ -1,0 +1,108 @@
+{
+  "tests": {
+    "path": "research/evidence/application/APP013/core-tests-first.log",
+    "bytes": 52064,
+    "sha256": "3108a87396bcdb1ea3b90888cededc60c8fe52f876b7373a73738068dbaf2771",
+    "passed": 238,
+    "suites": 36
+  },
+  "build_log": {
+    "path": "research/evidence/application/APP013/build-release.log",
+    "bytes": 6385,
+    "sha256": "a8bd3e8e7c867e60bff45fff26d8ea702c7b8004b839658218be933273978f6b"
+  },
+  "executable_sha256": "6ac7a0a8940f273d19b8ff415dbaadc820980fafe2345d30cd681b340607036d",
+  "native_studies": [
+    {
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1",
+      "finding_sha256": "e7d6167351ea7f3d36cb9a9f659d57500562f7331237defe2dcc15c866438068",
+      "manifest_sha256": "4be6a8ff70e76ebdbf9a9be6777e0e1988e086a4cf90fec02f343d73ffa91504",
+      "files": 177
+    },
+    {
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/live-binding",
+      "finding_sha256": "336cb75ecee76b121ccfe649ba97e47256ec182694c5c7af9127c8692b644cfc",
+      "manifest_sha256": "8d2a0e99a8b14d1a7bfeb91d020275817448ec9ccbc77fa4072acca2c27772c5",
+      "files": 639
+    }
+  ],
+  "reviews": [
+    "research/evidence/application/APP013/mode1-independent-review.json",
+    "research/evidence/application/APP013/callback-independent-review.json",
+    "research/evidence/application/APP013/mode1-swift-integration-review.json",
+    "research/evidence/application/APP013/stream-queue-independent-review.json"
+  ],
+  "controls": [
+    "research/evidence/application/APP013/mode1-oracle.py",
+    "research/evidence/application/APP013/mode1-oracle.json",
+    "research/evidence/application/APP013/verify-mode1-instructions.py",
+    "research/evidence/application/APP013/mode1-instruction-verification.json",
+    "research/evidence/application/APP013/callback-adapter-oracle.py",
+    "research/evidence/application/APP013/callback-adapter-oracle.json",
+    "research/evidence/application/APP013/verify-callback-instructions.py",
+    "research/evidence/application/APP013/callback-instruction-verification.json",
+    "research/evidence/application/APP013/module-map-correction.json",
+    "research/evidence/application/APP013/gui-loaded-public-library.json"
+  ],
+  "implemented": [
+    "Explicit native mode1 upsample, downsample and equal-rate source audition reconstructs coefficient tables, binary64 history, fused tap accumulation, phase/count progression, resize/reset and final trimming.",
+    "Fresh cursor creation avoids the native reset retaining stale samples. Full-source count planning, seek/preroll suffixes, post-filter event gain and planar stereo delivery are integrated.",
+    "Native static callback ownership now connects audition producer to the Float32 planar adapter. Converted buffers apply its first-plane sentinel output stage after ring transfer, using Rebase partitions and zero transport prefix.",
+    "A serial producer refills the bounded four-buffer live queue. Player completions only enqueue work; cancellation waits for producer serialization before player stop/detach.",
+    "All three converter choices remain explicit. Original-rate default, source/media hash checks, frozen CPR custody and ordinary-project unresolved-event barriers remain in place.",
+    "An explicit TimingDSP module map fixes reuse of stale directory-umbrella modules when public headers are added."
+  ],
+  "limits": [
+    "No Cubase/proprietary code executed and no vendor runtime or DAC comparison. Full Cubase fidelity remains incomplete.",
+    "One eligible stereo zero-origin source event. General placement, full CPR timeline, fades/warp/inversion, track mixing/routing/automation and plug-in processing remain unresolved.",
+    "Mode1 uses traced arithmetic with host libSystem sin/sqrt. Static reconstruction and independent controls do not establish vendor runtime equivalence; unsupported samples, unsafe native allocations and overflow reject.",
+    "Backend selection is explicit rather than automatic native policy1 availability/fallback. Public SoXR build equivalence to the bundled library remains unverified.",
+    "Source PCM stays resident. The8192-source-frame partitions, four-buffer queue, serialized ring access, fresh seek preroll and AVAudioEngine device delivery are application policies.",
+    "Callback window/offset/prefix arithmetic is tested with explicit inputs; native transport state and ordinary-channel provider coordinates are not inferred for the app.",
+    "Initial priming and seek preroll remain synchronous. The worker removes main-actor refill dependence but does not certify hard realtime deadlines or absence of all underruns. UI playhead remains host-time based.",
+    "ASan could not reach candidate main because sanitizer initialization recursed on this host; its failure is retained. UBSan authored controls passed; no ASan pass is claimed."
+  ],
+  "retained_corrections": [
+    {
+      "record": {
+        "path": "research/evidence/application/APP013/module-cache-repair.json",
+        "bytes": 697,
+        "sha256": "8e5660ec7d69d0cf9b8ed808adeafa4b52636da07e2aed360a291b0249adc508"
+      },
+      "scope": "Initial unknown mode1 symbols from stale generated PCM; narrow cache repair before passing focused tests."
+    },
+    {
+      "record": {
+        "path": "research/evidence/application/APP013/module-map-correction.json",
+        "bytes": 931,
+        "sha256": "6eec7623a2ec25d0746ac56d0749cfc0c16fa02347d0b874ac6e6a1847ea2310"
+      },
+      "scope": "Subsequent callback-header cache failure fixed by explicit module map; failed log retained."
+    },
+    {
+      "record": {
+        "path": "research/evidence/application/APP013/stream-queue-independent-review.json",
+        "bytes": 4719,
+        "sha256": "faf764a2808e1592a063a383d8cdb50353bc3b135985c3b124e7715cadc40272"
+      },
+      "scope": "Initial test incorrectly included synchronous prime in physical off-main assertion; narrowed to asynchronous refill."
+    },
+    {
+      "record": {
+        "path": "research/evidence/application/APP013/mode1-independent-review.json",
+        "bytes": 7061,
+        "sha256": "d9b41212d6b74d1020d0b3b2c7790e02128490791b6efee6902da325d8162905"
+      },
+      "scope": "Early beta label corrected from original bits; candidate always used correct bits. Test macro syntax failure retained."
+    },
+    {
+      "record": {
+        "path": "research/evidence/application/APP013/callback-independent-review.json",
+        "bytes": 6471,
+        "sha256": "16a6f7613962095dc1fdf5738bcb69651190d9278167b129bf4c0f8cd555d3b0"
+      },
+      "scope": "Unsupported non-arm64 FP environment now rejects. Recounted16 FMA discriminators rather than12 without changing numerical expectations."
+    }
+  ],
+  "next": "Resolve ordinary channel provider identity and PAudioSegment coordinate getters, then implement verified placement/seek/read into native CPR timeline playback. Recover automatic backend policy separately; continue to preserve static/runtime evidence boundaries."
+}

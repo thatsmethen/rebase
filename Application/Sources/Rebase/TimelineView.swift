@@ -23,9 +23,10 @@ struct TimelineView: View {
     private let rulerHeight: CGFloat = 32
 
     var body: some View {
+        let displayRanges = eventDisplayRanges()
         VStack(spacing: 0) {
             toolbar
-            if !project.unresolvedAudioEvents.isEmpty { unresolvedNotice }
+            if !project.unresolvedAudioEvents.isEmpty { unresolvedNotice(displayRanges: displayRanges) }
             GeometryReader { geometry in
                 let availableWidth = max(240, geometry.size.width - headerWidth)
                 let contentWidth = max(availableWidth, CGFloat(max(30, max(project.arrangementDuration, sourceAudition?.duration ?? 0) + 8) * pixelsPerSecond))
@@ -39,7 +40,7 @@ struct TimelineView: View {
                                     emptyArrangement(width: contentWidth, height: max(170, geometry.size.height - rulerHeight))
                                 } else {
                                     ForEach(Array(project.tracks.enumerated()), id: \.element.id) { index, track in
-                                        lane(track, index: index, width: contentWidth)
+                                        lane(track, index: index, width: contentWidth, displayRanges: displayRanges)
                                     }
                                     TimelineGrid(pixelsPerSecond: pixelsPerSecond, project: musicalRuler ? project : nil)
                                         .frame(width: contentWidth, height: max(60, geometry.size.height - rulerHeight - CGFloat(project.tracks.count) * laneHeight))
@@ -59,12 +60,12 @@ struct TimelineView: View {
         .background(TimelineColors.canvas)
     }
 
-    private var unresolvedNotice: some View {
+    private func unresolvedNotice(displayRanges: [UUID: [SourceDisplayRange]]) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label("\(project.unresolvedAudioEvents.count) unresolved audio event\(project.unresolvedAudioEvents.count == 1 ? "" : "s") · \(project.unresolvedAudioEvents.filter { project.attachedMedia(for: $0) != nil }.count) media attached · playback pending",
+            Label("\(project.unresolvedAudioEvents.count) unresolved audio event\(project.unresolvedAudioEvents.count == 1 ? "" : "s") · \(project.unresolvedAudioEvents.filter { project.attachedMedia(for: $0) != nil }.count) media attached · project playback unresolved",
                   systemImage: "exclamationmark.triangle")
                 .font(.system(size: 11)).foregroundStyle(.orange)
-            let unplaced = project.unresolvedAudioEvents.filter { eventRange($0) == nil }
+            let unplaced = project.unresolvedAudioEvents.filter { displayRanges[$0.id, default: []].isEmpty }
             if !unplaced.isEmpty {
                 ScrollView(.horizontal) {
                     HStack {
@@ -201,7 +202,8 @@ struct TimelineView: View {
             .accessibilityLabel(musicalRuler ? "Timeline ruler in bars and beats" : "Timeline ruler in minutes and seconds")
     }
 
-    private func lane(_ track: Track, index: Int, width: CGFloat) -> some View {
+    private func lane(_ track: Track, index: Int, width: CGFloat,
+                      displayRanges: [UUID: [SourceDisplayRange]]) -> some View {
         ZStack(alignment: .leading) {
             TimelineGrid(pixelsPerSecond: pixelsPerSecond, project: musicalRuler ? project : nil)
                 .background(selectedTrackID == track.id ? Color.white.opacity(0.025) : Color.clear)
@@ -225,28 +227,8 @@ struct TimelineView: View {
                 .zIndex(selectedClipID == clip.id ? 2 : 1)
             }
             ForEach(track.unresolvedAudioEvents) { event in
-                if let placement = eventRange(event) {
-                    Button { onSelectTrack(track.id); onSelectClip(event.id) } label: {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(event.name).font(.system(size: 11, weight: .semibold)).lineLimit(1)
-                            Label("\(sourceAudition?.eventID == event.id ? "Source event audition" : "Unresolved audio") · \(placement.duration, specifier: "%.3f") s", systemImage: "waveform.slash")
-                                .font(.system(size: 10)).lineLimit(1)
-                        }
-                        .padding(10).frame(width: max(24, placement.duration * pixelsPerSecond), height: laneHeight - 18, alignment: .topLeading)
-                        .background(Color.orange.opacity(selectedClipID == event.id ? 0.16 : 0.07))
-                        .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(Color.orange.opacity(0.75),
-                            style: StrokeStyle(lineWidth: selectedClipID == event.id ? 2 : 1, dash: [5, 3])))
-                        .foregroundStyle(Color.orange.opacity(0.95))
-                    }
-                    .buttonStyle(.plain)
-                    .offset(x: placement.position * pixelsPerSecond)
-                    .help(sourceAudition?.eventID == event.id && sourceAudition?.timelineRange != nil
-                        ? "Source-clock placement for this audition. The original import remains unchanged."
-                        : project.attachedMedia(for: event) == nil
-                        ? "Saved source coordinates. Media and playback processing remain unresolved."
-                        : "Saved source coordinates. Media attached; native playback processing remains unresolved.")
-                    .accessibilityLabel("Inspect unresolved audio event \(event.name), start \(placement.position) seconds, duration \(placement.duration) seconds")
-                    .zIndex(selectedClipID == event.id ? 3 : 1)
+                ForEach(displayRanges[event.id, default: []]) { placement in
+                    sourceEventButton(event, track: track, placement: placement)
                 }
             }
         }
@@ -256,11 +238,76 @@ struct TimelineView: View {
         .clipped()
     }
 
-    private func eventRange(_ event: UnresolvedCPRAudioEvent) -> (position: Double, duration: Double)? {
-        if sourceAudition?.eventID == event.id, let range = sourceAudition?.timelineRange {
-            return (range.position, range.duration)
+    private func sourceEventButton(_ event: UnresolvedCPRAudioEvent, track: Track,
+                                   placement: SourceDisplayRange) -> some View {
+        let tint: Color = placement.isAudible ? .cyan : .orange
+        let selected = selectedClipID == event.id
+        let backgroundOpacity: Double = placement.isCovered ? 0.03 : selected ? 0.16 : 0.07
+        let help: String
+        if placement.isCovered {
+            help = "This saved event has no audible fragment after overlap priority and frame rounding. Its source and media remain part of the verified track."
+        } else if placement.isAudible {
+            help = "Audible source-clock fragment for this audition. The original import remains unchanged."
+        } else if project.attachedMedia(for: event) == nil {
+            help = "Saved source coordinates. Media and playback processing remain unresolved."
+        } else {
+            help = "Saved source coordinates. Media attached; native playback processing remains unresolved."
         }
-        return event.placement.map { (position: $0.position, duration: $0.duration) }
+        return Button { onSelectTrack(track.id); onSelectClip(event.id) } label: {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(event.name).font(.system(size: 11, weight: .semibold)).lineLimit(1)
+                Label("\(placement.label) · \(placement.duration, specifier: "%.3f") s",
+                      systemImage: placement.isAudible ? "waveform" : "waveform.slash")
+                    .font(.system(size: 10)).lineLimit(1)
+            }
+            .padding(10)
+            .frame(width: max(24, placement.duration * pixelsPerSecond), height: laneHeight - 18, alignment: .topLeading)
+            .background(tint.opacity(backgroundOpacity))
+            .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(tint.opacity(placement.isCovered ? 0.35 : 0.75),
+                style: StrokeStyle(lineWidth: selected ? 2 : 1, dash: [5, 3])))
+            .foregroundStyle(tint.opacity(placement.isCovered ? 0.5 : 0.95))
+        }
+        .buttonStyle(.plain)
+        .offset(x: placement.position * pixelsPerSecond)
+        .help(help)
+        .accessibilityLabel("Inspect \(event.name), \(placement.label), start \(placement.position) seconds, duration \(placement.duration) seconds")
+        .zIndex(placement.isCovered ? 0 : selected ? 3 : 1)
+    }
+
+    private struct SourceDisplayRange: Identifiable {
+        let id: Int
+        let position: Double
+        let duration: Double
+        let label: String
+        var isAudible = false
+        var isCovered = false
+    }
+
+    private func eventDisplayRanges() -> [UUID: [SourceDisplayRange]] {
+        var result: [UUID: [SourceDisplayRange]] = [:]
+        for event in project.unresolvedAudioEvents {
+            if let placement = event.placement {
+                result[event.id] = [SourceDisplayRange(id: 0, position: placement.position,
+                    duration: placement.duration, label: "Unresolved audio")]
+            }
+        }
+        if let track = sourceAudition?.sourceTrack {
+            for event in track.events { result[event.eventID] = [] }
+            for (index, fragment) in track.fragments.enumerated() {
+                result[fragment.eventID, default: []].append(SourceDisplayRange(id: index,
+                    position: fragment.range.position, duration: fragment.range.duration,
+                    label: "Source track fragment", isAudible: true))
+            }
+            for event in track.events where result[event.eventID, default: []].isEmpty {
+                result[event.eventID] = [SourceDisplayRange(id: 0, position: event.canonicalStart,
+                    duration: event.canonicalEnd - event.canonicalStart,
+                    label: "No audible fragment", isCovered: true)]
+            }
+        } else if let audition = sourceAudition, let range = audition.timelineRange {
+            result[audition.eventID] = [SourceDisplayRange(id: 0, position: range.position,
+                duration: range.duration, label: "Source event audition", isAudible: true)]
+        }
+        return result
     }
 
     private var playheadLine: some View {

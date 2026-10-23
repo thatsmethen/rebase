@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "id": "APP014-TIMELINE-STREAM-INDEPENDENT-REVIEW",
+  "created_utc": "2026-10-20T10:59:00.937017+00:00",
+  "reviewer": "/root/target_intake",
+  "result": "No actionable integration defect found in the declared bounded source-only mode.",
+  "method": "Read-only source review of the new stream, preparation/transport/UI integration and independent tests; compared data flow with the sealed concrete-provider/descriptor finding. No new tests were run by this reviewer.",
+  "checks": [
+    {
+      "id": "admission",
+      "result": "pass",
+      "evidence": "CPRSourceEventRenderer.prepare is still called first. It replays verified source/report data, validates the attached media metadata/hash and exact bounded WAV layout, and obtains the existing no-fade/no-warp/no-loop complete zero-origin source plan. The new mode requires stereo and does not bypass those gates."
+    },
+    {
+      "id": "context",
+      "result": "pass with explicit scope",
+      "evidence": "The new stream uses source plan rate and period1/rate; project.sampleRate does not silently resample it. This is an explicitly supplied reconstruction builder context. Concrete PAudioSegment inputs are stored start, separately rounded start+length end, and source offset. The public app entry supplies only the verified zero-origin placement; synthetic wider descriptors do not expand CPR interpretation."
+    },
+    {
+      "id": "finite-domain",
+      "result": "pass",
+      "evidence": "Initializer bounds sample rate, descriptor order/nonoverlap, total sample storage, quantized extent and source endpoint. C quantization rejects invalid floating environment/nonfinite/subnormal coordinates and conversion overflow. Samples and post-gain values must be finite normal or permitted zero; unsupported values reject before scheduling."
+    },
+    {
+      "id": "planning-and-cursor",
+      "result": "pass",
+      "evidence": "Each block starts fully zeroed. Absolute request start/end/current cursor are passed to the native-derived C planner. SKIP advances only the local segment index; successful reads use returned relative output offset, source seek and count. The end-equal segment remains until a later planner skip. Cursor/index publish after the complete block succeeds, so failed production does not commit progress."
+    },
+    {
+      "id": "gain",
+      "result": "pass",
+      "evidence": "Preparation decodes PCM24 at unity for this mode. Each copied source interval then calls rb_cpr_event_gain_f32 exactly once per channel with the saved Float32 event gain. The player and mixer remain unity. Rebase track pan/gain/automation are not silently applied to the selected unresolved native event."
+    },
+    {
+      "id": "branch-boundaries",
+      "result": "pass",
+      "evidence": "Native timeline mode exits preparation before the rate-converted branch and uses a distinct nativeTimelineStream. It does not pass through the audition FIFO, rate converter or callback alternating correction. Immutable memory reads always return the full requested count; native transient read retry is retained in the value helper and tested independently, not falsely simulated by this memory backend."
+    },
+    {
+      "id": "transport",
+      "result": "pass",
+      "evidence": "Transport creates one player for either stream kind, constructs a fresh cursor at each clamped application seek, and uses the existing serialized producer queue. Queue cancellation precedes player stop and acts as a scheduling barrier. Completion callbacks return before dispatching work; generation checks prevent stale completion from ending a replacement run. Four-buffer host queuing and UI time-to-frame rounding remain Rebase policies."
+    },
+    {
+      "id": "fresh-proof-and-ui",
+      "result": "pass",
+      "evidence": "StudioSession resumes and seeks by configuring the source event again, checking preserved project/root state and fresh source/media proof. Failed configuration clears audition state. Edits/explicit exit preserve the existing transition to project mode. UI labels this as source event audition, describes the native-derived reader, and states that general CPR placement/project processing remain unresolved."
+    },
+    {
+      "id": "project-barriers",
+      "result": "pass",
+      "evidence": "PreparedProject storage gains one internal optional stream only. Whole-project render/play/export admission still requires resolved audio events. No playable clip, placement reinterpretation, source identity or historical interpretation profile is created by audition."
+    }
+  ],
+  "independent_test_design_review": {
+    "authored_by": "/root/fidelity_protocol",
+    "scope": [
+      "Integer-indexed synthetic direct-read oracle at8192Hz covers starts, gaps, offsets, touching segments, multiple partitions, seeks and exact power-of-two gains.",
+      "Real pinned LoFi CPR plus independently authored PCM24 fixture checks every output sample bit using integer sign/mantissa construction, avoiding the production decoder/planner as expected-output oracle.",
+      "Stale media/Original.cpr/report rejection, source/package preservation, whole-project barriers, invalid descriptors, cursor transactionality and a source-derived nonzero CPR negative control are present."
+    ],
+    "observed_log_result": "core-tests-first.log reports248tests/38suites passed. Targeted timeline-tests-second.log reports10tests/2suites passed. These are retained application test results, not proprietary-runtime comparisons."
+  },
+  "additional_native_review": "APP014/timeline-instruction-verification.json independently verifies concrete provider QI/store/registration and three getters as part of nine original intervals. This arrived after the provider cold seal and is an additive review; no sealed native file was altered.",
+  "limitations": [
+    "General nonzero CPR start/offset projection remains gated because containing-context start units differ from own-clip delta units, and builder rate/extra shift/overlap context require additional source binding.",
+    "No live Cubase object graph, device output, project mixer/routing, arbitrary overlap, concurrent native list mutation, non-memory backend or target runtime conformance was tested.",
+    "This review did not repeat the peer's entire numerical instruction/oracle audit, the full suite, GUI checks or hardware playback.",
+    "Application scheduling and immutable full-read backend are deliberate implementation choices around the reconstructed bounded reader operations."
+  ],
+  "proprietary_execution": false,
+  "source_and_evidence": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 8552,
+      "sha256": "296e6d0983dd8c9d673fb357590c0de5821e96dd6f83fde1095d4f2526dd67a0"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 8656,
+      "sha256": "ecb0af387fba251cc6de46ea842a56eeb2b33b2e1d25868f525e39b55aee2368"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8144,
+      "sha256": "e85d40e2d5f79fd95a822d0b789c1805786e251556028e130f466cece125610e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 8628,
+      "sha256": "b882fcd909e3721ccd7744988721b9157cc42e1bed73ee428b3470a357b1dfe3"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "bytes": 10182,
+      "sha256": "20b2388abdf78d896d33381950869b7347fc8c6e252729ff4cb00b8e57b38f20"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRStreamPlaybackQueue.swift",
+      "bytes": 4965,
+      "sha256": "db806fa154391729bb2605b38402f0e3aa204551fb723eeaeac0d039f2ab9eda"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/OfflineRenderer.swift",
+      "bytes": 13919,
+      "sha256": "b579e6d9f84e64c9efdb7164a7f701169f5ecd5ed2fb7606a634c5725e89c6bc"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 38820,
+      "sha256": "82d7ede057a9d4a4d9cb65a37e7e0acc5d80f4011c895813d8b11d08a1eb239b"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+      "bytes": 7103,
+      "sha256": "7be241785a874460142e241898bec9cf5aa69eeb3b89dfd8894af0aec7daf80c"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "bytes": 22301,
+      "sha256": "b3d1f2a38e4f1cb86417ab41a74285ecbddbbf2f4983d0914014464476b551d7"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_reader.c",
+      "bytes": 8196,
+      "sha256": "6697ca1b9ce8725324362b2da54ac6432b1d64c8dcbb48adfc3464322dba4e0b"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_reader.h",
+      "bytes": 4390,
+      "sha256": "910475ed5c486c662c0f0893097cfbc4551b9be5922f5fcdb398941701373014"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeTimelineStreamTests.swift",
+      "bytes": 16090,
+      "sha256": "6ab9bc49f5dbd0538a616a0629a172feaf9301d53404c1cdf39f9f2e9913fad4"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeTimelineReaderTests.swift",
+      "bytes": 9346,
+      "sha256": "a6407c569598b3c72ad7510f4b3cff232e589474745d80000ed5955aff4063a8"
+    },
+    {
+      "path": "research/evidence/application/APP014/core-tests-first.log",
+      "bytes": 54152,
+      "sha256": "43e6b818af702142aa021070cfdc76fd1a4c54c1d58e0789927fb094b0eef1ec"
+    },
+    {
+      "path": "research/evidence/application/APP014/timeline-tests-second.log",
+      "bytes": 8350,
+      "sha256": "1b4b18c1e9db3d09f3ed3ce0e43da8d219b1a9df3fdb628a0953c5cc8160ce90"
+    },
+    {
+      "path": "research/evidence/application/APP014/timeline-instruction-verification.json",
+      "bytes": 3101,
+      "sha256": "86d566565d67f6233f277c6b9954aaa1a18e211c1a806f80e750f01123a5477f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider/finding.json",
+      "bytes": 15413,
+      "sha256": "96edf3d32313581e95b804581e44af8ce4888e01148e384f6c4f12a6411ac539"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider/artifact-manifest.json",
+      "bytes": 65807,
+      "sha256": "5de1983978d6b5661ad27ca013fa7717085e3586c82b9b1b57f6c2358f90d3a8"
+    }
+  ]
+}

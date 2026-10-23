@@ -1,0 +1,54 @@
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--1AB21518FC5DEDBE.txt
+[4/10] Emitting module RebaseCore
+[5/10] Compiling RebaseCore CPRAutoFadeArchive.swift
+[6/39] Compiling RebaseCoreTests ProjectStoreTests.swift
+[7/40] Compiling RebaseCoreTests ProjectBehaviorTests.swift
+[8/40] Compiling RebaseCoreTests TestSupport.swift
+[9/40] Compiling RebaseCoreTests NativeMapClockTests.swift
+[10/40] Compiling RebaseCoreTests NativeTempoClockTests.swift
+[11/40] Compiling RebaseCoreTests OfflineRendererTests.swift
+[12/40] Compiling RebaseCoreTests MusicalTimeTests.swift
+[13/40] Compiling RebaseCoreTests DAWProjectTests.swift
+[14/40] Compiling RebaseCoreTests AutomationTests.swift
+[15/40] Compiling RebaseCoreTests CPRAudioEventArchiveTests.swift
+[16/40] Compiling RebaseCoreTests CPRRecoveryV3Tests.swift
+[17/40] Compiling RebaseCoreTests CPRRecoveryV4Tests.swift
+[18/40] Compiling RebaseCoreTests InvalidClipIntervalTests.swift
+[19/40] Compiling RebaseCoreTests NativeMapKernelTests.swift
+[20/40] Compiling RebaseCoreTests CPRProjectTests.swift
+[21/40] Compiling RebaseCoreTests CPRRateReadBudgetTests.swift
+[22/40] Compiling Rebase TimelineView.swift
+[23/40] Compiling Rebase StudioSession.swift
+[24/40] Emitting module Rebase
+[25/40] Compiling Rebase MixerView.swift
+[26/40] Compiling Rebase ProjectEditors.swift
+[27/40] Compiling Rebase RebaseApp.swift
+[28/40] Compiling Rebase AmbisonicExport.swift
+[28/40] Write Objects.LinkFileList
+[29/40] Linking Rebase
+[30/40] Applying Rebase
+[32/40] Compiling RebaseCoreTests AmbisonicConverterTests.swift
+[33/40] Compiling RebaseCoreTests AudioValidityTests.swift
+[34/40] Emitting module RebaseCoreTests
+[35/40] Compiling RebaseCoreTests CPRSegmentReadPlanTests.swift
+[36/40] Compiling RebaseCoreTests CPRSignatureRecoveryTests.swift
+[37/40] Compiling RebaseCoreTests CPRAudioMediaAttachmentTests.swift
+/workspace/rebase/Application/Tests/RebaseCoreTests/CPRAutoFadeArchiveTests.swift:116:83: error: argument 'curveBytes' must precede argument 'omitBases'
+114 |             #expect(throws: CPRProjectError.self) { try read(fixture(eventVersion: event, trackVersion: track)) }
+115 |         }
+116 |         #expect(throws: CPRProjectError.self) { try read(fixture(omitBases: true, curveBytes: Data("MEvent\0MTrackEvent\0".utf8))) }
+    |                                                                                   `- error: argument 'curveBytes' must precede argument 'omitBases'
+117 |         #expect(throws: CPRProjectError.self) { try read(fixture(settingVersion: 1)) }
+118 |         #expect(throws: CPRProjectError.self) { try read(fixture(curveVersion: 1)) }
+[38/40] Compiling RebaseCoreTests CPRAutoFadeArchiveTests.swift
+/workspace/rebase/Application/Tests/RebaseCoreTests/CPRAutoFadeArchiveTests.swift:116:83: error: argument 'curveBytes' must precede argument 'omitBases'
+114 |             #expect(throws: CPRProjectError.self) { try read(fixture(eventVersion: event, trackVersion: track)) }
+115 |         }
+116 |         #expect(throws: CPRProjectError.self) { try read(fixture(omitBases: true, curveBytes: Data("MEvent\0MTrackEvent\0".utf8))) }
+    |                                                                                   `- error: argument 'curveBytes' must precede argument 'omitBases'
+117 |         #expect(throws: CPRProjectError.self) { try read(fixture(settingVersion: 1)) }
+118 |         #expect(throws: CPRProjectError.self) { try read(fixture(curveVersion: 1)) }
+error: fatalError

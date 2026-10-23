@@ -6,15 +6,14 @@ import Testing
 /// references. Neither matching metadata nor these tests prove original media
 /// identity, target execution, or restored native playback processing.
 struct CPRAudioMediaAttachmentTests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let workspace = PrivateResearchFixtures.root
     private func temporary() throws -> URL {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("CPRAttachment-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         return root
     }
     private func imported(at root: URL) throws -> (URL, CPRImportResult) {
-        let source = workspace.appendingPathComponent("research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro/LoFi Hip Hop.cpr")
+        let source = workspace.appendingPathComponent("templates/LoFi Hip Hop.cpr")
         let expected = "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495"
         #expect(cprSHA256(try Data(contentsOf: source)) == expected)
         let package = root.appendingPathComponent("Source.rebaseproj")
@@ -60,7 +59,8 @@ struct CPRAudioMediaAttachmentTests {
         catch { Issue.record("Wrong failure instead of the unresolved-audio barrier: \(error)") }
     }
 
-    @Test func explicitMatchingAssociationCopiesExactBytesAndPreservesFrozenBaseline() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func explicitMatchingAssociationCopiesExactBytesAndPreservesFrozenBaseline() throws {
         let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
         let (package, baseline) = try imported(at: root), preserved = try retainedBytes(package)
         let source = root.appendingPathComponent("Self Authored LoFi Format.wav")
@@ -91,7 +91,8 @@ struct CPRAudioMediaAttachmentTests {
         #expect(baseline.report.recoveredProject?.cprMediaAttachments.isEmpty == true)
     }
 
-    @Test func changedOrMissingCopiedMediaFailsLoadAndSaveBeforeManifestWrites() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func changedOrMissingCopiedMediaFailsLoadAndSaveBeforeManifestWrites() throws {
         let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
         let (package, baseline) = try imported(at: root), source = root.appendingPathComponent("Match.wav")
         let bytes = try pcm(at: source), project = try attach(baseline.project, package: package, source: source)
@@ -112,7 +113,8 @@ struct CPRAudioMediaAttachmentTests {
         #expect(try Data(contentsOf: source) == bytes)
     }
 
-    @Test func incompatibleFormatAndFrameCountsLeaveNoAssociationOrCopiedAsset() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func incompatibleFormatAndFrameCountsLeaveNoAssociationOrCopiedAsset() throws {
         let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
         let (package, baseline) = try imported(at: root), preserved = try retainedBytes(package)
         let manifest = package.appendingPathComponent("Project.json"), before = try Data(contentsOf: manifest)
@@ -136,7 +138,8 @@ struct CPRAudioMediaAttachmentTests {
         #expect(baseline.project.cprMediaAttachments.isEmpty)
     }
 
-    @Test func replacementKeepsOneAssociationAndExplicitRemovalPrunesIt() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func replacementKeepsOneAssociationAndExplicitRemovalPrunesIt() throws {
         let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
         let (package, baseline) = try imported(at: root), preserved = try retainedBytes(package)
         let first = root.appendingPathComponent("First.wav"), second = root.appendingPathComponent("Second.wav")
@@ -165,7 +168,8 @@ struct CPRAudioMediaAttachmentTests {
         #expect(try CPRProject.compatibilityReport(from: package)?.recoveredProject?.unresolvedAudioEvents.count == 1)
     }
 
-    @Test func attachmentManifestTamperingAndMissingSourceProofCannotPersist() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func attachmentManifestTamperingAndMissingSourceProofCannotPersist() throws {
         let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
         let (package, baseline) = try imported(at: root), source = root.appendingPathComponent("Match.wav")
         _ = try pcm(at: source); let project = try attach(baseline.project, package: package, source: source)
@@ -202,7 +206,8 @@ struct CPRAudioMediaAttachmentTests {
         #expect(try ProjectStore.load(from: package) == project)
     }
 
-    @Test func attachedMediaStillCannotRenderOrExportNativeEvents() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func attachedMediaStillCannotRenderOrExportNativeEvents() throws {
         let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
         let (package, baseline) = try imported(at: root), source = root.appendingPathComponent("Match.wav")
         _ = try pcm(at: source)

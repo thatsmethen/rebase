@@ -1,0 +1,113 @@
+{
+  "id": "APP007-MEDIA-ATTACHMENT-REVIEW",
+  "created_utc": "2026-10-19T14:13:31.340102+00:00",
+  "status": "passed; no open actionable findings in the reviewed core attachment scope",
+  "scope": "Independent read-only production source review plus seven authored tests using self-authored PCM WAV and a source-proven shared-file archive control. No proprietary target execution or native audio-conformance observation.",
+  "source_pins": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioMediaAttachment.swift",
+      "bytes": 5034,
+      "sha256": "32ae14bc2db468a1ccb3ba9f15e090ff94c01ab79add0d5d9e1504cadb9f6e92"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 12457,
+      "sha256": "b31059bab1fc2a05ac15d4c8a72bd3db45d29ec1f79f260786bb115c02201a45"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "bytes": 13611,
+      "sha256": "5c7837be4d55f371591fcee99cb6663aaf4f346832a21180d46568193ad3fd1d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSegmentReadPlan.swift",
+      "bytes": 5048,
+      "sha256": "af56297a268184c07c58657beef5e7d67eb794b622614536992f65714752cae0"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRAudioMediaAttachmentTests.swift",
+      "bytes": 22919,
+      "sha256": "d6ab421a6d247c31828317f58153cb220623632f22b402ab592cc55d52ab3fff"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSegmentReadPlanTests.swift",
+      "bytes": 10014,
+      "sha256": "3b78f2abdc0f531b08776a70f7deb3b163395a37ced25d65704003ba1f7071af"
+    }
+  ],
+  "resolved_findings": [
+    {
+      "issue": "Attaching to one event could accept an association shared by another event with an inadmissible segment, causing later save/load failure.",
+      "correction": "ProjectStore now validates every linked event through validateCPRAudioMedia(result, at: root) before accepted=true.",
+      "verification": "A structurally generated two-event CPR declares one shared AudioFile and separate segments. Normal import creates its genuine source SHA/report. The first segment fits1058400 frames and the second exceeds it by1; attachment to the first rejects with sourceRangeExceeded, removes the copy and leaves the manifest unchanged. The matched valid control shares one attachment, persists, and retains the association when only one event is deleted."
+    },
+    {
+      "issue": "The failure cleanup defer was installed after copyItem, leaving a possible partial destination outside cleanup if the copy itself failed.",
+      "correction": "The cleanup defer is now installed before copyItem.",
+      "verification": "Read-only source inspection confirms ordering. The post-copy shared-source rejection exercises the same cleanup. No deterministic low-level mid-copy I/O failure was injected."
+    }
+  ],
+  "validation": {
+    "command": "Application/test-app.sh --filter CPRAudioMediaAttachmentTests",
+    "passed": true,
+    "tests": 7,
+    "suites": 1,
+    "duration_seconds": 2.09,
+    "log": {
+      "path": "research/evidence/application/APP007/media-attachment-tests-round2.log",
+      "bytes": 2182,
+      "sha256": "2b25c08e70e509a142d77ec3b161ff88aafdef165368a20226899748edf78a74"
+    },
+    "initial_attempt": {
+      "log": {
+        "path": "research/evidence/application/APP007/media-attachment-tests-initial.log",
+        "bytes": 1840,
+        "sha256": "223ea12744119ec3b711ac826027e7b922bcc66e384e4ebf296376af5ba59058"
+      },
+      "outcome": "Swift Testing macro rejected a throwing right-hand conjunction in the new test source. Split into independent assertions; production code unchanged."
+    }
+  },
+  "coverage": [
+    "Generated PCM24 stereo WAV with1058400 frames at44100Hz,6bytes/frame; explicit user-selected association, copied bytes and SHA match, and exact original/report baseline preservation.",
+    "Package save/load and package copy/reopen retain attachment facts; frozen report recoveredProject remains attachment-free.",
+    "Changed or missing copied media fails load/save before manifest replacement; selected source remains untouched.",
+    "Wrong frame count in either direction, rate, channel count, bit depth and a directory source all reject without attachment or copied asset.",
+    "Replacement retains one association per source file; failed replacement leaves files and manifest unchanged; explicit removal/pruning persists while retained source/report remain intact.",
+    "Altered media hash, source hash, source object identity, format facts, association type and traversal path reject persistence; tampered original or missing report rejects before attachment.",
+    "Even after explicit timing conversion, attached unresolved events block render, WAV and DAWproject export; rejected WAV leaves existing bytes unchanged.",
+    "Shared-file validation uses legitimate fresh CPR provenance, not forged in-memory event/report data."
+  ],
+  "segment_plan_validation": {
+    "tests": 7,
+    "suites": 1,
+    "passed": true,
+    "log": {
+      "path": "research/evidence/application/APP007/segment-plan-tests-initial.log",
+      "bytes": 4034,
+      "sha256": "02c00b76ac007447206ae0bf5deca05e798d9018e7cb4584f389295cba13cdb3"
+    },
+    "native_evidence": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/finding.json",
+      "bytes": 17257,
+      "sha256": "b3ed0ab7f758c91a65620dcc829be02e51684c7887e4561f9107d22fc0365c38"
+    },
+    "oracle": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/interval-and-rate-vectors.json",
+      "bytes": 14202,
+      "sha256": "83fd06bd41ee507e3d4735c69b52988dbf89687c41e46e94850b73b445117bcb"
+    },
+    "independent_peer_review": "The segment evidence author /root/target_intake reviewed the source/tests and original64-bit min/count narrowing and complete-read tail. No actionable defect found in the declared domain; source-capacity and overflow rejection remain explicit stricter application policy."
+  },
+  "limits": [
+    "Format agreement and checksum identify the selected local asset only; they do not prove it is the missing original recording.",
+    "The integer planner assumes the matched direct-format/gain1/complete-backend-read branch and does not establish actual backend selection, source rate stability or output samples.",
+    "Attached events remain unresolved, with no playable Clip or automatic conversion into generic application processing.",
+    "Filesystem mutation races beyond the implemented file-size/inode/modification-time checks and copied-file rescan/hash comparison were not adversarially stress-tested.",
+    "The reviewed core transaction returns a Project with copied media; app-level save/undo/redo/GUI workflows are validated separately by the parent."
+  ],
+  "production_edits_by_reviewer": [
+    "Application/Sources/RebaseCore/CPRSegmentReadPlan.swift"
+  ],
+  "target_executions": 0,
+  "sealed_APP006_mutations": 0
+}

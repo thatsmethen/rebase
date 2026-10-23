@@ -1,0 +1,308 @@
+{
+  "id": "APP013-GUI",
+  "created_utc": "2026-10-20T10:30:13.757985+00:00",
+  "groups_passed": 8,
+  "executable": {
+    "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 4912720,
+    "sha256": "6ac7a0a8940f273d19b8ff415dbaadc820980fafe2345d30cd681b340607036d"
+  },
+  "groups": [
+    {
+      "name": "up_admission",
+      "files": [
+        "gui-up-open.txt",
+        "gui-up-admitted.txt",
+        "gui-up-playing.txt",
+        "gui-up-playing.png",
+        "gui-loaded-public-library.json"
+      ],
+      "observations": "The 48 kHz package retains its unresolved event. Explicit mode1 admission describes a reconstructed filter, fresh seek replay and unverified reference sample equivalence. Live playback advances with nonzero stereo engine peaks and the screenshot confirms the persistent event-only banner. Read-only process mapping confirms the bundled public SoXR library used by the separate mode2 path."
+    },
+    {
+      "name": "transport_lifecycle",
+      "files": [
+        "gui-up-paused.txt",
+        "gui-up-seek.txt",
+        "gui-up-resumed.txt",
+        "gui-up-natural-end.txt",
+        "gui-up-restart.txt",
+        "gui-up-return.txt",
+        "gui-up-stop.txt"
+      ],
+      "observations": "Pause at11.768 clears peaks; paused seek shows16.000, resume advances to16.255; natural completion shows24.000 with zero peaks. Restart advances to0.392; Return while playing advances from0.388; Stop shows0.000 with zero peaks. These are retained application transport states, not a physical output measurement."
+    },
+    {
+      "name": "media_custody",
+      "files": [
+        "gui-media-tamper.json",
+        "gui-up-tamper-rejected.txt",
+        "gui-up-after-rejection.txt",
+        "gui-media-restored.json",
+        "gui-up-restored-playing.txt"
+      ],
+      "observations": "A recorded one-byte attached-media change causes an explicit refusal before using the source event and clears audition mode. Restoration to the baseline hash permits fresh mode1 playback; all15 package files are independently unchanged below."
+    },
+    {
+      "name": "edit_exit_undo",
+      "files": [
+        "gui-up-edit-exit.txt",
+        "gui-up-undo.txt"
+      ],
+      "observations": "Pan0.25 exits audition, zeros peaks, selects project Play and reports Stopped. Undo restores pan0 without re-entering audition. No package edit was published."
+    },
+    {
+      "name": "project_barriers",
+      "files": [
+        "gui-project-play-blocked.txt",
+        "gui-project-export-blocked.txt"
+      ],
+      "observations": "Ordinary project Play and Export both refuse unresolved CPR events. Explicit event audition has not silently enabled full-project playback or export."
+    },
+    {
+      "name": "downsample_lifecycle",
+      "files": [
+        "gui-down-open.txt",
+        "gui-down-admitted.txt",
+        "gui-down-playing.txt",
+        "gui-down-live-seek.txt",
+        "gui-down-natural-end.txt",
+        "gui-down-explicit-exit.txt"
+      ],
+      "observations": "The32kHz package admits explicit mode1, plays with nonzero peaks, and a live seek advances to16.284. It ends at24.000 with zero peaks; explicit exit removes the audition banner and restores project Play."
+    },
+    {
+      "name": "equalrate_admission",
+      "files": [
+        "gui-equal-open.txt",
+        "gui-equal-mode0-blocked.txt",
+        "gui-equal-mode1-admitted.txt",
+        "gui-equal-mode1-playing.txt",
+        "gui-equal-mode1-exit.txt"
+      ],
+      "observations": "At44.1kHz source/project rate, mode0 is disabled with its different-rate explanation. Explicit mode1 is admitted and observed playing, then exits to project mode with zero peaks. This does not claim the equal-rate filter is identity."
+    },
+    {
+      "name": "mode_regressions",
+      "files": [
+        "gui-mode2-admitted.txt",
+        "gui-mode2-playing.txt",
+        "gui-mode2-progress.txt",
+        "gui-mode2-exit.txt",
+        "gui-original-admitted.txt",
+        "gui-original-playing.txt",
+        "gui-original-exit.txt"
+      ],
+      "observations": "The existing public-SoXR mode2 path is admitted and advances from13.047 to21.814 before exit. A fresh inspection defaults to Original source rate; its playback advances at44.1kHz without a converter caption and exits with zero peaks."
+    }
+  ],
+  "records": [
+    {
+      "path": "research/evidence/application/APP013/gui-down-admitted.txt",
+      "bytes": 1561,
+      "sha256": "c133786d4d8d563251cdd9df0583c51d5c92f457892cc123c4d6bc54ae257225"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-down-explicit-exit.txt",
+      "bytes": 5362,
+      "sha256": "51af71cbd7fc2d375d5718f1add84e8eda1215f251efa339e35ddc9cca3c8195"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-down-live-seek.txt",
+      "bytes": 5877,
+      "sha256": "c2e4f7229f7b8f8f47912ed4386273affb30465fd84311b5f3eeca4e41309ff5"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-down-natural-end.txt",
+      "bytes": 5852,
+      "sha256": "05c4fdb56cb009eac8e15ce16627404308938f0cb100c8b414d76556fc4efa9e"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-down-open.txt",
+      "bytes": 5337,
+      "sha256": "2a42376a08b506caa35a46df39ca31ddeeb812f0434dd2614e43832f3701d749"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-down-playing.txt",
+      "bytes": 5876,
+      "sha256": "8515dc942c3ae15072967d21d0b46c447c8646f37c86f9916a8efec4e78ef2b8"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-equal-mode0-blocked.txt",
+      "bytes": 1541,
+      "sha256": "7122b225f18dc8d2a6464ae27581179f8737dd4a1efcb564fe479f2001e606e2"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-equal-mode1-admitted.txt",
+      "bytes": 1561,
+      "sha256": "7ffd307ba6b72d099d005d65f7f53236abe8a8e325532181c5898bed4fbfd50a"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-equal-mode1-exit.txt",
+      "bytes": 5363,
+      "sha256": "c5c477f5c520b7c143b56b38c58bb8b918cd4b2fde4a89b3c723c8e5459564b1"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-equal-mode1-playing.txt",
+      "bytes": 5876,
+      "sha256": "f89350553e77751a9485a550afca5d0a64d6f9a70d7b3e4afcc5d43a93690d1c"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-equal-open.txt",
+      "bytes": 5337,
+      "sha256": "f1e3f1300791f7d2df6b7d8d83c33b268d329aee44327b2285d53e3625dc406e"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-loaded-public-library.json",
+      "bytes": 481,
+      "sha256": "7f6456cc24b23ee5ecbf1bb139880d34d70a6e443dec1854aa4279920553525b"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-media-restored.json",
+      "bytes": 242,
+      "sha256": "e41980406dfb9b7ed197360e0ec687d3ae4e687e2a8b02c175702f14ced2354a"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-media-tamper.json",
+      "bytes": 413,
+      "sha256": "ebf27fcc0c559a423a847975489396b2f2a1b501ecf2b5eef7e793d1872206d2"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-mode2-admitted.txt",
+      "bytes": 1533,
+      "sha256": "ea7f05515dc1acd68485499a60f5ad05c040cd64453c5d0b45ffe5cdff8850eb"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-mode2-exit.txt",
+      "bytes": 5363,
+      "sha256": "54307f28d229591cd7ed303f91a439b521dd0df82bc279da3968515ea66ec9b9"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-mode2-playing.txt",
+      "bytes": 5868,
+      "sha256": "54014c2448ac58690a14ef342960d53852aff1f679b52bdf153c883467d20588"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-mode2-progress.txt",
+      "bytes": 5868,
+      "sha256": "b54197be01bcf01ee83234964633d5c48c62b1079810a162320b472c4a9c226a"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-original-admitted.txt",
+      "bytes": 1351,
+      "sha256": "0f3c89ed0f2280d34d535b3c36121c2c6403a0996b15ee3c4d600b0f26b36908"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-original-exit.txt",
+      "bytes": 5363,
+      "sha256": "00960388f7d644b2f9d0c9ef9b827c601b80f13a617bab6fd7f8ef2e3a0b4e11"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-original-playing.txt",
+      "bytes": 5809,
+      "sha256": "ca04cbbfc662c4fa2ed17645dab3b77a315aba388a4b16c0fa78b2464601ff56"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-package-baselines.json",
+      "bytes": 3905,
+      "sha256": "8a15ea5702931773fe098eec0e440c2c76b185ea8a9d4720683cde8b72f301f5"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-project-export-blocked.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-project-play-blocked.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-release-build.json",
+      "bytes": 204,
+      "sha256": "a4ceef4dcf35bf0985904670cee2bdcf434948a8a3abdae8b536f8349f3835a8"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-admitted.txt",
+      "bytes": 1561,
+      "sha256": "7168177101c760732b8114ccad6002ad5068d0ce81b715d2b0f704d0e25f13ae"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-after-rejection.txt",
+      "bytes": 5333,
+      "sha256": "a310ec2bc30c9513ee68652b4869e04eb2a4d32ab116fbcc9a2ec2e40a692c04"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-edit-exit.txt",
+      "bytes": 5334,
+      "sha256": "3dac188bdba388ddb1c0ad7565830b6e42812e3befcd2905b85dacfa4d8df54d"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-natural-end.txt",
+      "bytes": 5850,
+      "sha256": "0e71034748b64341564cb9a0c7ee58b5533767b5e92046e5e5aec14c88524dec"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-open.txt",
+      "bytes": 5333,
+      "sha256": "5a2a08c9d18ce2762fa8ebd4bf2e265fa44ef0c94b3087f502134ea20114a6e2"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-paused.txt",
+      "bytes": 5852,
+      "sha256": "947dd191c2c66d61cbe3f8039cac09d05cb41206db887d626bf0aeb6f65b99a5"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-playing.png",
+      "bytes": 404658,
+      "sha256": "b90f877629ffa8f11be24b7e8065bcc1f4a3b3774396e63df458aab97957bad3"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-playing.txt",
+      "bytes": 5875,
+      "sha256": "a9ce3d9e47ec68c253da4fe997d1c429dff4f21677fc87845ab88cf0ee39d938"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-restart.txt",
+      "bytes": 5874,
+      "sha256": "97d8e70370cd82bd40b9ff0692de9d9e6eaa0a371fbaf826f4d8e72aa49ec8a7"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-restored-playing.txt",
+      "bytes": 5874,
+      "sha256": "d311088dbd3a7dbd7e23a32a6c29d0777e99c4be416d097a40a11f0ba94a244c"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-resumed.txt",
+      "bytes": 5874,
+      "sha256": "9fcefbcb3943fcd64d64fa5b002cd3e529f3066a1a10e8eba34b607586c89838"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-return.txt",
+      "bytes": 5873,
+      "sha256": "ff835216b25809ac87170d4569cebe8cb9fec5f3f7b81623172a3798044dd156"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-seek.txt",
+      "bytes": 5852,
+      "sha256": "d67a99300f2a6c4297c0de0125289745269e2933dc51dc58a811cd98a180d2b6"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-stop.txt",
+      "bytes": 5852,
+      "sha256": "609e1ca82b65cf7aecec603d3eb2a8ac54575e498a8859ebe42ac158a2d14623"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-tamper-rejected.txt",
+      "bytes": 394,
+      "sha256": "4b2ec7bd2949f020b3eb9dc4f96d68554d43a716febaa1fa5551e665bc52b3c0"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-undo.txt",
+      "bytes": 5320,
+      "sha256": "d750f9237347f8bf3416d3f2c944d311fe851da9b9ce7d8a3e79351ba063ea69"
+    }
+  ],
+  "package_files_unchanged": 15,
+  "scope": "Own application and synthetic PCM; engine telemetry is not DAC or Cubase output."
+}

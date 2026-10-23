@@ -1,0 +1,1210 @@
+{
+  "scope": "Static-derived channel operators; no target sample comparison",
+  "operation": "For each destination j and frame n: y[j][n] = multiply_in_sample_precision(x[inverse(map)[j]][n], convert_stored_binary64_gain_to_sample_precision(gain[j])). Copy precedes destination-indexed gain.",
+  "float32_rounding_caution": "Stored gains are binary64; FCVT S,D precedes vDSP_vsmul. Listed binary32 bits assume nearest-even rounding and are not evidence of the target FPCR setting.",
+  "contracts": [
+    {
+      "channel_count": 9,
+      "direction": "A",
+      "normalized_parameter_condition": "0 <= p < 0.5",
+      "source_to_destination": [
+        0,
+        3,
+        1,
+        2,
+        6,
+        7,
+        5,
+        8,
+        4
+      ],
+      "destination_to_source": [
+        0,
+        2,
+        3,
+        1,
+        8,
+        6,
+        4,
+        5,
+        7
+      ],
+      "destination_gain_binary64": [
+        1.4142135623730951,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.8660254037844386,
+        0.8660254037844386,
+        0.8660254037844386,
+        0.8660254037844386
+      ],
+      "destination_gain_binary64_bits": [
+        "0x3ff6a09e667f3bcd",
+        "0x3ff0000000000000",
+        "0x3ff0000000000000",
+        "0x3ff0000000000000",
+        "0x3ff0000000000000",
+        "0x3febb67ae8584caa",
+        "0x3febb67ae8584caa",
+        "0x3febb67ae8584caa",
+        "0x3febb67ae8584caa"
+      ],
+      "destination_gain_binary32_nearest_even": [
+        1.4142135381698608,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.8660253882408142,
+        0.8660253882408142,
+        0.8660253882408142,
+        0.8660253882408142
+      ],
+      "destination_gain_binary32_nearest_even_bits": [
+        "0x3fb504f3",
+        "0x3f800000",
+        "0x3f800000",
+        "0x3f800000",
+        "0x3f800000",
+        "0x3f5db3d7",
+        "0x3f5db3d7",
+        "0x3f5db3d7",
+        "0x3f5db3d7"
+      ],
+      "per_destination_equations": [
+        {
+          "destination": 0,
+          "source": 0,
+          "gain_index": 0,
+          "gain_binary64_bits": "0x3ff6a09e667f3bcd",
+          "gain_binary32_nearest_even_bits": "0x3fb504f3"
+        },
+        {
+          "destination": 1,
+          "source": 2,
+          "gain_index": 1,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 2,
+          "source": 3,
+          "gain_index": 2,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 3,
+          "source": 1,
+          "gain_index": 3,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 4,
+          "source": 8,
+          "gain_index": 4,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 5,
+          "source": 6,
+          "gain_index": 5,
+          "gain_binary64_bits": "0x3febb67ae8584caa",
+          "gain_binary32_nearest_even_bits": "0x3f5db3d7"
+        },
+        {
+          "destination": 6,
+          "source": 4,
+          "gain_index": 6,
+          "gain_binary64_bits": "0x3febb67ae8584caa",
+          "gain_binary32_nearest_even_bits": "0x3f5db3d7"
+        },
+        {
+          "destination": 7,
+          "source": 5,
+          "gain_index": 7,
+          "gain_binary64_bits": "0x3febb67ae8584caa",
+          "gain_binary32_nearest_even_bits": "0x3f5db3d7"
+        },
+        {
+          "destination": 8,
+          "source": 7,
+          "gain_index": 8,
+          "gain_binary64_bits": "0x3febb67ae8584caa",
+          "gain_binary32_nearest_even_bits": "0x3f5db3d7"
+        }
+      ]
+    },
+    {
+      "channel_count": 9,
+      "direction": "B",
+      "normalized_parameter_condition": "0.5 <= p <= 1",
+      "source_to_destination": [
+        0,
+        2,
+        3,
+        1,
+        8,
+        6,
+        4,
+        5,
+        7
+      ],
+      "destination_to_source": [
+        0,
+        3,
+        1,
+        2,
+        6,
+        7,
+        5,
+        8,
+        4
+      ],
+      "destination_gain_binary64": [
+        0.7071067811865475,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.1547005383792517,
+        1.1547005383792517,
+        1.1547005383792517,
+        1.1547005383792517
+      ],
+      "destination_gain_binary64_bits": [
+        "0x3fe6a09e667f3bcc",
+        "0x3ff0000000000000",
+        "0x3ff0000000000000",
+        "0x3ff0000000000000",
+        "0x3ff0000000000000",
+        "0x3ff279a74590331d",
+        "0x3ff279a74590331d",
+        "0x3ff279a74590331d",
+        "0x3ff279a74590331d"
+      ],
+      "destination_gain_binary32_nearest_even": [
+        0.7071067690849304,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.154700517654419,
+        1.154700517654419,
+        1.154700517654419,
+        1.154700517654419
+      ],
+      "destination_gain_binary32_nearest_even_bits": [
+        "0x3f3504f3",
+        "0x3f800000",
+        "0x3f800000",
+        "0x3f800000",
+        "0x3f800000",
+        "0x3f93cd3a",
+        "0x3f93cd3a",
+        "0x3f93cd3a",
+        "0x3f93cd3a"
+      ],
+      "per_destination_equations": [
+        {
+          "destination": 0,
+          "source": 0,
+          "gain_index": 0,
+          "gain_binary64_bits": "0x3fe6a09e667f3bcc",
+          "gain_binary32_nearest_even_bits": "0x3f3504f3"
+        },
+        {
+          "destination": 1,
+          "source": 3,
+          "gain_index": 1,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 2,
+          "source": 1,
+          "gain_index": 2,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 3,
+          "source": 2,
+          "gain_index": 3,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 4,
+          "source": 6,
+          "gain_index": 4,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 5,
+          "source": 7,
+          "gain_index": 5,
+          "gain_binary64_bits": "0x3ff279a74590331d",
+          "gain_binary32_nearest_even_bits": "0x3f93cd3a"
+        },
+        {
+          "destination": 6,
+          "source": 5,
+          "gain_index": 6,
+          "gain_binary64_bits": "0x3ff279a74590331d",
+          "gain_binary32_nearest_even_bits": "0x3f93cd3a"
+        },
+        {
+          "destination": 7,
+          "source": 8,
+          "gain_index": 7,
+          "gain_binary64_bits": "0x3ff279a74590331d",
+          "gain_binary32_nearest_even_bits": "0x3f93cd3a"
+        },
+        {
+          "destination": 8,
+          "source": 4,
+          "gain_index": 8,
+          "gain_binary64_bits": "0x3ff279a74590331d",
+          "gain_binary32_nearest_even_bits": "0x3f93cd3a"
+        }
+      ]
+    },
+    {
+      "channel_count": 16,
+      "direction": "A",
+      "normalized_parameter_condition": "0 <= p < 0.5",
+      "source_to_destination": [
+        0,
+        3,
+        1,
+        2,
+        6,
+        7,
+        5,
+        8,
+        4,
+        12,
+        13,
+        11,
+        14,
+        10,
+        15,
+        9
+      ],
+      "destination_to_source": [
+        0,
+        2,
+        3,
+        1,
+        8,
+        6,
+        4,
+        5,
+        7,
+        15,
+        13,
+        11,
+        9,
+        10,
+        12,
+        14
+      ],
+      "destination_gain_binary64": [
+        1.4142135623730951,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.8660254037844386,
+        0.8660254037844386,
+        0.8660254037844386,
+        0.8660254037844386,
+        1.0,
+        4.7702783519995515,
+        4.7702783519995515,
+        0.7453559924999299,
+        0.7453559924999299,
+        1.7677669529663687,
+        1.7677669529663687
+      ],
+      "destination_gain_binary64_bits": [
+        "0x3ff6a09e667f3bcd",
+        "0x3ff0000000000000",
+        "0x3ff0000000000000",
+        "0x3ff0000000000000",
+        "0x3ff0000000000000",
+        "0x3febb67ae8584caa",
+        "0x3febb67ae8584caa",
+        "0x3febb67ae8584caa",
+        "0x3febb67ae8584caa",
+        "0x3ff0000000000000",
+        "0x401314c3d92a9e91",
+        "0x401314c3d92a9e91",
+        "0x3fe7d9f4cf754635",
+        "0x3fe7d9f4cf754635",
+        "0x3ffc48c6001f0abf",
+        "0x3ffc48c6001f0abf"
+      ],
+      "destination_gain_binary32_nearest_even": [
+        1.4142135381698608,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.8660253882408142,
+        0.8660253882408142,
+        0.8660253882408142,
+        0.8660253882408142,
+        1.0,
+        4.770278453826904,
+        4.770278453826904,
+        0.7453559637069702,
+        0.7453559637069702,
+        1.7677669525146484,
+        1.7677669525146484
+      ],
+      "destination_gain_binary32_nearest_even_bits": [
+        "0x3fb504f3",
+        "0x3f800000",
+        "0x3f800000",
+        "0x3f800000",
+        "0x3f800000",
+        "0x3f5db3d7",
+        "0x3f5db3d7",
+        "0x3f5db3d7",
+        "0x3f5db3d7",
+        "0x3f800000",
+        "0x4098a61f",
+        "0x4098a61f",
+        "0x3f3ecfa6",
+        "0x3f3ecfa6",
+        "0x3fe24630",
+        "0x3fe24630"
+      ],
+      "per_destination_equations": [
+        {
+          "destination": 0,
+          "source": 0,
+          "gain_index": 0,
+          "gain_binary64_bits": "0x3ff6a09e667f3bcd",
+          "gain_binary32_nearest_even_bits": "0x3fb504f3"
+        },
+        {
+          "destination": 1,
+          "source": 2,
+          "gain_index": 1,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 2,
+          "source": 3,
+          "gain_index": 2,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 3,
+          "source": 1,
+          "gain_index": 3,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 4,
+          "source": 8,
+          "gain_index": 4,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 5,
+          "source": 6,
+          "gain_index": 5,
+          "gain_binary64_bits": "0x3febb67ae8584caa",
+          "gain_binary32_nearest_even_bits": "0x3f5db3d7"
+        },
+        {
+          "destination": 6,
+          "source": 4,
+          "gain_index": 6,
+          "gain_binary64_bits": "0x3febb67ae8584caa",
+          "gain_binary32_nearest_even_bits": "0x3f5db3d7"
+        },
+        {
+          "destination": 7,
+          "source": 5,
+          "gain_index": 7,
+          "gain_binary64_bits": "0x3febb67ae8584caa",
+          "gain_binary32_nearest_even_bits": "0x3f5db3d7"
+        },
+        {
+          "destination": 8,
+          "source": 7,
+          "gain_index": 8,
+          "gain_binary64_bits": "0x3febb67ae8584caa",
+          "gain_binary32_nearest_even_bits": "0x3f5db3d7"
+        },
+        {
+          "destination": 9,
+          "source": 15,
+          "gain_index": 9,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 10,
+          "source": 13,
+          "gain_index": 10,
+          "gain_binary64_bits": "0x401314c3d92a9e91",
+          "gain_binary32_nearest_even_bits": "0x4098a61f"
+        },
+        {
+          "destination": 11,
+          "source": 11,
+          "gain_index": 11,
+          "gain_binary64_bits": "0x401314c3d92a9e91",
+          "gain_binary32_nearest_even_bits": "0x4098a61f"
+        },
+        {
+          "destination": 12,
+          "source": 9,
+          "gain_index": 12,
+          "gain_binary64_bits": "0x3fe7d9f4cf754635",
+          "gain_binary32_nearest_even_bits": "0x3f3ecfa6"
+        },
+        {
+          "destination": 13,
+          "source": 10,
+          "gain_index": 13,
+          "gain_binary64_bits": "0x3fe7d9f4cf754635",
+          "gain_binary32_nearest_even_bits": "0x3f3ecfa6"
+        },
+        {
+          "destination": 14,
+          "source": 12,
+          "gain_index": 14,
+          "gain_binary64_bits": "0x3ffc48c6001f0abf",
+          "gain_binary32_nearest_even_bits": "0x3fe24630"
+        },
+        {
+          "destination": 15,
+          "source": 14,
+          "gain_index": 15,
+          "gain_binary64_bits": "0x3ffc48c6001f0abf",
+          "gain_binary32_nearest_even_bits": "0x3fe24630"
+        }
+      ]
+    },
+    {
+      "channel_count": 16,
+      "direction": "B",
+      "normalized_parameter_condition": "0.5 <= p <= 1",
+      "source_to_destination": [
+        0,
+        2,
+        3,
+        1,
+        8,
+        6,
+        4,
+        5,
+        7,
+        15,
+        13,
+        11,
+        9,
+        10,
+        12,
+        14
+      ],
+      "destination_to_source": [
+        0,
+        3,
+        1,
+        2,
+        6,
+        7,
+        5,
+        8,
+        4,
+        12,
+        13,
+        11,
+        14,
+        10,
+        15,
+        9
+      ],
+      "destination_gain_binary64": [
+        0.7071067811865475,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.1547005383792517,
+        1.1547005383792517,
+        1.1547005383792517,
+        1.1547005383792517,
+        1.0,
+        0.2096313728906053,
+        0.2096313728906053,
+        1.3416407864998738,
+        1.3416407864998738,
+        0.565685424949238,
+        0.565685424949238
+      ],
+      "destination_gain_binary64_bits": [
+        "0x3fe6a09e667f3bcc",
+        "0x3ff0000000000000",
+        "0x3ff0000000000000",
+        "0x3ff0000000000000",
+        "0x3ff0000000000000",
+        "0x3ff279a74590331d",
+        "0x3ff279a74590331d",
+        "0x3ff279a74590331d",
+        "0x3ff279a74590331d",
+        "0x3ff0000000000000",
+        "0x3fcad5336963eefc",
+        "0x3fcad5336963eefc",
+        "0x3ff5775c544ff263",
+        "0x3ff5775c544ff263",
+        "0x3fe21a1851ff630a",
+        "0x3fe21a1851ff630a"
+      ],
+      "destination_gain_binary32_nearest_even": [
+        0.7071067690849304,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.154700517654419,
+        1.154700517654419,
+        1.154700517654419,
+        1.154700517654419,
+        1.0,
+        0.20963136851787567,
+        0.20963136851787567,
+        1.341640830039978,
+        1.341640830039978,
+        0.5656854510307312,
+        0.5656854510307312
+      ],
+      "destination_gain_binary32_nearest_even_bits": [
+        "0x3f3504f3",
+        "0x3f800000",
+        "0x3f800000",
+        "0x3f800000",
+        "0x3f800000",
+        "0x3f93cd3a",
+        "0x3f93cd3a",
+        "0x3f93cd3a",
+        "0x3f93cd3a",
+        "0x3f800000",
+        "0x3e56a99b",
+        "0x3e56a99b",
+        "0x3fabbae3",
+        "0x3fabbae3",
+        "0x3f10d0c3",
+        "0x3f10d0c3"
+      ],
+      "per_destination_equations": [
+        {
+          "destination": 0,
+          "source": 0,
+          "gain_index": 0,
+          "gain_binary64_bits": "0x3fe6a09e667f3bcc",
+          "gain_binary32_nearest_even_bits": "0x3f3504f3"
+        },
+        {
+          "destination": 1,
+          "source": 3,
+          "gain_index": 1,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 2,
+          "source": 1,
+          "gain_index": 2,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 3,
+          "source": 2,
+          "gain_index": 3,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 4,
+          "source": 6,
+          "gain_index": 4,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 5,
+          "source": 7,
+          "gain_index": 5,
+          "gain_binary64_bits": "0x3ff279a74590331d",
+          "gain_binary32_nearest_even_bits": "0x3f93cd3a"
+        },
+        {
+          "destination": 6,
+          "source": 5,
+          "gain_index": 6,
+          "gain_binary64_bits": "0x3ff279a74590331d",
+          "gain_binary32_nearest_even_bits": "0x3f93cd3a"
+        },
+        {
+          "destination": 7,
+          "source": 8,
+          "gain_index": 7,
+          "gain_binary64_bits": "0x3ff279a74590331d",
+          "gain_binary32_nearest_even_bits": "0x3f93cd3a"
+        },
+        {
+          "destination": 8,
+          "source": 4,
+          "gain_index": 8,
+          "gain_binary64_bits": "0x3ff279a74590331d",
+          "gain_binary32_nearest_even_bits": "0x3f93cd3a"
+        },
+        {
+          "destination": 9,
+          "source": 12,
+          "gain_index": 9,
+          "gain_binary64_bits": "0x3ff0000000000000",
+          "gain_binary32_nearest_even_bits": "0x3f800000"
+        },
+        {
+          "destination": 10,
+          "source": 13,
+          "gain_index": 10,
+          "gain_binary64_bits": "0x3fcad5336963eefc",
+          "gain_binary32_nearest_even_bits": "0x3e56a99b"
+        },
+        {
+          "destination": 11,
+          "source": 11,
+          "gain_index": 11,
+          "gain_binary64_bits": "0x3fcad5336963eefc",
+          "gain_binary32_nearest_even_bits": "0x3e56a99b"
+        },
+        {
+          "destination": 12,
+          "source": 14,
+          "gain_index": 12,
+          "gain_binary64_bits": "0x3ff5775c544ff263",
+          "gain_binary32_nearest_even_bits": "0x3fabbae3"
+        },
+        {
+          "destination": 13,
+          "source": 10,
+          "gain_index": 13,
+          "gain_binary64_bits": "0x3ff5775c544ff263",
+          "gain_binary32_nearest_even_bits": "0x3fabbae3"
+        },
+        {
+          "destination": 14,
+          "source": 15,
+          "gain_index": 14,
+          "gain_binary64_bits": "0x3fe21a1851ff630a",
+          "gain_binary32_nearest_even_bits": "0x3f10d0c3"
+        },
+        {
+          "destination": 15,
+          "source": 9,
+          "gain_index": 15,
+          "gain_binary64_bits": "0x3fe21a1851ff630a",
+          "gain_binary32_nearest_even_bits": "0x3f10d0c3"
+        }
+      ]
+    }
+  ],
+  "coefficient_only_compositions": [
+    {
+      "channel_count": 9,
+      "order": "A_then_B",
+      "rows": [
+        {
+          "source": 0,
+          "intermediate_destination": 0,
+          "final_destination": 0,
+          "first_gain_index": 0,
+          "second_gain_index": 0,
+          "exact_stored_coefficient_product": "10141204801825835006177419180439/10141204801825835211973625643008",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 1,
+          "intermediate_destination": 3,
+          "final_destination": 1,
+          "first_gain_index": 3,
+          "second_gain_index": 1,
+          "exact_stored_coefficient_product": "1/1",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 2,
+          "intermediate_destination": 1,
+          "final_destination": 2,
+          "first_gain_index": 1,
+          "second_gain_index": 2,
+          "exact_stored_coefficient_product": "1/1",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 3,
+          "intermediate_destination": 2,
+          "final_destination": 3,
+          "first_gain_index": 2,
+          "second_gain_index": 3,
+          "exact_stored_coefficient_product": "1/1",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 4,
+          "intermediate_destination": 6,
+          "final_destination": 4,
+          "first_gain_index": 6,
+          "second_gain_index": 4,
+          "exact_stored_coefficient_product": "3900231685776981/4503599627370496",
+          "product_decimal_for_display": 0.8660254037844386
+        },
+        {
+          "source": 5,
+          "intermediate_destination": 7,
+          "final_destination": 5,
+          "first_gain_index": 7,
+          "second_gain_index": 5,
+          "exact_stored_coefficient_product": "20282409603651671973951245076129/20282409603651670423947251286016",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 6,
+          "intermediate_destination": 5,
+          "final_destination": 6,
+          "first_gain_index": 5,
+          "second_gain_index": 6,
+          "exact_stored_coefficient_product": "20282409603651671973951245076129/20282409603651670423947251286016",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 7,
+          "intermediate_destination": 8,
+          "final_destination": 7,
+          "first_gain_index": 8,
+          "second_gain_index": 7,
+          "exact_stored_coefficient_product": "20282409603651671973951245076129/20282409603651670423947251286016",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 8,
+          "intermediate_destination": 4,
+          "final_destination": 8,
+          "first_gain_index": 4,
+          "second_gain_index": 8,
+          "exact_stored_coefficient_product": "5200308914369309/4503599627370496",
+          "product_decimal_for_display": 1.1547005383792517
+        }
+      ]
+    },
+    {
+      "channel_count": 9,
+      "order": "B_then_A",
+      "rows": [
+        {
+          "source": 0,
+          "intermediate_destination": 0,
+          "final_destination": 0,
+          "first_gain_index": 0,
+          "second_gain_index": 0,
+          "exact_stored_coefficient_product": "10141204801825835006177419180439/10141204801825835211973625643008",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 1,
+          "intermediate_destination": 2,
+          "final_destination": 1,
+          "first_gain_index": 2,
+          "second_gain_index": 1,
+          "exact_stored_coefficient_product": "1/1",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 2,
+          "intermediate_destination": 3,
+          "final_destination": 2,
+          "first_gain_index": 3,
+          "second_gain_index": 2,
+          "exact_stored_coefficient_product": "1/1",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 3,
+          "intermediate_destination": 1,
+          "final_destination": 3,
+          "first_gain_index": 1,
+          "second_gain_index": 3,
+          "exact_stored_coefficient_product": "1/1",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 4,
+          "intermediate_destination": 8,
+          "final_destination": 4,
+          "first_gain_index": 8,
+          "second_gain_index": 4,
+          "exact_stored_coefficient_product": "5200308914369309/4503599627370496",
+          "product_decimal_for_display": 1.1547005383792517
+        },
+        {
+          "source": 5,
+          "intermediate_destination": 6,
+          "final_destination": 5,
+          "first_gain_index": 6,
+          "second_gain_index": 5,
+          "exact_stored_coefficient_product": "20282409603651671973951245076129/20282409603651670423947251286016",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 6,
+          "intermediate_destination": 4,
+          "final_destination": 6,
+          "first_gain_index": 4,
+          "second_gain_index": 6,
+          "exact_stored_coefficient_product": "3900231685776981/4503599627370496",
+          "product_decimal_for_display": 0.8660254037844386
+        },
+        {
+          "source": 7,
+          "intermediate_destination": 5,
+          "final_destination": 7,
+          "first_gain_index": 5,
+          "second_gain_index": 7,
+          "exact_stored_coefficient_product": "20282409603651671973951245076129/20282409603651670423947251286016",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 8,
+          "intermediate_destination": 7,
+          "final_destination": 8,
+          "first_gain_index": 7,
+          "second_gain_index": 8,
+          "exact_stored_coefficient_product": "20282409603651671973951245076129/20282409603651670423947251286016",
+          "product_decimal_for_display": 1.0
+        }
+      ]
+    },
+    {
+      "channel_count": 16,
+      "order": "A_then_B",
+      "rows": [
+        {
+          "source": 0,
+          "intermediate_destination": 0,
+          "final_destination": 0,
+          "first_gain_index": 0,
+          "second_gain_index": 0,
+          "exact_stored_coefficient_product": "10141204801825835006177419180439/10141204801825835211973625643008",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 1,
+          "intermediate_destination": 3,
+          "final_destination": 1,
+          "first_gain_index": 3,
+          "second_gain_index": 1,
+          "exact_stored_coefficient_product": "1/1",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 2,
+          "intermediate_destination": 1,
+          "final_destination": 2,
+          "first_gain_index": 1,
+          "second_gain_index": 2,
+          "exact_stored_coefficient_product": "1/1",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 3,
+          "intermediate_destination": 2,
+          "final_destination": 3,
+          "first_gain_index": 2,
+          "second_gain_index": 3,
+          "exact_stored_coefficient_product": "1/1",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 4,
+          "intermediate_destination": 6,
+          "final_destination": 4,
+          "first_gain_index": 6,
+          "second_gain_index": 4,
+          "exact_stored_coefficient_product": "3900231685776981/4503599627370496",
+          "product_decimal_for_display": 0.8660254037844386
+        },
+        {
+          "source": 5,
+          "intermediate_destination": 7,
+          "final_destination": 5,
+          "first_gain_index": 7,
+          "second_gain_index": 5,
+          "exact_stored_coefficient_product": "20282409603651671973951245076129/20282409603651670423947251286016",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 6,
+          "intermediate_destination": 5,
+          "final_destination": 6,
+          "first_gain_index": 5,
+          "second_gain_index": 6,
+          "exact_stored_coefficient_product": "20282409603651671973951245076129/20282409603651670423947251286016",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 7,
+          "intermediate_destination": 8,
+          "final_destination": 7,
+          "first_gain_index": 8,
+          "second_gain_index": 7,
+          "exact_stored_coefficient_product": "20282409603651671973951245076129/20282409603651670423947251286016",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 8,
+          "intermediate_destination": 4,
+          "final_destination": 8,
+          "first_gain_index": 4,
+          "second_gain_index": 8,
+          "exact_stored_coefficient_product": "5200308914369309/4503599627370496",
+          "product_decimal_for_display": 1.1547005383792517
+        },
+        {
+          "source": 9,
+          "intermediate_destination": 12,
+          "final_destination": 9,
+          "first_gain_index": 12,
+          "second_gain_index": 9,
+          "exact_stored_coefficient_product": "6713569940162101/9007199254740992",
+          "product_decimal_for_display": 0.7453559924999299
+        },
+        {
+          "source": 10,
+          "intermediate_destination": 13,
+          "final_destination": 10,
+          "first_gain_index": 13,
+          "second_gain_index": 10,
+          "exact_stored_coefficient_product": "12676506002282294617379288471691/81129638414606681695789005144064",
+          "product_decimal_for_display": 0.15625
+        },
+        {
+          "source": 11,
+          "intermediate_destination": 11,
+          "final_destination": 11,
+          "first_gain_index": 11,
+          "second_gain_index": 11,
+          "exact_stored_coefficient_product": "10141204801825836071541739911471/10141204801825835211973625643008",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 12,
+          "intermediate_destination": 14,
+          "final_destination": 12,
+          "first_gain_index": 14,
+          "second_gain_index": 12,
+          "exact_stored_coefficient_product": "48103958088009199268250961753565/20282409603651670423947251286016",
+          "product_decimal_for_display": 2.3717082451262845
+        },
+        {
+          "source": 13,
+          "intermediate_destination": 10,
+          "final_destination": 13,
+          "first_gain_index": 10,
+          "second_gain_index": 13,
+          "exact_stored_coefficient_product": "32451855365842674354762377290771/5070602400912917605986812821504",
+          "product_decimal_for_display": 6.4
+        },
+        {
+          "source": 14,
+          "intermediate_destination": 15,
+          "final_destination": 14,
+          "first_gain_index": 15,
+          "second_gain_index": 14,
+          "exact_stored_coefficient_product": "20282409603651668420091920229435/20282409603651670423947251286016",
+          "product_decimal_for_display": 0.9999999999999999
+        },
+        {
+          "source": 15,
+          "intermediate_destination": 9,
+          "final_destination": 15,
+          "first_gain_index": 9,
+          "second_gain_index": 15,
+          "exact_stored_coefficient_product": "2547620669010309/4503599627370496",
+          "product_decimal_for_display": 0.565685424949238
+        }
+      ]
+    },
+    {
+      "channel_count": 16,
+      "order": "B_then_A",
+      "rows": [
+        {
+          "source": 0,
+          "intermediate_destination": 0,
+          "final_destination": 0,
+          "first_gain_index": 0,
+          "second_gain_index": 0,
+          "exact_stored_coefficient_product": "10141204801825835006177419180439/10141204801825835211973625643008",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 1,
+          "intermediate_destination": 2,
+          "final_destination": 1,
+          "first_gain_index": 2,
+          "second_gain_index": 1,
+          "exact_stored_coefficient_product": "1/1",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 2,
+          "intermediate_destination": 3,
+          "final_destination": 2,
+          "first_gain_index": 3,
+          "second_gain_index": 2,
+          "exact_stored_coefficient_product": "1/1",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 3,
+          "intermediate_destination": 1,
+          "final_destination": 3,
+          "first_gain_index": 1,
+          "second_gain_index": 3,
+          "exact_stored_coefficient_product": "1/1",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 4,
+          "intermediate_destination": 8,
+          "final_destination": 4,
+          "first_gain_index": 8,
+          "second_gain_index": 4,
+          "exact_stored_coefficient_product": "5200308914369309/4503599627370496",
+          "product_decimal_for_display": 1.1547005383792517
+        },
+        {
+          "source": 5,
+          "intermediate_destination": 6,
+          "final_destination": 5,
+          "first_gain_index": 6,
+          "second_gain_index": 5,
+          "exact_stored_coefficient_product": "20282409603651671973951245076129/20282409603651670423947251286016",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 6,
+          "intermediate_destination": 4,
+          "final_destination": 6,
+          "first_gain_index": 4,
+          "second_gain_index": 6,
+          "exact_stored_coefficient_product": "3900231685776981/4503599627370496",
+          "product_decimal_for_display": 0.8660254037844386
+        },
+        {
+          "source": 7,
+          "intermediate_destination": 5,
+          "final_destination": 7,
+          "first_gain_index": 5,
+          "second_gain_index": 7,
+          "exact_stored_coefficient_product": "20282409603651671973951245076129/20282409603651670423947251286016",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 8,
+          "intermediate_destination": 7,
+          "final_destination": 8,
+          "first_gain_index": 7,
+          "second_gain_index": 8,
+          "exact_stored_coefficient_product": "20282409603651671973951245076129/20282409603651670423947251286016",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 9,
+          "intermediate_destination": 15,
+          "final_destination": 9,
+          "first_gain_index": 15,
+          "second_gain_index": 9,
+          "exact_stored_coefficient_product": "2547620669010309/4503599627370496",
+          "product_decimal_for_display": 0.565685424949238
+        },
+        {
+          "source": 10,
+          "intermediate_destination": 13,
+          "final_destination": 10,
+          "first_gain_index": 13,
+          "second_gain_index": 10,
+          "exact_stored_coefficient_product": "32451855365842674354762377290771/5070602400912917605986812821504",
+          "product_decimal_for_display": 6.4
+        },
+        {
+          "source": 11,
+          "intermediate_destination": 11,
+          "final_destination": 11,
+          "first_gain_index": 11,
+          "second_gain_index": 11,
+          "exact_stored_coefficient_product": "10141204801825836071541739911471/10141204801825835211973625643008",
+          "product_decimal_for_display": 1.0
+        },
+        {
+          "source": 12,
+          "intermediate_destination": 9,
+          "final_destination": 12,
+          "first_gain_index": 9,
+          "second_gain_index": 12,
+          "exact_stored_coefficient_product": "6713569940162101/9007199254740992",
+          "product_decimal_for_display": 0.7453559924999299
+        },
+        {
+          "source": 13,
+          "intermediate_destination": 10,
+          "final_destination": 13,
+          "first_gain_index": 10,
+          "second_gain_index": 13,
+          "exact_stored_coefficient_product": "12676506002282294617379288471691/81129638414606681695789005144064",
+          "product_decimal_for_display": 0.15625
+        },
+        {
+          "source": 14,
+          "intermediate_destination": 12,
+          "final_destination": 14,
+          "first_gain_index": 12,
+          "second_gain_index": 14,
+          "exact_stored_coefficient_product": "48103958088009199268250961753565/20282409603651670423947251286016",
+          "product_decimal_for_display": 2.3717082451262845
+        },
+        {
+          "source": 15,
+          "intermediate_destination": 14,
+          "final_destination": 15,
+          "first_gain_index": 14,
+          "second_gain_index": 15,
+          "exact_stored_coefficient_product": "20282409603651668420091920229435/20282409603651670423947251286016",
+          "product_decimal_for_display": 0.9999999999999999
+        }
+      ]
+    }
+  ],
+  "composition_caution": "Exact rational products assume direct buffer-index chaining, with no host channel reordering or other intermediate transform, and omit sample rounding and runtime behavior. Inverse permutation alone does not establish inverse operators. Gains belong to destination indices. These records are a disconfirmation check, not measured round-trip output."
+}

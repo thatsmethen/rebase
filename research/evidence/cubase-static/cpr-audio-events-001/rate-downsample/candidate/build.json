@@ -1,0 +1,49 @@
+{
+  "compile_command": [
+    "/usr/bin/clang",
+    "-std=c11",
+    "-O2",
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-dynamiclib",
+    "-I",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/native_rate_mode0_down.c",
+    "-o",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/mode0-down.dylib"
+  ],
+  "compile_returncode": 0,
+  "disassembly_command": [
+    "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+    "-d",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/mode0-down.dylib"
+  ],
+  "source": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0_down.c",
+      "bytes": 10145,
+      "sha256": "e85877ab7c33c8ef9c6bf16124125504a545e3a057e4d3ec6838729bd0df676f"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0_down.h",
+      "bytes": 2587,
+      "sha256": "852af4ccba424e561634949674d2fd9788715fb2ac68e9bf4e5d8082e3adea3c"
+    }
+  ],
+  "binary": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/mode0-down.dylib",
+    "bytes": 33952,
+    "sha256": "be2e24f473e8449ca6e09f52652f1b9f97ae1ad5888fa39b2a6209e6bcaa5290"
+  },
+  "optimized_assembly": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/optimized-disassembly.txt",
+    "bytes": 52679,
+    "sha256": "5d662fa330d7cb9f3541e3f9ebf0d1763def836af5a66b1706ac1da7a1449ae0"
+  },
+  "method": "Explicit binary64 fma after separately rounded arithmetic. Compiler contraction disabled. State and sample validation remain part of our defensive wrapper, not target behavior.",
+  "target_execution": false,
+  "reconstruction_execution": false
+}

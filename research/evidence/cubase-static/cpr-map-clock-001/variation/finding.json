@@ -1,0 +1,337 @@
+{
+  "id": "CPR-MAP-GATE-2",
+  "revision": 1,
+  "created_utc": "2026-10-19T11:48:20.664820+00:00",
+  "scope": "Static successful fresh detached MTempoTrackEvent v3 restore, local post-read variation and visibility callback; no target execution.",
+  "source": {
+    "path": "research/targets/derived/Cubase15-arm64",
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "conclusion": "The accepted singleton/null-alternate source form does not substitute a different tempo list or insert a default item into a nonempty list in the traced local callback. It may initialize the list name, retain references, write owner-related state and set dirty bits. Cache equivalence and observer limits remain separate list/arithmetic gates.",
+  "acceptance_gate": {
+    "restore_context": "Successful fresh detached archive construction and v3 reader; no later host edits or arbitrary observers.",
+    "tempo_item_count": "Strictly positive; zero-item source is excluded because concrete list+0x150 inserts a default tempo item.",
+    "track_attributes": "Positive serialized count, complete successful read, exact parsed extents, no duplicate accepted keys; zero count is excluded because 1000ee8c4 then does not clear an existing collection.",
+    "variation_attribute": {
+      "numeric_key": "0x69435654",
+      "serialized_bytes_ascii": "iCVT",
+      "type": "0x22",
+      "payload_class": "MTrackVariationCollection",
+      "version": 0,
+      "serialized_selector": 10,
+      "native_selector": -1,
+      "flags": 2,
+      "count": 1,
+      "member": {
+        "class": "MTrackVariation",
+        "version": 0,
+        "name": "Bounded archive string; all ten observed names are v1. Importer may deliberately restrict to v1.",
+        "alternate_MDataNode": "null",
+        "trailing_i32": 0
+      },
+      "exact_body_consumption_required": true
+    },
+    "absent_numeric_key": "0x64696854 (ThiD in little-endian native-key display; use exact numeric ID, not a guessed text reversal)",
+    "other_attributes": "Must satisfy MAP-GATE-1 independently, including score/item attribute restrictions. This report does not provide an unrestricted attribute allowlist.",
+    "anchors_and_cache": "Must satisfy root list/iterator/cache arithmetic gate. Name notification is not assumed globally inert; requiring source anchors to equal native recomputation bitwise can make the supported cache branches equivalent."
+  },
+  "claims": [
+    {
+      "claim": "Feature branches are explicit, not assumed disabled. 10174c194 calls 1017a5898 when TRACK_VARIATIONS is truthy; when TRACK_VISIBILITY bit0 is clear it calls 1017064c4(track,0).",
+      "functions": [
+        "10174c194"
+      ],
+      "authority": "Retained native instructions and pinned global string-pointer linkage."
+    },
+    {
+      "claim": "Tempo +0x550 returns1. Existing iCVT resolves to the concrete collection; count1 means nonempty, excluding default collection/member creation. 1017a5898 visits the sole member.",
+      "functions": [
+        "10173f61c",
+        "1017a4fb4",
+        "1017a5898",
+        "1006f3b24",
+        "1030f1b4c",
+        "1006f3b2c",
+        "1017a5ed0"
+      ]
+    },
+    {
+      "claim": "For null alternate at variation+0x30, 1017a3f98 captures track+0x58 via +0x258 into variation+0x28 and retains it, then calls concrete tempo-list+0x150. +0x4f0 returns track+0x68, zero in the verified fresh base-track constructor. This is reference/ownership mutation, not a no-op.",
+      "functions": [
+        "1017a3f98",
+        "101747fe4",
+        "10174a630"
+      ],
+      "getters": [
+        "10174a698",
+        "10174aa6c"
+      ]
+    },
+    {
+      "claim": "Concrete MTempoTrackNode vtable104675ec8 +0x150 is1017409ec, not the signature-list no-op. A nonzero count skips default item creation. If the list name is empty, +0xd0 sets its name and dirty+0x90 |=6, then notifies. 6 does not intersect cache-cleanup mask0x11. Deferred or arbitrary observer effects are not proven inert.",
+      "functions": [
+        "1017409ec",
+        "1016c29ac",
+        "1000fd13c",
+        "1016e9990",
+        "1016e8fe8",
+        "101740948",
+        "1016e8ff4"
+      ]
+    },
+    {
+      "claim": "Fresh owner attachment inserts the same track into list+0x58 linked owners without populating list+0x30. The first-owner lookup is read-only; owner +0x258 returns that same list and the null-alternate path therefore writes list+0x88 nil.",
+      "functions": [
+        "1016e8a68",
+        "1016e9a30",
+        "103103ed0",
+        "1016ea7fc",
+        "103104c40",
+        "1017a3f98"
+      ]
+    },
+    {
+      "claim": "Accepted0x22 entries use direct stored payload. Numeric lookup and exact FIntIDAttribute key comparison are read-only; temporary key cleanup has zero flags/payload. Absent ThiD makes 1000e8db0 skip removal. Positive-count attribute restoration clears old entries before source entries, so accepted successful reads cannot inherit an unrecorded ThiD.",
+      "functions": [
+        "1000ee8c4",
+        "1000e8c38",
+        "1000e8db0",
+        "103105d1c",
+        "103106254",
+        "103117b9c",
+        "103117bb0",
+        "103115e54",
+        "10221bae0"
+      ]
+    },
+    {
+      "claim": "The +8 retain reached for the concrete list/variation is an atomic increment at object+8 via10221baec\u219210307d074; no additional callback is present in those bounded instructions.",
+      "functions": [
+        "10221baec",
+        "10307d074"
+      ]
+    }
+  ],
+  "evidence": {
+    "new_functions": 17,
+    "new_source_bytes": 1788,
+    "new_original_instruction_words": 447,
+    "new_rea_instruction_addresses": 421,
+    "new_mnemonic_differences": 0,
+    "reused_functions": 10,
+    "reused_source_bytes": 2412,
+    "canonical_bundle_records": 54,
+    "bundle_import": {
+      "_meta": {
+        "provenance": {
+          "untrusted_content": true,
+          "source": "analysis_target"
+        }
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"result\":{\"imported\":54,\"unknowns_added\":0,\"total\":54}}"
+        }
+      ],
+      "structuredContent": {
+        "result": {
+          "imported": 54,
+          "unknowns_added": 0,
+          "total": 54
+        }
+      }
+    },
+    "pins": [
+      {
+        "path": "research/evidence/cubase-static/cpr-map-clock-001/variation/verification.json",
+        "bytes": 59303,
+        "sha256": "73506b7acf0eebf66459b7f1ba50e441d994019a05ceff9f9d1801cf004bf2a2"
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-map-clock-001/variation/pass2/verification.json",
+        "bytes": 86513,
+        "sha256": "4b0bf68651aa63bf890b44c65774a4b15f8ef6b9566f04323243e222cf0f0928"
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-map-clock-001/variation/pass3/verification.json",
+        "bytes": 31577,
+        "sha256": "b686fbd236457eac0071fff51cfc918980de949e7670eb5329274534f49e9b0e"
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-map-clock-001/variation/reused-evidence.json",
+        "bytes": 16962,
+        "sha256": "8d98b1f9b43d700921d376dca0ce5bedf2e5139658d54b08a2f0e1d0cbe79360"
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-map-clock-001/variation/linkage-and-fixtures.json",
+        "bytes": 30504,
+        "sha256": "612fd86a5b1db93b6a2c46880d962f251c068a464e2e57d24ac56cd9e7b4799f"
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-map-clock-001/variation/external-evidence-checks.json",
+        "bytes": 23572,
+        "sha256": "983823f7049aaef82dcedbfc5e69389ede23758f6e4152ce2ba10533f23cb6e6"
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-map-clock-001/variation/native-evidence-bundle.json",
+        "bytes": 5016022,
+        "sha256": "1d162a2e746bf2ff8d6904f50642cb88270bf0c7c7d9c6b43187f68eb7c7d6b9"
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-map-clock-001/variation/evidence-import.json",
+        "bytes": 367,
+        "sha256": "2ef7ef44319cccb02f12a772e8f37997cf2c2f4cf352e5ebf22ed15ca93b165b"
+      }
+    ],
+    "function_evidence": [
+      {
+        "entry": "0x10173f61c",
+        "function_evidence_id": "ev_12cfdfb4480ccaece9f939751630718a02e52fc94ccaf079a9b29aa137dbbd70",
+        "readback_evidence_id": "ev_30a099d3493fabc76e71a580078cbf36ae9e45fabc7065846c7aa62e4dd90ab2"
+      },
+      {
+        "entry": "0x1016ea7fc",
+        "function_evidence_id": "ev_ac72d35a83da230a19a1a21af3a50c74219181de80def238a585b6e642ec391c",
+        "readback_evidence_id": "ev_2005cf4c3c526c25bbe13a613555b66c9e1dc37bbf3600c3621b45491c53f277"
+      },
+      {
+        "entry": "0x1006f3b24",
+        "function_evidence_id": "ev_7933d9c514cf1c496591317c131fb92b5900b2baf567a9431dcb750567483e3e",
+        "readback_evidence_id": "ev_ada76b269a9d878565020c40fd8dbcc4b231cde02a37be064349e2d2931ead89"
+      },
+      {
+        "entry": "0x1030f1b4c",
+        "function_evidence_id": "ev_6200660a09e504d7b06180e6639f35edcfcc8c0aeb59e8b284b79c0268b0e17e",
+        "readback_evidence_id": "ev_18b19ac027b30f6e6ca6573a01d220bd0a43d3794589f2b507e67d66834351ff"
+      },
+      {
+        "entry": "0x1006f3b2c",
+        "function_evidence_id": "ev_3b102016b50e224e4475652082ae7837f32b4d240fb3befd44ed90d038642727",
+        "readback_evidence_id": "ev_763ad463309d70b71494bf44d68dce819923a52d08abd555eb6a58a5e93086c3"
+      },
+      {
+        "entry": "0x1017a5ed0",
+        "function_evidence_id": "ev_e4811d1a11a059f6465521599c09e34405db5ae16dbd543d763c5b46f7e3caec",
+        "readback_evidence_id": "ev_38db260f9b595dbf59b4704c997960d2c52d8df2b5218b5f8c1b5476e052a255"
+      },
+      {
+        "entry": "0x10221baec",
+        "function_evidence_id": "ev_a7ae2e69a4db22aaa31c5c5c935ee0a3b84ede25a32e6ebc2e25773ec5378b43",
+        "readback_evidence_id": "ev_1ee61cabec0d1fcf8da363240a4b8fe836bbc1dc2ac0f1e7dc8f77c12d3da232"
+      },
+      {
+        "entry": "0x1000e8db0",
+        "function_evidence_id": "ev_1bb78569019a45d730ae4d04ac8a7c0b7fe0dcc4b2622e32c5402c6474f9d94e",
+        "readback_evidence_id": "ev_e99b225d663fbc3b63dde1f0d32215cc1620ef0e3bce11a6d98c9e341083da13"
+      },
+      {
+        "entry": "0x103104c40",
+        "function_evidence_id": "ev_cdf9826776e9af4d2be321a672e20557b656e5276fd3085cf8c6f98536061e7c",
+        "readback_evidence_id": "ev_82d3b9fe7e42a13d116d12ab589818bbd418d33755b5163ebd272696b293e6a1"
+      },
+      {
+        "entry": "0x10307d074",
+        "function_evidence_id": "ev_d6be79eb9ed1a6ce17b4fe789286a3f5eb1989d1aea2138dd52c9322c4b1ee9e",
+        "readback_evidence_id": "ev_98dc3cba31d900d5e4464311577b9932e8897aff62edc5407dd4bd9fff28846f"
+      },
+      {
+        "entry": "0x1000e8c38",
+        "function_evidence_id": "ev_13122e7c236e25c6e37a37f8e856d0295c52251fc294493d83f1030d7d738ea0",
+        "readback_evidence_id": "ev_6f2f9b151f48bb21a875aa7c871637e39eae740bdbdf8efd606b49c5baa240bd"
+      },
+      {
+        "entry": "0x103105d1c",
+        "function_evidence_id": "ev_e442bf4cdc4f2554974baab7554e43724633cd02e3fb9a8fb5fe7144eafdff8f",
+        "readback_evidence_id": "ev_b01f9bf2c707b6a61ab91dd3ad19c8a64a9edbd47a8ccd0f5eb6a7ec50460957"
+      },
+      {
+        "entry": "0x103115e54",
+        "function_evidence_id": "ev_f93271f23652bb94db199eeffed2a780e3854df47c169c51ad1475a4a6018fcc",
+        "readback_evidence_id": "ev_f4bf5799a3e09387c9de1f65ca51e3ae9fd2fba76eb142759507f2b3b8e2ba37"
+      },
+      {
+        "entry": "0x103117b9c",
+        "function_evidence_id": "ev_078fbc3a9c28940641a8ec673fa12c842f9523231df2b8a94a8135d21b165d75",
+        "readback_evidence_id": "ev_a12a8a5fd81aff050733ce1da369d03887cad9b2c0276afec66ef3e11f660bc3"
+      },
+      {
+        "entry": "0x103117bb0",
+        "function_evidence_id": "ev_b9a5fc6315df81c5bb7be6300b7b6fe21d81971d90f3d76810ee2090de1fce70",
+        "readback_evidence_id": "ev_3363a75b357950a443b6153c41b97ebbaeb64ec3124dedaddd015a285f974f21"
+      },
+      {
+        "entry": "0x103106254",
+        "function_evidence_id": "ev_ec273634111e3a59d9707036f5d54b69c6d58c3af9eb8c0c2e0a76a59812107a",
+        "readback_evidence_id": "ev_9963bfbb6015113c35cd497e1ddeb8dc07307987e8677b9177d5b58e215b7d5a"
+      },
+      {
+        "entry": "0x10221bae0",
+        "function_evidence_id": "ev_8686db4a710169486737d7a5ad1b35fba45e8d01f8f03457bac76a1b6563f3df",
+        "readback_evidence_id": "ev_6f14db921bc425bfaa8a5a81172b020b73dc5c67dde847e217b74d274d064961"
+      },
+      {
+        "entry": "0x10173bdac",
+        "function_evidence_id": "ev_352d614af40b930079e5cd268a4d4ea81f04bbd97ef3918e8b0ff393490f4701",
+        "readback_evidence_id": "ev_63219986efca24fefe0886b98902aee7ece9c995b62350a691086e3beebb6d44"
+      },
+      {
+        "entry": "0x10174c194",
+        "function_evidence_id": "ev_f80867243f590c9eb2d9cb1030aba44fbc223276af4f90ede472ace4a3d14d5e",
+        "readback_evidence_id": "ev_3fb34e5b8484a9e4c1aa4464d5a9b08a39b00cb88214a4e3fea20a4146de3eaf"
+      },
+      {
+        "entry": "0x1017a5898",
+        "function_evidence_id": "ev_036a24fcc4a9ef9ae08bb1dcbf63d5878a4e47530eb12541d0aab0e5cff56360",
+        "readback_evidence_id": "ev_55468c174529588740e2d3a362e7917fb18ed9fa6ba21dd278aaf2b70feddb14"
+      },
+      {
+        "entry": "0x1017064c4",
+        "function_evidence_id": "ev_47c8ad34a2057466ea6b72b8e7ae328b8f9e6c288e32a00a71a657342c0698db",
+        "readback_evidence_id": "ev_e91ef24e4f1da97dc637016a595d8492cb8346b056e69dcfa77326b9265ba6d3"
+      },
+      {
+        "entry": "0x1017a4fb4",
+        "function_evidence_id": "ev_73d74a02db5f4d5ff20b70f17881f01927f3c3380ff6d6b10a35f1a9c316413f",
+        "readback_evidence_id": "ev_dfd442f56c05d95813edecd02ed30ac9efd8f848947125699cb6bd1fb3932a1a"
+      },
+      {
+        "entry": "0x1017a3f98",
+        "function_evidence_id": "ev_dd74815e7463ce2df7635fdcad609b59f4b5356815e9d02a6ce39eeacdb5bba6",
+        "readback_evidence_id": "ev_fd38e25c2d0f17d1b80030abafb931f264baf9e1448bd388502c2ecde1669df3"
+      },
+      {
+        "entry": "0x1017a43f0",
+        "function_evidence_id": "ev_9bf8b01f661fa82bdabdcfe6c247f10a02d947c80dfc2bad4ca61e7f605ca6db",
+        "readback_evidence_id": "ev_1cd96196397e12803a38cec8b04cffddfe514ec9e91cf87ee13cc0c3ff68a1d5"
+      },
+      {
+        "entry": "0x1030f2cdc",
+        "function_evidence_id": "ev_1f385f07f9396882fac03097b0141e4aa5a3559dfa3c823af122ec824826c73c",
+        "readback_evidence_id": "ev_5e081e509ae3b518a5fa7fa1f973c8cbc7e372c7e5ff04aa0428e22eae7c3ec4"
+      },
+      {
+        "entry": "0x1030f91c4",
+        "function_evidence_id": "ev_43672960b11b9ee3b6b6944bd035e1dda6d4910c6cf63d69b7323dde608b2909",
+        "readback_evidence_id": "ev_6925e23f0c022cad28396e6edba4c9914db122956fd422d43ed142c1bfa3bd1c"
+      },
+      {
+        "entry": "0x1017a4250",
+        "function_evidence_id": "ev_94b5c0440c93bc6b428f7ba75477237855b9c18da594c515f46b3bd01b70a799",
+        "readback_evidence_id": "ev_aeda73066c77658c604d460d62625ccbbe24319639b6b1376a351675cdb09bf7"
+      }
+    ]
+  },
+  "fixture_corroboration": {
+    "source_count": 10,
+    "details": "linkage-and-fixtures.json rechecks original CPR bytes, numeric key/type, singleton collection fields, null member datum, trailing zero, absent ThiD and exact ranges. Fixture agreement is not runtime validation."
+  },
+  "provider_failure_boundary": "Selected external factory10173a5ac original64-byte native slice was verified, but its first REA attempt failed due to bridge compilation failure. external-evidence-checks.json explicitly excludes that attempt from REA success. The root-owned isolated retry is evaluated separately in list-review; this report does not overwrite or promote the failed artifact.",
+  "limits": [
+    "Raw-slice pseudocode lacks linked types, imports and full program context; indirect targets are bound only through explicitly retained original vtable/constructor bytes. Generated pseudocode is not source or a compilable reconstruction.",
+    "The local callback contract is not a proof of arbitrary global notifications, later lifecycle, concurrent host observers, editing, switching variations, map iterator behavior, or cache invalidation equivalence.",
+    "No default or alternate variation payloads, empty lists, failed reads, inherited zero-count track attributes or unsupported attribute payloads are accepted.",
+    "List+0x88 owner-related write and dirty/name/refcount changes are real; preserving tempo item fields locally does not mean the object is unchanged.",
+    "Target runtime executions and runtime comparisons: zero. Full Cubase behavior remains unverified."
+  ]
+}

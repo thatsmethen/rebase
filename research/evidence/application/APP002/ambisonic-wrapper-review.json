@@ -1,0 +1,187 @@
+{
+  "id": "APP002-AMBI-WRAPPER-INDEPENDENT-REVIEW",
+  "at_utc": "2026-10-19T08:49:23.227775+00:00",
+  "reviewer": "cubase_evidence",
+  "status": "no_actionable_defect_found_in_reviewed_scope",
+  "source_modified": false,
+  "proprietary_target_executed": false,
+  "native_runtime_equivalence_claimed": false,
+  "scope": "Read-only review of final Swift file-conversion wrapper, raw-plane bridge, RIFF writer and focused test source/log. C arithmetic review referenced separately.",
+  "findings": [],
+  "checks": [
+    {
+      "area": "RIFF byte counts and integer bounds",
+      "source_lines": [
+        27,
+        53,
+        130,
+        145
+      ],
+      "result": "Header is 56 bytes; RIFF size is payload+48, fmt tag is 3, fact count is frames, and data size is frames*channels*(precision/8). Preflight division bounds all UInt32 conversions, products and additions before header construction, including binary64. Integral positive sample-rate/byte-rate check prevents truncation and UInt32 multiplication overflow."
+    },
+    {
+      "area": "Precision and raw storage",
+      "source_lines": [
+        86,
+        128,
+        148,
+        168
+      ],
+      "result": "Source float64 selects planar float64 decoding; output preserves UInt64 sample bits directly rather than converting through Float. Other decoded sources use float32. Chunk buffers hold at most 8192 frames; final length and total file bytes are checked."
+    },
+    {
+      "area": "Swift to C bridge lifetime and bounds",
+      "source_lines": [
+        171,
+        248
+      ],
+      "result": "Scratch is owned for the processor lifetime and freed once. Validated planar format/count/capacity and scoped nested buffer-pointer calls keep channel arrays, queues and points alive through the synchronous C call. File conversion uses private AVAudioPCMBuffer allocations with maximumFrames=8192. Tests exercise corresponding input/output aliasing through C staging."
+    },
+    {
+      "area": "Source protection and publication",
+      "source_lines": [
+        55,
+        84,
+        100,
+        128
+      ],
+      "result": "Resolved path plus inode checks reject the source and hard/symbolic aliases. The same-directory temporary is removed on throw. Synchronize and close complete before move/replace; no destination update occurs for decode or processing failures. Existing-output replacement and late-block rejection are covered by retained tests."
+    },
+    {
+      "area": "Test sensitivity",
+      "source_lines": [
+        116,
+        147,
+        187,
+        205,
+        231,
+        253
+      ],
+      "result": "All 12 channel/precision/direction combinations compare every output sample byte across the 8192-frame boundary. Separate Core Audio readback checks the final 17-frame tail and one-ULP sample, detecting binary64 narrowing. Tests additionally cover replacement, malformed input, aliases, late-block failure cleanup and preflight integer extremes."
+    }
+  ],
+  "computed_size_bound_checks": [
+    {
+      "channels": 4,
+      "precision_bits": 32,
+      "max_frames_preflight": 268435199,
+      "max_payload_bytes": 4294963184,
+      "max_riff_size_field": 4294963232,
+      "max_total_file_bytes": 4294963240
+    },
+    {
+      "channels": 4,
+      "precision_bits": 64,
+      "max_frames_preflight": 134217599,
+      "max_payload_bytes": 4294963168,
+      "max_riff_size_field": 4294963216,
+      "max_total_file_bytes": 4294963224
+    },
+    {
+      "channels": 9,
+      "precision_bits": 32,
+      "max_frames_preflight": 119304533,
+      "max_payload_bytes": 4294963188,
+      "max_riff_size_field": 4294963236,
+      "max_total_file_bytes": 4294963244
+    },
+    {
+      "channels": 9,
+      "precision_bits": 64,
+      "max_frames_preflight": 59652266,
+      "max_payload_bytes": 4294963152,
+      "max_riff_size_field": 4294963200,
+      "max_total_file_bytes": 4294963208
+    },
+    {
+      "channels": 16,
+      "precision_bits": 32,
+      "max_frames_preflight": 67108799,
+      "max_payload_bytes": 4294963136,
+      "max_riff_size_field": 4294963184,
+      "max_total_file_bytes": 4294963192
+    },
+    {
+      "channels": 16,
+      "precision_bits": 64,
+      "max_frames_preflight": 33554399,
+      "max_payload_bytes": 4294963072,
+      "max_riff_size_field": 4294963120,
+      "max_total_file_bytes": 4294963128
+    }
+  ],
+  "retained_test_evidence": {
+    "path": "research/evidence/application/APP002/ambisonic-integration/targeted-tests.log",
+    "tests": 6,
+    "suites": 1,
+    "passed": true,
+    "reported_seconds": 1.584,
+    "execution_by_this_reviewer": false,
+    "note": "Inspected final test source and retained peer-run log; did not rerun the suite."
+  },
+  "limitations": [
+    "No Cubase execution or runtime differential comparison; this review concerns the local application wrapper.",
+    "No power-loss, filesystem replacement-failure, close-failure or concurrent external file-mutation fault injection. Publication ordering was reviewed; crash durability is not established.",
+    "Buffer-safety reasoning assumes valid AVAudioPCMBuffer backing storage. The public file path allocates its own buffers; arbitrary fabricated no-copy buffer descriptors are outside this reviewed use.",
+    "Core Audio readback establishes tested local format interoperability, not compatibility with every WAV reader. Source metadata and speaker labels are intentionally not preserved.",
+    "The six tests do not exercise near-4-GiB file writes; maximum-size arithmetic was checked statically and by bounded preflight tests.",
+    "C coefficient/state semantics and FP-domain restrictions are covered by the separately retained C review and candidate evidence, not rederived here."
+  ],
+  "inputs": [
+    {
+      "path": "Application/Sources/RebaseCore/AmbisonicConverter.swift",
+      "sha256": "6caf356e617015012e0b9845bab58bbd812c6fc510e19e48db74107e030138dc",
+      "bytes": 14393,
+      "matches_integration_report": true,
+      "matches_frozen_snapshot": true
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/AmbisonicConverterTests.swift",
+      "sha256": "1295abfb8acae18d13e9262de837dfbc237b23325fd6e778905050a2fb99ba2c",
+      "bytes": 16561,
+      "matches_integration_report": true,
+      "matches_frozen_snapshot": true
+    },
+    {
+      "path": "Application/Sources/Rebase/AmbisonicExport.swift",
+      "sha256": "954e244ccce2fb9735c3a18ba5f09ae80bccf32b680a33330325b99ff2ea4827",
+      "bytes": 2026,
+      "matches_integration_report": true,
+      "matches_frozen_snapshot": true
+    },
+    {
+      "path": "Application/Sources/RebaseAmbiDSP/ambi_processor.c",
+      "sha256": "63908b7352e8e3e72baf545348ab0cd8d54c81a6ebaedfab5528141afe76d726",
+      "bytes": 11103,
+      "matches_integration_report": true,
+      "matches_frozen_snapshot": true
+    },
+    {
+      "path": "Application/Sources/RebaseAmbiDSP/include/ambi_processor.h",
+      "sha256": "d132434743a64bb48de6d63d0d1c73d74813eac51e5ccb3b21a4661498ea4062",
+      "bytes": 3531,
+      "matches_integration_report": true,
+      "matches_frozen_snapshot": true
+    },
+    {
+      "path": "research/evidence/application/APP002/ambisonic-source-review.json",
+      "sha256": "549b83e53940158d6838318a38b5e074835e1b09344bdcf488a11ce729168d45",
+      "bytes": 2413
+    },
+    {
+      "path": "research/evidence/application/APP002/ambisonic-integration/integration-report.json",
+      "sha256": "46de0df482386acc60c65cbd071e697edab9dbe087003e1792eb7895fd696c38",
+      "bytes": 5095
+    },
+    {
+      "path": "research/evidence/application/APP002/ambisonic-integration/targeted-tests.log",
+      "sha256": "70a36c8c2daf6d1dd6cdb1c50144a52d986e0f267660d6950c890e673b30dedc",
+      "bytes": 1793
+    },
+    {
+      "path": "research/evidence/application/APP002/ambisonic-integration/initial-encoder-failure/observation.json",
+      "sha256": "dc146f0eb72feedf06f8fd789bc76adfe7f5ad7bed6c0edc0d4a404de9c437e3",
+      "bytes": 1163
+    }
+  ]
+}

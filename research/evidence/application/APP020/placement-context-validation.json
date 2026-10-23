@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "status": "passed scoped implementation and development validation; final acceptance is separate",
+  "created_utc": "2026-10-21T03:30:44.489956+00:00",
+  "target_executed": false,
+  "authorship": "This agent authored the shared-context refactor and its two tests; it is not an independent review of those changes. Root authored track-plan composition and the five source-track playback tests, inspected here read-only apart from the requested context/dictionary refactor.",
+  "scope": "Immutable saved-source placement context shared across contributors; selected-event arithmetic, complete counted membership, source order and media preparation boundaries. Native collector admission and GUI acceptance require separate reviews.",
+  "reviewed_development_snapshots": [
+    {
+      "reviewed_path": "Application/Sources/RebaseCore/CPRPlacedSourceEventPlan.swift",
+      "snapshot": {
+        "path": "research/evidence/application/APP020/placement-context-snapshot/CPRPlacedSourceEventPlan.swift",
+        "bytes": 11044,
+        "sha256": "af220b38898a00238f40bb246cb42249bdb026bc037b18765077391e833ab43e"
+      }
+    },
+    {
+      "reviewed_path": "Application/Sources/RebaseCore/CPRSourceTrackPlan.swift",
+      "snapshot": {
+        "path": "research/evidence/application/APP020/placement-context-snapshot/CPRSourceTrackPlan.swift",
+        "bytes": 6716,
+        "sha256": "8f291390fb0de9d5e5b4756cff6bd978a7f09158e79580ee6d2d361a553d2fb5"
+      }
+    },
+    {
+      "reviewed_path": "Application/Sources/RebaseCore/CPRSourceTrackPlayback.swift",
+      "snapshot": {
+        "path": "research/evidence/application/APP020/placement-context-snapshot/CPRSourceTrackPlayback.swift",
+        "bytes": 3186,
+        "sha256": "4ffb5727790bd16fa94741aa5aad63bf559195625e4e9dfdc4e2083e041f54c0"
+      }
+    },
+    {
+      "reviewed_path": "Application/Tests/RebaseCoreTests/CPRPlacedSourceContextTests.swift",
+      "snapshot": {
+        "path": "research/evidence/application/APP020/placement-context-snapshot/CPRPlacedSourceContextTests.swift",
+        "bytes": 6115,
+        "sha256": "69242a5321e1bdaa5d07a1d4a7eb905f1078964543631d68b0c1de3ae0f80f23"
+      }
+    },
+    {
+      "reviewed_path": "Application/Tests/RebaseCoreTests/CPRSourceTrackPlaybackTests.swift",
+      "snapshot": {
+        "path": "research/evidence/application/APP020/placement-context-snapshot/CPRSourceTrackPlaybackTests.swift",
+        "bytes": 11561,
+        "sha256": "13830d612d8163213e974bb4bd52106c1a63573a0ef2c8dc1247030583e2c3e2"
+      }
+    }
+  ],
+  "arithmetic_comparison": {
+    "head": "8619330443b77f2cf28b06603d1733c8d0ed71e7",
+    "canonical_and_builder_reader_block_unchanged": true,
+    "normalization": "Only clock.seconds renamed context.clock.seconds; raw tick/scalar/negation/builder/reader operations are byte-identical in the extracted block."
+  },
+  "changes": [
+    "Resolve saved setup, clock-role descriptors and frozen V3 native clock once per track, holding the immutable source bytes and hash in a non-publicly-constructible context.",
+    "Per-event context reuse checks retained source hash, root and event/clip/cluster descriptors, plus typed containing tempo/signature identities.",
+    "Track plan retains serialized counted order and uses identity dictionaries with duplicate rejection; it does not sort or infer priority.",
+    "The existing single-event entry point creates its own context and preserves the saved-clock range contract."
+  ],
+  "tests": {
+    "command": "sh Application/test-app.sh --filter 'CPRPlacedSourceEventTests|CPRProjectAudioSetupTests|CPRTrackContributorArchiveTests|CPRPlacedSourceContextTests|CPRSourceTrackPlaybackTests'",
+    "passed": 29,
+    "suites": 5,
+    "duration_seconds": 43.105,
+    "exit_code": 0,
+    "log": {
+      "path": "research/evidence/application/APP020/placement-context-tests-second.log",
+      "bytes": 12480,
+      "sha256": "0238c3061360c12bca43d73d12f330a7b83020873c84f1c953931192bd54a9ed"
+    },
+    "first_attempt": {
+      "log": {
+        "path": "research/evidence/application/APP020/placement-context-tests-first.log",
+        "bytes": 7317,
+        "sha256": "7ab6fdfaa14f28679b456a988b859cd2d192c0b0116a2a5b7455b84e750528e6"
+      },
+      "exit_code": 1,
+      "reason": "Concurrent root UI integration added nativeTrackSavedProjectClock before the Source Audio switch was exhaustive. Compilation failed; no tests ran. Root completed the switch and all source edits were held for the second run."
+    }
+  },
+  "context_controls": [
+    "Repeated shared context equals fresh saved-context projection at the bit level at zero, before and after the saved tempo jump.",
+    "A valid foreign source/context, foreign fade owner, altered retained source SHA and changed event/clip/cluster identities reject without changing subsequent valid context output."
+  ],
+  "root_composition_review": [
+    "Exact child/source/current-retained cardinalities and descriptor-set checks prevent omitted, removed or unknown contributors from becoming complete track playback.",
+    "Both canonical intervals and reader-quantized windows must already be chronological and nonoverlapping.",
+    "CPRSourceTrackPlayback checks aggregate 32M input sample budget before decoding and validates each attachment/actual media hash through prepareMedia before creating PreparedProject.",
+    "Every event keeps its source rate, independently of the saved timeline rate; event gain remains applied by the direct reader after source read."
+  ],
+  "historical_profiles_and_reader_unchanged": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV1.swift",
+      "bytes": 19302,
+      "sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV2.swift",
+      "bytes": 6252,
+      "sha256": "6183ca0ea72f992cf00d1fd4aab5a9c0a014e764988d6ae7bacf89e83386a836"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV3.swift",
+      "bytes": 12082,
+      "sha256": "66d68787d337781075e7d691709d363bb2862c7f381c9a0c8c6ed888c376b949"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV4.swift",
+      "bytes": 10093,
+      "sha256": "311ef0ad0f120d7406b0e8469312f2e9d0083f348f52ea6704a4aa57e226f3ad"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV5.swift",
+      "bytes": 2526,
+      "sha256": "95d503bbbc98fc8599bbfb232e7226078e60d351513f8bf452e87f06f6fab3b7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioEventArchive.swift",
+      "bytes": 20165,
+      "sha256": "4dd8369fe4cc35c969da0909cc4ec835dc7c5c951197eb0fec9ae23bec7b7421"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "bytes": 25075,
+      "sha256": "b4d8ecc082bb3ba4411051941bb8c6925d987de21a58056d07ed9186a1630282"
+    }
+  ],
+  "limits": [
+    "Development logs are not a fixed-source final full-suite or release capture. The first run explicitly encountered an integration race.",
+    "Track tails, host callbacks, collector/normalizer admission and project mixer/routing remain separate proof obligations.",
+    "This context reuses immutable source interpretation; it does not cache across source changes, seek preparations or edited packages.",
+    "No proprietary executable was run and no Cubase output comparison occurred."
+  ],
+  "open_scoped_implementation_defects": []
+}

@@ -1,0 +1,693 @@
+{
+  "schema_version": 1,
+  "review_id": "APP020-GUI-INDEPENDENT-001",
+  "created_utc": "2026-10-23T03:33:22.625736+00:00",
+  "status": "passed",
+  "reviewer": "independent app020_review agent",
+  "scope": "Independent review of retained release AX captures, three visually inspected screenshots, package/source/binary identities and final test records. The reviewer did not operate the GUI, execute the application or rerun tests; parent supplied the observed release sessions.",
+  "target_executed": false,
+  "native_runtime_comparisons": 0,
+  "actionable_findings": [],
+  "release": {
+    "version": "0.20.0",
+    "build": 20,
+    "binary": {
+      "path": "research/evidence/application/APP020/final-build-snapshot/Rebase.app/Contents/MacOS/Rebase",
+      "bytes": 5229008,
+      "sha256": "e4073f77dc5296362256ad388dd176ef6f3ffc33843a89f9c5b149f76f59e528"
+    },
+    "process": {
+      "path": "research/evidence/application/APP020/gui-process.json",
+      "bytes": 736,
+      "sha256": "1f5469047b5f700f79e0ecd85b9bcb07636b3040ae19ef991e26480c12d658d3"
+    },
+    "accepted_pid": 99498,
+    "earlier_pid_excluded": 81307
+  },
+  "tests": {
+    "passed": 301,
+    "suites": 47,
+    "log": {
+      "path": "research/evidence/application/APP020/core-tests.log",
+      "bytes": 58584,
+      "sha256": "85a96913d11f1ba8dc360ac3bb51d7302f52e7f4dff9eea074bf1952957844f4"
+    },
+    "record": {
+      "path": "research/evidence/application/APP020/core-test-run.json",
+      "bytes": 1745,
+      "sha256": "524f28a5db0c37dfd2a3a68943ea4ae67fe73dda9cea9cddeb39130506b94012"
+    },
+    "scope": "Own-implementation suite; not native runtime comparison"
+  },
+  "expected_group_names": [
+    "two_complete_transport",
+    "three_complete_transport",
+    "saved_clock_controls",
+    "deleted_contributor_guard",
+    "unknown_contributor_guard",
+    "whole_project_guard"
+  ],
+  "groups": [
+    {
+      "name": "two_complete_transport",
+      "result": "passed",
+      "files": [
+        "gui-two-import-review.txt",
+        "gui-two-attached.txt",
+        "gui-two-mode.txt",
+        "gui-two-playing.txt",
+        "gui-two-first-active.txt",
+        "gui-two-first-output.txt",
+        "gui-two-seek-second.txt",
+        "gui-two-second-active.txt",
+        "gui-two-ended.txt",
+        "gui-two-saved-reopened.txt",
+        "gui-two-saved-mode.txt",
+        "gui-two-saved-seek-output.txt",
+        "gui-two-saved-paused.txt",
+        "gui-two-saved-resumed.txt",
+        "gui-two-saved-stopped.txt",
+        "gui-two-second-active.png",
+        "gui-two-saved-playing.txt"
+      ],
+      "observations": [
+        "The GUI import review retains two events, attachment maps the shared WAV to both, and complete-track mode shows2 included events. This first audition uses unsaved attachment state; final saved state is checked separately.",
+        "At0.306s the engine telemetry is zero; at3.258s both peaks are nonzero; at6.906s the known5.5..8s gap is zero; paused seek9.000s resumes to nonzero peaks at9.300s; the final state is13.000s with zero peaks and an ended label.",
+        "The explicitly saved package reopens with2 attached events. New playback shows a zero prefix at0.520s, output at3.255s, paused zero peaks at3.502s, resumed output at3.764s, and stop at0.000s. Final current package bytes match gui-two-saved-inputs and the aggregate baseline."
+      ]
+    },
+    {
+      "name": "three_complete_transport",
+      "result": "passed",
+      "files": [
+        "gui-three-opened.txt",
+        "gui-three-mode.txt",
+        "gui-three-playing.txt",
+        "gui-three-last-output.txt",
+        "gui-three-ended.txt",
+        "gui-three-track.png"
+      ],
+      "observations": [
+        "The helper-prepared package is opened by the release UI and complete-track mode identifies3 contributors. A zero prefix is captured at0.537s.",
+        "At17.286s the third event range16..18s is present and both engine peaks are nonzero; completion is18.000s with zero peaks and ended status. The screenshot independently shows all three timeline ranges, a3-event banner/footer, active meters and playhead inside the third event. This group does not separately capture output from every earlier event in the three-event run; exact full composition is covered by the own-implementation tests."
+      ]
+    },
+    {
+      "name": "saved_clock_controls",
+      "result": "passed",
+      "files": [
+        "gui-saved32-opened.txt",
+        "gui-saved32-mode.txt",
+        "gui-saved32-prefix.txt",
+        "gui-saved32-seek.txt",
+        "gui-saved32-output.txt",
+        "gui-saved32-ended.txt",
+        "gui-saved32-exited.txt",
+        "gui-saved32-output.png",
+        "gui-saved32-paused-prefix.txt"
+      ],
+      "observations": [
+        "The saved32k package opens with editable48000Hz and detached37BPM. Its source dialog identifies saved32000Hz and2 contributors.",
+        "Playback has a zero prefix at0.781s, paused prefix0.944s, paused seek9.000s and nonzero engine output at9.480s. Banner/footer continue to show32000Hz saved clock while project tempo remains37. It ends at13.000s; exit returns the footer to48000Hz project transport. The screenshot shows the same distinction.",
+        "These are clock selection, range and engine-activity observations. They do not establish device resampling behavior or acoustic equality with Cubase."
+      ]
+    },
+    {
+      "name": "deleted_contributor_guard",
+      "result": "passed",
+      "files": [
+        "gui-deleted-event.txt",
+        "gui-deleted-track-rejected-final.txt",
+        "gui-deleted-selected-event-admitted.txt",
+        "gui-deleted-saved.txt"
+      ],
+      "observations": [
+        "The isolated copy retains1 unresolved event and1 attached mapping after deleting the other original contributor. Complete-track mode explicitly requests restoration of removed events and disables Play Complete Track. The surviving selected-event saved-clock mode remains enabled.",
+        "The saved deletion package retains identical original CPR and report bytes from the two-event package; its current Project.json contains the intentional deletion. Baseline immutability applies after that explicit save, not across the deletion itself."
+      ]
+    },
+    {
+      "name": "unknown_contributor_guard",
+      "result": "passed",
+      "files": [
+        "gui-unknown-opened.txt",
+        "gui-unknown-track-rejected.txt",
+        "gui-unknown-selected-event-admitted.txt"
+      ],
+      "observations": [
+        "The helper-prepared unknown-child package opens with2 retained known events and2 media-attached event indicators. Complete-track mode rejects the unaccounted counted child and disables playback; selected-event saved-clock mode remains enabled. This cannot silently become a partial complete-track output."
+      ]
+    },
+    {
+      "name": "whole_project_guard",
+      "result": "passed",
+      "files": [
+        "gui-two-exited.txt",
+        "gui-project-blocked.txt"
+      ],
+      "observations": [
+        "Exiting source audition returns project playback selection. Invoking ordinary project playback produces the unresolved Cubase events alert; the source audition has not promoted native events into playable Clips or authorized full-project playback."
+      ]
+    }
+  ],
+  "gui_evidence": [
+    {
+      "path": "research/evidence/application/APP020/gui-two-import-review.txt",
+      "bytes": 3434,
+      "sha256": "7101d07488bef7054578c8512ad8db9b71e7020c15e3dce9841ac5fe350535de"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-attached.txt",
+      "bytes": 5278,
+      "sha256": "fce7ca9916ef3d8299605e561c52fabcdd33878c493130bc3e4418dcca2bc315"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-mode.txt",
+      "bytes": 1700,
+      "sha256": "e43e26fafb36ab18f29aae9a7c509832be55896381eceb99c93d732976d1fed1"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-playing.txt",
+      "bytes": 6060,
+      "sha256": "d87232a1bd0f2af548c700d7cababaad668ebc7ca8df9adad00470e16161102b"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-first-active.txt",
+      "bytes": 6059,
+      "sha256": "90d3c217e49ce7c611d496abe3efe526322a8dfe254c7df8f9e04a89ed1bd9c4"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-first-output.txt",
+      "bytes": 6060,
+      "sha256": "9128c686f07100b1ea750e1bbde6a714028d6f14b45a87b54f0e2a371558ac7a"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-seek-second.txt",
+      "bytes": 6047,
+      "sha256": "71313e82f502a0716f8e705f543c9295f73f2a5ba44f47d518e19668c4f422ff"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-second-active.txt",
+      "bytes": 6060,
+      "sha256": "5d4037d262572197d825e06f662ca9265bccb753f0e829c6baf5c006cd7ddd6b"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-ended.txt",
+      "bytes": 6046,
+      "sha256": "696e31a3dbf6ad1580d93381e6c163667ba05a0c95c3847f446c7f4ebf2fc64f"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-saved-reopened.txt",
+      "bytes": 5212,
+      "sha256": "7e8e348984d348806a8b6b8a9248ca2fdb196d5e5f8d4de2cabd4c17c65bfae5"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-saved-mode.txt",
+      "bytes": 1700,
+      "sha256": "e43e26fafb36ab18f29aae9a7c509832be55896381eceb99c93d732976d1fed1"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-saved-seek-output.txt",
+      "bytes": 6059,
+      "sha256": "7532aa51ece2ea84242746f5038feb6674bd820feac1e2179c56cfef3768e483"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-saved-paused.txt",
+      "bytes": 6047,
+      "sha256": "1c7cacc244b78ec04541e35b52cf52928ad35e6f0c7eedf65e44f29c6d9fe469"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-saved-resumed.txt",
+      "bytes": 6060,
+      "sha256": "3d15feb8c2adfa385490de24fd9a6a669d9a15e6eb353615c2deac0b8bf675d3"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-saved-stopped.txt",
+      "bytes": 6048,
+      "sha256": "c1e2436c7a6ed87745b25858ea3c78c09fed2f392d6827a2caaee810f05ef0e3"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-three-opened.txt",
+      "bytes": 5276,
+      "sha256": "97b4408c974fcb4d3a17babf00231dc463aeedb473f3767900128ede69c5ebd5"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-three-mode.txt",
+      "bytes": 1700,
+      "sha256": "38ac423a94a78b2b9cc93acc37154535902b9ecc00ce92fe9d93a3902a97f691"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-three-playing.txt",
+      "bytes": 6286,
+      "sha256": "0fd252a9143f19267e2f336792697ec7d14318211d28590f38ae2290eaa2f653"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-three-last-output.txt",
+      "bytes": 6286,
+      "sha256": "31e26317124e3b176fa782c7a886c9f1a4336622b0252234ac62b37950cba923"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-three-ended.txt",
+      "bytes": 6273,
+      "sha256": "f8091cf183363bb153564a3a60db50c28f8f819c409c8dac399c38cb0b816f8a"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-saved32-opened.txt",
+      "bytes": 5181,
+      "sha256": "ecc8c3faf0ee11f6afa4e110a2bf4135b3e6d4620a3c06e81807d59b1be64c4c"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-saved32-mode.txt",
+      "bytes": 1700,
+      "sha256": "161af9857409300420baa51d747dc7041280df360d84c70d57d4e6d4a95242a0"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-saved32-prefix.txt",
+      "bytes": 6021,
+      "sha256": "4d0897d2f1a1721037a68c22841d60fcb7a9c65b3133ec176965ec6886f92059"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-saved32-seek.txt",
+      "bytes": 6008,
+      "sha256": "6cea7d0d1c63a4a5b9c5b49d78b362ff47e7a4000705e1ad06593eaadbc88485"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-saved32-output.txt",
+      "bytes": 6020,
+      "sha256": "ec12703c2af7123e01371684e96f58496ed1f689cc9206f5e8d79b21cfd5471e"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-saved32-ended.txt",
+      "bytes": 6006,
+      "sha256": "525559deef7ca9d51ea3b17a8a6891e8c89251b4ea18fa9e9bc9a0f87854f31f"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-saved32-exited.txt",
+      "bytes": 5211,
+      "sha256": "d0bdf1b687a3e894743d42d196bda8e5cbb75d2497b142581027345df00d8940"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-deleted-event.txt",
+      "bytes": 4372,
+      "sha256": "4b2631a00ba3408715c07294c0bf914ba52d3090ac48d9c6062dabbccd3a01a8"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-deleted-track-rejected-final.txt",
+      "bytes": 1849,
+      "sha256": "d6dd86b53ad8e269373bb6feba6da3eebeac7a46d55bf9c60ac8bd1bda73c60f"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-deleted-selected-event-admitted.txt",
+      "bytes": 1747,
+      "sha256": "65511fb9f6389b886136a99c7d73777d5fad7bb0be9a5ad5fa67bf25a3ef5ec7"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-deleted-saved.txt",
+      "bytes": 5150,
+      "sha256": "6a9eb14476a07edc697cb4f4fb0a8dd30e4163388877b794ee14d2f989dd163b"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-unknown-opened.txt",
+      "bytes": 5218,
+      "sha256": "3f8000814364df0099b9f45ffd31e678ab13309ba44696f0955da987e8696db1"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-unknown-track-rejected.txt",
+      "bytes": 1783,
+      "sha256": "f8d4b9812bfd5d478fa5a985585f07c84e8c6ad25738e236d23242e459d3f72b"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-unknown-selected-event-admitted.txt",
+      "bytes": 1745,
+      "sha256": "e22cb4424ebc4c5be6ed62994fda51c4e3242ecec5b047a6458d6bd4046173ae"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-exited.txt",
+      "bytes": 5251,
+      "sha256": "8b3156dc3688487af22811f31d47185d0f102f0afac2bef532c30867e1b1de1e"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-project-blocked.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-second-active.png",
+      "bytes": 391978,
+      "sha256": "71da7db37357f1df9cbcfb3a5a5206076c5e5c1ce1996ba938a5881339afae17"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-three-track.png",
+      "bytes": 400585,
+      "sha256": "70fd3a6a6c773159392faf06d8f15d8188a65dcc334e66e05ff8f2154d6ebe47"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-saved32-output.png",
+      "bytes": 371686,
+      "sha256": "5063f7be63e3500f7cb653d26e3c553055d392f1b806680738f0a2e52f0c162d"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-process.json",
+      "bytes": 736,
+      "sha256": "1f5469047b5f700f79e0ecd85b9bcb07636b3040ae19ef991e26480c12d658d3"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-inputs.json",
+      "bytes": 4921,
+      "sha256": "f313e5ccc8df415e8ff1d63fc770300778e3d795d3dc4b89982af241186cf823"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-saved-inputs.json",
+      "bytes": 1085,
+      "sha256": "2bb1b71ca84878036b57a25b5d181ab402da7c20e93dda4dae02e151027b571c"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-inputs.json",
+      "bytes": 1081,
+      "sha256": "f68df42f84bfd42e4516645d7c66bd1cea22e131a1426eb41152ab35684f354e"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-helper-preparation.json",
+      "bytes": 4587,
+      "sha256": "8720a479d9bb525864f4fa889957bdd57a861f5c3e2cc31bdf01e2a1e2a6ce4e"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-live-first-series.json",
+      "bytes": 114410,
+      "sha256": "6918e9b70ecc5a621c4adbe43ec0f2637afc286218e79f775737761e648cfd22"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-pause-attempt.txt",
+      "bytes": 6060,
+      "sha256": "8e39af2e197c15f9fd4e04a3198b36952a05e02c98b740085d94d4901b9458eb"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-second-output.txt",
+      "bytes": 6046,
+      "sha256": "696e31a3dbf6ad1580d93381e6c163667ba05a0c95c3847f446c7f4ebf2fc64f"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-two-saved-playing.txt",
+      "bytes": 6060,
+      "sha256": "a51347d5a68b589f9fbbfaed6602385c68a4410a93ec5ad9f8db2ae9382b7ef4"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-saved32-paused-prefix.txt",
+      "bytes": 6008,
+      "sha256": "eb1ca7050931951bbf504ab10c05210d01d93d42eee3c4204fdb68dd76c294c2"
+    },
+    {
+      "path": "research/evidence/application/APP020/gui-observations.json",
+      "bytes": 18129,
+      "sha256": "5dd508eaf4fad6d15ff375ae78d326d1538bdcb522d5eea19b5d86eca1386d27"
+    },
+    {
+      "path": "research/evidence/application/APP020/record_gui.py",
+      "bytes": 8513,
+      "sha256": "aecb15b4e494b435704dea9dc4646b8fda9711cac33d81c640b86bebd5e3b651"
+    }
+  ],
+  "source_and_evidence": [
+    {
+      "path": "research/evidence/application/APP020/core-test-run.json",
+      "bytes": 1745,
+      "sha256": "524f28a5db0c37dfd2a3a68943ea4ae67fe73dda9cea9cddeb39130506b94012"
+    },
+    {
+      "path": "research/evidence/application/APP020/core-tests.log",
+      "bytes": 58584,
+      "sha256": "85a96913d11f1ba8dc360ac3bb51d7302f52e7f4dff9eea074bf1952957844f4"
+    },
+    {
+      "path": "research/evidence/application/APP020/release-build.json",
+      "bytes": 832,
+      "sha256": "541e707e1e5b422e51d6c482dea296fdc5c864d3e47e711b175b939ea7d41551"
+    },
+    {
+      "path": "research/evidence/application/APP020/test-source-before.json",
+      "bytes": 52209,
+      "sha256": "4f7a6ce884e987d3524c0a7397d88e06c272b458d24c39db58df5bf2f57bd965"
+    },
+    {
+      "path": "research/evidence/application/APP020/test-source-after.json",
+      "bytes": 52209,
+      "sha256": "4f7a6ce884e987d3524c0a7397d88e06c272b458d24c39db58df5bf2f57bd965"
+    },
+    {
+      "path": "research/evidence/application/APP020/sealer-preflight-independent-addendum.json",
+      "bytes": 14987,
+      "sha256": "aaaa78d03dacf71fe64f724728a10482df53f3ee9015102ea20100ab136b4de1"
+    },
+    {
+      "path": "research/evidence/application/APP020/track-application-independent-review.json",
+      "bytes": 16659,
+      "sha256": "084bd5cdf06b912da340505db722ae5b9317057159e5664445cd193c965d2ebb"
+    }
+  ],
+  "independently_parsed_transport_states": [
+    {
+      "capture": "two-playing",
+      "seconds": 0.306,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": true,
+      "paused": false,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "two-first-active",
+      "seconds": 3.258,
+      "left_peak": 0.077666,
+      "right_peak": 0.072232,
+      "playing": true,
+      "paused": false,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "two-first-output",
+      "seconds": 6.906,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": true,
+      "paused": false,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "two-seek-second",
+      "seconds": 9.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": false,
+      "paused": true,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "two-second-active",
+      "seconds": 9.3,
+      "left_peak": 0.077795,
+      "right_peak": 0.072123,
+      "playing": true,
+      "paused": false,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "two-ended",
+      "seconds": 13.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": false,
+      "paused": false,
+      "ended": true,
+      "stopped": false
+    },
+    {
+      "capture": "two-saved-playing",
+      "seconds": 0.52,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": true,
+      "paused": false,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "two-saved-seek-output",
+      "seconds": 3.255,
+      "left_peak": 0.077346,
+      "right_peak": 0.072292,
+      "playing": true,
+      "paused": false,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "two-saved-paused",
+      "seconds": 3.502,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": false,
+      "paused": true,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "two-saved-resumed",
+      "seconds": 3.764,
+      "left_peak": 0.0778,
+      "right_peak": 0.072268,
+      "playing": true,
+      "paused": false,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "two-saved-stopped",
+      "seconds": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": false,
+      "paused": false,
+      "ended": false,
+      "stopped": true
+    },
+    {
+      "capture": "three-playing",
+      "seconds": 0.537,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": true,
+      "paused": false,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "three-last-output",
+      "seconds": 17.286,
+      "left_peak": 0.077348,
+      "right_peak": 0.072246,
+      "playing": true,
+      "paused": false,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "three-ended",
+      "seconds": 18.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": false,
+      "paused": false,
+      "ended": true,
+      "stopped": false
+    },
+    {
+      "capture": "saved32-prefix",
+      "seconds": 0.781,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": true,
+      "paused": false,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "saved32-paused-prefix",
+      "seconds": 0.944,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": false,
+      "paused": true,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "saved32-seek",
+      "seconds": 9.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": false,
+      "paused": true,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "saved32-output",
+      "seconds": 9.48,
+      "left_peak": 0.076627,
+      "right_peak": 0.07131,
+      "playing": true,
+      "paused": false,
+      "ended": false,
+      "stopped": false
+    },
+    {
+      "capture": "saved32-ended",
+      "seconds": 13.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0,
+      "playing": false,
+      "paused": false,
+      "ended": true,
+      "stopped": false
+    }
+  ],
+  "package_integrity": {
+    "packages": 5,
+    "files": 20,
+    "current_files_equal_final_baselines": true,
+    "complete_file_sets_checked": true,
+    "baseline": {
+      "path": "research/evidence/application/APP020/gui-inputs.json",
+      "bytes": 4921,
+      "sha256": "f313e5ccc8df415e8ff1d63fc770300778e3d795d3dc4b89982af241186cf823"
+    },
+    "two_saved_baseline": {
+      "path": "research/evidence/application/APP020/gui-two-saved-inputs.json",
+      "bytes": 1085,
+      "sha256": "2bb1b71ca84878036b57a25b5d181ab402da7c20e93dda4dae02e151027b571c"
+    },
+    "unrelated_preserved_session_excluded": true,
+    "scope": "Current final saved files match their respective baselines. Explicit import/attachment Save/deletion operations precede those final baselines; the review does not claim bytes stayed unchanged across intentional saves."
+  },
+  "baseline_transition": {
+    "pre_save_record": {
+      "path": "research/evidence/application/APP020/gui-two-inputs.json",
+      "bytes": 1081,
+      "sha256": "f68df42f84bfd42e4516645d7c66bd1cea22e131a1426eb41152ab35684f354e"
+    },
+    "final_saved_record": {
+      "path": "research/evidence/application/APP020/gui-two-saved-inputs.json",
+      "bytes": 1085,
+      "sha256": "2bb1b71ca84878036b57a25b5d181ab402da7c20e93dda4dae02e151027b571c"
+    },
+    "changed_current_member": "Two Track QA.rebaseproj/Project.json",
+    "before_observed_sha256": "01e15d619269de1e79092b405feefc07a1e21dbc92854a8fa30db08bdfa4ab4e",
+    "after_current_sha256": "d84e0636f83d54d9a4adce0e7d7d9d7c9b962ee6ef3fbfb3078d9df4e633d9fd",
+    "unchanged_other_members": 3,
+    "qualification": "The old Project.json identity is a superseded recorded observation, not a current file pin. The unchanged original/report/media identities still match. Saved reopen and later transport use the final baseline."
+  },
+  "screenshots_reviewed": {
+    "count": 3,
+    "viewed_by_reviewer": true,
+    "assessment": "All three show readable complete-source-track banners, event counts, unconverted saved-clock labels, timeline ranges, output meters and transport controls without an obstructing dialog. Screenshots follow nearby AX captures and therefore have slightly later timecodes; they are not treated as identical instants. Older per-lane anchor/unresolved wording remains the documented nonblocking clarity limitation."
+  },
+  "retained_intermediates_assessment": [
+    "The stopped all-zero first series is not live-output evidence.",
+    "The pause-attempt capture is actually restarted playback and is not pause evidence; final saved-paused/resumed establish that transition.",
+    "first-output is the6.906s silent gap and second-output is an ended13s state; filenames do not define their meaning.",
+    "The earlier process was excluded before final import; unrelated unsaved work was preserved separately and is outside the5 QA packages.",
+    "Helper-created packages are not labeled GUI-imported. The distinct two-event package supplies the observed import/attachment journey."
+  ],
+  "assertion_review": "Read record_gui.py without executing its exclusive writer. Recomputed final binary/log/package identities, all51 retained record digests, exact group membership, positive/zero telemetry and enabled/disabled transport controls independently. No failed/intermediate capture was substituted for a final passing behavior.",
+  "limits": [
+    "Engine peaks show application mixer activity only; they are neither DAC capture nor per-sample comparison of live output. Exact PCM evidence comes from the separately pinned tests.",
+    "Native Cubase execution remains zero. Symbolic multi-event inputs have minimal ancillary bodies and are not native-valid or Cubase-generated CPR evidence.",
+    "Chronological disjoint direct-track source audition remains conditional on explicit fresh filtering/context and all source/media gates; overlaps, fades, hosted routing/mixer/effects/automation and full product fidelity remain unresolved.",
+    "No actual seal, publication operation, source/status change or git action was performed during this review."
+  ]
+}

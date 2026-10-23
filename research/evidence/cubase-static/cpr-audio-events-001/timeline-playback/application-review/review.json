@@ -1,0 +1,64 @@
+{
+  "scope": "Read-only source review plus optimized execution of independently implemented C selector, not target code; no device or Cubase execution",
+  "files": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_selector.c",
+      "sha256": "fc4c02d437de57103592dd08cd1579567a1ba45bafe329943e1d1971db94f919"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_selector.h",
+      "sha256": "e18da95522c4a9d73b1393ce48b6110e7a00bec1f5a935b952d758c22eca2af7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRTimelineSelection.swift",
+      "sha256": "b08ace23f823c5bf28b54bea8fa32e531234569378574ab6257b7caf9b735e30"
+    }
+  ],
+  "compile_command": [
+    "/usr/bin/clang",
+    "-O2",
+    "-dynamiclib",
+    "-ffp-contract=off",
+    "-I",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/timeline-playback/application-review",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/timeline-playback/application-review/cpr_timeline_selector.c",
+    "-o",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/timeline-playback/application-review/selector-control.dylib"
+  ],
+  "controls_passed": 20,
+  "controls": [
+    "origin",
+    "before_end",
+    "exact_end",
+    "after_end",
+    "future_start_still_selected",
+    "empty",
+    "stale_generation_search",
+    "stale_after_end_writes_generation_keeps_current",
+    "cached_ignores_future",
+    "cached_exact_end",
+    "gap_selects_future",
+    "adjacent_inclusive_prior",
+    "last_exact_end",
+    "past_all",
+    "iterator_order_not_minimum_start",
+    "linked_order_skips_unlinked_storage",
+    "zero_length_exact_end",
+    "equal_generation_all_bits",
+    "generation_wrap_stale",
+    "one_addition_not_subtracted_comparison"
+  ],
+  "analytical_negative_query_controls_excluded": "The application intentionally requires nonnegative coordinates; native finite selector itself has no such check.",
+  "review": {
+    "fixed": "Initial array-index scan replaced by linked traversal from head0, matching native list iterator. The negative linked-order control discriminates this error.",
+    "no_remaining_issue_in_scope": true,
+    "limits": [
+      "Normal-or-zero finite coordinate/domain check,4096 cap,nearest-even enforcement,cycle failure and safe bounds are application guards absent in native selector.",
+      "C uses indices and stable arrays, not pointer/reference ownership or lock callbacks.",
+      "Swift reset mirrors null current+u32 generation; selecting updates only generation.",
+      "Current field remains caller-owned; cached successor ignores query.",
+      "Half-open sample scheduling and seconds-to-frame policy are outside this source review."
+    ]
+  },
+  "target_execution": false
+}

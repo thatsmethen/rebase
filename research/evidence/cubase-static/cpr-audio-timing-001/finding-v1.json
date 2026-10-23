@@ -1,0 +1,123 @@
+{
+  "id": "CPR-AUDIO-TIMING-001",
+  "evidence_class": "native static instructions and independent source-byte comparison",
+  "source": "/workspace/rebase/research/targets/derived/Cubase15-arm64",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "target_executed": false,
+  "scope": {
+    "functions": 38,
+    "exact_source_derivative_bytes": 7364,
+    "original_instruction_words": 1841,
+    "rea_instruction_addresses_in_original": 1706,
+    "rea_records_validated_and_imported": 76
+  },
+  "accepted_for_implementation": [
+    {
+      "id": "fixed-clock-v1",
+      "condition": "MTempoTrackEvent v3 fixed mode is active; finite Float32 BPM20..400 and nonnegative finite bounded coordinates are an explicit application subset.",
+      "native_entries": [
+        "0x10173ad50",
+        "0x10173b1d4"
+      ],
+      "period": "p = Float64(roundToFloat32(60.0f / originalFixedBPMFloat32))",
+      "seconds_to_native_tick": "(seconds / p) * 480.0; two separate Float64 operations, no positive-map quantizer",
+      "native_tick_to_seconds": "(p * nativeTick) / 480.0; two separate Float64 operations",
+      "limitations": [
+        "Default IEEE round-to-nearest arithmetic domain only; native execution has not been compared.",
+        "Application quarter-note APIs explicitly convert at480ticks per quarter; preserving an original native tick requires the raw tick API.",
+        "This clock branch does not inspect the tempo-event list or variation state.",
+        "Displayed BPM alone is insufficient to recreate this arithmetic with Double60/BPM."
+      ]
+    }
+  ],
+  "linkage": [
+    "Reader101c23184 queries datum interface identifier104fe7d50. MTempoTrackEvent QueryInterface10173f3d0 returns object+160 for that identifier.",
+    "Secondary vtable104675520 slot28 is10173b1cc (subtract160, branch10173ad50); slot30 is10173b6cc (subtract160, branch10173b1d4).",
+    "Generic datum converter101c22dc0 source tag0 invokes tempo slot30 to canonical time; destination tag0 invokes slot28 from canonical time. Scalar datum forms multiply/divide their stored double scale.",
+    "MTempoEvent reader stores serialized reciprocal Float32 at48, first double at50, second double at58, kind at60. Original getter/setter101739edc/ed4 bind MEvent Start to58.",
+    "MEvent named reader101701cf4 binds Start/Length/Offset to virtual slotsd8/e8/f8; previously retained MAudioEvent setters store60/68/70 and current getters return those fields."
+  ],
+  "additional_static_findings_not_yet_implemented": [
+    {
+      "id": "map-jump-coordinates",
+      "observation": "Inverse map branch returns A.double50 + ((queryTick-A.double58)*Double(A.float48))/480 for a following jump kind0 or no next event. Forward branch computes A.double58 + ((seconds-A.double50)/Double(A.float48))*480 before quantization. This identifies serialized double50 as seconds coordinate and double58 as native tick coordinate in this consumer.",
+      "limits": [
+        "Active iterator ownership, variation selection, attribute effects, cache lifecycle and structural list validation must be constrained for each supported import.",
+        "Not yet authorization to place MAudioEvent clips or map source offsets."
+      ]
+    },
+    {
+      "id": "positive-map-quantization",
+      "observation": "Native10173b014..b034 uses FMADD(tick,1000,0.5), FRINTM, then division1000. Its finite positive branch is floor(fma(tick,1000,0.5))/1000. REA pseudocode inaccurately renders an integer cast; original instructions control the contract."
+    },
+    {
+      "id": "two-point-forward-boundary",
+      "observation": "Native10173b064 selects index0 when query seconds<=last.seconds, index1 when query>last.seconds for count2. The ASR assignment at10173b108 and move atb114 are lost in decompiled control flow."
+    },
+    {
+      "id": "tempo-cache",
+      "observation": "10173b4cc skips recomputation when node+50 bit200 is set. Otherwise first Start/timeA become0 and following seconds anchors recompute from tick distances and period/kind. Reader10173bdac explicitly setsbit200 after restoration before the post-read callback; saved anchors must not be silently discarded."
+    },
+    {
+      "id": "ramp",
+      "observation": "Kind1 branches and their arithmetic are retained; imported call stubs and full interpolation/FP contract are not yet certified or implemented."
+    }
+  ],
+  "known_limits": [
+    "Raw slices preserve entry VAs and exact instructions but do not map external globals/imports/unwind metadata. Original-image bytes and direct native disassembly supply separately retained linkage.",
+    "LC_FUNCTION_STARTS interval is a derivative boundary, not proof that every byte belongs to one reachable function. Some raw decompilations omit external tails.",
+    "No running Cubase comparisons, full project compatibility, audio segment resolution, tempo ramps, negative application timeline or whole-product fidelity are established.",
+    "Native shared post-read callback has variation and visibility feature branches; signature dossier separately traces those. Fixed clock dispatch is independent of map-list branches."
+  ],
+  "evidence": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/verification.json",
+      "sha256": "c8de445c441d9eaa3a92b406f33d0c3d243a5331c62529957b37360606ab78d4"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/tempo-interface-vtables.json",
+      "sha256": "4e229bb1a66f6703f4d7958521c649900db86b46725b56aec4c35032cef78b0f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/tempo-iterator-vtable.json",
+      "sha256": "486f1f1294c65ee3b557f5ef1bd564b12b303cca1e63fb5e5397ee2c91fec4fe"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/tempo-item-vtable.json",
+      "sha256": "7f7ef30d6aaa11654bacdb71cbede79f81b5f2292253af4766637b2e32980b97"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/native-linkage.json",
+      "sha256": "0704613d6a107164ea2f7574c7a803b816bf37f55329b046715a16f8f6187d6b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/event-vtable-slots.json",
+      "sha256": "e698366f4f928b491627748c58b3e773674a7ed7de254c255d6909b31ce26904"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/tempo-postread-symbols.json",
+      "sha256": "bdc7b7cb3787936cb4dc118c278c0f0e9d19e97f1ace7e28034685074b29e768"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/evidence-import.json",
+      "sha256": "5138c6c2a2356a92e1792380c464efd2f2eac11445a1d0f9e07a99a4c5c21707"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/native/pass2/native-10173bdac.txt",
+      "sha256": "a2a8cb8351e38ef77808c84068ce64927aa9661b0e5e49f7625492f9ea7f86b1"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/native/pass3/native-101c23184.txt",
+      "sha256": "849a4805658aaf178ed97f6b0e33fbbf88ac90e2e5a7851b5562dc061bee9ad0"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-signature-001/pass4/native-101701cf4.txt",
+      "sha256": "3f93a210e26f480e9443e2f7d35a535f769f06834bfade422fb940dd9f4b3d42"
+    }
+  ],
+  "reproduction": [
+    "python3 research/evidence/cubase-static/cpr-audio-timing-001/verify_evidence.py",
+    "node research/evidence/cubase-static/cpr-audio-timing-001/combine_evidence.mjs",
+    "node research/evidence/cubase-static/cpr-audio-timing-001/import_evidence.mjs"
+  ]
+}

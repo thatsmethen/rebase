@@ -2,11 +2,11 @@
 
 This original C implementation follows reviewed static contracts AMBI-DSP-002,
 AMBI-DSP-003 and AMBI-STATE-004. It is not a VST3 implementation and has not been
-compared with an executing Reference component. The target code is never loaded.
+compared with an executing Cubase component. The target code is never loaded.
 
 The source is the arm64 slice with SHA-256
 `e8341c6b31ac6b65cf7e8c18bdfbaa18ac24b20160b4287dc385b202eb29b883` under
-`research/evidence/cpr-static/ambisonic`. The 388-byte table region at virtual
+`research/evidence/cubase-static/ambisonic`. The 388-byte table region at virtual
 address `0x18d15c` has SHA-256
 `c49accecf95f469477a7f57bcc31e6e35ff5d51ee1ff63479b9268bb5a3fc874`.
 `first-order-finding.json`, `higher-order-finding.json`,
@@ -50,7 +50,7 @@ selected precision. This conservative domain keeps all products normal/finite.
 Normal conversion requires round-to-nearest-even and arm64 FPCR exactly zero,
 or x86-64 default MXCSR controls (sticky exception flags ignored). Other host
 architectures fail closed. These are explicit candidate restrictions, not
-recovered Reference environment guarantees. Bypass/skip accept every finite bit
+recovered Cubase environment guarantees. Bypass/skip accept every finite bit
 pattern, including subnormals, because they perform no sample arithmetic.
 
 NaN/infinity, nonnormalized parameter values, empty recognized queues, unsupported

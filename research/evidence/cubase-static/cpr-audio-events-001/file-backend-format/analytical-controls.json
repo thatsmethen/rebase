@@ -1,0 +1,205 @@
+{
+  "passed": true,
+  "target_executed": false,
+  "signature_controls": [
+    {
+      "name": "fmt15",
+      "bytes_hex": "524946460000000057415645666d74",
+      "expected": "0x104fecbb8"
+    },
+    {
+      "name": "fmt16",
+      "bytes_hex": "524946460000000057415645666d7420",
+      "expected": "0x104fecbb8"
+    },
+    {
+      "name": "fmt nonspace is still only signature",
+      "bytes_hex": "524946460000000057415645666d7458",
+      "expected": "0x104fecbb8"
+    },
+    {
+      "name": "short14",
+      "bytes_hex": "524946460000000057415645666d",
+      "expected": null
+    },
+    {
+      "name": "first chunk JUNK",
+      "bytes_hex": "5249464600000000574156454a554e4b",
+      "expected": null
+    },
+    {
+      "name": "RF64",
+      "bytes_hex": "52463634000000005741564564733634",
+      "expected": "0x10502d9f8"
+    },
+    {
+      "name": "RF64 short",
+      "bytes_hex": "524636340000000057415645647336",
+      "expected": null
+    },
+    {
+      "name": "BWF",
+      "bytes_hex": "52494646000000005741564562657874",
+      "expected": "return from 0x10031f7d8"
+    },
+    {
+      "name": "RIFX",
+      "bytes_hex": "524946580000000057415645666d7420",
+      "expected": null
+    }
+  ],
+  "registry_controls": [
+    {
+      "name": "first-success",
+      "entries": [
+        [
+          "A",
+          true,
+          false,
+          "handleA"
+        ],
+        [
+          "B",
+          true,
+          false,
+          "handleB"
+        ]
+      ],
+      "expected": "A"
+    },
+    {
+      "name": "null-creator-continues",
+      "entries": [
+        [
+          "A",
+          true,
+          false,
+          null
+        ],
+        [
+          "B",
+          true,
+          false,
+          "handleB"
+        ]
+      ],
+      "expected": "B"
+    },
+    {
+      "name": "probe-match",
+      "entries": [
+        [
+          "A",
+          false,
+          true,
+          "handleA"
+        ]
+      ],
+      "expected": "A"
+    },
+    {
+      "name": "no-match",
+      "entries": [
+        [
+          "A",
+          false,
+          false,
+          "handleA"
+        ]
+      ],
+      "expected": null
+    },
+    {
+      "name": "priority-changes-selection",
+      "entries": [
+        [
+          "plugin",
+          true,
+          false,
+          "p"
+        ],
+        [
+          "built-in",
+          true,
+          false,
+          "w"
+        ]
+      ],
+      "expected": "plugin"
+    }
+  ],
+  "pcm_metadata_controls": [
+    {
+      "tag": 1,
+      "bits": 24,
+      "channels": 2,
+      "rate": 44100,
+      "header_block_alignment": 6,
+      "kind": 1,
+      "stored_sample_bits": 24,
+      "stored_frame_bytes": 6,
+      "stored_rate_double": 44100.0
+    },
+    {
+      "tag": 1,
+      "bits": 24,
+      "channels": 1,
+      "rate": 48000,
+      "header_block_alignment": 3,
+      "kind": 1,
+      "stored_sample_bits": 24,
+      "stored_frame_bytes": 3,
+      "stored_rate_double": 48000.0
+    },
+    {
+      "tag": 1,
+      "bits": 16,
+      "channels": 2,
+      "rate": 32000,
+      "header_block_alignment": 4,
+      "kind": 1,
+      "stored_sample_bits": 16,
+      "stored_frame_bytes": 4,
+      "stored_rate_double": 32000.0
+    },
+    {
+      "tag": 1,
+      "bits": 8,
+      "channels": 1,
+      "rate": 8000,
+      "header_block_alignment": 1,
+      "kind": 0,
+      "stored_sample_bits": 8,
+      "stored_frame_bytes": 1,
+      "stored_rate_double": 8000.0
+    },
+    {
+      "tag": 1,
+      "bits": 20,
+      "channels": 2,
+      "rate": 44100,
+      "header_block_alignment": 6,
+      "kind": 1,
+      "stored_sample_bits": 24,
+      "stored_frame_bytes": 6,
+      "stored_rate_double": 44100.0
+    },
+    {
+      "tag": 1,
+      "bits": 24,
+      "channels": 2,
+      "rate": 44100,
+      "header_block_alignment": 8,
+      "kind": 1,
+      "stored_sample_bits": 24,
+      "stored_frame_bytes": 6,
+      "stored_rate_double": 44100.0
+    }
+  ],
+  "scope": "Analytical source-derived branch/value controls only; not native execution, no actual backend selection, no PCM read or malformed-WAV acceptance claim.",
+  "limitations": [
+    "Registry controls model only the first pass; filesystem-type fallback is recorded separately in the finding.",
+    "Metadata controls assume successful primitive reads and plain PCM tag1; extended/compressed tags, errors and malformed files remain outside the model.",
+    "The signature recognizer is deliberately weaker than full file validation."
+  ]
+}

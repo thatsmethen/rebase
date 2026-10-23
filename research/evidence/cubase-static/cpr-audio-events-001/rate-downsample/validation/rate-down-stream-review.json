@@ -1,0 +1,45 @@
+{
+  "scope": "Independent read-only integration review of downsample arithmetic/layout/count/state composition. No hardware, whole timeline, full project, or live Cubase conformance claim.",
+  "result": "No actionable composition or memory-safety defect found within the declared bounded source-event route.",
+  "checked": [
+    "Source/output are finite integral8k..192k, unequal; equal-rate source uses existing route. Integer rates in this range are exactlyFloat32-representable.",
+    "Downstream count uses count_blocks from fresh state with8192limit and ABOVE. Processing calls the same next_block helper, preserving the counted partition sequence including8191+2 instead of8192+1.",
+    "Single arena places output directly after all copied input samples and provides max(2,count*2) capacity. Explicit process logical output capacitycount matches exact prediction and actual pointer ordering satisfies ABOVE.",
+    "Immutable source snapshot is copied before processing. Per-call state is a Swift value and assigned only after C process success/produced-count match.",
+    "Zero-output calls advance input/state and continue, so they are not mistaken forEOF. No padding/flush extends the retained exact count.",
+    "OutputFloat32 gain is applied after conversion. Frame counts and duration use actual aggregate count, retaining small-ratio partition effects.",
+    "Seek resets state and prerolls the same partitions; suffix buffering preserves the exact remaining output from the crossing block. Seek-to-end produces no frames and skips expensive preroll.",
+    "Positive bounded rates permit nonnil stereoFloat32 format. Arrays and integer arithmetic are bounded by16m source/output frames and8192-source block policy."
+  ],
+  "limits": [
+    "This is a source review, not another independent mathematical oracle or test execution.",
+    "Source array count is validated atconstruction but sample-domain validation is deferred to each C block; nonfinite or nonzero subnormal inputs fail during preparation/preroll/playback.",
+    "If separate post-conversion gain fails, cursor converter/input position has already advanced. Caller must stop/discard that cursor; retrying it would not replay the failed block. The method throws an explicit playback-stopped error and does not promise cursor transactionality.",
+    "The existing transfer/ring, AVAudioEngine device routing, cancellation and UI lifecycle are outside this narrow review.",
+    "ABOVE allocation order and block partitioning are explicit application policies, not inferred Cubase-host behavior."
+  ],
+  "inputs": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "bytes": 9971,
+      "sha256": "7c8251bc8d65c14a9959f053a24ad79d0185e442b46fdc30043fdd37bf843670"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0_down.c",
+      "bytes": 10145,
+      "sha256": "e85877ab7c33c8ef9c6bf16124125504a545e3a057e4d3ec6838729bd0df676f"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0_down.h",
+      "bytes": 2587,
+      "sha256": "852af4ccba424e561634949674d2fd9788715fb2ac68e9bf4e5d8082e3adea3c"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0.c",
+      "bytes": 5859,
+      "sha256": "9cf22cb496e5eac010c0e027286927bdf68ef4181c195d30c30b0df2304bd7fa"
+    }
+  ],
+  "target_execution": false,
+  "application_edits": false
+}

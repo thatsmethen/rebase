@@ -1,0 +1,86 @@
+{
+  "id": "APP007",
+  "version": "0.7.0",
+  "build": 7,
+  "created_utc": "2026-10-19T14:18:22.185213+00:00",
+  "status": "bounded_media_attachment_implemented_and_checked",
+  "autonomous_goal_status": "active",
+  "interpretation_profile": "cpr-static-subset-v4 unchanged",
+  "serialization_schema": 2,
+  "executable": {
+    "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 4398256,
+    "sha256": "3f757ea25ca70468b2de4e07ba62396b77d10e79ea74472e9049835f4e2d627f"
+  },
+  "test_methods_passed": 138,
+  "test_suites": 20,
+  "test_log": {
+    "path": "research/evidence/application/APP007/core-tests-final.log",
+    "bytes": 26910,
+    "sha256": "fb612c5d30f4089958ff2b84f5be8bb8c11acab7727ff414643ba921dca8becd"
+  },
+  "gui_groups_passed": 10,
+  "gui_record": {
+    "path": "research/evidence/application/APP007/gui-observations.json",
+    "bytes": 7417,
+    "sha256": "c3fdc0fa56f203fb286a8a7e52c692180dfbad51123ed4ae6a211c28735ebec3"
+  },
+  "independent_review": {
+    "path": "research/evidence/application/APP007/media-attachment-review.json",
+    "bytes": 6967,
+    "sha256": "d32115d4c8844e6700fe51a57847152264bf271a4879f00bfd46db6823e2aa53"
+  },
+  "package_audit": {
+    "path": "research/evidence/application/APP007/gui-packages-independent-check.json",
+    "bytes": 18352,
+    "sha256": "0524700be65298f680796b53f591f7720481e3c523a974860b7e4ad31c8c15a5"
+  },
+  "historical_audit": {
+    "path": "research/evidence/application/APP007/historical-integrity.json",
+    "bytes": 453,
+    "sha256": "4a8a9bdb3cff82108ffab0c72555275eb67dd2c5174c9c2fa57662651429034e"
+  },
+  "static_findings": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/finding.json",
+      "bytes": 17257,
+      "sha256": "b3ed0ab7f758c91a65620dcc829be02e51684c7887e4561f9107d22fc0365c38"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/finding.json",
+      "bytes": 33370,
+      "sha256": "f3ec20b3e9b3412a30a4451a920f1c68bbd95b41906dda4a432139a5f8f23da4"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/finding.json",
+      "bytes": 22112,
+      "sha256": "a78e11153ad11bbd925a915a4e5260af19ce28188073a78a59f26cc0fe109ada"
+    }
+  ],
+  "implemented": [
+    "Checked integer source-segment mapping with nonzero Start/Offset discriminator, overflow and source-capacity rejection.",
+    "Explicit user-selected PCM attachment bound to preserved source SHA and AudioFile identity; copied media SHA, actual decoded frame count and format verified.",
+    "Every source-sharing event validated before accepting a copy; failed transactions leave project manifest unchanged and clean copied media.",
+    "Native Attach/Replace controls, attachment Undo/Redo, removal/pruning, save/reopen and Save As.",
+    "Frozen V1/V2/V3/V4 imports unchanged; attachments are separate user edits. Native-event playback/render/exchange still refuses unresolved processing."
+  ],
+  "retained_corrections": [
+    {
+      "record": "media-attachment-tests-initial.log",
+      "cause": "New test macro could not use a throwing right-hand conjunction; split into independent assertions, production code unchanged."
+    },
+    {
+      "record": "media-attachment-review.json",
+      "cause": "Pre-acceptance shared-file validation and failed-copy cleanup order corrected before build and GUI checks."
+    }
+  ],
+  "limits": [
+    "Cubase/proprietary runtime executions and measured reference comparisons remain0.",
+    "Matching file metadata does not prove original recording identity; every attachment is explicitly user-selected.",
+    "Attachment currently supports one file and one segment per linked event, mono/stereo PCM, exact saved format, at most256MiB and16million frames.",
+    "Direct segment arithmetic does not establish active backend format/gain or actual complete reads; stream selection is conditional on bounded unchanged restored state.",
+    "Native event-local gain/fades/looping, timeline mixer/output path, differing-rate output samples, general placement and musical duration remain open.",
+    "CPR writing/roundtrip, MIDI editing, recording, plugin hosting, PDC, complete routing and full interface fidelity remain open."
+  ],
+  "next": "Trace finite event rendering consumer gain/fade/loop state, then implement supported event-local rendering in a new frozen profile with explicit conditions. Full Cubase fidelity goal remains active."
+}

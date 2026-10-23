@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "status": "passed_no_open_defect_in_reviewed_domain",
+  "target_executions": 0,
+  "cubase_runtime_comparisons": 0,
+  "scope": "Mutable supplied accessor gain over immutable interleaved stereo Float32 or exact decoded PCM24, fixed supplied rates, retained mode1/mode2 state and bounded equal-rate fast-path arithmetic. This is a development/core review, not packaged GUI acceptance or proof of the hosted backend or gain owner.",
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeAudioAccessor.swift",
+      "bytes": 10508,
+      "sha256": "0045544a4ddff95bf1badaa42b5dca58de43c994c389527182d2121a91fb27da"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_format.c",
+      "bytes": 2665,
+      "sha256": "2ffadf89dba582bb7b17dedb732655ed83a2e403ebd351b313d5f2d0d65c6b92"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_format.h",
+      "bytes": 1239,
+      "sha256": "bc4c2facbd574bc81359c4ef40b859cc98a8c0b3a5c944692f8b463147e390bd"
+    }
+  ],
+  "source_and_evidence": [
+    {
+      "path": "research/evidence/application/APP017/gain-order-stage-oracle.py",
+      "bytes": 5753,
+      "sha256": "0a3998fd94a13231fea4c9758f96deab77b1fce48436592cd86a6c6b878338fe"
+    },
+    {
+      "path": "research/evidence/application/APP017/gain-order-stage-oracle.json",
+      "bytes": 1115416,
+      "sha256": "e28870caa88a1eda66d8cc77eaf804ea513695e3fc3694ee77d719f2d1799cc1"
+    },
+    {
+      "path": "research/evidence/application/APP017/accessor-gain-oracle.py",
+      "bytes": 6387,
+      "sha256": "e07ca70f414e676daf94c77de7858363edecad66882deff6b90c983ac189edda"
+    },
+    {
+      "path": "research/evidence/application/APP017/accessor-gain-oracle.json",
+      "bytes": 2348869,
+      "sha256": "2a78917ad3318b904f66bda1a8205305d420d4c7d088ffb2ac8d6562e2d6aaaa"
+    },
+    {
+      "path": "research/evidence/application/APP017/accessor-gain-oracle-generation.log",
+      "bytes": 235,
+      "sha256": "cbd0fea8d76d7e97ad2ea973eebbac28e3606b4697b70c3a5571ab5245f9db62"
+    },
+    {
+      "path": "research/evidence/application/APP017/verify-gain-instructions.py",
+      "bytes": 4417,
+      "sha256": "25ed81ecbd4c8c3189065531c9e27ec476c2d8da4abd9c95b804eb07c906fc4c"
+    },
+    {
+      "path": "research/evidence/application/APP017/gain-instruction-verification.json",
+      "bytes": 5466,
+      "sha256": "51989521bd2180111ccad04b3327eeac70a15608259d26c370cd86525b00a04a"
+    },
+    {
+      "path": "research/evidence/application/APP017/accessor-gain-tests-first.log",
+      "bytes": 12274,
+      "sha256": "9b24837f929634bbf92d8f03687cee6be7fa0ae3237dd238d45ceaf49af26400"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeAccessorGainTests.swift",
+      "bytes": 13073,
+      "sha256": "fbec217ca2d0304fdf333175c9df13d2cb6012f8a9c1656a82c6f30ed4eb9fb3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/finding.json",
+      "bytes": 6408,
+      "sha256": "111dc72c995faca34ed2750f55b4565dc9a973cb42de69b73f18db0802b4214d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/original-bindings.json",
+      "bytes": 13120,
+      "sha256": "0477f7e73a14a6bd4adc0b322cf11f03319b0e430d4c957b076b54efff80731d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/gain-controls.json",
+      "bytes": 5357,
+      "sha256": "4a33970d3ad3a7d16043cab1e66cf9f7f5fd1f093589604f1ab3f2014c00e460"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/artifact-manifest.json",
+      "bytes": 18881,
+      "sha256": "f9f1124b0022857a91758e52f8cc7adf05578246fa9e5e11c163918ef5a8aed8"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/finding.json",
+      "bytes": 31753,
+      "sha256": "d76301f9ef7e25345c0e22fdded03aecff7e41f5ffbd0729985a0018518a1ea2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/finding.json",
+      "bytes": 5405,
+      "sha256": "26640a81ed61597bd809ffbf21febd81264f688bbb51433b049cb02de778245e"
+    }
+  ],
+  "reused_oracle_dependencies": [
+    {
+      "path": "research/evidence/application/APP017/accessor-gain-oracle.py",
+      "bytes": 6387,
+      "sha256": "e07ca70f414e676daf94c77de7858363edecad66882deff6b90c983ac189edda"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-state-oracle.py",
+      "bytes": 8462,
+      "sha256": "ae0dd3068c1628f77a6a39c4c7dc65e1fe0325aa018a6d3b4d3998423961c536"
+    },
+    {
+      "path": "research/evidence/application/APP017/gain-order-stage-oracle.py",
+      "bytes": 5753,
+      "sha256": "0a3998fd94a13231fea4c9758f96deab77b1fce48436592cd86a6c6b878338fe"
+    },
+    {
+      "path": "research/evidence/application/APP010/native-rate-mode0-oracle.py",
+      "bytes": 7965,
+      "sha256": "6b5357c1bf923034673e9bcb240136b6dc31e8fde0276132036232811f2623a4"
+    },
+    {
+      "path": "research/evidence/application/APP013/mode1-oracle.py",
+      "bytes": 13030,
+      "sha256": "f031f38172356ca244c683c35c17c2413333f52a58a1d43048f457258d8e9238"
+    },
+    {
+      "path": "research/evidence/application/APP012/mode2-public-oracle.py",
+      "bytes": 6810,
+      "sha256": "8f051d49f4b2e660951cfcfe8e3f7d93e73f4f2693d56124939ccd1e6eeed852"
+    },
+    {
+      "path": "research/evidence/application/APP012/mode2-wrapper-oracle.py",
+      "bytes": 16452,
+      "sha256": "13d030c982ca7154ae29839e527638cd900068f785ba5e8a05095115d6957b64"
+    },
+    {
+      "path": "Application/.build-soxr/install/lib/libsoxr.0.1.2.dylib",
+      "bytes": 188000,
+      "sha256": "c614df97b2c3f3881fa694efc73a6d5152fe0288ac9396adb6bd7c8c8e5f895a"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-pcm24-oracle.py",
+      "bytes": 8456,
+      "sha256": "87c7d19a69113a6a4f9f21233058d8810eb04c51ccc705599b7cb46c6338584f"
+    }
+  ],
+  "review_findings": [
+    {
+      "id": "GAIN-ORDER",
+      "status": "confirmed",
+      "detail": "Both native fast-path prefixes reject unequal rates. The admitted Float32-destination generic up path is type conversion then gain then filtering; the down path is source-format filtering, conditional packed24 roundtrip, type conversion and gain. Current Swift preserves these orders, with no sample clipping in the destination Float32 multiply."
+    },
+    {
+      "id": "EQUAL-PCM24",
+      "status": "confirmed_with_explicit_bound",
+      "detail": "For signed zero or finite |gain|>=2^-95, gain*2^-31 and gain*2^-23 stay normal and exact. Signed24 and signed24<<8 are exactly representable. Both native decoder paths and exact decoded-Float32 followed by gain present the same exact product to one Float32 rounding. The app rejects lower nonzero equal-PCM24 gains;709 independently derived below-bound cases discriminate the alternatives."
+    },
+    {
+      "id": "GAIN-LIFECYCLE",
+      "status": "confirmed",
+      "detail": "Native setter100370538 writes gain only; each conversion read copies it into retained converter state. Gain!=1 consumes first-conversion state even at equal Float32 rates. Swift setGain leaves cursor/first/filter untouched, including rejected-setter controls; existing seek also preserves history. Upsampling zero-gain calls can return prior nonzero filtered history, while downsampling gains the current returned buffer."
+    },
+    {
+      "id": "TRANSACTIONAL-DOMAIN",
+      "status": "confirmed_app_policy",
+      "detail": "The C gain helper validates all samples/results and the arm64 FP environment before writing. Signed zeros are preserved, unity copies, no clipping. Invalid gain, subnormal input/result, nonfinite/overflow and non-nearest tests reject without changing buffers. A processing failure poisons Swift state because the retained backend might already have advanced. Postterminal gain edits remain explicitly excluded by the application."
+    }
+  ],
+  "validation": {
+    "focused_command": "sh Application/test-app.sh --filter CPRNativeAccessorGainTests",
+    "focused_log": {
+      "path": "research/evidence/application/APP017/accessor-gain-tests-first.log",
+      "bytes": 12274,
+      "sha256": "9b24837f929634bbf92d8f03687cee6be7fa0ae3237dd238d45ceaf49af26400"
+    },
+    "tests_passed": 6,
+    "suites": 1,
+    "seconds": 0.196,
+    "first_attempt": "compiled_and_passed",
+    "retained_state_scenarios": 8,
+    "retained_state_read_calls": 48,
+    "exact_output_float32_words": 16540,
+    "equal_pcm24_vectors": 3168,
+    "below_bound_discriminators": 709,
+    "downsample_stage_vectors": 96,
+    "wrong_order_discriminators": 67,
+    "missing_q24_discriminators": 66,
+    "native_original_instruction_rows_verified": 6614,
+    "native_original_bytes_verified": 26456,
+    "native_jump_cells_verified": 3,
+    "instruction_count_scope": "Retained disassembly rows, possibly overlapping; not unique address coverage.",
+    "standalone_author_controls": "Inspected sealed optimized and UBSan reports,117593 assertions and7 FP rejections per build; not rerun by this reviewer.",
+    "full_suite": "Parent-owned separate run, not claimed by this focused review."
+  },
+  "limits": [
+    "Expected gain arithmetic uses Fraction/integer IEEE rounding and no candidate implementation. Mode1 oracle retains the shared host-libm sin/sqrt limitation; mode2 wrapper comparison uses the same pinned public SoXR backend, not the unknown vendor build.",
+    "Source format, accessor gain and source/output rates are explicit supplied context. Saved WAV metadata or project rate does not prove the selected native backend, rate or gain owner.",
+    "The equal-PCM24 bound, finite normal-or-zero policy, transactional errors, poisoned-state handling and postterminal exclusion are application boundaries, not native rejection claims.",
+    "The native scalar/SIMD choice below the admitted equal-PCM24 bound, other formats/layouts, dynamic rate change and full generic converter behavior are not implemented here.",
+    "Event/segment gain stays a separate owner. Existing audition stream gain placement is not reclassified by this accessor contract, and production timeline use does not automatically select this nonunity accessor path.",
+    "No proprietary target execution, Cubase export/sample comparison, hosted scheduler comparison, device capture or full-application fidelity claim."
+  ],
+  "remaining_actionable_defects": []
+}

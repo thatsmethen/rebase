@@ -1,0 +1,167 @@
+import AVFoundation
+import Foundation
+import RebaseTimingDSP
+
+/// Absolute-frame, direct stereo reader. The recovered native window and seek
+/// operations are separate from Rebase's worker scheduling and device output.
+/// Descriptors here are already-constructed PAudioSegment values, not raw CPR
+/// fields. The separately verified placed-source plan constructs them from a preserved
+/// CPR. Synthetic descriptors additionally exercise multiple-segment behavior.
+struct CPRNativeTimelineStream {
+    struct Segment {
+        let start: Double
+        let length: Double
+        let offset: Double
+        let samples: [Float]
+        let gain: Float
+    }
+
+    private struct BoundSegment {
+        let descriptor: RBTimelineSegment
+        let source: Segment
+        let startFrame: Int64
+        let endFrame: Int64
+    }
+
+    let format: AVAudioFormat
+    let frameCount: Int64
+    private let period: Double
+    private let segments: [BoundSegment]
+
+    init(sampleRate: Double, segments: [Segment]) throws {
+        guard sampleRate.rounded() == sampleRate, (8_000...192_000).contains(sampleRate),
+              !segments.isEmpty, segments.count <= 4096 else { throw Self.invalid }
+        let period = 1 / sampleRate
+        var bound: [BoundSegment] = []
+        var previousEnd: Int64 = 0
+        var totalSamples = 0
+        for source in segments {
+            guard source.start >= 0, source.length > 0, source.offset >= 0,
+                  source.gain.isNormal, source.gain > 0,
+                  !source.samples.isEmpty, source.samples.count % 2 == 0,
+                  source.samples.count <= 32_000_000 - totalSamples else { throw Self.invalid }
+            totalSamples += source.samples.count
+            // The concrete native end getter performs this addition separately
+            // before the reader's FMA and signed integer conversion.
+            let end = source.start + source.length
+            let descriptor = RBTimelineSegment(start: source.start, end: end, sourceOffset: source.offset)
+            var first: Int64 = 0, last: Int64 = 0, offset: Int64 = 0
+            guard rb_cpr_timeline_quantize(period, source.start, &first) == 0,
+                  rb_cpr_timeline_quantize(period, end, &last) == 0,
+                  rb_cpr_timeline_quantize(period, source.offset, &offset) == 0,
+                  first >= previousEnd, last > first, last <= Int64(sampleRate) * 86_400,
+                  offset >= 0, offset <= Int64(source.samples.count / 2),
+                  last - first <= Int64(source.samples.count / 2) - offset else { throw Self.invalid }
+            // Reject unsupported arithmetic before live scheduling. The actual
+            // multiply still follows each direct read, exactly once.
+            for value in source.samples {
+                let result = value * source.gain
+                guard value.isFinite, value == 0 || value.isNormal,
+                      result.isFinite, result == 0 ? value == 0 : result.isNormal else { throw Self.invalid }
+            }
+            bound.append(BoundSegment(descriptor: descriptor, source: source,
+                                      startFrame: first, endFrame: last))
+            previousEnd = last
+        }
+        self.period = period
+        self.segments = bound
+        frameCount = previousEnd
+        format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: sampleRate,
+                              channels: 2, interleaved: false)!
+    }
+
+    func cursor(from frame: Int64) throws -> Cursor {
+        guard (0...frameCount).contains(frame) else { throw Self.invalid }
+        return Cursor(stream: self, position: frame)
+    }
+
+    private static var invalid: RebaseCoreError {
+        .unsupportedAudio("The native timeline reader requires ordered, nonoverlapping stereo source segments with matching rates, complete media and finite supported frame bounds.")
+    }
+
+    final class Cursor {
+        private let stream: CPRNativeTimelineStream
+        private var segmentIndex = 0
+        private(set) var deliveredFrames: Int64
+        var isAtEnd: Bool { deliveredFrames == stream.frameCount }
+
+        fileprivate init(stream: CPRNativeTimelineStream, position: Int64) {
+            self.stream = stream
+            deliveredFrames = position
+            // End equality remains selected for the native planner to skip.
+            while segmentIndex < stream.segments.count,
+                  stream.segments[segmentIndex].endFrame < position {
+                segmentIndex += 1
+            }
+        }
+
+        /// The block size is application policy. Equal-rate direct source reads
+        /// have no converter history. No audition FIFO or resampler is used.
+        func nextBuffer(maximumFrames: Int = 4096) throws -> AVAudioPCMBuffer? {
+            guard (1...65_536).contains(maximumFrames) else { throw CPRNativeTimelineStream.invalid }
+            guard !isAtEnd else { return nil }
+            let first = deliveredFrames
+            let end = min(stream.frameCount, first + Int64(maximumFrames))
+            let frames = Int(end - first)
+            let buffer = try AudioPreparation.buffer(format: stream.format, frames: frames)
+            let channels = buffer.floatChannelData!
+            for channel in 0..<2 { channels[channel].update(repeating: 0, count: frames) }
+            var position = first
+            var index = segmentIndex
+            while position < end {
+                var plan = RBTimelinePlan()
+                let status: Int32
+                if index < stream.segments.count {
+                    var descriptor = stream.segments[index].descriptor
+                    status = rb_cpr_timeline_plan(first, end, position, stream.period, &descriptor, &plan)
+                } else {
+                    status = rb_cpr_timeline_plan(first, end, position, stream.period, nil, &plan)
+                }
+                guard status == 0 else { throw CPRNativeTimelineStream.invalid }
+                if plan.action == RB_TIMELINE_SKIP {
+                    guard index < stream.segments.count else { throw CPRNativeTimelineStream.invalid }
+                    index += 1
+                    continue
+                }
+                if plan.action == RB_TIMELINE_READ {
+                    guard index < stream.segments.count, plan.readFrames > 0,
+                          plan.sourceSeek >= 0, plan.readOffset >= 0,
+                          plan.readOffset + plan.readFrames <= Int64(frames) else {
+                        throw CPRNativeTimelineStream.invalid
+                    }
+                    let source = stream.segments[index].source
+                    guard plan.sourceSeek + plan.readFrames <= Int64(source.samples.count / 2) else {
+                        throw CPRNativeTimelineStream.invalid
+                    }
+                    let count = Int(plan.readFrames)
+                    // This immutable memory backend returns the full requested
+                    // interval. Native transient I/O retry is tested separately;
+                    // no invented retry/error is emitted by this backend.
+                    for channel in 0..<2 {
+                        let output = channels[channel].advanced(by: Int(plan.readOffset))
+                        for frame in 0..<count {
+                            output[frame] = source.samples[(Int(plan.sourceSeek) + frame) * 2 + channel]
+                        }
+                        guard rb_cpr_event_gain_f32(output, count, source.gain.bitPattern) == 0 else {
+                            throw CPRNativeTimelineStream.invalid
+                        }
+                    }
+                    var decision = RBTimelineReadDecision()
+                    guard rb_cpr_timeline_read_result(Int32(count), plan.readBegin, plan.segmentStart,
+                        0, Int32(count), &decision) == 0,
+                        decision.action == RB_TIMELINE_READ_COMPLETE else { throw CPRNativeTimelineStream.invalid }
+                }
+                guard plan.nextCursor > position || plan.stopAfter != 0 else { throw CPRNativeTimelineStream.invalid }
+                position = plan.nextCursor
+                if plan.stopAfter != 0 { break }
+                // The native selector advances its current node after each
+                // segment. Our admitted sorted list has no concurrent mutation.
+                index += 1
+            }
+            // Publish cursor progress only after the complete block succeeds.
+            deliveredFrames = end
+            segmentIndex = index
+            return buffer
+        }
+    }
+}

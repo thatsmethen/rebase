@@ -1,0 +1,637 @@
+{
+  "id": "APP017-PUBLICATION-REVIEW",
+  "created_utc": "2026-10-21T00:29:28.334038+00:00",
+  "status": "passed_no_open_material_findings",
+  "scope": "Read-only audit of the exact nonignored prospective private-repository APP017 development publication after development recording and both final peer reviews. Only this report is written; no staging, commit, application test rerun, proprietary execution or GUI acceptance is performed.",
+  "base_commit": "a5ad69a9a65f6510b162ef567e426c916f878c56",
+  "prospective_publication": {
+    "files_before_this_report": 88,
+    "strict_JSON_files": 29,
+    "application_source_and_test_files": 4,
+    "new_native_studies": 3,
+    "binary_payloads": 0,
+    "credential_pattern_hits": 0,
+    "raw_provider_fields": 0,
+    "excluded_artifact_suffix_hits": 0,
+    "symlinks": 0,
+    "deletions": 0,
+    "whitespace_check": "git diff --check passed",
+    "inventory": "Union of git diff --name-only HEAD and git ls-files --others --exclude-standard, without selective path filtering. Every current prospective file is pinned in inputs. Root must recheck staged bytes and allow only the four declared follow-up paths.",
+    "content_check": "All prospective files decode as UTF-8 and contain no NUL bytes. All JSON was parsed with duplicate-key and nonfinite-number rejection. Secret-shaped credentials, raw provider/disassembly fields and excluded native/audio/binary capture paths were absent. Numeric instruction counts and authored byte-verification code are not raw native instruction payloads."
+  },
+  "claims_review": [
+    "APP017 is a tested core/source development milestone. All 271 tests in 42 suites passed with 267 application source entries identical before and after testing and matching the immutable source snapshot.",
+    "The focused gain run records linking Rebase; the later full-suite invocation completed an incremental build. The debug executable copied after testing is a separately timestamped observation, not a test-time executable identity.",
+    "APP015/Rebase 0.15.0 remains the latest accepted packaged GUI checkpoint. The live packaged executable still matches its accepted SHA256 65d0704e0897752c235d48e66ce96443f9f4b0a6c9366916efa5be2796d2fd41; no new GUI release is claimed.",
+    "Supplied accessor gain is mutable without resetting retained conversion state. Gain precedes upsampling and follows source-format downsampling and conditional PCM24 quantization. Equal-rate PCM24 magnitude >= 2^-95 or signed zero is an explicit application admission bound, not a native rejection rule.",
+    "Production timeline playback still constructs unity equal-rate accessors and applies event/segment gain separately. Nonunity accessor gain and differing-rate placed timeline playback are not silently promoted into that path.",
+    "Six new tests compare 48 retained-state reads and 16,540 predicted Float32 words. The 3,168 equal-PCM24 vectors, 709 below-bound discriminators and 96 stage-order vectors are analytical controls; 67 discriminate stage order and 66 discriminate omitted quantization. Standalone optimized and UBSan controls each pass 117,593 assertions.",
+    "Mode1 expectations share host libm primitives and mode2 expectations share the pinned public SoXR backend. Their wrapper/state expectations are independent; they are not Cubase runtime sample comparisons.",
+    "Fresh grouped processing conforms member accessors to the first collected reference stream, not automatically the originally requested event or project rate. Reader multiplier, selected stream and engine rate owners remain distinct, and full rate reconciliation is unresolved.",
+    "Proprietary executions and Cubase runtime comparisons remain zero. Complete Cubase product fidelity, hosted callback behavior and ordinary full-project playback remain unestablished."
+  ],
+  "custody": {
+    "source_inventory_entries": 267,
+    "source_snapshot_entries_rechecked": 267,
+    "validation_pins_rechecked": 17,
+    "accepted_review_pin_counts": [
+      18,
+      4,
+      21,
+      30,
+      9
+    ],
+    "native_and_prior_manifests_recursively_rechecked": 32,
+    "unique_native_prior_file_identities_rechecked": 7885,
+    "current_native_manifest_entries": [
+      81,
+      521,
+      436
+    ],
+    "method": "Independently invoked the reviewed sealer read-only verification helpers, without calling record or seal; checked both final peer outcomes, current source/test inventories, every source snapshot record, the recorded validation references and all recursive native/prior roots.",
+    "historical_substitution": "The older rate-samples manifest has 144 entries unchanged at their original paths and one explicitly preserved historical test revision at APP010/historical-source-snapshot. Its original bytes were verified; no claim that the current live test equals that superseded revision is made.",
+    "frozen_C_header_copies_identical_to_application": true,
+    "prior_status_history": [
+      {
+        "path": "research/status-history/APP017-before/README.md",
+        "bytes": 50479,
+        "sha256": "148de74cc24a7a3bdead8d8282b2d652ca519d5c1ccf6e3de566a67d7aa93fad"
+      },
+      {
+        "path": "research/status-history/APP017-before/study.json",
+        "bytes": 74441,
+        "sha256": "1487dd21503d45f906426f28e601f69ab58af61e71d48f451f43c8edee03436d"
+      },
+      {
+        "path": "research/status-history/APP017-before/coverage.json",
+        "bytes": 100457,
+        "sha256": "af466fc4fd21c6cf5274f91f326e5d26cb70735b90ffa09081ed88de13cdb5f9"
+      },
+      {
+        "path": "research/status-history/APP017-before/rea-steering.json",
+        "bytes": 217042,
+        "sha256": "3996b0a4c0383c5efe84aa93a27325c296d7c9f91d828ccedc2a7af83828b998"
+      }
+    ],
+    "prior_status_history_check": "All four APP017-before files exactly equal the corresponding HEAD bytes. Semantic JSON diff changes are limited to current development milestone/checkpoint scope and the first two next-priority entries; historical content is unchanged."
+  },
+  "corrections_and_sealer_review": [
+    "The final frozen sealer recognizes input_pins along with prior review-pin fields and verifies the five reviews recursively. Source, snapshot, test-log identity and the single 271/42 success line are rechecked during both recording and sealing.",
+    "The initially overbroad debug-binary custody label was corrected before recording: post_test_debug_executable_observation explicitly states that the test capture did not hash the executable. Current status records preserve that limitation.",
+    "Both final peer reviews passed their bounded contracts with no open actionable finding; neither closes arbitrary processed/grouped playback or source/project/engine-rate reconciliation.",
+    "Original evidence and historical failures/corrections remain immutable. This audit does not transform successful synthetic controls or byte custody into native runtime evidence."
+  ],
+  "private_artifact_boundary": {
+    "representative_ignore_checks": [
+      "research/targets/derived/Cubase15-arm64",
+      "research/evidence/application/APP017/test-build-snapshot/Rebase",
+      "research/evidence/application/APP017/final-source-snapshot/Sources/RebaseCore/CPRNativeAudioAccessor.swift",
+      "research/evidence/application/APP017/core-tests-first.log",
+      "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/pass1/function-10032d2a8.arm64.bin",
+      "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/pass1/function-10032d2a8.json",
+      "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/pass1/native-10032d2a8.txt"
+    ],
+    "statement": "Each listed representative private artifact exists and is ignored. Native target images, original CPR/audio fixtures, binaries, disassembly, raw REA dossiers, logs and full snapshots remain local. Compact published manifests identify those local files without redistributing their contents.",
+    "public_upstream_library_changes": 0,
+    "remote_credentials": "No secret-shaped content was found in the prospective files. Root separately owns final private-remote verification, authorization, staged-byte validation and publication."
+  },
+  "allowed_followup_delta": [
+    "research/evidence/application/APP017/publication-review.json",
+    "research/evidence/application/APP017/seal-integrity.json",
+    "research/evidence/application/APP017/artifact-manifest.json",
+    "research/evidence/application/APP017/final-integrity.json"
+  ],
+  "open_findings": [],
+  "prospective_file_paths": [
+    ".gitignore",
+    "Application/Sources/RebaseCore/CPRNativeAudioAccessor.swift",
+    "Application/Sources/RebaseTimingDSP/cpr_accessor_format.c",
+    "Application/Sources/RebaseTimingDSP/include/cpr_accessor_format.h",
+    "Application/Tests/RebaseCoreTests/CPRNativeAccessorGainTests.swift",
+    "README.md",
+    "research/coverage.json",
+    "research/evidence/application/APP017/accessor-gain-independent-review.json",
+    "research/evidence/application/APP017/accessor-gain-oracle.json",
+    "research/evidence/application/APP017/accessor-gain-oracle.py",
+    "research/evidence/application/APP017/capture_tests.py",
+    "research/evidence/application/APP017/channel-rate-independent-review.json",
+    "research/evidence/application/APP017/core-test-run.json",
+    "research/evidence/application/APP017/development-validation.json",
+    "research/evidence/application/APP017/final-source-manifest.json",
+    "research/evidence/application/APP017/gain-instruction-verification.json",
+    "research/evidence/application/APP017/gain-order-stage-oracle.json",
+    "research/evidence/application/APP017/gain-order-stage-oracle.py",
+    "research/evidence/application/APP017/processed-rate-independent-review.json",
+    "research/evidence/application/APP017/record-native-integrity.json",
+    "research/evidence/application/APP017/reference-rate-independent-review.json",
+    "research/evidence/application/APP017/seal_development.py",
+    "research/evidence/application/APP017/sealer-independent-review.json",
+    "research/evidence/application/APP017/test-source-after.json",
+    "research/evidence/application/APP017/test-source-before.json",
+    "research/evidence/application/APP017/verify-gain-instructions.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/analyze_pass.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/artifact-manifest.json",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/bind_source.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/candidate/cpr_accessor_format.c",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/candidate/cpr_accessor_format.h",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/check_candidate.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/combine_evidence.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/derive_pass.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/finding.json",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/gain-controls.json",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/import_evidence.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/seal_study.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/controls.c",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/gain-order-stage-oracle.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/verify_bindings.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/verify_evidence.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass1.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass11.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass12.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass13.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass14.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass15.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass2.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass3.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass4.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass5.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass6.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass7.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass8.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass9.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/artifact-manifest.json",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/combine_evidence.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/combine_unique_evidence.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/derive_missing.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/find_refs.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/finding.json",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/import_evidence.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/import_unique_evidence.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/rate-controls.json",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/rate_controls.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/scan_context_refs.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/scan_load_refs.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/seal_study.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/verify_evidence.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/write_finding.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/analytical-controls.json",
+    "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/analytical_controls.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/analyze_pass.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/artifact-manifest.json",
+    "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/combine_evidence.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/derive.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/finding.json",
+    "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/import_evidence.mjs",
+    "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/linkage.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/verify_evidence.py",
+    "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/write_finding.py",
+    "research/rea-steering.json",
+    "research/status-history/APP017-before/README.md",
+    "research/status-history/APP017-before/coverage.json",
+    "research/status-history/APP017-before/rea-steering.json",
+    "research/status-history/APP017-before/study.json",
+    "research/study.json"
+  ],
+  "inputs": [
+    {
+      "path": ".gitignore",
+      "bytes": 12026,
+      "sha256": "b0adea15f66a45a7e26035d58b86c007093826519bb65f590238e6dfc7c3fdbc"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeAudioAccessor.swift",
+      "bytes": 10508,
+      "sha256": "0045544a4ddff95bf1badaa42b5dca58de43c994c389527182d2121a91fb27da"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_format.c",
+      "bytes": 2665,
+      "sha256": "2ffadf89dba582bb7b17dedb732655ed83a2e403ebd351b313d5f2d0d65c6b92"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_format.h",
+      "bytes": 1239,
+      "sha256": "bc4c2facbd574bc81359c4ef40b859cc98a8c0b3a5c944692f8b463147e390bd"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeAccessorGainTests.swift",
+      "bytes": 13073,
+      "sha256": "fbec217ca2d0304fdf333175c9df13d2cb6012f8a9c1656a82c6f30ed4eb9fb3"
+    },
+    {
+      "path": "README.md",
+      "bytes": 50806,
+      "sha256": "d9ff01817561d1d3947dfbc40fc0c1b035d49ba8ce41f354b249ba4e7c33d88d"
+    },
+    {
+      "path": "research/coverage.json",
+      "bytes": 101585,
+      "sha256": "d29b47adf6888ef417d625977ab12679e397f789d2c82a8361199befad90c5fc"
+    },
+    {
+      "path": "research/evidence/application/APP017/accessor-gain-independent-review.json",
+      "bytes": 10538,
+      "sha256": "0f6181de10232f198a5473a4de68f5e342c30221170df1e57d69d32ea8d74dc8"
+    },
+    {
+      "path": "research/evidence/application/APP017/accessor-gain-oracle.json",
+      "bytes": 2348869,
+      "sha256": "2a78917ad3318b904f66bda1a8205305d420d4c7d088ffb2ac8d6562e2d6aaaa"
+    },
+    {
+      "path": "research/evidence/application/APP017/accessor-gain-oracle.py",
+      "bytes": 6387,
+      "sha256": "e07ca70f414e676daf94c77de7858363edecad66882deff6b90c983ac189edda"
+    },
+    {
+      "path": "research/evidence/application/APP017/capture_tests.py",
+      "bytes": 1926,
+      "sha256": "3d1c1404862e1bb8f7c37cb0e32ae20b75bbf8eab1a7105435214fc031ebf664"
+    },
+    {
+      "path": "research/evidence/application/APP017/channel-rate-independent-review.json",
+      "bytes": 14814,
+      "sha256": "8a8a1f6da524ce4d643812c70d95ae561cf85c58863366b16f23bf25b878b26b"
+    },
+    {
+      "path": "research/evidence/application/APP017/core-test-run.json",
+      "bytes": 944,
+      "sha256": "c97737b76c25d1df07d1d672b4821f7e218cff38d85405aa095a4c8f6f23a183"
+    },
+    {
+      "path": "research/evidence/application/APP017/development-validation.json",
+      "bytes": 7103,
+      "sha256": "cba43ec9c9f0a60eca6e67a62860b9e6e86b0a3cec9eccf16fbda33687a27a6a"
+    },
+    {
+      "path": "research/evidence/application/APP017/final-source-manifest.json",
+      "bytes": 62781,
+      "sha256": "45bf5a5c4a58a75239ee5174ba8295cee83fec071ed6a2fc5ec1eae4b61a3e7d"
+    },
+    {
+      "path": "research/evidence/application/APP017/gain-instruction-verification.json",
+      "bytes": 5466,
+      "sha256": "51989521bd2180111ccad04b3327eeac70a15608259d26c370cd86525b00a04a"
+    },
+    {
+      "path": "research/evidence/application/APP017/gain-order-stage-oracle.json",
+      "bytes": 1115416,
+      "sha256": "e28870caa88a1eda66d8cc77eaf804ea513695e3fc3694ee77d719f2d1799cc1"
+    },
+    {
+      "path": "research/evidence/application/APP017/gain-order-stage-oracle.py",
+      "bytes": 5753,
+      "sha256": "0a3998fd94a13231fea4c9758f96deab77b1fce48436592cd86a6c6b878338fe"
+    },
+    {
+      "path": "research/evidence/application/APP017/processed-rate-independent-review.json",
+      "bytes": 11277,
+      "sha256": "cbf57922643821f9901c5ba58118ad47934c6fba61bbe4462ecbab8dd02e844b"
+    },
+    {
+      "path": "research/evidence/application/APP017/record-native-integrity.json",
+      "bytes": 13637,
+      "sha256": "89c53040f2a9b8f8ae67da99cc460e8df3bc9f241374d58b0fe80defa560a500"
+    },
+    {
+      "path": "research/evidence/application/APP017/reference-rate-independent-review.json",
+      "bytes": 2910,
+      "sha256": "5c72efd720f4fc96b2dd2bda755944206904b0d3ef925dd9eeed4e6be036e239"
+    },
+    {
+      "path": "research/evidence/application/APP017/seal_development.py",
+      "bytes": 10255,
+      "sha256": "271d36e04427e8397d71eb78fb2d54b09968513c1ad10da37d04e685a444fa28"
+    },
+    {
+      "path": "research/evidence/application/APP017/sealer-independent-review.json",
+      "bytes": 7864,
+      "sha256": "1cf56620e063b3bba1ff8f8aeed4b264c205936addfc75bd90638d87ecd0223e"
+    },
+    {
+      "path": "research/evidence/application/APP017/test-source-after.json",
+      "bytes": 50232,
+      "sha256": "08f8450759c03c49aa3f13c6fa2a863246e78ad8b9686de9ebf146f6f503110a"
+    },
+    {
+      "path": "research/evidence/application/APP017/test-source-before.json",
+      "bytes": 50232,
+      "sha256": "08f8450759c03c49aa3f13c6fa2a863246e78ad8b9686de9ebf146f6f503110a"
+    },
+    {
+      "path": "research/evidence/application/APP017/verify-gain-instructions.py",
+      "bytes": 4417,
+      "sha256": "25ed81ecbd4c8c3189065531c9e27ec476c2d8da4abd9c95b804eb07c906fc4c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/analyze_pass.mjs",
+      "bytes": 2892,
+      "sha256": "457d1328af68a2c497906ebdf19c980460592dd397755c60f7332518c3baf8b5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/artifact-manifest.json",
+      "bytes": 18881,
+      "sha256": "f9f1124b0022857a91758e52f8cc7adf05578246fa9e5e11c163918ef5a8aed8"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/bind_source.py",
+      "bytes": 4405,
+      "sha256": "40cdd03fec08d3b5369e7f6f1727b9991edec49f0c507ecd345acd0cf22d8d3a"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/candidate/cpr_accessor_format.c",
+      "bytes": 2665,
+      "sha256": "2ffadf89dba582bb7b17dedb732655ed83a2e403ebd351b313d5f2d0d65c6b92"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/candidate/cpr_accessor_format.h",
+      "bytes": 1239,
+      "sha256": "bc4c2facbd574bc81359c4ef40b859cc98a8c0b3a5c944692f8b463147e390bd"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/check_candidate.py",
+      "bytes": 6186,
+      "sha256": "6f73bd283109d4609e19b62aee788e064f963f5679d98b7aa9a8293099485a22"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/combine_evidence.mjs",
+      "bytes": 1337,
+      "sha256": "c42344baebbebf8166d2318e26520e461fad792800bfe1dacb5e41edc4c62f73"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/derive_pass.py",
+      "bytes": 599,
+      "sha256": "007f8d5e020f67cfa29cdb6fac7075477e17db327203faac26412009fbea6a6f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/finding.json",
+      "bytes": 6408,
+      "sha256": "111dc72c995faca34ed2750f55b4565dc9a973cb42de69b73f18db0802b4214d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/gain-controls.json",
+      "bytes": 5357,
+      "sha256": "4a33970d3ad3a7d16043cab1e66cf9f7f5fd1f093589604f1ab3f2014c00e460"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/import_evidence.mjs",
+      "bytes": 1763,
+      "sha256": "557e76a7f503692bcc1cbca9143be3f3b7ae06ead3b9f57033c05b78823d7581"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/seal_study.py",
+      "bytes": 7572,
+      "sha256": "045117dc7ff24419eb32fb75549bc3cb634001e79b8a700b056117aa29ba936c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/controls/controls.c",
+      "bytes": 121092,
+      "sha256": "1b27ba6b13546623189e667787d6a072c5974f7f158810909754f97006ad4968"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/validation/gain-order-stage-oracle.py",
+      "bytes": 5753,
+      "sha256": "0a3998fd94a13231fea4c9758f96deab77b1fce48436592cd86a6c6b878338fe"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/verify_bindings.py",
+      "bytes": 1964,
+      "sha256": "57c9dc6e7651e42cb084cbcbd752b79712d055cb95a598f809cb5039ee51de51"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/verify_evidence.py",
+      "bytes": 5156,
+      "sha256": "302ba245248b49fb9ec8b5f40f6002fb6881b2779ea83462f7842761371bfcc5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass1.mjs",
+      "bytes": 2876,
+      "sha256": "2d38f27b0a41609521aaa297b037a3509f434b51ee3ac31c2cbc0cb7afad2d7b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass11.mjs",
+      "bytes": 2877,
+      "sha256": "f71d8ac9f087066f5e871a4a3af2f0ba09ab108f80269d9f7f0a32ad78738fbe"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass12.mjs",
+      "bytes": 2877,
+      "sha256": "28e31322fd02c8dc6065bb4096cde0499c8f94c8e77c36a9cde5c85ce8a99003"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass13.mjs",
+      "bytes": 2877,
+      "sha256": "274de6db532efa488a6606cdbfaec30ad9ee50684ae3e4a5b41efe2dec78c1a4"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass14.mjs",
+      "bytes": 2877,
+      "sha256": "a6f5bd7f1e18e640bce04466e20e1c1ec03bb5641197a861fa82cfbb6eef6bf4"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass15.mjs",
+      "bytes": 2877,
+      "sha256": "7d3468bbe4e8561bf9396a01c1fd1e52fc31a3c6ee7ca31dc539a7af8b346f45"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass2.mjs",
+      "bytes": 2876,
+      "sha256": "ef16d12084048b65f600be174b5ec201d009742ad989ac456162e055df7010f3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass3.mjs",
+      "bytes": 2876,
+      "sha256": "b16bcffb457323e9e3d8ddb85fa5ed4d851e63639c70e6954cb38f6fdccaa9f2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass4.mjs",
+      "bytes": 2876,
+      "sha256": "ffc3da365c95a6a5a5851641d0d1670292bc4ce079bd50d984858c5ef59467a1"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass5.mjs",
+      "bytes": 2876,
+      "sha256": "fc5cb350183b0076800db4460f8ce720f93d81195c6dd5e10072e723d931a8d2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass6.mjs",
+      "bytes": 2876,
+      "sha256": "a0a2a98dfd9922cc055017ca0db4c4e1c95279ce6627826195e5a63ce2b3f7e7"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass7.mjs",
+      "bytes": 2876,
+      "sha256": "0f29ea2327e3b68710e979aafe8412cc1f8a5b8c78d8dd9b5b50b1faacfcb6a3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass8.mjs",
+      "bytes": 2876,
+      "sha256": "65c2d04a05cc9312fa5d33691b00eab2582bd2c95f4fcf5dae2d0c9c2f1bc7ab"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/analyze_pass9.mjs",
+      "bytes": 2876,
+      "sha256": "833e77a9bf283eb23484939ccdbb941c3961f69a4435868bbdb0a387147565b6"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/artifact-manifest.json",
+      "bytes": 117670,
+      "sha256": "8d87f2d1b9d79e7225509bd0e6587da96216944b30d4719a439f3bd4edd110bf"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/combine_evidence.mjs",
+      "bytes": 853,
+      "sha256": "0ad775dda37cf6e321f0dd30516c8663897f61ce95a499ca2d72c21bcb342e99"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/combine_unique_evidence.mjs",
+      "bytes": 1299,
+      "sha256": "425f4798e78faa0c10e73fa93c0e89cb6542389fcee22acc0112fb15b1d0c6cb"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/derive_missing.py",
+      "bytes": 1042,
+      "sha256": "a8c4977cff8726880aba9c275efc60f14feafd30312021c6ee4c93c29ae0bb62"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/find_refs.py",
+      "bytes": 1412,
+      "sha256": "1ae9d35df6d99b72091dc7f59378beeab641f22640430cc45d26107c26b25b16"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/finding.json",
+      "bytes": 19214,
+      "sha256": "456e462f8dbc13075ca3074ccd929654e0b856a8d61d236f05adc513e2286be6"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/import_evidence.mjs",
+      "bytes": 1764,
+      "sha256": "8bd551f4d1e6b06bfb69a059d46ce5106f5323d59a25b5bd18300de7814c7dde"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/import_unique_evidence.mjs",
+      "bytes": 1792,
+      "sha256": "17becd1c110fe4f33c3eac60d0f590dcdde3aeb66051ef28ae3ff881eaf45449"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/rate-controls.json",
+      "bytes": 8732,
+      "sha256": "6743ec8524e4837fb93af69bd7439dd00cb16824d25b691348f4e106b0937423"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/rate_controls.py",
+      "bytes": 1465,
+      "sha256": "1ecd1fb3e7870866f0b3eec5794b55fb42a727744d9c9f5539c725c5a13abb23"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/scan_context_refs.py",
+      "bytes": 3863,
+      "sha256": "cdc377a09792ed90b5719bb8ba4c3e7e54ebcda0b5fd64c1623428801875857d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/scan_load_refs.py",
+      "bytes": 1301,
+      "sha256": "54312c1aacce12d5479244e388d577d8e5ba7883f9d44958b4a58ecea076d2f6"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/seal_study.py",
+      "bytes": 2577,
+      "sha256": "df8895b5dff50be75e9d295c59e02c9c4c689bfc70fef517823c8241d719c7b1"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/verify_evidence.py",
+      "bytes": 5313,
+      "sha256": "373f30df5f4c60787f689e696056ad50a2561c9ab006e2f57e68e45c7140b663"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/write_finding.py",
+      "bytes": 10358,
+      "sha256": "6a4d901571d58ddd1be774e15c2790ef88cce18e53bd81431cee6a4abe8e8d82"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/analytical-controls.json",
+      "bytes": 5386,
+      "sha256": "8a6c4add83a17e16284964e871df8c27744d1de760fff23332cceea40dd2b18c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/analytical_controls.py",
+      "bytes": 4597,
+      "sha256": "4124ea1c4887714c9fdd4edc1f016d29e2588da425dd28e8ca0e0075bd4eb7ce"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/analyze_pass.mjs",
+      "bytes": 2898,
+      "sha256": "db109aa0f6f1ffe5b404fa7b60a4eaf7159d55ac0c4784bbae4189ad88c37655"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/artifact-manifest.json",
+      "bytes": 128169,
+      "sha256": "d6ef99f4d68fd725ac5a9fd7338d19e16b21a013b4ce7b6c97261dcdac7494f1"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/combine_evidence.mjs",
+      "bytes": 1337,
+      "sha256": "c42344baebbebf8166d2318e26520e461fad792800bfe1dacb5e41edc4c62f73"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/derive.py",
+      "bytes": 1166,
+      "sha256": "d1a4c1f6d866218cd859c0d0150610f5a66a666d59183e57f375c4a7cbb2f99d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/finding.json",
+      "bytes": 43502,
+      "sha256": "b05b974e7d121bb78cbc496ca1669fd8da023b0430430dc0ec34fa6ad93f067a"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/import_evidence.mjs",
+      "bytes": 1769,
+      "sha256": "b2c02add563c8c880b16b5074572e3c2d5b5295572c68fdfc0f04996a443cd78"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/linkage.py",
+      "bytes": 2482,
+      "sha256": "f3142d27e3d09f132be45a78853910197c2adfce58be68d27f102d57ee34d120"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/verify_evidence.py",
+      "bytes": 5156,
+      "sha256": "302ba245248b49fb9ec8b5f40f6002fb6881b2779ea83462f7842761371bfcc5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/write_finding.py",
+      "bytes": 16189,
+      "sha256": "d47bd1d18064a4d549aa0b510795705e7e9729fcb932e13afeb18faa28e12484"
+    },
+    {
+      "path": "research/rea-steering.json",
+      "bytes": 219016,
+      "sha256": "de66e6d0b7f5a1830ea022d7ac66b69dd9c0d330dc408045a7ac24855bc4eefe"
+    },
+    {
+      "path": "research/status-history/APP017-before/README.md",
+      "bytes": 50479,
+      "sha256": "148de74cc24a7a3bdead8d8282b2d652ca519d5c1ccf6e3de566a67d7aa93fad"
+    },
+    {
+      "path": "research/status-history/APP017-before/coverage.json",
+      "bytes": 100457,
+      "sha256": "af466fc4fd21c6cf5274f91f326e5d26cb70735b90ffa09081ed88de13cdb5f9"
+    },
+    {
+      "path": "research/status-history/APP017-before/rea-steering.json",
+      "bytes": 217042,
+      "sha256": "3996b0a4c0383c5efe84aa93a27325c296d7c9f91d828ccedc2a7af83828b998"
+    },
+    {
+      "path": "research/status-history/APP017-before/study.json",
+      "bytes": 74441,
+      "sha256": "1487dd21503d45f906426f28e601f69ab58af61e71d48f451f43c8edee03436d"
+    },
+    {
+      "path": "research/study.json",
+      "bytes": 75579,
+      "sha256": "d88317c073e9013b759856931daa9ba0a7cb2d320508d6faaf8fb3e9474a30e8"
+    }
+  ]
+}

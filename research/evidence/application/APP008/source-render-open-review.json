@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "review_id": "APP008-SOURCE-RENDER-OPEN-REVIEW-001",
+  "created_utc": "2026-10-20T00:22:56.856188+00:00",
+  "status": "No actionable defect found in the narrow asynchronous Open correction; retained parent GUI evidence shows the expected package loaded.",
+  "scope": "Read-only review of StudioSession.openProject and its unchanged load/CPR dispatch, plus source-render request-context preservation. This is an additive final-source record; previous reviews remain byte-identical.",
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 33505,
+      "sha256": "3de1f42f97a962bca16f66990c93601facea8abbed4879e59cc261a844ee929c"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "bytes": 18821,
+      "sha256": "a7802372cec6447320428fdb5d10549e4c6ffb008aff77a5fe4e389c0c3b73f6"
+    }
+  ],
+  "previous_reviews": [
+    {
+      "path": "research/evidence/application/APP008/source-render-independent-review.json",
+      "bytes": 10988,
+      "sha256": "9ebb56527f8812d5cbcf44ab13f05df64479123ba6a201277d547b054c880ea9"
+    },
+    {
+      "path": "research/evidence/application/APP008/source-render-ui-review.json",
+      "bytes": 6674,
+      "sha256": "8661b5dd3053e73b53f2d79726f1653d94b68a06236aaa16935a1eb577b86f84"
+    },
+    {
+      "path": "research/evidence/application/APP008/source-render-ui-final-review.json",
+      "bytes": 5996,
+      "sha256": "e89395c8328bcb9ce61d915e581774520086d11612f65aafb29c69875c0f8889"
+    }
+  ],
+  "source_observations": [
+    "Open now uses NSOpenPanel.begin completion instead of runModal. Files/directories remain selectable, with no multiple selection.",
+    "The completion captures self weakly; cancellation, no URL or deallocated session returns without project replacement.",
+    "A .cpr URL still goes to source inspection. Other URLs still go through load, which retains unsaved-project confirmation, package/source/media validation and deferred state replacement after successful reads.",
+    "Source Event rendering still queues a Project/root snapshot, consumes the request once and checks context equality before panel presentation and before rendering. Its asynchronous completion passes captured state to the validated core renderer."
+  ],
+  "gui_record": {
+    "artifact": {
+      "path": "research/evidence/application/APP008/gui-release-open-success.ax.txt",
+      "bytes": 5566,
+      "sha256": "9fe959ff4d5503c1ed388b2133cf7ae5377343f71cbebc203e1a807f3b104319"
+    },
+    "observation_from_retained_accessibility_text": "The application shows the expected Vinyl Crackle source event with attached Synthetic LoFi Format.wav and status Opened LoFi Attached Copy.",
+    "parent_reported_route": "Command-O, Go To the copied package, enabled Open, then expected package loaded.",
+    "historical_failure": "The prior runModal Open dialog stalled under computer automation. The earlier successful source-export session was initialized using --project. These are correction history, not a current claim that Open remains blocked.",
+    "acceptance_scope": "The corrected package Open path is observed. This does not comprehensively reaccept every Open/cancel/unsaved-change/document-type workflow."
+  },
+  "build": {
+    "log": {
+      "path": "research/evidence/application/APP008/build-final.log",
+      "bytes": 372,
+      "sha256": "9759cbb185ceda93a195d52dc6911653b93b4b2864fa93b1d94e123e1fe1a407"
+    },
+    "version": "0.8.0",
+    "bundle_build": "8",
+    "executable": {
+      "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+      "bytes": 4648848,
+      "sha256": "9c4c8ce3e82f746df8902c7f20aaaaca8340fba49ede2c8b8bc6a2e26d6e6333"
+    },
+    "scope": "The retained script log completed after release compilation and strict local code-signature verification; no target runtime conformance is inferred."
+  },
+  "independent_gui_source_render": {
+    "path": "research/evidence/application/APP008/gui-source-render-independent-check.json",
+    "bytes": 4918,
+    "sha256": "33d315674bfc970869477b69517aca6364fde6a96417ca7484a283a93592eeaa"
+  },
+  "limits": [
+    "The selected synthetic PCM24 source export is independently sample/custody checked; it is not a Cubase reference output.",
+    "Inspection-readiness caveat from the prior core review remains; actual bytes are still revalidated before render publication.",
+    "Whole timeline/host behavior remains outside the explicit fresh-source event reconstruction."
+  ],
+  "reviewer_actions": {
+    "application_edits": 0,
+    "gui_operations": 0,
+    "new_test_runs": 0,
+    "target_executions": 0,
+    "writes": [
+      "research/evidence/application/APP008/source-render-open-review.json"
+    ]
+  },
+  "final_release_gui_addendum": {
+    "open_cancel": {
+      "path": "research/evidence/application/APP008/gui-release-open-cancel.ax.txt",
+      "bytes": 5566,
+      "sha256": "a2baca1f4fce0668a1319a6c37b40b577b864beba261c15bdf9b1b029827cbe5"
+    },
+    "final_export_success": {
+      "path": "research/evidence/application/APP008/gui-release-render-success.ax.txt",
+      "bytes": 5623,
+      "sha256": "78cba564b4843105acb02ce2934243a173b90e2ba6d57d00320c34f05384302e"
+    },
+    "final_output_check": {
+      "path": "research/evidence/application/APP008/gui-release-output-check.json",
+      "bytes": 385,
+      "sha256": "e923eff3e6b2e7701220c9709e65a3755442b840d06b34171175e2355bfa2669"
+    },
+    "result": "The final binary opened the expected copied package, canceled Open without replacement, and exported 1,058,400 frames at 44,100 Hz through the asynchronous Source Event panel. The final output is byte-identical to the independently checked export, and all five package files remain unchanged.",
+    "parent_reported_total_gui_groups": 5,
+    "scope_limit": "Not every group was rerun on the last binary; only Open presentation changed since the prior successful source-render GUI. Core code is unchanged. No comprehensive document/Open acceptance or target runtime conformance is claimed."
+  }
+}

@@ -1,0 +1,1708 @@
+{
+  "finding_id": "CPR-NATIVE-001",
+  "created_utc": "2026-10-19T10:31:55.422530+00:00",
+  "scope": "Bounded static archive, node and tempo contracts from Cubase Pro 15.0.30.287 arm64 instructions; no target execution, no host project-load observation, no complete CPR decoder claim",
+  "source": {
+    "path": "research/targets/derived/Cubase15-arm64",
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "status": "partial_static_contract_supported_by_original_bytes_and_REA",
+  "key_results": [
+    "Class references and object references use different keys: declaration-token offset versus payload-length-field offset, both relative to the captured archive origin.",
+    "Cached -2 declarations bind each own class descriptor/version. A safe strict parser may restrict missing-reference fallback to earlier explicit -1 declarations; that is a deliberate subset of native recursive seek behavior.",
+    "Normal MDataNode tag 0/17 carries two archive objects; other tags carry a binary64 datum. MListNode adds a counted child sequence; MTrackList inserts an additional 16-bit field before that sequence.",
+    "MTempoTrackEvent reads counted 22-byte records, then for version>0 a fixed binary32 value and a TWO-byte nonzero boolean. The stored boolean occupies one object byte and selects fixed versus map lookup.",
+    "The fixed getter returns the stored fixed value directly. Map items expose float32 60.0/storedPeriod; coordinate units remain unbound, so this finding does not authorize a tempo-map import in quarter notes or seconds."
+  ],
+  "linkage_provenance": {
+    "path": "research/evidence/cubase-static/cpr-objects-001/native/linkage-provenance.json",
+    "sha256": "31ecbe4d414cb6c1849556ae9b9eb797f427f90c2b28697d2d04f858ba16e4c9",
+    "method": "Verified exact mangled class-name bytes, typeinfo name pointers, zero offset-to-top/vtable typeinfo prefixes and 17 selected slots; not all neighboring locator words are vtable members."
+  },
+  "archive_contract": {
+    "evidence": [
+      {
+        "address": "0x103192464",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass2/function-103192464.json",
+        "sha256": "8b21a2ae2b54252a77197c63f6af2bf6509817550b439a34fd24628a02b721ba",
+        "evidence_id": "ev_359d415cb53c9a0d4fd743a14b90ecd193ec4b43d87786768faf1fa4714039ad",
+        "readback_evidence_id": "ev_ba799519bb933e50e6657b85149d0dba3f8084478e54ea551ae8e5a1ca5d1c04",
+        "raw_sha256": "f520b4a414a5d97a55a19d253d900fd8e8a7a59b0eaf9724ceb3601843e87371",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x103192464",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "d409eea97b4014c5df73b98daaaeec777af8f7f4cb000a8a495c3ef83c7fcad9"
+        },
+        "native_instruction_count": 87,
+        "rea_instruction_count": 77,
+        "warnings": [
+          "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */"
+        ]
+      },
+      {
+        "address": "0x1031930f8",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/function-1031930f8.json",
+        "sha256": "e13cad73f5f1d2410a18544cb1d6c25c24d5fd96c5838152b09a9d8127771e24",
+        "evidence_id": "ev_232b459027960ec9777e20c2258386ac11f21d5dfc0d5f3f2873345121093647",
+        "readback_evidence_id": "ev_fa393185016399309dc2311587c0868851e5a5a44fa5858616bd44b6b4c141cd",
+        "raw_sha256": "75d8b9f758967798bd89bf550ff8c997cf1a74c779d2ea4ab209a5a7429333cf",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x1031930f8",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "b7772bed9806efc1affa4d0cd85ce8625a5e6234cf31c19bde4d3ada9fcc9952"
+        },
+        "native_instruction_count": 241,
+        "rea_instruction_count": 240,
+        "warnings": []
+      },
+      {
+        "address": "0x1031934bc",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/function-1031934bc.json",
+        "sha256": "dabd78c62a104e0148c6fea5724012af58e892fd5b78f7efcf2c9973a1268122",
+        "evidence_id": "ev_d2c42eb1671993a7a4e7c1325eabb2ea6964a01663b769993c85fb0db93652fb",
+        "readback_evidence_id": "ev_c41c56146125143cb68566d8ad8198c8b413f493023b4f7511cd7614dd958813",
+        "raw_sha256": "fb1cee8128197bb0af6159703c450c5403c61dc67f6ab164b04a8fbb4ac4c178",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x1031934bc",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "b2620c652b847125d5a1fe0982ecf4ce558970099fa6699c99bde40db9ca30c6"
+        },
+        "native_instruction_count": 338,
+        "rea_instruction_count": 338,
+        "warnings": []
+      },
+      {
+        "address": "0x1031696b0",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass2/function-1031696b0.json",
+        "sha256": "6c6e896aad0ef3fc59532714eb34cf75b87d9d740ef789a02a40c75b7172e833",
+        "evidence_id": "ev_b1c9317a0a9a6eb985daa62556879a0f1422cefd3e73bb7c3ac826c2cc0143b2",
+        "readback_evidence_id": "ev_075e98728381ad14c5e609e461a6d2d4d8eb997492b7aaf85911fa92f055b622",
+        "raw_sha256": "c8e4f415df547d5e4f4baa1f139c0ab430b91b420d092c4da170255153dd7a36",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x1031696b0",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "eababc4f68170631bbd45a8486f51fd3b50107e2ba0fba14338bbdc700c83c40"
+        },
+        "native_instruction_count": 33,
+        "rea_instruction_count": 2,
+        "warnings": []
+      },
+      {
+        "address": "0x103193a04",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass2/function-103193a04.json",
+        "sha256": "b5562c1747b001c6d493b6c7b8ffd059d0c2a4e071f3e85b1661bd8e98682bc3",
+        "evidence_id": "ev_b3c6fb70a9956516477dcd310e8375fe12af4fe9424517bade758abc8a7322bf",
+        "readback_evidence_id": "ev_6b2b934ec84aeaa754888484e728fe86519e2d7229a8b362fb0b4bfbead5d4c8",
+        "raw_sha256": "c3db4144ae08923ded1308eb9ee55d72fb15e6ab9f561f29f71e4413c8b9210a",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x103193a04",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "e4c56b9850c9eadc8882cbcdaed09ba991e959cff969cb8ea3c20c3436acb2ca"
+        },
+        "native_instruction_count": 53,
+        "rea_instruction_count": 53,
+        "warnings": []
+      }
+    ],
+    "identity": {
+      "class": "FNewArchive",
+      "primary_vtable": "0x104e44b70",
+      "object_reader_slot": "0x28 -> 0x1031930f8",
+      "header_helper": "0x1031934bc",
+      "object_callback": "virtual +0x98"
+    },
+    "width_and_origin": "Constructor stores current underlying-stream position in archive+0x48. Constructor argument x4 is stored at +0x68; exactly 1 selects 8-byte token/length fields, other values use 4-byte fields. The complete CPR caller and choice of width have not been traced here; shipped-byte validation establishes the 4-byte subset separately.",
+    "header_32bit": [
+      {
+        "token": "0",
+        "meaning": "null object; no class descriptor returned"
+      },
+      {
+        "token": "positive signed int32",
+        "meaning": "object identity reference; caller looks up object table at archive+0x50, then optionally checks requested class"
+      },
+      {
+        "token": "-2",
+        "meaning": "class declaration: length-prefixed class bytes plus signed16 version; register this marker-relative offset and its own looked-up descriptor/version, then read another token"
+      },
+      {
+        "token": "-1",
+        "meaning": "concrete class declaration: class bytes, signed16 version and unsigned32 payload length; register this marker-relative offset and looked-up descriptor/version"
+      },
+      {
+        "token": "other negative signed int32",
+        "meaning": "class reference: clear sign bit to obtain class-declaration-relative offset, then read unsigned32 payload length; use class table at archive+0x58"
+      }
+    ],
+    "class_fallback": {
+      "observed": "On a missing class-table key, save stream position, seek to archiveOrigin+key, recursively run header decoder, restore position and return recursive result. This is an explicit seek, not a string scan.",
+      "nuance": "When recursively entered at -2, the helper can consume a declaration chain and return its final descriptor; this is not equivalent to the cached own-descriptor lookup in every state.",
+      "strict_subset": "Earlier explicit -1 declarations with validated bounds are sufficient for the observed missing FNPath references and avoid the -2 fallback ambiguity. Forward reference support, arbitrary backward chains and native error recovery are not required by this bounded parser proposal."
+    },
+    "object_registration": {
+      "key": "position after class/header and payload-length field - archiveOrigin - tokenWidth",
+      "meaning": "offset of the payload-length field, not offset of the class marker",
+      "ordering": "Register factory-created, class-checked object before calling its virtual +0x98 reader. Push current class version to archive+0x14 for that call and restore previous value afterward.",
+      "reference_limits": "Positive references use existing object-table entries; no seek fallback for unknown positive references was observed."
+    },
+    "payload_end": "After successful object callback, compare current stream position with payloadStart+payloadLength and seek to that declared end if different. Failed callback also seeks to declared end and invalidates the table entry. These instructions do not prove complete input-bound validation.",
+    "not_established": [
+      "Whole CPR load call chain into this constructor/reader",
+      "Complete factory registry, every archive width/version or unknown-class recovery policy",
+      "Safe native behavior for malformed, cyclic, truncated or adversarial streams"
+    ]
+  },
+  "primitive_contract": {
+    "evidence": [
+      {
+        "address": "0x10221d068",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/function-10221d068.json",
+        "sha256": "42211ec025fca9f80a2562b3c9526654439a9c02d760513c7d336e2e07098ff7",
+        "evidence_id": "ev_03c4f24ddda6bd8faf33adb29970afe0fd89182b4298e2e172faaf64677deda2",
+        "readback_evidence_id": "ev_9c616cd54254cc2ea6a19808d8667b2358a394f58f81a12858aef614ae01628a",
+        "raw_sha256": "049f60297e0c8d2daaeff454ae6d490ac246998c7bf17f1313106d413449b34c",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10221d068",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "d11382763c6039b1f21b104dd4d5e54f0b8ad259489b0f1f2454f14d2475ca1f"
+        },
+        "native_instruction_count": 32,
+        "rea_instruction_count": 32,
+        "warnings": []
+      },
+      {
+        "address": "0x10221d38c",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/function-10221d38c.json",
+        "sha256": "3ffc8013088d73f214f6343daf19188f02345af9e7ed1e2508a879348d31b5ac",
+        "evidence_id": "ev_32d9c15f14d5aca17ae11aa0281359b5e79e6869d3e5bcf9b5b06b2a2e4624cf",
+        "readback_evidence_id": "ev_a3dbd04d021895ec83146e992bca4f3fa181ddd985c78bd105c06c6b486ef581",
+        "raw_sha256": "37cb68489c56bd0b23cdc017906cc2671e9daf4daf3df36fbf0e37a8aa24af9d",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10221d38c",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "3ea595845667f121e5c388efd7e03c49efd6f7a6a3eef0dcc5b3a029f34611f0"
+        },
+        "native_instruction_count": 28,
+        "rea_instruction_count": 28,
+        "warnings": []
+      },
+      {
+        "address": "0x10221d9c8",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/function-10221d9c8.json",
+        "sha256": "378fc474002cc2520461e0671e78b23b6ef9d7b2bbf4b940ae960e28ce769030",
+        "evidence_id": "ev_ee24469b56642d9a3a981b13ab0365002f945b7b8b45e3af614610c0bc2baa6c",
+        "readback_evidence_id": "ev_c6040eab366e29ffe129b82d63d55ab4cc4a6672a9e0683b176beada564575d0",
+        "raw_sha256": "049f60297e0c8d2daaeff454ae6d490ac246998c7bf17f1313106d413449b34c",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10221d9c8",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "91fc25781b70a9f61b520cfa738950cd719a8e254fec53b432869644963e74a9"
+        },
+        "native_instruction_count": 32,
+        "rea_instruction_count": 32,
+        "warnings": []
+      },
+      {
+        "address": "0x10221dc34",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/function-10221dc34.json",
+        "sha256": "3df523f14309c5f9c9861b115c202624099e486ddbb909c271431751f6139065",
+        "evidence_id": "ev_b1dee846397cac06b8a67fc527cb3580ecbb8ba19046eb161d21d2df2ba23d1a",
+        "readback_evidence_id": "ev_855daca117560964049129dc3f2fc9d7f2edab104388179945bbd12681bd4141",
+        "raw_sha256": "355723abb2335608d2e8e1a2e9ed43e1fb104f96b1a20d49c90e73890bfce55c",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10221dc34",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "73e729ab55ffbf9303da5edcba6aa985baa8d37d165c338940fee213ab0de31a"
+        },
+        "native_instruction_count": 27,
+        "rea_instruction_count": 27,
+        "warnings": []
+      },
+      {
+        "address": "0x10221e188",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass2/function-10221e188.json",
+        "sha256": "5cba57d5d04b5d1e55fcb3a860ca12ca75abd706686325899197bf89e21feb8b",
+        "evidence_id": "ev_19077be3b1ed7225cb4e1a7a08b096b4346f1a3c59bd31422fb226f80232780c",
+        "readback_evidence_id": "ev_ef9e110e5f2fcf56394f1773a921dbe294edad1b3e9af520e01e8f7098fe0b83",
+        "raw_sha256": "049f60297e0c8d2daaeff454ae6d490ac246998c7bf17f1313106d413449b34c",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10221e188",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "980e363ab82c11f226fb696e5fc5527705037f03764194da67bb7a9424733c9e"
+        },
+        "native_instruction_count": 32,
+        "rea_instruction_count": 32,
+        "warnings": []
+      },
+      {
+        "address": "0x10221e3fc",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass2/function-10221e3fc.json",
+        "sha256": "cb05e4723a29ddff76a47d0e8951b5de90b263caf8168cbd07f436808ab65e8f",
+        "evidence_id": "ev_c6291a63d8174ea027918babdaef8478a80e4e160c6cc2e3a5df07e2b7e7ccb0",
+        "readback_evidence_id": "ev_208d2663851d3e06ffdd74aaeba18595524857b169cb8a52d6da5d95f55b1fba",
+        "raw_sha256": "355723abb2335608d2e8e1a2e9ed43e1fb104f96b1a20d49c90e73890bfce55c",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10221e3fc",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "cfe1382161eee3cf52a67cb07b113876993f7233871a4041a989b6b3c37d17d6"
+        },
+        "native_instruction_count": 27,
+        "rea_instruction_count": 27,
+        "warnings": []
+      },
+      {
+        "address": "0x10221e5fc",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass2/function-10221e5fc.json",
+        "sha256": "ec82f80b785937b76ec6e2ea59909c49e4d245dfbdaa9e4c1ce92f5432437105",
+        "evidence_id": "ev_1af08e304e78850b527fe215063ef05931fc9967bd99db11eac90d525ef7e1be",
+        "readback_evidence_id": "ev_9ebaf642e2eb4b80c5f5724e5704a51b787834df8b03074033849828e492d6c4",
+        "raw_sha256": "5acc776100cd945683b128da3dd1ad7cce284986c019b2ded750691ce9cab091",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10221e5fc",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "4a72d95b3e19a5d3f63e10712a06a572696cf55798f13c7183d0ebe5acc437a8"
+        },
+        "native_instruction_count": 32,
+        "rea_instruction_count": 32,
+        "warnings": []
+      },
+      {
+        "address": "0x10221eb28",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/function-10221eb28.json",
+        "sha256": "acfa0094d57a057f0e66b6099b044800f0550f8545a0cc5140fe0863b3c58722",
+        "evidence_id": "ev_e40bc4b2c7c19cf0ffe99874baf1e3da103c40b2ca05b7ace7b46e745373edfc",
+        "readback_evidence_id": "ev_3115e9eb3ff59f8020723194597badda1af47b5fbb80d09db3c619dc5f3dbe7c",
+        "raw_sha256": "a3f9ed2b6b660e33c770d679ca5925ed929d2d98a8f4a138f8f11c99cfc8f781",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10221eb28",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "e91b7c99d452ecbf8b5d4c9898891d5c4ea476cab003270f1c7924b327a18b6d"
+        },
+        "native_instruction_count": 50,
+        "rea_instruction_count": 50,
+        "warnings": []
+      }
+    ],
+    "byte_order": "Read helpers conditionally reverse 2/4/8 bytes when underlying stream uint16 field +8 is nonzero. Their native CPR initialization is not traced here; template-byte evidence independently supports big-endian serialized numbers.",
+    "scalar_widths": {
+      "int32": "4",
+      "uint32": "4",
+      "int16": "2",
+      "int64": "8",
+      "binary32": "4",
+      "binary64": "8",
+      "boolean": "2 serialized bytes -> 1 object byte (value!=0)"
+    },
+    "boolean": "0x10221e5fc requests exactly 2 bytes, swaps if required, stores (uint16!=0) to destination, returns whether read count was 2; a short read stores false. The uint16 encoding 0x0001 is true, as is any other nonzero uint16. Do not read only one serialized byte.",
+    "class_name_string": "0x10221eb28 reads a 4-byte length and accepts 1...262144 bytes; allocates and requests that length. Its returned string read count and terminal NUL are not explicitly checked in the retained helper; a strict decoder should validate rather than emulate malformed-input unsafety."
+  },
+  "node_contract": {
+    "evidence": [
+      {
+        "address": "0x1016ea554",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass3/function-1016ea554.json",
+        "sha256": "8a514305aed2a31b5e1a27d8c6355aafdef86b96fd0729251559cc267f9cbe03",
+        "evidence_id": "ev_17923a0ab8c7efc0834e6aac3c4cd6082859aa3318ed062ce168a75056363626",
+        "readback_evidence_id": "ev_844e07b1fafdd9770b0b6af18c086820c58d0a4e0879716b71b782492d6e77ed",
+        "raw_sha256": "f293a5b07a32a669c06ad926b2f99017fdf76c6a356b09ec4f5af20e38467c77",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x1016ea554",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "672e1422569698db1c206e9420e3442191ce3bf23a44aa080c3749197e72a439"
+        },
+        "native_instruction_count": 61,
+        "rea_instruction_count": 61,
+        "warnings": []
+      },
+      {
+        "address": "0x101c23184",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass3/function-101c23184.json",
+        "sha256": "0790d893ab6dd84aa99d1e26d3a445e9cf548a0558b9be4c6d3860e8463fefcb",
+        "evidence_id": "ev_d12307ab1debc9d268e367de405547a194bf90486528e9cd7ea0a0a70318a1c5",
+        "readback_evidence_id": "ev_a5b37b37b87f8079c037043beb1451467f5b6ea2a00d36d7822eda040b5bbf94",
+        "raw_sha256": "afaf31c3dcb7769345ae9bfbed12bfc4e9b19bb117151af8a35438f35a3b2ccc",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x101c23184",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "8f61f85beaa3ec812ef3e29dcb7d9ea5b2f0d32759adb243bc0569140c4694b9"
+        },
+        "native_instruction_count": 121,
+        "rea_instruction_count": 121,
+        "warnings": [
+          "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */"
+        ]
+      },
+      {
+        "address": "0x101715fb0",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass3/function-101715fb0.json",
+        "sha256": "da2bb38baf29366fe6fa3b7d9f0a073343939951c4d55df78f41ba6512caff86",
+        "evidence_id": "ev_38eb996e5eaecf32ffbbc3be5f517e35b937f4e7d4e31ad206a4d6bab53a454e",
+        "readback_evidence_id": "ev_ba9fbe19b6800bf7b509f640d73bdea59aaa7e8194aa353e2fd400da7692de36",
+        "raw_sha256": "7c2a183a833fd9a35bb7760d6cb577aab2e13879bb26fb32ff12f236aeb2c1e4",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x101715fb0",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "36b55218d2364835508f3543dabfabf639e5962e9562ab19fb2afbb8d19c9fdd"
+        },
+        "native_instruction_count": 22,
+        "rea_instruction_count": 22,
+        "warnings": []
+      },
+      {
+        "address": "0x101759190",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass3/function-101759190.json",
+        "sha256": "89b1fcb06dcd5db8be7c63e97c6067c9b434c33a69c3c2e856e2a1ed6817213b",
+        "evidence_id": "ev_22d0bd1c8ef4942bdc39d679939998adbcb72b7948c40111c75f038e7d738c99",
+        "readback_evidence_id": "ev_a3a3b0ce8f0ab73c182b6235961235940c83e2efe8601aa2bf87c9135ea5500e",
+        "raw_sha256": "c3ce209f2f4f12959147b83cac227f6813bbf5ca32ce0e869636d51ffd12cdee",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x101759190",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "a40369837680a94a5e341a821f69faaaeaf3eb9fa345486cd4e95931ccbbae03"
+        },
+        "native_instruction_count": 25,
+        "rea_instruction_count": 25,
+        "warnings": []
+      },
+      {
+        "address": "0x101716008",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass3/function-101716008.json",
+        "sha256": "de3ffc73035ab0552ed9583ac7cef4597e4efe797ee45dce370adfd9c9febf72",
+        "evidence_id": "ev_a78f783f250ef680fb25f96994d533217f12a354a5a95e04a28a7df483ffdd5b",
+        "readback_evidence_id": "ev_aef511caa3d378e330c10724cccb460001331ab09bd2ea0063831c00f5c8f7c8",
+        "raw_sha256": "4a67128d789560f48157307cb684430404863299f8ebd511bdbed57dffbab1e3",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x101716008",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "07ab1be9f63d11159e26a55a4125327c6d024a7982c2a2223bbe7d4f0780ac90"
+        },
+        "native_instruction_count": 90,
+        "rea_instruction_count": 90,
+        "warnings": []
+      },
+      {
+        "address": "0x103109ff0",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass3/function-103109ff0.json",
+        "sha256": "a16d26af9d706ccb1dee3b37e6748417241864ff26491ee4d3c4cdad46758031",
+        "evidence_id": "ev_9eba06a1c095c1eb85e6d542f893bbed9fa5a305329924f1707c407afdd68a9e",
+        "readback_evidence_id": "ev_4688cf7d85da28adba87d11e02162709d7edcd36668abfa2cd61ad2f2b1198a9",
+        "raw_sha256": "2826bda041af7148324503399246be45f9a56753f85f1b8246140483f192dc39",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x103109ff0",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "15204bae7fac6c795574b2c340ec8f1bb604b9d4bcd91974742231e506b4faa6"
+        },
+        "native_instruction_count": 105,
+        "rea_instruction_count": 105,
+        "warnings": []
+      }
+    ],
+    "dispatch": {
+      "MDataNode": "0x1016ea554",
+      "MListNode": "0x101715fb0",
+      "MTrackList": "0x101759190",
+      "counted_children": "0x101716008"
+    },
+    "normal_path_condition": "Global compatibility byte at 0x104ff4020 bit1 clear. Its runtime value is unobserved. The shipped-template structural parsing agrees with this path; the alternative raw-pointer path is outside the strict subset.",
+    "prefix": "MDataNode calls archive-string wrapper 0x10310a240 (two verified instructions: load archive+8; tail branch to 0x103109ff0) on object+0x18, then normal datum reader on object+0x38.",
+    "name_string": "Length is signed32, successful positive lengths are limited to 50000 and require an exact byte read. UTF-8 BOM EF BB BF is recognized at beginning or trailing marker location and conversion helper is called with 65001. Without that marker the bytes remain in the string representation; universal UTF-8 decoding of all legacy strings is not established.",
+    "datum": "Read signed32 tag. If compatibility global bit4 is set and tag>15, effective tag becomes17. Effective tag0/17 reads two archive objects through archive virtual+0x28; each may be null, a positive identity reference, or an inline class payload under the archive contract. All other effective tags read one binary64. Generic enum meanings are not inferred.",
+    "list": "MListNode: MDataNode prefix then signed32 count and that many archive objects requested as class MEvent. MTrackList: same prefix, one extra serialized int16, then same child sequence. Child callback virtual+0x288 receives parent before append when a parent is supplied.",
+    "bounds_policy": "Native count<=0 returns success with no children; strict application importer should reject negative or excessive counts and enforce enclosing payload/file bounds. No explicit class-version gate in these individual node readers establishes support for unobserved versions.",
+    "not_established": [
+      "Runtime global compatibility configuration",
+      "General string legacy code page",
+      "Meaning of extra MTrackList int16",
+      "Every child subtype or every datum tag semantic"
+    ]
+  },
+  "tempo_contract": {
+    "evidence": [
+      {
+        "address": "0x10173bdac",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass2/function-10173bdac.json",
+        "sha256": "766e3994fd037d5f118486ffa3de8d9321275aa45a635929fa6a6c956755a48e",
+        "evidence_id": "ev_352d614af40b930079e5cd268a4d4ea81f04bbd97ef3918e8b0ff393490f4701",
+        "readback_evidence_id": "ev_63219986efca24fefe0886b98902aee7ece9c995b62350a691086e3beebb6d44",
+        "raw_sha256": "3a4cde899f112839c394354887851e45b45758bf8f453844d8a4863ec2f58811",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10173bdac",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "361babf5f9abe089d1780ddc38619335ce27dbf654746576f800dda14cc5914b"
+        },
+        "native_instruction_count": 244,
+        "rea_instruction_count": 222,
+        "warnings": [
+          "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */"
+        ]
+      },
+      {
+        "address": "0x10173c17c",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass2/function-10173c17c.json",
+        "sha256": "230a06bbb4b2718b8b16d0b1c1c9db8453c2693ca8705e44236c942df5a3dac6",
+        "evidence_id": "ev_2ae9ef9e0046894145c51f57400cd809116a2a88c20371a189161265c114e235",
+        "readback_evidence_id": "ev_251c03c71ca6c4817bd355a197c96f147f31d01740ad81ac978ebd0d62fc17be",
+        "raw_sha256": "57407a9d5093ee1bf34c7f6f46a69f433e2d4da16171cb6c9678ea86a8116d0f",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10173c17c",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "0f26c576d43b753aa1594ead9c10e297bdd546c07ce4a7829a531195f708492f"
+        },
+        "native_instruction_count": 133,
+        "rea_instruction_count": 118,
+        "warnings": [
+          "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */"
+        ]
+      },
+      {
+        "address": "0x10173ac84",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass3/function-10173ac84.json",
+        "sha256": "6910298299a55d505860c4546be0736c4943d393a09b640c8446c48a43ecc18e",
+        "evidence_id": "ev_6a70806958989a3d4b542e41f37a4379d242ef962336c0070112b3457e096c1e",
+        "readback_evidence_id": "ev_84a2482fce761ee850e1218873c512e7cfef6616b3a01f53b7c2005dba5a7a05",
+        "raw_sha256": "4aef79db97e2b6fcac25056e97d89d1ab7291f1d25a15ab76f8d52186353a127",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10173ac84",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "5ecc4cf32e5441fd378217989ada084b9d28f92838abf1540225574b171f3863"
+        },
+        "native_instruction_count": 5,
+        "rea_instruction_count": 5,
+        "warnings": [
+          "/* WARNING: Control flow encountered bad instruction data */",
+          "/* WARNING: Bad instruction - Truncating control flow here */"
+        ]
+      },
+      {
+        "address": "0x10173acb0",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass3/function-10173acb0.json",
+        "sha256": "47f3c0585416572820f313990802d23f9b770e0a1e4c24f62c7add44726d1346",
+        "evidence_id": "ev_9594dd6c0318534c224a04f6c13cd878741ab39be87b55d8638310b864bb5302",
+        "readback_evidence_id": "ev_e490b8200912aba4ffa9f7d172a63b1bc2d98ff3e59c85e4d02e2c47565ffc3c",
+        "raw_sha256": "afa0eedb2e0e75e9b2b64581cbeaadf69385a6c6449cf6d34d271559893a22d2",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10173acb0",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "72d7c02ba3545d483e6d8f7eab2951c60fea6a378a4ed339d411838a2b207105"
+        },
+        "native_instruction_count": 20,
+        "rea_instruction_count": 20,
+        "warnings": [
+          "/* WARNING: Could not recover jumptable at 0x00010173acfc. Too many branches */",
+          "/* WARNING: Treating indirect jump as call */"
+        ]
+      },
+      {
+        "address": "0x10173824c",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass3/function-10173824c.json",
+        "sha256": "a194fb6f5170c2cc0fa6a034641cba954a8f043cbb62470451516648249fb882",
+        "evidence_id": "ev_cbf886ea3f73e0f19674a0736e957f094f584ff18876d0d19aea9337491f1818",
+        "readback_evidence_id": "ev_4418a29775682964dff7bdb90bc9301958f2fc2bcfee6721642e8c944a006737",
+        "raw_sha256": "4f3b8c57a1ab7f66cb1f277f1bb347d49f623104b8ac1bd3194c699227c25736",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x10173824c",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "17b203b1a3701ae56b67e1bc218166bb0fe2e67d9d5f43c1bc12505f5fa4e554"
+        },
+        "native_instruction_count": 114,
+        "rea_instruction_count": 104,
+        "warnings": []
+      },
+      {
+        "address": "0x101740db0",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass4/function-101740db0.json",
+        "sha256": "26dac0e01d3d107aee5ce98b837aa335f9602c81481e230aa6cd69849fcab8dd",
+        "evidence_id": "ev_35fba5b3036245107759abbae8beec5e0fd4c2190514a35105e9b2354d3d929f",
+        "readback_evidence_id": "ev_59d886f0f9b26a62a0fdd08852f7c88601c894fbf8c83cccadd2404f71bc722c",
+        "raw_sha256": "0658f872ead7438480b7a2b53850cee1c5dd5193f215638abc5dbcf8cf5bf74d",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x101740db0",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "1e9627dbbe7e18859a81f5735e6cd5611dccdc8f40608d49bd3b4ac9a23ecb3b"
+        },
+        "native_instruction_count": 5,
+        "rea_instruction_count": 5,
+        "warnings": []
+      },
+      {
+        "address": "0x101740dc4",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass4/function-101740dc4.json",
+        "sha256": "262366ec8af8820fcf531efdd11cf200589ab46d2a1f5d935bbb36e84be3a3f6",
+        "evidence_id": "ev_9e1b0a137ea684748f5acc51d9eb4fdf83df104edf6817883a0bcf9c426e3b7c",
+        "readback_evidence_id": "ev_1ba82d0202454f0253af0f9e1958b13d8713c4a461a36ae8cf05521020243c1e",
+        "raw_sha256": "0d15c1d9a7c781be0a3b517bc9e332ead28dc7efc7a19547c5fb172f81911707",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x101740dc4",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "324d5cc60095f2642a8f9600cc77a674f66e7f058663972fb47d6d5742645ed4"
+        },
+        "native_instruction_count": 2,
+        "rea_instruction_count": 2,
+        "warnings": []
+      },
+      {
+        "address": "0x101739f00",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass2/function-101739f00.json",
+        "sha256": "c14670868a5eb23bcc64daa20ed19c05b483e7058f78428243dc6bc105b8dd27",
+        "evidence_id": "ev_bd39134d05d00f2b951159fa6a1c93b11ffea31b1ea166594dac58c8d7676581",
+        "readback_evidence_id": "ev_325dbaef2d08581c8cae3472ac17acce088d8e61c73219a81e6584433ef4dfdf",
+        "raw_sha256": "567b191064dffe370d7a83db0fc015095e1922f9dcaf73f629fa08edde96989f",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x101739f00",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "43e4c131006391e488d0718490be620d7ae024c3335929b36354b4355182063a"
+        },
+        "native_instruction_count": 11,
+        "rea_instruction_count": 11,
+        "warnings": []
+      },
+      {
+        "address": "0x101739f3c",
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass2/function-101739f3c.json",
+        "sha256": "266f5ad60f9cde9480dacba9f22a1b167e0287b4c01b5d27199e0a76413a3dd6",
+        "evidence_id": "ev_529f6f32ffa50778b2ce90db0f91ca1db40cbe9046ed89e10b57b5c8c1f6b1ff",
+        "readback_evidence_id": "ev_15bc10815b9294131e5bb90e1a5159978c0beaf195ad4428332598deb0336e63",
+        "raw_sha256": "9c2f7b111eddd433544de500eb675c2c0d9b8ba15f32a40f963db1869cbda4ff",
+        "profile": {
+          "provider": {
+            "id": "ghidra",
+            "name": "Ghidra",
+            "version": "12.1.4"
+          },
+          "parameters": {
+            "target_kind": "executable",
+            "target_format": "raw-binary",
+            "architecture": "arm64",
+            "available_architectures": [
+              "arm64"
+            ],
+            "import_mode": "ephemeral-source-immutable",
+            "annotation_policy": "atomic-function-entry-metadata-v1",
+            "load_image_observations": "source-mappings-entry-context-v2",
+            "function_body_evidence": "complete-inclusive-ranges-v1",
+            "function_references": "complete-body-and-entry-reference-manager-v2",
+            "call_relationship_coverage": "function-body-call-coverage-v5",
+            "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+            "string_inventory_evidence": "defined-data-coverage-v1",
+            "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+            "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+            "instruction_flow_evidence": "decoded-return-pcode-v1",
+            "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+            "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+            "no_return_repair": "returning-imports-decoded-return-v2",
+            "process_launch": "inspected-jvm-launch-support-v1",
+            "load_image_evidence": "independent-raw-mapping-context-v4",
+            "jump_table_evidence": "typed-case-default-blocks-v1",
+            "decompiler_jump_loads": true,
+            "loader": "BinaryLoader",
+            "language_id": "AARCH64:LE:64:v8A",
+            "compiler_spec_id": "default",
+            "language_selection": "caller-supplied-v1",
+            "entry_point": "0x101739f3c",
+            "entry_seed": "external-entry-and-function-before-analysis-v1",
+            "analyzer_preset": "ghidra-default"
+          },
+          "digest": "5531aa78d7db80f5d3d61ee68e3b51708ef9b0a6846aa158559351eab2ad8219"
+        },
+        "native_instruction_count": 12,
+        "rea_instruction_count": 12,
+        "warnings": []
+      }
+    ],
+    "dispatch": {
+      "MTempoTrackEvent_reader": "primary vtable 0x104674d18 +0x98 -> 0x10173bdac",
+      "writer": "+0xa0 -> 0x10173c17c",
+      "selection_getter": "+0x600 -> 0x10173ac84",
+      "MTempoEvent_primary_vtable": "0x1046746f0"
+    },
+    "record_layout": {
+      "count": "signed32; reader returns false for count<1 or missing iterator",
+      "stride_bytes": 22,
+      "fields": [
+        {
+          "relative_offset": 0,
+          "serialized": "binary32",
+          "object_offset": "0x48",
+          "meaning": "stored period-like quantity; getter is float32 60.0/value"
+        },
+        {
+          "relative_offset": 4,
+          "serialized": "binary64",
+          "object_offset": "0x50",
+          "meaning": "coordinate A, units unbound"
+        },
+        {
+          "relative_offset": 12,
+          "serialized": "binary64",
+          "object_offset": "0x58",
+          "meaning": "coordinate B used for interpolation, units unbound"
+        },
+        {
+          "relative_offset": 20,
+          "serialized": "signed16",
+          "object_offset": "0x60 (sign extended to 32 bits)",
+          "meaning": "kind value, getter +0x4a0"
+        }
+      ]
+    },
+    "post_records": [
+      {
+        "condition": "current archive version>0",
+        "fields": "binary32 fixed value -> track+0x170, then uint16 nonzero boolean -> track+0x174 (one byte)"
+      },
+      {
+        "condition": "named MTempoTrackEvent class version>=2",
+        "fields": "attribute helper on track+0x20; update bits0x4048 from an attribute when available"
+      },
+      {
+        "condition": "named class version>=3",
+        "fields": "attribute helper on each tempo object+0x20"
+      }
+    ],
+    "selection": "0x10173ac84 reads byte+0x174: nonzero returns float32+0x170 directly; zero tail-branches to 0x10173824c with query coordinate D0 preserved. The raw decompiler reports halt_baddata at the unmapped external branch; original instruction is a valid B, not a target halt.",
+    "item_value": "MTempoEvent vtable+0x498 ->0x101740db0 performs float32 FDIV(60.0f, storedFloat+0x48). +0x4a0 ->0x101740dc4 loads the int32 kind at+0x60.",
+    "map_lookup": {
+      "domain": "Conditional on the two iterator results (A=current candidate, B=next candidate) supplied by untraced iterator helpers. Query-position selection, ordering, coordinate units and whole lifecycle are not established here.",
+      "conditions": [
+        "A null ->120.0f",
+        "B null ->A value",
+        "B kind0 ->A value",
+        "B kind other than0/1 ->120.0f",
+        "B kind1 and abs(B.coordinate-A.coordinate)<binary64 1e-8 ->repeat iterator loop",
+        "B kind1 otherwise ->arithmetic below"
+      ],
+      "fp_sequence": [
+        "aBPM=float32(60.0f/A.storedPeriod); bBPM=float32(60.0f/B.storedPeriod)",
+        "delta=FP64(B.coordinate-A.coordinate)",
+        "slope=FP64(FP64(FP64(bBPM)-FP64(aBPM))*480.0)/delta",
+        "intercept=FP64(aBPM)-FP64(FP64(A.coordinate*slope)/480.0)",
+        "result=float32(FP64(FP64(slope*query)/480.0)+intercept)"
+      ],
+      "instruction_note": "Explicit FCVT/FSUB/FMUL/FDIV/FADD instructions; no FMADD in this interpolation sequence. Algebraic cancellation/reassociation of 480 factors can change floating-point results. The comparison uses FCMP plus B.MI; nonfinite, zero-period and exceptional FP behavior are not validated by a target run."
+    },
+    "quantized_value_getter": "Separate vtable+0x190 function 0x101739f00 computes float32 60/period, promotes to binary64, FMADD(value,100.0,0.5), then signed FCVTZS W0. Do not replace this order with a generic host-language rounding rule or infer a UI display binding.",
+    "post_read_lifecycle_limit": "Reader invokes list callbacks and track virtual+0x5f8 ->0x10174c194; that callback and its transitive effects are not fully traced here. This contract establishes the direct serialized-field/getter relationship, not immutable lifetime state.",
+    "safe_application_scope": "Recover a validated positive finite fixed tempo when the full serialized uint16 mode is nonzero, labeling recovery as static subset. Preserve raw tempo records and opaque attributes. Do not turn their coordinates into beat/time positions or import ramps until unit and iterator bindings are proven. Metadata MusicalTempo is not the authority for this native selection."
+  },
+  "verification": {
+    "functions": 31,
+    "raw_bytes": 9024,
+    "native_interval_instruction_words": 2256,
+    "rea_decoded_instructions": 2167,
+    "all_original_slices_and_REA_readbacks_exact": true,
+    "bundled_records": 62,
+    "reports": [
+      {
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/verification.json",
+        "sha256": "a936ca7550896664121eab7b1228ba7a1213f6e6dfce7949f07a8cafd841d82b"
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass2/verification.json",
+        "sha256": "ac86db59a70f2bbd9fe8987715038d843fc7c3a1f28546e8c50f5ddc7211c030"
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass3/verification.json",
+        "sha256": "49d2a435084ed01b0df4a9276beaeab628a04d85cf72cd6ab2f11e80f2e85e2d"
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-objects-001/native/pass4/verification.json",
+        "sha256": "deafcabce91cedac626988916fe48d965ba05d121d9769b138d993cebfd47c03"
+      }
+    ],
+    "canonical_bundle": {
+      "path": "research/evidence/cubase-static/cpr-objects-001/native/native-evidence-bundle.json",
+      "sha256": "37c9baec3d386f83a73cbadf3c17236eae823d4cbab465d2ea194e4d95be89b2"
+    },
+    "REA_bundle_validation": {
+      "path": "research/evidence/cubase-static/cpr-objects-001/native/evidence-import-validation.json",
+      "sha256": "62febff3c34b1169e9ae383e7e7f70876042cb6cc23370869e44c6eeba83fe5f"
+    },
+    "decoder_differences": "14 mnemonic-spelling differences: B.CS/B.HS, B.CC/B.LO, ORR/MOV aliases and vector suffix rendering. All instruction addresses and original words are retained in reports; this is not a proof of every operand or decompiler type.",
+    "omitted_body_words": "89 native interval words are outside Ghidra inferred reachable bodies; retained original disassembly covers them. They include disconnected tails and LC_FUNCTION_STARTS intervals containing additional code. Do not call whole intervals fully decompiled.",
+    "session_cleanup": "31 snapshots and close responses retained; all four MCP clients closed. No target code executed."
+  },
+  "retained_failures": [
+    {
+      "path": "noncanonical-concatenation-rejection.json",
+      "reason": "Naively concatenated exported bundle manifests were rejected as noncanonical. Original records were unchanged; createEvidenceBundle from pinned REA produced the canonical aggregate subsequently accepted by evidence-import. This was bundle assembly failure, not a native-analysis failure."
+    }
+  ],
+  "general_limits": [
+    "Every raw slice is an exact unmodified original interval at its linked address; imports, globals, typeinfo/vtables, neighboring code and unwind metadata are absent from the raw analysis image. Selected original-file linkages are separately verified.",
+    "Generated pseudocode is not original source and is not guaranteed compilable or bit-faithful. Addressed ARM64 instructions take precedence for widths, FP operation order and external branches.",
+    "Static conditions are not runtime observations. Cubase comparison count remains zero. No full-project roundtrip, target load, audio playback or host parser acceptance is demonstrated.",
+    "Archive and tempo facts apply to the pinned 15.0.30.287 arm64 artifact and investigated branches; unsupported versions/content remain opaque rather than inferred."
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "created_utc": "2026-10-19T13:57:26.362249+00:00",
+  "application_executable_sha256": "1dae0a89d53ec02bedc34a240b10f8e5c99255154611ac7bc2f70c31709928da",
+  "target_executed": false,
+  "method": "Native Rebase accessibility and visual inspection through cua_repl.",
+  "groups": [
+    {
+      "id": "lofi-import-and-report",
+      "status": "passed",
+      "observation": "One unresolved event; exact saved start0/duration24s, declared stereo44100Hz1058400frames; native80/120BPM map retained.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP006/gui-lofi-imported.ax.txt",
+          "bytes": 5096,
+          "sha256": "6e59e7ea62fd892d203435852d3ae514ab68b00350a3fc9cbe7ca23acfeb8d4f"
+        },
+        {
+          "path": "research/evidence/application/APP006/gui-lofi-review.ax.txt",
+          "bytes": 3560,
+          "sha256": "095f50afb05bb9d3e112222c026fefe92acfed6ffb558281674c82986b8a465e"
+        }
+      ]
+    },
+    {
+      "id": "playback-refusal",
+      "status": "passed",
+      "observation": "Explicit unresolved-event error before transport starts.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP006/gui-playback-refused.ax.txt",
+          "bytes": 503,
+          "sha256": "d2c291b8c3ac168ad2c71451f5e5576a5bf3719b877069a7217b4b657cef6d68"
+        }
+      ]
+    },
+    {
+      "id": "mixdown-refusal",
+      "status": "passed",
+      "observation": "Explicit unresolved-event error before destination selection.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP006/gui-mixdown-refused.ax.txt",
+          "bytes": 503,
+          "sha256": "d2c291b8c3ac168ad2c71451f5e5576a5bf3719b877069a7217b4b657cef6d68"
+        }
+      ]
+    },
+    {
+      "id": "dawproject-refusal",
+      "status": "passed",
+      "observation": "Unplaced Classic event cannot disappear through export.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP006/gui-dawproject-refused.ax.txt",
+          "bytes": 503,
+          "sha256": "d2c291b8c3ac168ad2c71451f5e5576a5bf3719b877069a7217b4b657cef6d68"
+        }
+      ]
+    },
+    {
+      "id": "remove-undo-redo",
+      "status": "passed",
+      "observation": "Removal clears source event; Undo restores exact24s event and inspector; Redo removes it. Final Undo restored it before save.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP006/gui-event-removed.ax.txt",
+          "bytes": 4156,
+          "sha256": "084ac210a0a08dc0a950ccf287a593f390d1cf55635c9a32c2d8cb3b78a84441"
+        },
+        {
+          "path": "research/evidence/application/APP006/gui-event-undo.ax.txt",
+          "bytes": 5066,
+          "sha256": "e8ccd5b8eddd24cfa91696a6299f01179a6d8b798d759cbfa04fdd08723ab92e"
+        },
+        {
+          "path": "research/evidence/application/APP006/gui-event-redo.ax.txt",
+          "bytes": 4086,
+          "sha256": "5b801e519a3a330440b9cb72f677e91f3bf65f9e1a03182389ae0205e652697c"
+        }
+      ]
+    },
+    {
+      "id": "lofi-save-reopen",
+      "status": "passed",
+      "observation": "Saved event and source coordinates survive reopening.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP006/gui-lofi-reopened.ax.txt",
+          "bytes": 5070,
+          "sha256": "a0ba1acc7d0c923c1419d2a1b39626d1e05f7bba5d7cb59e00841e078a75af0a"
+        },
+        {
+          "path": "research/evidence/application/APP006/gui-lofi-reopened.png",
+          "bytes": 352907,
+          "sha256": "3438cbc93466ff05c8f2e63c2d081aed552d9afac07da9e2d19fd86ed42730e3"
+        }
+      ]
+    },
+    {
+      "id": "save-as",
+      "status": "passed",
+      "observation": "Independent copy retains event and source proof; separate byte audit confirms only project name differs.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP006/gui-lofi-save-as.ax.txt",
+          "bytes": 5077,
+          "sha256": "357e857bacd06d588aa40ff7bab94237fa9751230dbf2b9b9bf63f0048914be9"
+        }
+      ]
+    },
+    {
+      "id": "classic-unplaced",
+      "status": "passed",
+      "observation": "Musical datum remains unplaced in a separate status area; no invented seconds or playable clip.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP006/gui-classic-review.ax.txt",
+          "bytes": 3805,
+          "sha256": "cd805838f54fc5941706c71264f10544281ba48fb5eb2e0c776db19c7aa708d3"
+        },
+        {
+          "path": "research/evidence/application/APP006/gui-classic-imported.ax.txt",
+          "bytes": 4884,
+          "sha256": "1860a38fb0b7a3c374e2a400bd806a9c72ee9fc3ee20bfd0a6cdf7b29eb351fb"
+        },
+        {
+          "path": "research/evidence/application/APP006/gui-classic-imported.png",
+          "bytes": 341340,
+          "sha256": "76c1ebbb11f4424789851ec247b1b43717cf6dfad16285bd7cae633a6d1b1834"
+        }
+      ]
+    },
+    {
+      "id": "classic-reopen",
+      "status": "passed",
+      "observation": "Unplaced source event survives package reopening.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP006/gui-classic-reopened.ax.txt",
+          "bytes": 4858,
+          "sha256": "bb85218ad865f706f3a2db1cb9790c8b1aa3323b5adde73dbb5effbc0e013d0b"
+        }
+      ]
+    },
+    {
+      "id": "historical-v3-open",
+      "status": "passed",
+      "observation": "Frozen APP005 package reopens with80BPM and its original empty track; it is not silently upgraded to V4.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP006/gui-v3-historical-open.ax.txt",
+          "bytes": 4090,
+          "sha256": "7f669c608494f35534e6f3f12767f5e0603188414a7adbcec0b66bd154cb2bfe"
+        }
+      ]
+    }
+  ],
+  "final_open_state": {
+    "path": "research/evidence/application/APP006/gui-final-open.ax.txt",
+    "bytes": 5070,
+    "sha256": "a0ba1acc7d0c923c1419d2a1b39626d1e05f7bba5d7cb59e00841e078a75af0a"
+  },
+  "boundary": "These are Rebase workflow observations, not running Cubase measurements or audio equivalence tests."
+}

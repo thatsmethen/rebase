@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "id": "APP014-INITIAL-TIMELINE-ASSESSMENT",
+  "created_utc": "2026-10-20T10:43:00.818473+00:00",
+  "status": "pre_contract_read_only_assessment",
+  "baseline_commit": "1fd706d",
+  "purpose": "Identify the concrete gates and independent controls for advancing from zero-origin source audition to a source-backed ordinary channel/timeline reader. No new runtime/native contract is asserted.",
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 7510,
+      "sha256": "00ffeff9ed3cd8c72ebcf4ef0b7a5561c279acef1fd226fe206e5bca563ab35a"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8144,
+      "sha256": "e85d40e2d5f79fd95a822d0b789c1805786e251556028e130f466cece125610e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 8628,
+      "sha256": "b882fcd909e3721ccd7744988721b9157cc42e1bed73ee428b3470a357b1dfe3"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRTimelineSelection.swift",
+      "bytes": 1730,
+      "sha256": "b08ace23f823c5bf28b54bea8fa32e531234569378574ab6257b7caf9b735e30"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSegmentReadPlan.swift",
+      "bytes": 5048,
+      "sha256": "af56297a268184c07c58657beef5e7d67eb794b622614536992f65714752cae0"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "bytes": 16107,
+      "sha256": "01654e81697d79c6bb2244c004580ffee8b5d202dd64a54f14f84db4098516ce"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "bytes": 9795,
+      "sha256": "2ad37f35cbcca0e273e83255e89c0c7c007fe085e43bb35e0a016f8a6e318dea"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/OfflineRenderer.swift",
+      "bytes": 13858,
+      "sha256": "5ab53cab071f6a33f4582f2be0fca2084cb838e3d5dec0ecbc0eac8cc08a1d7a"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 13673,
+      "sha256": "e426e17e26303faa9752f049652c4c08c5365e3c97c606cec387a05b1a504d39"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "bytes": 13611,
+      "sha256": "5c7837be4d55f371591fcee99cb6663aaf4f346832a21180d46568193ad3fd1d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV4.swift",
+      "bytes": 10093,
+      "sha256": "311ef0ad0f120d7406b0e8469312f2e9d0083f348f52ea6704a4aa57e226f3ad"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV1.swift",
+      "bytes": 19302,
+      "sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 38820,
+      "sha256": "82d7ede057a9d4a4d9cb65a37e7e0acc5d80f4011c895813d8b11d08a1eb239b"
+    }
+  ],
+  "retained_native_sources": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-binding/finding.json",
+      "bytes": 17380,
+      "sha256": "336cb75ecee76b121ccfe649ba97e47256ec182694c5c7af9127c8692b644cfc"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-binding/pass20/native-101d3e704.txt",
+      "bytes": 9755,
+      "sha256": "bdb64a8fa093869fed319c6349185c1b8bad5ebc2cf6912b21a8a90f4e572fa8"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-binding/pass21/native-101d3ea38.txt",
+      "bytes": 2908,
+      "sha256": "0734965d3fc5cb9428fe6c1c0c24b59f3ada7fe34e722ef4f98f5603e622837e"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-binding/pass21/native-101d3eb24.txt",
+      "bytes": 32209,
+      "sha256": "f86f3a3d20b211e5703d4b4cbe18e8b38b224ddda152fffe7790c5ddacccd252"
+    }
+  ],
+  "current_barriers": [
+    {
+      "location": "CPRRecoveryV4.projectCoordinates",
+      "barrier": "Frozen V4 admits only positive-zero root/ancestor/event start and offset, direct root audio track, accepted shared clock and type10 reciprocal-rate datum. Nonzero source placement has no accepted projection yet. Preserve this historical profile; expand through a separate interpretation contract or source replay projection."
+    },
+    {
+      "location": "CPRSourceEventRenderPlan.make / CPRSourceEventRenderer.decodePCM24",
+      "barrier": "Requires zero origin/offset, one full segment with stored Start=Offset=0 and Length=file frames=event frames. Decoder currently treats the whole media data as the event. A slice needs separately validated source capacity, selected interval and event span."
+    },
+    {
+      "location": "PreparedProject / CPRSourceEventPlayback.prepare / AudioPlaybackSchedule.make",
+      "barrier": "Only one selector descriptor and one source-local converted stream. Global seconds are converted directly to stream output frame; adding a nonzero selector start would not insert timeline silence or translate to event-local/source coordinates. Duration is only source output frameCount/rate."
+    },
+    {
+      "location": "AudioTransportEngine.play",
+      "barrier": "Converted path owns one player/stream cursor. The worker queue is reusable, but the source producer must become an absolute-frame channel reader; node-per-clip app mixing is not evidence of native event overlap behavior."
+    },
+    {
+      "location": "AudioPreparation.prepare / Project.requireResolvedAudioEvents",
+      "barrier": "Ordinary project path intentionally rejects retained CPR events. Its resampling, pan, automation and mix policy are authored application behavior. Do not remove the barrier or manufacture Clips merely because one channel can be read."
+    },
+    {
+      "location": "CPRRecoveryV1.decode / compatibility report",
+      "barrier": "Imported audio tracks are a partial subset; MIDI/instruments/plugins/mixer/routing/automation and folders remain opaque or omitted. Default app controls and an empty Clips array do not prove absence of native contributors."
+    }
+  ],
+  "native_operation_observations": [
+    "101d3eb24 obtains its segment provider from channel+1610 and uses a descriptor at global1050105e0+388. Concrete provider/getter/global identity remains a separate pending binding.",
+    "At101d3ebdc..ec18, scale is Double(Float32(RN64(1/globalDouble390))). Getter+d8, then+f8, then+108 are converted using FMADD(value,scale,0.5) followed by signed64 FCVTZS. Do not replace this with generic round() or a direct Double project rate.",
+    "With unnamed converted fields A=getter+d8, B=getter+f8, O=getter+108, local flow intersects [cursor,end) with [A,B), zeros a prefix when cursor<A, and seeks O+(cursor-A) when cursor>A. Actual semantic units and identity are not inferred from these arithmetic positions.",
+    "The source is loaded from segment+38, cached accessor at+78, gain Float32+68. Native accessor construction/configuration differs from simply slicing preconverted event PCM.",
+    "At101d3f2a0..2d8, transient return -2147483645 retries once only at the converted segment start. A successful read must return the full requested count; other nonnegative short reads become an error. Any candidate atomic publication policy must be identified separately from native partial-buffer side effects.",
+    "101d3ea38 dispatches through optional+1848 and global mapping; absence of the optional object still calls101c351e4. It is not yet a proven identity/no-loop mapping.",
+    "101d3e704 partitions40-byte records; bit2 selects silence. Start rounds with sign-dependent +/-0.5 while span length uses rounded difference+0.5 clamped to remaining. Its outer transient retry policy is additional to the inner reader. Definitions and reachability of flags/mapping remain pending."
+  ],
+  "required_gates": [
+    {
+      "id": "PROVIDER",
+      "requirement": "Bind actual channel+1610 setter/interface, concrete segment type/list ordering/selection and constructor lifecycle; do not infer timeline track role from an arbitrary reachable object."
+    },
+    {
+      "id": "COORDINATES",
+      "requirement": "Bind+f8/+d8/+108 to native stored/source fields through typed datum and ancestor conversion, plus global+388/+390. Retain raw bits and define source frame versus absolute timeline frame domains."
+    },
+    {
+      "id": "PARTITION",
+      "requirement": "Bound mapping101d3ea38 and ordinary non-varispeed path. A no-loop/no-map acceptance gate must have a positive source/default-context proof; null alone is not identity."
+    },
+    {
+      "id": "ACCESSOR",
+      "requirement": "Bind exact accessor flags0x25/policy1/configuration, gain, seek/read units and persistent filter state. Existing audition create-from-zero/preroll policy is not native ordinary-seek evidence."
+    },
+    {
+      "id": "EVENT_PROCESSING",
+      "requirement": "Preserve explicit admissibility for gain, inversion, lanes/priority, fade inheritance, curves, warp/pitch, source segments and successful full backend reads. Nonzero offsets must stay inside verified media."
+    },
+    {
+      "id": "CUSTODY",
+      "requirement": "A complete plan replays preserved CPR/report, all included event/segment identities and media hashes once into immutable snapshots; changes fail before scheduling. Old V1-V4 reports remain unchanged."
+    },
+    {
+      "id": "PROJECT_COMPLETENESS",
+      "requirement": "Before ordinary project Play/export, inventory every potentially audible track/event and processing/routing object from source. Require supported or positively absent state rather than accepting imported defaults or silently dropping unsupported contributors."
+    }
+  ],
+  "minimal_architecture": [
+    "Introduce a dedicated source-bound channel plan and cursor: absolute output-frame interval -> exact planar frames plus diagnostic read spans. Own timeline position, provider traversal/generation and source accessors independently of the event audition cursor.",
+    "Use a pure checked native window/partition kernel for prefix/read/tail counts and source seek. Apply to verified immutable PCM through a bounded provider; preserve original event IDs and compatibility payload. Do not convert retained events to generic Clips.",
+    "Reuse CPRStreamPlaybackQueue only as application buffer delivery. Its serial cancellation/refill can consume the new reader without claiming native scheduler equivalence.",
+    "First end-to-end scope should use equal-rate direct PCM, nonzero placed event, nonzero source offset and at least two events separated by a gap. Gate overlaps/lanes/loops until their native rule is proved. A single-channel reconstruction is useful progress but cannot be labelled full-project playback.",
+    "If persisted projections expand, use a new semantic profile and independently replay it. Alternatively inspect original source under a versioned render-plan contract without rewriting historical report/Project.json."
+  ],
+  "independent_test_plan": [
+    {
+      "group": "numeric_windows",
+      "controls": "Fraction IEEE operations from original instructions; Float32 reciprocal narrowing versus Double rate; fused versus split +/-half boundaries; negative positions and signed truncation; Int64 conversion/addition and Int32 span/byte overflow. Do not generate expected values from candidate."
+    },
+    {
+      "group": "placed_PCM",
+      "controls": "Self-authored channel-distinct impulse/ramp PCM and provenance-valid CPR variants: positive start, nonzero source offset, trimmed length, two adjacent events and a gap. Expected output from integer source indices and independently rounded native gain; verify every frame and silence byte."
+    },
+    {
+      "group": "boundaries",
+      "controls": "Request entirely before/after, starts/ends exactly at event boundary and neighboring frames; inclusive selector endpoint versus half-open sample intersection; zero quantized length rejection; ordered successor traversal, cycles, duplicate/foreign references and generation reset."
+    },
+    {
+      "group": "seeks_and_partitions",
+      "controls": "Whole render versus irregular1/7/257/8192 windows for direct equal-rate branch; repeated fresh seeks must match independently selected suffixes. For stateful rate modes compare native request/state ledger per exact partition, never assume generic partition invariance or native reset==fresh create."
+    },
+    {
+      "group": "backend_spies",
+      "controls": "Record seek/gain/read order and every request; complete read, short positive read, zero read, negative failure and boundary-only transient retry. Ensure unsupported errors never become silent success, loops terminate, and app does not publish partially prepared buffers."
+    },
+    {
+      "group": "source_and_project_gates",
+      "controls": "Mutated raw offset/length/datum/ancestor/media hash and forged projection fail; legitimate synthetic variants recompute source/report rather than bypass proof. Unknown track/plugin/MIDI/automation/routing objects keep ordinary project playback blocked."
+    },
+    {
+      "group": "queue_and_GUI",
+      "controls": "Cancel during prepare/refill, stale callbacks, seek before/inside/gap/end, edit/new/open invalidation, failed second event preparation leaves no audio scheduled, blocked main does not stop worker refill. GUI identifies exact supported source/channel scope and cannot silently enable full-project mix."
+    }
+  ],
+  "current_tests_or_app_changes": false,
+  "target_executions": 0,
+  "cubase_runtime_comparisons": 0
+}

@@ -1,0 +1,328 @@
+{
+  "id": "APP018-GUI-INDEPENDENT-REVIEW",
+  "created_utc": "2026-10-21T01:07:03.704459+00:00",
+  "status": "passed",
+  "reviewer": "cubase_evidence",
+  "method": "Read the retained final AX records and process/custody JSON, visually inspect the retained screenshot, and independently rehash build/package files. No GUI replay or proprietary execution.",
+  "release": {
+    "version": "0.18.0",
+    "build": 18,
+    "binary": {
+      "path": "research/evidence/application/APP018/final-build-snapshot/Rebase.app/Contents/MacOS/Rebase",
+      "bytes": 5017248,
+      "sha256": "dcb4760f7eaa72db83e92237ee8e0a9ea6320fb6f9d0ffbfb9c3ad3c9e3ab8c1"
+    },
+    "info": {
+      "path": "research/evidence/application/APP018/final-build-snapshot/Rebase.app/Contents/Info.plist",
+      "bytes": 1000,
+      "sha256": "5598572fae48fbacc2f4238c0258a5f3b5a94cbe8ec4718f8c9a92d662081090"
+    },
+    "public_library": {
+      "path": "research/evidence/application/APP018/final-build-snapshot/Rebase.app/Contents/Frameworks/libsoxr.0.dylib",
+      "bytes": 188000,
+      "sha256": "c614df97b2c3f3881fa694efc73a6d5152fe0288ac9396adb6bd7c8c8e5f895a"
+    },
+    "live_and_snapshot_entries_identical": 151,
+    "symlinks_compared_by_link_identity": 1,
+    "build_record": {
+      "path": "research/evidence/application/APP018/release-build.json",
+      "bytes": 834,
+      "sha256": "63f52f8ba56a2049188faed62eb3751d1b8f115f9a44a6a77047fa359e9313bf"
+    }
+  },
+  "tests": {
+    "passed": 280,
+    "suites": 43,
+    "log": {
+      "path": "research/evidence/application/APP018/core-tests.log",
+      "bytes": 60416,
+      "sha256": "3ae255a8be25a12c171856da377dbd4067eaf19b112b73ee9cc36c82ecbe0d90"
+    },
+    "record": {
+      "path": "research/evidence/application/APP018/core-test-run.json",
+      "bytes": 1745,
+      "sha256": "69ef843b795081d5b1b9bc978993ef0912949da4e71eadcc376868fe415da8a9"
+    },
+    "fixed_binaries": [
+      {
+        "path": "research/evidence/application/APP018/test-build-snapshot/Rebase",
+        "bytes": 7988976,
+        "sha256": "50cebd79efd571bd06065306e507308bc7803b43442cb2f6bb3389e92e4ce0a8"
+      },
+      {
+        "path": "research/evidence/application/APP018/test-build-snapshot/RebasePackageTests",
+        "bytes": 16304592,
+        "sha256": "9c1656040cffd191d6e45ce6a71d0566f4d9091f2fde96a0555e86c72a064471"
+      }
+    ],
+    "source_inventory_entries_checked": 268,
+    "scope": "Existing own-implementation run reviewed; not rerun by this reviewer and not a Cubase comparison."
+  },
+  "expected_group_names": [
+    "admission",
+    "silent_prefix_and_output",
+    "pause_resume",
+    "seek_and_end",
+    "exit_and_project_guard",
+    "capacity_and_original_rate"
+  ],
+  "groups": [
+    {
+      "name": "admission",
+      "status": "passed",
+      "files": [
+        "gui-final-admitted.txt"
+      ],
+      "observations": [
+        "The project-clock choice is enabled for the 32,000 Hz control. AX text explicitly warns of changed speed/pitch and an unrecovered original project rate.",
+        "Final caption distinguishes saved offset 2 s from physical file time; start 1.5 s and duration 22 s are shown. Source rendering remains disabled for this nonzero-origin event."
+      ]
+    },
+    {
+      "name": "silent_prefix_and_output",
+      "status": "passed",
+      "files": [
+        "gui-final-playing.txt",
+        "gui-final-output.txt"
+      ],
+      "observations": [
+        "At 0.638 s, the Pause control is visible and both engine peaks are zero, consistent with the event starting at 1.5 s.",
+        "At 12.138 s, own-engine peaks read left 0.062486 and right 0.031250. The screenshot also shows event-only audition, separate 44,100 Hz source and 32,000 Hz clock, and unresolved project content."
+      ]
+    },
+    {
+      "name": "pause_resume",
+      "status": "passed",
+      "files": [
+        "gui-final-paused.txt",
+        "gui-final-resumed.txt"
+      ],
+      "observations": [
+        "Paused AX state retains 12.286 s with a Play source event control and zero peaks.",
+        "Resumed AX state advances to 12.761 s with a Pause control and nonzero stereo peaks."
+      ]
+    },
+    {
+      "name": "seek_and_end",
+      "status": "passed",
+      "files": [
+        "gui-final-seek.txt",
+        "gui-final-seek-playing.txt",
+        "gui-final-ended.txt"
+      ],
+      "observations": [
+        "Seek observation is paused at 15.750 s. Resumed observation advances to 16.140 s and reports nonzero stereo peaks.",
+        "The final observation is stopped at 23.500 s with zero peaks and an ended status, matching 1.5 s start plus 22 s duration."
+      ]
+    },
+    {
+      "name": "exit_and_project_guard",
+      "status": "passed",
+      "files": [
+        "gui-final-exited.txt",
+        "gui-final-project-blocked.txt"
+      ],
+      "observations": [
+        "Exit removes the source-event banner, restores the ordinary Play control, and selects project playback.",
+        "A subsequent project-play alert refuses unresolved CPR audio events even when media is attached. The event-only operation has not promoted the project to general playback."
+      ]
+    },
+    {
+      "name": "capacity_and_original_rate",
+      "status": "passed",
+      "files": [
+        "gui-final-capacity-blocked.txt",
+        "gui-final-original-rate-admitted.txt"
+      ],
+      "observations": [
+        "For the 48,000 Hz control, the project-clock choice disables Play Event with an explicit complete-source-window failure and no-padding explanation.",
+        "Switching to the original-rate native timeline choice admits Play Event and retains 1.5 s start, 22 s duration and 2 s source offset."
+      ]
+    }
+  ],
+  "gui_evidence": [
+    {
+      "path": "research/evidence/application/APP018/gui-final-admitted.txt",
+      "bytes": 1715,
+      "sha256": "92b26a2f8468e54325785ab6a1d02c300fc9461ec93a8876c1e89600abdceda5"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-playing.txt",
+      "bytes": 5831,
+      "sha256": "a0315d4468bc38ac6af4f84ca6988c2f096de90b2abeb6eaf5310ff5eb6205be"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-output.txt",
+      "bytes": 5831,
+      "sha256": "90eb2ce53c173cb5b9196e1e76f94773236b17881a7b8f766ddc1618c5672b55"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-paused.txt",
+      "bytes": 5809,
+      "sha256": "b9dfb688a2c9cfaef1918d22686d2267379525c309bbae135533c9d53b7ad3d1"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-resumed.txt",
+      "bytes": 5830,
+      "sha256": "7010732e658fc3677abe27ca33a74aec2dabdf5a5fc55454963b925a6a651ec6"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-seek.txt",
+      "bytes": 5808,
+      "sha256": "077ccb67e62465150b048419eace932d48735cf68478ea07b9e0558820b6b583"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-seek-playing.txt",
+      "bytes": 5831,
+      "sha256": "b0f292ef915ceb11e923b03bf7cff2604dc7dac761ef510bf8d3f3b923f2566a"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-ended.txt",
+      "bytes": 5808,
+      "sha256": "f32718582a0394dc9c9b0c78fff84664891a71bae5f38dc355f2074eacc3c4ac"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-exited.txt",
+      "bytes": 5155,
+      "sha256": "85b44825f7b39bc675050f0ba81796ef8d738dab6e41cfc7354faf2718d6baa4"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-project-blocked.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-capacity-blocked.txt",
+      "bytes": 1856,
+      "sha256": "d1da361a9c950a81afdf8e82ba5272a12a726293a846952132e63ffd26447077"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-original-rate-admitted.txt",
+      "bytes": 1705,
+      "sha256": "4b8c2f0159c89f4af0fd6a76211904bbb44c148718305083f0d706da09f5ca51"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-project-clock.png",
+      "bytes": 394067,
+      "sha256": "05b57dcc0034b98b62422a0ddf60161da7add3476a523548f804ad5eea5f6d2a"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-final-process.json",
+      "bytes": 429,
+      "sha256": "7a24b36dc1265f92df2762eacda416280bd96a65aa65bccc099ed1d41e068379"
+    }
+  ],
+  "evidence_counts": {
+    "accessibility_text_records": 12,
+    "screenshots": 1,
+    "process_json_records": 1,
+    "total_gui_records": 14
+  },
+  "packages": {
+    "count": 2,
+    "files_unchanged": 8,
+    "complete_file_universes_checked": true,
+    "baselines": [
+      {
+        "package": "research/evidence/application/APP018/Project Clock QA.rebaseproj",
+        "project_rate": 32000,
+        "files_checked": 4,
+        "baseline": {
+          "path": "research/evidence/application/APP018/gui-inputs.json",
+          "bytes": 1398,
+          "sha256": "7fc05b12089822560650b9111a988dce7d5b0c4364a41a4cb7eaa4a69f2cde15"
+        }
+      },
+      {
+        "package": "research/evidence/application/APP018/Incomplete Clock QA.rebaseproj",
+        "project_rate": 48000,
+        "files_checked": 4,
+        "baseline": {
+          "path": "research/evidence/application/APP018/gui-capacity-inputs.json",
+          "bytes": 1080,
+          "sha256": "7ab3afd7e4c7a63a21b7b6747f1dc5dfb655297f2faeffe53ea14a7a9c9fc098"
+        }
+      }
+    ],
+    "files": [
+      {
+        "path": "research/evidence/application/APP018/Project Clock QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+        "bytes": 93492,
+        "sha256": "608404edbfed6737c8ae02aac3003ea0c3839540f744692a06feeddbbc06807e"
+      },
+      {
+        "path": "research/evidence/application/APP018/Project Clock QA.rebaseproj/Compatibility/CPR/Original.cpr",
+        "bytes": 1333360,
+        "sha256": "9ea2b00a18ff3c1f4b3a7958a8399f46184b39dcb0696e578a3eac1fe547a4d3"
+      },
+      {
+        "path": "research/evidence/application/APP018/Project Clock QA.rebaseproj/Media/5449A2DB-0479-4D77-97F9-A8F259B95A76.wav",
+        "bytes": 6350444,
+        "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+      },
+      {
+        "path": "research/evidence/application/APP018/Project Clock QA.rebaseproj/Project.json",
+        "bytes": 5392,
+        "sha256": "de4a17707c97467e18aa0614d6b0fc73a998a22aa2e89b4e8948871a6b85c91e"
+      },
+      {
+        "path": "research/evidence/application/APP018/Incomplete Clock QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+        "bytes": 93492,
+        "sha256": "608404edbfed6737c8ae02aac3003ea0c3839540f744692a06feeddbbc06807e"
+      },
+      {
+        "path": "research/evidence/application/APP018/Incomplete Clock QA.rebaseproj/Compatibility/CPR/Original.cpr",
+        "bytes": 1333360,
+        "sha256": "9ea2b00a18ff3c1f4b3a7958a8399f46184b39dcb0696e578a3eac1fe547a4d3"
+      },
+      {
+        "path": "research/evidence/application/APP018/Incomplete Clock QA.rebaseproj/Media/5449A2DB-0479-4D77-97F9-A8F259B95A76.wav",
+        "bytes": 6350444,
+        "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+      },
+      {
+        "path": "research/evidence/application/APP018/Incomplete Clock QA.rebaseproj/Project.json",
+        "bytes": 5395,
+        "sha256": "9563ab77585bad687442a175ccedac6e3c540af04ff6091bf3965cfd1f405378"
+      }
+    ]
+  },
+  "reviewed_sources": [
+    {
+      "path": "research/evidence/application/APP018/gui-observations.json",
+      "bytes": 8089,
+      "sha256": "901c4395467262d699f4973915020f8f491e1ace0560755ce139eed7a908ac2f"
+    },
+    {
+      "path": "research/evidence/application/APP018/test-source-before.json",
+      "bytes": 50433,
+      "sha256": "2028a1de02a01ea0813050a0e69f3d6d1d974b295850ee4fb591142bce7f2877"
+    },
+    {
+      "path": "research/evidence/application/APP018/test-source-after.json",
+      "bytes": 50433,
+      "sha256": "2028a1de02a01ea0813050a0e69f3d6d1d974b295850ee4fb591142bce7f2877"
+    },
+    {
+      "path": "research/evidence/application/APP018/project-clock-native-review.json",
+      "bytes": 59391,
+      "sha256": "cafb636698b97f6e1daa15da6a2602cbfa8ab6582bddaa1ab49208b08516d4dd"
+    }
+  ],
+  "superseded_initial_observation": {
+    "binary": {
+      "path": "research/evidence/application/APP018/gui-initial-build-snapshot/Rebase.app/Contents/MacOS/Rebase",
+      "bytes": 5017248,
+      "sha256": "ed2b6bd0e0b1bff3a34eec3dd44e090350fd405dc3efff020744b48b3447a1e3"
+    },
+    "scope": "Initial captures are preserved separately; this final review uses only gui-final records for GUI conclusions."
+  },
+  "interrupted_attempts": "The observation record retains two CUA routing timeouts before recovery. Final capacity and original-rate records exist and were checked; no inference is made from failed attempts.",
+  "open_actionable_defects": [],
+  "limits": [
+    "Synthetic self-authored PCM attached to a preserved source-derived CPR control; no original project audio equivalence asserted.",
+    "Observed engine peaks and GUI progress are not exact sample comparisons, audible/DAC capture, latency/underrun certification or native Cubase behavior.",
+    "The integral project rate and factor 1 are explicitly supplied application context; the saved original CPR project rate and full hosted channel/device relationship are not recovered.",
+    "This is one admitted event with complete source capacity. General project playback, MIDI, plugins, mixer, routing and automation remain outside this review."
+  ]
+}

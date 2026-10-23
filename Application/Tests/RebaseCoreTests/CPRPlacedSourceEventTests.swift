@@ -10,20 +10,19 @@ import Testing
 /// forged retained project events. Proprietary media/code is not executed.
 @Suite(.serialized)
 struct CPRPlacedSourceEventTests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let workspace = PrivateResearchFixtures.root
     private let originalSHA = "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495"
     private let oracleSHA = "060ca297846429da2264b1e5e68e65709b104c796ee1184ce5416765820d1711"
     private func rejects(_ body: () throws -> Void) -> Bool {
         do { try body(); return false } catch { return true }
     }
     private func original() throws -> Data {
-        let data = try Data(contentsOf: workspace.appendingPathComponent("research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro/LoFi Hip Hop.cpr"))
+        let data = try Data(contentsOf: workspace.appendingPathComponent("templates/LoFi Hip Hop.cpr"))
         #expect(cprSHA256(data) == originalSHA)
         return data
     }
     private func oracle(_ key: String) throws -> [[String: Any]] {
-        let data = try Data(contentsOf: workspace.appendingPathComponent("research/evidence/application/APP015/placed-source-oracle.json"))
+        let data = try Data(contentsOf: workspace.appendingPathComponent("evidence/application/APP015/placed-source-oracle.json"))
         #expect(cprSHA256(data) == oracleSHA)
         let root = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
         return try #require(root[key] as? [[String: Any]])
@@ -63,7 +62,7 @@ struct CPRPlacedSourceEventTests {
                                                  fades: CPRAutoFadeArchive.read(container: container))
     }
 
-    @Test func BuilderMatchesIndependentIEEEControlsWithoutCollapsingRoundTrips() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func BuilderMatchesIndependentIEEEControlsWithoutCollapsingRoundTrips() throws {
         let rows = try oracle("builder_vectors")
         #expect(rows.count == 180)
         #expect(rows.filter { $0["multiply_rate_discriminator"] as? Bool == true }.count == 82)
@@ -169,7 +168,7 @@ struct CPRPlacedSourceEventTests {
         #expect(equal)
     }
 
-    @Test func SourceBackedPlacementTrimOffsetAndJumpClockMatchExactPCM() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func SourceBackedPlacementTrimOffsetAndJumpClockMatchExactPCM() throws {
         let folder = try temporary(); defer { try? FileManager.default.removeItem(at: folder) }
         let original = try original(), pcm = media(), mediaURL = folder.appendingPathComponent("Synthetic.wav")
         try pcm.write(to: mediaURL)
@@ -221,7 +220,7 @@ struct CPRPlacedSourceEventTests {
         #expect(try self.original() == original)
     }
 
-    @Test func DetachedAndEditedApplicationClockCannotReinterpretSavedTicks() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func DetachedAndEditedApplicationClockCannotReinterpretSavedTicks() throws {
         let folder = try temporary(); defer { try? FileManager.default.removeItem(at: folder) }
         let row = try #require(try oracle("source_vectors").first { $0["name"] as? String == "after-jump" })
         let bytes = try changed(original(),start: bits(row,"raw_start_bits"),length: bits(row,"raw_length_bits"),offset: bits(row,"raw_offset_bits"))
@@ -249,7 +248,7 @@ struct CPRPlacedSourceEventTests {
         #expect(try snapshot(package) == after)
     }
 
-    @Test func ExplicitProjectClockReadsUnconvertedPCMAndKeepsSavedTiming() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func ExplicitProjectClockReadsUnconvertedPCMAndKeepsSavedTiming() throws {
         let folder = try temporary(); defer { try? FileManager.default.removeItem(at: folder) }
         // The preserved clock maps 960 ticks to 1.5 seconds; 4410/44100
         // source frames span 0.1 seconds and 882/44100 offset is 0.02 seconds.
@@ -303,7 +302,7 @@ struct CPRPlacedSourceEventTests {
         }
     }
 
-    @Test func EqualExplicitClockMatchesOriginalRateAndInvalidClockFails() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func EqualExplicitClockMatchesOriginalRateAndInvalidClockFails() throws {
         let folder = try temporary(); defer { try? FileManager.default.removeItem(at: folder) }
         let bytes = try changed(original(), start: Double(960).bitPattern,
             length: Double(4410).bitPattern, offset: Double(882).bitPattern)
@@ -328,7 +327,7 @@ struct CPRPlacedSourceEventTests {
         }
     }
 
-    @Test func ProjectClockDeclinesIncompleteRawReadsWithoutChangingSource() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func ProjectClockDeclinesIncompleteRawReadsWithoutChangingSource() throws {
         let folder = try temporary(); defer { try? FileManager.default.removeItem(at: folder) }
         let mediaURL = folder.appendingPathComponent("Synthetic.wav"); try media().write(to: mediaURL)
         var (project, package, id) = try imported(original(), mediaURL: mediaURL, folder: folder, name: "Capacity")
@@ -353,7 +352,7 @@ struct CPRPlacedSourceEventTests {
         #expect(try snapshot(package) == before)
     }
 
-    @Test func UnknownAncestorsTrackShiftDatumsClockAndSourceBoundsReject() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func UnknownAncestorsTrackShiftDatumsClockAndSourceBoundsReject() throws {
         let original = try original(), parsed = try source(original)
         let container = try CPRProject.readContainer(original), fades = try CPRAutoFadeArchive.read(container: container)
         let track = try #require(fades.tracks[parsed.trackIdentity]), roles = try CPRClockRoles.resolve(container: container)
@@ -394,7 +393,7 @@ struct CPRPlacedSourceEventTests {
         #expect(zeroPlan.range.position.bitPattern == 0 && zeroPlan.range.offset.bitPattern == 0)
     }
 
-    @Test func SavedProjectClockDrivesUnconvertedPCMAndSurvivesApplicationEdits() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func SavedProjectClockDrivesUnconvertedPCMAndSurvivesApplicationEdits() throws {
         let folder = try temporary(); defer { try? FileManager.default.removeItem(at: folder) }
         let mediaURL = folder.appendingPathComponent("Synthetic.wav"); try media().write(to: mediaURL)
         for (rate, first, last, offset): (Float, Int64, Int64, Int64) in [
@@ -442,7 +441,7 @@ struct CPRPlacedSourceEventTests {
         }
     }
 
-    @Test func UnsupportedSavedFactorCannotSelectDefaultRateAndCustodyIsRechecked() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func UnsupportedSavedFactorCannotSelectDefaultRateAndCustodyIsRechecked() throws {
         let folder = try temporary(); defer { try? FileManager.default.removeItem(at:folder) }
         let mediaURL = folder.appendingPathComponent("Synthetic.wav"); try media().write(to:mediaURL)
         var bytes = try original()
@@ -465,7 +464,7 @@ struct CPRPlacedSourceEventTests {
         #expect(rejects { _ = try CPRSourceEventPlayback.prepare(eventID:id,project:project,root:package,mode:.nativeTimelineSavedProjectClock) })
     }
 
-    @Test func FreshProofMediaAndRejectedPublicationLeavePackageIntact() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func FreshProofMediaAndRejectedPublicationLeavePackageIntact() throws {
         let folder = try temporary(); defer { try? FileManager.default.removeItem(at: folder) }
         let derived = try changed(original(),start:Double(960).bitPattern,length:Double(8193).bitPattern,offset:Double(441).bitPattern)
         let mediaURL = folder.appendingPathComponent("Synthetic.wav"); try media().write(to:mediaURL)

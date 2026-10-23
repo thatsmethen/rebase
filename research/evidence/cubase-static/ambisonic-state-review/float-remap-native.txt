@@ -1,0 +1,70 @@
+
+research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+00000000000038e0 <__text>:
+  154ebc: a9bc5ff8     	stp	x24, x23, [sp, #-0x40]!
+  154ec0: a90157f6     	stp	x22, x21, [sp, #0x10]
+  154ec4: a9024ff4     	stp	x20, x19, [sp, #0x20]
+  154ec8: a9037bfd     	stp	x29, x30, [sp, #0x30]
+  154ecc: 9100c3fd     	add	x29, sp, #0x30
+  154ed0: f9400c08     	ldr	x8, [x0, #0x18]
+  154ed4: b40006a8     	cbz	x8, 0x154fa8 <__text+0x1516c8>
+  154ed8: aa0003f5     	mov	x21, x0
+  154edc: b9401408     	ldr	w8, [x0, #0x14]
+  154ee0: 34000648     	cbz	w8, 0x154fa8 <__text+0x1516c8>
+  154ee4: aa0303f3     	mov	x19, x3
+  154ee8: aa0203f4     	mov	x20, x2
+  154eec: aa0103f6     	mov	x22, x1
+  154ef0: aa0203e9     	mov	x9, x2
+  154ef4: aa0103ea     	mov	x10, x1
+  154ef8: f940014b     	ldr	x11, [x10]
+  154efc: f940012c     	ldr	x12, [x9]
+  154f00: eb0c017f     	cmp	x11, x12
+  154f04: 54000220     	b.eq	0x154f48 <__text+0x151668>
+  154f08: 9100214a     	add	x10, x10, #0x8
+  154f0c: 91002129     	add	x9, x9, #0x8
+  154f10: f1000508     	subs	x8, x8, #0x1
+  154f14: 54ffff21     	b.ne	0x154ef8 <__text+0x151618>
+  154f18: d2800017     	mov	x23, #0x0               ; =0
+  154f1c: f8777ac0     	ldr	x0, [x22, x23, lsl #3]
+  154f20: f9400ea8     	ldr	x8, [x21, #0x18]
+  154f24: b8777908     	ldr	w8, [x8, x23, lsl #2]
+  154f28: f8687a81     	ldr	x1, [x20, x8, lsl #3]
+  154f2c: aa1303e2     	mov	x2, x19
+  154f30: 94005473     	bl	0x16a0fc <_bundleExit+0x14258>
+  154f34: 910006f7     	add	x23, x23, #0x1
+  154f38: b94016a8     	ldr	w8, [x21, #0x14]
+  154f3c: eb0802ff     	cmp	x23, x8
+  154f40: 54fffee3     	b.lo	0x154f1c <__text+0x15163c>
+  154f44: 14000019     	b	0x154fa8 <__text+0x1516c8>
+  154f48: d2800017     	mov	x23, #0x0               ; =0
+  154f4c: d37df2e8     	lsl	x8, x23, #3
+  154f50: f8686ac0     	ldr	x0, [x22, x8]
+  154f54: f94016a9     	ldr	x9, [x21, #0x28]
+  154f58: f8686921     	ldr	x1, [x9, x8]
+  154f5c: aa1303e2     	mov	x2, x19
+  154f60: 94005467     	bl	0x16a0fc <_bundleExit+0x14258>
+  154f64: 910006f7     	add	x23, x23, #0x1
+  154f68: b94016a8     	ldr	w8, [x21, #0x14]
+  154f6c: eb0802ff     	cmp	x23, x8
+  154f70: 54fffee3     	b.lo	0x154f4c <__text+0x15166c>
+  154f74: 340001a8     	cbz	w8, 0x154fa8 <__text+0x1516c8>
+  154f78: d2800016     	mov	x22, #0x0               ; =0
+  154f7c: f94016a8     	ldr	x8, [x21, #0x28]
+  154f80: f8767900     	ldr	x0, [x8, x22, lsl #3]
+  154f84: f9400ea8     	ldr	x8, [x21, #0x18]
+  154f88: b8767908     	ldr	w8, [x8, x22, lsl #2]
+  154f8c: f8687a81     	ldr	x1, [x20, x8, lsl #3]
+  154f90: aa1303e2     	mov	x2, x19
+  154f94: 9400545a     	bl	0x16a0fc <_bundleExit+0x14258>
+  154f98: 910006d6     	add	x22, x22, #0x1
+  154f9c: b94016a8     	ldr	w8, [x21, #0x14]
+  154fa0: eb0802df     	cmp	x22, x8
+  154fa4: 54fffec3     	b.lo	0x154f7c <__text+0x15169c>
+  154fa8: a9437bfd     	ldp	x29, x30, [sp, #0x30]
+  154fac: a9424ff4     	ldp	x20, x19, [sp, #0x20]
+  154fb0: a94157f6     	ldp	x22, x21, [sp, #0x10]
+  154fb4: a8c45ff8     	ldp	x24, x23, [sp], #0x40
+  154fb8: d65f03c0     	ret

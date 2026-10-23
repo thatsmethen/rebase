@@ -1,0 +1,239 @@
+{
+  "id": "CPR-MAP-CLOCK-001-ORACLE-ITERATOR",
+  "created_utc": "2026-10-19T11:39:45.862504+00:00",
+  "author": "target_intake",
+  "status": "four iterator methods and bounded1/2-item selection resolved; analytical clock goldens complete; import lifecycle gates remain separate",
+  "source": {
+    "path": "/workspace/rebase/research/targets/derived/Cubase15-arm64",
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+    "target_executed": false
+  },
+  "scope": {
+    "rea_functions": 4,
+    "source_bytes": 520,
+    "original_instruction_words": 130,
+    "rea_addresses": 130,
+    "original_vtable_slots": 9,
+    "native_only_support_words": 128,
+    "reused_original_words": 858,
+    "rea_records_validated_and_imported": 8,
+    "sessions_closed": true
+  },
+  "conditional_contract": {
+    "conditions": [
+      "Fresh stack iterator as constructed in10173ad50/10173b1d4: base1016c137c zeros filter+20;1016c31b0 stores selected list+28, initializes index+30=0 for nonempty list. Valid stable list, count1 or2, strictly increasing nonnegative anchors with firstA=B=0, acceptedkind0; root must establish actual list ownership/cache lifecycle.",
+      "Source record periods are finite positive Float32 values promoted directly to Double; do not reconstruct from displayed BPM or inactive fixed value. Analytical arithmetic uses IEEE nearest/ties-even normal finite intermediate domain; signed zero is explicit. Target process FPCR was not observed."
+    ],
+    "inverse_one": "1016c3ee0 count1 writes index0. Caller10173b2d4 next returns item0 then increments index1;10173b2e4 current is null. The last-segment branch uses stored item0.",
+    "inverse_two": "With originalB0=0 and nonnegativequery,1016c1424 selects index0 whenquery<B1, index1 whenquery>=B1. Exact equality returns current item at1016c1578. For query<B1 after advance to1,1016c15f8 tails to previous(), returning old item but decrementing index to0. For query>B1 iteration reaches2 then100/last resets index1. Subsequent caller next()/current() select current/next segment accordingly.",
+    "forward_two": "10173b064 uses index0 whenseconds<=A1 and index1 whenseconds>A1. This exact-knot side differs from inverse. Original1016c34b0 writes the chosen index directly; null-filter count and indexed lookup use slots148/140 verified in native helpers.",
+    "jump_math": {
+      "seconds_to_ticks_positive": [
+        "delta=round64(seconds-A)",
+        "quotient=round64(delta/Double(period32))",
+        "raw=fma64(quotient,480,B)",
+        "shifted=fma64(raw,1000,0.5)",
+        "floored=FRINTM(shifted)",
+        "result=round64(floored/1000)"
+      ],
+      "ticks_to_seconds_nonnegative": [
+        "delta=round64(ticks-B)",
+        "product=round64(delta*Double(period32))",
+        "scaled=round64(product/480)",
+        "result=round64(A+scaled)"
+      ],
+      "zero": "Forwardzero enters10173aeec..af58 rather than positive quantizer; for valid first item uses period division then480 multiply. +0\u2192+0,-0\u2192-0. Inverse follows nonnegative jump path; firstA=B=+0 yields+0 for either signed inputzero. These are default-rounding analytical bit claims, not process observations."
+    }
+  },
+  "new_methods": [
+    {
+      "slot": "0xd0",
+      "entry": "0x1016c3478",
+      "meaning": "Return index<0 || index>=list.count. Original signed CMP/CCMP/CSET matches REA."
+    },
+    {
+      "slot": "0xe0",
+      "entry": "0x1016c37d4",
+      "meaning": "Previous: retain old indexed item/null, decrement index, return old item. Optional predicate walk executes only when filter+20 nonnull; excluded by fresh-constructor null filter."
+    },
+    {
+      "slot": "0xf8",
+      "entry": "0x1016c34b8",
+      "meaning": "First: write index0; with null filter return. With filter may tail to next; that branch is not used by accepted fresh iterator."
+    },
+    {
+      "slot": "0x100",
+      "entry": "0x1016c35c4",
+      "meaning": "Last: write count-1 when count>0 else0; with null filter return. With filter may tail to previous; excluded here."
+    }
+  ],
+  "boundary_examples": [
+    {
+      "input_tick_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "caller_next_returns": 0,
+      "caller_current_after_next": 1,
+      "native_path": [
+        "1016c148c: current.Start==query; return"
+      ]
+    },
+    {
+      "input_tick_bits": "0x41176fffffffffff",
+      "selected_index": 0,
+      "caller_next_returns": 0,
+      "caller_current_after_next": 1,
+      "native_path": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ]
+    },
+    {
+      "input_tick_bits": "0x4117700000000000",
+      "selected_index": 1,
+      "caller_next_returns": 1,
+      "caller_current_after_next": null,
+      "native_path": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c1578: current.Start==query; return current index"
+      ]
+    },
+    {
+      "input_tick_bits": "0x4117700000000001",
+      "selected_index": 1,
+      "caller_next_returns": 1,
+      "caller_current_after_next": null,
+      "native_path": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15dc..15f4: last resets index=count-1"
+      ]
+    }
+  ],
+  "analytical_validation": {
+    "map_vectors": 105,
+    "internal_quantizer_vectors": 30,
+    "first_fma_raw_discriminators": 3,
+    "host_sanity_check_passed": true,
+    "host_sanity_check": "Separate script used host scalar operations and libSystem fma to compare all golden results/intermediate FMA bits. This is arithmetic crosschecking only; Fraction calculations produced every expected bit. No target/candidate application execution.",
+    "scope_qualifications": [
+      "Chosen first-FMA controls change raw tick bits but final0.001 quantization erases those differences; no final-output discrimination is claimed for those rows.",
+      "One internal quantizer fused-vs-split final difference occurs above the current app tick bound480000000000. The row is marked outside that bound and does not authorize a wider importer. Within-bound half-step neighbors remain useful exact values without claiming fused/split discrimination.",
+      "Synthetic unequal-anchor points deliberately expose knot-side selection and may not satisfy source cache/lifecycle acceptance. Their arithmetic results are conditional tests, not imported-project approval.",
+      "The direct period map operations differ from fixed-mode clock reconstruction; positive map quantization is lossy, so inverse(forward(x)) need not equalx."
+    ]
+  },
+  "provenance": {
+    "new_function_dossiers": [
+      {
+        "entry": "0x1016c3478",
+        "source_file_offset": 23868536,
+        "bytes": 28,
+        "source_range_sha256": "c13aff193e7865cec336f17ff669858900271f731b408c474e15c0e31b5b64a4",
+        "evidence_id": "ev_987fa5464fe31e2c040d879c6750eae7d537b9723e6a517290c55f9689306a47",
+        "dossier": {
+          "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/function-1016c3478.json",
+          "sha256": "9ca5d169d053dbec125c2a186d527613db34eee1741595484d189411c82cb83c",
+          "bytes": 76096
+        }
+      },
+      {
+        "entry": "0x1016c37d4",
+        "source_file_offset": 23869396,
+        "bytes": 228,
+        "source_range_sha256": "fb9e401970b9f04e2e937aaf23b7cc6e9d99613f9e298b148137f20ae18eb381",
+        "evidence_id": "ev_9da9e26725ff7441d3a8ed75e99ae3b94e4f41a4ea590189ba06f7ccd23f5c8a",
+        "dossier": {
+          "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/function-1016c37d4.json",
+          "sha256": "d8f03a1afcb9a3ead90d883a83fd5bc9b9037579fb63c72f562e568aa83fd993",
+          "bytes": 484374
+        }
+      },
+      {
+        "entry": "0x1016c34b8",
+        "source_file_offset": 23868600,
+        "bytes": 124,
+        "source_range_sha256": "1fee9de06123bb9ef0d406e9c4528e9fccce1d39636cb59eba3ee7435deb7dd3",
+        "evidence_id": "ev_8f700fa2615d446b2a5b410f4d0639b77a23e1be5f6b5a8a6351ac195e184ea0",
+        "dossier": {
+          "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/function-1016c34b8.json",
+          "sha256": "89505206904bb562855be620add59258e7b12e32e884381df45330eef3e218c6",
+          "bytes": 205510
+        }
+      },
+      {
+        "entry": "0x1016c35c4",
+        "source_file_offset": 23868868,
+        "bytes": 140,
+        "source_range_sha256": "e1d9dfe45a2495dc00a8e750ab84228d072142ad0bcc9e18bede87d73cf2cdb3",
+        "evidence_id": "ev_7d0efdabc8c22cae7cfa0f0cf88a87e1abde871127a2c1198fd56a3b8a406da3",
+        "dossier": {
+          "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/function-1016c35c4.json",
+          "sha256": "65d126e2266da5107a696e44c95321630d01538aa2071b0fc4ce2372c552dfc4",
+          "bytes": 237642
+        }
+      }
+    ],
+    "goldens": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/map-clock-goldens.json",
+      "sha256": "98b3922f598f57e51e961252a61a6503c67cead5b8d17605024e2bedc202795c",
+      "bytes": 88972
+    },
+    "oracle": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/map_oracle.py",
+      "sha256": "05b23d625aa1da2491c7e5a1158555a14d8148533ba23882ce7983648a880343",
+      "bytes": 14553
+    },
+    "oracle_crosscheck": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/oracle-crosscheck.json",
+      "sha256": "d0bb77b3abbddfc8dbfd175f6380126496efb44ca0ed3b7c967144323d35c6f9",
+      "bytes": 650
+    },
+    "fixture_binding": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/fixture-golden-bindings.json",
+      "sha256": "c5dca72c14a21ecfe340c2528f8c3c00cc13667f4824ed1727b3e5039bd89f3f",
+      "bytes": 3775
+    },
+    "source_verification": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/verification.json",
+      "sha256": "616e322bb5fbef4a25e3c738edba7ce457e63899451f4c68ed409412e257aa99",
+      "bytes": 2534
+    },
+    "vtable_and_support_verification": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/iterator-linkage-checks.json",
+      "sha256": "291c7d0ab94ac03f0f9276691178a33f71cd1e48887c1049cd6874ff816f85bb",
+      "bytes": 6055
+    },
+    "portable_rea_bundle": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/iterator-evidence-bundle.json",
+      "sha256": "f205e688b9c8b7ef9c82a70d1bf00012123b07b310ac5a007a906195334dee69",
+      "bytes": 697667
+    },
+    "bundle_import": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/evidence-import.json",
+      "sha256": "50ae9611a9025a20ce0278d73c99fa1fb74c6305be9a765a8571ce0cba73e09f",
+      "bytes": 363
+    }
+  },
+  "remaining_unknowns": [
+    "Actual selected tempo list after track/per-item attributes, variation callbacks and caller-owned list preparation are outside these four methods. Root/other agents own those gates.",
+    "Cache-validity changes and whether savedA anchors survive reader/list/cleanup determine which map state the formulas receive. This report assumes the stated unchanged anchors, not a recomputation policy.",
+    "Listmode/lock state may affect surrounding metadata and invalidation; filter-null and index semantics do not establish those effects.",
+    "Count>=3 binary-search duplicate behavior, malformed/nonfinite source records, negative timeline, rampkind1/imported-library math and arbitrary target FP modes remain unsupported.",
+    "All raw slices omit globals/imports/vtables/type context; linked original native bytes supply separate dispatch facts. REA indirect-tail warnings at1016c3530/1016c364c are valid virtual tail branches, not target corruption or compilable source."
+  ],
+  "next_implementation_gate": "Combine this conditional contract with independently reviewed attribute/list/cache/post-read gates before map import. Preserve released schema2/V2 replay and fixed-clock-v1; use a distinct new map contract/profile.",
+  "reproduction": [
+    "python3 research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/verify_evidence.py",
+    "python3 research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/verify_linkage.py",
+    "python3 research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/map_oracle.py",
+    "python3 research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/crosscheck_oracle.py"
+  ],
+  "counts": {
+    "target_runtime": 0,
+    "candidate_target_runtime_comparisons": 0
+  },
+  "untouched": "Application source, APP004 evidence, prior findings and proprietary originals remain unchanged."
+}

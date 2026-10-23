@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "status": "scoped_review_and_eight_focused_tests_pass",
+  "scope": "Independent application queue ordering/lifetime review and supplied-buffer controls. No target execution or native scheduling equivalence.",
+  "reviewed_inputs": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRStreamPlaybackQueue.swift",
+      "bytes": 4965,
+      "sha256": "db806fa154391729bb2605b38402f0e3aa204551fb723eeaeac0d039f2ab9eda"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "bytes": 9795,
+      "sha256": "2ad37f35cbcca0e273e83255e89c0c7c007fe085e43bb35e0a016f8a6e318dea"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRStreamPlaybackQueueTests.swift",
+      "bytes": 15384,
+      "sha256": "5401c4cbae7ad971ce2aa922ddc99182b0e06caeafee2d754d34d7206406f12c"
+    },
+    {
+      "path": "research/evidence/application/APP013/stream-queue-tests-first.log",
+      "bytes": 10554,
+      "sha256": "1fda3bdeb7309e730e875669c6cdb6bd95e08a04fd4f5e5e72eb74dfd98270b4"
+    },
+    {
+      "path": "research/evidence/application/APP013/stream-queue-tests-second.log",
+      "bytes": 7746,
+      "sha256": "1cf63c9adfc272aa8713b9e28452aee3832df193c2a6a7a265081e5aceb2c2a3"
+    }
+  ],
+  "local_sdk": {
+    "path": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/AVFAudio.framework/Versions/A/Headers/AVAudioPlayerNode.h",
+    "sha256": "d47ecd191ea3ceab6f02d1c0fef07daaa9d7f8b60285155453a296f25e4b2413",
+    "relevant_contracts": [
+      "Player callbacks generally arrive off main; client must synchronize player API use.",
+      "Do not stop player inside its completion callback.",
+      "dataPlayedBack is device rendering only; manual test uses dataRendered.",
+      "nil schedule time appends to previous scheduled command."
+    ]
+  },
+  "test_result": {
+    "tests": 8,
+    "suites": 1,
+    "seconds": 0.177,
+    "exit_code": 0,
+    "offline_audio": {
+      "blocks": 15,
+      "frames_per_block": 512,
+      "channels": 2,
+      "sample_rate": 48000,
+      "samples_checked_exact": 15360,
+      "trailing_zero_frames_checked": 257,
+      "main_actor": "blocked for entire background offline-engine run",
+      "completion_type": "dataRendered"
+    }
+  },
+  "controls": [
+    "Atomic initial priming failure schedules zero buffers; empty source notifies once; queue cannot restart.",
+    "19 supplied buffers drain/refill in order while main actor blocked; duplicate callbacks do not double release/refill.",
+    "Synchronous scheduler callbacks are deferred; producer/scheduler nesting remains1 across100 buffers.",
+    "Cancel waits for active producer then prevents all subsequent scheduling; old callbacks ignored.",
+    "Refill error notifies once, stops production and retains outstanding buffers until cancel.",
+    "Cancel directly within terminal notification does not deadlock; old callbacks cannot affect fresh queue.",
+    "Zero-frame buffer rejected before any scheduling.",
+    "Actual offline AV player delivers >4-buffer PCM and then silence while main actor blocked."
+  ],
+  "retained_initial_failure": {
+    "log": "research/evidence/application/APP013/stream-queue-tests-first.log",
+    "description": "7/8 tests passed. Physical-thread assertion included synchronous initial prime. DispatchQueue.sync may execute on caller thread; assertion was narrowed to post-prime refill/schedule/completion. Production scheduling behavior was not changed to satisfy this assertion."
+  },
+  "source_review": [
+    "Serial worker owns producer and pending buffers; UUID removal ignores duplicate/stale completion.",
+    "Completion callback only enqueues work, avoiding conversion or stop in AV callback.",
+    "Cancellation is a worker barrier before player stop/detach; queue-specific key permits cancellation within terminal notification.",
+    "Transport generation rejects old terminal notifications; engine start/prime failure stops current schedule."
+  ],
+  "open_limits": [
+    "Refill worker is application host policy, not recovered Cubase thread topology.",
+    "No realtime deadline, device latency, DAC continuity or hardware underrun equivalence established.",
+    "Source remains fully resident; priming and seek preroll synchronously block caller pending readiness.",
+    "UI transport clock remains host-time based; a future actual producer underrun could diverge from delivered frames. Moving refill off main reduces one starvation cause but does not prove all underruns absent.",
+    "Device dataPlayedBack callback behavior is not exercised by manual dataRendered test.",
+    "Full application GUI and full suite acceptance are separate."
+  ],
+  "actionable_source_defects_found": []
+}

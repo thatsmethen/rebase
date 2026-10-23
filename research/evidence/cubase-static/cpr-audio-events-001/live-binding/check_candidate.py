@@ -1,0 +1,91 @@
+"""Compile only authored C and compare with the peer's independent Fraction oracle."""
+from pathlib import Path
+import ctypes as C
+import hashlib
+import json
+import struct
+import subprocess
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[4]
+SOURCE = ROOT / "Application/Sources/RebaseTimingDSP/native_callback_adapter.c"
+HEADER = SOURCE.parent / "include/native_callback_adapter.h"
+ORACLE = ROOT / "research/evidence/application/APP013/callback-adapter-oracle.json"
+LIB = HERE / "candidate/native_callback_adapter.dylib"
+LIB.parent.mkdir(exist_ok=True)
+command = ["clang", "-std=c11", "-O3", "-Wall", "-Wextra", "-Werror",
+           "-fno-fast-math", "-ffp-contract=off", "-frounding-math",
+           "-mmacosx-version-min=14.0", "-arch", "arm64",
+           "-I", str(HEADER.parent), "-dynamiclib", str(SOURCE), "-o", str(LIB)]
+subprocess.run(command, check=True)
+native = subprocess.check_output(["/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+                                  "-d", str(LIB)], text=True)
+(HERE / "candidate/optimized-native.txt").write_text(native)
+assert "fmadd" in native and "fcvtzs" in native
+
+class Window(C.Structure):
+    _fields_ = [("start", C.c_int64), ("end", C.c_int64)]
+class Post(C.Structure):
+    _fields_ = [("action", C.c_int32), ("prefix", C.c_int32)]
+lib = C.CDLL(str(LIB))
+fp = C.POINTER(C.c_float)
+lib.rb_native_callback_window.argtypes = [C.c_int64, C.c_double, C.c_double,
+                                         C.c_int32, C.POINTER(Window)]
+lib.rb_native_callback_offset_from_frames.argtypes = [C.c_int32, C.c_double,
+                                                     C.POINTER(C.c_double)]
+lib.rb_native_callback_prefix.argtypes = [C.POINTER(Window), C.c_int32, C.c_uint8,
+                                         C.c_int64, C.POINTER(C.c_int32)]
+lib.rb_native_callback_postprocess_f32.argtypes = [
+    C.POINTER(fp), C.c_int32, C.c_int32, C.c_int32, C.c_int32, C.c_int32,
+    C.POINTER(Post)]
+def double(bits):
+    return struct.unpack(">d", bytes.fromhex(bits))[0]
+oracle = json.loads(ORACLE.read_text())
+for row in oracle["windows"]:
+    out = Window(0x1234, 0x5678)
+    rc = lib.rb_native_callback_window(row["position"], double(row["offset_bits"]),
+                                      double(row["rate_bits"]), row["frames"], C.byref(out))
+    assert (rc == 0) == row["valid"], row
+    assert (out.start, out.end) == ((row["start"], row["end"]) if row["valid"]
+                                  else (0x1234, 0x5678)), row
+for row in oracle["offsets"]:
+    out = C.c_double()
+    assert lib.rb_native_callback_offset_from_frames(
+        row["frames"], double(row["rate_bits"]), C.byref(out)) == 0
+    assert struct.pack(">d", out.value).hex() == row["expected_bits"], row
+for row in oracle["prefixes"]:
+    out = C.c_int32(-9)
+    assert lib.rb_native_callback_prefix(C.byref(Window(row["start"], row["end"])),
+                                         row["transport"], row["whole"],
+                                         row["boundary"], C.byref(out)) == 0
+    assert out.value == row["expected"], row
+for row in oracle["postprocess"]:
+    buffers = [(C.c_uint32 * len(channel))(*(int(word, 16) for word in channel))
+               for channel in row["input_bits"]]
+    planes = (fp * len(buffers))(*(C.cast(buffer, fp) for buffer in buffers))
+    out = Post(-7, -8)
+    rc = lib.rb_native_callback_postprocess_f32(
+        planes, len(buffers), row["frames"], row["capacity"],
+        row["offset"], row["prefix"], C.byref(out))
+    assert (rc == 0) == row["valid"], row["name"]
+    expected = row["output_bits"] if row["valid"] else row["input_bits"]
+    assert [[f"{word:08x}" for word in channel] for channel in buffers] == expected, row["name"]
+    assert (out.action, out.prefix) == ((row["action"], row["prefix"]) if row["valid"]
+                                       else (-7, -8)), row["name"]
+def pin(path):
+    return dict(path=str(path.relative_to(ROOT)), bytes=path.stat().st_size,
+                sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+result = dict(status="passed", target_execution_count=0, command=command,
+              compiler=subprocess.check_output(["clang", "--version"], text=True),
+              oracle=pin(ORACLE), script=pin(Path(__file__)),
+              source=pin(SOURCE), header=pin(HEADER), library=pin(LIB),
+              optimized_instructions=pin(HERE / "candidate/optimized-native.txt"),
+              windows=len(oracle["windows"]), offsets=len(oracle["offsets"]),
+              planes=len(oracle["postprocess"]), prefixes=len(oracle["prefixes"]),
+              fused_discriminators=sum(r["fma_discriminator"] for r in oracle["windows"]),
+              limits=["Only authored candidate library executed.",
+                      "Original instructions establish the bounded rule; no Cubase runtime comparison.",
+                      "Independent oracle generated by another agent from exact Fraction IEEE rounding."])
+(HERE / "candidate-check.json").write_text(json.dumps(result, indent=2) + "\n")
+print(json.dumps({k: result[k] for k in ["status", "windows", "offsets", "planes",
+                                       "prefixes", "fused_discriminators"]}))

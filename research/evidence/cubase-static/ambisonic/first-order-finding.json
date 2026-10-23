@@ -1,0 +1,285 @@
+{
+  "finding_id": "AMBI-DSP-002",
+  "created_utc": "2026-10-19T05:20:00.976269+00:00",
+  "title": "First-order four-channel permutation and normalization selected by direction parameter 2",
+  "status": "Static-derived, independently reviewable; target runtime conformance untested",
+  "target": {
+    "component": "vstambiconverter.vst3",
+    "version": "1.5.10.152",
+    "architecture": "arm64",
+    "original_universal_sha256": "e803dd1390ee7989306b15c0fccca52e5d3097ae7a489dc6834f82b50ba485c5",
+    "derived_arm64_sha256": "e8341c6b31ac6b65cf7e8c18bdfbaa18ac24b20160b4287dc385b202eb29b883",
+    "original_slice_offset": 2162688,
+    "original_slice_length": 2058208,
+    "identity_and_signature": "component-hashes.json, plist.json, signature.json, codesign-verification.json, arm64-derivation.json"
+  },
+  "method": {
+    "tool": "REA 6.7.0",
+    "provider": "Ghidra 12.1.4",
+    "ghidra_max_heap": "2G",
+    "target_execution": false,
+    "plugin_activation": false,
+    "evidence_class": "Shipped artifact static analysis plus analyst derivation. Public ABI documentation identifies interface/structure roles; equations are derived from binary instructions and constant bytes.",
+    "analysis_names": "FUN_... and parameter/local names are Ghidra output, not recovered original source names.",
+    "source_byte_record": "first-order-byte-ranges.json",
+    "exact_requests": "persistent-requests.jsonl",
+    "complete_evidence_bundle": "dsp-evidence-bundle.json",
+    "snapshot": "dsp-analysis-snapshot.json"
+  },
+  "bounded_contract": {
+    "conditions": [
+      "Eligible processor construction and valid activation/setup have succeeded; the analysis does not establish actual host activation or licensing reachability.",
+      "One input and one output bus, each with four channels; actual buffers match the initialized algorithm channel count of four.",
+      "The relevant float32 or float64 algorithm object exists, tables are initialized, and buffers and any required scratch allocation are valid.",
+      "A successful ID2 queue point supplies finite normalized p in [0,1], or tables are already known to be the corresponding pair. Saved-state/lifecycle-wide default behavior is not inferred.",
+      "Nonzero positive frame count with valid planar sample storage; bypass flag is false and input bus silenceFlags is exactly zero.",
+      "Disjoint channel regions, or conventional corresponding-buffer in-place layout with distinct channel regions and valid scratch storage. Arbitrary overlap is outside the claim.",
+      "Equations describe ordinary finite samples with normal finite products, subject to actual floating-point library/FP control behavior. Bitwise agreement with target outputs has not been established."
+    ],
+    "low_direction": {
+      "condition": "0 <= p < 0.5",
+      "registered_choice_index": 0,
+      "ui_label": "FuMa > AmbiX",
+      "source_to_destination_map": [
+        0,
+        3,
+        1,
+        2
+      ],
+      "destination_gains_binary64": [
+        1.4142135623730951,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "equations": [
+        "y0[n] = a*x0[n]",
+        "y1[n] = x2[n]",
+        "y2[n] = x3[n]",
+        "y3[n] = x1[n]"
+      ],
+      "a_binary64_bits": "0x3ff6a09e667f3bcd",
+      "a_binary32_bits_after_narrowing": "0x3fb504f3"
+    },
+    "high_direction": {
+      "condition": "0.5 <= p <= 1",
+      "registered_choice_index": 1,
+      "ui_label": "AmbiX > FuMa",
+      "source_to_destination_map": [
+        0,
+        2,
+        3,
+        1
+      ],
+      "destination_gains_binary64": [
+        0.7071067811865475,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "equations": [
+        "y0[n] = b*x0[n]",
+        "y1[n] = x3[n]",
+        "y2[n] = x1[n]",
+        "y3[n] = x2[n]"
+      ],
+      "b_binary64_bits": "0x3fe6a09e667f3bcc",
+      "b_binary32_bits_after_narrowing": "0x3f3504f3"
+    },
+    "coefficient_caution": "Reverse binary64 gain is one representable number below sqrt(0.5); do not regenerate it with a math library or infer exact round-trip identity.",
+    "channel_semantics": "x0..x3 and y0..y3 denote planar buffer indices. UI direction labels and first-order bus names are observed, but named spatial axes or actual host routing have not been independently established."
+  },
+  "trace": [
+    {
+      "edge": "Factory to processor",
+      "evidence": [
+        "processor-class-registration-function.json",
+        "processor-create-function.json",
+        "processor-constructor-function.json"
+      ],
+      "observation": "Under the observed factory eligibility branch, the Audio Module Class named AmbiConverter is registered with callback 0x155638. That callback allocates an object and calls 0x152028, which installs the interface vtable 0x1d7570 at object+0x110."
+    },
+    {
+      "edge": "Interface to processing",
+      "evidence": [
+        "processor-interface-vtables.json",
+        "processor-process-thunk.json"
+      ],
+      "observation": "Interface slot +0x48 contains 0x154464; the thunk subtracts 0x110 from this and transfers to 0x153d98. Official IAudioProcessor declaration ordering identifies this slot as process; the observed call offsets and ProcessData layout agree."
+    },
+    {
+      "edge": "Bus selection to channel count",
+      "evidence": [
+        "processor-bus-arrangement-function.json"
+      ],
+      "observation": "0x152824 requires one input and one output bus and counts set bits in their arrangement masks. Its four-input/four-output branch assigns first-order bus labels and stores count4 at processor+0x154. This validates counts, not exact channel-mask semantics. Other 9/16-channel paths exist but are not included in this finding."
+    },
+    {
+      "edge": "Activation to sample precision",
+      "evidence": [
+        "processor-activation-function.json",
+        "algorithm-vtables.json"
+      ],
+      "observation": "0x153ba0 selects double when setup field processor+0x124 equals1, otherwise float; stores precision flag +0x168. Fresh float object vtable0x1d7740 and double object vtable0x1d7620 both receive table pairA and channel count from +0x154."
+    },
+    {
+      "edge": "Direction queue to active tables",
+      "evidence": [
+        "direction-parameter-consumer.json"
+      ],
+      "observation": "0x1520d0 visits parameter queues, identifies ID2 and calls getPoint(count-1, &sampleOffset, &value). On return0, FCMP with0.5 and B.PL at0x152204/0x152208 selects pairB for finite p>=0.5, otherwise pairA. Float object map/gain fields are+0x18/+0x20; double fields+0x20/+0x28. The separate integer conversion stored at processor+0x150 does not control this threshold branch."
+    },
+    {
+      "edge": "Queue time to block time",
+      "evidence": [
+        "direction-parameter-consumer.json",
+        "processor-process-function.json"
+      ],
+      "observation": "0x153d98 calls0x1520d0 before examining/processing the audio block. The consumer takes the last indexed queue point and never reads the returned sampleOffset; no per-offset split appears on this path. Absent queues or getPoint failure leave tables unchanged. There is no positive point-count guard before requesting count-1; valid host queues are assumed for the last-point rule. Zero-sample calls still reach parameter consumption unless an earlier object guard returns."
+    },
+    {
+      "edge": "Normal versus bypass/silence",
+      "evidence": [
+        "processor-process-function.json",
+        "algorithm-vtables.json",
+        "float-bypass-process-function.json"
+      ],
+      "observation": "Normal mode selects algorithm vtable+0x58 (float0x154d4c/double0x154a8c); bypass selects+0x90. Any nonzero input silenceFlags skips normal conversion and the flags are copied to output unchanged. The separately observed float bypass function0x154e28 copies corresponding channels. No claim is made about valid output samples on the skipped path. ID1 bypass updates use p>0.5, distinct from direction threshold p>=0.5."
+    },
+    {
+      "edge": "Permutation direction",
+      "evidence": [
+        "float-channel-permutation-function.json",
+        "double-channel-permutation-function.json",
+        "float-buffer-copy-function.json",
+        "double-buffer-copy-function.json"
+      ],
+      "observation": "Float helper0x154ebc and double helper0x154bf8 copy input[i] to output[map[i]], using copy helpers0x16a0fc and0x16a14c. Thus tables are scatter maps, not gather maps. If any corresponding input[i]==output[i], helpers first copy every input to scratch before scattering. They do not generally detect cross-channel or partial overlap."
+    },
+    {
+      "edge": "Destination gain",
+      "evidence": [
+        "float-conversion-process-function.json",
+        "double-conversion-process-function.json",
+        "conversion-constant-tables.json"
+      ],
+      "observation": "After permutation,0x154d4c loops over output j, loads gain[j] as binary64, narrows via FCVT S,D at0x154d98, and calls imported vDSP_vsmul with equal input/output pointer, unit strides and frame count.0x154a8c similarly calls vDSP_vsmulD with the un-narrowed binary64 gain. First four table entries yield the stated equations."
+    }
+  ],
+  "disconfirming_checks_performed": [
+    "Inspected copy helper argument order and destination lookup, eliminating the inverse/gather interpretation of map arrays.",
+    "Inspected branch instruction at the exact0.5 threshold, excluding truncation of p as the table selection rule.",
+    "Inspected both precision paths and float narrowing, excluding use of binary64 coefficients directly for binary32 multiplication.",
+    "Decoded all388 requested table bytes and compared them byte-for-byte with the source slice. First-order subsets and hashes retained separately.",
+    "Mapped key procedure/table addresses through REA source mappings and independently parsed Mach-O segment commands. Full function ranges hashed; original slice still equals corresponding universal bytes.",
+    "Checked selected process and algorithm vtable slots against source bytes. Full initialized-memory vtable read contains unrelated loader fixups; no whole-read identity claim.",
+    "Inspected bypass and silence branch guards, excluding those states from the normal conversion formula.",
+    "Inspected bus masks and alias checks rather than assuming exact layout or arbitrary in-place support."
+  ],
+  "residual_unknowns": [
+    "No target process, VST instance, or Cubase export has executed in this study; no target reference output exists.",
+    "Actual eligibility, activation, routing, bus arrangement accepted by the host, parameter-controller normalization and state restoration/lifecycle behavior remain unvalidated.",
+    "Fresh allocation writes pairA; this does not establish a universal product default. No-update calls retain current tables on this consumer path, whose current value can depend on other lifecycle paths.",
+    "9/16-channel tables are retained but not claimed; arbitrary channel counts, invalid masks and actual host speaker names remain outside the first-order proof.",
+    "Actual vDSP dynamic library, rounding/FP control modes, NaNs/infinities/subnormals, overflow, arbitrary overlap and memory-allocation failures are unvalidated.",
+    "x86_64 behavior and other component/build versions have not been compared."
+  ],
+  "prospective_target_disconfirmation": [
+    "After separately authorized runtime activation, supply four distinguishable impulse channels with silenceFlags0, bypassfalse and explicit direction values0,nextafter(0.5,0),0.5,1; verify destination index and exact observed gain for both precisions.",
+    "Use W input1 in the reverse double case to distinguish stored0x3fe6a09e667f3bcc from sqrt(0.5); compare normal finite multiframe samples with recorded FP environment and actual library resolution.",
+    "Use multiple direction queue points and a final point at nonzero sampleOffset to test the inferred whole-block last-point rule.",
+    "Compare disjoint and conventional corresponding-channel in-place runs separately; test bypass and silence behavior as separate contracts without assuming the normal equations apply."
+  ],
+  "candidate": {
+    "path": "candidate/ambiconverter_first_order",
+    "status": "Independent C transcription; unvalidated against target runtime",
+    "restriction": "Explicit finite normalized direction; four equal positive-length channels; disjoint storage only; bypassfalse/silence0; FE_TONEAREST; zero or |sample| between2*MIN_NORMAL and1. Candidate rejection semantics are not attributed to target.",
+    "test_scope": "Synthetic unit basis, exact coefficient bits, adjacent threshold values, multiframe exact-rational numeric oracle, and rejection-before-write checks. Passing tests are transcription controls only."
+  },
+  "abi_context": "external-abi-references.json pins downloaded official Steinberg declarations and Apple scalar-multiply documentation. These provide public ABI/arithmetic context, not the recovered implementation source.",
+  "related_findings": [
+    "AMBI-PARAM-001 (finding.json)"
+  ],
+  "evidence": [
+    {
+      "file": "processor-class-registration-function.json",
+      "evidence_id": "ev_82e62f8df7b9a647cf39618da216ec54e8d56001985840a5eb920b4c673d0c70",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "processor-create-function.json",
+      "evidence_id": "ev_66010421fae02942a901f1260cec473edff954683a73f62e9939bec14ec5789f",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "processor-constructor-function.json",
+      "evidence_id": "ev_3b8728c5ecb2fb8d025cc8d8de3c5f02808798a9bda41a165619bb6e10926134",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "processor-process-thunk.json",
+      "evidence_id": "ev_c0693808fd4ea5ff43fc1385d4728d4b47466f80ab8d7473a88fa79b96f8c2a6",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "processor-process-function.json",
+      "evidence_id": "ev_b2f398cfea2637930a17064bd1032da4610f721ee69cf9bb6c19f2986c2d29ae",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "processor-bus-arrangement-function.json",
+      "evidence_id": "ev_73aeb3d9d98e4c9487109124edfcbe9e3c56df077156d651ebc77b36c4421da3",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "processor-activation-function.json",
+      "evidence_id": "ev_71427cb4c15b53d125dbb8f414f8827d185a7297fbf0057f99e8618a075b5860",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "direction-parameter-consumer.json",
+      "evidence_id": "ev_4f992b72aec563124a5a8828c9cd9e5f2f704d1b44726ce440a62470f802581a",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "float-conversion-process-function.json",
+      "evidence_id": "ev_cbbaed7434362e2b7f9465cdd773e5f1931f9d2c60ed615262d8668b8ab47c5b",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "float-channel-permutation-function.json",
+      "evidence_id": "ev_8c579cccb9a2999385243abde3a396b6762626d8537f036a621e1114ecf7caae",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "float-buffer-copy-function.json",
+      "evidence_id": "ev_da781b019e3e65787f4007c055181ae257d7fadad31f0fa739442f5efebce5a8",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "double-conversion-process-function.json",
+      "evidence_id": "ev_8e7f749a08b569b58f88bdce179c6bae9ec267805ccf38c75456169dc0791c70",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "double-channel-permutation-function.json",
+      "evidence_id": "ev_eeb71a978aabe2b0b5741cba344e76f07768355f52ecc4eb92ab4a7c67d7e608",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "double-buffer-copy-function.json",
+      "evidence_id": "ev_440191a53535ba55af7157734fa32e827d5e3ea6c215bc7d160a26a1abe2cd67",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "conversion-constant-tables.json",
+      "evidence_id": "ev_09a304b26aa532665dd8e142be4a83de850d646aa7ce8238f872572631180f40",
+      "operation": "read_bytes"
+    },
+    {
+      "file": "algorithm-vtables.json",
+      "evidence_id": "ev_67b1cf21639caa0a645eeab97a1aee8058a304392abf536219d78ba63c42642f",
+      "operation": "read_bytes"
+    }
+  ]
+}

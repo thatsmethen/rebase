@@ -32,7 +32,7 @@ struct CPRImportReviewView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 8) {
-                Text(preview.isImportReport ? "Reference Import Report" : "Import Reference Project").font(.title2.weight(.semibold))
+                Text(preview.isImportReport ? "CPR Import Report" : "Import CPR Project").font(.title2.weight(.semibold))
                 Text(preview.sourceName).font(.headline).textSelection(.enabled)
                 Text(preview.recoveryDescription).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -63,7 +63,7 @@ struct CPRImportReviewView: View {
                             .font(.headline)
                         Text(preview.isImportReport
                              ? "This report records the import baseline. Your Rebase edits may differ from it. The original CPR file is retained in this project; edits in Rebase do not update it."
-                             : "The new Rebase project keeps an exact copy of this CPR file and its compatibility report. Edits in Rebase do not update the original Reference project.")
+                             : "The new Rebase project keeps an exact copy of this CPR file and its compatibility report. Edits in Rebase do not update the original source project.")
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                         DisclosureGroup("Source details") {

@@ -8,8 +8,7 @@ import Testing
 /// controls share the pinned public backend, not the candidate wrapper.
 @Suite(.serialized)
 struct CPRNativeAudioAccessorTests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let workspace = PrivateResearchFixtures.root
 
     private struct Seek: Decodable {
         let source_rate, output_rate: Double
@@ -39,7 +38,7 @@ struct CPRNativeAudioAccessorTests {
     }
     private func oracle() throws -> Oracle {
         let data = try Data(contentsOf: workspace.appendingPathComponent(
-            "research/evidence/application/APP016/accessor-state-oracle.json"))
+            "evidence/application/APP016/accessor-state-oracle.json"))
         try #require(cprSHA256(data) == "5742689c7f78313468e9c682aa49735b245ff86493aefafa79508e8e9caa347a")
         return try JSONDecoder().decode(Oracle.self, from: data)
     }
@@ -57,7 +56,8 @@ struct CPRNativeAudioAccessorTests {
             sourceFormat: format, converter: converter, mode2BudgetAvailable: available)
     }
 
-    @Test func ExactFloat32SeekMappingMatchesFractionVectorsAndRejectsBeforeWrites() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func ExactFloat32SeekMappingMatchesFractionVectorsAndRejectsBeforeWrites() throws {
         for row in try oracle().seek_vectors {
             var output = RBAccessorSeek()
             try #require(rb_cpr_accessor_seek(Float(row.source_rate).bitPattern,
@@ -94,7 +94,8 @@ struct CPRNativeAudioAccessorTests {
         }
     }
 
-    @Test func EveryReadCountPositionAndSampleMatchesIndependentRetainedSequences() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func EveryReadCountPositionAndSampleMatchesIndependentRetainedSequences() throws {
         for row in try oracle().scenarios {
             let input = row.input_f32_bits.map { Float(bitPattern: UInt32($0, radix: 16)!) }
             let accessor = try CPRNativeAudioAccessor(source: input,

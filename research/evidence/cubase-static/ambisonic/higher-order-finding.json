@@ -1,0 +1,658 @@
+{
+  "finding_id": "AMBI-DSP-003",
+  "title": "Static9/16channel AmbiConverter scatter maps and destination gains",
+  "created_utc": "2026-10-19T06:17:37.837028+00:00",
+  "status": "Independently reviewed static-derived9/16channel contract; target runtime unvalidated",
+  "target": {
+    "component": "vstambiconverter.vst3",
+    "version": "1.5.10.152",
+    "architecture": "arm64",
+    "original_universal_sha256": "e803dd1390ee7989306b15c0fccca52e5d3097ae7a489dc6834f82b50ba485c5",
+    "derived_arm64_sha256": "e8341c6b31ac6b65cf7e8c18bdfbaa18ac24b20160b4287dc385b202eb29b883"
+  },
+  "method": {
+    "retained_analysis": "REA6.7.0/Ghidra12.1.4 DSP snapshot and37-record bundle",
+    "snapshot": "dsp-analysis-snapshot.json",
+    "bundle": "dsp-evidence-bundle.json",
+    "new_heavyweight_import": false,
+    "target_execution": false,
+    "candidate_expansion": false,
+    "new_checks": "Source-byte decoding plus bounded llvm-objdump instruction validation; no Ghidra session started."
+  },
+  "contract": {
+    "domain": "Configured N=9 or N=16 planar channels with valid active objects, channel arrays and sample storage; normal non-bypassed processing with input silenceFlags=0 and ordinary finite values whose products remain finite and normal. No actual host activation or sample output observed.",
+    "rule": "For each0<=j<N and sample n, output[j][n] = multiply_in_sample_precision(input[inverse(map)[j]][n], convert_stored_binary64_gain_to_sample_precision(gain[j])). Scatter copy completes before scaling each destination.",
+    "map_meaning": "map[i] is destination buffer index for source buffer indexi. Gain indexing is destinationj, not sourcei.",
+    "directions": "A is the pair selected for finite normalized parameter2 value p<0.5; B for p>=0.5. Prior parameter finding establishes first/second UI labels FuMa > AmbiX / AmbiX > FuMa, but actual controller normalization and host routing remain unvalidated.",
+    "sample_precisions": {
+      "binary64": "Stored binary64 gain bits are passed directly to imported vDSP_vsmulD.",
+      "binary32": "Stored binary64 gain is converted by FCVT S,D before imported vDSP_vsmul. Listed binary32 coefficients are nearest-even reference conversions; target FPCR/rounding mode is unobserved."
+    },
+    "operators": [
+      {
+        "channel_count": 9,
+        "direction": "A",
+        "normalized_parameter_condition": "0 <= p < 0.5",
+        "source_to_destination": [
+          0,
+          3,
+          1,
+          2,
+          6,
+          7,
+          5,
+          8,
+          4
+        ],
+        "destination_to_source": [
+          0,
+          2,
+          3,
+          1,
+          8,
+          6,
+          4,
+          5,
+          7
+        ],
+        "destination_gain_binary64": [
+          1.4142135623730951,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.8660254037844386,
+          0.8660254037844386,
+          0.8660254037844386,
+          0.8660254037844386
+        ],
+        "destination_gain_binary64_bits": [
+          "0x3ff6a09e667f3bcd",
+          "0x3ff0000000000000",
+          "0x3ff0000000000000",
+          "0x3ff0000000000000",
+          "0x3ff0000000000000",
+          "0x3febb67ae8584caa",
+          "0x3febb67ae8584caa",
+          "0x3febb67ae8584caa",
+          "0x3febb67ae8584caa"
+        ],
+        "destination_gain_binary32_nearest_even": [
+          1.4142135381698608,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.8660253882408142,
+          0.8660253882408142,
+          0.8660253882408142,
+          0.8660253882408142
+        ],
+        "destination_gain_binary32_nearest_even_bits": [
+          "0x3fb504f3",
+          "0x3f800000",
+          "0x3f800000",
+          "0x3f800000",
+          "0x3f800000",
+          "0x3f5db3d7",
+          "0x3f5db3d7",
+          "0x3f5db3d7",
+          "0x3f5db3d7"
+        ]
+      },
+      {
+        "channel_count": 9,
+        "direction": "B",
+        "normalized_parameter_condition": "0.5 <= p <= 1",
+        "source_to_destination": [
+          0,
+          2,
+          3,
+          1,
+          8,
+          6,
+          4,
+          5,
+          7
+        ],
+        "destination_to_source": [
+          0,
+          3,
+          1,
+          2,
+          6,
+          7,
+          5,
+          8,
+          4
+        ],
+        "destination_gain_binary64": [
+          0.7071067811865475,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.1547005383792517,
+          1.1547005383792517,
+          1.1547005383792517,
+          1.1547005383792517
+        ],
+        "destination_gain_binary64_bits": [
+          "0x3fe6a09e667f3bcc",
+          "0x3ff0000000000000",
+          "0x3ff0000000000000",
+          "0x3ff0000000000000",
+          "0x3ff0000000000000",
+          "0x3ff279a74590331d",
+          "0x3ff279a74590331d",
+          "0x3ff279a74590331d",
+          "0x3ff279a74590331d"
+        ],
+        "destination_gain_binary32_nearest_even": [
+          0.7071067690849304,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.154700517654419,
+          1.154700517654419,
+          1.154700517654419,
+          1.154700517654419
+        ],
+        "destination_gain_binary32_nearest_even_bits": [
+          "0x3f3504f3",
+          "0x3f800000",
+          "0x3f800000",
+          "0x3f800000",
+          "0x3f800000",
+          "0x3f93cd3a",
+          "0x3f93cd3a",
+          "0x3f93cd3a",
+          "0x3f93cd3a"
+        ]
+      },
+      {
+        "channel_count": 16,
+        "direction": "A",
+        "normalized_parameter_condition": "0 <= p < 0.5",
+        "source_to_destination": [
+          0,
+          3,
+          1,
+          2,
+          6,
+          7,
+          5,
+          8,
+          4,
+          12,
+          13,
+          11,
+          14,
+          10,
+          15,
+          9
+        ],
+        "destination_to_source": [
+          0,
+          2,
+          3,
+          1,
+          8,
+          6,
+          4,
+          5,
+          7,
+          15,
+          13,
+          11,
+          9,
+          10,
+          12,
+          14
+        ],
+        "destination_gain_binary64": [
+          1.4142135623730951,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.8660254037844386,
+          0.8660254037844386,
+          0.8660254037844386,
+          0.8660254037844386,
+          1.0,
+          4.7702783519995515,
+          4.7702783519995515,
+          0.7453559924999299,
+          0.7453559924999299,
+          1.7677669529663687,
+          1.7677669529663687
+        ],
+        "destination_gain_binary64_bits": [
+          "0x3ff6a09e667f3bcd",
+          "0x3ff0000000000000",
+          "0x3ff0000000000000",
+          "0x3ff0000000000000",
+          "0x3ff0000000000000",
+          "0x3febb67ae8584caa",
+          "0x3febb67ae8584caa",
+          "0x3febb67ae8584caa",
+          "0x3febb67ae8584caa",
+          "0x3ff0000000000000",
+          "0x401314c3d92a9e91",
+          "0x401314c3d92a9e91",
+          "0x3fe7d9f4cf754635",
+          "0x3fe7d9f4cf754635",
+          "0x3ffc48c6001f0abf",
+          "0x3ffc48c6001f0abf"
+        ],
+        "destination_gain_binary32_nearest_even": [
+          1.4142135381698608,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.8660253882408142,
+          0.8660253882408142,
+          0.8660253882408142,
+          0.8660253882408142,
+          1.0,
+          4.770278453826904,
+          4.770278453826904,
+          0.7453559637069702,
+          0.7453559637069702,
+          1.7677669525146484,
+          1.7677669525146484
+        ],
+        "destination_gain_binary32_nearest_even_bits": [
+          "0x3fb504f3",
+          "0x3f800000",
+          "0x3f800000",
+          "0x3f800000",
+          "0x3f800000",
+          "0x3f5db3d7",
+          "0x3f5db3d7",
+          "0x3f5db3d7",
+          "0x3f5db3d7",
+          "0x3f800000",
+          "0x4098a61f",
+          "0x4098a61f",
+          "0x3f3ecfa6",
+          "0x3f3ecfa6",
+          "0x3fe24630",
+          "0x3fe24630"
+        ]
+      },
+      {
+        "channel_count": 16,
+        "direction": "B",
+        "normalized_parameter_condition": "0.5 <= p <= 1",
+        "source_to_destination": [
+          0,
+          2,
+          3,
+          1,
+          8,
+          6,
+          4,
+          5,
+          7,
+          15,
+          13,
+          11,
+          9,
+          10,
+          12,
+          14
+        ],
+        "destination_to_source": [
+          0,
+          3,
+          1,
+          2,
+          6,
+          7,
+          5,
+          8,
+          4,
+          12,
+          13,
+          11,
+          14,
+          10,
+          15,
+          9
+        ],
+        "destination_gain_binary64": [
+          0.7071067811865475,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.1547005383792517,
+          1.1547005383792517,
+          1.1547005383792517,
+          1.1547005383792517,
+          1.0,
+          0.2096313728906053,
+          0.2096313728906053,
+          1.3416407864998738,
+          1.3416407864998738,
+          0.565685424949238,
+          0.565685424949238
+        ],
+        "destination_gain_binary64_bits": [
+          "0x3fe6a09e667f3bcc",
+          "0x3ff0000000000000",
+          "0x3ff0000000000000",
+          "0x3ff0000000000000",
+          "0x3ff0000000000000",
+          "0x3ff279a74590331d",
+          "0x3ff279a74590331d",
+          "0x3ff279a74590331d",
+          "0x3ff279a74590331d",
+          "0x3ff0000000000000",
+          "0x3fcad5336963eefc",
+          "0x3fcad5336963eefc",
+          "0x3ff5775c544ff263",
+          "0x3ff5775c544ff263",
+          "0x3fe21a1851ff630a",
+          "0x3fe21a1851ff630a"
+        ],
+        "destination_gain_binary32_nearest_even": [
+          0.7071067690849304,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.154700517654419,
+          1.154700517654419,
+          1.154700517654419,
+          1.154700517654419,
+          1.0,
+          0.20963136851787567,
+          0.20963136851787567,
+          1.341640830039978,
+          1.341640830039978,
+          0.5656854510307312,
+          0.5656854510307312
+        ],
+        "destination_gain_binary32_nearest_even_bits": [
+          "0x3f3504f3",
+          "0x3f800000",
+          "0x3f800000",
+          "0x3f800000",
+          "0x3f800000",
+          "0x3f93cd3a",
+          "0x3f93cd3a",
+          "0x3f93cd3a",
+          "0x3f93cd3a",
+          "0x3f800000",
+          "0x3e56a99b",
+          "0x3e56a99b",
+          "0x3fabbae3",
+          "0x3fabbae3",
+          "0x3f10d0c3",
+          "0x3f10d0c3"
+        ]
+      }
+    ],
+    "per_destination_equations_file": "higher-order-table-contract.json",
+    "spatial_semantics": "Channel indices are buffer positions. The finding does not assign spherical-harmonic axis/order names or assert standards compliance from channel counts and UI labels alone."
+  },
+  "selection_and_initialization": [
+    {
+      "topic": "Bus counts",
+      "evidence": "processor-bus-arrangement-function.json",
+      "addresses": [
+        "0x152848",
+        "0x152850",
+        "0x15286c",
+        "0x152890",
+        "0x1528a8",
+        "0x1528c4"
+      ],
+      "observation": "Requires one requested input and one output bus. Counts set bits in the requested arrangement masks. The higher-count branch requires9/9 or16/16;4/4 takes a separate branch. Existing bus/object validity and normal helper completion are preconditions."
+    },
+    {
+      "topic": "Count storage",
+      "evidence": "processor-bus-arrangement-function.json",
+      "addresses": [
+        "0x152918",
+        "0x152b48",
+        "0x152c24",
+        "0x152c28",
+        "0x152c40",
+        "0x152c44"
+      ],
+      "observation": "Successful higher-count branch stores input popcountN at processor+0x154. The common tail copiesN to double algorithm+0x18 or float algorithm+0x14 and invokes configuration withN as third argumentw2. Failure/fallback branches are not covered by this valid-N contract."
+    },
+    {
+      "topic": "Arrangement masks",
+      "evidence": "processor-bus-arrangement-function.json",
+      "addresses": [
+        "0x152904",
+        "0x15290c",
+        "0x152af0",
+        "0x152b18"
+      ],
+      "observation": "This branch does not require identical input/output mask bits. It compares existing input arrangement with requested input arrangement. On rebuilding it passes the requested input mask to both input and output bus creation; if input arrangement already matches, reconstruction is skipped. Requested output mask contributes its popcount but is not used for the two rebuild calls. No guarantee of actual host spatial ordering is inferred."
+    },
+    {
+      "topic": "Fresh activation",
+      "evidence": "processor-activation-function.json",
+      "addresses": [
+        "0x153bd4",
+        "0x153bf8",
+        "0x153c4c",
+        "0x153c54",
+        "0x153cfc",
+        "0x153d58",
+        "0x153d60"
+      ],
+      "observation": "Setup precision field1 selects double object; otherwise float object. Fresh allocation installs the corresponding vtable and fixed pairA (map18d15c/gain18d1e0), then the currentN is stored and supplied to configuration. This is a local initialization observation, not a universal persisted or UI default."
+    },
+    {
+      "topic": "Direction consumption",
+      "evidence": "direction-parameter-consumer.json",
+      "addresses": [
+        "0x152148",
+        "0x152160",
+        "0x152204",
+        "0x152208",
+        "0x152218",
+        "0x15222c",
+        "0x15223c",
+        "0x15224c"
+      ],
+      "observation": "For ID2, requests queue point count-1; when getPoint returns0, finite p selects fixed pairA orB. Float fields+0x18/+0x20 and double fields+0x20/+0x28 receive table addresses without count-dependent offset or conjugation. Returned sampleOffset is not read; absent queues or getPoint failure leave current tables unchanged. A positive point-count guard is absent, so valid host queues are assumed."
+    },
+    {
+      "topic": "Normal dispatch",
+      "evidence": "processor-process-function.json",
+      "addresses": [
+        "0x153dd8",
+        "0x153f60",
+        "0x153f78",
+        "0x154128",
+        "0x154130"
+      ],
+      "observation": "Direction consumption precedes audio processing. With nonzero frames, valid input and silenceFlags0, non-bypass mode calls vtable slot0x58 for the selected precision (float154d4c/double154a8c); there is no N-specific process dispatch. Both remap and gain loops use the storedN."
+    },
+    {
+      "topic": "Configuration coverage",
+      "evidence": [
+        "float-algorithm-configuration.json",
+        "processor-activation-function.json",
+        "processor-bus-arrangement-function.json",
+        "higher-order-double-configuration-assembly.txt",
+        "higher-order-configuration-cleanup-assembly.txt"
+      ],
+      "observation": "Retained float configuration0x154864 and newly bounded native disassembly of double configuration0x154694 allocateN scratch channel pointers for configured frame capacity plus meter arrays whenN!=0. Direct writes and cleanup writes affect scratch/meter fields, not map/gain pointers. Allocation success and sufficient capacity remain preconditions; no live count-transition or allocation-failure proof is claimed."
+    }
+  ],
+  "conditions_and_exclusions": [
+    "Actual buffer count and lengths agree with initializedN and configured frame capacity. Process itself does not fully validate this contract; malformed host inputs are excluded.",
+    "The analyzed direction update or fresh-activation path establishes current table pointers; other uninspected state/lifecycle writers are not ruled out.",
+    "Disjoint channel regions, or conventional corresponding-channel in-place layout with distinct channels and valid scratch. Equality guard checks matching input[i]/output[i] only; arbitrary cross-channel/partial overlap is excluded.",
+    "Bypassfalse and input silenceFlags exactly0. Any nonzero input flags skip normal conversion and are propagated unchanged; output sample validity on that skipped path is not established.",
+    "Actual vDSP implementation, FPCR, non-finite/subnormal/overflow behavior, exceptions, allocation failures and cross-architecture behavior are unvalidated.",
+    "No physical/spherical channel identity, normalization standard, host routing correctness or end-to-end inverse-conversion fidelity is asserted.",
+    "CountN is stable with correctly sized scratch, or fresh initialization completed successfully. Live channel-count transitions and cleanup/allocation lifecycle safety are not established."
+  ],
+  "interpretation_challenge": {
+    "status": "Independent instruction, argument, pointer, count and source-byte review supports the conditional static operator and nonidentity example; no measured product defect claim",
+    "question": "Are higher-order direction pairs inverse operators, or is the apparent mismatch a wrong scatter/gain/caller interpretation?",
+    "checked_alternatives": "higher-order-callflow-checks.json records7specific alternatives and exact instruction anchors, including caller buffer order, helper copy direction, post-copy destination gains, fixed direction-table pointers, count-dependent dispatch/offsets scratch behavior and configuration/cleanup pointer writes.",
+    "coefficient_only_result": "Both map prefixes are inverse permutations. For the currently supported instruction interpretation, coefficients attach to destinations, so exact-rational composition uses gain_A[map_A[i]]*gain_B[i] for A thenB. This is not generally1 for N9/16. This composition assumes direct buffer-index chaining with no host channel reorder or other intermediate transform.",
+    "discriminating_example": {
+      "N": 9,
+      "source_index": 4,
+      "A_destination": 6,
+      "A_gain_at_destination": 0.8660254037844386,
+      "B_destination": 4,
+      "B_gain_at_destination": 1.0,
+      "coefficient_product_for_display": 0.8660254037844386,
+      "status": "Static arithmetic implication under reviewed interpretation, not measured round-trip output."
+    },
+    "full_coefficient_compositions": "higher-order-table-contract.json includes both orders for9/16, exact rational products of stored binary64 coefficients, and explicit omission of runtime sample rounding."
+  },
+  "prospective_disconfirmation": [
+    "Before any higher-order candidate, independently inspect caller x1/x2 binding, both precision wrappers/helper argument directions and direction-table pointer writes; resolve any contradiction.",
+    "After separately authorized target activation, use one basis impulse per channel for N9/16 and both directions/precisions, with silenceFlags0 and bypassfalse. Compare destination and literal coefficient to source-derived expectations.",
+    "Use N9 source4 and source8 as discriminating round-trip probes, since first-order/W-only probes cannot distinguish source-versus-destination gain indexing.",
+    "Trace real host arrangements/state updates and compare exact output channel order separately from numeric sample values; test rounding/environment and conventional in-place behavior separately."
+  ],
+  "artifacts": {
+    "byte_provenance": "higher-order-byte-provenance.json",
+    "table_contract": "higher-order-table-contract.json",
+    "callflow_checks": "higher-order-callflow-checks.json",
+    "derivation_script": "higher-order-derivation.py",
+    "instruction_validation": "higher-order-instruction-validation.txt",
+    "configuration_provenance": [
+      "higher-order-double-configuration-provenance.json",
+      "higher-order-configuration-cleanup-provenance.json"
+    ],
+    "validation": "higher-order-validation.json"
+  },
+  "preservation": [
+    {
+      "path": "research/evidence/cubase-static/ambisonic/first-order-finding.json",
+      "sha256": "26464fd1f96d299710c49a7b0735882d3095725449c0368ba894794a9ac791f9",
+      "matches_prior_session_record": true
+    },
+    {
+      "path": "research/evidence/cubase-static/ambisonic/first-order-byte-ranges.json",
+      "sha256": "a58036a05a6d65107e12d61a3ec08b10cf01a31eeab780b70dc7b3db6050a685",
+      "matches_prior_session_record": true
+    },
+    {
+      "path": "candidate/ambiconverter_first_order/README.md",
+      "sha256": "e432b2a1f245295e61e139a24c23374ac9eb1d9bbc53d193cb05256d205d1796",
+      "matches_prior_candidate_validation": true
+    },
+    {
+      "path": "candidate/ambiconverter_first_order/ambi_first_order.c",
+      "sha256": "b2af5f8622fa3c336f0c6c6abbb59ddf79151107bfe8e31a23c09dd2a9a1d240",
+      "matches_prior_candidate_validation": true
+    },
+    {
+      "path": "candidate/ambiconverter_first_order/ambi_first_order.h",
+      "sha256": "b1103f9cc0450db33aa1331297306e2619998d069cada1e4a919573df8dd0135",
+      "matches_prior_candidate_validation": true
+    },
+    {
+      "path": "candidate/ambiconverter_first_order/test_candidate.py",
+      "sha256": "39953b0546640f93193c0f08ba74a6d260a8b5bfe231a2cf65de422485d2e048",
+      "matches_prior_candidate_validation": true
+    }
+  ],
+  "evidence": [
+    {
+      "file": "direction-parameter-consumer.json",
+      "file_sha256": "462b034dfe906c7426e7cc4f71f0e9bb9de2b70a831851ba7dd465a074d8b82b",
+      "evidence_id": "ev_4f992b72aec563124a5a8828c9cd9e5f2f704d1b44726ce440a62470f802581a",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "processor-bus-arrangement-function.json",
+      "file_sha256": "69a39139f48467730f772ad5dd244c68cd63e506a3f872372175eb0d0a36a198",
+      "evidence_id": "ev_73aeb3d9d98e4c9487109124edfcbe9e3c56df077156d651ebc77b36c4421da3",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "processor-activation-function.json",
+      "file_sha256": "bb538ce7880177aef67bc7392b1d4ed6405006ae08e40f5f4f98fd6dc9edbf60",
+      "evidence_id": "ev_71427cb4c15b53d125dbb8f414f8827d185a7297fbf0057f99e8618a075b5860",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "processor-process-function.json",
+      "file_sha256": "87b619703b894bfb64d178b770f3d5c72175ade5dd2a46c467036476d6b63fa1",
+      "evidence_id": "ev_b2f398cfea2637930a17064bd1032da4610f721ee69cf9bb6c19f2986c2d29ae",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "float-conversion-process-function.json",
+      "file_sha256": "54e4acee827b1f59e7a80858d40438834d034673b47667de45e039fd42b2e2ae",
+      "evidence_id": "ev_cbbaed7434362e2b7f9465cdd773e5f1931f9d2c60ed615262d8668b8ab47c5b",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "float-channel-permutation-function.json",
+      "file_sha256": "8715aaf3268fa46159c210b93fad84f91ba2f9c72e0fc4d496436a2e007aba3e",
+      "evidence_id": "ev_8c579cccb9a2999385243abde3a396b6762626d8537f036a621e1114ecf7caae",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "float-buffer-copy-function.json",
+      "file_sha256": "94fda0f6ff6b77e4d95deee1c4dfd7f034a485bea9649361a44553d115b9317a",
+      "evidence_id": "ev_da781b019e3e65787f4007c055181ae257d7fadad31f0fa739442f5efebce5a8",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "double-conversion-process-function.json",
+      "file_sha256": "cdd578dc4320199fd0a9d7bbd049477f42f026d0eccee71d0e5d035fd09dce44",
+      "evidence_id": "ev_8e7f749a08b569b58f88bdce179c6bae9ec267805ccf38c75456169dc0791c70",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "double-channel-permutation-function.json",
+      "file_sha256": "6aebce2e199e6f7ae24648192cce288ce3c4d5746c92435befec49d0b072e185",
+      "evidence_id": "ev_eeb71a978aabe2b0b5741cba344e76f07768355f52ecc4eb92ab4a7c67d7e608",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "double-buffer-copy-function.json",
+      "file_sha256": "021afffe053938e346e644c11b9de173d26d6a17c057d432dbcc4943c6baac4f",
+      "evidence_id": "ev_440191a53535ba55af7157734fa32e827d5e3ea6c215bc7d160a26a1abe2cd67",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "float-algorithm-configuration.json",
+      "file_sha256": "71e6d974c3b0d12d03bcb9816fcd027791bed9823b7534c01ad556ca0f9ef06f",
+      "evidence_id": "ev_44e0691da3cebbbefadf943655ed5bd6ac3954e3f11cc564601d74646f97b883",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "algorithm-vtables.json",
+      "file_sha256": "363c1e86a518df7fbead5577d2a8365318095762e83fadf049a24f75997b4ff7",
+      "evidence_id": "ev_67b1cf21639caa0a645eeab97a1aee8058a304392abf536219d78ba63c42642f",
+      "operation": "read_bytes"
+    },
+    {
+      "file": "conversion-constant-tables.json",
+      "file_sha256": "bc39325209b98bf77b657e681318b54f3b5c09039a8ed03c41767888581667b1",
+      "evidence_id": "ev_09a304b26aa532665dd8e142be4a83de850d646aa7ce8238f872572631180f40",
+      "operation": "read_bytes"
+    }
+  ],
+  "independent_review": {
+    "file": "../ambisonic-higher-order-review/review.json",
+    "review_id": "AMBI-DSP-003-INDEPENDENT-REVIEW",
+    "actionable_contract_error_found": false,
+    "static_contract_supported": true,
+    "observed_product_defect": false
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "APP001-CORE-REVIEW-FINITE-002",
+  "recorded_utc": "2026-10-19T07:49:50.227860+00:00",
+  "result": "All 19 tests in four suites passed. The previously uncovered nonfinite-source and finite-overflow cases are now rejected in the tested paths.",
+  "prior_review_preserved": {
+    "path": "research/evidence/application/APP001/core-review.json",
+    "size": 3904,
+    "sha256": "38eb9f0e635c75b3dd990f5249845b88688a1fa098bd829f6af747d9e5a9bea6"
+  },
+  "evidence": [
+    {
+      "path": "research/evidence/application/APP001/core-tests-finite.json",
+      "size": 7183,
+      "sha256": "7bc1f25707a6f61f186d937b69c57d83f5f5672e21d844c96191a414c218fb64"
+    },
+    {
+      "path": "research/evidence/application/APP001/core-tests-finite-output.log",
+      "size": 5142,
+      "sha256": "5e5dccc42e4a32594eb0722bfb74c06b3536b817a88da12b0845f12e945902ee"
+    }
+  ],
+  "static_review": [
+    "ProjectStore scans copied imports and deletes the new copy on failure; load scans each resolved unique media URL.",
+    "Preparation checks decoded buffer values and gained Float values for finiteness before returning prepared buffers.",
+    "OfflineRenderer.mix checks each Float accumulation result and throws nonFiniteAudio on overflow; it does not clamp ordinary finite samples above unity.",
+    "Preparation preflights overlapping intervals with the same deterministic offline mixer before transport or export consumes the prepared project.",
+    "Export writes a temporary file before final replacement; new typed-error tests demonstrate previous destination preservation and temporary-file cleanup."
+  ],
+  "important_limit": "The preparation check establishes finiteness for the application's offline accumulation order. AVAudioEngine hardware mixer grouping/order/precision is not established. A cancellation-heavy extreme-amplitude mixture can depend on accumulation order, so this is not an unconditional proof of all native playback arithmetic.",
+  "dsp_copies_unchanged": true,
+  "prior_artifacts_modified": false,
+  "target_execution": false,
+  "hardware_playback_exercised_by_this_review": false
+}

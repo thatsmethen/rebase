@@ -1,0 +1,495 @@
+{
+  "schema_version": 1,
+  "finding_id": "TRACK-CONTRIBUTORS-001",
+  "status": "bounded static contract; disjoint direct-track source projection only",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "target_executed": false,
+  "native_runtime_comparisons": 0,
+  "provider": "Pinned rea-agents6.7.0 / Ghidra12.1.4, isolated arm64 raw imports, original-image instructions authoritative",
+  "scope": "Complete direct MListNode-v0 track-source contributor projection under explicit fresh reconstruction context, not hosted track mix",
+  "admission": [
+    "Inventory every serialized counted child of the selected direct MAudioTrackEvent node. All children must be supported plain MAudioEvent v6; unknown classes, nested containers, duplicate object identities, malformed or skipped entries reject the whole operation.",
+    "Preserve counted source order. Require finite nonnegative positive canonical ranges in that order with end[i] <= start[i+1], and positive nonoverlapping builder/reader frame intervals after exact native arithmetic. Do not sort an unsorted source and call it native restore behavior.",
+    "Use the already qualified direct ancestor/context and source-media gates, with the ordinary [0,2592000] builder window containing every complete range and zero extra track shift.",
+    "Explicit fresh context uses builder flags 0x80, nil external predicate and root+0x138 bit0 clear. This root mode is a reconstruction policy initialized by native constructors, not recovered serialized hosted state. No external callback mutation is claimed.",
+    "Every event has serialized flags0 and fresh base flags0. Both observed reader branches preserve zero; default predicate masks4 or6 then accepts. Empty event numeric attributes and no later mutation keep neighbor keys0x76504643 and0x744e4643 absent.",
+    "Both explicit event fade pointers are nil; effective source-bound automatic-fade flags are0. All prior plain-source selector, gain, waveform, timebase, source-capacity and backend gates remain required.",
+    "Routing, inserts, sends, automation, channel gains and all other track/project contributors are outside this explicitly named track-source audition. Reject unsupported counted event contributors rather than silently omitting them."
+  ],
+  "claims": [
+    {
+      "id": "TRACK-CONTRIB-1",
+      "claim": "Concrete MListNode v0 restoration and iteration preserve the successful counted child append order; they do not sort by start time in these operations.",
+      "details": [
+        "Reader101716008 loops the serialized signed32 count, requests each child as MEvent, calls child+288(parent), then tail-appends with103101758. Its missing-object recovery can skip entries, so source reconstruction rejects missing/null/unknown/malformed/duplicate entries instead of treating a partial native read as complete.",
+        "Fresh MListNode101714ccc zeroes head/tail at+b0/+b8; container ctor1030f88d4 initializes count0. Append103101758 updates old tail+10, newchild+10=nil/+18=oldtail, head when empty, and count. Its only post-link helper1030f9c44 conditionally retains the item, not a sort. Concrete MAudioEvent+288=1017014ec only stores parent+38.",
+        "MListNode+f0=1017154a0 constructs iterator1046703b8 with current=list+b0. Mode0 enters root locking helper1016ea4c4\u219210171c7fc, which accesses root+178 mutex+e0; no sorting is done in that helper. Filter installation1016c1700 resets current through101715c20 and skips failing entries. Next101715bbc returns current, advances through item+10, and skips failing successors. Done101715bac tests currentnil.",
+        "No arbitrary post-restore callback/host mutation or registry object lifetime invariance is inferred. MTrackList has a distinct iterator override and is excluded from this first admitted content-node type."
+      ],
+      "support": [
+        {
+          "entry": "0x101714ccc",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass5",
+          "evidence_ids": [
+            "ev_7ab52353283bfd25c091c577cc8646163054ac234b264fac857b1b0bfe43b7be",
+            "ev_5c9674f92beed0f72d2b3504da5418cc3ced38336a2332010afea97ad3b7c0fa"
+          ]
+        },
+        {
+          "entry": "0x101715fb0",
+          "directory": "research/evidence/cubase-static/cpr-objects-001/native/pass3",
+          "evidence_ids": [
+            "ev_38eb996e5eaecf32ffbbc3be5f517e35b937f4e7d4e31ad206a4d6bab53a454e",
+            "ev_ba9fbe19b6800bf7b509f640d73bdea59aaa7e8194aa353e2fd400da7692de36"
+          ]
+        },
+        {
+          "entry": "0x101716008",
+          "directory": "research/evidence/cubase-static/cpr-objects-001/native/pass3",
+          "evidence_ids": [
+            "ev_a78f783f250ef680fb25f96994d533217f12a354a5a95e04a28a7df483ffdd5b",
+            "ev_aef511caa3d378e330c10724cccb460001331ab09bd2ea0063831c00f5c8f7c8"
+          ]
+        },
+        {
+          "entry": "0x103101758",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass3",
+          "evidence_ids": [
+            "ev_b070a5874befe6019bf99722e79a4e633cb87ad0f571d111a772586fbbffeaf4",
+            "ev_663fbe986e054ef81b8e5a6094ac9bc1f3f276719e26ba4e0422ce70bd3c8e4e"
+          ]
+        },
+        {
+          "entry": "0x1030f9c44",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass4",
+          "evidence_ids": [
+            "ev_0bf5bf29fc3d4939545272f249fe9d739c143e5fceaa53cd2e4299a3f4018880",
+            "ev_e8af46f258cadaa4b505c40b7bfa0694a18f7f3cd136b91feeaf843324c33931"
+          ]
+        },
+        {
+          "entry": "0x1017014ec",
+          "directory": "research/evidence/cubase-static/cpr-map-clock-001/list",
+          "evidence_ids": [
+            "ev_98ee7b824bfaec91aeefec12c5a089a76a865e274e94c9929b63a05bc6f1d413",
+            "ev_95cfab3998b17d57d148fc92e30efcfce76cbc8edd8b1a4cd5fe8a18f1efcce2"
+          ]
+        },
+        {
+          "entry": "0x1017154a0",
+          "directory": "research/evidence/cubase-static/cpr-signature-001/pass9",
+          "evidence_ids": [
+            "ev_b937536ec02ca2426387c98b45337a8289a82245bbe02ae603f8e98fcad8d109",
+            "ev_964f862664766b5517b82f665e1cec0f337d231a6b9e87ecfa79cce062b50e1a"
+          ]
+        },
+        {
+          "entry": "0x1016ea4c4",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass2",
+          "evidence_ids": [
+            "ev_552c65b9a12edc94d639ac9ccd907258c7b5a1180290c249879490f78e4298e5",
+            "ev_0b5a9a52fe8781f022b13dfeeb16eb31616d02ea05944a82b1f7a85af87a374f"
+          ]
+        },
+        {
+          "entry": "0x10171c7fc",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass3",
+          "evidence_ids": [
+            "ev_6687fc2b9014f0a822467d799ba63053a204311af9ebdd3c2b43d4b9ef767fc9",
+            "ev_83522a0f5474a08621492cf1b10673f1592f1182262dc3ccb3fb2b4c4806996b"
+          ]
+        },
+        {
+          "entry": "0x1016c1700",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass2",
+          "evidence_ids": [
+            "ev_dcaf3f8a516ff92687bd0ee5551c6862c223273ced57f9af55e4b21ab583ed0b",
+            "ev_500fd9f6f80cf9713f3bbeecbcc5fc3cb69848c72ac96baa86b87f5b3cdebf6a"
+          ]
+        },
+        {
+          "entry": "0x101715c20",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass3",
+          "evidence_ids": [
+            "ev_74d651d86940a66c0e9c05f3ac9a87428f7c606dc6fe98fc4cd2c6b8c9e7b385",
+            "ev_72965ff057935e16ecb288585ed725e5c4cbab46f135643c62bb7b18f9730425"
+          ]
+        },
+        {
+          "entry": "0x101715bbc",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass2",
+          "evidence_ids": [
+            "ev_21c7d8aea8ca346faa06f6b54fc3e0ab3308dda6cf89aaf7fcb8f5b04044f4eb",
+            "ev_9dbaa3bc29c9c38230ecc289ddac5338c37a06e6c04cafccd9146519a12c0a6b"
+          ]
+        },
+        {
+          "entry": "0x101715bac",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass2",
+          "evidence_ids": [
+            "ev_5985cefef2847e2e42ed2c04195d7e36105e8689f9221018f77a37d55c316a48",
+            "ev_9fd870d52463d14ed4b316b09df3108f6a2228e36633bd73d47a30cded1290ed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRACK-CONTRIB-2",
+      "claim": "Builder flags0x80 with nil external filter and explicit fresh root mode0 admits every plain MAudioEvent whose runtime flags are0 through the observed default filter.",
+      "details": [
+        "10020ee24 assembles an AND predicate. Flags0x80 avoids the flags&6 and flagsbit0 additional predicates, retains default104447470, and only inserts optional10444dc60 when context root exists and root+138 bit0 is set.",
+        "Default1001e4fa0 tails to event+178. MAudioEvent1000e9cf8 selects mask4 when global104fe9700 byte0 is zero, otherwise mask6; runtime flags0 passes both. Base constructor101700aac zeros flags+30 and attrs+20; MAudioEvent1000e9148 does not directly overwrite flags. Normal serialized update ORs(word&0x585a) into oldflags; alternate ORs sign-extended word. A zero serializedword preserves initialzero in these direct updates. This is not a proof that every nested callback preserves all object state.",
+        "Fresh archive-style MRoot10171bcdc explicitly zeroes+138 at10171bd5c. MRoot reader101722120 directly clears bit1 at1017225a8, notbit0. Both constructor and reader contain external/attachment callbacks, so mode0 is an explicit fresh reconstruction context, not a recovered saved project preference or invariant of hosted restore.",
+        "Optional1002139f0 is genuinely exclusionary for plain nonnull clip/list bit0clear: returnsfalse unless container-kind, nullclip, clip+50bit0, or parentlist+50bit0. Therefore zero source prefix/eventflags do not make the optional branch invariant."
+      ],
+      "support": [
+        {
+          "entry": "0x10020ee24",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/pass17",
+          "evidence_ids": [
+            "ev_36bcca630c7a05bcb98adbd0e5e071aa83354aae09c9b7699f886a87e4aa9d24",
+            "ev_9dcb4f328382d04ea697e1454dcbe50fe4acc49092643cce2d6954b23ae0b4f6"
+          ]
+        },
+        {
+          "entry": "0x1001e4fa0",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass1",
+          "evidence_ids": [
+            "ev_aea64aff7a06c79191a218b89ed1a65780193e3287c8f9f836ac11ab31a0e0e9",
+            "ev_50af8d21b75807c58f300d9f8a0819ee0ab67ec2f3c61e3de7d3ff74ae6062a5"
+          ]
+        },
+        {
+          "entry": "0x1000e9cf8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass1",
+          "evidence_ids": [
+            "ev_df13497113313a6948493c2d32638d09c1cc93d36c9739ebb515c662b07dc860",
+            "ev_6316f0f5d65677f0872e462e5f736052ca319ae7d633122e6bbdac7410120223"
+          ]
+        },
+        {
+          "entry": "0x1001e4884",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass1",
+          "evidence_ids": [
+            "ev_e93dfc1a781e95d2c1719b75ef52068922c4bbdc20b0f1b3de774460ef1eea11",
+            "ev_69ef944b7742283529771232ac1d13280470e0fb809816860dee8a1d6ffcea6e"
+          ]
+        },
+        {
+          "entry": "0x1001e4da0",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass1",
+          "evidence_ids": [
+            "ev_387c1bd9697ac175e209875b1c159211a8a10fc76685d0389d0494ac8fe903c4",
+            "ev_b4bf8dcee4870d132e651ad34839c98d4c17793b0dd6b7ba8e16b72ab67af210"
+          ]
+        },
+        {
+          "entry": "0x1002139f0",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass1",
+          "evidence_ids": [
+            "ev_6b69716ca7158010e3103df9b2c6a92365a7ac4f66238b12f2037b60659e5cd2",
+            "ev_03593b1f806cffae9473f06a76beeacc2abe5195060f3d23d28d59e946017b87"
+          ]
+        },
+        {
+          "entry": "0x101700aac",
+          "directory": "research/evidence/cubase-static/cpr-map-clock-001/attributes/pass3",
+          "evidence_ids": [
+            "ev_cd0bdf475be4412f5650de9822a2f62e93a9ec63bbdd2d3a762ccbeed6968797",
+            "ev_dbcdd01572d63d26a23ad83fe3d4ea5af2b2508403ffd3502c6d7a1898fa113a"
+          ]
+        },
+        {
+          "entry": "0x1000e9148",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/pass15",
+          "evidence_ids": [
+            "ev_923fe6a4a4b36e560f04eeef0b2a603e3e82e64c1c06b9965025f9b82680f53f",
+            "ev_9c78cf23546acda2b3c73bb5ab9ef90491b365134e2e0fef0a76c47bdb9ac5a3"
+          ]
+        },
+        {
+          "entry": "0x1017017a0",
+          "directory": "research/evidence/cubase-static/cpr-objects-001/audio-native",
+          "evidence_ids": [
+            "ev_89eb8010ebb16db3d20005ea2bc95d94668ccff7e0ed7eaa3937880ab8b4bc14",
+            "ev_39be9e71e4564f9d1d67594dba40c5ac5c90e7afdd676eafb2e99d782262bf3e"
+          ]
+        },
+        {
+          "entry": "0x101701934",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/pass2",
+          "evidence_ids": [
+            "ev_080a121a65b16817850696f41f03a02eb64b6ef4d6d96f624a317db8ee303006",
+            "ev_cc23845d9c1e7d5f4f04b104935080041d736a97888a20301acd2d359c507c39"
+          ]
+        },
+        {
+          "entry": "0x1000ee164",
+          "directory": "research/evidence/cubase-static/cpr-objects-001/audio-native",
+          "evidence_ids": [
+            "ev_a0aec2785fb3d041bd20c334518d846094a893e0cb9eeb8f9d88bb92a57f84cb",
+            "ev_ed13a871b1e6eb449ed2895394e2d933ea94e35380690722b338b2451e851571"
+          ]
+        },
+        {
+          "entry": "0x10171bcdc",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass2",
+          "evidence_ids": [
+            "ev_41de87dbc9fda881da7c2f24d524e960b7e36f472538dc10919e615b5aa05432",
+            "ev_9ab43ac4164bec09f80c67cd6ccdf25fff35e9145f350d6ae6f93919fa88e198"
+          ]
+        },
+        {
+          "entry": "0x101722120",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/pass1",
+          "evidence_ids": [
+            "ev_25a4d408beec10e04b0c421790b69d1dbb4f873ef3220905826675800e91ac58",
+            "ev_1e51385a8199f0bbda003cfde1db281b563c49288bae11b6ca34d0db258dc2eb"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRACK-CONTRIB-3",
+      "claim": "For finite positive chronological disjoint or touching admitted ranges, the collector and normalizer publish each full range unchanged in the same order.",
+      "details": [
+        "10020e354 enumerates the filtered list, tests start<windowEnd and end>windowStart, clips to max(start,windowStart)/min(end,windowEnd), requires positive range, assigns increasing ordinal at+28, and appends ranges through1031016e4. Ordinal is admitted traversal ordinal, not unconditionally the serialized child index. Under complete all-passing in-window admission the ordinals are one-to-one with the preserved counted order.",
+        "MAudioEvent+2e0/+2e8 return0, so plain-only input does not enter recursive container replacement after normalization. Range+30 stores event, +38 context, +50 clippedStart, +58 clippedEnd.",
+        "Normalizer10020e7c8 initializes prior-end watermark bitsc14b774000000000 (-3600000) and epsilon3f1a36e2eb1c432d. Its initial overlap branch requires currentEnd>=nextStart AND abs(RN64(currentEnd-nextStart))>=epsilon. Otherwise publication clamps currentStart to watermark, updates watermark=max(watermark,currentEnd), and keeps only positive RN64(end-start).",
+        "Nonnegative chronological disjoint/touching ranges cannot be moved by the prior-end clamp and take publication without priority/split branches. Positive sub-epsilon event duration is not alone a pruning rule; later builder/reader frame quantization may collapse a range and is separately rejected by the application subset.",
+        "The normalizer is not a general initial sort. Input in a different source order must not be sorted by the reconstruction and claimed to match this native restoration path."
+      ],
+      "support": [
+        {
+          "entry": "0x10020e354",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/pass1",
+          "evidence_ids": [
+            "ev_c067a564a2c37ceeb4bb214fa94928931e741ca1d848964221064e78f3e086c9",
+            "ev_1dc686d79821882b097e61f55f3e744bf5c0352610b302c50c9db556b3df7b16"
+          ]
+        },
+        {
+          "entry": "0x10020e7c8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/pass1",
+          "evidence_ids": [
+            "ev_036634d39535cbf26572f7477b4b66fc94f4c0eaf2189b82be1728f8c57f281d",
+            "ev_ac946ebc2cb281f877d05345f2423abbadbf10726b9c484ecec6e4cdbcfc1b50"
+          ]
+        },
+        {
+          "entry": "0x1031016e4",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass4",
+          "evidence_ids": [
+            "ev_a3747e53a1914b4bf6c0b39c999c26040e72ffd1fe69890fd8fa20bcdeb7b6ea",
+            "ev_6f984e55519bbd980f7c1b5504580a6345742444d6661f140347f0bb837dda8d"
+          ]
+        },
+        {
+          "entry": "0x100213534",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass1",
+          "evidence_ids": [
+            "ev_01bc73fb446859dcb5932263afc7a0744b676689c27988acd30d9af77f0104b6",
+            "ev_8159d5a591ef8a93afd08b4f24bc6293ffe2853e151b4b92c4edec523a754075"
+          ]
+        },
+        {
+          "entry": "0x101700d64",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass10",
+          "evidence_ids": [
+            "ev_0590bbee9dd150fb204b72f02d5b85eb2274637e8c4179845af74ec6eebeb00a",
+            "ev_8fb1f4554ccf876d82b68f0cc40812e2c2fea6d746c364ff7658b59aec6b7464"
+          ]
+        },
+        {
+          "entry": "0x101700d6c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass10",
+          "evidence_ids": [
+            "ev_9493aca0528980b3c4efbbb58fed5a47eb37f24d17890595d9d1e138f436ff29",
+            "ev_085a2b62cd5203dfcbcc7cca1e18758caeb2a136d4c4ba74cdf6f51d9c712687"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRACK-CONTRIB-4",
+      "claim": "With absent numeric neighbor links, nil explicit event fades, and effective auto-fade flags0, each admitted range reaches the same plain segment remainder branch independently of adjacent disjoint ranges.",
+      "details": [
+        "1000ea704 and1000ea694 fetch keys0x76504643 and0x744e4643 from event+20, classchecked as MAudioEvent by1000e8c38. They do not inspect normalized range list neighbors. Nil fresh attrs produce nil neighbors immediately; serialized count0 alone would preserve existing attrs and is not a blanket empty-runtime guarantee.",
+        "100212f3c initializes fade extents0 and only sets them through event+90/+98 when explicit fade pointers are nonnull. No-fade input therefore leaves stack fade extents0.",
+        "At10020f4e8/10020f590 nil neighbor getters branch to x28=nil and stack+88=nil. With source stream nonnil, effective auto-fade setting flags0 takes10020f748\u219210020f668; flags0x80 itself does not suppress automatic fades.",
+        "The zero-neighbor/zero-extent path is10020f670\u219210020f7b8\u219210020fae4\u2192100210208\u21921002104fc\u2192100210508. Only the positive snapped remainder is constructed, with independently rounded start/end/offset and per-event Float32 gain. The actual adjacent-normalized-range scan100210620 is on the skipped automatic-fade path.",
+        "Prior placed-event-builder supplies exact compensation/rate-roundtrip equations, and source selector/autofade studies supply their conditional gates. No track mixer/routing/effect policy is recovered here."
+      ],
+      "support": [
+        {
+          "entry": "0x10020f2e8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/pass1",
+          "evidence_ids": [
+            "ev_cdf1e86cddc7273c25dbff44bba20ebf30c14ebb847d848fd13d385a70f1050f",
+            "ev_71fe611794f270ea59ed13655819d80dec4884feb34de29783ff9f664a0599dc"
+          ]
+        },
+        {
+          "entry": "0x1000ea704",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/pass2",
+          "evidence_ids": [
+            "ev_16733bf92796c0c78cf983f01d3da1498992a2b55c6ef65d28e4b46a0ac383ca",
+            "ev_13da423d739a496c503a7124bd9bd25b4c3ff8dc5360054b2511c5c8a1fd2dd8"
+          ]
+        },
+        {
+          "entry": "0x1000ea694",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/pass2",
+          "evidence_ids": [
+            "ev_091f77aac682038a6624118a91ef6899c6c3cfb5c6ca50ad76558e50943be7b7",
+            "ev_faa7d12de9ee17bbb69b967789d0e4492c2e67ec4c92ba64e9a03c1b9bbd6e10"
+          ]
+        },
+        {
+          "entry": "0x1000e8c38",
+          "directory": "research/evidence/cubase-static/cpr-map-clock-001/variation/pass2",
+          "evidence_ids": [
+            "ev_13122e7c236e25c6e37a37f8e856d0295c52251fc294493d83f1030d7d738ea0",
+            "ev_6f2f9b151f48bb21a875aa7c871637e39eae740bdbdf8efd606b49c5baa240bd"
+          ]
+        },
+        {
+          "entry": "0x100212f3c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/pass2",
+          "evidence_ids": [
+            "ev_d9a1b1db39758b703d6b255bf1f815f23adba5114044feef1ff0f70f6d64a7af",
+            "ev_43d2bad8969dea571e712443310914799f53af04448028e81ada6f9c04bda2e5"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRACK-CONTRIB-5",
+      "claim": "Overlap is explicitly excluded from application admission; the native comparison identifies a concrete next study rather than a generic mixing rule.",
+      "details": [
+        "On overlap beyond the exact tolerance,10020e91c..10020e984 compares signed32 event+1a8 priorities and signed32 range ordinals. Higher priority wins locally; on equal priority the greater/equal next ordinal takes the next-wins branch. Current-wins removes/trims/reinserts the next range; next-wins may clone a right remainder through range+c8=1002136ec and clip currentleft.",
+        "Tail reinsertion scans by range start. Full epsilon-edge, multi-overlap, split ownership and eventual fade interactions have not been implemented or independently qualified by this disjoint finding. Next bounded experiment should pin103101e50/103101840/1031022a0 linked removal/insertion and replay at least nested, crossing, equalpriority and epsilon-boundary overlaps before any promotion."
+      ],
+      "support": [
+        {
+          "entry": "0x10020e7c8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/pass1",
+          "evidence_ids": [
+            "ev_036634d39535cbf26572f7477b4b66fc94f4c0eaf2189b82be1728f8c57f281d",
+            "ev_ac946ebc2cb281f877d05345f2423abbadbf10726b9c484ecec6e4cdbcfc1b50"
+          ]
+        },
+        {
+          "entry": "0x1000ea130",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass1",
+          "evidence_ids": [
+            "ev_af6a88b76129d5d8fa9ebe5a5cbd284b54cdb648878f2de2cadebbc5f04cd24c",
+            "ev_6e7070c0e0599d2462200470ce19659f361a39871df7e88286d1cfb42ed45dee"
+          ]
+        },
+        {
+          "entry": "0x1002136ec",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass1",
+          "evidence_ids": [
+            "ev_35067ec4ef1bc2e94bcc5bd78b705c304483fffbd5801c0fae4a27c0cc70ddd7",
+            "ev_b0d6b2ba6b059c8a320bd751384501989825655b7e11b1c3321058f6ee750fc6"
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "The optional root predicate is not branch-invariant for plain zero-flag events: when enabled it can reject a clip/list with bit0 clear. Root source prefix flags do not establish this mode.",
+    "Source order and runtime order are equal only for the observed fresh restore/iterator path without untraced post-restore mutation. MTrackList has another iterator override and is outside this first admission.",
+    "Overlap selection, tolerance-boundary behavior, dynamic callbacks, receiver lifetimes, hosted backend selection and ordinary whole-channel fidelity are not promoted by the disjoint result.",
+    "No proprietary code was executed. Static contracts and synthetic controls are not Cubase runtime comparison.",
+    "Source WAV/media bindings and complete application admission/tests are separate from this static study.",
+    "External callback replacements and observed hosted mutable root/filter flags are not reconstructed or assumed absent in Cubase.",
+    "No assertion of full source-track/channel/project acoustic equivalence, native GUI behavior or runtime overlap selection."
+  ],
+  "verification": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/verification.json",
+    "bytes": 88647,
+    "sha256": "9d6596818927ba574fe09f34557d0e50b3f6c8e861307ec4434bdc391a5e8cef"
+  },
+  "analytical_controls": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/branch-controls.json",
+    "bytes": 33682,
+    "sha256": "202efae4ed81003a475ee78399ccaee2038bb93908fbd99945532ee8daa34e79"
+  },
+  "control_summary": {
+    "default_filter_rows": 32,
+    "optional_root_rows": 24,
+    "positive_disjoint_rows": 65,
+    "negative_admission_rows": 3,
+    "total": 124
+  },
+  "canonical_import": {
+    "records": 102,
+    "response": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/evidence-import-final.json",
+      "bytes": 371,
+      "sha256": "ed8192c0664185c79599e74cf00e96980c949a6c5bd41fe0e179cb53cc4d9d90"
+    },
+    "run_log": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/import-final-run.log",
+      "bytes": 91,
+      "sha256": "51a68738027ff1a4fa8dcf71161a6d801bdcca9b9739bcff54eec182347c70bf"
+    },
+    "all_sessions_closed": true,
+    "raw_sessions": 5,
+    "import_sessions": 1
+  },
+  "prior_findings": [
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/native/finding.json",
+      "bytes": 95671,
+      "sha256": "22b74aea8b41164f8be1bfa11333e1bfb82c335c163b92402fc0ada29536bf45"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/finding.json",
+      "bytes": 28600,
+      "sha256": "12ce949821b80d579cb69ba0cca51bd20e5adcfad99f7ae26d36c3cb15c4a2f9"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/finalization-finding.json",
+      "bytes": 10963,
+      "sha256": "c1f3d17a0d56dcd19ebbdd01fe3c42aa2007eab572b9f01373f0c426d14dd4ec"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/ownership-finding.json",
+      "bytes": 7206,
+      "sha256": "14aaee2b8096ee1f0c2f502b4942140111ba4b86ecc703617e50c27d03861a85"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/finding.json",
+      "bytes": 13349,
+      "sha256": "421a3e5bf51f892b2b68a37e69c8171440ee39d114385d9934bd05a6cc7ca08c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/finding.json",
+      "bytes": 12941,
+      "sha256": "e0797ab18bf763c94243e4f4dfff2bced4f0fb608d9cde681913b7509220ad9d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/finding.json",
+      "bytes": 19331,
+      "sha256": "aa9e0ef239dfb7e3516bf198c77d45881a73e3fc6b0a2d51b5994f8fa1fcf1bd"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider/finding.json",
+      "bytes": 15413,
+      "sha256": "96edf3d32313581e95b804581e44af8ce4888e01148e384f6c4f12a6411ac539"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/finding.json",
+      "bytes": 14814,
+      "sha256": "1d4576dc2679e05206e4aecedf4c1bb695c5beb1a49ceafb689e098d1666cbda"
+    }
+  ],
+  "review": {
+    "status": "external independent review pending",
+    "external_path": "research/evidence/application/APP020/track-contributors-independent-review.json",
+    "scope": "No hash cycle; final reviewer will pin this immutable finding."
+  }
+}

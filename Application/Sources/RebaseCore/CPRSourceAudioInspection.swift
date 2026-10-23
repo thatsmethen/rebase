@@ -32,6 +32,10 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
     public let savedProjectAudioSetup: CPRProjectAudioSetup?
     public let nativeSavedProjectClockPlaybackUnavailableReason: String?
     public let nativeSavedProjectClockRange: CPRSourceEventTimelineRange?
+    public let nativeTrackPlaybackUnavailableReason: String?
+    public let nativeTrackEventCount: Int?
+    public let nativeTrackFragmentCount: Int?
+    public let nativeTrackSnappedEmptyFragmentCount: Int?
 
     public static func inspect(eventID: UUID, in project: Project, at root: URL) throws -> CPRSourceAudioInspection {
         let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
@@ -97,6 +101,25 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
             savedClockReason = error.localizedDescription
             savedClockRange = nil
         }
+        let trackReason: String?
+        let trackCount: Int?
+        let fragmentCount: Int?
+        let snappedEmptyCount: Int?
+        do {
+            let track = try CPRSourceTrackPlan.make(eventID: eventID, project: project, root: root)
+            trackCount = track.entries.count
+            if let selected = track.entries.first(where: { $0.retained.id == eventID }) {
+                sourceRate = Double(selected.canonical.media.rate)
+            }
+            fragmentCount = track.fragments.count
+            snappedEmptyCount = track.snappedEmptyFragmentCount
+            trackReason = nil
+        } catch {
+            trackCount = nil
+            fragmentCount = nil
+            snappedEmptyCount = nil
+            trackReason = error.localizedDescription
+        }
         return CPRSourceAudioInspection(eventID: eventID, name: verified.retained.name,
             sourceSHA256: verified.container.sha256, eventIdentity: source.event.identityOffset,
             trackIdentity: source.trackIdentity, volume: Float(bitPattern: source.volumeBits),
@@ -111,13 +134,21 @@ public struct CPRSourceAudioInspection: Identifiable, Equatable {
             nativeTimelinePlaybackUnavailableReason: nativeReason, nativeTimelineRange: nativeRange,
             nativeProjectClockPlaybackUnavailableReason: projectClockReason, nativeProjectClockRange: projectClockRange,
             savedProjectAudioSetup: savedSetup, nativeSavedProjectClockPlaybackUnavailableReason: savedClockReason,
-            nativeSavedProjectClockRange: savedClockRange)
+            nativeSavedProjectClockRange: savedClockRange,
+            nativeTrackPlaybackUnavailableReason: trackReason, nativeTrackEventCount: trackCount,
+            nativeTrackFragmentCount: fragmentCount, nativeTrackSnappedEmptyFragmentCount: snappedEmptyCount)
     }
 }
 
 /// A fresh source-state reconstruction of one event. Track/mixer processing,
 /// host callbacks and external pitch context are not inputs to this operation.
 struct CPRSourceEventRenderPlan {
+    enum PriorityPolicy: Equatable {
+        case requireDefault
+        /// The complete-track caller must normalize the recovered signed
+        /// priority and original collector order before constructing playback.
+        case normalizedTrack
+    }
     let frames: Int
     let rate: UInt32
     let channels: Int
@@ -147,13 +178,15 @@ struct CPRSourceEventRenderPlan {
     /// from event coordinates. Callers must additionally prove their own timing
     /// contract; this alone never admits an event to playback or export.
     static func completeMedia(source: CPRSourceAudioEvent, retained: UnresolvedCPRAudioEvent,
-                              fades: CPRSourceAutoFadeArchive) throws -> CPRSourceEventRenderPlan {
+                              fades: CPRSourceAutoFadeArchive,
+                              priorityPolicy: PriorityPolicy = .requireDefault) throws -> CPRSourceEventRenderPlan {
         func unsupported(_ message: String) -> RebaseCoreError { .unsupportedAudio(message) }
         guard source.root == fades.root else {
             throw unsupported("Source and effective fades must belong to the same saved project.")
         }
         guard source.fadeIn == nil, source.fadeOut == nil, source.invertedWord == 0,
-              source.priority == 1, source.lane == 0, source.legacyLane == 0 else {
+              (priorityPolicy == .normalizedTrack || source.priority == 1),
+              source.lane == 0, source.legacyLane == 0 else {
             throw unsupported("Explicit fades, inversion, lanes or event-priority processing are not reconstructed.")
         }
         // CPRAudioEventArchive already requires empty numeric event attributes,

@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "status": "independent_mode1_controls_pass_no_open_actionable_finding",
+  "scope": "Original-instruction analytical review of bounded Float32 mode1 reconstruction and its explicit application cursor integration. No proprietary code execution.",
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode1.c",
+      "bytes": 13301,
+      "sha256": "9dd346c5f1a3f27d188e3475a8db6d92ddfbeb92da10c02af4b45b2741d66a80"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode1.h",
+      "bytes": 3681,
+      "sha256": "25cdbb819f84bddf8a6d756a16954f2ee439309668efdbe72fb8d394dcdf0bb4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "bytes": 16107,
+      "sha256": "01654e81697d79c6bb2244c004580ffee8b5d202dd64a54f14f84db4098516ce"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 7510,
+      "sha256": "00ffeff9ed3cd8c72ebcf4ef0b7a5561c279acef1fd226fe206e5bca563ab35a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode1Tests.swift",
+      "bytes": 12583,
+      "sha256": "ff5ee7fecd27064129b432cebb2978a4d336a031e400819785b6f1b51df456e8"
+    },
+    {
+      "path": "Application/Package.swift",
+      "bytes": 1868,
+      "sha256": "95831a7c96a4a59f60c97045a07e392ded69271a2c8fa1f53db97d10db843458"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "research/evidence/application/APP013/mode1-oracle.py",
+      "bytes": 13030,
+      "sha256": "f031f38172356ca244c683c35c17c2413333f52a58a1d43048f457258d8e9238"
+    },
+    {
+      "path": "research/evidence/application/APP013/mode1-oracle.json",
+      "bytes": 705834,
+      "sha256": "d985ab0b74146b093ccae9ca98edd5e8a7d78e904a35f6966ec841f98340d8a9"
+    },
+    {
+      "path": "research/evidence/application/APP013/verify-mode1-instructions.py",
+      "bytes": 2459,
+      "sha256": "0797d022e23f506293e4a0bc7cfdb6f1a4e7a69fec1360b2c36336911dbe25c9"
+    },
+    {
+      "path": "research/evidence/application/APP013/mode1-instruction-verification.json",
+      "bytes": 1960,
+      "sha256": "dfce9e00cbe5f2d2513a6e67883f04bbefdcf5fbd2624503fedc713615f46ff1"
+    },
+    {
+      "path": "research/evidence/application/APP013/mode1-oracle-generation.log",
+      "bytes": 589,
+      "sha256": "9a3c59d8306550690b84402b42909f9d66ed03c0afb5788fe24adc248aae6c12"
+    },
+    {
+      "path": "research/evidence/application/APP013/mode1-combined-first.log",
+      "bytes": 9700,
+      "sha256": "c964440e40da212478e6d4fb7284166068ebafb4199d8a1a3e82367ad8e9b1fc"
+    },
+    {
+      "path": "research/evidence/application/APP013/mode1-combined-second.log",
+      "bytes": 8225,
+      "sha256": "0690326e61eb563a45f1bc5a86ec27f552e37cd5a09a5daf6d6faf7e955ed8db"
+    },
+    {
+      "path": "research/evidence/application/APP013/independent-kernels-final-02.log",
+      "bytes": 8127,
+      "sha256": "2cbb114d614e7c16c6d02fd295af2e868a638df225e12bb2d7b987061cdb7ffc"
+    }
+  ],
+  "original_bytes": {
+    "ranges": 6,
+    "instruction_words": 895,
+    "bytes": 3580,
+    "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "independent_oracle": {
+    "sample_scenarios": 14,
+    "calls_including_reset": 24,
+    "exact_float32_samples": 2084,
+    "complete_table_rate_pairs": 6,
+    "elements_per_coefficient_and_difference_table": 32769,
+    "arithmetic": "Exact Fraction/integer IEEE rounding for both coefficient interpolation and128-tap FMA accumulation, then binary32. Independently implemented coefficient construction uses explicit host libSystem sin/sqrt primitives and binary64 operation ordering. Candidate library never loaded by generator.",
+    "full_LoFi_counts": {
+      "source_frames": 1058400,
+      "source_rate": 44100,
+      "input_blocks": 8192,
+      "last_positive_final": true,
+      "output_rates_and_returned": {
+        "48000": 1152000,
+        "32000": 768000,
+        "16000": 384000,
+        "44100": 1058400
+      }
+    }
+  },
+  "tests": {
+    "own_tests": 6,
+    "combined_final_tests": 10,
+    "combined_final_suites": 2,
+    "seconds": 0.393,
+    "log": "independent-kernels-final-02.log",
+    "controls": [
+      "Every visible output bit, per-call count, ratio/step/phase and counters match independent oracle.",
+      "All six complete coefficient/difference tables match independent hashes; table probes includeorigin/integer/fractional/endpoints.",
+      "Short first blocks, zero nonterminal, NULL-final versus positive-final and retained-reset storage are distinguished.",
+      "Count queries preserve state/storage and match independent full-source block ledgers.",
+      "Malformed rates, precision environment, input/output/count alias, sample-domain and capacity failures preserve state/output/count.",
+      "Exact unsafe native terminal allocation interval rejects; adjacent safe and resized counts pass; repeated final/post-final calls reject."
+    ]
+  },
+  "source_review": [
+    "Native first-prefix64, later-history128, generated-versus-returned counts and final trimming are retained.",
+    "Native reset preserves storage; app seeks create a new converter and replay source0 with identical8192 partitions.",
+    "App planner owns independent instance; no sample-state mutation from count query.",
+    "Last positive app block is final, including exact8192 multiples; no extra null drain is added.",
+    "Gain remains after filtering; ring transfer then callback adapter use explicit application partitions.",
+    "C process stages storage/output; errors cannot publish partial state or visible output."
+  ],
+  "corrections": [
+    {
+      "kind": "descriptive_native_constant",
+      "detail": "Early agent message said beta8.6. Original MOVKs encode8.96/half4.48. Candidate already used rawcorrectbits; independent draft corrected before generation."
+    },
+    {
+      "kind": "test_compilation",
+      "detail": "First combined compile failed only Swift Testing throwing&& syntax at2assertions. Split assertions; retained log. No expectation data or production arithmetic changed."
+    }
+  ],
+  "limitations": [
+    "Host libm primitives are a declared context; no target/vendor libm behavior observed.",
+    "Exact sample controls are finite; broader rates/source programs and native runtime callback contexts remain unestablished.",
+    "Defensive unsupported domains include nonzero subnormal samples, unsafe native allocation reads/writes, invalid floating environment, overflow, alias and repeated final calls.",
+    "Only returned samples are published; native writes beyond the returned region are not reproduced ABI side effects.",
+    "Worker queue, blocks, memory ownership, seek/preroll and selected backend are explicit Rebase policy.",
+    "Mode1 is exposed as a choice associated with the traced fallback, not an observed runtime availability outcome or full native playback default.",
+    "Full application acceptance and GUI evidence are separate; Cubase runtime comparisons remain0."
+  ]
+}

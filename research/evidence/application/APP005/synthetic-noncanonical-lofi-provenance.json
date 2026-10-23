@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "kind": "Self-authored one-ULP mutation of a pinned shipped file; not a Cubase runtime output",
+  "target_executed": false,
+  "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/LoFi Hip Hop.cpr",
+  "source_sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
+  "source_bytes": 1333360,
+  "control": "research/evidence/application/APP005/Synthetic Noncanonical LoFi.cpr",
+  "control_sha256": "068dfbb7bd7310c328b89348c565ee73da176c11203ac12a026c7d180567eef4",
+  "control_bytes": 1333360,
+  "source_unchanged_after_derivation": true,
+  "derivation": {
+    "field": "Second tempo record saved seconds anchor (A1)",
+    "tempo_object_identity_offset": 754,
+    "tempo_payload_offset": 758,
+    "record_offset": 784,
+    "field_offset": 788,
+    "field_bytes": 8,
+    "before_bits": "0x4082c00000000000",
+    "after_bits": "0x4082c00000000001",
+    "before_seconds": 600.0,
+    "after_seconds": 600.0000000000001,
+    "changed_byte_offsets": [
+      795
+    ],
+    "all_other_bytes_equal": true
+  },
+  "instrument": "research/evidence/application/APP005/create_noncanonical_control.py",
+  "instrument_sha256": "0ad46450f9a153c9df4ac8ceedda36025c8c30462c409280f0293ffa1e8f109a",
+  "offset_authority": {
+    "manifest": "research/evidence/cubase-static/cpr-audio-timing-001/reviewer-template-state.json",
+    "manifest_sha256": "c23cf70470d39040a731a951406c1ac61514bfa5b3b4385701ef8cb5f6c37590",
+    "fresh_structural_probe": "scripts/cpr_probe.py",
+    "probe_sha256": "502a5d53c1a6135e40c0c220c99f4f509f30ccaa30cbe5a63ec5ab4b752ec63b",
+    "probe_exact_tempo_body_agrees_with_manifest": true
+  },
+  "prospective_gui_expectation": {
+    "native_clock": null,
+    "tempo": "Explicit application default 120 BPM",
+    "reason": "Saved A1 differs by one ULP from the native cache recurrence, which remains exactly 600 seconds.",
+    "project_subset": "Audio track skeletons may still be imported; the original control is preserved.",
+    "validation_status": "Expected from the reviewed contract and passing analogous core control; this artifact does not itself record a GUI run."
+  }
+}

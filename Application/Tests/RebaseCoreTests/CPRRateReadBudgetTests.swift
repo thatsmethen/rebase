@@ -6,9 +6,8 @@ import Testing
 
 /// Independent retained Fraction-oracle controls; no resampler or target runs.
 struct CPRRateReadBudgetTests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-    private let evidence = "research/evidence/cpr-static/cpr-audio-events-001/rate-converter/"
+    private let workspace = PrivateResearchFixtures.root
+    private let evidence = "evidence/cpr-static/cpr-audio-events-001/rate-converter/"
 
     private struct Oracle: Decodable {
         struct Vector: Decodable {
@@ -29,7 +28,8 @@ struct CPRRateReadBudgetTests {
             requestedFrames: count, branch: branch)
     }
 
-    @Test func all240IndependentBudgetVectorsAndFourControlsMatchExactBits() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func all240IndependentBudgetVectorsAndFourControlsMatchExactBits() throws {
         let pins = [
             "finding.json": "a78e11153ad11bbd925a915a4e5260af19ce28188073a78a59f26cc0fe109ada",
             "count_oracle.py": "f4973e1c259792aca92a3e30202ba75acde3e7a88ed58cbe024c396859bdd6d2",

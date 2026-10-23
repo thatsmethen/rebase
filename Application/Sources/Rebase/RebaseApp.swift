@@ -36,16 +36,16 @@ struct RebaseApp: App {
                 Divider()
                 Button("Import DAWproject…") { session.importDAWProject() }
                 Button("Export DAWproject…") { session.exportDAWProject() }
-                Button("Import Reference Project…") { session.importCPRProject() }
-                Button("Reference Import Report…") { session.showCPRCompatibility() }
+                Button("Import CPR Project…") { session.importCPRProject() }
+                Button("CPR Import Report…") { session.showCPRCompatibility() }
                     .disabled(session.cprCompatibility == nil)
                 Divider()
                 Button("Convert Ambisonics…") { AmbisonicExport.present() }
             }
             CommandMenu("Transport") {
-                Button(session.isPlaying ? "Pause" : (session.sourceEventPlaybackInfo == nil ? "Play" : "Play Source Event")) { session.togglePlayback() }.keyboardShortcut(.space, modifiers: [])
+                Button(session.isPlaying ? "Pause" : (session.sourceEventPlaybackInfo.map { "Play \($0.auditionScope)" } ?? "Play")) { session.togglePlayback() }.keyboardShortcut(.space, modifiers: [])
                 if session.sourceEventPlaybackInfo != nil {
-                    Button("Exit Source Event Audition") { session.exitSourceEventAudition() }
+                    Button("Exit Source Audition") { session.exitSourceEventAudition() }
                 }
                 Button("Return to Start") { session.returnToStart() }.keyboardShortcut(.home, modifiers: [])
                 Button("Split Selected Clip at Playhead") { session.splitSelected() }.keyboardShortcut("t")
@@ -123,7 +123,7 @@ struct StudioView: View {
                 Text(session.status).lineLimit(1)
                 Spacer()
                 if let info = session.sourceEventPlaybackInfo {
-                    Text("1 source event   ·   \(Int(info.sampleRate)) Hz   ·   \(info.mode.displayName)")
+                    Text("\(info.sourceTrack?.events.count ?? 1) source event\((info.sourceTrack?.events.count ?? 1) == 1 ? "" : "s")   ·   \(Int(info.sampleRate)) Hz   ·   \(info.mode.displayName)")
                 } else {
                     Text("\(session.project.tracks.count) tracks   ·   \(Int(session.project.sampleRate)) Hz   ·   Stereo out")
                 }
@@ -156,10 +156,21 @@ struct StudioView: View {
             Image(systemName: "headphones").font(.system(size: 17))
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 8) {
-                    Text("SOURCE EVENT AUDITION").font(.system(size: 10, weight: .bold, design: .monospaced)).tracking(1)
+                    Text(info.sourceTrack == nil ? "SOURCE EVENT AUDITION" : "COMPLETE SOURCE TRACK AUDITION")
+                        .font(.system(size: 10, weight: .bold, design: .monospaced)).tracking(1)
                     Text(info.name).font(.system(size: 12, weight: .semibold)).lineLimit(1)
                 }
-                if info.mode == .nativeTimelineProjectClock {
+                if let track = info.sourceTrack {
+                    Text("\(track.events.count) source events · \(track.fragments.count) audible fragments · \(Int(info.sampleRate)) Hz saved CPR clock · unconverted")
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                    if track.snappedEmptyFragmentCount > 0 {
+                        Text("\(track.snappedEmptyFragmentCount) short fragment\(track.snappedEmptyFragmentCount == 1 ? "" : "s") rounded to zero frames")
+                            .font(.system(size: 11)).foregroundStyle(.secondary)
+                    }
+                } else if info.mode == .nativeTimelineSavedProjectClock {
+                    Text("Saved CPR clock · \(Int(info.sourceSampleRate)) Hz source at \(Int(info.sampleRate)) Hz · unconverted")
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                } else if info.mode == .nativeTimelineProjectClock {
                     Text("Native project clock · \(Int(info.sourceSampleRate)) Hz source at \(Int(info.sampleRate)) Hz · unconverted")
                         .font(.caption).foregroundStyle(.orange)
                 } else if info.mode == .nativeTimelineSourceRate {
@@ -175,13 +186,15 @@ struct StudioView: View {
                     Text("SoXR mode 2 · \(Int(info.sourceSampleRate)) → \(Int(info.sampleRate)) Hz · reconstructed wrapper")
                         .font(.system(size: 11)).foregroundStyle(.secondary)
                 }
-                Text("Only this event · fresh source state · project effects, mixer, routing and automation bypassed")
+                Text(info.sourceTrack == nil
+                    ? "Only this event · fresh source state · project effects, mixer, routing and automation bypassed"
+                    : "Only this source track · fresh default filtering · project effects, mixer, routing and automation bypassed")
                     .font(.system(size: 11)).foregroundStyle(.secondary)
             }
             Spacer(minLength: 8)
             Button("Exit Audition") { session.exitSourceEventAudition() }
-                .accessibilityLabel("Exit source event audition")
-                .help("Stop this event and return the transport to project playback")
+                .accessibilityLabel("Exit source audition")
+                .help("Stop source audition and return the transport to project playback")
                 .buttonStyle(.bordered)
         }
         .foregroundStyle(Color.cyan)
@@ -189,7 +202,7 @@ struct StudioView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.cyan.opacity(0.09))
         .accessibilityElement(children: .contain)
-        .accessibilityLabel("Source event audition mode")
+        .accessibilityLabel(info.sourceTrack == nil ? "Source event audition mode" : "Source track audition mode")
     }
 
     private var transport: some View {
@@ -209,8 +222,8 @@ struct StudioView: View {
                         .frame(width: 43, height: 32)
                         .background(session.isPlaying ? Color.cyan : Color.white.opacity(0.09), in: RoundedRectangle(cornerRadius: 5))
                 }
-                .help(session.sourceEventPlaybackInfo == nil ? "Play / pause · Space" : "Play / pause this source event · Space")
-                .accessibilityLabel(session.isPlaying ? "Pause" : (session.sourceEventPlaybackInfo == nil ? "Play" : "Play source event"))
+                .help(session.sourceEventPlaybackInfo == nil ? "Play / pause · Space" : "Play / pause this source audition · Space")
+                .accessibilityLabel(session.isPlaying ? "Pause" : (session.sourceEventPlaybackInfo.map { "Play \($0.auditionScope.lowercased())" } ?? "Play"))
             }.buttonStyle(.plain)
             Text(Self.timecode(session.playhead)).font(.system(size: 23, weight: .medium, design: .monospaced)).monospacedDigit().frame(width: 188)
             Divider().frame(height: 29)
@@ -220,7 +233,7 @@ struct StudioView: View {
                     TextField("120", value: Binding(get: { session.project.tempo }, set: { session.setTempo($0) }), format: .number.precision(.fractionLength(0...1)))
                         .textFieldStyle(.plain).frame(width: 45).font(.system(size: 14, design: .monospaced))
                         .disabled(session.project.tempoMap.nativeClock != nil)
-                        .help(session.project.tempoMap.nativeClock == nil ? "Project tempo" : "Recovered Reference timing. Open Tempo Track to change timing mode before editing.")
+                        .help(session.project.tempoMap.nativeClock == nil ? "Project tempo" : "Recovered source timing. Open Tempo Track to change timing mode before editing.")
                     Text("BPM").font(.system(size: 9)).foregroundStyle(.secondary)
                 }
             }
@@ -235,7 +248,7 @@ struct StudioView: View {
 
     private var outputMeter: some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text(session.sourceEventPlaybackInfo == nil ? "STEREO OUT" : "EVENT OUT")
+            Text(session.sourceEventPlaybackInfo == nil ? "STEREO OUT" : (session.sourceEventPlaybackInfo?.sourceTrack == nil ? "EVENT OUT" : "SOURCE TRACK OUT"))
                 .font(.system(size: 9, weight: .semibold)).foregroundStyle(.secondary)
             ForEach(0..<2, id: \.self) { channel in
                 let peak = session.outputPeaks[channel]

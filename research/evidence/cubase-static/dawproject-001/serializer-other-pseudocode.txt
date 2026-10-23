@@ -1,0 +1,328 @@
+
+void FUN_00070394(undefined8 param_1,long *param_2,long *param_3)
+
+{
+  undefined8 *puVar1;
+  undefined8 ******ppppppuVar2;
+  long ******pppppplVar3;
+  int iVar4;
+  int iVar5;
+  int iVar6;
+  undefined8 uVar7;
+  long *plVar8;
+  long *plVar9;
+  long *plVar10;
+  long *plVar11;
+  ulong uVar12;
+  long lVar13;
+  int iVar14;
+  uint uVar15;
+  int iVar16;
+  undefined8 local_d0;
+  long *local_c8;
+  long *****local_c0 [2];
+  char local_a9;
+  long *local_a8;
+  undefined *local_a0;
+  undefined8 local_98;
+  undefined8 local_90;
+  uint local_88;
+  long local_80;
+  undefined8 *****local_78;
+  long local_70;
+  uint local_68;
+  char local_61;
+  
+  if (param_3 != (long *)0x0) {
+    (**(code **)(*param_2 + 0x38))(param_2,"Arrangement");
+    (**(code **)(*param_2 + 0x38))(param_2,"Lanes");
+    (**(code **)(*param_2 + 0x40))(param_2,"timeUnit","seconds");
+    local_88 = 0;
+    local_80 = 0;
+    local_90 = 0xa00000000;
+    local_a0 = &DAT_001933a8;
+    local_98 = 0;
+    iVar4 = (**(code **)(*param_3 + 0x28))(param_3);
+    if (iVar4 != 0) {
+      iVar14 = 0;
+      do {
+        local_78 = (undefined8 *****)(**(code **)(*param_3 + 0x30))(param_3,iVar14);
+        if ((undefined8 ******)local_78 != (undefined8 ******)0x0) {
+          uVar7 = (**(code **)(local_a0 + 0x80))(&local_a0,&local_78);
+          FUN_0002aee8(&local_a0,uVar7,&local_78);
+          FUN_0007358c(local_78,&local_a0);
+        }
+        iVar14 = iVar14 + 1;
+      } while (iVar4 != iVar14);
+    }
+    uVar12 = (ulong)local_88;
+    if (local_88 != 0) {
+      lVar13 = 0;
+      uVar15 = 0;
+      do {
+        puVar1 = (undefined8 *)(local_80 + lVar13);
+        if ((int)local_88 <= (int)uVar15 || 0x7fffffff < uVar15) {
+          puVar1 = &local_98;
+        }
+        FUN_00073628(param_1,param_2,*puVar1);
+        uVar15 = uVar15 + 1;
+        lVar13 = lVar13 + 8;
+      } while (uVar12 * 8 - lVar13 != 0);
+    }
+    (**(code **)(*param_2 + 0x48))(param_2);
+    iVar4 = (**(code **)(*param_3 + 0x28))(param_3);
+    if (iVar4 != 0) {
+      iVar14 = 0;
+LAB_00070544:
+      plVar8 = (long *)(**(code **)(*param_3 + 0x30))(param_3,iVar14);
+      if ((plVar8 == (long *)0x0) || (iVar5 = (**(code **)(*plVar8 + 0x18))(plVar8), iVar5 != 4))
+      goto LAB_00070538;
+      (**(code **)(*param_2 + 0x38))(param_2,"TempoAutomation");
+      (**(code **)(*param_2 + 0x40))(param_2,"unit","seconds");
+      iVar4 = (**(code **)(*plVar8 + 0x30))(plVar8);
+      if (iVar4 != 0) {
+        iVar14 = 0;
+        do {
+          plVar9 = (long *)(**(code **)(*plVar8 + 0x38))(plVar8,iVar14);
+          if ((plVar9 != (long *)0x0) && (iVar5 = (**(code **)(*plVar9 + 0x28))(plVar9), iVar5 != 0)
+             ) {
+            iVar16 = 0;
+            do {
+              plVar10 = (long *)(**(code **)(*plVar9 + 0x30))(plVar9,iVar16);
+              if ((plVar10 != (long *)0x0) &&
+                 (plVar11 = (long *)(**(code **)(*plVar10 + 0x20))(plVar10), plVar11 != (long *)0x0)
+                 ) {
+                local_c0[0] = (long *****)0x0;
+                iVar6 = (**(code **)*plVar10)(plVar10,&DAT_001b6230,local_c0);
+                if (iVar6 == 0 && (long ******)local_c0[0] != (long ******)0x0) {
+                  (**(code **)(*param_2 + 0x38))(param_2,"RealPoint");
+                  local_a8 = (long *)(**(code **)(*plVar11 + 0x18))(plVar11);
+                  FUN_000712f8(&local_78,&local_a8,0x10);
+                  ppppppuVar2 = (undefined8 ******)local_78;
+                  if (-1 < local_61) {
+                    ppppppuVar2 = &local_78;
+                  }
+                  (**(code **)(*param_2 + 0x40))(param_2,"time",ppppppuVar2);
+                  if (local_61 < '\0') {
+                    __ZdlPv(local_78);
+                  }
+                  local_a8 = (long *)(*(code *)(*local_c0[0])[3])();
+                  FUN_000712f8(&local_78,&local_a8,6);
+                  ppppppuVar2 = (undefined8 ******)local_78;
+                  if (-1 < local_61) {
+                    ppppppuVar2 = &local_78;
+                  }
+                  (**(code **)(*param_2 + 0x40))(param_2,"value",ppppppuVar2);
+                  if (local_61 < '\0') {
+                    __ZdlPv(local_78);
+                  }
+                  iVar6 = (*(code *)(*local_c0[0])[4])();
+                  thunk_FUN_00078ea4(&local_78,"hold");
+                  if (iVar6 == 1) {
+                    FUN_00074764(&local_78,"linear");
+                  }
+                  ppppppuVar2 = (undefined8 ******)local_78;
+                  if (-1 < local_61) {
+                    ppppppuVar2 = &local_78;
+                  }
+                  (**(code **)(*param_2 + 0x40))(param_2,"interpolation",ppppppuVar2);
+                  (**(code **)(*param_2 + 0x48))(param_2);
+                  if (local_61 < '\0') {
+                    __ZdlPv(local_78);
+                  }
+                  if ((long ******)local_c0[0] != (long ******)0x0) {
+                    (*(code *)(*local_c0[0])[2])();
+                  }
+                }
+              }
+              iVar16 = iVar16 + 1;
+            } while (iVar5 != iVar16);
+          }
+          iVar14 = iVar14 + 1;
+        } while (iVar14 != iVar4);
+      }
+      (**(code **)(*param_2 + 0x48))(param_2);
+    }
+LAB_00070820:
+    iVar4 = (**(code **)(*param_3 + 0x28))(param_3);
+    if (iVar4 != 0) {
+      iVar14 = 0;
+LAB_0007084c:
+      plVar8 = (long *)(**(code **)(*param_3 + 0x30))(param_3,iVar14);
+      if ((plVar8 == (long *)0x0) || (iVar5 = (**(code **)(*plVar8 + 0x18))(plVar8), iVar5 != 6))
+      goto LAB_00070840;
+      (**(code **)(*param_2 + 0x38))(param_2,"TimeSignatureAutomation");
+      (**(code **)(*param_2 + 0x40))(param_2,"unit","seconds");
+      iVar4 = (**(code **)(*plVar8 + 0x30))(plVar8);
+      if (iVar4 != 0) {
+        iVar14 = 0;
+        do {
+          plVar9 = (long *)(**(code **)(*plVar8 + 0x38))(plVar8,iVar14);
+          if ((plVar9 != (long *)0x0) && (iVar5 = (**(code **)(*plVar9 + 0x28))(plVar9), iVar5 != 0)
+             ) {
+            iVar16 = 0;
+            do {
+              plVar10 = (long *)(**(code **)(*plVar9 + 0x30))(plVar9,iVar16);
+              if ((plVar10 != (long *)0x0) &&
+                 (plVar11 = (long *)(**(code **)(*plVar10 + 0x20))(plVar10), plVar11 != (long *)0x0)
+                 ) {
+                local_a8 = (long *)0x0;
+                iVar6 = (**(code **)*plVar10)(plVar10,&DAT_001b6218,&local_a8);
+                if (iVar6 == 0 && local_a8 != (long *)0x0) {
+                  (**(code **)(*param_2 + 0x38))(param_2,"TimeSignaturePoint");
+                  local_c0[0] = (long *****)(**(code **)(*plVar11 + 0x18))(plVar11);
+                  FUN_000712f8(&local_78,local_c0,0x10);
+                  ppppppuVar2 = (undefined8 ******)local_78;
+                  if (-1 < local_61) {
+                    ppppppuVar2 = &local_78;
+                  }
+                  (**(code **)(*param_2 + 0x40))(param_2,"time",ppppppuVar2);
+                  if (local_61 < '\0') {
+                    __ZdlPv(local_78);
+                  }
+                  (**(code **)(*local_a8 + 0x18))();
+                  __ZNSt3__19to_stringEi(&local_78);
+                  thunk_FUN_00078e88(local_c0,&local_78);
+                  if (local_61 < '\0') {
+                    __ZdlPv(local_78);
+                  }
+                  pppppplVar3 = (long ******)local_c0[0];
+                  if (-1 < local_a9) {
+                    pppppplVar3 = local_c0;
+                  }
+                  (**(code **)(*param_2 + 0x40))(param_2,"numerator",pppppplVar3);
+                  if (local_a9 < '\0') {
+                    __ZdlPv(local_c0[0]);
+                  }
+                  (**(code **)(*local_a8 + 0x20))();
+                  __ZNSt3__19to_stringEi(&local_78);
+                  thunk_FUN_00078e88(local_c0,&local_78);
+                  if (local_61 < '\0') {
+                    __ZdlPv(local_78);
+                  }
+                  pppppplVar3 = (long ******)local_c0[0];
+                  if (-1 < local_a9) {
+                    pppppplVar3 = local_c0;
+                  }
+                  (**(code **)(*param_2 + 0x40))(param_2,"denominator",pppppplVar3);
+                  if (local_a9 < '\0') {
+                    __ZdlPv(local_c0[0]);
+                  }
+                  (**(code **)(*param_2 + 0x48))(param_2);
+                  if (local_a8 != (long *)0x0) {
+                    (**(code **)(*local_a8 + 0x10))();
+                  }
+                }
+              }
+              iVar16 = iVar16 + 1;
+            } while (iVar5 != iVar16);
+          }
+          iVar14 = iVar14 + 1;
+        } while (iVar14 != iVar4);
+      }
+      (**(code **)(*param_2 + 0x48))(param_2);
+    }
+LAB_00070b2c:
+    iVar4 = (**(code **)(*param_3 + 0x28))(param_3);
+    if (iVar4 != 0) {
+      iVar14 = 0;
+LAB_00070b58:
+      plVar8 = (long *)(**(code **)(*param_3 + 0x30))(param_3,iVar14);
+      if ((plVar8 == (long *)0x0) || (iVar5 = (**(code **)(*plVar8 + 0x18))(plVar8), iVar5 != 9))
+      goto LAB_00070b4c;
+      (**(code **)(*param_2 + 0x38))(param_2,"Markers");
+      (**(code **)(*param_2 + 0x40))(param_2,"timeUnit","seconds");
+      iVar4 = (**(code **)(*plVar8 + 0x30))(plVar8);
+      if (iVar4 != 0) {
+        iVar14 = 0;
+        do {
+          plVar9 = (long *)(**(code **)(*plVar8 + 0x38))(plVar8,iVar14);
+          if ((plVar9 != (long *)0x0) && (iVar5 = (**(code **)(*plVar9 + 0x28))(plVar9), iVar5 != 0)
+             ) {
+            iVar16 = 0;
+            do {
+              plVar10 = (long *)(**(code **)(*plVar9 + 0x30))(plVar9,iVar16);
+              if (plVar10 != (long *)0x0) {
+                local_a8 = (long *)0x0;
+                iVar6 = (**(code **)*plVar10)(plVar10,&DAT_001b6158,&local_a8);
+                if (iVar6 == 0 && local_a8 != (long *)0x0) {
+                  plVar11 = (long *)(**(code **)(*plVar10 + 0x20))(plVar10);
+                  if (plVar11 != (long *)0x0) {
+                    local_c8 = (long *)0x0;
+                    iVar6 = (**(code **)*plVar10)(plVar10,&DAT_001b6110,&local_c8);
+                    if (iVar6 == 0 && local_c8 != (long *)0x0) {
+                      uVar7 = (**(code **)(*local_a8 + 0x20))();
+                      FUN_00003688(&local_78,uVar7,0xffffffff,1);
+                      (**(code **)(*param_2 + 0x38))(param_2,"Marker");
+                      local_d0 = (**(code **)(*plVar11 + 0x18))(plVar11);
+                      FUN_000712f8(local_c0,&local_d0,0x10);
+                      pppppplVar3 = (long ******)local_c0[0];
+                      if (-1 < local_a9) {
+                        pppppplVar3 = local_c0;
+                      }
+                      (**(code **)(*param_2 + 0x40))(param_2,"time",pppppplVar3);
+                      if (local_a9 < '\0') {
+                        __ZdlPv(local_c0[0]);
+                      }
+                      if ((local_70 != 0) && ((local_68 & 0x3fffffff) != 0)) {
+                        if ((local_68 >> 0x1e & 1) == 0) {
+                          uVar7 = (*(code *)local_78[3])(&local_78);
+                          iVar6 = (*(code *)local_78[2])(&local_78);
+                          thunk_FUN_000783e8(local_c0,uVar7,(long)iVar6);
+                        }
+                        else {
+                          uVar7 = (*(code *)local_78[4])(&local_78);
+                          iVar6 = (*(code *)local_78[2])(&local_78);
+                          FUN_000781f0(local_c0,uVar7,(long)iVar6);
+                        }
+                        pppppplVar3 = (long ******)local_c0[0];
+                        if (-1 < local_a9) {
+                          pppppplVar3 = local_c0;
+                        }
+                        (**(code **)(*param_2 + 0x40))(param_2,"name",pppppplVar3);
+                        if (local_a9 < '\0') {
+                          __ZdlPv(local_c0[0]);
+                        }
+                      }
+                      (**(code **)(*param_2 + 0x48))(param_2);
+                      FUN_0000393c(&local_78);
+                      if (local_c8 != (long *)0x0) {
+                        (**(code **)(*local_c8 + 0x10))();
+                      }
+                    }
+                  }
+                  if (local_a8 != (long *)0x0) {
+                    (**(code **)(*local_a8 + 0x10))();
+                  }
+                }
+              }
+              iVar16 = iVar16 + 1;
+            } while (iVar5 != iVar16);
+          }
+          iVar14 = iVar14 + 1;
+        } while (iVar14 != iVar4);
+      }
+      (**(code **)(*param_2 + 0x48))(param_2);
+    }
+LAB_00070e98:
+    (**(code **)(*param_2 + 0x48))(param_2);
+    local_a0 = &DAT_00192f18;
+    if (local_80 != 0) {
+      __ZdaPv();
+    }
+  }
+  return;
+LAB_00070538:
+  iVar14 = iVar14 + 1;
+  if (iVar4 == iVar14) goto LAB_00070820;
+  goto LAB_00070544;
+LAB_00070840:
+  iVar14 = iVar14 + 1;
+  if (iVar4 == iVar14) goto LAB_00070b2c;
+  goto LAB_0007084c;
+LAB_00070b4c:
+  iVar14 = iVar14 + 1;
+  if (iVar4 == iVar14) goto LAB_00070e98;
+  goto LAB_00070b58;
+}
+

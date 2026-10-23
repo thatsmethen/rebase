@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Self-authored WAV fixtures; expected products use pinned source tables as data.
 
-No Reference code executes. Exact-rational rounding is shared with test_processor's
+No Cubase code executes. Exact-rational rounding is shared with test_processor's
 independent oracle, not with the C candidate or the application's WAV writer.
 """
 import argparse

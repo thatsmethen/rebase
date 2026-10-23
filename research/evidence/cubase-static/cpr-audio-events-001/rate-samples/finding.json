@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "finding_id": "CPR-RATE-SAMPLES-MODE0-001",
+  "status": "sealed implementable bounded sample-producing contract; proprietaryruntimeunvalidated",
+  "native_source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "target_execution": false,
+  "cubase_runtime_comparisons": 0,
+  "claims": [
+    {
+      "id": "RS1",
+      "classification": "static concrete selection",
+      "claim": "Mode0 is an explicit concrete native backend; its Float32 mono/stereo upsample branch is now fully captured.",
+      "addresses": [
+        "10030a008",
+        "10030c4a4",
+        "104461990+40",
+        "10030a534",
+        "10030de00",
+        "10030ffb0",
+        "1003101ec"
+      ],
+      "details": [
+        "Generic constructor mode argument0 allocates0x28-byte child and invokes10030c4a4, which sets vtable104461990. This is not a claim about current global/default selection.",
+        "Generic wrapper10030a534 requires nonnull child,positive ratio andpositivechannels,then forms packet(src,dst,inputCount,flush). Child+40 is10030de00, which forwards to10030ffb0.",
+        "Input count<1 returns0 before data/stateaccess. For finite storedstep<1, channels1 staysinline andchannels2 tails to1003101ec; other channels/directions are outside this contract.",
+        "General converter1003261a8 widens its Float32 source/outputrates toDouble. SelectedFloat32 processing100326738..754 calls10030a534 and replaces the supplied count with returnedoutputframes."
+      ]
+    },
+    {
+      "id": "RS2",
+      "classification": "static setup and reset",
+      "claim": "The native mode0 step is one rounded source/output division; reset setsphase1 and clears previous-frame storage.",
+      "addresses": [
+        "10030c5b8",
+        "10030c5c8",
+        "10030c620",
+        "10030c664",
+        "10030c66c",
+        "103881008"
+      ],
+      "fields": {
+        "child+8": "binary64step=RN64(Rin/Rout)",
+        "child+10": "binary64phase",
+        "child+18": "pointer toDouble previous-frame[channel]storage",
+        "child+20": "int32channelcount",
+        "child+24": "otherdirectionpendingbyte,reset0;notreadonupsamplebranch",
+        "child+25": "readybyte"
+      },
+      "details": [
+        "Ratesetter performs FDIV D0,D0,D1 thenstoreschild+8. No Float32 ratio substitutes for this division.",
+        "Channel setter allocateschannels*8 bytes and invokeschild+30 reset. Reset bzero importedstub103881008 clears thehistory; originalMachOindirectsymtab pins_bzero. It storesphasebits3ff0000000000000 andpendingbyte0.",
+        "Initialize+20 callsreset then setsreadybyte ifhistorynonnull andstep>0; readygetter+28returnsbyte. The reconstructedinit combines the successfulrates/channels/reset state,notallocationfailure behavior.",
+        "Reset retains rate/channels withvalidhistory. Neitherseek norhostreset timing is inferred from this function."
+      ]
+    },
+    {
+      "id": "RS3",
+      "classification": "static sample and state equation",
+      "claim": "For each admitted input frame, mode0 emits the explicit binary64 interpolation recurrence and converts once toFloat32.",
+      "addresses": [
+        "10030ffdc..10031009c",
+        "10031013c..10031014c",
+        "1003101ec..1003102e4"
+      ],
+      "equation": [
+        "For each input frame next[c], widen itsFloat32samples exactly toDouble.",
+        "Whilephase<1: complement=RN64(1\u2212phase); product[c]=RN64(phase*Double(next[c])); mixed[c]=RN64_FMA(complement,Double(Float32(previous[c])),product[c]); output[c]=RN32(mixed[c]).",
+        "phase=RN64(step+phase) once peremittedframe. Afterthisinputframe,phase=RN64(phase+(\u22121)); previous[c]=Double(next[c]).",
+        "Count is numberofwhileloopiterations,notceil(totalinput*ratio),notanallocationbudget."
+      ],
+      "details": [
+        "Mono uses scalarFMUL thenFMADD; stereo usesFMUL.2D thenFMLA.2D,thenFCVTN. Channelorder is retained interleavedL/R withoutcross-channel arithmetic.",
+        "History is storedasDouble but is exactly widened fromFloat32 onthisbranch; nativefirstinterval narrowsandrewidens it. Reconstructionrequires exactFloat32-representablehistory.",
+        "The ordered recurrence makesanycontiguousinputblockpartition equivalent ifstateiscarriedunchanged andinput/order/ratesareconstant. This is independently tested againstexact-rationaloracle sample/statebits.",
+        "The firstresetframe ishistoryonly:phase1 failswhilecondition,thensubtracts1. It doesnotemitinitializedzero samples."
+      ]
+    },
+    {
+      "id": "RS4",
+      "classification": "static boundary and explicit exclusions",
+      "claim": "This admitted upsampling branch does not useflush or inventa finalsample. Zero-input calls emitnothing and preserve state.",
+      "addresses": [
+        "10030de00",
+        "10030ffb0",
+        "1003101ec"
+      ],
+      "details": [
+        "Wrapper forwardsflush inW4, but thefullyretainedmono/stereo step<1 path neverreadsW4. No flushbranch,tailpadding,repeatedlastframe orfinalhistoryemission occurs.",
+        "Afterfinalinputframe thepreviousframe remainsstate; furtheroutputrequiresanother actualinputframe. Resetdiscards history; callingresetataseekisnotgenerallyequivalent toprerollfromsourceorigin.",
+        "Negativecount nativeearlyreturn isoutside size_tcandidateAPI. Nonfinitearithmetic,invalidpointers,overlap,channels>2,equal/downsample branches and otherbackendmodes remainexcluded.",
+        "The currentAPI enforces explicitupsampling only; noSoXR ormode1replacement is silentlychosen."
+      ]
+    },
+    {
+      "id": "RS5",
+      "classification": "static composition with separate existing consumer",
+      "claim": "In the previously boundoffline innerconsumer, accessor conversion precedes a separateFloat32segmentgain multiplication.",
+      "addresses": [
+        "100190e1c",
+        "100190e5c..100190f20"
+      ],
+      "details": [
+        "Thisstudy pins originalinstruction spancontaining10036eff0 readreturn followedbysegmentgainFloat32load/multiplication. Fornonunitygain,apply oneRN32(sample*gain)afterconvertedFloat32output; unitybypasses arithmetic.",
+        "Movingeventgainbefore resampling canchangebits and isnot thiscomposition. The explicitappconvertedpath mustrequest ungainedPCM24\u2192Float32source,runmode0,thenapplythegain.",
+        "This doesnotreclassifywhole10018fb40 asliveplayback: thatcontainingactiontemporarilymutatestadB. It reusesonlyitsalreadyselected innerPCMconsumer. Actualnative liveprovider/schedulerremains a separatestudy."
+      ]
+    }
+  ],
+  "reconstruction_contract": {
+    "backend": "explicit native mode0 Float32 mono/stereo upsampling",
+    "rates": "Float32 8000<=Rin<Rout<=192000; widened division; appUI furtherrequiresintegralrates",
+    "phase": "reset1; carriedfinite[0,1]; previousDoubleexactlyrepresentableasFloat32",
+    "sample_domain": "finite normal-or-zero Float32inputandoutput. Nonzero subnormal outputs reject. A nonzeroDouble mixedvalue rounding toFloat32zero isaccepted withhardwareflushingdisabled.",
+    "arithmetic": "IEEEnearest-even,FPCRFZ/FIZ orMXCSRFTZ/DAZdisabled; explicitfmaafterseparatelyroundedproduct. Unsupportedarchitecturesreject.",
+    "limits": "Atmost16,000,000inputframes andoutputframes percall; mono/stereo; buffers/state/countstorage pairwisedisjoint; immutableinputthroughpreflightandcommit.",
+    "transactionality": "Allinput/capacity/state/environmentandoutputsamplechecks precedecommit. Failureleavesstate,outputandproduceduntouched. Preflight samples arecomputedagainonlyafter success.",
+    "api": [
+      "rb_native_mode0_init",
+      "rb_native_mode0_reset",
+      "rb_native_mode0_count",
+      "rb_native_mode0_process"
+    ],
+    "guard_status": "These are conservativeapplicationadmission guards,notnative rejectionrules.",
+    "files": [
+      {
+        "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0.c",
+        "bytes": 5859,
+        "sha256": "9cf22cb496e5eac010c0e027286927bdf68ef4181c195d30c30b0df2304bd7fa"
+      },
+      {
+        "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0.h",
+        "bytes": 1958,
+        "sha256": "9c3c7185a93dd54beff48dec9618c8abd69f68f01084adad30d4c4436a4cc19f"
+      }
+    ]
+  },
+  "projection": {
+    "source_rate": 44100,
+    "output_rate": 48000,
+    "input_frames": 1058400,
+    "output_frames": 1151999,
+    "nominal_24_second_output_frames": 1152000,
+    "reason": "Phase1 initialization andnoendpointpadding; countfromexactrecurrence,notforcedduration."
+  },
+  "validation": {
+    "independent_oracle_vectors": 9,
+    "independent_expected_sample_bits": 19592,
+    "fma_discriminators": 2,
+    "distributed_rounding_discriminators": 2,
+    "first_focused_run": "18tests in3suitespassed; included7NativeRateMode0Tests. Theadditional8thtest finalsourceisretainedbutitsfuturefullrun isnotclaimedhere.",
+    "independent_review": "Peer/fidelity_protocol foundnoactionablekerneldefect inthescoped recurrence/errorcontract; clarifiedzero-roundedunderflow versusnonzerosubnormal rejection.",
+    "evidence_type": "Analytical controls andexecutionofourreconstructiononly; notobservedCubasePCM."
+  },
+  "custody": {
+    "new": {
+      "functions": 6,
+      "source_bytes": 520,
+      "native_words": 130,
+      "rea_instruction_addresses": 130,
+      "records": 12
+    },
+    "reused": {
+      "functions": 8,
+      "source_bytes": 3752,
+      "native_words": 938,
+      "rea_instruction_addresses": 430,
+      "records": 16
+    },
+    "all": {
+      "functions": 14,
+      "source_bytes": 4272,
+      "native_words": 1068,
+      "rea_instruction_addresses": 560,
+      "records": 28
+    }
+  },
+  "sessions": {
+    "new_capture_clients": 1,
+    "new_targets": 6,
+    "capture_closed": true,
+    "canonical_import_records": 28,
+    "import_closed": true
+  },
+  "references": {
+    "prior_count_and_backends": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/finding.json",
+      "bytes": 22112,
+      "sha256": "a78e11153ad11bbd925a915a4e5260af19ce28188073a78a59f26cc0fe109ada"
+    },
+    "event_inner_consumer": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/finalization-finding.json",
+      "bytes": 10963,
+      "sha256": "c1f3d17a0d56dcd19ebbdd01fe3c42aa2007eab572b9f01373f0c426d14dd4ec"
+    },
+    "independent_oracle": {
+      "path": "research/evidence/application/APP010/native-rate-mode0-oracle.json",
+      "bytes": 749565,
+      "sha256": "d2c91862a7a93b744f6da5793d92ec00b58aab56f0c15772121835b2843c9aa5"
+    },
+    "independent_oracle_generator": {
+      "path": "research/evidence/application/APP010/native-rate-mode0-oracle.py",
+      "bytes": 7965,
+      "sha256": "6b5357c1bf923034673e9bcb240136b6dc31e8fde0276132036232811f2623a4"
+    },
+    "custody": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/verification.json",
+      "bytes": 11498,
+      "sha256": "5814e1d61695a3a7826b977cad49de3f89729e1b70b833293afc0116cebb86b4"
+    },
+    "dispatch_and_operations": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/original-bindings.json",
+      "bytes": 7693,
+      "sha256": "638767d4bc9f5f1b5d8883d64c80492b406a0344f9868278521a906ce8015cfb"
+    },
+    "canonical_import": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/evidence-import.json",
+      "bytes": 367,
+      "sha256": "47e98dbebdb4f28d72cd2daa9215ab9faf5bb105749b818178784e424a8805f0"
+    },
+    "candidate_build": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/candidate/build.json",
+      "bytes": 1944,
+      "sha256": "65686b2fc0372273f1994f3613453f3357baa74800bd8a4027b1a33dea1dd53b"
+    },
+    "count_projection": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/candidate/count-projection.json",
+      "bytes": 600,
+      "sha256": "fed8dfe07d9e6665dd9ed27d79f7accb0acf8f8f8edbdc17b274790af05713e1"
+    },
+    "first_focused_test_log": {
+      "path": "research/evidence/application/APP010/converted-tests-first.log",
+      "bytes": 4162,
+      "sha256": "34db613cefadfd09d7de5f59f4b1ab76ca817af29b55cc1face1f03e36f6d70f"
+    },
+    "final_test_source": {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode0Tests.swift",
+      "bytes": 13976,
+      "sha256": "3756de7075cde5ef498cd40f8ece0ea7c97e0bdb9570a6285b8cc94f648c9f75"
+    }
+  },
+  "limitations": [
+    "Mode0 selection isexplicit; globalnativequality/defaultchoice isnotestablished.",
+    "Stereo/mono upsampling only;mode0downsampling,mode1filterstateandSoXRmode2samples remainunimplemented.",
+    "Allcallbacks,PCMsource acquisition,channelconversion,externalplugins,mixerautomation,PDC,deviceoutput andhoststate areoutside thiskernelcontract.",
+    "RawGhidrasliceslackexternalcontext; existingrawtails markedhalt_baddataarevalidexternaltransfers resolvedonlywhereexplicitlybound. Pseudocodeisnotoriginalsource orindependentlybitfaithful.",
+    "Signedzero nativeoperationsarepreservedbyexplicitarithmetic, butFractionoraclecontrolsdo notclaimnegativezeroresultcoverage.",
+    "Reset-and-prerollorfullbufferseek isapplicationpolicy; thisstudy doesnotbindliveCubase seekorflush invocation."
+  ]
+}

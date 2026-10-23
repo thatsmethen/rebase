@@ -5,8 +5,7 @@ import Testing
 /// Generated controls are self-authored archive inputs; factory bytes are read
 /// from the pinned local reference. Neither is a Reference runtime observation.
 final class CPRRecoveryV3Tests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let workspace = PrivateResearchFixtures.root
     private func u16(_ value: UInt16) -> Data { var value = value.bigEndian; return withUnsafeBytes(of: &value) { Data($0) } }
     private func u32(_ value: UInt32) -> Data { var value = value.bigEndian; return withUnsafeBytes(of: &value) { Data($0) } }
     private func u64(_ value: UInt64) -> Data { var value = value.bigEndian; return withUnsafeBytes(of: &value) { Data($0) } }
@@ -148,13 +147,14 @@ final class CPRRecoveryV3Tests {
         #expect(new.recovery.objects == old.recovery.objects && new.recovery.unsupported == old.recovery.unsupported)
     }
 
-    @Test func tenPinnedFactoryFilesSeparateSixMapClocksFromFourUnchangedFixedClocks() throws {
-        let manifestURL = workspace.appendingPathComponent("research/evidence/cpr-static/cpr-audio-timing-001/reviewer-template-state.json")
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func tenPinnedFactoryFilesSeparateSixMapClocksFromFourUnchangedFixedClocks() throws {
+        let manifestURL = workspace.appendingPathComponent("evidence/cpr-static/cpr-audio-timing-001/reviewer-template-state.json")
         let manifest = try #require(JSONSerialization.jsonObject(with: Data(contentsOf: manifestURL)) as? [String: Any])
         let fixtures = try #require(manifest["fixtures"] as? [[String: Any]])
         var maps = 0, fixed = 0
         for fixture in fixtures {
-            let source = workspace.appendingPathComponent(try #require(fixture["source"] as? String))
+            let source = try PrivateResearchFixtures.template(recordedPath: #require(fixture["source"] as? String))
             let bytes = try Data(contentsOf: source)
             #expect(cprSHA256(bytes) == fixture["source_sha256"] as? String)
             let container = try CPRProject.readContainer(bytes)
@@ -202,11 +202,12 @@ final class CPRRecoveryV3Tests {
         #expect(try CPRProject.compatibilityReport(from: destination) == imported.report)
     }
 
-    @Test func realMapPackagesBindCanonicalAlternativeToSourceAndAllowExplicitExchangeConversion() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func realMapPackagesBindCanonicalAlternativeToSourceAndAllowExplicitExchangeConversion() throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("CPRFactoryMap-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: root) }
-        let reference = workspace.appendingPathComponent("research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro")
+        let reference = workspace.appendingPathComponent("templates")
         let sources = [("LoFi Hip Hop", "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495"),
                        ("Stereo Mastering", "6cde8a5ce37e5f112c79f684ad8c1fc3e308979feba9f046db42bf62ecce3022")]
         for (name, expectedSHA) in sources {

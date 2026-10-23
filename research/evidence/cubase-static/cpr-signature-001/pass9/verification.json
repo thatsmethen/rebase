@@ -1,0 +1,619 @@
+{
+  "created_utc": "2026-10-19T10:54:13.620276+00:00",
+  "scope": "Static byte/address/decoded-mnemonic verification; no target execution or semantic equivalence test",
+  "source": "/workspace/rebase/research/targets/derived/Cubase15-arm64",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "source_stable_during_verification": true,
+  "passed": true,
+  "functions": [
+    {
+      "entry": "0x101758eec",
+      "raw_sha256": "8e0535259c7bda167ac00bda1886eda62271439f6f5ba62e7f7508a1876c1da8",
+      "source_range_and_rea_readback_exact": true,
+      "analyze_function_evidence_id": "ev_916be16fdffd36b8697519fa3302705ce25d3618e6026e48b15e30242580f1af",
+      "read_bytes_evidence_id": "ev_c17c9078e1c6970633c967ea66639224aa9fbf29939c8c2aa75a67f733006428",
+      "analysis_profile": {
+        "provider": {
+          "id": "ghidra",
+          "name": "Ghidra",
+          "version": "12.1.4"
+        },
+        "parameters": {
+          "target_kind": "executable",
+          "target_format": "raw-binary",
+          "architecture": "arm64",
+          "available_architectures": [
+            "arm64"
+          ],
+          "import_mode": "ephemeral-source-immutable",
+          "annotation_policy": "atomic-function-entry-metadata-v1",
+          "load_image_observations": "source-mappings-entry-context-v2",
+          "function_body_evidence": "complete-inclusive-ranges-v1",
+          "function_references": "complete-body-and-entry-reference-manager-v2",
+          "call_relationship_coverage": "function-body-call-coverage-v5",
+          "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+          "string_inventory_evidence": "defined-data-coverage-v1",
+          "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+          "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+          "instruction_flow_evidence": "decoded-return-pcode-v1",
+          "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+          "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+          "no_return_repair": "returning-imports-decoded-return-v2",
+          "process_launch": "inspected-jvm-launch-support-v1",
+          "load_image_evidence": "independent-raw-mapping-context-v4",
+          "jump_table_evidence": "typed-case-default-blocks-v1",
+          "decompiler_jump_loads": true,
+          "loader": "BinaryLoader",
+          "language_id": "AARCH64:LE:64:v8A",
+          "compiler_spec_id": "default",
+          "language_selection": "caller-supplied-v1",
+          "entry_point": "0x101758eec",
+          "entry_seed": "external-entry-and-function-before-analysis-v1",
+          "analyzer_preset": "ghidra-default"
+        },
+        "digest": "2c15420d2e90fdf981b25691643284bc613402986223921fc8811b229249fb98"
+      },
+      "native_interval_instruction_count": 27,
+      "rea_body_instruction_count": 22,
+      "rea_body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x101758eec",
+            "end": "0x101758f43"
+          }
+        ],
+        "total_bytes": 88,
+        "span_bytes": 88,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "omitted_native_instruction_addresses": [
+        "0x101758f44",
+        "0x101758f48",
+        "0x101758f4c",
+        "0x101758f50",
+        "0x101758f54"
+      ],
+      "mnemonic_differences": [],
+      "instruction_checks": [
+        {
+          "address": "0x101758eec",
+          "original_word": "a9bd57f6",
+          "source_file_offset": 24481516,
+          "rea_assembly": "stp x22, x21, [sp, #-0x30]!",
+          "native_assembly": "stp\tx22, x21, [sp, #-0x30]!",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758ef0",
+          "original_word": "a9014ff4",
+          "source_file_offset": 24481520,
+          "rea_assembly": "stp x20, x19, [sp, #0x10]",
+          "native_assembly": "stp\tx20, x19, [sp, #0x10]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758ef4",
+          "original_word": "a9027bfd",
+          "source_file_offset": 24481524,
+          "rea_assembly": "stp x29, x30, [sp, #0x20]",
+          "native_assembly": "stp\tx29, x30, [sp, #0x20]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758ef8",
+          "original_word": "910083fd",
+          "source_file_offset": 24481528,
+          "rea_assembly": "add x29, sp, #0x20",
+          "native_assembly": "add\tx29, sp, #0x20",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758efc",
+          "original_word": "aa0103f4",
+          "source_file_offset": 24481532,
+          "rea_assembly": "mov x20, x1",
+          "native_assembly": "mov\tx20, x1",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f00",
+          "original_word": "aa0003f5",
+          "source_file_offset": 24481536,
+          "rea_assembly": "mov x21, x0",
+          "native_assembly": "mov\tx21, x0",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f04",
+          "original_word": "52800700",
+          "source_file_offset": 24481540,
+          "rea_assembly": "mov w0, #0x38",
+          "native_assembly": "mov\tw0, #0x38               ; =56",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f08",
+          "original_word": "94849fad",
+          "source_file_offset": 24481544,
+          "rea_assembly": "bl 0x103880dbc",
+          "native_assembly": "bl\t0x103880dbc <dyld_stub_binder+0x103880dbc>",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f0c",
+          "original_word": "aa0003f3",
+          "source_file_offset": 24481548,
+          "rea_assembly": "mov x19, x0",
+          "native_assembly": "mov\tx19, x0",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f10",
+          "original_word": "aa1503e1",
+          "source_file_offset": 24481552,
+          "rea_assembly": "mov x1, x21",
+          "native_assembly": "mov\tx1, x21",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f14",
+          "original_word": "aa1403e2",
+          "source_file_offset": 24481556,
+          "rea_assembly": "mov x2, x20",
+          "native_assembly": "mov\tx2, x20",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f18",
+          "original_word": "97fef54c",
+          "source_file_offset": 24481560,
+          "rea_assembly": "bl 0x101716448",
+          "native_assembly": "bl\t0x101716448 <__text+0x171257c>",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f1c",
+          "original_word": "b0017908",
+          "source_file_offset": 24481564,
+          "rea_assembly": "adrp x8, 0x104679000",
+          "native_assembly": "adrp\tx8, 0x104679000 <dyld_stub_binder+0x104679000>",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f20",
+          "original_word": "91014108",
+          "source_file_offset": 24481568,
+          "rea_assembly": "add x8, x8, #0x50",
+          "native_assembly": "add\tx8, x8, #0x50",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f24",
+          "original_word": "f9000268",
+          "source_file_offset": 24481572,
+          "rea_assembly": "str x8, [x19]",
+          "native_assembly": "str\tx8, [x19]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f28",
+          "original_word": "9106a108",
+          "source_file_offset": 24481576,
+          "rea_assembly": "add x8, x8, #0x1a8",
+          "native_assembly": "add\tx8, x8, #0x1a8",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f2c",
+          "original_word": "f9000a68",
+          "source_file_offset": 24481580,
+          "rea_assembly": "str x8, [x19, #0x10]",
+          "native_assembly": "str\tx8, [x19, #0x10]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f30",
+          "original_word": "aa1303e0",
+          "source_file_offset": 24481584,
+          "rea_assembly": "mov x0, x19",
+          "native_assembly": "mov\tx0, x19",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f34",
+          "original_word": "a9427bfd",
+          "source_file_offset": 24481588,
+          "rea_assembly": "ldp x29, x30, [sp, #0x20]",
+          "native_assembly": "ldp\tx29, x30, [sp, #0x20]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f38",
+          "original_word": "a9414ff4",
+          "source_file_offset": 24481592,
+          "rea_assembly": "ldp x20, x19, [sp, #0x10]",
+          "native_assembly": "ldp\tx20, x19, [sp, #0x10]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f3c",
+          "original_word": "a8c357f6",
+          "source_file_offset": 24481596,
+          "rea_assembly": "ldp x22, x21, [sp], #0x30",
+          "native_assembly": "ldp\tx22, x21, [sp], #0x30",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101758f40",
+          "original_word": "d65f03c0",
+          "source_file_offset": 24481600,
+          "rea_assembly": "ret",
+          "native_assembly": "ret",
+          "mnemonic_matches": true
+        }
+      ],
+      "pseudocode_warnings": [],
+      "snapshot": {
+        "path": "/workspace/rebase/research/evidence/cubase-static/cpr-signature-001/pass9/snapshot-101758eec.json",
+        "bytes": 77700,
+        "primitive_entries": 1,
+        "workflow_entries": 0,
+        "evidence_records": 2
+      },
+      "bundle_file": "bundle-101758eec.json"
+    },
+    {
+      "entry": "0x1017154a0",
+      "raw_sha256": "70e288a355b8298dfc7ed51554929fed69887c1a46083c56ebb65e10c238db75",
+      "source_range_and_rea_readback_exact": true,
+      "analyze_function_evidence_id": "ev_b937536ec02ca2426387c98b45337a8289a82245bbe02ae603f8e98fcad8d109",
+      "read_bytes_evidence_id": "ev_964f862664766b5517b82f665e1cec0f337d231a6b9e87ecfa79cce062b50e1a",
+      "analysis_profile": {
+        "provider": {
+          "id": "ghidra",
+          "name": "Ghidra",
+          "version": "12.1.4"
+        },
+        "parameters": {
+          "target_kind": "executable",
+          "target_format": "raw-binary",
+          "architecture": "arm64",
+          "available_architectures": [
+            "arm64"
+          ],
+          "import_mode": "ephemeral-source-immutable",
+          "annotation_policy": "atomic-function-entry-metadata-v1",
+          "load_image_observations": "source-mappings-entry-context-v2",
+          "function_body_evidence": "complete-inclusive-ranges-v1",
+          "function_references": "complete-body-and-entry-reference-manager-v2",
+          "call_relationship_coverage": "function-body-call-coverage-v5",
+          "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+          "string_inventory_evidence": "defined-data-coverage-v1",
+          "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+          "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+          "instruction_flow_evidence": "decoded-return-pcode-v1",
+          "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+          "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+          "no_return_repair": "returning-imports-decoded-return-v2",
+          "process_launch": "inspected-jvm-launch-support-v1",
+          "load_image_evidence": "independent-raw-mapping-context-v4",
+          "jump_table_evidence": "typed-case-default-blocks-v1",
+          "decompiler_jump_loads": true,
+          "loader": "BinaryLoader",
+          "language_id": "AARCH64:LE:64:v8A",
+          "compiler_spec_id": "default",
+          "language_selection": "caller-supplied-v1",
+          "entry_point": "0x1017154a0",
+          "entry_seed": "external-entry-and-function-before-analysis-v1",
+          "analyzer_preset": "ghidra-default"
+        },
+        "digest": "e0b49485c0602eacc605b901a7bdf7151500d8c5278131af4dab6c582b6326f3"
+      },
+      "native_interval_instruction_count": 41,
+      "rea_body_instruction_count": 32,
+      "rea_body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x1017154a0",
+            "end": "0x10171551f"
+          }
+        ],
+        "total_bytes": 128,
+        "span_bytes": 128,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "omitted_native_instruction_addresses": [
+        "0x101715520",
+        "0x101715524",
+        "0x101715528",
+        "0x10171552c",
+        "0x101715530",
+        "0x101715534",
+        "0x101715538",
+        "0x10171553c",
+        "0x101715540"
+      ],
+      "mnemonic_differences": [],
+      "instruction_checks": [
+        {
+          "address": "0x1017154a0",
+          "original_word": "a9bd57f6",
+          "source_file_offset": 24204448,
+          "rea_assembly": "stp x22, x21, [sp, #-0x30]!",
+          "native_assembly": "stp\tx22, x21, [sp, #-0x30]!",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154a4",
+          "original_word": "a9014ff4",
+          "source_file_offset": 24204452,
+          "rea_assembly": "stp x20, x19, [sp, #0x10]",
+          "native_assembly": "stp\tx20, x19, [sp, #0x10]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154a8",
+          "original_word": "a9027bfd",
+          "source_file_offset": 24204456,
+          "rea_assembly": "stp x29, x30, [sp, #0x20]",
+          "native_assembly": "stp\tx29, x30, [sp, #0x20]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154ac",
+          "original_word": "910083fd",
+          "source_file_offset": 24204460,
+          "rea_assembly": "add x29, sp, #0x20",
+          "native_assembly": "add\tx29, sp, #0x20",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154b0",
+          "original_word": "aa0103f5",
+          "source_file_offset": 24204464,
+          "rea_assembly": "mov x21, x1",
+          "native_assembly": "mov\tx21, x1",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154b4",
+          "original_word": "aa0003f4",
+          "source_file_offset": 24204468,
+          "rea_assembly": "mov x20, x0",
+          "native_assembly": "mov\tx20, x0",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154b8",
+          "original_word": "52800700",
+          "source_file_offset": 24204472,
+          "rea_assembly": "mov w0, #0x38",
+          "native_assembly": "mov\tw0, #0x38               ; =56",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154bc",
+          "original_word": "9485ae40",
+          "source_file_offset": 24204476,
+          "rea_assembly": "bl 0x103880dbc",
+          "native_assembly": "bl\t0x103880dbc <dyld_stub_binder+0x103880dbc>",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154c0",
+          "original_word": "aa0003f3",
+          "source_file_offset": 24204480,
+          "rea_assembly": "mov x19, x0",
+          "native_assembly": "mov\tx19, x0",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154c4",
+          "original_word": "aa1503e1",
+          "source_file_offset": 24204484,
+          "rea_assembly": "mov x1, x21",
+          "native_assembly": "mov\tx1, x21",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154c8",
+          "original_word": "97feafad",
+          "source_file_offset": 24204488,
+          "rea_assembly": "bl 0x1016c137c",
+          "native_assembly": "bl\t0x1016c137c <__text+0x16bd4b0>",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154cc",
+          "original_word": "f0017ac8",
+          "source_file_offset": 24204492,
+          "rea_assembly": "adrp x8, 0x104670000",
+          "native_assembly": "adrp\tx8, 0x104670000 <dyld_stub_binder+0x104670000>",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154d0",
+          "original_word": "910ee108",
+          "source_file_offset": 24204496,
+          "rea_assembly": "add x8, x8, #0x3b8",
+          "native_assembly": "add\tx8, x8, #0x3b8",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154d4",
+          "original_word": "f9000268",
+          "source_file_offset": 24204500,
+          "rea_assembly": "str x8, [x19]",
+          "native_assembly": "str\tx8, [x19]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154d8",
+          "original_word": "91066108",
+          "source_file_offset": 24204504,
+          "rea_assembly": "add x8, x8, #0x198",
+          "native_assembly": "add\tx8, x8, #0x198",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154dc",
+          "original_word": "f9000a68",
+          "source_file_offset": 24204508,
+          "rea_assembly": "str x8, [x19, #0x10]",
+          "native_assembly": "str\tx8, [x19, #0x10]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154e0",
+          "original_word": "a902fe74",
+          "source_file_offset": 24204512,
+          "rea_assembly": "stp x20, xzr, [x19, #0x28]",
+          "native_assembly": "stp\tx20, xzr, [x19, #0x28]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154e4",
+          "original_word": "710006bf",
+          "source_file_offset": 24204516,
+          "rea_assembly": "cmp w21, #0x1",
+          "native_assembly": "cmp\tw21, #0x1",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154e8",
+          "original_word": "540000e8",
+          "source_file_offset": 24204520,
+          "rea_assembly": "b.hi 0x101715504",
+          "native_assembly": "b.hi\t0x101715504 <__text+0x1711638>",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154ec",
+          "original_word": "f9400288",
+          "source_file_offset": 24204524,
+          "rea_assembly": "ldr x8, [x20]",
+          "native_assembly": "ldr\tx8, [x20]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154f0",
+          "original_word": "f940ad08",
+          "source_file_offset": 24204528,
+          "rea_assembly": "ldr x8, [x8, #0x158]",
+          "native_assembly": "ldr\tx8, [x8, #0x158]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154f4",
+          "original_word": "aa1403e0",
+          "source_file_offset": 24204532,
+          "rea_assembly": "mov x0, x20",
+          "native_assembly": "mov\tx0, x20",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154f8",
+          "original_word": "aa1503e1",
+          "source_file_offset": 24204536,
+          "rea_assembly": "mov x1, x21",
+          "native_assembly": "mov\tx1, x21",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x1017154fc",
+          "original_word": "52800022",
+          "source_file_offset": 24204540,
+          "rea_assembly": "mov w2, #0x1",
+          "native_assembly": "mov\tw2, #0x1                ; =1",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101715500",
+          "original_word": "d63f0100",
+          "source_file_offset": 24204544,
+          "rea_assembly": "blr x8",
+          "native_assembly": "blr\tx8",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101715504",
+          "original_word": "f9405a88",
+          "source_file_offset": 24204548,
+          "rea_assembly": "ldr x8, [x20, #0xb0]",
+          "native_assembly": "ldr\tx8, [x20, #0xb0]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101715508",
+          "original_word": "f9001a68",
+          "source_file_offset": 24204552,
+          "rea_assembly": "str x8, [x19, #0x30]",
+          "native_assembly": "str\tx8, [x19, #0x30]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x10171550c",
+          "original_word": "aa1303e0",
+          "source_file_offset": 24204556,
+          "rea_assembly": "mov x0, x19",
+          "native_assembly": "mov\tx0, x19",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101715510",
+          "original_word": "a9427bfd",
+          "source_file_offset": 24204560,
+          "rea_assembly": "ldp x29, x30, [sp, #0x20]",
+          "native_assembly": "ldp\tx29, x30, [sp, #0x20]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101715514",
+          "original_word": "a9414ff4",
+          "source_file_offset": 24204564,
+          "rea_assembly": "ldp x20, x19, [sp, #0x10]",
+          "native_assembly": "ldp\tx20, x19, [sp, #0x10]",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x101715518",
+          "original_word": "a8c357f6",
+          "source_file_offset": 24204568,
+          "rea_assembly": "ldp x22, x21, [sp], #0x30",
+          "native_assembly": "ldp\tx22, x21, [sp], #0x30",
+          "mnemonic_matches": true
+        },
+        {
+          "address": "0x10171551c",
+          "original_word": "d65f03c0",
+          "source_file_offset": 24204572,
+          "rea_assembly": "ret",
+          "native_assembly": "ret",
+          "mnemonic_matches": true
+        }
+      ],
+      "pseudocode_warnings": [],
+      "snapshot": {
+        "path": "/workspace/rebase/research/evidence/cubase-static/cpr-signature-001/pass9/snapshot-1017154a0.json",
+        "bytes": 118552,
+        "primitive_entries": 1,
+        "workflow_entries": 0,
+        "evidence_records": 2
+      },
+      "bundle_file": "bundle-1017154a0.json"
+    }
+  ],
+  "total_native_interval_instructions": 68,
+  "total_rea_body_instructions": 54,
+  "limits": [
+    "REA assembly lines do not contain instruction words. Every line address was checked against original-image native disassembly; its original word was separately matched to complete REA initialized-memory readback.",
+    "Mnemonic differences may be decoder aliases. This does not automatically prove all operand rendering or decompiler semantics.",
+    "Ghidra inferred body boundaries are observations, not source-level or unwind-metadata proof."
+  ]
+}

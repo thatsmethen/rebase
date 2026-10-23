@@ -1,0 +1,603 @@
+{
+  "schema_version": 1,
+  "kind": "analytical finite control vectors, not target executions",
+  "arithmetic": "IEEE binary64 nearest-even single addition; exact rational independent sum check",
+  "controls": [
+    {
+      "name": "before_origin",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4038000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 7,
+      "current": null,
+      "cursor_generation": 7,
+      "query_bits": "bff0000000000000",
+      "result": {
+        "selected": 0,
+        "cursor_generation": 7,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "origin",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4038000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 7,
+      "current": null,
+      "cursor_generation": 7,
+      "query_bits": "0000000000000000",
+      "result": {
+        "selected": 0,
+        "cursor_generation": 7,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "before_end",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4038000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 7,
+      "current": null,
+      "cursor_generation": 7,
+      "query_bits": "4037ffffffffffff",
+      "result": {
+        "selected": 0,
+        "cursor_generation": 7,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "exact_end",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4038000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 7,
+      "current": null,
+      "cursor_generation": 7,
+      "query_bits": "4038000000000000",
+      "result": {
+        "selected": 0,
+        "cursor_generation": 7,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "after_end",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4038000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 7,
+      "current": null,
+      "cursor_generation": 7,
+      "query_bits": "4038000000000001",
+      "result": {
+        "selected": null,
+        "cursor_generation": 7,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "future_start_still_selected",
+      "segments": [
+        {
+          "start_bits": "4024000000000000",
+          "length_bits": "4000000000000000",
+          "successor": null,
+          "end_bits": "4028000000000000"
+        }
+      ],
+      "generation": 7,
+      "current": null,
+      "cursor_generation": 7,
+      "query_bits": "0000000000000000",
+      "result": {
+        "selected": 0,
+        "cursor_generation": 7,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "empty",
+      "segments": [],
+      "generation": 7,
+      "current": null,
+      "cursor_generation": 3,
+      "query_bits": "0000000000000000",
+      "result": {
+        "selected": null,
+        "cursor_generation": 7,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "stale_generation_search",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4038000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 7,
+      "current": 0,
+      "cursor_generation": 6,
+      "query_bits": "0000000000000000",
+      "result": {
+        "selected": 0,
+        "cursor_generation": 7,
+        "current_unchanged": 0,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "stale_after_end_writes_generation_keeps_current",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4038000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 7,
+      "current": 0,
+      "cursor_generation": 6,
+      "query_bits": "4039000000000000",
+      "result": {
+        "selected": null,
+        "cursor_generation": 7,
+        "current_unchanged": 0,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "matching_last_ignores_backward_query",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4038000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 7,
+      "current": 0,
+      "cursor_generation": 7,
+      "query_bits": "bff0000000000000",
+      "result": {
+        "selected": null,
+        "cursor_generation": 7,
+        "current_unchanged": 0,
+        "branch": "cached_successor"
+      }
+    },
+    {
+      "name": "cached_ignores_past",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4024000000000000",
+          "successor": 1,
+          "end_bits": "4024000000000000"
+        },
+        {
+          "start_bits": "4034000000000000",
+          "length_bits": "4010000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 9,
+      "current": 0,
+      "cursor_generation": 9,
+      "query_bits": "c059000000000000",
+      "result": {
+        "selected": 1,
+        "cursor_generation": 9,
+        "current_unchanged": 0,
+        "branch": "cached_successor"
+      }
+    },
+    {
+      "name": "cached_ignores_future",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4024000000000000",
+          "successor": 1,
+          "end_bits": "4024000000000000"
+        },
+        {
+          "start_bits": "4034000000000000",
+          "length_bits": "4010000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 9,
+      "current": 0,
+      "cursor_generation": 9,
+      "query_bits": "4059000000000000",
+      "result": {
+        "selected": 1,
+        "cursor_generation": 9,
+        "current_unchanged": 0,
+        "branch": "cached_successor"
+      }
+    },
+    {
+      "name": "cached_exact_end",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4024000000000000",
+          "successor": 1,
+          "end_bits": "4024000000000000"
+        },
+        {
+          "start_bits": "4034000000000000",
+          "length_bits": "4010000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 9,
+      "current": 0,
+      "cursor_generation": 9,
+      "query_bits": "4024000000000000",
+      "result": {
+        "selected": 1,
+        "cursor_generation": 9,
+        "current_unchanged": 0,
+        "branch": "cached_successor"
+      }
+    },
+    {
+      "name": "gap_selects_future",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4024000000000000",
+          "successor": 1,
+          "end_bits": "4024000000000000"
+        },
+        {
+          "start_bits": "4034000000000000",
+          "length_bits": "4010000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 9,
+      "current": null,
+      "cursor_generation": 9,
+      "query_bits": "402e000000000000",
+      "result": {
+        "selected": 1,
+        "cursor_generation": 9,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "adjacent_inclusive_prior",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4024000000000000",
+          "successor": 1,
+          "end_bits": "4024000000000000"
+        },
+        {
+          "start_bits": "4034000000000000",
+          "length_bits": "4010000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 9,
+      "current": null,
+      "cursor_generation": 9,
+      "query_bits": "4024000000000000",
+      "result": {
+        "selected": 0,
+        "cursor_generation": 9,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "last_exact_end",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4024000000000000",
+          "successor": 1,
+          "end_bits": "4024000000000000"
+        },
+        {
+          "start_bits": "4034000000000000",
+          "length_bits": "4010000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 9,
+      "current": null,
+      "cursor_generation": 9,
+      "query_bits": "4038000000000000",
+      "result": {
+        "selected": 1,
+        "cursor_generation": 9,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "past_all",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4024000000000000",
+          "successor": 1,
+          "end_bits": "4024000000000000"
+        },
+        {
+          "start_bits": "4034000000000000",
+          "length_bits": "4010000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 9,
+      "current": null,
+      "cursor_generation": 9,
+      "query_bits": "4039000000000000",
+      "result": {
+        "selected": null,
+        "cursor_generation": 9,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "iterator_order_not_minimum_start",
+      "segments": [
+        {
+          "start_bits": "4034000000000000",
+          "length_bits": "4024000000000000",
+          "successor": 1,
+          "end_bits": "403e000000000000"
+        },
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4000000000000000",
+          "successor": null,
+          "end_bits": "4000000000000000"
+        }
+      ],
+      "generation": 4,
+      "current": null,
+      "cursor_generation": 4,
+      "query_bits": "3ff0000000000000",
+      "result": {
+        "selected": 0,
+        "cursor_generation": 4,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "linked_order_skips_unlinked_storage",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "3ff0000000000000",
+          "successor": 2,
+          "end_bits": "3ff0000000000000"
+        },
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4059000000000000",
+          "successor": null,
+          "end_bits": "4059000000000000"
+        },
+        {
+          "start_bits": "4008000000000000",
+          "length_bits": "3ff0000000000000",
+          "successor": null,
+          "end_bits": "4010000000000000"
+        }
+      ],
+      "generation": 4,
+      "current": null,
+      "cursor_generation": 4,
+      "query_bits": "4000000000000000",
+      "result": {
+        "selected": 2,
+        "cursor_generation": 4,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "zero_length_exact_end",
+      "segments": [
+        {
+          "start_bits": "4000000000000000",
+          "length_bits": "0000000000000000",
+          "successor": null,
+          "end_bits": "4000000000000000"
+        }
+      ],
+      "generation": 4,
+      "current": null,
+      "cursor_generation": 4,
+      "query_bits": "4000000000000000",
+      "result": {
+        "selected": 0,
+        "cursor_generation": 4,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "equal_generation_all_bits",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4038000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 4294967295,
+      "current": null,
+      "cursor_generation": 4294967295,
+      "query_bits": "0000000000000000",
+      "result": {
+        "selected": 0,
+        "cursor_generation": 4294967295,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "generation_wrap_stale",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4038000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 0,
+      "current": 0,
+      "cursor_generation": 4294967295,
+      "query_bits": "0000000000000000",
+      "result": {
+        "selected": 0,
+        "cursor_generation": 0,
+        "current_unchanged": 0,
+        "branch": "search"
+      }
+    },
+    {
+      "name": "generation_wrap_equality_has_no_epoch",
+      "segments": [
+        {
+          "start_bits": "0000000000000000",
+          "length_bits": "4038000000000000",
+          "successor": null,
+          "end_bits": "4038000000000000"
+        }
+      ],
+      "generation": 0,
+      "current": 0,
+      "cursor_generation": 0,
+      "query_bits": "bff0000000000000",
+      "result": {
+        "selected": null,
+        "cursor_generation": 0,
+        "current_unchanged": 0,
+        "branch": "cached_successor"
+      }
+    },
+    {
+      "name": "one_addition_not_subtracted_comparison",
+      "segments": [
+        {
+          "start_bits": "3fefffffffffffff",
+          "length_bits": "3c90000000000000",
+          "successor": null,
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "generation": 1,
+      "current": null,
+      "cursor_generation": 1,
+      "query_bits": "3ff0000000000000",
+      "result": {
+        "selected": 0,
+        "cursor_generation": 1,
+        "current_unchanged": null,
+        "branch": "search"
+      }
+    }
+  ],
+  "reset_controls": [
+    {
+      "before_current": null,
+      "owner_generation": 0,
+      "after": {
+        "current": null,
+        "cursor_generation": 0
+      }
+    },
+    {
+      "before_current": 0,
+      "owner_generation": 7,
+      "after": {
+        "current": null,
+        "cursor_generation": 7
+      }
+    },
+    {
+      "before_current": 42,
+      "owner_generation": 4294967295,
+      "after": {
+        "current": null,
+        "cursor_generation": 4294967295
+      }
+    }
+  ],
+  "counts": {
+    "selection": 24,
+    "reset": 3
+  },
+  "passed": true,
+  "target_execution": false,
+  "excluded": [
+    "NaN/Infinity/overflow",
+    "callback or concurrent mutation",
+    "actual pointer lifetime/refcounts",
+    "native host format or timeline callback",
+    "seek-to-frame conversion"
+  ]
+}

@@ -1,0 +1,306 @@
+{
+  "schema_version": 1,
+  "review_id": "APP018-PROJECT-CLOCK-NATIVE-REVIEW",
+  "reviewed_utc": "2026-10-21T00:49:42.926332+00:00",
+  "status": "no open actionable defect in the reviewed conditional direct-read domain",
+  "reviewer_role": "Independent review of root application composition and peer prepared-rate claims. Reviewer authored builder-rate-provider, so that study is a cited input, not independently revalidated scientific interpretation here.",
+  "application_modified": false,
+  "target_executed": false,
+  "target_runtime_comparisons": 0,
+  "tests_run_by_this_reviewer": false,
+  "scope": [
+    "Read-only new production diff and surrounding source preparation/transport; no broad test rerun.",
+    "Explicit stereo PCM24 source-event audition with factor1 application-supplied builder/reader clock, admitted source state and finite whole rates8k..192k.",
+    "Original source rate, saved clip datum and application timeline rate remain separate. No saved CPR project-rate recovery or complete ordinary channel claim."
+  ],
+  "checks": [
+    {
+      "area": "Rate ownership and operation order",
+      "result": "pass",
+      "detail": "CPRPlacedSourceEventPlan replays the preserved native tempo for Start and preserved scalar type10 for Length/Offset. Only the explicit mode supplies project.sampleRate to existing builder and reader arithmetic. CPRNativeTimelineStream keeps each retained accessor sourceRate\u2192sourceRate, while its output format uses timelineRate. There is no SRC insertion or source-rate rewrite in this path."
+    },
+    {
+      "area": "Builder/reader equality assumptions",
+      "result": "pass with explicit context limitation",
+      "detail": "App uses positive integral rate and factor1, making the concrete widened Float32 base product equal the supplied rate. This does not establish that the native registry config, VstDeck global period or device has those values. BRP2/BRP5 preserve that distinction."
+    },
+    {
+      "area": "Read capacity and endpoints",
+      "result": "pass",
+      "detail": "Before preparation and again in stream construction, separately quantized start/end/offset must yield last>first, seek>=0, and last-first<=availableFrames-seek. Up-clock raw windows exceeding actual source are rejected; no repetition, interpolation or EOF padding is used. The previous native selector/zero-length-intersection/positive full-read rules remain unchanged."
+    },
+    {
+      "area": "Trim offset semantics",
+      "result": "pass in declared domain",
+      "detail": "A saved native offset expressed in canonical time is quantized using the supplied timeline clock. With differing source rate the resulting raw source-frame index need not equal that same number of source-file seconds. The source datum and bytes remain unchanged; this mode must not be described as preserving pitch or the same physical source-time interval."
+    },
+    {
+      "area": "Retained accessor, gain and transport",
+      "result": "pass",
+      "detail": "The active descriptor retains its accessor across blocks. Direct source-rate equality avoids rate-converter history. Each read copies the returned samples and applies checked Float32 event gain once. Rebase worker scheduling, UI seconds-to-start-frame and AVAudioEngine/device output remain application behavior, not a reconstructed full Cubase channel."
+    },
+    {
+      "area": "UI and persistence boundaries",
+      "result": "pass",
+      "detail": "Picker labels project clock/unconverted, explains changed speed and pitch, states that Rebase supplies clock because original project rate is unrecovered, and retains separate original-rate and converter choices. Preparation creates ephemeral playback info; this diff does not rewrite saved CPR, attachment, frozen import timing or project clips."
+    },
+    {
+      "area": "Official documentation",
+      "result": "supported as documentation only",
+      "detail": "Independent official Steinberg search results confirm unconverted differing-rate media can change speed/pitch, project sample rate governs recording/playback, and import conversion is a separate option. These pages do not specify exact frame quantization, endpoint behavior, effective native object state or current WAV backend."
+    },
+    {
+      "area": "Prepared replacement request versus returned rate",
+      "result": "pass narrow original-instruction check",
+      "detail": "PREP-RATE-4 has one Double FMUL of VstDeck+310/+318 at10044fc74..80 followed by10043760c, which tail-dispatches provider+a8 without modifying D0. PREP-RATE-5 separately calls backend+38 and stores its Float32 return at wrapper+a8 (10040b820..830);10040d498 loads that field. This does not establish request acceptance, equality or ordinary-file eligibility."
+    }
+  ],
+  "findings": [],
+  "validation_observed": {
+    "root_focused_log": {
+      "path": "research/evidence/application/APP018/placed-tests-first.log",
+      "bytes": 8548,
+      "sha256": "c0fc9e642526b428f60557605bbeb19ccb8135dcdff72823ca2a22e26b2d4772"
+    },
+    "root_focused_result": "8 tests/1 suite passed; inspected retained log, not rerun",
+    "release_metadata": {
+      "path": "research/evidence/application/APP018/gui-release-build.json",
+      "bytes": 219,
+      "sha256": "8d70d9eaeb083ca64cd21b918d63b6c5ce9a3f5e6066c1129bfcd525a7f1e73e"
+    },
+    "release_binary_sha256": "ed2b6bd0e0b1bff3a34eec3dd44e090350fd405dc3efff020744b48b3447a1e3",
+    "release_claim_limit": "Release file hash checked only. Native GUI acceptance and full suite remain separate parent/peer evidence."
+  },
+  "prepared_original_checks": [
+    {
+      "entry": "0x10044fae0",
+      "original_words_checked": 198,
+      "native": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/pass4/native-10044fae0.txt",
+        "bytes": 9307,
+        "sha256": "126b21805a8994269d4b4836559f9d658a86c220162dc3db001f6357fffd33ac"
+      }
+    },
+    {
+      "entry": "0x10043760c",
+      "original_words_checked": 6,
+      "native": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/pass5/native-10043760c.txt",
+        "bytes": 411,
+        "sha256": "0b8fdde2a574c474c86635f450ea4bf7f1d4ae62671d998059d242924f1ee27f"
+      }
+    },
+    {
+      "entry": "0x10040b6d8",
+      "original_words_checked": 121,
+      "native": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/pass3/native-10040b6d8.txt",
+        "bytes": 5675,
+        "sha256": "7f71260e724083b461e0758d5b655b2c5f49a42360cb06fe6a154d3c07f34da9"
+      }
+    },
+    {
+      "entry": "0x10040d498",
+      "original_words_checked": 2,
+      "native": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/pass4/native-10040d498.txt",
+        "bytes": 237,
+        "sha256": "ffe38e346d12ed256b34015ec3da93c40547c3ed8f74ac063128d77db7818e88"
+      }
+    }
+  ],
+  "documentation_review": {
+    "method": "Official Steinberg web search content independently reread. Initial direct page opens identified15.0 pages; later section fetches timed out, then official indexed page contents supplied relevant passages.",
+    "sources": [
+      {
+        "title": "Importing Media",
+        "url": "https://www.steinberg.help/r/cubase-pro/15.0/en/cubase_nuendo/topics/pool/pool_media_importing_c.html"
+      },
+      {
+        "title": "Project Setup Dialog",
+        "url": "https://www.steinberg.help/r/cubase-pro/15.0/en/cubase_nuendo/topics/project_handling/project_handling_project_setup_dialog_r.html"
+      },
+      {
+        "title": "Import Options Dialog for Audio Files",
+        "url": "https://www.steinberg.help/r/cubase-pro/15.0/en/cubase_nuendo/topics/importing_audio_and_midi/importing_audio_and_midi_open_options_dialog_r.html"
+      }
+    ],
+    "version": "Cubase Pro15.0 family",
+    "no_runtime_claim": true
+  },
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRPlacedSourceEventPlan.swift",
+      "bytes": 6513,
+      "sha256": "28b24895ee19eaf0b8193ec81144ffef3256faf2ffa8e067be66b6189d9077bd"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 9920,
+      "sha256": "4d34133eac2884913b702fd865fbca361be92023838369eeab26235d18103819"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeAudioAccessor.swift",
+      "bytes": 10508,
+      "sha256": "0045544a4ddff95bf1badaa42b5dca58de43c994c389527182d2121a91fb27da"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 11393,
+      "sha256": "373ebaf4615e55b753a3ea9605e8a657da5d62a5e83742aa820fcf083cb06aec"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 9678,
+      "sha256": "b36f3a3fbad1374d90fbb0544d151a4815c9c91f926d4dd5120bd86d912630b1"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8748,
+      "sha256": "447e435835317ff3a0fb66dfeb855fa24b79d42106694d0ce9acebc9bbfab9d7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "bytes": 10182,
+      "sha256": "20b2388abdf78d896d33381950869b7347fc8c6e252729ff4cb00b8e57b38f20"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+      "bytes": 8770,
+      "sha256": "fae36af5825d58fcf1ed5ea0a95deba48f4ddc0b46e298be35f8496dcb92f4e9"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "bytes": 22654,
+      "sha256": "05a057537dd6a649a6a1bd5cfee2373cbc05faef738f52e839fedee7c6391e7f"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRPlacedSourceEventTests.swift",
+      "bytes": 28538,
+      "sha256": "f505ebdf76966929e848d4eb2e2e774062c119a3c7f601a99f566afcadc4698e"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_builder.c",
+      "bytes": 4119,
+      "sha256": "f744ebced17794fcb62f3a36e0d10c8bb1c735aa769612ffb652e546b28464df"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_reader.c",
+      "bytes": 8196,
+      "sha256": "6697ca1b9ce8725324362b2da54ac6432b1d64c8dcbb48adfc3464322dba4e0b"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_seek.c",
+      "bytes": 2274,
+      "sha256": "355b2818498bf35bc756ab671fbb4aa64cadd6dc823f54ed386bfb5bf997581e"
+    }
+  ],
+  "evidence_pins": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/finding.json",
+      "bytes": 15602,
+      "sha256": "f6448e5a71e2110f70246febd2d66c6b7965f97ff23bc9e9075a6abf3c4bc121"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/finding.json",
+      "bytes": 12852,
+      "sha256": "111ec14e07fb9a88b26a558c75a0c99eb3c8b1d2674394a889556c26cb6f7a75"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/finding.json",
+      "bytes": 12941,
+      "sha256": "e0797ab18bf763c94243e4f4dfff2bced4f0fb608d9cde681913b7509220ad9d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/finding.json",
+      "bytes": 19331,
+      "sha256": "aa9e0ef239dfb7e3516bf198c77d45881a73e3fc6b0a2d51b5994f8fa1fcf1bd"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/finding.json",
+      "bytes": 33246,
+      "sha256": "889f90405c4d5607958f92f35b38e99a1b821f3708d038eda0ee53819eea657b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/finding.json",
+      "bytes": 31753,
+      "sha256": "d76301f9ef7e25345c0e22fdded03aecff7e41f5ffbd0729985a0018518a1ea2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/finding.json",
+      "bytes": 19214,
+      "sha256": "456e462f8dbc13075ca3074ccd929654e0b856a8d61d236f05adc513e2286be6"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/finding.json",
+      "bytes": 7592,
+      "sha256": "95258c04e8174d326e284dff5710a49ddd813ca099965e62f9e7dbab9be2c3a5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/finding.json",
+      "bytes": 27688,
+      "sha256": "510aa3182cd3179b2b2e6c8d1dcd76cb40dfe36625e224281c0ff93ff39df9be"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/artifact-manifest.json",
+      "bytes": 93296,
+      "sha256": "64fa01bc5de7b90c623507d4ae0eb52e5122c6f5bb2b0e24b5e4160b2ea894f3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/artifact-manifest.json",
+      "bytes": 45401,
+      "sha256": "4d9208c4ebec79ec1cf749049c3531b973361cc66f7e1a007640ff17e462f4ca"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/artifact-manifest.json",
+      "bytes": 35554,
+      "sha256": "e385de0e94fbddba2c4a7967bcbf7916a85e3540f9fc55a3d3c1c17f7a84da26"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/artifact-manifest.json",
+      "bytes": 89454,
+      "sha256": "a42b429f15869cdc96777a4b45f4e86480bc23de369caf7c1c1e8a41096f12da"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/artifact-manifest.json",
+      "bytes": 83621,
+      "sha256": "5d7d93282408b2b3b703ec9d6d8df5694d15ee1953cb3126c42b66a94ccaa0a8"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/artifact-manifest.json",
+      "bytes": 67576,
+      "sha256": "09f04a50114fbaf475904be4fe0d767d7763e047a10ce2a7d41945a984d34f8e"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/artifact-manifest.json",
+      "bytes": 117670,
+      "sha256": "8d87f2d1b9d79e7225509bd0e6587da96216944b30d4719a439f3bd4edd110bf"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/artifact-manifest.json",
+      "bytes": 93355,
+      "sha256": "ebebedc2afafb3f5af440bb54e15e4cea02cf64c40a089933a16e82d90e17aa3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/artifact-manifest.json",
+      "bytes": 91809,
+      "sha256": "8de873442af33b9f768d48b7cea8d31c4f2dc1b1c7528bf93e47ce547f9628d1"
+    },
+    {
+      "path": "research/evidence/cubase-documentation/project-rate-001/finding.json",
+      "bytes": 2682,
+      "sha256": "4065e5da3bced53d7539bd2abcd7ece22cda7097bbe12cb5a5f557a6a2c7054c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/attributes/source_tools.py",
+      "bytes": 3060,
+      "sha256": "f24eb1ee109bc9a57ce54d001d56bf7c7298469df54aeac9283e08ddd1eb3791"
+    }
+  ],
+  "limitations": [
+    "No native target execution, hardware output equivalence, full project render, saved CPR rate decoding or registry replacement equivalence.",
+    "Current source contracts restrict direct fresh-source state; warped/prepared/grouped/alternate scrub paths are not admitted by these application changes.",
+    "Documentation revises the automatic-conformer hypothesis; it does not itself prove this source reconstruction is the active hosted path.",
+    "Independent stream tests are being authored by a different reviewer and are not claimed by this review. Source pins represent exactly the files inspected here."
+  ]
+}

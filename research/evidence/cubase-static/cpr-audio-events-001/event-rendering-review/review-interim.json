@@ -1,0 +1,83 @@
+{
+  "at_utc": "2026-10-19T14:20:21.277727+00:00",
+  "status": "Interim static review: construction checked; eventual PCM consumer pending author trace",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "input_checks": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/input-checks-initial.json",
+    "sha256": "2f6e173538e43b6978e41bbbaa39f2c953ba484f70bd1622b686296fcb16d10c"
+  },
+  "accepted": [
+    {
+      "id": "ER-REV-001",
+      "ranges": [
+        "100113780..7d8",
+        "101a17ccc..cd0",
+        "101a17cec..d04",
+        "101a17d14..d18"
+      ],
+      "claim": "PAudioSegment constructor retains selected stream at+38 and initializes Float32gain+68=1. Start setter storesDouble+50; end setter computes FMAX(end\u2212start,0) then virtual+e0 stores+58; offset setter stores+60. Finite inputs only; this alone says nothing about PCM gain application."
+    },
+    {
+      "id": "ER-REV-002",
+      "ranges": [
+        "100212f5c..68",
+        "100213014..058",
+        "100213058..0a4",
+        "10020f668..674",
+        "10020f7b8..7c0",
+        "10020fae4..ae8",
+        "100210208..210",
+        "1002104fc..5c0"
+      ],
+      "claim": "With successful selected stream, both neighbor getters null, event+90/+98 null, effective automatic-fade path bypassed and rounded start<end, the normal remainder creates exactly one PAudioSegment. Fade extents stay zero because helper zero-initializes metadata and only computes nonzero candidates under nonnull fade pointers."
+    },
+    {
+      "id": "ER-REV-003",
+      "ranges": [
+        "10020f630..648",
+        "10021051c..58c"
+      ],
+      "claim": "The builder converts scalar values, adds signed0.5 selected by finite sign, FCVTZS toInt64, then converts rounded integer positions back before setter calls. Do not substitute raw event doubles or generic floor(x+.5) for all signs, or claim NaN behavior from C pseudocode."
+    }
+  ],
+  "challenges": [
+    {
+      "id": "ER-REV-004",
+      "status": "communicated to author",
+      "ranges": [
+        "1001f755c..584",
+        "10020f654..784"
+      ],
+      "claim": "Absence of local track+170 automatic-fade object does not prove bypass; getter invokes track+618 then101720d58 fallback. Need effective inherited result, or caller builderflags&0x28!=0, or another proved branch guard."
+    },
+    {
+      "id": "ER-REV-005",
+      "status": "communicated to author",
+      "evidence": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/pass4/native-100124060.txt",
+        "sha256": "f16f0082cea13580e77fc3ea93830223f816427b1a0b0204e4a2f05f8e1c51f0"
+      },
+      "claim": "Caller100124060 ORs builderflags2, which bypasses mute test through builder bit1. It does not set automatic-fade suppression0x28. Its reuse of builder doesnot alone identify ordinary playback semantics."
+    },
+    {
+      "id": "ER-REV-006",
+      "status": "communicated to author",
+      "evidence": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/pass4/native-100126bac.txt",
+        "sha256": "55dffd860ebebc2df734c1a457aa52eab4f840db1971ae153acfc86aa7f7f8bb"
+      },
+      "claim": "Initial playlist lookup selects firstend>=query, including exactend. The eventual reader must bind boundary progress; lookup alone isnot a half-open PCM interval."
+    },
+    {
+      "id": "ER-REV-007",
+      "status": "not yet established",
+      "claim": "No actual PCM consumer of segment+68gain has been bound in reviewed passes1\u20134. Native target playback remains gated."
+    }
+  ],
+  "nonclaims": [
+    "No complete fade/loop processor reconstruction.",
+    "No source/backend identity, real PCM, output level or target runtime equivalence established.",
+    "No Application source/test changes."
+  ],
+  "target_execution_count": 0
+}

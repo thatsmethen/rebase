@@ -1,0 +1,112 @@
+{
+  "id": "CPR-AUDIO-TIMING-001-INDEPENDENT-REVIEW",
+  "reviewer": "target_intake",
+  "at_utc": "2026-10-19T11:04:18.467706+00:00",
+  "status": "accepted bounded fixed-clock static contract; map implementation remains deferred",
+  "scope": "Independent source-byte, native-instruction and retained-REA review; analytical arithmetic oracle. No target execution, runtime conformance or full importer approval.",
+  "reviewed_finding": {
+    "path": "research/evidence/cubase-static/cpr-audio-timing-001/finding-v1.json",
+    "sha256": "2169213ddb52e087005c8683b38f4c3d29720f337187ff187e9b0c47be0d478e"
+  },
+  "actionable_blockers_for_fixed_clock": [],
+  "checks": [
+    {
+      "topic": "source provenance",
+      "result": "Independently parsed Mach-O segments and LC_FUNCTION_STARTS. All 38 source intervals (7364 bytes), 1841 original LLVM words, 1706 REA instruction addresses and REA readback bytes match. Additional reader/named-field native words and vtable slots match original source.",
+      "evidence": "reviewer-source-checks.json"
+    },
+    {
+      "topic": "fixed arithmetic",
+      "result": "10173ad7c..ad9c and 10173b204..b228 load original BPM f32, divide f32 60/BPM, promote rounded period, then perform two separate f64 operations. Forward divides seconds by period then multiplies 480. Inverse multiplies ticks by period then divides480. Neither passes through map quantization/cache.",
+      "limits": "Nearest/ties-even finite normal arithmetic is an explicit candidate domain; process FPCR and runtime outcomes not observed."
+    },
+    {
+      "topic": "numeric oracle",
+      "result": "36 Fraction-based IEEE vectors with exact bits; seven discriminate reordering. Oracle does not call target code or use host floating arithmetic to calculate result bits.",
+      "evidence": "reviewer-fixed-clock-vectors.json"
+    },
+    {
+      "topic": "interface binding",
+      "result": "Datum reader101c23250..260 supplies identifier at104fe7d50. QueryInterface10173f3e8..420 compares the two qwords at that address then returns full-object+160. The source-file identifier bytes are zero-initialized, so this is address/use binding rather than an asserted runtime GUID. Secondary vtable104675520+28/+30 points to10173b1cc/10173b6cc; original thunks subtract160 and branch to forward/inverse functions. Source tag0 converter uses+30; destination tag0 uses+28."
+    },
+    {
+      "topic": "post-read cache",
+      "result": "Reader10173c0c4..cc sets list+50 bit0x200 before post-read callback at10173c0dc. Cache builder10173b4cc returns when this bit is already set. Therefore saved A/+50 anchors are initially retained under that path. When recomputed, first tick getter/setter binds+58 (native101739edc/ed4) and both first tick and cached time become zero; later cached times accumulate segment durations.",
+      "limits": "List method+68 and shared post-read callback may affect state; variation/visibility branches exist. Serialized list contents alone are insufficient to certify active map state."
+    },
+    {
+      "topic": "one-point path",
+      "result": "Forward search10173b064 count<2 selects index0 without preparing cache; inverse invokes cache preparation then iterator tick search count1 selects0. For valid unmodified one-point state with A=B=0 and positive period, each path is bounded; positive forward still uses map quantization, inverse does not.",
+      "limits": "This does not approve one-point importing: item attrs/variation lifecycle and selected-list conditions remain to be enforced. Original serialized nonzero anchors or cache changes can make a naive reconstructed clock disagree."
+    },
+    {
+      "topic": "multi-point search",
+      "result": "Count2 forward query<=last.seconds selects index0 via ASR10173b108 and move10173b114; query>last selects last. At exact last coordinate it uses preceding segment. Count2 inverse enters real tail helper1016c1424, which dispatches iterator virtual methods; raw decompiler warning does not indicate corrupt native instructions.",
+      "limits": "Full iterator-method state trace and strict sorted/cache-valid list constraints remain necessary before certifying a generic jump-map implementation."
+    },
+    {
+      "topic": "finite jump segment",
+      "result": "Inverse jump/last-segment native10173b44c..46c uses delta*t32period, /480, then separate add cached time. Forward jump native10173afc8..afdc uses delta/period then FMADD with480 and tick anchor. Preserve the fused final addition if implementing this path."
+    },
+    {
+      "topic": "template structure",
+      "result": "All ten tempo v3 objects consumed exactly through track attributes and per-record attribute groups. Four selected fixed, four selected one-point maps, two selected two-point maps. Every first A/B anchor is0. Both tempo and signature variation collections are explicitly parsed; all observed collections have serialized index10, flags2, one v0 child v1, null MDataNode alternate and trailing i32zero.",
+      "limits": "Null alternate is an observed structural condition; native lifecycle effect is separately reviewed, not inferred from nullness.",
+      "evidence": "reviewer-template-state.json"
+    }
+  ],
+  "corrected_decompiler_artifacts": [
+    {
+      "address": "0x10173b024",
+      "word": "0x1f410800",
+      "instruction": "fmadd d0,d0,d1,d2",
+      "effect": "Fused multiply tick*1000 plus0.5, rather than two rounded operations."
+    },
+    {
+      "address": "0x10173b028",
+      "word": "0x1e654000",
+      "instruction": "frintm d0,d0",
+      "effect": "Floating floor; not FCVTZS/integer cast. Native positive-map quantizer is floor(fma(tick,1000,0.5))/1000. No integer saturation should be inferred."
+    },
+    {
+      "address": "0x10173b108..0x10173b114",
+      "effect": "Count2 initializes selected index0 for query<=last; Ghidra control-flow expression loses this assignment."
+    },
+    {
+      "address": "0x10173b4cc",
+      "effect": "Integer-looking decompiler casts around cache assignment are type artifacts; original floating arithmetic and STR D store govern."
+    }
+  ],
+  "prospective_disconfirming_cases": [
+    "Compare target fixed conversions at stored f32 BPM126.5 and next f32 mantissa, including supplied reordering discriminators, under a known FPCR.",
+    "For future map implementation, test before/at/after the last point and interior knot, exact positive quantizer half-step, and negative/zero branch separately.",
+    "Change serialized cache A with cache-valid flag retained versus invalidated; observe post-read normalization and resulting map conversion before accepting a recompute policy.",
+    "Exercise non-null alternate variation, nondefault collection selection, and item attrs that could alter map ownership; currently excluded from any map approval."
+  ],
+  "files": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/reviewer-check.py",
+      "sha256": "a7f607eb582e7fbcd3072bb71ef8583f6ee0454f8b88c5c719e50f271d4cbcbd"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/reviewer-source-checks.json",
+      "sha256": "484bc05a3a4e966454600213b374e2c3227bd75982f7164a5fa50d132caa2ece"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/reviewer-fixed-clock-vectors.json",
+      "sha256": "bc9d7eef520a3c82e1941ff3e37b48d07dc9dc09a21642db058062cc97221a02"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/reviewer-fixture-state.py",
+      "sha256": "a415661c7b04f9da694b4283d1adad962996c7324ca32e064830a9a6cee7622d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/reviewer-template-state.json",
+      "sha256": "c23cf70470d39040a731a951406c1ac61514bfa5b3b4385701ef8cb5f6c37590"
+    }
+  ],
+  "conformance_counts": {
+    "reference_runtime": 0,
+    "candidate_target_runtime_comparisons": 0
+  }
+}

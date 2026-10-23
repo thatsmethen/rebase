@@ -1,0 +1,31 @@
+{
+  "review_id": "APP002-AMBI-C-SOURCE-REVIEW",
+  "reviewer": "root independent of candidate author",
+  "date_utc": "2026-10-19T08:34:57.843352+00:00",
+  "inputs": {
+    "candidate/ambiconverter_processor/ambi_processor.c": "63908b7352e8e3e72baf545348ab0cd8d54c81a6ebaedfab5528141afe76d726",
+    "candidate/ambiconverter_processor/ambi_processor.h": "d132434743a64bb48de6d63d0d1c73d74813eac51e5ccb3b21a4661498ea4062",
+    "candidate/ambiconverter_processor/test_processor.py": "1378ace958fc592757eb43afeff416803adcbc9844cc5177eb14dd7f10f76373"
+  },
+  "review_basis": [
+    "research/evidence/cubase-static/ambisonic-higher-order-review/review.json",
+    "research/evidence/cubase-static/ambisonic/state-contract-finding.json",
+    "research/evidence/cubase-static/ambisonic-state-review/review.json"
+  ],
+  "checked": [
+    "Scatter direction uses output[map[source]], gains subsequently index destination.",
+    "Threshold distinction: direction >=0.5, bypass >0.5. Ordered queues consume last successful point, preserve prior state on failed point reads.",
+    "Zero frames consume parameters before audio descriptors. Bypass precedes silence skip. Silence skip leaves sample storage unchanged and propagates complete mask.",
+    "Corresponding alias detection stages all input planes before scatter; cross-channel and partial alias rejected. Bounds and pointer-end integer overflow checked before overlap arithmetic.",
+    "Exact source-derived f64 coefficients and pre-rounded f32 constants retained; f32 multiply remains f32. No fast-math or FMA contraction allowed.",
+    "Arithmetic domain lower 8*minimum-normal and upper max-finite/8 encloses all reviewed coefficient products within finite normal range; signed zero supported.",
+    "Error-state changes are staged and atomic. Candidate restricts descriptors, normalized parameters, silence validity and FP control more narrowly than unproven native error behavior.",
+    "Independent test oracle reads pinned source Mach-O tables and uses rational nearest-even conversion rather than candidate table parsing."
+  ],
+  "actionable_defects_found": [],
+  "limitations": [
+    "Source review supports only the declared restricted subset. No target runtime executed.",
+    "No VST3 host ABI, meters, arbitrary live configuration changes or full lifecycle parity claimed.",
+    "Wrapper and actual build still require their separate integration tests."
+  ]
+}

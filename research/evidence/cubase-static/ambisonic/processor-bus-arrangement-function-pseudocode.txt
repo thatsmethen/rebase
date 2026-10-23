@@ -1,0 +1,154 @@
+
+undefined8 FUN_00152824(long param_1,ulong *param_2,int param_3,ulong *param_4,int param_5)
+
+{
+  bool bVar1;
+  int iVar2;
+  int iVar3;
+  long *plVar4;
+  long lVar5;
+  _Unwind_Exception *exception_object;
+  ulong uVar6;
+  undefined8 uVar7;
+  long *plVar8;
+  int iVar9;
+  undefined1 auStack_c8 [24];
+  long local_b0 [3];
+  long local_98 [3];
+  undefined1 auStack_80 [24];
+  undefined1 auStack_68 [24];
+  
+  uVar7 = 1;
+  if ((param_3 != 1) || (param_5 != 1)) goto LAB_00152c14;
+  if (*param_2 == 0) {
+    iVar9 = 0;
+    uVar6 = *param_4;
+    if (uVar6 != 0) goto LAB_0015288c;
+LAB_00152938:
+    iVar2 = 0;
+LAB_0015293c:
+    if (*(undefined8 **)(param_1 + 0x68) == *(undefined8 **)(param_1 + 0x60)) {
+LAB_00152c70:
+      exception_object = (_Unwind_Exception *)FUN_0001193c();
+      FUN_001581f4(auStack_c8);
+      FUN_001581f4(local_98);
+      FUN_001581f4(auStack_80);
+                    /* WARNING: Subroutine does not return */
+      __Unwind_Resume(exception_object);
+    }
+    plVar8 = (long *)**(undefined8 **)(param_1 + 0x60);
+    if (plVar8 == (long *)0x0) {
+      uVar7 = 1;
+      plVar8 = (long *)FUN_00013ef8(param_1);
+    }
+    else {
+      iVar3 = (**(code **)(*plVar8 + 0x40))(plVar8,"Vst::AudioBus",1);
+      if (iVar3 == 0) {
+LAB_001529d0:
+        plVar8 = (long *)FUN_00013ef8(param_1);
+joined_r0x001529fc:
+        uVar7 = 1;
+      }
+      else {
+        if ((iVar9 == 4) && (iVar2 == 4)) {
+          FUN_00012ac4(param_1);
+          FUN_00010b98(param_1,L"Ambi 1st-Order In",*param_2,0,1);
+          uVar7 = 0;
+          uVar6 = *param_4;
+        }
+        else {
+          if (plVar8[7] == 0xf00000) {
+            *(int *)(param_1 + 0x154) = iVar9;
+            plVar8 = (long *)FUN_00013ef8(param_1);
+            goto joined_r0x001529fc;
+          }
+          FUN_00012ac4(param_1);
+          uVar6 = 0xf00000;
+          uVar7 = 1;
+          FUN_00010b98(param_1,L"Ambi 1st-Order In",0xf00000,0,1);
+        }
+        FUN_00010c7c(param_1,L"Ambi 1st-Order Out",uVar6,0,1);
+        *(int *)(param_1 + 0x154) = iVar9;
+        plVar8 = (long *)FUN_00013ef8(param_1);
+      }
+    }
+  }
+  else {
+    iVar9 = 0;
+    uVar6 = *param_2;
+    do {
+      iVar9 = ((uint)uVar6 & 1) + iVar9;
+      bVar1 = 1 < uVar6;
+      uVar6 = uVar6 >> 1;
+    } while (bVar1);
+    uVar6 = *param_4;
+    if (uVar6 == 0) goto LAB_00152938;
+LAB_0015288c:
+    iVar2 = 0;
+    do {
+      iVar2 = ((uint)uVar6 & 1) + iVar2;
+      bVar1 = 1 < uVar6;
+      uVar6 = uVar6 >> 1;
+    } while (bVar1);
+    if (((iVar9 != 9) || (iVar2 != 9)) && ((iVar9 != 0x10 || (iVar2 != 0x10)))) goto LAB_0015293c;
+    if (*(undefined8 **)(param_1 + 0x68) == *(undefined8 **)(param_1 + 0x60)) goto LAB_00152c70;
+    plVar8 = (long *)**(undefined8 **)(param_1 + 0x60);
+    if ((plVar8 == (long *)0x0) ||
+       (iVar2 = (**(code **)(*plVar8 + 0x40))(plVar8,"Vst::AudioBus",1), iVar2 == 0))
+    goto LAB_001529d0;
+    if (plVar8[7] == *param_2) {
+      *(int *)(param_1 + 0x154) = iVar9;
+      plVar8 = (long *)FUN_00013ef8(param_1);
+    }
+    else {
+      FUN_00012ac4(param_1);
+      uVar7 = FUN_00152d10(*param_2,0);
+      FUN_001583cc(auStack_80,uVar7,0xffffffff,1);
+      FUN_001583cc(local_b0," In",0xffffffff,1);
+      FUN_0015d35c(auStack_68,auStack_80,0xffffffff);
+      uVar7 = FUN_0015e54c(auStack_68,local_b0,0xffffffff);
+      FUN_0015d35c(local_98,uVar7,0xffffffff);
+      FUN_001581f4(auStack_68);
+      FUN_001581f4(local_b0);
+      FUN_001583cc(auStack_c8," Out",0xffffffff,1);
+      FUN_0015d35c(auStack_68,auStack_80,0xffffffff);
+      uVar7 = FUN_0015e54c(auStack_68,auStack_c8,0xffffffff);
+      FUN_0015d35c(local_b0,uVar7,0xffffffff);
+      FUN_001581f4(auStack_68);
+      FUN_001581f4(auStack_c8);
+      uVar7 = (**(code **)(local_98[0] + 0x20))(local_98);
+      FUN_00010b98(param_1,uVar7,*param_2,0,1);
+      uVar7 = (**(code **)(local_b0[0] + 0x20))(local_b0);
+      FUN_00010c7c(param_1,uVar7,*param_2,0,1);
+      FUN_001581f4(local_b0);
+      FUN_001581f4(local_98);
+      FUN_001581f4(auStack_80);
+      *(int *)(param_1 + 0x154) = iVar9;
+      plVar8 = (long *)FUN_00013ef8(param_1);
+    }
+    uVar7 = 0;
+  }
+  if (plVar8 != (long *)0x0) {
+    (**(code **)(*plVar8 + 0x20))(plVar8,"numberChannelsChanged");
+    plVar4 = (long *)(**(code **)(*plVar8 + 0x28))(plVar8);
+    if (plVar4 != (long *)0x0) {
+      (**(code **)(*plVar4 + 0x18))(plVar4,"nChannels",*(undefined4 *)(param_1 + 0x154));
+    }
+    FUN_00013ff4(param_1,plVar8);
+    (**(code **)(*plVar8 + 0x10))(plVar8);
+  }
+LAB_00152c14:
+  if ((*(char *)(param_1 + 0x168) == '\0') || (lVar5 = *(long *)(param_1 + 0x148), lVar5 == 0)) {
+    lVar5 = *(long *)(param_1 + 0x140);
+    if (lVar5 != 0) {
+      *(undefined4 *)(lVar5 + 0x14) = *(undefined4 *)(param_1 + 0x154);
+      FUN_00154864(lVar5,*(undefined4 *)(lVar5 + 0xc));
+    }
+  }
+  else {
+    *(undefined4 *)(lVar5 + 0x18) = *(undefined4 *)(param_1 + 0x154);
+    FUN_00154694(lVar5,*(undefined4 *)(lVar5 + 0x10));
+  }
+  return uVar7;
+}
+

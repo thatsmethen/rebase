@@ -1,0 +1,68 @@
+{
+  "tests": {
+    "path": "research/evidence/application/APP015/core-tests-first.log",
+    "bytes": 56188,
+    "sha256": "a7fbe87b02cf451dc66d16a55bbd3f498c62a01f0d24f9266c60dcfc37623170",
+    "passed": 258,
+    "suites": 40
+  },
+  "build_log": {
+    "path": "research/evidence/application/APP015/build-release.log",
+    "bytes": 6505,
+    "sha256": "ec98fbf69d75896fe29c901671dcd20d124d373b96528c0826e89c7571adb2da"
+  },
+  "executable_sha256": "65d0704e0897752c235d48e66ce96443f9f4b0a6c9366916efa5be2796d2fd41",
+  "gui_package_count": 2,
+  "gui_package_files": 9,
+  "native_studies": [
+    {
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder",
+      "finding_sha256": "e0797ab18bf763c94243e4f4dfff2bced4f0fb608d9cde681913b7509220ad9d",
+      "manifest_sha256": "e385de0e94fbddba2c4a7967bcbf7916a85e3540f9fc55a3d3c1c17f7a84da26",
+      "files": 150
+    },
+    {
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context",
+      "finding_sha256": "aa9e0ef239dfb7e3516bf198c77d45881a73e3fc6b0a2d51b5994f8fa1fcf1bd",
+      "manifest_sha256": "a42b429f15869cdc96777a4b45f4e86480bc23de369caf7c1c1e8a41096f12da",
+      "files": 349
+    }
+  ],
+  "reviews": [
+    "research/evidence/application/APP015/placed-source-independent-review.json",
+    "research/evidence/application/APP015/sealer-independent-review.json"
+  ],
+  "controls": [
+    "research/evidence/application/APP015/placed-source-oracle.py",
+    "research/evidence/application/APP015/placed-source-oracle.json",
+    "research/evidence/application/APP015/placed-instruction-verification.json",
+    "research/evidence/application/APP015/sealer-negative-controls.py",
+    "research/evidence/application/APP015/sealer-negative-controls-final.json"
+  ],
+  "implemented": [
+    "Native source-rate timeline audition accepts source-backed nonzero event starts, whole-frame trims and media offsets. It replays the source fixed/jump clock, distinguishes containing-track and clip datums, reconstructs the native signed builder quantization and then applies the distinct native reader quantization and exact PCM seeks.",
+    "Complete source media capacity is validated separately from the event interval; processing, attachment and original/report provenance gates remain enforced. Inspector and timeline display an ephemeral versioned source range without changing frozen V4 placement or creating playable Clips.",
+    "Absolute source timeline bounds extend to 24 hours while each immutable source/media and read block remains bounded. Independent controls include original LoFi tempo-knot placement at600s, compact whole-buffer comparisons, seek boundaries and edited/detached application-clock independence.",
+    "Existing original-rate and native mode0/1/2 converted zero-origin paths remain supported, full-suite checked and live GUI checked at44.1\u219248k. Rebase serial worker and AVAudioEngine delivery remain application choices."
+  ],
+  "limits": [
+    "Full Cubase fidelity is incomplete. Zero Cubase/proprietary target executions or runtime comparisons.",
+    "One direct stereo PCM24 source event at a time, whole-frame trim, one complete cluster source segment, no supported fade/inversion/warp/pitch/lane/overlap processing. Ordinary full-project playback, mixdown and exchange remain blocked by unresolved content.",
+    "Saved track delay is gated to positive zero; fresh resource state without later host callback delay mutations is an explicit reconstruction condition, not proof of effective restored hosted delay. Source-rate builder context is explicitly selected, not inferred as the native host default from file metadata.",
+    "Differing-rate placed/trimmed events remain unavailable until ordinary accessor seek, filter history, rate selection and reset lifecycle are recovered. The existing zero-origin converter modes have not been silently extended.",
+    "Pure C builder supports bounded canonical windows; app source selection uses the equivalent full direct-event interval within native ordinary positive window. Native loops/mapped partition expansion, complete channel inventory and concurrent mutations remain unresolved.",
+    "GUI evidence records own application telemetry and synthetic media; it is not DAC capture or reference audio. Independent GUI reviewer inspects retained evidence, not a separate replay."
+  ],
+  "retained_corrections": [
+    "Initial direct swift test invocation lacked Testing framework configuration; retained failure. Project test wrapper then passed focused tests and final258/40 suite.",
+    "Independent first compile corrected nested Swift Testing macros; two further runs corrected test-only /var versus /private/var snapshot relative-path handling. Failed logs retained; fourth independent5-test run and finalfull suite pass.",
+    "APP014 nonzero negative test is renamed to accurately describe its missing-media rejection; new source-backed attached controls validate admitted nonzero placement. HistoricalAPP014 source snapshot remains unchanged.",
+    "APP015 custody instrumentation independently reviewed; its hash-only records, required digests and recursive external references receive additional negative controls. Prior seals remain immutable.",
+    "Preexisting unsaved app session was preserved through Save As to a separate local recovery package before closing the old process. GUIQA used freshAPP015 packages; priorsealed packages remain unchanged."
+  ],
+  "next": [
+    "Recover ordinary accessor flags0x25/policy1 seek/read and resampler state lifecycle; compose differing-rate placed and trimmed event playback only after independent native-derived count/sample controls.",
+    "Bind mapped/loop partitions and complete channel inventory; add source-backed multiple events with native overlap/priority/fade semantics before full-project transport.",
+    "Continue toward complete native editing, MIDI, mixing, plug-in hosting, routing, persistence and interaction fidelity; do not treat this milestone as product completion."
+  ]
+}

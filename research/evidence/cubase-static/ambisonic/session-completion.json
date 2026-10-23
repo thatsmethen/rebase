@@ -1,0 +1,56 @@
+{
+  "completed_utc": "2026-10-19T05:21:00.680984+00:00",
+  "scope": "Static-only REA session; no target launch or plug-in activation",
+  "native_session_closed": true,
+  "close_result": {
+    "path": "/workspace/rebase/research/evidence/cubase-static/ambisonic/dsp-analysis-snapshot.json",
+    "bytes": 12146461,
+    "primitive_entries": 22,
+    "workflow_entries": 0,
+    "evidence_records": 37
+  },
+  "mcp_client_exit_code": 0,
+  "mcp_bundle_delivery": "Complete get_evidence_bundle exceeded the MCP10MiB response budget; full resource_constraint error retained in persistent-evidence-bundle.json. No truncated bundle was used.",
+  "recovery": "close_binary atomically saved dsp-analysis-snapshot.json. Its evidence_bundle object was extracted to snapshot-evidence-bundle.json and validated/exported by REA evidence-export.",
+  "export_command": [
+    "sh",
+    "scripts/rea",
+    "evidence-export",
+    "research/evidence/cubase-static/ambisonic/snapshot-evidence-bundle.json",
+    "research/evidence/cubase-static/ambisonic/dsp-evidence-bundle.json",
+    "--format",
+    "json"
+  ],
+  "export_result": {
+    "path": "/workspace/rebase/research/evidence/cubase-static/ambisonic/dsp-evidence-bundle.json",
+    "bytes": 6119140,
+    "records": 37
+  },
+  "retained_files": [
+    {
+      "path": "dsp-analysis-snapshot.json",
+      "bytes": 12146461,
+      "sha256": "d3b2d543bdbc59ed34d8a2c0bbba2004823b65ba5f5a54c01310aa74b107a167"
+    },
+    {
+      "path": "dsp-evidence-bundle.json",
+      "bytes": 6119140,
+      "sha256": "5dbde2eda7cc4d2df246618b67e5606ee679f613001061c673952884d34a3315"
+    },
+    {
+      "path": "first-order-finding.json",
+      "bytes": 16195,
+      "sha256": "26464fd1f96d299710c49a7b0735882d3095725449c0368ba894794a9ac791f9"
+    },
+    {
+      "path": "first-order-byte-ranges.json",
+      "bytes": 14723,
+      "sha256": "a58036a05a6d65107e12d61a3ec08b10cf01a31eeab780b70dc7b3db6050a685"
+    },
+    {
+      "path": "candidate-validation.json",
+      "bytes": 2457,
+      "sha256": "b6e216364cf55d698dc3beee85ea0793ae4e46f0bdfe41b99031000524871034"
+    }
+  ]
+}

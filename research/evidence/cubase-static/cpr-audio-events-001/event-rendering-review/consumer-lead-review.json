@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "at_utc": "2026-10-19T14:30:47.176983+00:00",
+  "status": "independent_original_instruction_consumer_lead; author_REA_capture_available; caller_role_unbound",
+  "scope": "Bounded original-byte dataflow from PAudioSegment to PCM gain loop; no target execution or native timeline playback acceptance.",
+  "source": {
+    "path": "research/targets/derived/Cubase15-arm64",
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "discovery": {
+    "script": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/scan_segment_references.py",
+      "sha256": "27a5b960cca911aff444030ca437315b33362f1ba8549967a114ccb618a90f40"
+    },
+    "result": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/segment-reference-candidates.json",
+      "sha256": "e0bf6eaa46ebd94f1f784bfe8da11ae32427e1e906808914a56d58b6f651391b"
+    },
+    "scan": "Aligned __text ADR/ADRP+ADD references to exact class literal, vtable addresses and descriptor; direct B/BL to selected concrete accessor targets. No indirect completeness.",
+    "result_summary": "Class-literal reference in LC interval10018fb40..100191f48 led to stream and gain field loads. All retained ADRP+ADD pairs adjacent; no direct accessor calls found."
+  },
+  "custody": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/consumer-lead-checks.json",
+      "sha256": "9c170031504dc570b350846e73efe3ee10fe1b9abdceca002bf79a300a20b857"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/input-checks-followup.json",
+      "sha256": "2ea7a4ccf53395fe056e246dee634c68b19fad97dc092fad4522863b5a770737"
+    }
+  ],
+  "primary_function": {
+    "start": "0x10018fb40",
+    "next_lc_start": "0x100191f48",
+    "metadata_interval_bytes": 9224,
+    "boundary_note": "LC_FUNCTION_STARTS interval includes cleanup/exception tails; not a claim of one linear body.",
+    "native": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/native-candidate-10018fb40.txt",
+      "sha256": "1482f1b83729e05205f7ce23882746ccb2cb36e8c069ea419c4973ea98041646"
+    }
+  },
+  "established_instruction_path": [
+    {
+      "range": "100190b08..100190b48",
+      "fact": "Successful virtual+40 class check against exact PAudioSegment literal10389270f and virtual+e8 positive-length check precede loads of selected stream from segment+38 and Float32 gain from segment+68; gain retained at stack+10."
+    },
+    {
+      "range": "100190b50..100190b74;100190c9c..100190ce0",
+      "fact": "Concrete PAudioSegment+d8/e8/+108 slots independently bind to direct Double getters at +50/+58/+60. Start, offset and length are passed through native scalar helper101c23e68 using stack+200 and datum stack+c8; results are not assumed raw sample coordinates. Later +0.5 then FCVTZS X seeks/length; global negative-coordinate semantics not inferred."
+    },
+    {
+      "range": "100190ce4..100190d74",
+      "fact": "Selected stream virtual+c8 produces clone. It must pass exact AudioStream class check at literal10389225a; selected clone retained. Local accessor constructed10036e34c with numerical format5, flag1, then10036e964 receives output receiverx26."
+    },
+    {
+      "range": "100190d78..100190db4",
+      "fact": "Clone rate from+140 is stored into local accessor+30. Gain compared to exact Float32 unity from100190004. Nonunity selects format5 via10036ee80 and output+198. Earlier sealed rate study independently binds format5 to Float32; actual multiply loop also operates on 32-bitfloat samples."
+    },
+    {
+      "range": "100190dc0..100190e20",
+      "fact": "Accessor seek10036f89c receives FCVTZS(offset_conversion+0.5). Remaininglength similarly rounded; each requested block is min(remaining,10000). Buffer byte capacity derived from output+108\u00d7request. Actual read is10036eff0(localaccessor,requestedFrames,buffer), whose return becomes signed32-tested actualframecount."
+    },
+    {
+      "range": "100190e54..100190efc",
+      "fact": "Only positive returnedcount reaches write loop. Exact gain1 bypasses multiply. Otherwise output+138 signed32 count times returnedFrames defines float elementcount. Vector loop multiplies16 samples per iteration with four FMUL.4S instructions; scalar tail FMUL handles remainder. Both use original Float32 gain, no addition, dB conversion or saturation observed in this loop."
+    },
+    {
+      "range": "100190f00..100190f98",
+      "fact": "Same PCM buffer passed to output+170 with actual returnedframecount and flag0. Write count below read count sets error/cancel flags. Positive-read loop subtracts actualreturnedcount from remaining; reader EOF comparison may set remaining0. Read<=0 sets error/cancel flags rather than endlessly retrying."
+    }
+  ],
+  "secondary_candidate": {
+    "function": "0x1017bb48c",
+    "native": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/native-candidate-1017bb48c.txt",
+      "sha256": "e05c5387f3bafdb90fef96ba7cc108b2eaa41e9c1b5e7c7efd3272d9ac613ece"
+    },
+    "observed": "Builder output class-checked as PAudioSegment; stream+38 at1017bb5c8, offset+108 at1017bb8d0, accessor seek10036f89c, reads10036eff0 at1017bb940/9ec, writes10036f500. No segment+68 load or FMUL found in full inspected interval.",
+    "priority": "Lower priority; not evidence that all PAudioSegment readers apply stored gain."
+  },
+  "disconfirming_checks": [
+    "Exact original class bytes and three primary coordinate slots independently read, not inferred from nearby strings.",
+    "Exact Float32 unity constant is set at100190004; no intervening s12 rewrite in retained path. Gain has scalar and vector multiplication implementations, rather than only a configuration setter.",
+    "Every retained native instructionword checked against pinned original bytes. Author pass4..8 raw derivatives/readback/REA addresses independently checked separately.",
+    "Other exact class-literal hits include type classifiers and stream-return helpers; they were not promoted to PCM readers.",
+    "1017bb48c independently reads selectedstream PCM without visible gain field use, so the primary gain rule is not generalized to every consumer."
+  ],
+  "remaining_boundaries": [
+    "Caller action/export/timeline role of10018fb40 unbound. Progress/cancel and output stream setup suggest a nonrealtime operation, but that is an inference, not classification evidence.",
+    "Selected stream can include processing wrappers; clone/backend mutation and format/rate conversion remain their own native boundaries.",
+    "Output receiverx26 constructed10036e5fc at100190a50; virtual+170/+138/+108/+198 need concrete receiver binding for full output format/write contract.",
+    "Finite normal values, positive representable counts and sufficient buffers only. FP mode, nonfinite gain, clipping outside this loop, arbitrary layouts, fades and looped content are not established.",
+    "No target audio or application playback conformance is claimed; existing application gates remain unchanged."
+  ],
+  "target_execution_count": 0,
+  "application_source_changes": 0
+}

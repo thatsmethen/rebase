@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "id": "APP004-CPR-V2-INTEGRATION-INDEPENDENT-REVIEW",
+  "reviewer": "target_intake",
+  "created_utc": "2026-10-19T11:20:21.305248+00:00",
+  "status": "accepted bounded integration after two corrections; no remaining actionable issue in reviewed scope",
+  "scope": "Read-only review of the fixed-clock C/Swift contract, timing-map and project edit boundaries, persistence provenance, versioned CPR replay, V2 role-failure behavior, DAWproject exclusion, and source-level UI apply/cancel/undo transaction. No application or proprietary target execution by this review.",
+  "issues": [
+    {
+      "id": "CPRV2-REVIEW-001",
+      "severity": "blocking for trustworthy recovered-clock persistence",
+      "status": "resolved",
+      "problem": "A syntactically valid active nativeClock in Project.json could differ from the independently replayed historical import clock while still appearing recovered.",
+      "resolution": "ProjectStore.load and save now require the entire active NativeTempoClock descriptor to equal compatibilityReport.nativeClock whenever nonnil. The report replays the preserved original under its stored interpretation profile. Save checks precede directory creation and manifest publication. Explicit conversion to nil remains allowed; source/report remain historical evidence.",
+      "source": "Application/Sources/RebaseCore/ProjectStore.swift:58",
+      "validation": "persistedNativeClockMustMatchReplayedOriginalBeforeLoadOrSave rejects changed source SHA, object offset, and BPM with matching display projection; failed save preserves existing manifest, missing evidence creates no new root, failed load does not promote the changed clock. The valid original and explicit nil conversion still reopen."
+    },
+    {
+      "id": "CPRV2-REVIEW-002",
+      "severity": "blocking for V2 role-qualified tempo claims",
+      "status": "resolved",
+      "problem": "On unsupported shared-role resolution V2 initially refused nativeClock but inherited V1 scalar BPM and its active-fixed recovery fact, including a tempo object placed in the signature slot.",
+      "resolution": "V2 removes unbound active fixed/map facts and the active-map diagnostic, selects a deterministic 120 BPM application default, and records unsupported role/value preservation explicitly. V1 source and historical replay remain unchanged.",
+      "source": "Application/Sources/RebaseCore/CPRRecoveryV2.swift:52",
+      "validation": "nativeClockRequiresConsistentKnownTrackInterfaceRoles now asserts effective120 BPM, an explicit application-default label, no active-fixed recovery fact and no native clock for wrong slot, unknown counterpart class and unsupported counterpart version."
+    }
+  ],
+  "confirmed_contracts": [
+    {
+      "topic": "Fixed arithmetic and build settings",
+      "result": "The C kernel first computes Float32 60/BPM, then promotes that rounded period. Tick-to-seconds uses separate Float64 multiplication followed by division by480. Seconds-to-ticks uses separate division followed by multiplication by480. Volatile intermediates, FENV_ACCESS, FP_CONTRACT OFF, and package -fno-fast-math/-ffp-contract=off/-frounding-math retain the reviewed operation order. Inputs and intermediate/results are finite normal-or-zero, BPM is20...400, and FE_TONEAREST is required. Errors occur before writing the caller output. This is the bounded fixed branch; map quantization is not transplanted into it."
+    },
+    {
+      "topic": "Independent arithmetic evidence",
+      "result": "Existing retained optimized -O3 comparison exactly matches all36 independent rational IEEE vectors, including mantissa-adjacent BPM and operation-order discriminators. This review verified matching current C/header/oracle hashes and inspected retained optimized assembly; it did not repeat execution. Analytical agreement is not a Cubase runtime comparison."
+    },
+    {
+      "topic": "Descriptor and projection validation",
+      "result": "The immutable clock records exact Float32 BPM bits, contract/profile, source SHA and object identity offset. Validation rejects unknown contract/profile, malformed provenance syntax, invalid BPM and unavailable rounding environment. TempoMap permits only one origin jump event with exactly the descriptor display BPM. Legacy maps without nativeClock decode normally. Native raw-tick APIs retain the clock operation contract; quarter-note APIs additionally convert through480 and must not be represented as identity on arbitrary raw tick bit patterns."
+    },
+    {
+      "topic": "Explicit conversion and anchor behavior",
+      "result": "Project.replaceTempoMap refuses replacement/removal of an active descriptor without explicit conversion. convertToApplicationTiming builds a candidate, drops native arithmetic, recomputes musical clip starts from retained quarter-note anchors, validates, then commits. Seconds tracks remain at their seconds positions. Audio lengths/source offsets do not stretch. The conversion is intentionally not numerically lossless and the UI warns musical starts may shift."
+    },
+    {
+      "topic": "DAWproject boundary",
+      "result": "DAWProject.export rejects an active nativeClock before destination preflight/publication. Only explicit conversion permits the standards-based application timing map to be exported. This avoids presenting Double60/BPM exchange arithmetic as the recovered Float32-period clock."
+    },
+    {
+      "topic": "Profile and historical-report behavior",
+      "result": "Schema1 with absent profile resolves only to frozen V1. Schema2 requires a recognized explicit profile; unsupported schema/profile pairs reject. Historical reports verify original SHA/section/layout and compare a full freshly replayed inspection under the stored profile. Report wording states an import baseline; subsequent project edits and explicit timing conversion can differ without rewriting Original.cpr or ImportReport.json."
+    },
+    {
+      "topic": "V2 shared-role integration",
+      "result": "V2 combines frozen hierarchy recovery with shared counted-interface role resolution and bounded signature recovery. It checks the selected tempo identity against the shared role, refuses inconsistent object-identity records, and now handles unsupported roles without preserving an unqualified scalar tempo claim. Signature recovery retains its compact/typed agreement gate; detailed native signature and role-helper evidence is linked separately, not asserted from class names alone."
+    },
+    {
+      "topic": "Persistence and Save As ordering",
+      "result": "Import staging and Save As place Compatibility evidence before saving an active-clock project. The new ProjectStore provenance check therefore does not recurse or require an already published Project.json. StudioSession.load validates both project and report before replacing session state. Save As failure cleans its new destination; original compatibility bytes are copied, not regenerated."
+    },
+    {
+      "topic": "UI transaction source review",
+      "result": "TempoEditor keeps converted maps and conversion intent in local State; Cancel dismisses without session mutation. Apply validates both maps and calls StudioSession.applyMusicalMaps, which mutates a project candidate and records undo only after successful validation and an actual change. Undo snapshots include the descriptor. Direct tempo editing opens/disables editing until explicit conversion. Native GUI behavior remains the parent validation task."
+    },
+    {
+      "topic": "Repeated source reads",
+      "result": "CPRProject.readSource clears cached URL resource values before its existing bounded regular-file and size checks. The byte parser, before/after inode/size/mtime checks and bytes-count bounds remain present. This resolves stale metadata on repeated inspection of the same URL without weakening layout parsing."
+    }
+  ],
+  "validation": {
+    "execution_by_this_review": false,
+    "accepted_targeted": {
+      "tests": 37,
+      "suites": 3,
+      "log": {
+        "path": "research/evidence/application/APP004/native-fixed-clock-tests-final-03.log",
+        "bytes": 7432,
+        "sha256": "b4ea1efaadeb712d86f4f5d8808c12ab1ee209e30eb1a751d3bf603d6cdb4c06"
+      }
+    },
+    "accepted_full_suite": {
+      "tests": 92,
+      "suites": 13,
+      "log": {
+        "path": "research/evidence/application/APP004/core-tests-final.log",
+        "bytes": 17830,
+        "sha256": "171ac07a178f78a1b3b5756f7696f248ff93526f25264411d2e4fea7ce1c5bbb"
+      }
+    },
+    "accepted_analytical_comparison": {
+      "vectors": 36,
+      "exact": 36,
+      "record": {
+        "path": "research/evidence/application/APP004/native-clock-optimized-comparison.json",
+        "bytes": 10585,
+        "sha256": "d1f1a6c65ea10d244accc4ec66c57c5dd157727728bb25a060bb535326496b1a"
+      }
+    },
+    "native_runtime_comparisons": 0,
+    "frozen_v1_sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4",
+    "notes": "Accepted test logs were produced by the implementing/root agents and read by this reviewer; no duplicate suite execution. Source review and hash checks are independent. Earlier failure logs and earlier integration/native findings remain retained."
+  },
+  "source_snapshot": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_tempo.c",
+      "bytes": 2430,
+      "sha256": "00d86967975e90f88ade6d1f4223db6a7db5543729f8c39fbc9556a53967d3f3"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_tempo.h",
+      "bytes": 612,
+      "sha256": "52da95a0738a1581188e1e63cc43d443b6f25e243197d6abf737f27b1d324864"
+    },
+    {
+      "path": "Application/Package.swift",
+      "bytes": 1165,
+      "sha256": "4297b2e7061c7ff2428713fc926219c44835b492f49edaa75f6e87c42aba0391"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/NativeTempoClock.swift",
+      "bytes": 4829,
+      "sha256": "107de7aaafc7ccd9092ef9f80955865a8a5ff23b79363ed07d3ff64b2ddf107c"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/MusicalTime.swift",
+      "bytes": 13111,
+      "sha256": "ed1319e1507a8d1f5b8eb291632fae2b2c4913d4493f3dbc87cd82feb35c5bd7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "bytes": 9917,
+      "sha256": "c3a6974a3d1b736ae2e3b3b03f4a9e5a74268fb66e779655c21189f85d4bf167"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 6179,
+      "sha256": "528396c63fca659ce7597c88d7db426aad1d30a307f15dffe9d32f9c49a20ea4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/DAWProject.swift",
+      "bytes": 41225,
+      "sha256": "f366d6db98f5ab7c77fff56608dbf8a7b03846d46bee8d7fba90c1e814a7ba5f"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "bytes": 23955,
+      "sha256": "0bd8bf7b0266afe5622c36cc094bb556c8e615897498c580ae28eefe2968edde"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV1.swift",
+      "bytes": 19302,
+      "sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV2.swift",
+      "bytes": 6252,
+      "sha256": "6183ca0ea72f992cf00d1fd4aab5a9c0a014e764988d6ae7bacf89e83386a836"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRClockRoles.swift",
+      "bytes": 5895,
+      "sha256": "b73cb45c6663be109e91ba7eecf63dca8c54dcfacdea47adbf7a9b41aba6366d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSignatureRecovery.swift",
+      "bytes": 12412,
+      "sha256": "46a1f0a1c3893d1483e02aed4dd441e4c1cfca26252964a632f464ccf0a937ee"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 28552,
+      "sha256": "3994d07dd73982a9f69396b543f97b6e6c1085b75f05ddf6a81d6bf0ce6839d0"
+    },
+    {
+      "path": "Application/Sources/Rebase/ProjectEditors.swift",
+      "bytes": 14065,
+      "sha256": "7dce30e15972427893b9946eeab72b1ebb4490faf502566a53997a2d668c996a"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "bytes": 15106,
+      "sha256": "83cdb92dc1a8503e6b4a1550e738912ab5c695fb2f6ce54b50800fd5ce43f831"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRImportReview.swift",
+      "bytes": 5553,
+      "sha256": "61789fecd70c892bd742553a41d98bc4807d643e7168fb53db3ca3886461c242"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeTempoClockTests.swift",
+      "bytes": 9662,
+      "sha256": "a5f112f10cf2392ef5ce07dddad4a33c27e790272a6286b7e6b1c5b274044bc2"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectTests.swift",
+      "bytes": 40491,
+      "sha256": "8034a788750a46959b876557ef17a5f302cca07fbf38411ece49d281c9d8a94a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSignatureRecoveryTests.swift",
+      "bytes": 11870,
+      "sha256": "e2e6f676418c53ed760de242e5204ce2e1dc01c9d293349ee759c36aa5680a98"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/finding-v1.json",
+      "bytes": 7568,
+      "sha256": "2169213ddb52e087005c8683b38f4c3d29720f337187ff187e9b0c47be0d478e"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/timing-independent-review.json",
+      "bytes": 7891,
+      "sha256": "01167af84b0319ef792622d26b2354b8be097677bf88d148260fbfd567908d4c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/reviewer-fixed-clock-vectors.json",
+      "bytes": 20283,
+      "sha256": "bc9d7eef520a3c82e1941ff3e37b48d07dc9dc09a21642db058062cc97221a02"
+    },
+    {
+      "path": "research/evidence/application/APP004/native-clock-optimized-comparison.json",
+      "bytes": 10585,
+      "sha256": "d1f1a6c65ea10d244accc4ec66c57c5dd157727728bb25a060bb535326496b1a"
+    },
+    {
+      "path": "research/evidence/application/APP004/cpr-signature-native-review.json",
+      "bytes": 7235,
+      "sha256": "25d708f4c0d3a8d93b1a6906f2c0403dedd3429dca92949a127d1313173b28e6"
+    },
+    {
+      "path": "research/evidence/application/APP004/native-fixed-clock-integration.json",
+      "bytes": 9470,
+      "sha256": "6b8b4be6de1e2896e1efba67231f3afcd21ffa6d10f40beb5ca7b366abd80b8c"
+    },
+    {
+      "path": "research/evidence/application/APP004/native-fixed-clock-integration-correction-v2.json",
+      "bytes": 2288,
+      "sha256": "9680d22fe7765baaf33c064f4a4bce312849e6ce850d30e5cce036a6365e8f04"
+    },
+    {
+      "path": "research/evidence/application/APP004/signature-integration.json",
+      "bytes": 7143,
+      "sha256": "7ff67a5bd2cae76f18452143319d036d0ede1b39443e6bc6a72281b6ff8baced"
+    }
+  ],
+  "limits": [
+    "No Cubase executable or proprietary plugin was run; no target runtime fidelity or full CPR importer claim.",
+    "Variable tempo maps, cache/lifecycle alternatives, arbitrary floating-point modes/subnormal arithmetic, audio events/media playback and wider CPR semantics remain outside this fixed-clock integration acceptance.",
+    "The native signature contract is branch-invariant only under its explicit compact/typed agreement and supported origin/variation gates; arbitrary typed precedence is not established.",
+    "GUI cancel/apply/undo, actual final application binary, and package-level user workflow observations are separately verified by the parent; this record pins source and existing core logs only.",
+    "Later source modifications require a scoped follow-up review rather than inheriting this acceptance automatically."
+  ]
+}

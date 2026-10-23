@@ -1,0 +1,189 @@
+{
+  "created_utc": "2026-10-19T14:18:22.185213+00:00",
+  "application_executable_sha256": "3f757ea25ca70468b2de4e07ba62396b77d10e79ea74472e9049835f4e2d627f",
+  "method": "Native Rebase accessibility and visual checks via cua_repl",
+  "target_executed": false,
+  "groups": [
+    {
+      "id": "frozen-v4-open",
+      "status": "passed",
+      "observation": "APP006 V4 package copied before edits; opens with exact24-second event, native timing, no attachment.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP007/gui-backward-open.ax.txt",
+          "bytes": 5220,
+          "sha256": "87989954ad4a132986ffddd9eea0277331ce0d7271164b24e3059c43cbc99ebd"
+        }
+      ]
+    },
+    {
+      "id": "mismatch-rejected",
+      "status": "passed",
+      "observation": "1058399-frame file rejected against1058400-frame reference; no association.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP007/gui-mismatch-refused.ax.txt",
+          "bytes": 480,
+          "sha256": "0326e606c4b3e6c8bf9d2ee6ef39f9734e6a1f08fb47a71566ca49cf5255b249"
+        },
+        {
+          "path": "research/evidence/application/APP007/gui-after-mismatch.ax.txt",
+          "bytes": 5230,
+          "sha256": "76bf0fb9e4ba485ef7351b6e982c66af2dbb1d2519fc291b8b15e33b9cb7e372"
+        }
+      ]
+    },
+    {
+      "id": "explicit-attachment",
+      "status": "passed",
+      "observation": "Native file picker copies matching synthetic PCM; selected filename/hash and unresolved playback state visible. Inspector scroll reaches controls without overlap.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP007/gui-media-attached.ax.txt",
+          "bytes": 5357,
+          "sha256": "042d3762749e5f73c5f1aa6d4da33cb32e7afa03087a3804f32e3453981135eb"
+        },
+        {
+          "path": "research/evidence/application/APP007/gui-media-attached.png",
+          "bytes": 356166,
+          "sha256": "2a83e8701247b4d1456777ce4232b54a7a61dbb185df648cf44a8571908d09e7"
+        },
+        {
+          "path": "research/evidence/application/APP007/gui-attachment-inspector.png",
+          "bytes": 381039,
+          "sha256": "63704305b10511c322e44c9baf4526d45595d039e8d1453e09138d15fde0a70e"
+        }
+      ]
+    },
+    {
+      "id": "attachment-undo-redo",
+      "status": "passed",
+      "observation": "Undo removes association; Redo restores it.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP007/gui-attachment-undo.ax.txt",
+          "bytes": 5216,
+          "sha256": "96fc26e6c69ee5f75bfde81eda3188d35d2f40d057ed5d68562fb55c8b3d11bb"
+        },
+        {
+          "path": "research/evidence/application/APP007/gui-attachment-redo.ax.txt",
+          "bytes": 5323,
+          "sha256": "4788c7ace16b59ce04cded9a3b5d981453fd3df5ca6f4cecf8ab060476539712"
+        }
+      ]
+    },
+    {
+      "id": "replacement-undo",
+      "status": "passed",
+      "observation": "Replacement selects a different synthetic file; Undo restores the initial file/hash.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP007/gui-media-replaced.ax.txt",
+          "bytes": 5391,
+          "sha256": "307d44dff092f655c794a015786d9be3ad1e4b60953afb925f515584d9a643c5"
+        },
+        {
+          "path": "research/evidence/application/APP007/gui-replacement-undo.ax.txt",
+          "bytes": 5323,
+          "sha256": "cb467e3fe1a638e9ccede678cacf90dce318cd846973101dbad1098bb2cd1cae"
+        }
+      ]
+    },
+    {
+      "id": "playback-and-mixdown-refusal",
+      "status": "passed",
+      "observation": "Attachment does not bypass unresolved native-processing gates.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP007/gui-attached-play-refused.ax.txt",
+          "bytes": 533,
+          "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+        },
+        {
+          "path": "research/evidence/application/APP007/gui-attached-mixdown-refused.ax.txt",
+          "bytes": 533,
+          "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+        }
+      ]
+    },
+    {
+      "id": "event-removal-and-undo",
+      "status": "passed",
+      "observation": "Removing event prunes association before save; Undo restores source event and attachment, then saves successfully.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP007/gui-event-and-binding-removed.ax.txt",
+          "bytes": 4089,
+          "sha256": "f813fb827e49e808f9ce99d9f13ce0b949940beab3d5461a0633932d81b122a9"
+        },
+        {
+          "path": "research/evidence/application/APP007/gui-removed-project-checkpoint.json",
+          "bytes": 1565,
+          "sha256": "aa8b8194aa2128eca54ddc225932b83c20b7bbff06d19e28054690d67b313722"
+        },
+        {
+          "path": "research/evidence/application/APP007/gui-event-and-binding-restored.ax.txt",
+          "bytes": 5292,
+          "sha256": "714af9f32318fede0767260d670a8e1031ca7828aac2672f8cfbd63e6045353c"
+        }
+      ]
+    },
+    {
+      "id": "save-reopen",
+      "status": "passed",
+      "observation": "Saved attachment reopens with identical checksum and24-second source placement.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP007/gui-attached-saved.ax.txt",
+          "bytes": 5326,
+          "sha256": "5f49b00fc3231256d93d7bc71ed6f3919eb37c852a97d21e2b935093b393c3d1"
+        },
+        {
+          "path": "research/evidence/application/APP007/gui-attached-reopened.ax.txt",
+          "bytes": 5293,
+          "sha256": "5a623ff9aac27d291f6fffce5107429f6f97e5c3db8547452bf8fa60a5f4c535"
+        }
+      ]
+    },
+    {
+      "id": "save-as-reopen",
+      "status": "passed",
+      "observation": "Save As copy reopens; independent package audit checks copied assets and source proof.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP007/gui-attached-save-as.ax.txt",
+          "bytes": 5304,
+          "sha256": "419d957adc2385f5776d15ab8962cfa4e8668fe3d67ba69814764c7247e64e27"
+        },
+        {
+          "path": "research/evidence/application/APP007/gui-attached-copy-reopened.ax.txt",
+          "bytes": 5305,
+          "sha256": "06203fc6abea7cdbf3151075902f357d62b4fe40037d949e6c4f667f9613e5a5"
+        }
+      ]
+    },
+    {
+      "id": "changed-media-refusal",
+      "status": "passed",
+      "observation": "One changed PCM sample in a separate package copy is detected on reopen; valid current project remains open.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP007/changed-media-control.json",
+          "bytes": 648,
+          "sha256": "0004929f160bfbac73f3432548c8504f1482733f9bbc89d1fdddf82455f7bb56"
+        },
+        {
+          "path": "research/evidence/application/APP007/gui-changed-media-refused.ax.txt",
+          "bytes": 398,
+          "sha256": "4dcc7b043d77a1ee4c9fd8269c2cd6dcb454312706d1b4bfc0d24b17c93ecf04"
+        },
+        {
+          "path": "research/evidence/application/APP007/gui-final-open.ax.txt",
+          "bytes": 5309,
+          "sha256": "f83acab6f4e2a9a4e69951d68701a1b8478ffc8d6b4de48138c3f5748d4c4aba"
+        }
+      ]
+    }
+  ],
+  "boundary": "Self-authored media validates application behavior only; no Cubase runtime or audio-equivalence measurements."
+}

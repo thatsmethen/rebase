@@ -1,0 +1,137 @@
+{
+  "assessment_id": "APP004-cpr-profile-integration-001",
+  "created_utc": "2026-10-19T10:47:59.787261+00:00",
+  "scope": "Versioned replay of existing CPR import reports. No new signature, tempo-map, media, or native DSP recovery. No target execution.",
+  "status": "15 targeted Swift tests passed; independent read-only source review requested separately.",
+  "sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "bytes": 23291,
+      "sha256": "be74be7fb6bd6a664e749432fb2d6c802456f895d77803eb2ed122e6882ffef2"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV1.swift",
+      "bytes": 19302,
+      "sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectTests.swift",
+      "bytes": 28610,
+      "sha256": "97e576dda2ba29d902c36606d71b8ed6d5b06894ad5a56a9120d6ba94e54b03c"
+    }
+  ],
+  "frozen_semantic_body": {
+    "source": {
+      "path": "research/evidence/application/APP003/final-source-snapshot/Application/Sources/RebaseCore/CPRProject.swift",
+      "bytes": 40586,
+      "sha256": "75b82b2d3e0afadff279284d6f2872685fb2a3146ead0d7a08709eefe089e940"
+    },
+    "normalized_sha256": "ab383478dfa76cd7efff9519ba0c4d5bc155c791609b93a5cf626a39beeb8258",
+    "identical": true,
+    "normalization": "Removed new file preamble; renamed CPRRecoveryV1 back to CPRRecovery; restored original private modifiers on CPRRecoveryResult and CPRRecovery. No semantic body changes."
+  },
+  "protocol": {
+    "new_reports": {
+      "schemaVersion": 2,
+      "interpretationProfile": "cpr-static-subset-v1"
+    },
+    "historical_schema1_absent_profile": "Select frozen cpr-static-subset-v1, preserve absent field during equality replay.",
+    "schema1_explicit_supported_profile": "Accepted; original representation is retained.",
+    "schema2_absent_profile": "Rejected.",
+    "unknown_schema_or_profile": "Rejected as unsupported before semantic verification.",
+    "replay": "Resolve semantic profile independently from report serialization schema; current replay routes v1 to isolated CPRRecoveryV1. Shared bounded container/archive/string mechanics remain in CPRProject.swift.",
+    "mutations": "Inspection and compatibilityReport do not write project, report or source. Import still checks report8MiB cap and staged compatibility before publication."
+  },
+  "pinned_legacy_packages": [
+    {
+      "package": "research/evidence/application/APP003/Classic House Recovery.rebaseproj",
+      "inputs": [
+        {
+          "path": "research/evidence/application/APP003/Classic House Recovery.rebaseproj/Project.json",
+          "bytes": 783,
+          "sha256": "c6fe832e355c90a27bc3594a9e1bf453cbb626af1a260a01aa94f0dd0bcf9ce7"
+        },
+        {
+          "path": "research/evidence/application/APP003/Classic House Recovery.rebaseproj/Compatibility/CPR/ImportReport.json",
+          "bytes": 43556,
+          "sha256": "d861662e75cd4fabb2b9248dd150dceac95c760501470f1baa7dae0eed5ce272"
+        },
+        {
+          "path": "research/evidence/application/APP003/Classic House Recovery.rebaseproj/Compatibility/CPR/Original.cpr",
+          "bytes": 1197444,
+          "sha256": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892"
+        }
+      ]
+    },
+    {
+      "package": "research/evidence/application/APP003/Stereo Mastering Recovery.rebaseproj",
+      "inputs": [
+        {
+          "path": "research/evidence/application/APP003/Stereo Mastering Recovery.rebaseproj/Project.json",
+          "bytes": 1065,
+          "sha256": "53996c0507bd82a7d259cb214e0ce714cd54b66d6e3952066f009a0b1a50d452"
+        },
+        {
+          "path": "research/evidence/application/APP003/Stereo Mastering Recovery.rebaseproj/Compatibility/CPR/ImportReport.json",
+          "bytes": 10195,
+          "sha256": "d41ebd025fa211668fac1dad4b851a187b54ab8197766d4497459a702bbed2d3"
+        },
+        {
+          "path": "research/evidence/application/APP003/Stereo Mastering Recovery.rebaseproj/Compatibility/CPR/Original.cpr",
+          "bytes": 291662,
+          "sha256": "6cde8a5ce37e5f112c79f684ad8c1fc3e308979feba9f046db42bf62ecce3022"
+        }
+      ]
+    },
+    {
+      "package": "research/evidence/application/APP003/Stereo Mastering Copy.rebaseproj",
+      "inputs": [
+        {
+          "path": "research/evidence/application/APP003/Stereo Mastering Copy.rebaseproj/Project.json",
+          "bytes": 1070,
+          "sha256": "e06ab17bcdb1b64ebf1d8013d26b4ac65bfde0668ec36f6d507597bc2dff22a8"
+        },
+        {
+          "path": "research/evidence/application/APP003/Stereo Mastering Copy.rebaseproj/Compatibility/CPR/ImportReport.json",
+          "bytes": 10195,
+          "sha256": "d41ebd025fa211668fac1dad4b851a187b54ab8197766d4497459a702bbed2d3"
+        },
+        {
+          "path": "research/evidence/application/APP003/Stereo Mastering Copy.rebaseproj/Compatibility/CPR/Original.cpr",
+          "bytes": 291662,
+          "sha256": "6cde8a5ce37e5f112c79f684ad8c1fc3e308979feba9f046db42bf62ecce3022"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "command": "Application/test-app.sh --filter CPRProjectTests",
+    "test_count": 15,
+    "failure_count": 0,
+    "log": {
+      "path": "research/evidence/application/APP004/cpr-profile-tests.log",
+      "bytes": 3243,
+      "sha256": "c36ab731e143ac3d4565c12a14205157a891d08ec397a515c70f283d2eb8696a"
+    },
+    "initial_compile_failure": {
+      "path": "research/evidence/application/APP004/cpr-profile-tests-initial.log",
+      "bytes": 2568,
+      "sha256": "fda40f93539cc48179644b5e6e48d7e07d1b091a43ed01c8af16a34caf1e4cc9"
+    },
+    "initial_failure_resolution": "Added required inner try in a #require macro wrapping a throwing compatibilityReport call.",
+    "coverage": [
+      "All ten pinned shipped templates still inspect successfully.",
+      "Three APP003 report/source/current-project hash pins remain unchanged on replay.",
+      "Temporary copies of both source fixtures and the edited GUI copy preserve additional name/gain edits and exact report/source bytes.",
+      "Schema1 absent profile, schema1 explicit v1, and schema2 explicit v1 validate independently.",
+      "Unknown profile, missing schema2 profile and unknown schema reject without writes.",
+      "Legacy applicationDefaults tampering and current report recovery tampering reject.",
+      "Existing bounded parsing, zero-tempo-count, class-BOM, report-size/publication, source SHA and source-redirection controls remain passing."
+    ]
+  },
+  "limits": [
+    "This is application replay verification, not native Cubase runtime acceptance.",
+    "The frozen semantic source body is preserved; future changes to shared parsing mechanics must continue passing pinned historical replay tests.",
+    "Unknown future profiles currently reject package compatibility validation; no degraded historical-report opening state has been introduced."
+  ]
+}

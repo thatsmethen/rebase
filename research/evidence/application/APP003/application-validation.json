@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "id": "APP003",
+  "at_utc": "2026-10-19T10:42:31.585998+00:00",
+  "class": "Independent application implementation validation; target static evidence separately linked.",
+  "build": {
+    "version": "0.3.0",
+    "build": "3",
+    "executable_sha256": "e209c1fb5b83f76df57be71e8d217d222c6e18ec498d6dc9eeb926174a4773ba",
+    "sources": 36
+  },
+  "tests": {
+    "count": 68,
+    "suites": 11,
+    "cpr_tests": 13,
+    "passed": true,
+    "log": "core-tests-final.log",
+    "sha256": "0e09ce89e390d18be8b6b614e06d6c22c4eb8c62dda2a66271f7568c1f99ec6d"
+  },
+  "packaging": {
+    "release_build_exit": 0,
+    "codesign_verify_strict_exit": 0,
+    "logs": [
+      "build-release.log",
+      "codesign-verify.log"
+    ]
+  },
+  "reviews": [
+    "cpr-native-review.json",
+    "cpr-integration-review.json"
+  ],
+  "gui_observations": [
+    {
+      "id": "GUI-CPR-01",
+      "action": "File > Import Cubase Project > shipped Stereo Mastering.cpr",
+      "observed": "Review shows4 native track/folder objects, two empty audio tracks; native map mode noted; 120BPM/48kHz/4-4 explicitly defaults. Source and unsupported native state shown.",
+      "evidence": "Native accessibility tree and screenshot observed through cua_repl in this session."
+    },
+    {
+      "id": "GUI-CPR-02",
+      "action": "Import Supported Data > save Stereo Mastering Recovery.rebaseproj",
+      "observed": "Application shows Stereo Master then Reference Track; zero clips, 120BPM, partial-import badge, stopped transport.",
+      "package": "Stereo Mastering Recovery.rebaseproj"
+    },
+    {
+      "id": "GUI-CPR-03",
+      "action": "Click partial-import badge",
+      "observed": "Historical report opens, source integrity check passes, import baseline versus subsequent edits described."
+    },
+    {
+      "id": "GUI-CPR-04",
+      "action": "Save As Stereo Mastering Copy.rebaseproj, Open Project same copy",
+      "observed": "Reopened two tracks in order with partial-import badge and copy name.",
+      "package": "Stereo Mastering Copy.rebaseproj"
+    },
+    {
+      "id": "GUI-CPR-05",
+      "action": "Review Classic House.cpr then Cancel",
+      "observed": "Review shows active126.5BPM and Bongos empty track, missing named VSTsound asset. Cancel returns to unchanged Stereo Mastering Copy with two tracks and120BPM."
+    },
+    {
+      "id": "GUI-CPR-06",
+      "action": "Open self-authored Truncated Synthetic.cpr",
+      "observed": "Alert: Invalid CPR file: A record extends beyond its enclosing region at byte16. Dismissing preserves Stereo Mastering Copy, two tracks and120BPM.",
+      "control": "synthetic-control.json"
+    },
+    {
+      "id": "GUI-CPR-07",
+      "action": "Open Project > Classic House.cpr, review, scroll through limits, import to Classic House Recovery.rebaseproj",
+      "observed": "Open routes to same review. Scrolled text/defaults readable without overflow. Saved project shows126.5BPM, Bongos empty track and partial-import badge.",
+      "package": "Classic House Recovery.rebaseproj"
+    }
+  ],
+  "source_snapshot": "final-source-snapshot",
+  "source_manifest": "final-source-manifest.json",
+  "reference_static_evidence": [
+    "research/evidence/cubase-static/cpr-objects-001/native/finding.json",
+    "research/evidence/cubase-static/cpr-objects-001/audio-native/finding.json",
+    "research/evidence/cubase-static/cpr-objects-001/fixtures/structural-contract-v2.json",
+    "research/evidence/cubase-static/cpr-objects-001/fixtures/native-corroboration-v1.json"
+  ],
+  "limitations": [
+    "The GUI runs independently authored Rebase only. Cubase and proprietary components remain unexecuted.",
+    "Imported audio tracks are empty named skeletons. No native playable clip/MIDI/plugin/mixer state is restored.",
+    "Active fixed BPM is recovered; native map coordinates, ramp domain and signature override semantics remain unresolved.",
+    "Project sample rate48k, meter4-4 and mixer/timebase settings are explicit application defaults.",
+    "All source bytes remain in Compatibility/CPR/Original.cpr. Rebase edits do not serialize a changed CPR.",
+    "Historical report v1 interpretation must be preserved when extending the decoder, or older packages would fail fresh-inspection equality.",
+    "GUI screenshots and accessibility observations are in the tool transcript; this record is an observation summary, not a raw capture."
+  ],
+  "cubase_runtime_cases": 0,
+  "candidate_conformance_cases": 0,
+  "full_cubase_fidelity": "unestablished",
+  "independent_package_checks": [
+    "stereo-import-independent-check.json",
+    "classic-import-independent-check.json",
+    "cpr-three-package-independent-check.json"
+  ],
+  "next_decoder_contract": "next-decoder-contract.json",
+  "final_source_recheck": {
+    "passed": true,
+    "files": 36
+  }
+}

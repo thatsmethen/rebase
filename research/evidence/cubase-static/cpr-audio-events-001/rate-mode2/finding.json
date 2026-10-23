@@ -1,0 +1,461 @@
+{
+  "id": "CPR-RATE-MODE2-001",
+  "schema_version": 1,
+  "created_utc": "2026-10-20T09:38:50.653945+00:00",
+  "status": "sealed_bounded_static_contract_and_reconstruction",
+  "scope": "Native successful fresh Float32 mode2 buffered wrapper; defensive visible-region reconstruction with independently built public SoXR callback backend. No Cubase/bundled-library execution.",
+  "evidence_classes": [
+    "original-byte static analysis",
+    "REA retained analysis",
+    "synthetic reconstructed-code controls",
+    "independent public-library wrapper comparisons"
+  ],
+  "proprietary_target_executions": 0,
+  "cubase_runtime_sample_comparisons": 0,
+  "public_open_source_backend_executed": true,
+  "target": {
+    "product": "Cubase Pro 15.0.30.287 macOS arm64",
+    "image": {
+      "path": "research/targets/derived/Cubase15-arm64",
+      "bytes": 85691328,
+      "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+    },
+    "edition_limit": "Static shared executable provenance does not establish licensed runtime edition behavior."
+  },
+  "native_custody": {
+    "new_functions": 7,
+    "reused_functions": 17,
+    "original_native_words": 1866,
+    "rea_instruction_addresses": 916,
+    "bytes_verified": 7464,
+    "retained_canonical_records": 48,
+    "canonical_import": {
+      "imported": 48,
+      "unknowns_added": 0,
+      "total": 48
+    },
+    "verification": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/verification.json",
+      "bytes": 37729,
+      "sha256": "1089293e92113f87ec911eacbdcd624fe86eea715b9940d1ead77acf9b6a77b8"
+    },
+    "concrete_child_vtable": "0x104461a80",
+    "wrapper_slots": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/wrapper-slot-bindings.json",
+      "bytes": 2390,
+      "sha256": "f3cda2a3b8a26e2c759ac680b8edad667343f80221157bcbc7873c1db2f7b579"
+    },
+    "new_raw_slice_sessions_closed": 7,
+    "isolated_analysis_mcp_processes_closed": 2,
+    "evidence_import_processes_closed": 1,
+    "provider": "rea-agents@6.7.0; Ghidra raw arm64 slices, default analysis, 2G heap; exact retained request/tool inventories.",
+    "context_limits": [
+      "Raw slices omit imports, neighboring functions, globals, types and switch tables. The specified original vtable/switch/import bindings supplement these omissions.",
+      "916 REA decoded addresses do not mean 1866 complete pseudocode instructions; original words and exact full interval readbacks cover the separate 7464-byte custody check.",
+      "Source readback and canonical import validate evidence custody, not semantic completeness or runtime behavior."
+    ]
+  },
+  "facts": [
+    {
+      "id": "RATE-MODE2-01",
+      "title": "Concrete fresh Float32 wrapper and child",
+      "claims": [
+        "Factory 0x1003136b8 constructs wrapper vtable 0x104461a08 and child 0x104461a80; the retained packet path is wrapper +0x40 -> 0x100313c78 -> 0x1003141bc.",
+        "Wrapper source/output rates produce ratio=RN64(output/source), input capacity 65536, maximum internal positive chunk 65408. External sample format 5 selects child format 0 (Float32 interleaved).",
+        "Child quality byte is 1 with its second quality flag 0; retained initializer uses public-ABI io_spec(0,0), quality_spec(6,0), runtime_spec(0). Availability/factory-conditioned mode selection belongs to the separate rate-selection finding.",
+        "Fresh successful initialization is a precondition. Equal-rate operation still uses the wrapper, delay/discard and terminal path when this mode is explicitly selected."
+      ],
+      "source_functions": [
+        {
+          "entry": "0x1003136b8",
+          "evidence_ids": [
+            "ev_888e0fe7cacd29bb264d5aab360cab666e04e69e441d141d92e7d274cb2e008b",
+            "ev_73b85d2da629f3dec6e800d28a1e6d68ec1de2fe9c7b131d4557c8ac1879b359"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-1003136b8.txt"
+        },
+        {
+          "entry": "0x100313adc",
+          "evidence_ids": [
+            "ev_3cd7538b681980dfc8372d891fcbf464b940eec211885086c7e55f6522a785e3",
+            "ev_9a67754660949be01a0861b2043f8f0164769348e2f8475e165681c83cd58e32"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100313adc.txt"
+        },
+        {
+          "entry": "0x100313b44",
+          "evidence_ids": [
+            "ev_dc8b3a840cfa288ba7c355fcec568189c8d78f1245cb458de8a34c735af37efe",
+            "ev_7a5be7d05b19ec987709c2ddb3d32879306cdef64e3f51ad2c6f4726b61bd564"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100313b44.txt"
+        },
+        {
+          "entry": "0x100313b74",
+          "evidence_ids": [
+            "ev_1e735362ff6f4bae5efebfc7d559378599797e54fdf827e400257f9559bc1b9b",
+            "ev_2e987335ac9616c1567742e510527eb23be165beaa14f95ade24c19b0bb871a6"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100313b74.txt"
+        },
+        {
+          "entry": "0x100313c78",
+          "evidence_ids": [
+            "ev_894d8673304908f2eee2200464ea0906ece414efa14d02688e227c13e49fc024",
+            "ev_f4ebbba7606b9f0376606582d1e1f56557c51666d50f56d0b7f1f6d6aea8d65e"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100313c78.txt"
+        },
+        {
+          "entry": "0x100314ce0",
+          "evidence_ids": [
+            "ev_d99cb633a9d82bc895d6c338ccb96911bdc8eb2f5ee5f7426ff2717720edc12b",
+            "ev_555b286dd297707338c56dbb67a61adc1420f05e2822784ba89d342c1768381f"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100314ce0.txt"
+        },
+        {
+          "entry": "0x100314ff8",
+          "evidence_ids": [
+            "ev_d45c610eec2eab39283c732fcaee61c050b509ea3dd849c45320261e02a5cf29",
+            "ev_a6f71eafbe5fcda668f6db6a2b5747866c52e27a11425e04ea0496278ad92460"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100314ff8.txt"
+        },
+        {
+          "entry": "0x100314fe8",
+          "evidence_ids": [
+            "ev_5f77f8048b5de52ef9e2ed5278276c399f2fbb0df10b0a4b07398299c9bfb5e9",
+            "ev_5185fcde089af6f6c942b719ec881fcc8684f03a314dcc70b1360d78b44c7999"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100314fe8.txt"
+        },
+        {
+          "entry": "0x100315000",
+          "evidence_ids": [
+            "ev_5753609ebffd1d03ad82c23283fd877e6c1a7d3fb25a253c8fa587184925ce30",
+            "ev_b7b889b9d2216711f1c68ac32893eb9b5ff8b577a4da61be66d37c50a6d45518"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100315000.txt"
+        }
+      ]
+    },
+    {
+      "id": "RATE-MODE2-02",
+      "title": "Artificial delay and actual initialized storage",
+      "claims": [
+        "P=ceil(ratio)*2048. Child output capacity=ceil(RN64(FMA(65536,ratio,P)+1024)); FMA is explicit at 0x10031518c, followed by separate FADD at 0x100315198 and unsigned ceil conversion at 0x10031519c.",
+        "The full allocated Float32 output storage is cleared: 0x1003151e4 forms channels*outputCapacity and 0x100315248..250 passes it to imported _vDSP_vclr at 0x103881efc. It is not merely a P-frame prefix clear.",
+        "Fresh wrapper delay and discard are P; cumulative input/visible/ideal are zero. Child input end/consumed/pending/output read are zero; output end starts at P."
+      ],
+      "source_functions": [
+        {
+          "entry": "0x100314f88",
+          "evidence_ids": [
+            "ev_670b4064005426d8b6fbd7a6e0c7813ede72118b65e3c30da06502242649e5dc",
+            "ev_7d729af92bca18dc5bcb3f455bf88b42ee81d9c90a95c345cb8e00f87d6a71ac"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100314f88.txt"
+        },
+        {
+          "entry": "0x100313b74",
+          "evidence_ids": [
+            "ev_1e735362ff6f4bae5efebfc7d559378599797e54fdf827e400257f9559bc1b9b",
+            "ev_2e987335ac9616c1567742e510527eb23be165beaa14f95ade24c19b0bb871a6"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100313b74.txt"
+        },
+        {
+          "entry": "0x100315000",
+          "evidence_ids": [
+            "ev_5753609ebffd1d03ad82c23283fd877e6c1a7d3fb25a253c8fa587184925ce30",
+            "ev_b7b889b9d2216711f1c68ac32893eb9b5ff8b577a4da61be66d37c50a6d45518"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100315000.txt"
+        }
+      ]
+    },
+    {
+      "id": "RATE-MODE2-03",
+      "title": "Requested count and initial discard recurrence",
+      "claims": [
+        "For positive n: ideal=RN64(n*ratio); base=trunc(ideal); drift=RN64(RN64(cumulativeIdeal+ideal)-Double(cumulativeVisible+base)); requested=base+(drift>1). A zero requested count is forced to 1.",
+        "The strict comparison is >1, not >=1. Integer accumulation and the shown binary64 operations remain distinct; they are not fused or reassociated.",
+        "Discard>=requested yields visible=0, decreases discard by requested and contributes 0 to cumulativeIdeal. Partial discard yields visible=requested-discard and contribution RN64(ideal-discard). With no discard, visible=requested and contribution=ideal.",
+        "The successful positive call adds n to cumulative input, visible to cumulative visible, and separately rounds contribution+cumulativeIdeal."
+      ],
+      "source_functions": [
+        {
+          "entry": "0x1003141bc",
+          "evidence_ids": [
+            "ev_aae3b8b1879861ee86509d18a7dd67a6996f8b4e471dca0a03b3fd5e223f3bbe",
+            "ev_b7183adf516bce965c8a12b0ceaceb3ce358748f6931d10f4d1b93201f65ad82"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-1003141bc.txt"
+        }
+      ]
+    },
+    {
+      "id": "RATE-MODE2-04",
+      "title": "One backend call, three different frame counts, and preserved tails",
+      "claims": [
+        "Before append: if inputEnd+n>=inputCapacity and consumed!=0, shift only [consumed,inputEnd) to index 0 and reset consumed. If outputEnd+requested>=floor(outputCapacity/2) and outputRead!=0, shift only [outputRead,outputEnd) and reset read.",
+        "Compaction does not clear trailing allocation storage. The current input is appended; one backend call receives pending+n frames from input+consumed and output capacity exactly requested. NULL input clears pending and passes NULL/zero input.",
+        "Actual backend inputUsed and outputProduced update pending, consumed, and output end. Native code uses low 32-bit returned counts and does not branch on the backend error pointer.",
+        "The wrapper copies requested frames from outputRead, not outputProduced. Thus the returned sequence can include initialized zero or retained stale allocation cells when backend production is shorter. It then advances outputRead by requested and resets cursors only when read==end.",
+        "Float32 publication is bit copying through 0x1037bce78. This is not a retry-until-produced or plain soxr_process contract."
+      ],
+      "source_functions": [
+        {
+          "entry": "0x100315434",
+          "evidence_ids": [
+            "ev_f282f6e10550c8103852a7b5ae582f2a293b147fcff8c38146a0042858f2d2c8",
+            "ev_0788c4034ac40845c8b2d6a4aec22253384e72a24baf5bde9c13764b012825cd"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100315434.txt"
+        },
+        {
+          "entry": "0x100315438",
+          "evidence_ids": [
+            "ev_5a3210efa60e7565ce38dbeb4b7e5836247195a3a4702e7c77c8ce77402fab48",
+            "ev_c6db3fe4492c1b44506d84c28467f54fcec5c7088e50270b6af12a3ca0f281aa"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100315438.txt"
+        },
+        {
+          "entry": "0x1037bce78",
+          "evidence_ids": [
+            "ev_6c5914384b56569bc771fa34665fb05aab3594d2506edc9645abeea80970e161",
+            "ev_8afcb123912ec7ee935b85af26b5e2429474b5bcf062104070b456a32afb07b4"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/pass1/native-1037bce78.txt"
+        }
+      ]
+    },
+    {
+      "id": "RATE-MODE2-05",
+      "title": "Single terminal operation and conditional drain",
+      "claims": [
+        "A final positive block first executes normal positive processing. It computes extra=trunc(Double(P)/ratio), repeats that caller block's last frame extra times, and processes the padding as a nonfinal positive block.",
+        "NULL/zero final skips normal child processing, uses zero padding instead, and retains the precomputed base/drift return term. The observed checked reachable states have that term zero; the reconstruction preserves the formula.",
+        "After padding, restore cumulativeInput to its saved real-input value while retaining padding's discard/cumulativeVisible/cumulativeIdeal changes. remaining=trunc(RN64(Double(savedInput)*ratio))-cumulativeVisible.",
+        "Only if remaining>0, call the child with NULL/zero input and request remaining, appending that many returned frames. This final drain does not increment cumulativeVisible.",
+        "Native oversized caller splitting is retained as an excluded branch. Its terminal last-frame expression uses the original caller pointer and the residual count; the reconstruction admits caller blocks <=65408 and does not invent a generalized oversized terminal rule."
+      ],
+      "source_functions": [
+        {
+          "entry": "0x1003141bc",
+          "evidence_ids": [
+            "ev_aae3b8b1879861ee86509d18a7dd67a6996f8b4e471dca0a03b3fd5e223f3bbe",
+            "ev_b7183adf516bce965c8a12b0ceaceb3ce358748f6931d10f4d1b93201f65ad82"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-1003141bc.txt"
+        },
+        {
+          "entry": "0x100315438",
+          "evidence_ids": [
+            "ev_5a3210efa60e7565ce38dbeb4b7e5836247195a3a4702e7c77c8ce77402fab48",
+            "ev_c6db3fe4492c1b44506d84c28467f54fcec5c7088e50270b6af12a3ca0f281aa"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100315438.txt"
+        }
+      ]
+    },
+    {
+      "id": "RATE-MODE2-06",
+      "title": "Destruction and reset limits",
+      "claims": [
+        "0x1003152b8 frees the selected-format owned buffers and deletes a nonnull backend handle; 0x100314eb4 invokes cleanup before base destruction.",
+        "0x100315384 clears full child output storage and child cursors, but does not reset or recreate the backend handle. Wrapper virtual +0x30 at 0x100313bcc simply returns zero; it is not a reset operation.",
+        "The reconstruction intentionally exposes no in-place reset. Application seek uses a fresh backend/wrapper and prerolls the same partition sequence; this is an explicit application policy."
+      ],
+      "source_functions": [
+        {
+          "entry": "0x1003152b8",
+          "evidence_ids": [
+            "ev_5c37eed2ed6a0608e785466f74f26e7631a1ce6889697197f1655b46bf912e2b",
+            "ev_782b7d33058655cd44c48a65983072624750ddc798f0742fbcb696692605e81c"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/pass1/native-1003152b8.txt"
+        },
+        {
+          "entry": "0x100314eb4",
+          "evidence_ids": [
+            "ev_27a59d8c352fa767ceade0eb823dff1b545871ca34f2cc4d44ef6699e38d6877",
+            "ev_ddd764d3b2c5da9a08816fa697a6074f33435e279049944bf424a62a4a37bcce"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/pass1/native-100314eb4.txt"
+        },
+        {
+          "entry": "0x100315384",
+          "evidence_ids": [
+            "ev_936955455ff41148173ea881d277c38ecc8cdfed3ffb0d62597f53d6ece23727",
+            "ev_599031e23ae68a70ebc76988a01998abf93dc58ec77d8e41b52a36a35aea7a19"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/pass1/native-100315384.txt"
+        },
+        {
+          "entry": "0x100313bcc",
+          "evidence_ids": [
+            "ev_adaf99f6ab275076f4d466ff8a6821dd29ad06cf57bddf26d38ab3fbddf7ab1d",
+            "ev_bd41e0e40bed06c4579382f1badd717aee2c01a6cbc6962eda42d4076e227648"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/pass2/native-100313bcc.txt"
+        },
+        {
+          "entry": "0x100316364",
+          "evidence_ids": [
+            "ev_62cd084c59817896568484c7299e848fb0411789429e6296219662743b550257",
+            "ev_fbda664fdd183710f7d42ee3c1e2677893920ac8f503302d83514c64089b4e6a"
+          ],
+          "native": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/pass2/native-100316364.txt"
+        }
+      ]
+    }
+  ],
+  "candidate": {
+    "source": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/candidate/native_rate_mode2.c",
+      "bytes": 12402,
+      "sha256": "31d246b317726458bc46c747d37a8e2ae1d582b70a55d7b69d99b2c728016380"
+    },
+    "header": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/candidate/native_rate_mode2.h",
+      "bytes": 3919,
+      "sha256": "e125e7965509e74ed5e0c5302bae35f2dd5e642f6f92ccb60388954ada2bb9e7"
+    },
+    "domain": [
+      "Integral finite 8000...192000 Hz input/output, mono or stereo; equal rate supported when explicitly selected.",
+      "Finite Float32 normal-or-zero samples; nearest-even and hardware subnormal flushing disabled. Nonzero subnormal inputs/produced outputs are rejected.",
+      "Positive caller blocks 1...65408, exactly one final positive block or NULL/zero final; cumulative source and returned frame cap 16000000.",
+      "Checked allocated storage, nonoverlapping caller buffers, stable callback-owned handle, successful fresh initialization, no rates/channels change."
+    ],
+    "count_api": "Nonmutating count/count_blocks reproduce requested/discard/EOF arithmetic for the same partitions, without invoking the backend. Predictions concern successful returned frames, not actual backend production or guaranteed success for arbitrary providers.",
+    "application_partition_policy": "Root integration uses up to8192 real source frames, last positive block final, no added empty EOF, fresh wrapper for seek/preroll, and event gain after conversion. Application acceptance is a separate record.",
+    "defensive_deviations": [
+      "Backend errors, impossible counts, capacity/invariant violations and invalid produced samples fail closed; original successful-call trace ignores the error pointer.",
+      "Public argument/output-capacity/input-sample preflight preserves usable state. Subsequent processing errors poison state; caller must discard it.",
+      "On processing failure caller output/count are not published; backend/internal state may have advanced. This is not a rollback claim.",
+      "Only returned visible samples are published. Native discarded/unreturned writes outside that visible interval are not reproduced as ABI side effects.",
+      "Zero-input nonfinal, oversized callers, repeated terminal calls, post-finish reuse, arbitrary pointer aliasing, other formats, unsafe state and arbitrary callback mutation are rejected or excluded.",
+      "Fresh input allocation is also zeroed defensively; unused input cells are not offered to the backend in the supported contract."
+    ]
+  },
+  "validation": {
+    "independent_review": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/validation/mode2-independent-review.json",
+      "bytes": 8445,
+      "sha256": "70020d6474cfccf4a8934d2f19b62ed8db61bec631c52518e968b1a1872ea5b8"
+    },
+    "focused_swift": {
+      "passed": 7,
+      "suites": 1,
+      "seconds": 1.672,
+      "log": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/validation/mode2-tests-round2.log",
+        "bytes": 7491,
+        "sha256": "f029d355d461bb1503aa158eb91e07759c0b92faece7a0ca4bf7c318b34ae0d0"
+      }
+    },
+    "retained_initial_test_issue": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/validation/mode2-tests-round1.log",
+      "bytes": 7099,
+      "sha256": "77ed16b2f4c19068e51ee35b008e245fc13b07fa45e06bb37c28b8bc34cc430d"
+    },
+    "spy_cases": 47,
+    "public_wrapper_cases": 27,
+    "public_returned_sample_bits_checked": 561454,
+    "full_source_count_ledgers": [
+      {
+        "source": 44100,
+        "output": 48000,
+        "input_frames": 1058400,
+        "block_frames": 8192,
+        "returned_frames": 1152000,
+        "final_cumulative_visible": 1151999
+      },
+      {
+        "source": 44100,
+        "output": 32000,
+        "input_frames": 1058400,
+        "block_frames": 8192,
+        "returned_frames": 768000,
+        "final_cumulative_visible": 767999
+      },
+      {
+        "source": 44100,
+        "output": 16000,
+        "input_frames": 1058400,
+        "block_frames": 8192,
+        "returned_frames": 384000,
+        "final_cumulative_visible": 383999
+      },
+      {
+        "source": 44100,
+        "output": 44100,
+        "input_frames": 1058400,
+        "block_frames": 8192,
+        "returned_frames": 1058400,
+        "final_cumulative_visible": 1058400
+      }
+    ],
+    "author_synthetic_stream_controls": 40,
+    "author_additional_control_groups": [
+      "query state unchanged/no backend calls",
+      "finished rejection preserves result",
+      "invalid samples preserve usable state",
+      "zero nonterminal and oversized blocks rejected",
+      "backend error poisons state/output and result unchanged",
+      "owned handle destroyed exactly once"
+    ],
+    "ubsan_synthetic_calls": 384,
+    "ubsan_log": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/candidate/stress-ubsan.log",
+      "bytes": 55,
+      "sha256": "988864ac98db005075cfed7c446459b4ba6230a47f5afa7e0aa86928f2b32c55"
+    },
+    "independence_limits": {
+      "expectations_started_before_candidate_C_read": true,
+      "count_arithmetic": "Exact Fraction arithmetic; separate nearest/ties-even binary64 rounding per original operation, including fused initialization and strict drift comparison.",
+      "sample_model": "Float32 integer-bit copying and initialized retained storage; spy generates distinguishable finite normal samples independently of candidate.",
+      "public_backend": "Python ctypes calls pinned public libsoxr directly with io(0,0), quality(6,0), runtime(0); separately authored instruction wrapper handles counters/storage/padding. Candidate C and application bridge are not loaded by either oracle generator.",
+      "public_filter_limit": "Same public backend is used on both comparison sides. This independently validates wrapper/bridge integration, not an independent SoXR filter implementation or equivalence to bundled proprietary build."
+    },
+    "independent_native_word_check": {
+      "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+      "reviewed_and_reverified_functions": 6,
+      "instruction_words": 1531,
+      "bytes": 6124,
+      "verification": "research/evidence/application/APP012/mode2-instruction-verification.json"
+    },
+    "application_integration_review": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/validation/mode2-swift-integration-review.json",
+      "bytes": 5256,
+      "sha256": "45dfac518fbe7b70eebd4d1ecc2726dc75759e0ea79773982c036723724606cd"
+    },
+    "release_acceptance": "Full suite, GUI and final application acceptance are owned by APP012; no future test result is asserted here."
+  },
+  "public_backend": {
+    "finding": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/validation/public-backend/finding.json",
+      "bytes": 8771,
+      "sha256": "b1a89c059919631331be61bea29940fb39d7a0cf38fd0d685b29d2279e2d8965"
+    },
+    "upstream_commit": "945b592b70470e29f917f4de89b4281fbbd540c0",
+    "build_choice": "Pinned scalar CR32+CR64 public SoXR0.1.3, no SIMD/OpenMP/VR, io(0,0), quality(6,0)=VHQ28bit, runtime(0).",
+    "limit": "The same public backend is used on both oracle/candidate comparison sides; wrapper/bridge correctness is tested, not an independent filter implementation or equivalence to the bundled build."
+  },
+  "remaining_limits": [
+    "No native runtime selection, sample comparison, device delivery, full Cubase project playback or whole-host equivalence.",
+    "Inspected policy1 native accessors conditionally select mode2 or mode1 through availability/factory paths. This explicit mode2 application option is not a global default assertion.",
+    "Bundled source modifications, toolchain/SIMD/FP settings and backend error/lifetime behavior remain unverified.",
+    "Arbitrary caller partitions may change requested/discard/EOF behavior; prediction and processing must use the same partition sequence.",
+    "The positive and NULL EOF cases are distinct; no silent replacement with generic backend flush or floor(total*ratio) is justified.",
+    "Raw proprietary binary slices and disassembly remain local research artifacts. This manifest is custody, not authorization to redistribute vendor code."
+  ],
+  "snapshot_policy": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2/source-snapshots.json",
+    "bytes": 9868,
+    "sha256": "85ab9e63278fa65a79c82e29b3a3b36b217149961b20ec88b0376814912af4b4"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "id": "APP008-GUI",
+  "created_utc": "2026-10-20T00:24:28.668261+00:00",
+  "groups_passed": 5,
+  "groups": [
+    {
+      "id": "open",
+      "result": "passed",
+      "observation": "Final build opened the copied APP007 project through Cmd-O/Go To/Open, preserving 80 BPM, one unresolved event and its attached PCM; repeated Open/Cancel returned to the project.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP008/gui-release-open-success.ax.txt",
+          "bytes": 5566,
+          "sha256": "9fe959ff4d5503c1ed388b2133cf7ae5377343f71cbebc203e1a807f3b104319"
+        },
+        {
+          "path": "research/evidence/application/APP008/gui-release-open-cancel.ax.txt",
+          "bytes": 5566,
+          "sha256": "a2baca1f4fce0668a1319a6c37b40b577b864beba261c15bdf9b1b029827cbe5"
+        }
+      ]
+    },
+    {
+      "id": "inspection",
+      "result": "passed",
+      "observation": "Source inspector showed gain1, inversionoff, no explicit fades/Warpscale, project automatic-fade flags0 and saved duration0.01s. Layout inspected in native screenshot.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP008/gui-final-source-inspection.ax.txt",
+          "bytes": 1103,
+          "sha256": "5b58e1f370c6ef26e94c65e8681868bf5c49190c593a5ad7f6afbdccdd17a31a"
+        },
+        {
+          "path": "research/evidence/application/APP008/gui-source-inspection.png",
+          "bytes": 139750,
+          "sha256": "eb70af11500b0e1acd68148deb071812cdff32d84f04c0cb6fdad19de98cf7a6"
+        }
+      ]
+    },
+    {
+      "id": "render",
+      "result": "passed",
+      "observation": "Separate WAV exported through the native panel. Final build repeated the export under a new filename after opening through the corrected Open workflow. Both entire outputs are identical; independent integer IEEE encoding matched all2116800samples. All5packagefiles remain unchanged.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP008/gui-final-render-success.ax.txt",
+          "bytes": 5670,
+          "sha256": "408ef76ed4dbba5ebf9a608e29a416d9214f6fd95472c670bc36e3cc63fe61df"
+        },
+        {
+          "path": "research/evidence/application/APP008/gui-release-render-success.ax.txt",
+          "bytes": 5623,
+          "sha256": "78cba564b4843105acb02ce2934243a173b90e2ba6d57d00320c34f05384302e"
+        },
+        {
+          "path": "research/evidence/application/APP008/gui-source-render-independent-check.json",
+          "bytes": 4918,
+          "sha256": "33d315674bfc970869477b69517aca6364fde6a96417ca7484a283a93592eeaa"
+        },
+        {
+          "path": "research/evidence/application/APP008/gui-release-output-check.json",
+          "bytes": 385,
+          "sha256": "e923eff3e6b2e7701220c9709e65a3755442b840d06b34171175e2355bfa2669"
+        }
+      ]
+    },
+    {
+      "id": "cancel_reopen",
+      "result": "passed",
+      "observation": "After successful export, Cancel returned to arrangement; reopening the inspector/export kept Save enabled. This was observed after the async render-panel correction, before the final Open-only change.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP008/gui-final-render-cancel.ax.txt",
+          "bytes": 5670,
+          "sha256": "fc02443ca03e2cc4e9f0d40d740ede7d9dfe338dee5ad4247ca014c9c1bb21c8"
+        },
+        {
+          "path": "research/evidence/application/APP008/gui-final-render-reopened.ax.txt",
+          "bytes": 29124,
+          "sha256": "a73fc4e964bcb312e0f0fb2521b850e4c62e3dda137715f3ed7d9448d28babe5"
+        }
+      ]
+    },
+    {
+      "id": "playback_barrier",
+      "result": "passed",
+      "observation": "Play displayed unresolved-Cubase-event refusal after source export. Rendering did not create a playable Clip. Observed before final Open-only change; core gate unchanged.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP008/gui-final-play-refused.ax.txt",
+          "bytes": 654,
+          "sha256": "52061bb946f475fbe9871f06c57c39c0fbcee26c88d1095b09a40f2c8dbf5dbd"
+        }
+      ]
+    }
+  ],
+  "scope": "Selected native application workflows; self-authored attached PCM, no Cubase reference execution.",
+  "correction_history": [
+    "Initial nested modal save-panel cancellation/reopen left Save disabled. Changed to dismiss the inspector then asynchronously begin the native panel.",
+    "Bound queued render to Project value snapshot and package root; check context before panel and again on acceptance.",
+    "The existing synchronous Open panel also became disabled under CUA. Replaced runModal with asynchronous begin; final GUI open/cancel/export succeeded.",
+    "During diagnosis the app was also initialized with its existing --project argument. Final build Open verification used the real dialog; that workaround is not the final acceptance path."
+  ]
+}

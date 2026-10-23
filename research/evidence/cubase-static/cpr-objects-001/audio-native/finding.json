@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "id": "CPR-AUDIO-NATIVE-001",
+  "created_utc": "2026-10-19T10:31:07.676636+00:00",
+  "scope": "Bounded original macOS arm64 instructions, RTTI/vtable pointers, constants and inert CPR byte correlation. No proprietary execution.",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "verification": {
+    "path": "research/evidence/cubase-static/cpr-objects-001/audio-native/verification.json",
+    "sha256": "155d826b63c074c8c75dcd06ae2d3756c02f37f6f53794b614cbd91627d4a2f3"
+  },
+  "pointer_and_string_evidence": [
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/audio-native/reader-candidates-v02.json",
+      "sha256": "1f1f140deafb73b5cbf8764eed4e2e6a1c5db2afe8e7bbcafa05f6ac15d103aa"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/audio-native/event-field-bindings.json",
+      "sha256": "5c801870b84d86ac938aba67418298ea55917278ee4ad20359ef7c2a4f3efdd2"
+    }
+  ],
+  "findings": [
+    {
+      "id": "event-envelope",
+      "entry": "0x1017017a0",
+      "observation": "MEvent reader consumes a 2-byte field then three 8-byte floating fields, dispatched to virtual setters +0xd8/+0xe8/+0xf8. It next reads a typed MDataNode object. Version-dependent object-link reading follows. Flags are masked by virtual +0x360 before merging.",
+      "binding": "Original MAudioEvent vtable setters resolve to0x1000e9d20/30/40, storing the values at instance+0x60/+0x68/+0x70. Primitive helpers0x10221d5d8 and0x10221e3fc independently confirm widths and byte-order handling.",
+      "limits": "Timeline/source-offset units and flag semantics are not established by these setters. Do not create playable clips by treating all three values as seconds."
+    },
+    {
+      "id": "audio-object-chain",
+      "entry": "0x1000ee164",
+      "observation": "MAudioEvent normally calls MEvent reader first; an external global compatibility bit selects a different path. The typed data object path must be followed through archive identity rather than searching adjacent strings.",
+      "limits": "Compatibility mode, remaining event attributes and callback side effects are unresolved."
+    },
+    {
+      "id": "clip-media-descriptor",
+      "entry": "0x1000faff8",
+      "observation": "PAudioClip calls PMediaDescriptor reader0x1017aab94, then requests typed AudioCluster (original constant0x1038921ee). Legacy version0 has a separate FNPath read after that. PMediaDescriptor calls MAudioPart reader, then reads a typed FPath, a native string, i16/i32/f64 and version-dependent descriptor attributes.",
+      "limits": "Inherited MAudioPart/node helper chains and unbound scalar meanings remain separately scoped. FNPath in the descriptor is not sufficient evidence of the actual active AudioFile without following its object reference."
+    },
+    {
+      "id": "cluster-file-references",
+      "entry": "0x10036c9bc",
+      "observation": "AudioCluster consumes a typed FPath then two object-vector readers0x1030f91c4. Each vector reads i16 storage flags, i32 count and counted typed object reads.",
+      "limits": "AClusterSegment body semantics and media container resolution remain unknown."
+    },
+    {
+      "id": "audio-file-fields",
+      "entry": "0x10033eec4",
+      "observation": "AudioFile reads u64, i16, i16, i16, f32 and a typed FPath. Original constant references in its missing/unavailable-file property path bind these fields to MediaFrameCount, AudioSampleSize, AudioFrameSize, AudioChannels and AudioSampleRate respectively. The schema is supported by the original instruction widths and constant addresses retained in event-field-bindings.json.",
+      "limits": "This reads descriptor metadata; it is not a successful media decode or file-content verification."
+    },
+    {
+      "id": "native-path",
+      "entry": "0x1031911d0",
+      "observation": "FNPath reads a native filename string, a type descriptor, i32 platform/path discriminator and i16 field. Discriminators1/2 then read a base-path string with platform separator handling. Type descriptor0x10319b8b8 reads i32 and three native strings.",
+      "limits": "Native path resolution and resource lookup are unexecuted. Raw decompilation warns on disconnected failure/exception tail; original instructions and byte readback remain retained. No implicit filesystem lookup or VSTsound extraction is claimed."
+    },
+    {
+      "id": "native-string-encoding",
+      "entry": "0x103109ff0",
+      "observation": "Native string reader consumes signed32 byte count and rejects values above50000. It recognizes UTF8 BOM EFBBBF at either end, normalizes terminal NUL and uses conversioncode65001 for marked strings. Unmarked bytes bypass that UTF8 conversion.0x10310a240 is an8-byte tail wrapper to this reader.",
+      "application_rule": "Accept observed unmarkedASCII and explicitly BOM-marked strictUTF8; reject ambiguous unmarkednonASCII instead of guessing legacy encoding. Restrict count to50000.",
+      "limits": "Raw REA could not model the isolated wrapper tail; the original LLVM branch to0x103109ff0 and separate complete helper dossier supply the relationship. Other legacy encodings remain unsupported."
+    },
+    {
+      "id": "arrangement-root",
+      "entry": "0x100959278",
+      "observation": "PArrangement reads two typed objects followed by version-dependent strings; it retains the first object and links it back to the arrangement. Original type-constant binding for the second object remains for a subsequent pass.",
+      "limits": "This is not full arrangement state reconstruction or CPR writing."
+    }
+  ],
+  "derivations": [
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/audio-native/derivation.json",
+      "sha256": "965220d5dde9f48bf32aef20a7508a00a02f04d15e95d265bc7f3c6b71d83a1d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/audio-native/derivation-pass2.json",
+      "sha256": "c5f745ee638e7fc825414f4272515120050715ad704f10456a8607f9216e4e26"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/audio-native/derivation-pass3.json",
+      "sha256": "12063d4e3cf2e8db26711f35f04ead6da94abb735872faa7aeee9bb2f1df75dd"
+    }
+  ],
+  "limitations": [
+    "21 exact code slices retain9,068 bytes and2,267 original instruction words;2,173 REA instruction addresses checked within original intervals.",
+    "Raw slices omit global bytes, imports, unwind metadata and type context. Native pointers/constants are resolved separately from unchanged full-image bytes.",
+    "No Cubase runtime cases, native media playback or candidate conformance cases.",
+    "Native object tails, callbacks, alternate versions,32/64-bit archive variants and nonlocal resource resolution remain explicit unknowns."
+  ],
+  "target_executed": false,
+  "rea_evidence_import": {
+    "bundle": "audio-evidence-bundle.json",
+    "bundle_sha256": "4f8bea5f9307b546bd62a96d278c53ab8f9b2d76451355c874477c7a3c8e6ff1",
+    "result": {
+      "imported": 42,
+      "unknowns_added": 0,
+      "total": 42
+    },
+    "record_policy": "Unchanged original evidence records; canonicalized with pinned REA createEvidenceBundle."
+  }
+}

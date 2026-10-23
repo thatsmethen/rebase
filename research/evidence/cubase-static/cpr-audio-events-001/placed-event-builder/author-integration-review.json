@@ -1,0 +1,47 @@
+{
+  "status": "passed_scoped_read_only_api_composition_review",
+  "scope": "Builder author review of current Swift call/descriptor use; no full source-profile, GUI or host conformance claim.",
+  "inputs": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRPlacedSourceEventPlan.swift",
+      "bytes": 5872,
+      "sha256": "1a2f2e41ec3da158bfb7fa4c11d8013bbf87aed9eec93d859543b84c67e6908c"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 8578,
+      "sha256": "7085132d62fa0b032e0b7493f6c04a02fa18a504a966e9c13460559e1c71e74b"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 10474,
+      "sha256": "9d53bde36b59b1a7f474e713928ad986d9474b65c23a07a0de33759e3747dd68"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 9395,
+      "sha256": "3896d4274da33007ac2fd193ab61938b3f2221b07bed82728031e4887f704a9e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8748,
+      "sha256": "447e435835317ff3a0fb66dfeb855fa24b79d42106694d0ce9acebc9bbfab9d7"
+    }
+  ],
+  "checks": [
+    "Canonical containing-clock Start separated from clip scalar Length/Offset; explicit zero signed Offset path retained.",
+    "Builder API receives explicit media-rate context and whole event window; admitted nonnegative direct event is inside ordinary [0,2592000] caller range.",
+    "Stored start/length/offset feed concrete getterEnd reader stage, not unrounded raw source coordinates.",
+    "Reader first/end/seek values validated against positive timeline and complete-media bounds before scheduling.",
+    "Direct stream uses complete source samples; seek incorporates projected offset, and event gain is applied after direct read exactly once.",
+    "Frozen V4 report/source recovery remains separate; source clock is replayed rather than edited project tempo."
+  ],
+  "limitations": [
+    "Caller uses a fresh source-rate builder context, not the hosted root rate provider.",
+    "Fresh track-resource state and zero delay/context assumptions require the separate placed-event-context source contract.",
+    "General nested ranges/overlaps, fades, pitch/warp, sample rate changes and full project playback are outside this API review.",
+    "AVAudioEngine scheduling and app cursor seconds quantization are separate from this source descriptor operation."
+  ],
+  "open_findings": [],
+  "target_execution_count": 0
+}

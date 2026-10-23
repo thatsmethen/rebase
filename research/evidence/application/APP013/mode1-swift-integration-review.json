@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "id": "APP013-MODE1-SWIFT-INTEGRATION-REVIEW",
+  "created_utc": "2026-10-20T10:27:55.213589+00:00",
+  "status": "no_open_actionable_finding_in_reviewed_scope",
+  "scope": "Read-only review of explicit mode1 source-event preparation, cursor, inspection/UI, callback postprocessor and build-module integration. Worker lifecycle is reviewed separately; this record does not certify GUI or native host equivalence.",
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "bytes": 16107,
+      "sha256": "01654e81697d79c6bb2244c004580ffee8b5d202dd64a54f14f84db4098516ce"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 7510,
+      "sha256": "00ffeff9ed3cd8c72ebcf4ef0b7a5561c279acef1fd226fe206e5bca563ab35a"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8144,
+      "sha256": "e85d40e2d5f79fd95a822d0b789c1805786e251556028e130f466cece125610e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 8628,
+      "sha256": "b882fcd909e3721ccd7744988721b9157cc42e1bed73ee428b3470a357b1dfe3"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRLiveCallbackAdapter.swift",
+      "bytes": 1312,
+      "sha256": "f9c4ac8cfa03fa3aeb5fcd23c112a254916a6bf480899c60c3925f357b3120a3"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 13673,
+      "sha256": "e426e17e26303faa9752f049652c4c08c5365e3c97c606cec387a05b1a504d39"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 38820,
+      "sha256": "82d7ede057a9d4a4d9cb65a37e7e0acc5d80f4011c895813d8b11d08a1eb239b"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+      "bytes": 6497,
+      "sha256": "8fa76429d270bf744f287951e84488ac8c7dc0ce450b176ccfb512fd211bd41b"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "bytes": 22046,
+      "sha256": "c7b56928a3ddb72e6d7b62545611a3c8838dbc7741274f395cf93f0a23ea239b"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/module.modulemap",
+      "bytes": 529,
+      "sha256": "b8037d9fae1ef25fb332f02908cb70176684eccb122f2ee8e6d7dbf83e63bc35"
+    },
+    {
+      "path": "Application/Package.swift",
+      "bytes": 1868,
+      "sha256": "95831a7c96a4a59f60c97045a07e392ded69271a2c8fa1f53db97d10db843458"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRMode1StreamTests.swift",
+      "bytes": 6737,
+      "sha256": "7ed542e413ea8030df48f3551ed8e722be4969ba0f371b4071884091a139e9c2"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceEventPlaybackTests.swift",
+      "bytes": 31238,
+      "sha256": "7adf6d13e723d28190a86b0d0fd7489e031f0469a9be3d64a5ff44f91136af9e"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRLiveCallbackAdapterTests.swift",
+      "bytes": 2603,
+      "sha256": "2ebc43674ad46c15b05523d459c10e08b0a9f368dcdaa5216d2c5b45a5cd8297"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "research/evidence/application/APP013/mode1-independent-review.json",
+      "bytes": 7061,
+      "sha256": "d9b41212d6b74d1020d0b3b2c7790e02128490791b6efee6902da325d8162905"
+    },
+    {
+      "path": "research/evidence/application/APP013/callback-independent-review.json",
+      "bytes": 6471,
+      "sha256": "16a6f7613962095dc1fdf5738bcb69651190d9278167b129bf4c0f8cd555d3b0"
+    },
+    {
+      "path": "research/evidence/application/APP013/stream-queue-independent-review.json",
+      "bytes": 4719,
+      "sha256": "faf764a2808e1592a063a383d8cdb50353bc3b135985c3b124e7715cadc40272"
+    },
+    {
+      "path": "research/evidence/application/APP013/module-map-correction.json",
+      "bytes": 931,
+      "sha256": "6eec7623a2ec25d0746ac56d0749cfc0c16fa02347d0b874ac6e6a1847ea2310"
+    },
+    {
+      "path": "research/evidence/application/APP013/mode1-integration-second.log",
+      "bytes": 12096,
+      "sha256": "43c4431c07048b9cd2b022b251a6d25d49567bfccc80c451952c3580964ab0d7"
+    },
+    {
+      "path": "research/evidence/application/APP013/independent-kernels-final-02.log",
+      "bytes": 8127,
+      "sha256": "2cbb114d614e7c16c6d02fd295af2e868a638df225e12bb2d7b987061cdb7ffc"
+    },
+    {
+      "path": "research/evidence/application/APP013/core-tests-first.log",
+      "bytes": 52064,
+      "sha256": "3108a87396bcdb1ea3b90888cededc60c8fe52f876b7373a73738068dbaf2771"
+    }
+  ],
+  "checks": [
+    "Every prepare, resume and seek reuses preserved-source replay and attached-media size/hash verification before a new source snapshot is accepted. Project/root/selection context is checked by the session, and preparation failures exit audition.",
+    "Mode1 is explicit and original-rate remains the default. Inspection routes its own admission reason; equal source/project rate is admitted for mode1 without claiming identity filtering. Ordinary project Play/mix barriers remain in place.",
+    "Each count planner and playback cursor owns a distinct create/destroy mode1 instance. Seeking reconstructs from source0 with the same8192-frame partitions, preserving suffix output; it does not reuse native reset with retained storage.",
+    "The last positive block is final, including exact8192 multiples. Zero-output blocks advance the source and are not mistaken for EOF; visible returned counts must match the count query. No additional NULL drain is inserted.",
+    "Event gain follows conversion as a separate Float32 operation. Bounded ring transfer precedes the callback postprocessor with explicit application prefix0/offset0, and a failed buffer is not published.",
+    "UI labels identify only the selected event and bypass project effects/mixer/routing/automation. Mode1 text calls the filter reconstructed, describes explicit choice and seek replay, and leaves reference sample equivalence unverified.",
+    "Explicit module.modulemap lists exactly all10 public TimingDSP headers. Strict floating-point C flags remain; new header additions are part of the module definition rather than relying on a directory umbrella.",
+    "Frozen CPR interpretation profiles and compatibility payloads are not changed by choosing an audition backend."
+  ],
+  "tests": {
+    "passed": 238,
+    "suites": 36,
+    "seconds": 32.238,
+    "log": {
+      "path": "research/evidence/application/APP013/core-tests-first.log",
+      "bytes": 52064,
+      "sha256": "3108a87396bcdb1ea3b90888cededc60c8fe52f876b7373a73738068dbaf2771"
+    },
+    "root_composition_controls": [
+      "4 stream tests cover fresh cursors, seek suffixes at4rates, post-filter gain discrimination, planar ring samples, offline tail plus257silence frames and invalid-domain rejection.",
+      "Full CPR test pins independent oracle SHA and checks every visible block count for1058400sourceframes at48/32/16/44.1kHz, retained event/media/source custody and changed-media rejection.",
+      "3 callback bridge tests distinguish first-plane sentinel action from other-plane contents and reject empty/nonstereo output."
+    ],
+    "independence": "These application composition checks supplement the separate original-instruction/Fraction kernel oracles; a cursor compared to itself is not an independent native sample oracle."
+  },
+  "retained_corrections": [
+    "Earlier stale Clang umbrella-header build failures are retained. The explicit module map resolved the callback integration retry without another cache deletion.",
+    "Earlier throwing Swift Testing expression compilation and callback discriminator metadata count corrections are documented in the separate independent reviews."
+  ],
+  "actionable_findings_open": [],
+  "limitations": [
+    "Source PCM remains fully resident; converted queue and conversion blocks are bounded. Initial synchronous preparation and seek/preroll can block the caller.",
+    "Native availability-based fallback selection is not replayed: mode1 is a user-selected reconstruction, and mode2 uses the separately pinned public backend.",
+    "Application queue topology, device scheduling, output-frame quantization and reset/preroll seeking are application policy; hard real-time delivery is not certified.",
+    "Kernel sample-domain, FP environment and allocation restrictions are defensive supported-domain gates, not universal vendor behavior.",
+    "Inspection readiness does not promise the file remains unchanged; actual preparation rereads and verifies it.",
+    "Only the bounded source event is auditioned. Full project tracks, plugins, routing, automation, general placement/fades/warp and Cubase runtime samples remain unverified."
+  ],
+  "cubase_runtime_comparisons": 0,
+  "target_executions": 0
+}

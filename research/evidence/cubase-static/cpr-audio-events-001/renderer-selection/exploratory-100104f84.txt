@@ -1,0 +1,36 @@
+
+/workspace/rebase/research/targets/derived/Cubase15-arm64:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+0000000100003ecc <__text>:
+100104f84: 6dbd23e9    	stp	d9, d8, [sp, #-0x30]!
+100104f88: a9014ff4    	stp	x20, x19, [sp, #0x10]
+100104f8c: a9027bfd    	stp	x29, x30, [sp, #0x20]
+100104f90: 910083fd    	add	x29, sp, #0x20
+100104f94: aa0003f3    	mov	x19, x0
+100104f98: f9401000    	ldr	x0, [x0, #0x20]
+100104f9c: 97ff97ee    	bl	0x1000eaf54 <__text+0xe7088>
+100104fa0: 1e204008    	fmov	s8, s0
+100104fa4: f9401260    	ldr	x0, [x19, #0x20]
+100104fa8: bd403260    	ldr	s0, [x19, #0x30]
+100104fac: 97ff97ec    	bl	0x1000eaf5c <__text+0xe7090>
+100104fb0: bd003268    	str	s8, [x19, #0x30]
+100104fb4: a9420261    	ldp	x1, x0, [x19, #0x20]
+100104fb8: f9400008    	ldr	x8, [x0]
+100104fbc: f9408108    	ldr	x8, [x8, #0x100]
+100104fc0: 52800022    	mov	w2, #0x1                ; =1
+100104fc4: d63f0100    	blr	x8
+100104fc8: f9401660    	ldr	x0, [x19, #0x28]
+100104fcc: 52800061    	mov	w1, #0x3                ; =3
+100104fd0: 94578f83    	bl	0x1016e8ddc <__text+0x16e4f10>
+100104fd4: f9401660    	ldr	x0, [x19, #0x28]
+100104fd8: f9400008    	ldr	x8, [x0]
+100104fdc: f9402d08    	ldr	x8, [x8, #0x58]
+100104fe0: 52800021    	mov	w1, #0x1                ; =1
+100104fe4: d63f0100    	blr	x8
+100104fe8: 52800020    	mov	w0, #0x1                ; =1
+100104fec: a9427bfd    	ldp	x29, x30, [sp, #0x20]
+100104ff0: a9414ff4    	ldp	x20, x19, [sp, #0x10]
+100104ff4: 6cc323e9    	ldp	d9, d8, [sp], #0x30
+100104ff8: d65f03c0    	ret

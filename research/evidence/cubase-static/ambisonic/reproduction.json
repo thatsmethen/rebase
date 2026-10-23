@@ -1,0 +1,224 @@
+{
+  "cwd": "/workspace/rebase",
+  "environment_for_ghidra": {
+    "GHIDRA_HEADLESS_MAXMEM": "2G"
+  },
+  "rea_version": "6.7.0",
+  "ghidra_version": "12.1.4",
+  "commands": [
+    {
+      "argv": [
+        "sh",
+        "scripts/rea",
+        "inspect-plist",
+        "/workspace/rebase/research/targets/downloads/partial-components-01/components/Cubase 15.app/Contents/VST3/vstambiconverter.vst3/Contents/MacOS/vstambiconverter",
+        "--relative-path",
+        "/workspace/rebase/research/targets/downloads/partial-components-01/components/Cubase 15.app/Contents/VST3/vstambiconverter.vst3/Contents/Info.plist",
+        "--format",
+        "json"
+      ],
+      "stdout": "research/evidence/cubase-static/ambisonic/plist.json",
+      "status": "recorded",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "sh",
+        "scripts/rea",
+        "inspect-signature",
+        "/workspace/rebase/research/targets/downloads/partial-components-01/components/Cubase 15.app/Contents/VST3/vstambiconverter.vst3/Contents/MacOS/vstambiconverter",
+        "--format",
+        "json"
+      ],
+      "stdout": "research/evidence/cubase-static/ambisonic/signature.json",
+      "status": "recorded",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "sh",
+        "scripts/rea",
+        "inspect-macho",
+        "/workspace/rebase/research/targets/downloads/partial-components-01/components/Cubase 15.app/Contents/VST3/vstambiconverter.vst3/Contents/MacOS/vstambiconverter",
+        "--format",
+        "json"
+      ],
+      "stdout": "research/evidence/cubase-static/ambisonic/macho.json",
+      "status": "recorded",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "sh",
+        "scripts/rea",
+        "search",
+        "/workspace/rebase/research/targets/downloads/partial-components-01/components/Cubase 15.app/Contents/VST3/vstambiconverter.vst3/Contents/MacOS/vstambiconverter",
+        "Ambi|FuMa|SN3D|N3D|Converter|process",
+        "--mode",
+        "regex",
+        "--kind",
+        "procedures",
+        "--provider",
+        "ghidra",
+        "--snapshot",
+        "research/evidence/cubase-static/ambisonic/analysis-snapshot.json",
+        "--format",
+        "json"
+      ],
+      "stdout": "research/evidence/cubase-static/ambisonic/procedure-search.json",
+      "status": "rejected_universal_input",
+      "exit_code": 1
+    },
+    {
+      "argv": [
+        "sh",
+        "scripts/rea",
+        "search",
+        "/workspace/rebase/research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho",
+        "Ambi|FuMa|SN3D|N3D|Converter|process",
+        "--mode",
+        "regex",
+        "--kind",
+        "procedures",
+        "--provider",
+        "ghidra",
+        "--snapshot",
+        "research/evidence/cubase-static/ambisonic/analysis-snapshot.json",
+        "--format",
+        "json"
+      ],
+      "stdout": "research/evidence/cubase-static/ambisonic/procedure-search-arm64.json",
+      "status": "recorded",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "sh",
+        "scripts/rea",
+        "search",
+        "/workspace/rebase/research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho",
+        "FuMa|AmbiX|Conversion|Direction",
+        "--mode",
+        "regex",
+        "--kind",
+        "strings",
+        "--provider",
+        "ghidra",
+        "--snapshot",
+        "research/evidence/cubase-static/ambisonic/analysis-snapshot.json",
+        "--format",
+        "json"
+      ],
+      "stdout": "research/evidence/cubase-static/ambisonic/string-search.json",
+      "status": "recorded",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "sh",
+        "scripts/rea",
+        "xrefs",
+        "/workspace/rebase/research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho",
+        "0x192328",
+        "--provider",
+        "ghidra",
+        "--snapshot",
+        "research/evidence/cubase-static/ambisonic/analysis-snapshot.json",
+        "--format",
+        "json"
+      ],
+      "stdout": "research/evidence/cubase-static/ambisonic/fuma-label-xrefs.json",
+      "status": "recorded",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "sh",
+        "scripts/rea",
+        "function",
+        "/workspace/rebase/research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho",
+        "0x150a00",
+        "--provider",
+        "ghidra",
+        "--snapshot",
+        "research/evidence/cubase-static/ambisonic/analysis-snapshot.json",
+        "--format",
+        "json"
+      ],
+      "stdout": "research/evidence/cubase-static/ambisonic/conversion-registration-function.json",
+      "status": "recorded",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "sh",
+        "scripts/rea",
+        "function",
+        "/workspace/rebase/research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho",
+        "0x1c520",
+        "--provider",
+        "ghidra",
+        "--snapshot",
+        "research/evidence/cubase-static/ambisonic/constructor-snapshot.json",
+        "--format",
+        "json"
+      ],
+      "stdout": "research/evidence/cubase-static/ambisonic/parameter-constructor-function.json",
+      "status": "recorded",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "sh",
+        "scripts/rea",
+        "address-to-file-offset",
+        "/workspace/rebase/research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho",
+        "0x150988",
+        "--provider",
+        "ghidra",
+        "--format",
+        "json"
+      ],
+      "stdout": "research/evidence/cubase-static/ambisonic/registration-file-mapping.json",
+      "status": "recorded",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "sh",
+        "scripts/rea",
+        "read-bytes",
+        "/workspace/rebase/research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho",
+        "0x1a04b0",
+        "--length",
+        "8",
+        "--provider",
+        "ghidra",
+        "--format",
+        "json"
+      ],
+      "stdout": "research/evidence/cubase-static/ambisonic/parameter-vtable-slot.json",
+      "status": "recorded",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "sh",
+        "scripts/rea",
+        "function",
+        "/workspace/rebase/research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho",
+        "0x1c79c",
+        "--provider",
+        "ghidra",
+        "--snapshot",
+        "research/evidence/cubase-static/ambisonic/list-method-snapshot.json",
+        "--format",
+        "json"
+      ],
+      "stdout": "research/evidence/cubase-static/ambisonic/parameter-list-method.json",
+      "status": "recorded",
+      "exit_code": 0
+    }
+  ],
+  "static_scope": "No target process launched. CLI native-analysis sessions close after each command. Raw source component is unchanged; exact slice derivation is recorded separately."
+}

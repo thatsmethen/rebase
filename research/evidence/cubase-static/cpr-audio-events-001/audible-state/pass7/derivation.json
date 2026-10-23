@@ -1,0 +1,75 @@
+{
+  "scope": "Exact unmodified byte derivatives for static decompilation only",
+  "source": "/workspace/rebase/research/targets/derived/Cubase15-arm64",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "source_bytes": 85691328,
+  "segments": [
+    {
+      "name": "__PAGEZERO",
+      "address": 0,
+      "vm_size": 4294967296,
+      "offset": 0,
+      "file_size": 0
+    },
+    {
+      "name": "__TEXT",
+      "address": 4294967296,
+      "vm_size": 71335936,
+      "offset": 0,
+      "file_size": 71335936
+    },
+    {
+      "name": "__DATA_CONST",
+      "address": 4366303232,
+      "vm_size": 11993088,
+      "offset": 71335936,
+      "file_size": 11993088
+    },
+    {
+      "name": "__DATA",
+      "address": 4378296320,
+      "vm_size": 1507328,
+      "offset": 83329024,
+      "file_size": 458752
+    },
+    {
+      "name": "__LINKEDIT",
+      "address": 4379803648,
+      "vm_size": 1916928,
+      "offset": 83787776,
+      "file_size": 1903552
+    }
+  ],
+  "function_starts": {
+    "offset": 84211048,
+    "length": 742376,
+    "sha256": "6fcf18e04007f0482aa396b3672bf39edb5301966b8b05b7814cf1beb5484f5b"
+  },
+  "derivatives": [
+    {
+      "entry": "0x1003016e4",
+      "next_declared_function_start": "0x100301744",
+      "source_file_offset": 3151588,
+      "length": 96,
+      "raw_file": "function-1003016e4.arm64.bin",
+      "raw_sha256": "be952f738d2911b740f44ed68c24ae3c5a419869a4d7710e78a6b1d8579bd712",
+      "original_segment": "__TEXT",
+      "original_native_disassembly": "native-1003016e4.txt",
+      "native_command": [
+        "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+        "-d",
+        "--start-address=0x1003016e4",
+        "--stop-address=0x100301744",
+        "/workspace/rebase/research/targets/derived/Cubase15-arm64"
+      ],
+      "native_stdout_sha256": "eadc342c0bc694c9d35190c187b7db0cce97bc2186ce156d27e1b4f2c99539c1",
+      "boundary": "LC_FUNCTION_STARTS interval, not proof of exact function body; exception tails may be disconnected"
+    }
+  ],
+  "losses": [
+    "No Mach-O headers, imports, global data, typeinfo, vtables, relocations, unwind metadata or neighboring functions are mapped in each raw image.",
+    "Original linked entry addresses are preserved, so PC-relative references still calculate original addresses, but their external bytes are unavailable.",
+    "No fake imports, data patches, additional functions or modified instructions are introduced.",
+    "Raw analysis output must be correlated with separately retained original-image evidence; this is not whole-image decompilation."
+  ]
+}

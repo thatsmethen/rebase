@@ -1,0 +1,607 @@
+{
+  "id": "CPR-PLACED-RATE-OWNERSHIP-001",
+  "revision": 1,
+  "evidence_class": "Original-image static rate/format/ownership contracts and supplied-state analytical discriminators",
+  "target_executed": false,
+  "target_runtime_comparisons": 0,
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "conclusion": "The ordinary reader configures sample format but does not assign its timeline or builder rate to a newly created AudioAccessor. The accessor snapshots the rate of the returned reader owner. For the concrete unchanged AudioCluster path that owner is the cluster, whose rate comes from its first current file. This closes a conditional direct one-file rate relationship; it does not prove that native differing-rate timeline playback is absent, because selected/cached/transformed streams, mixed-file cluster accessors and later output stages are separate concrete boundaries.",
+  "correction": {
+    "seed_label": "The investigation seed called10036ec30 a rate setter.",
+    "verified": "AudioAccessor1044664f0+110\u219210036ec30 sets frame byte size at+42 and may adjust bit width+40. Actual rate setter is+f0\u21921003704d4, which stores Float32 S0 at+30 and returns1.",
+    "custody": "Earlier sealed evidence was preserved. Receiver-specific slots, original pointer cells and setter instructions in this new study are authoritative."
+  },
+  "roles": [
+    {
+      "name": "builder rate",
+      "owner": "context root passed to10020f2e8;10171c5a0",
+      "use": "Creates a type10 period for descriptor coordinate quantization. Not passed to10011376c as stream configuration."
+    },
+    {
+      "name": "reader coordinate period",
+      "owner": "global1050105e0 object+390, datum+388",
+      "use": "Quantizes descriptor coordinates in101d3eb24. This function does not copy that rate into accessor+30."
+    },
+    {
+      "name": "selected stream",
+      "owner": "100211a7c return \u2192 ordinary remainder constructor10011376c \u2192 PAudioSegment+38",
+      "use": "May be exact clip+188 AudioCluster, a cached AudioStream, or an optional processed stream. Constructor retains pointer; no rate conversion/configuration there."
+    },
+    {
+      "name": "reader owner",
+      "owner": "accessor+28 read context, then readContext+8",
+      "use": "10036e858 queries this owner+140 and stores its Float32 result into accessor+30. Arbitrary factory owner identity is not assumed."
+    },
+    {
+      "name": "output accessor rate",
+      "owner": "AudioAccessor+30",
+      "use": "Sampled from reader owner on successful initialization; explicit+f0 or format-copy can overwrite it. Not automatically synchronized after owner/host mutation."
+    },
+    {
+      "name": "current file format",
+      "owner": "AudioFile lazy backend/property bag",
+      "use": "Current kind/bits/rate getters can consult backend state; serialized CPR values and a .wav extension alone do not prove their effective values."
+    }
+  ],
+  "contracts": [
+    {
+      "id": "RATE1",
+      "claim": "Constructor10036e34c installs1044664f0, zeros converter+20/read-context+28, stores caller policy at+49 and first-read flag1 at+4a. If the source readiness predicate permits and source+f8 returns a reader, it stores that reader at+28, retains reader+8 owner, then invokes+d8\u219210036e858. That copier queries owner+140, not an unconditional ctor-input getter.",
+      "evidence": [
+        {
+          "entry": "0x10036e34c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass3",
+          "source_file_offset": 3597132,
+          "bytes": 240,
+          "sha256": "48e86f3885747328b573ea07b0ca154e78219c259803cade267c35fabebaaae3",
+          "evidence_ids": [
+            "ev_fba9c0423c0acb23514d925f752030d23e2316628ae927b993aea2dc80f3ffeb",
+            "ev_fef319331e0d6be57eb0f1a39cc84036b65f05c8cf88093f96661fc328a93d12"
+          ]
+        },
+        {
+          "entry": "0x10036e858",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass3",
+          "source_file_offset": 3598424,
+          "bytes": 260,
+          "sha256": "fcca38c9d755b28f3441477f1f65552a5e45991fcd4c8287a7d791fcf8b08b39",
+          "evidence_ids": [
+            "ev_4419f7ce4d1c1a48fd656e22b9b4b2955e05fbe64dd1d537ea7e626b45a22bce",
+            "ev_d5f3d5cb624946f996a02c94eb110bece57e9ccf11d6b87669d121e788c35bd1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RATE2",
+      "claim": "Concrete AudioCluster104466150+f8\u219210036a52c allocates a read context and calls10036cd94(context,cluster,flags). The constructor stores the exact cluster atcontext+8. On the successful factory return, this binds RATE1 owner to the selected cluster; factory failure returns nil. Cluster primary+140\u219210036af9c and secondary-format+40\u219210036afc8 consult first file through head/node+8 and call file+140; empty case returns44100. Empty or failed sources are excluded from direct-file admission.",
+      "evidence": [
+        {
+          "entry": "0x10036cd94",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass4",
+          "source_file_offset": 3591572,
+          "bytes": 516,
+          "sha256": "fe3777582bd84a5651bdf5b420fe41c1c590f1fee82087da127e3168d14788bd",
+          "evidence_ids": [
+            "ev_1ff1bc7fa3a00fdd80a3b241cae7fa17277b1aebf4c194237880a967ccf1e1a4",
+            "ev_a3b2ffef032f8c94f62949de7fbcb6bd7f115bdea348f91455d2eed38930d04d"
+          ]
+        },
+        {
+          "entry": "0x10036af9c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass3",
+          "source_file_offset": 3583900,
+          "bytes": 44,
+          "sha256": "296b2f9c039136d56a8ea17767080551f7b410ee9a666d4caa555ad975d63c1f",
+          "evidence_ids": [
+            "ev_1f7325956e14526c8c000c3c5ac83bf73f22f7e25cd611ef2523d845c8f983c8",
+            "ev_3a13d562f7385aaa8ab2d9966e99457dcc7782f7d3c1fa63d74d4937fc416fe3"
+          ]
+        },
+        {
+          "entry": "0x10036afc8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass1",
+          "source_file_offset": 3583944,
+          "bytes": 44,
+          "sha256": "3e1c701bda606e65bbeacf520a8b3d499e396de371cb8cca41c5c90ad169a4b7",
+          "evidence_ids": [
+            "ev_5d8fbcab2747748807fb041f036eef1a1e1e958ce343ef6c4a7615e3a6551cc0",
+            "ev_f77c4ef814d50874a03ee95fa95dc40860a8627c04c8df8588c8307bd0f07de5"
+          ]
+        }
+      ],
+      "supplemental": "owner-and-metadata-bindings.json checks original factory and dispatch cell"
+    },
+    {
+      "id": "RATE3",
+      "claim": "101d3eb24 at101d3f040..0c0 creates with selected stream, flags0x25, policy1. It sets+150 alignment0, +100 layout2 only for stereo/stereo (otherwise0), +130 kind2, and+120 bits32 or64 according to output format1/2, then transfers accessor into segment+78. There is no actual+f0 rate setter or format-copy call in this initialization. The existing cache path checks layout and can reuse the prior accessor without resampling its rate property.",
+      "evidence": [
+        {
+          "entry": "0x101d3eb24",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass3",
+          "source_file_offset": 30665508,
+          "bytes": 2824,
+          "sha256": "a2d84514f3c51829b6535246599ba3a9e982fba11dc63c26ee84c6a82e8a15fa",
+          "evidence_ids": [
+            "ev_9a834cae8c37ee9d35b633871ac036e535ca8f69418de64855ee6ae9815c361b",
+            "ev_cdf9ff9130018b3ea3f34035ccc4fbe91c321763d208d6325a996ebd475e5c2c"
+          ]
+        },
+        {
+          "entry": "0x10036ed34",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass3",
+          "source_file_offset": 3599668,
+          "bytes": 88,
+          "sha256": "6bc7ed89218c45c2660f26f48f17cea4ee45c7a8f07d146391c5d218af3ecefc",
+          "evidence_ids": [
+            "ev_821094d74d2ba31c53b3fb519bdaccc716534869d5ec00b82dce60f3b5bb6e07",
+            "ev_cbc7950f069246a463a210b46376ed90649e7a8b267be85eaeb3a37b07e79cee"
+          ]
+        },
+        {
+          "entry": "0x1003704e8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass2",
+          "source_file_offset": 3605736,
+          "bytes": 12,
+          "sha256": "4e58e5614ec4730e25e2228fb0dce459dc42984061577f2a3afbf88d726c6a81",
+          "evidence_ids": [
+            "ev_65ce76b17abff83c31cc7daf8abf46f78e87db29469fbda7da5662b2606778f4",
+            "ev_7e1bd4e7c3f9354de2887bbbd524ddc13bb6d6b51d74ff45c6203802f3ae6352"
+          ]
+        },
+        {
+          "entry": "0x10037050c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass2",
+          "source_file_offset": 3605772,
+          "bytes": 12,
+          "sha256": "1347827036477e199e2bdfc3d72552a3d5af1d29151728ff8c31093059166737",
+          "evidence_ids": [
+            "ev_10eeda63c9c7614c8d1a9ae39d4ea9e3135e73993528b6a0c610681b40e16f7f",
+            "ev_cc4739b33afdf42e7e0a73bce39711ef01287fe812aab6bded3aec905f951434"
+          ]
+        },
+        {
+          "entry": "0x100370528",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass2",
+          "source_file_offset": 3605800,
+          "bytes": 8,
+          "sha256": "518e1e302193d83397320325386a80dcbc8394d3634f913d12684cbf16050233",
+          "evidence_ids": [
+            "ev_7b3af841ec596ee903f5a3df6c71df0c19f96f3e2863383a77a70c32f2340f83",
+            "ev_f253132d345b55a4359ea42d781fa0a6a54e59bc1732fa2ee654929c885b6609"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RATE4",
+      "claim": "1001139d0 releases the previous segment+78 accessor via+10 when nonnil and stores the supplied pointer. It neither retains the new pointer nor directly configures rate/format; the old release remains a possible external lifecycle callback. On another selector call within101d3eb24,101d3ec60..eca0 clears the prior local descriptor cache before validating the new selection. For prior-invocation channel+1840,101d3eccc..ecfc clears only when the new selected pointer differs (including nil); identical selection preserves the cache. Exit101d3f484..4a0 retains the final nonnil descriptor in channel+1840, preserving the same-descriptor cache across block calls. Layout mismatch separately clears at101d3eff4.101d3e5b0 explicitly clears current descriptor accessor and releases channel+1840 under its lock. These are not automatic resets on every source seek or every block boundary.",
+      "evidence": [
+        {
+          "entry": "0x1001139d0",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass1",
+          "source_file_offset": 1128912,
+          "bytes": 56,
+          "sha256": "64b24eba181bb69671c2010338869a6ad11caf0ef9089654b9c26f163c9f89c8",
+          "evidence_ids": [
+            "ev_23dc952ef4dd46d44ee8f180fc0201eaae10edc8ee7bb190020768115437e486",
+            "ev_f8917993ab2a631038d755a79097e766de6c3010d5e0ff1e9a46094590ea8ef5"
+          ]
+        },
+        {
+          "entry": "0x101d3e5b0",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass2",
+          "source_file_offset": 30664112,
+          "bytes": 328,
+          "sha256": "2b5c252497606c5eab17f01dcd5c173ce20a3ea7194a6e5145f1a1fcd6ed5afb",
+          "evidence_ids": [
+            "ev_086a344c4337f7d5475b63d6e028c2ea3f06c9a0eb2e0342f4fd16fb6332e7ee",
+            "ev_13735bbb3e5c5859bbf43ff93c89181c7c08eade600a11ceb3e3a79f14ce7f8a"
+          ]
+        },
+        {
+          "entry": "0x101d3eb24",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass3",
+          "source_file_offset": 30665508,
+          "bytes": 2824,
+          "sha256": "a2d84514f3c51829b6535246599ba3a9e982fba11dc63c26ee84c6a82e8a15fa",
+          "evidence_ids": [
+            "ev_9a834cae8c37ee9d35b633871ac036e535ca8f69418de64855ee6ae9815c361b",
+            "ev_cdf9ff9130018b3ea3f34035ccc4fbe91c321763d208d6325a996ebd475e5c2c"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RATE5",
+      "claim": "Actual rate setter1003704d4 is a Float32 store to+30; gain100370538 stores Float32 to+34.10036fca0 and10036fea0 also overwrite+30 from supplied format-interface+40, then copy other properties using different interface slots.10036e964 passes object+10 to accessor+1a0;10036e97c passes object+10 to+1a8. Their inspected bodies contain no direct converter+20 or first-read+4a reset. This is not proof that an arbitrary virtual source getter cannot have side effects.",
+      "evidence": [
+        {
+          "entry": "0x1003704d4",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass2",
+          "source_file_offset": 3605716,
+          "bytes": 12,
+          "sha256": "cc3aebaff1e838c94da7a8ca2fc8f8a7a61cb5cba3fcc14c2af342e06a37a9b8",
+          "evidence_ids": [
+            "ev_18bbafa573098b19dbb27cb74f5a0a431079d22fe1e4ab973ba131445d96508e",
+            "ev_a89d800aaa205e36c1cf2eeb8c20ef1a68b0970aae0be73b3690c823925d6583"
+          ]
+        },
+        {
+          "entry": "0x100370538",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass1",
+          "source_file_offset": 3605816,
+          "bytes": 8,
+          "sha256": "372c3b4619ccd0f8c5bea6c4afe9e5ab17b3b78c7344e4084277cc7593eef6c6",
+          "evidence_ids": [
+            "ev_02ff5a1e7a36106628aae465fd609e7f4035d7d90b3f4a04adbe089c1d3cc540",
+            "ev_6fba6eb59099f87cda419196b4b15f1c9602113fb654f294ae2b739410e3718a"
+          ]
+        },
+        {
+          "entry": "0x10036fca0",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass1",
+          "source_file_offset": 3603616,
+          "bytes": 256,
+          "sha256": "7ca0205661addf9658f373bfe9359cf1d1c89c264929f11cc27ef0af1fbe4e62",
+          "evidence_ids": [
+            "ev_184f100fe0275660f79a9a28f76e63a7d95876b9a26315dd1fcfb06a9cea5a65",
+            "ev_3e889c63021d5f8cb18b7a3bfa6383af42301d5b53379c2f20864c6bbbd4cd2d"
+          ]
+        },
+        {
+          "entry": "0x10036fea0",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass1",
+          "source_file_offset": 3604128,
+          "bytes": 296,
+          "sha256": "9b5176beabd8080d859e53325b401d699cf54f1d72e1e99785418afb8ab750ca",
+          "evidence_ids": [
+            "ev_0a71f726a2633b3c08d837a7b8215c3849c6838b01b04f23e22a98d06bf08c8d",
+            "ev_ab9bd0098699f98fda75954b4b236b32204dc44017ee4b8d7d157ffb3f6f9382"
+          ]
+        },
+        {
+          "entry": "0x10036e964",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass3",
+          "source_file_offset": 3598692,
+          "bytes": 24,
+          "sha256": "69ae9298cd545d99f1fbb0bc7d48435771d27849e024a7b7637fe5314eec1df4",
+          "evidence_ids": [
+            "ev_3ff019ebb026b2d29c4ae25ea8473a108c224e3b690aea3da2ac01d1010c1688",
+            "ev_8c3c0aed8ec5b5967bfd929a1a1bf981ab32fa34710b9a8067d9507e298c62db"
+          ]
+        },
+        {
+          "entry": "0x10036e97c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass1",
+          "source_file_offset": 3598716,
+          "bytes": 24,
+          "sha256": "33fb607dc4b4e69fc229f0a5284e6c2a8ec1e2309ac2dc7a081c8fd90d7975ac",
+          "evidence_ids": [
+            "ev_777ab5fbe244a819da9b714138ed71b18df27ee0889a7cb2600337e098d316fd",
+            "ev_e62600ef527da39b7468baec7fba2103c7804b0c6f7fc3dd698303769f228c8a"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RATE6",
+      "claim": "100211a7c first honors builder flag bit5 with direct clip+188. Otherwise it looks up typed AudioStream from event numeric attributes with runtime key at105028978. A hit is returned directly. A miss calls10021225c(event,context,0,builder+38); a result different from exact clip+188 is cached and the event added to builder cleanup storage. The sealed selector contract gives a sufficient direct LoFi no-processing branch; arbitrary cached/processed stream format is not constrained by the original clip metadata.",
+      "evidence": [
+        {
+          "entry": "0x100211a7c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass4",
+          "source_file_offset": 2169468,
+          "bytes": 284,
+          "sha256": "a3f83e37f5e139f0b0dad78b5ae59c7201c67bbc703cfc9f8b70b61644e91070",
+          "evidence_ids": [
+            "ev_0d21f3dd2ce287b77fbc92e638dbbb4dbbcdfef704e2f9b2702ce74820d8a868",
+            "ev_99bae7fec8072ae0cf00a356b0c61cd7b0324992fddfc2698f34f2535c01dd40"
+          ]
+        },
+        {
+          "entry": "0x10011376c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass4",
+          "source_file_offset": 1128300,
+          "bytes": 144,
+          "sha256": "b891273b44a46c6103b52a84c4e5370ea4c2b491c733e977c61ca2884b41bcdc",
+          "evidence_ids": [
+            "ev_1dcadaa8fb241110ba6ab6f034b63b3052adbec59e790510917d544ce6c0e1a4",
+            "ev_84a9c1fb3b88ed36a30ff11466e3c86a45f490480a9c0caaa9931c2fde99d6d3"
+          ]
+        }
+      ],
+      "external": "renderer-selection/finding.json and original-bindings.json builder excerpts"
+    },
+    {
+      "id": "RATE7",
+      "claim": "10036cd94 constructs one inner AudioAccessor for each iterated cluster file with caller flags/policy1, then calls10036e97c(inner,cluster,1) to overwrite its output format from the cluster secondary interface. This can establish a real differing-rate inner file\u2192first-file-cluster conversion. It is independent of builder/project rate. For a stable one-file cluster, the inner source and cluster rate query agree by the same file receiver.",
+      "evidence": [
+        {
+          "entry": "0x10036cd94",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass4",
+          "source_file_offset": 3591572,
+          "bytes": 516,
+          "sha256": "fe3777582bd84a5651bdf5b420fe41c1c590f1fee82087da127e3168d14788bd",
+          "evidence_ids": [
+            "ev_1ff1bc7fa3a00fdd80a3b241cae7fa17277b1aebf4c194237880a967ccf1e1a4",
+            "ev_a3b2ffef032f8c94f62949de7fbcb6bd7f115bdea348f91455d2eed38930d04d"
+          ]
+        },
+        {
+          "entry": "0x10036e97c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass1",
+          "source_file_offset": 3598716,
+          "bytes": 24,
+          "sha256": "33fb607dc4b4e69fc229f0a5284e6c2a8ec1e2309ac2dc7a081c8fd90d7975ac",
+          "evidence_ids": [
+            "ev_777ab5fbe244a819da9b714138ed71b18df27ee0889a7cb2600337e098d316fd",
+            "ev_e62600ef527da39b7468baec7fba2103c7804b0c6f7fc3dd698303769f228c8a"
+          ]
+        },
+        {
+          "entry": "0x10036fea0",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass1",
+          "source_file_offset": 3604128,
+          "bytes": 296,
+          "sha256": "9b5176beabd8080d859e53325b401d699cf54f1d72e1e99785418afb8ab750ca",
+          "evidence_ids": [
+            "ev_0a71f726a2633b3c08d837a7b8215c3849c6838b01b04f23e22a98d06bf08c8d",
+            "ev_ab9bd0098699f98fda75954b4b236b32204dc44017ee4b8d7d157ffb3f6f9382"
+          ]
+        },
+        {
+          "entry": "0x10036afc8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass1",
+          "source_file_offset": 3583944,
+          "bytes": 44,
+          "sha256": "3e1c701bda606e65bbeacf520a8b3d499e396de371cb8cca41c5c90ad169a4b7",
+          "evidence_ids": [
+            "ev_5d8fbcab2747748807fb041f036eef1a1e1e958ce343ef6c4a7615e3a6551cc0",
+            "ev_f77c4ef814d50874a03ee95fa95dc40860a8627c04c8df8588c8307bd0f07de5"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RATE8",
+      "claim": "AudioCluster primary+150\u219210036b0bc and+158\u219210036b244 obtain first-file+168 format ID, map it through10012c5e0, then load descriptor kind+10/bits+14. Original AudioFile+168\u219210033d530 delegates file+150 kind and+158 bits through10012c64c. Those concrete file getters first invoke lazy10033a054 then query AudioSampleFormat/AudioSampleSize; kind query failure defaults1, bits query failure invokes the frame-size/channel fallback. This preserves the current-provider boundary relevant to PCM24\u2192resample\u2192PCM24 versus already-Float32 source order.",
+      "evidence": [
+        {
+          "entry": "0x10036b0bc",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass4",
+          "source_file_offset": 3584188,
+          "bytes": 136,
+          "sha256": "d13bd1c4660c5a1e10d0504c1e22fe4ecfd14bfe1989dfbf68e3d0854745445d",
+          "evidence_ids": [
+            "ev_e3a93fc3d9a1184ac8ab5986aacf2de8d356e61ba91727862d70b55c509d6c04",
+            "ev_fcf62488d8c28279ebcf5b7ebce4ad1fcc508991a7597562037c498063a4cddb"
+          ]
+        },
+        {
+          "entry": "0x10036b244",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/pass4",
+          "source_file_offset": 3584580,
+          "bytes": 136,
+          "sha256": "474f68ded5d8bd5bb0cfd273fe9b7f48cd525d833368ad51e90aabde5a9c57b5",
+          "evidence_ids": [
+            "ev_1ff6968dabdeb1a0f7a37319bc613023123a772e086e8bf55d0feea26e36be58",
+            "ev_5d58a6ba5fcbf8bb5b6eb43d20dc1b0e635b4cc3fcd747f43fd6cba891099fdc"
+          ]
+        }
+      ],
+      "supplemental": "owner-and-metadata-bindings.json independently verifies peer-captured getter instructions and exact property-name bytes"
+    }
+  ],
+  "bounded_application_implications": [
+    "A direct one-file ordinary-reader reconstruction may supply a verified stable reader owner and inherit that owner rate, preserving independent builder and reader-period inputs. Matching the source-rate builder/reader is an explicit accepted context, not a recovered global project default.",
+    "An explicit application destination-rate setter can exercise the recovered accessor capability, but must be labeled supplied configuration until a concrete ordinary-path caller or prepared owner proves that destination rate.",
+    "Do not compose the existing whole-source Float32 conversion pipeline with placed reads and call it the native ordinary path. Source sample format, current owner rate, seek history, first-read allowance, converter state and read partition are distinct inputs.",
+    "For a current integer24 backend, retain source-format-dependent conversion ordering. This study binds format ownership but does not implement or independently establish the complete differing-rate PCM pipeline."
+  ],
+  "disconfirming_cases": [
+    "Change builder/root rate while holding direct cluster reader owner fixed: RATE3 contains no rate write reflecting that change.",
+    "Change reader datum period only: coordinate quantization changes while accessor initialization rate remains owner-derived.",
+    "Return a prepared48000Hz owner from a stream factory whose original clip/file is44100Hz: generic inheritance from original metadata would be wrong.",
+    "Two cluster files with differing rates: inner format copy can convert the second file to the first-file cluster rate even though outer initialization has no rate setter.",
+    "Populate cached AudioStream key or activate a selector layer: the direct clip+188 equality gate no longer establishes selected-stream rate/format.",
+    "Change lazy backend AudioSampleFormat/AudioSampleSize or first-file rate after snapshot: current query and cached output configuration need not remain equal.",
+    "Invoke+110 with an integer frame size: it cannot substitute for Float32+f0 rate assignment. Invoking only+f0 does not directly rearm+4a or replace+20."
+  ],
+  "next_edges": [
+    {
+      "addresses": [
+        "0x100211a7c",
+        "global0x105028978",
+        "0x10021225c"
+      ],
+      "question": "Bind cached/processed selected-stream receiver and its factory owner before attributing project-rate conformance to a general event."
+    },
+    {
+      "addresses": [
+        "0x100339108",
+        "global0x10502c0f8",
+        "0x10033a054"
+      ],
+      "question": "Bind actual file registry probe/creator and property population for the selected backend; peer accessor-seek-state retains the current focused evidence."
+    },
+    {
+      "addresses": [
+        "0x1003704d4",
+        "0x10036fca0",
+        "0x10036fea0"
+      ],
+      "question": "Find a concrete ordinary-path call that assigns target/project rate, if any; no direct B/BL matches to the tiny rate setter does not enumerate virtual calls."
+    },
+    {
+      "addresses": [
+        "0x101d9b3b4",
+        "0x10171c5a0"
+      ],
+      "question": "Bind effective reader datum and builder-root rate inputs to the same hosted source graph; defaults or capability alone do not establish their relationship."
+    }
+  ],
+  "limits": [
+    "No proprietary executable/library was executed, activated or linked. No target audio, device or transport comparison was performed.",
+    "Conditional successful concrete initialization and stable admitted source state are required. This is not whole-host immutability, general loop/cache/transform support or proof that Cubase lacks ordinary differing-rate playback.",
+    "Raw REA slices omit external callees, imports, globals, RTTI and unwind context. LC_FUNCTION_STARTS intervals are not proved function bodies; exception tails and decompiler warnings are retained. Original instructions/cells are authority.",
+    "Direct B/BL scans are address candidates only and do not enumerate indirect calls. Numerical analytical controls are supplied-state dependency examples, not observed Cubase states or PCM conformance.",
+    "Current AudioFile backend/format state is separate from the bytes of an attached file and its saved CPR metadata. Runtime provider selection, transformed owner identity and downstream device-rate conversion remain bounded external edges."
+  ],
+  "verification": {
+    "function_intervals": 36,
+    "unique_entry_addresses": 36,
+    "source_bytes": 6108,
+    "native_words": 1527,
+    "rea_dossiers": 36,
+    "rea_instruction_addresses": 1411,
+    "unique_evidence_records": 72
+  },
+  "canonical_import": {
+    "imported": 72,
+    "unknowns_added": 0,
+    "total": 72
+  },
+  "supplemental_original_words": 143,
+  "analytical_controls": 7,
+  "primary_artifacts": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/original-bindings.json",
+      "bytes": 16630,
+      "sha256": "98934540b6bb586f5f55f40eef27803a01519d7167974f78252d6b7485a9c64f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/owner-and-metadata-bindings.json",
+      "bytes": 2933,
+      "sha256": "495a6fc096f0ff9113e657921ce09b58c7481063ded969d1cbc27dbbf0ffbc42"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/verification.json",
+      "bytes": 25417,
+      "sha256": "50afd8a0ac94aa8e3d9ca908797a44a6afa8b6f33a6b13b8ef466e20055098ea"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/evidence-bundle.json",
+      "bytes": 9774250,
+      "sha256": "a85469fe8daffe9ed217ad90194c7e03ef1e54fa99c5cf148047c64d6ae7f556"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/evidence-import.json",
+      "bytes": 367,
+      "sha256": "1437493070d75410582de5ecdf85ad77bf383efcb4d8b2e6673959f6cc457d4b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/analytical-controls.json",
+      "bytes": 2057,
+      "sha256": "f34c7f8a1c24242797936d86988059d8c0065ad71c08b6616e59272406183c6c"
+    }
+  ],
+  "external_references": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/finding.json",
+      "bytes": 33370,
+      "sha256": "f3ec20b3e9b3412a30a4451a920f1c68bbd95b41906dda4a432139a5f8f23da4"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/pass8/native-10021225c.txt",
+      "bytes": 10569,
+      "sha256": "8eabbdfc7578381ea3dea81ed6e92409247f33711fd57de1189e662348e6df12"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/finding.json",
+      "bytes": 12941,
+      "sha256": "e0797ab18bf763c94243e4f4dfff2bced4f0fb608d9cde681913b7509220ad9d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/finding.json",
+      "bytes": 19331,
+      "sha256": "aa9e0ef239dfb7e3516bf198c77d45881a73e3fc6b0a2d51b5994f8fa1fcf1bd"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/finding.json",
+      "bytes": 12852,
+      "sha256": "111ec14e07fb9a88b26a558c75a0c99eb3c8b1d2674394a889556c26cb6f7a75"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider/finding.json",
+      "bytes": 15413,
+      "sha256": "96edf3d32313581e95b804581e44af8ce4888e01148e384f6c4f12a6411ac539"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/cluster/finding.json",
+      "bytes": 13948,
+      "sha256": "12131650ca7510f4fe85d55ed0e2e8e6e96a1fa827ca57abeb345388553ecc6f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-selection/receiver-tables.json",
+      "bytes": 14058,
+      "sha256": "764008ce565a06496c2123a115d79d996241ae0ba2ecff23c63ed33ee65c01d7"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-selection/finding.json",
+      "bytes": 9640,
+      "sha256": "2b0d82f0b5922b0e7bd279f1a19955803b982b629b6508d941be58ebf75e376b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/finding.json",
+      "bytes": 17257,
+      "sha256": "b3ed0ab7f758c91a65620dcc829be02e51684c7887e4561f9107d22fc0365c38"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/bound-source-bytes.json",
+      "bytes": 9368,
+      "sha256": "9dc50098b2f735e2f9115a1431c215077a97fd97a5b1bad98dc03cbc1c943085"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/attributes/source_tools.py",
+      "bytes": 3060,
+      "sha256": "f24eb1ee109bc9a57ce54d001d56bf7c7298469df54aeac9283e08ddd1eb3791"
+    },
+    {
+      "path": ".tools/rea/node_modules/rea-agents/skills/reverse-engineer-anything/SKILL.md",
+      "bytes": 23523,
+      "sha256": "fbcd39d6abe803cf7aa49c1880815bc8e22ba2af87a23681944f687bb7629eb1"
+    },
+    {
+      "path": ".tools/rea/node_modules/rea-agents/skills/reverse-engineer-anything/references/native-and-artifacts.md",
+      "bytes": 18911,
+      "sha256": "18b8828aec6476be03ca92bdb9506c47cc9ef8c1415c37d33e4af2f8c55cf8f9"
+    },
+    {
+      "path": ".tools/rea/node_modules/rea-agents/skills/reverse-engineer-anything/references/evidence-workflows.md",
+      "bytes": 4363,
+      "sha256": "2bdee98a843d018cf850c706111bb74c459ba8640da00799e9208122e4d5ab80"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/pass1/native-10020f2e8.txt",
+      "bytes": 96057,
+      "sha256": "7f933cb8f97cbadd640ef32b10745451f06d7ae6d8a44b9cb752b34daf5c18ee"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/native-10036a52c.txt",
+      "bytes": 1502,
+      "sha256": "9717738396908a1109322a5a393eaf62bfc4eaa517bd01eeead8707faada796b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass2/native-10033d530.txt",
+      "bytes": 945,
+      "sha256": "dd0d41e13f5ed8f35c76f43fde08f6f1119bb8d370387dc3aa35ed549960e844"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass3/native-10033d024.txt",
+      "bytes": 2330,
+      "sha256": "1e501c0651e482ecf8ca545e25b272e80fae9a25a36506f74eef4627c5bb2a91"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass3/native-10033d308.txt",
+      "bytes": 2644,
+      "sha256": "555e6ee9f13b8ed97a0a8ba09080e0670432ee85df44d7c293c59c06f62935fa"
+    }
+  ],
+  "sessions": "Four isolated raw-slice MCP clients and canonical-import client closed explicitly.",
+  "reproduction": [
+    "derive.py N in a new output directory; analyze_pass.mjs N",
+    "verify_evidence.py; combine_evidence.mjs; import_evidence.mjs",
+    "bind_source.py; bind_owner_and_metadata.py; analytical_controls.py; write_finding.py"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "id": "DAWPROJECT-APPLICATION-REVIEW-001",
+  "status": "One actionable export-domain defect reported; awaiting owner correction",
+  "review_mode": "Independent read-only source/schema/native-evidence review; no Cubase execution, no new application tests executed",
+  "findings": [
+    {
+      "id": "EXCHANGE-R1",
+      "priority": 2,
+      "path": "Application/Sources/RebaseCore/DAWProject.swift",
+      "line": 153,
+      "issue": "Export truncates an unchecked source rate to Int, and does not enforce its own import asset domain. Valid fractional-rate source audio becomes falsely labelled; below8kHz/above192kHz or multichannel source files can produce exports rejected by this importer.",
+      "evidence": "ProjectStore.importAudio accepts positive source rates; AudioSampleValidation.scan checks finite samples and returns actual rate. Export preflight passes bounds.sampleRate directly into assets, then XML uses Int(asset.rate). Import requires integral8\u2013192kHz and1\u20132channels plus equality with actual file metadata.",
+      "recommended_fix": "Reject unrepresentable/out-of-subset source rate or channels before writing XML, or explicitly implement and test conversion. Silent integer truncation is unsuitable.",
+      "status": "Reported to root and target_intake; no source changed by reviewer."
+    }
+  ],
+  "confirmed_contracts": [
+    "Clip.time and duration use parent timeline units; contentTimeUnit applies to playStart/playStop and child content. Restricted seconds\u2192seconds mapping correctly maps playStart to sourceOffset and duration to audible clip length.",
+    "Official Audio comments define duration as full file duration. Export retains full original asset and declares its entire duration, with source trimming in Clip. Import compares declared asset metadata with actual file and validates every clip interval.",
+    "When duration is absent, playStop-playStart is supported within the seconds subset. Conflicting explicit duration and playStop reject conservatively rather than silently selecting one.",
+    "Official RealPoint docs define outgoing interpolation and default hold. Explicit interpolation requirement rejects otherwise standards-valid omitted values intentionally, due to ambiguity with the observed native parser default; no silently changed curve results.",
+    "Gain automation accepts only decibels, so it does not mistakenly interpolate amplitude then relabel the result as dB. Normalized pan uses the explicit affine mapping to the application range. Constant linear Volume is converted to dB.",
+    "Unsupported warp/loop/reference/scene/plugin/routing/musical-anchor content is rejected; import stages a new project and publishes only after full media validation.",
+    "Self-roundtrip and schema tests do not prove another DAW will use the same pan law, mix precision, or native tempo semantics."
+  ],
+  "native_binding_limit": "The 0x70394 observations are virtual-call arguments: receiver slot+0x38 receives TempoAutomation, then+0x40 receives unit and seconds. Lanes uses timeUnit and seconds. Concrete writer-vtable implementation and resulting XML have not been observed. This is not evidence of emitted invalid Cubase XML.",
+  "primary_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/bitwig/dawproject/ee4dcdde75940f30e14e55401a26955a58b8322b/src/main/java/com/bitwig/dawproject/timeline/Clip.java",
+      "retrieved_on": "2026-10-19",
+      "source_commit": "ee4dcdde75940f30e14e55401a26955a58b8322b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/bitwig/dawproject/ee4dcdde75940f30e14e55401a26955a58b8322b/src/main/java/com/bitwig/dawproject/timeline/Audio.java",
+      "retrieved_on": "2026-10-19",
+      "source_commit": "ee4dcdde75940f30e14e55401a26955a58b8322b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/bitwig/dawproject/ee4dcdde75940f30e14e55401a26955a58b8322b/src/main/java/com/bitwig/dawproject/timeline/RealPoint.java",
+      "retrieved_on": "2026-10-19",
+      "source_commit": "ee4dcdde75940f30e14e55401a26955a58b8322b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/bitwig/dawproject/ee4dcdde75940f30e14e55401a26955a58b8322b/src/main/java/com/bitwig/dawproject/timeline/Timeline.java",
+      "retrieved_on": "2026-10-19",
+      "source_commit": "ee4dcdde75940f30e14e55401a26955a58b8322b"
+    }
+  ],
+  "files": [
+    {
+      "path": "Application/Sources/RebaseCore/DAWProject.swift",
+      "sha256": "766623ccd20304706d3a0f884b8bd3785ef2021a11384307927fce0210541a87"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/DAWProjectTests.swift",
+      "sha256": "c519844f524665e5a9007b96edb5ffa253f145d3a4d35ab70b532ccdb631c777"
+    },
+    {
+      "path": "research/references/dawproject/Project.xsd",
+      "sha256": "58e2fd9864772850aac3eab1f3de8693857dc5384df6d29fbc320ae1de2347cc"
+    },
+    {
+      "path": "research/references/dawproject/README.md",
+      "sha256": "d2a501c0315f128deff7e367ed1ee68b3ec0ef88f3f36d0cd4ca2d2c03f2a8f0"
+    },
+    {
+      "path": "research/evidence/cubase-static/dawproject-001/native-finding.json",
+      "sha256": "3cf66b9229c82ae13a193dc993c11a25a261b173d8a52edf8ea16e087f60bc10"
+    }
+  ]
+}

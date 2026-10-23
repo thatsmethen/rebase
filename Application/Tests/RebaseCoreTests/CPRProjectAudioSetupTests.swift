@@ -6,10 +6,9 @@ import Testing
 /// Reference execution or hosted device-state equivalence is claimed by these tests.
 @Suite(.serialized)
 struct CPRProjectAudioSetupTests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let workspace = PrivateResearchFixtures.root
     private var references: URL {
-        workspace.appendingPathComponent("research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro")
+        workspace.appendingPathComponent("templates")
     }
     private func original() throws -> Data {
         let bytes = try Data(contentsOf: references.appendingPathComponent("LoFi Hip Hop.cpr"))
@@ -63,8 +62,8 @@ struct CPRProjectAudioSetupTests {
         return try CPRProject.readContainer(Data("RIFF".utf8) + be(UInt32(sections.count)) + Data("NUND".utf8) + sections)
     }
 
-    @Test func AllTenPinnedTemplatesBindTheDirectSavedRateWithoutChangingV4() throws {
-        let inventory = try Data(contentsOf: workspace.appendingPathComponent("research/evidence/cpr-static/cpr-container-001/inventory.json"))
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func AllTenPinnedTemplatesBindTheDirectSavedRateWithoutChangingV4() throws {
+        let inventory = try Data(contentsOf: workspace.appendingPathComponent("evidence/cpr-static/cpr-container-001/inventory.json"))
         #expect(cprSHA256(inventory) == "e50ff515c541c76d857d6c093f4329b5cb53bffcd631a6e22cbc5edf86511b0d")
         let records = try #require((JSONSerialization.jsonObject(with: inventory) as? [String: Any])?["records"] as? [[String: Any]])
         #expect(records.count == 10)
@@ -90,7 +89,7 @@ struct CPRProjectAudioSetupTests {
         }
     }
 
-    @Test func RawRateAndFactorBoundsCannotBecomeAHostClockByFallback() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func RawRateAndFactorBoundsCannotBecomeAHostClockByFallback() throws {
         for rate: Float in [10000, 32000, 44100, 48000, 88200, 96000, 192000] {
             let bytes = try changed(rate: rate.bitPattern)
             let setup = try CPRProjectAudioSetup.read(container: CPRProject.readContainer(bytes))
@@ -111,7 +110,7 @@ struct CPRProjectAudioSetupTests {
         }
     }
 
-    @Test func TypedOwnerAndCompleteBodyAreRequiredEvenWhenDecoyRatesExist() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func TypedOwnerAndCompleteBodyAreRequiredEvenWhenDecoyRatesExist() throws {
         let bytes = try original(), descriptor = try object(bytes)
         let body = bytes.subdata(in: descriptor.payloadOffset..<(descriptor.payloadOffset + descriptor.payloadByteCount))
         let valid = native("PArrangeSetup", version: 8, body: body)
@@ -134,7 +133,7 @@ struct CPRProjectAudioSetupTests {
         }
     }
 
-    @Test func VariableStringsAndEmbeddedDatumBoundsAreParsedForward() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func VariableStringsAndEmbeddedDatumBoundsAreParsedForward() throws {
         let bytes = try original(), descriptor = try object(bytes)
         let originalBody = bytes.subdata(in: descriptor.payloadOffset..<(descriptor.payloadOffset + descriptor.payloadByteCount))
         func string(_ value: String) -> Data {
@@ -171,7 +170,7 @@ struct CPRProjectAudioSetupTests {
             setup:native("PArrangeSetup",version:8,body:body),suffix:suffix+be(UInt32(0)))) })
     }
 
-    @Test func V5UnsupportedRateRemainsExplicitAndHistoricalV4ReportIsUntouched() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func V5UnsupportedRateRemainsExplicitAndHistoricalV4ReportIsUntouched() throws {
         let temporary = FileManager.default.temporaryDirectory.appendingPathComponent("SavedRate-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: temporary, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: temporary) }

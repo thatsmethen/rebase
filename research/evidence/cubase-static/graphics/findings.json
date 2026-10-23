@@ -1,0 +1,299 @@
+{
+  "scope": "Static analysis only of two recovered signed Cubase macOS libraries, with one bounded arm64 function dossier. No target execution or activation; no original target modification.",
+  "captured_at_utc": "2026-10-19T04:43:33.751131+00:00",
+  "status": "bounded-static-dossier-complete-with-partial-indirect-call-coverage",
+  "artifacts": [
+    {
+      "container": "/workspace/rebase/research/targets/downloads/partial-components-01/components/Cubase 15.app/Contents/MacOS/libgraphics2d.2.dylib",
+      "container_sha256": "70d3c217a29b8ba65883678e1c3f434618733b2339122152392bbfea79d54cf5",
+      "container_inventory_evidence_id": "ev_5a063942a368453ae3c0810459e05e13d98ff163fd52eff079c01c2dc975e090",
+      "architecture": "arm64",
+      "slice_offset": 1671168,
+      "slice_size": 1597376,
+      "output": "/workspace/rebase/research/evidence/cubase-static/graphics/libgraphics2d.2-arm64.dylib",
+      "output_sha256": "1ba65d947e697a9ee6f3a26c72e4a3752c42123890fd7a2033d6c5fd655f4625",
+      "method": "Exact source byte range copied without modification; original universal binary unchanged."
+    },
+    {
+      "container": "/workspace/rebase/research/targets/downloads/partial-components-01/components/Cubase 15.app/Contents/MacOS/libimagegenerator.dylib",
+      "container_sha256": "b167ef98ce3d770b21ac974a3c4a5e1520970104270ca6528259679668975089",
+      "container_inventory_evidence_id": "ev_81fb3a226de1e0f851179c00b19ccc463c652aa0cf66a0568477acc5f540f4d8",
+      "architecture": "arm64",
+      "slice_offset": 5079040,
+      "slice_size": 3784592,
+      "output": "/workspace/rebase/research/evidence/cubase-static/graphics/libimagegenerator-arm64.dylib",
+      "output_sha256": "fa0e7d4ed30f6a4a11ad3db7073e090ace97f13335b7ab877eb858a193981e6f",
+      "method": "Exact source byte range copied without modification; original universal binary unchanged."
+    }
+  ],
+  "signature_custody": {
+    "parent_record": "/workspace/rebase/research/targets/downloads/partial-components-01/standalone-signature-verification.json",
+    "parent_record_sha256": "dc202036ee570a2908992f35e668f446f94eaf5aaf5399a014a68d1bdb256776",
+    "thin_slice_verification": "slice-signature-verification.json",
+    "both_thin_slices_strict_codesign_returncode": 0,
+    "limitation": "Standalone Mach-O signatures verified; this does not verify a complete app bundle or original installer."
+  },
+  "evidence": [
+    {
+      "file": "graphics2d-macho.json",
+      "evidence_id": "ev_5a063942a368453ae3c0810459e05e13d98ff163fd52eff079c01c2dc975e090",
+      "operation": "inspect_macho",
+      "provider": {
+        "id": "native-macos",
+        "name": "macOS native inspection utilities",
+        "version": null
+      }
+    },
+    {
+      "file": "imagegenerator-macho.json",
+      "evidence_id": "ev_81fb3a226de1e0f851179c00b19ccc463c652aa0cf66a0568477acc5f540f4d8",
+      "operation": "inspect_macho",
+      "provider": {
+        "id": "native-macos",
+        "name": "macOS native inspection utilities",
+        "version": null
+      }
+    },
+    {
+      "file": "graphics2d-arm64-procedure-search.json",
+      "evidence_id": "ev_03c4f0890d6deef2345e72f566894f75546cf44b3208feaf1e8928c3608812e9",
+      "operation": "search_procedures",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      }
+    },
+    {
+      "file": "imagegenerator-arm64-factory-function.json",
+      "evidence_id": "ev_3ea2b9cb495f9cf0241fa43cacc18f88bcd7b1bc680592a1619eba8333295968",
+      "operation": "analyze_function",
+      "provider": {
+        "id": "ghidra",
+        "name": "Ghidra",
+        "version": "12.1.4"
+      },
+      "analysis_profile_digest": "3fc72c9b4b78498fb992b938f8f3389dc670244a293c1d40abf5e1d10162ed3b"
+    }
+  ],
+  "observations": [
+    {
+      "claim": "libimagegenerator records a load dependency on @loader_path/libgraphics2d.2.dylib; the imagegenerator export inventory contains _createImageGeneratorFactory at arm64 address 0x37ac.",
+      "type": "static-loader-and-symbol-observation",
+      "evidence_ids": [
+        "ev_81fb3a226de1e0f851179c00b19ccc463c652aa0cf66a0568477acc5f540f4d8"
+      ],
+      "limitation": "The import/export collections are nonexhaustive and actual runtime library resolution was not observed."
+    },
+    {
+      "claim": "The recovered factory has an early null return when its input is null, or an indirect call returns a nonzero code or no output pointer.",
+      "type": "decompiler-and-instruction-observation",
+      "evidence_ids": [
+        "ev_3ea2b9cb495f9cf0241fa43cacc18f88bcd7b1bc680592a1619eba8333295968"
+      ],
+      "interpretation": "The first indirect call resembles an interface query, but the interface identifier and complete ABI are not established."
+    },
+    {
+      "claim": "The recovered factory requests 0x30 bytes from imported operator-new symbol __Znwm, initializes pointer-sized fields, and later returns an interior pointer at allocation+0x10 on its success path.",
+      "type": "decompiler-and-instruction-observation",
+      "evidence_ids": [
+        "ev_3ea2b9cb495f9cf0241fa43cacc18f88bcd7b1bc680592a1619eba8333295968"
+      ],
+      "limitation": "Object class names, ownership semantics and behavior of indirect methods remain unestablished."
+    },
+    {
+      "claim": "At call site 0x3864 the factory calls the local thunk at 0x2eb980 named _createGraphicsFactory2; recovered argument setup references the literal default at 0x329238.",
+      "type": "static-call-and-data-reference-observation",
+      "evidence_ids": [
+        "ev_3ea2b9cb495f9cf0241fa43cacc18f88bcd7b1bc680592a1619eba8333295968"
+      ],
+      "limitation": "The name default does not establish which renderer is selected or any visible rendering behavior."
+    },
+    {
+      "claim": "The bounded graphics procedure-name search finds CoreGraphics transform and image API names plus the two exported graphics factory names.",
+      "type": "static-search-observation",
+      "evidence_ids": [
+        "ev_03c4f0890d6deef2345e72f566894f75546cf44b3208feaf1e8928c3608812e9"
+      ],
+      "limitation": "Names alone do not establish call execution, supported UI features, or absence of unnamed internal implementations."
+    }
+  ],
+  "function": {
+    "name": "_createImageGeneratorFactory",
+    "entry": "0x37ac",
+    "body": {
+      "available": true,
+      "provenance": "ghidra-function-body-address-set",
+      "ranges": [
+        {
+          "start": "0x37ac",
+          "end": "0x39af"
+        }
+      ],
+      "total_bytes": 516,
+      "span_bytes": 516,
+      "non_contiguous": false,
+      "contains_entry": true
+    },
+    "assembly_instruction_count": 129,
+    "basic_block_count": 22,
+    "resolved_callee_count": 9,
+    "unresolved_calls": [
+      {
+        "address": "0x37e4",
+        "reason": "Instruction decoder identifies a call but ReferenceManager supplies no call destination"
+      },
+      {
+        "address": "0x3888",
+        "reason": "Instruction decoder identifies a call but ReferenceManager supplies no call destination"
+      },
+      {
+        "address": "0x38a8",
+        "reason": "Instruction decoder identifies a call but ReferenceManager supplies no call destination"
+      },
+      {
+        "address": "0x38c0",
+        "reason": "Instruction decoder identifies a call but ReferenceManager supplies no call destination"
+      },
+      {
+        "address": "0x38e8",
+        "reason": "Instruction decoder identifies a call but ReferenceManager supplies no call destination"
+      },
+      {
+        "address": "0x3910",
+        "reason": "Instruction decoder identifies a call but ReferenceManager supplies no call destination"
+      },
+      {
+        "address": "0x3954",
+        "reason": "Instruction decoder identifies a call but ReferenceManager supplies no call destination"
+      },
+      {
+        "address": "0x397c",
+        "reason": "Instruction decoder identifies a call but ReferenceManager supplies no call destination"
+      },
+      {
+        "address": "0x3998",
+        "reason": "Instruction decoder identifies a call but ReferenceManager supplies no call destination"
+      },
+      {
+        "address": "0x39a8",
+        "reason": "Instruction decoder identifies a call but ReferenceManager supplies no call destination"
+      }
+    ],
+    "relationship_coverage": {
+      "status": "partial",
+      "limitations": [
+        "Ghidra's callee inventory omits targets of 10 call reference(s) or decoded call(s) without destinations."
+      ],
+      "limited_directions": [
+        "callees"
+      ],
+      "diagnostics": [
+        "Only resolved Ghidra call references are returned; unresolved computed or indirect calls remain unknown, while function classifications distinguish thunks and externals."
+      ]
+    },
+    "abi_parameters": [
+      {
+        "ordinal": 0,
+        "name": "param_1",
+        "data_type": "undefined8 *",
+        "size_bytes": 8,
+        "storage": "x0:8",
+        "confidence": "low",
+        "evidence": [
+          {
+            "kind": "signature-source",
+            "source": "ghidra-function-manager",
+            "detail": "Function signature source is default."
+          },
+          {
+            "kind": "decompiler-type",
+            "source": "ghidra-high-function",
+            "detail": "HighFunction recovered data type undefined8 *."
+          }
+        ],
+        "decompiler_artifacts": [
+          "recovered-signature",
+          "register-or-stack-storage",
+          "compiler-generated-variable"
+        ],
+        "role": "parameter"
+      }
+    ],
+    "abi_return": {
+      "ordinal": null,
+      "name": null,
+      "data_type": "undefined8 *",
+      "size_bytes": 8,
+      "storage": "x0:8",
+      "confidence": "low",
+      "evidence": [
+        {
+          "kind": "signature-source",
+          "source": "ghidra-function-manager",
+          "detail": "Function signature source is default."
+        },
+        {
+          "kind": "decompiler-type",
+          "source": "ghidra-high-function",
+          "detail": "HighFunction recovered data type undefined8 *."
+        }
+      ],
+      "decompiler_artifacts": [
+        "recovered-signature",
+        "register-or-stack-storage"
+      ],
+      "role": "return"
+    },
+    "pseudocode_classification": {
+      "classification": "decompiler-generated-non-source",
+      "compilable": false
+    },
+    "native_value_flow_truncated": false
+  },
+  "search_boundary": {
+    "parameters": {
+      "pattern": "transform|matrix|createGraphics|image",
+      "mode": "regex",
+      "case_sensitive": false
+    },
+    "matches_returned": 68,
+    "external_space_matches": 33,
+    "scope": "One arm64 library and recovered procedure names only; no exhaustive functionality claim."
+  },
+  "failed_admission_retained": {
+    "files": [
+      "graphics2d-procedure-search.json",
+      "imagegenerator-factory-function.json"
+    ],
+    "reason": "Ghidra adapter cannot enforce selected architecture on universal Mach-O. Retry used newly extracted exact arm64 byte slices, not identical inputs."
+  },
+  "provider_limits": [
+    "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+    "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+    "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+    "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+    "References cover the complete Ghidra function-body AddressSet and exact entry. Dossier incoming edges omit sources owned by that function; procedure_references also retains those internal edges.",
+    "The dossier combines Ghidra FunctionManager, Listing, ReferenceManager, BasicBlockModel, and decompiler observations; provider-specific pseudocode and assembly are not cross-provider text invariants.",
+    "Resolved reference metadata identifies computed, indirect, external, call, jump, and data edges; unresolved targetless flows remain unknown, and function classifications distinguish thunks and externals.",
+    "Synthetic Ghidra entry-point references without actionable memory sources are omitted.",
+    "The Java bridge serializes one function request per Program and lets each decompilation run until it completes or the caller cancels.",
+    "macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.",
+    "Unresolved computed or indirect flows without target addresses are not represented as reference edges.",
+    "Thunk and external classifications are Ghidra FunctionManager observations; they do not resolve targetless calls.",
+    "Pseudocode and assembly are Ghidra-specific representations, not original source or Hopper-equivalent text.",
+    "Synthetic Ghidra entry-point references without actionable memory sources are omitted.",
+    "Types and calling conventions are Ghidra decompiler observations, not source declarations.",
+    "Register variables, compiler-generated blocks, and pointer arithmetic remain decompiler artifacts.",
+    "Pseudocode is neither original source nor guaranteed to compile."
+  ],
+  "unknowns": [
+    "Ten indirect call destinations remain unresolved.",
+    "Recovered parameter and return types have low confidence.",
+    "No complete Cubase app bundle was available to this analysis.",
+    "No UI, rendered image, audio, timing, runtime loading or behavioral equivalence was observed.",
+    "External callers of the exported factory are outside this library-local dossier."
+  ],
+  "next_bounded_static_probe": "Analyze libgraphics2d.2 arm64 export _createGraphicsFactory2 at 0x3c30 to inspect how its string argument participates in selection, preserving unresolved indirect edges.",
+  "source_integrity_rechecked_after_analysis": true
+}

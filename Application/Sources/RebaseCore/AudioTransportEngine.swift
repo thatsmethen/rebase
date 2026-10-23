@@ -49,8 +49,8 @@ public final class AudioTransportEngine {
         install(next)
     }
 
-    /// Explicitly audition only the selected retained native event. Fresh source
-    /// proof and attached-media hashes are checked on each configuration.
+    /// Explicitly audition the selected source event or its complete supported
+    /// track. Fresh source proof and all media hashes are checked each time.
     @discardableResult
     public func configureCPRSourceEvent(eventID: UUID, project: Project, projectRoot: URL,
                                        mode: CPRSourceEventPlaybackMode = .sourceRate) throws -> CPRSourceEventPlaybackInfo {

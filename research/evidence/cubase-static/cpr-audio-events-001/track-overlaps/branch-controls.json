@@ -1,0 +1,1314 @@
+{
+  "kind": "authored analytical numerical models; zero proprietary target executions",
+  "epsilon_bits": "3f1a36e2eb1c432d",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "controls": [
+    {
+      "label": "crossing-later-equal-priority",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4010000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "4000000000000000",
+          "end_bits": "4018000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4000000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "4000000000000000",
+          "end_bits": "4018000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eb58",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "nested-later-equal-priority",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4020000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "4000000000000000",
+          "end_bits": "4010000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4000000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "4000000000000000",
+          "end_bits": "4010000000000000"
+        },
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "4010000000000000",
+          "end_bits": "4020000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eab8",
+          "action": "clone-current-tail",
+          "event": 0
+        },
+        {
+          "pc": "0x10020eb58",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020e8a8",
+          "action": "publish",
+          "event": 1
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 0
+        }
+      ]
+    },
+    {
+      "label": "crossing-earlier-higher-priority",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "4010000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "4000000000000000",
+          "end_bits": "4018000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "4010000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "4010000000000000",
+          "end_bits": "4018000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020e9b4",
+          "action": "trim-following-tail",
+          "event": 1
+        },
+        {
+          "pc": "0x10020eae8",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "nested-earlier-higher-priority",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "4020000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "4000000000000000",
+          "end_bits": "4010000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "4020000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020ea04",
+          "action": "discard-following",
+          "event": 1
+        },
+        {
+          "pc": "0x10020eae8",
+          "action": "publish",
+          "event": 0
+        }
+      ]
+    },
+    {
+      "label": "same-start-later-equal",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4020000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4010000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4010000000000000"
+        },
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "4010000000000000",
+          "end_bits": "4020000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eab8",
+          "action": "clone-current-tail",
+          "event": 0
+        },
+        {
+          "pc": "0x10020eb54",
+          "action": "discard-current-prefix",
+          "event": 0
+        },
+        {
+          "pc": "0x10020e8a8",
+          "action": "publish",
+          "event": 1
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 0
+        }
+      ]
+    },
+    {
+      "label": "same-range-later-equal",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4010000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4010000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4010000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eb54",
+          "action": "discard-current-prefix",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "signed-priority-min-max",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": -2147483648,
+          "start_bits": "0000000000000000",
+          "end_bits": "4010000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2147483647,
+          "start_bits": "4000000000000000",
+          "end_bits": "4018000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": -2147483648,
+          "start_bits": "0000000000000000",
+          "end_bits": "4000000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2147483647,
+          "start_bits": "4000000000000000",
+          "end_bits": "4018000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eb58",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "touching-higher-later",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4000000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "4000000000000000",
+          "end_bits": "4010000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4000000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "4000000000000000",
+          "end_bits": "4010000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020e8a8",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "three-nested-later-ties",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4024000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "4000000000000000",
+          "end_bits": "4020000000000000"
+        },
+        {
+          "event": 2,
+          "ordinal": 2,
+          "priority": 1,
+          "start_bits": "4010000000000000",
+          "end_bits": "4018000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4000000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "4000000000000000",
+          "end_bits": "4010000000000000"
+        },
+        {
+          "event": 2,
+          "ordinal": 2,
+          "priority": 1,
+          "start_bits": "4010000000000000",
+          "end_bits": "4018000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "4018000000000000",
+          "end_bits": "4020000000000000"
+        },
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "4020000000000000",
+          "end_bits": "4024000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eab8",
+          "action": "clone-current-tail",
+          "event": 0
+        },
+        {
+          "pc": "0x10020eb58",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020eab8",
+          "action": "clone-current-tail",
+          "event": 1
+        },
+        {
+          "pc": "0x10020eb58",
+          "action": "publish",
+          "event": 1
+        },
+        {
+          "pc": "0x10020e8a8",
+          "action": "publish",
+          "event": 2
+        },
+        {
+          "pc": "0x10020e8a8",
+          "action": "publish",
+          "event": 1
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 0
+        }
+      ]
+    },
+    {
+      "label": "chain-alternating-priorities",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4018000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 3,
+          "start_bits": "4000000000000000",
+          "end_bits": "4020000000000000"
+        },
+        {
+          "event": 2,
+          "ordinal": 2,
+          "priority": 2,
+          "start_bits": "4010000000000000",
+          "end_bits": "4024000000000000"
+        },
+        {
+          "event": 3,
+          "ordinal": 3,
+          "priority": 4,
+          "start_bits": "4018000000000000",
+          "end_bits": "4028000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "4000000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 3,
+          "start_bits": "4000000000000000",
+          "end_bits": "4018000000000000"
+        },
+        {
+          "event": 3,
+          "ordinal": 3,
+          "priority": 4,
+          "start_bits": "4018000000000000",
+          "end_bits": "4028000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eb58",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020e9b4",
+          "action": "trim-following-tail",
+          "event": 2
+        },
+        {
+          "pc": "0x10020eb58",
+          "action": "publish",
+          "event": 1
+        },
+        {
+          "pc": "0x10020ea04",
+          "action": "discard-following",
+          "event": 2
+        },
+        {
+          "pc": "0x10020eae8",
+          "action": "publish",
+          "event": 3
+        }
+      ]
+    },
+    {
+      "label": "reinsert-tail-after-equal-start",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 3,
+          "start_bits": "0000000000000000",
+          "end_bits": "4010000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "4000000000000000",
+          "end_bits": "4024000000000000"
+        },
+        {
+          "event": 2,
+          "ordinal": 2,
+          "priority": 2,
+          "start_bits": "4010000000000000",
+          "end_bits": "4020000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 3,
+          "start_bits": "0000000000000000",
+          "end_bits": "4010000000000000"
+        },
+        {
+          "event": 2,
+          "ordinal": 2,
+          "priority": 2,
+          "start_bits": "4010000000000000",
+          "end_bits": "4020000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "4020000000000000",
+          "end_bits": "4024000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020e9b4",
+          "action": "trim-following-tail",
+          "event": 1
+        },
+        {
+          "pc": "0x10020e8a8",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020e9b4",
+          "action": "trim-following-tail",
+          "event": 1
+        },
+        {
+          "pc": "0x10020eae8",
+          "action": "publish",
+          "event": 2
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "higher-current-removes-multiple",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 4,
+          "start_bits": "0000000000000000",
+          "end_bits": "4024000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "4000000000000000",
+          "end_bits": "4010000000000000"
+        },
+        {
+          "event": 2,
+          "ordinal": 2,
+          "priority": 1,
+          "start_bits": "4018000000000000",
+          "end_bits": "4028000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 4,
+          "start_bits": "0000000000000000",
+          "end_bits": "4024000000000000"
+        },
+        {
+          "event": 2,
+          "ordinal": 2,
+          "priority": 1,
+          "start_bits": "4024000000000000",
+          "end_bits": "4028000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020ea04",
+          "action": "discard-following",
+          "event": 1
+        },
+        {
+          "pc": "0x10020e9b4",
+          "action": "trim-following-tail",
+          "event": 2
+        },
+        {
+          "pc": "0x10020eae8",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 2
+        }
+      ]
+    },
+    {
+      "label": "overlap-below-epsilon",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432c"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432c"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "3f1a36e2eb1c432c",
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020e8a8",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "clamp",
+          "event": 1
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "prefix-below-epsilon",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3ff0000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "3f1a36e2eb1c432c",
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "3f1a36e2eb1c432c",
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eb54",
+          "action": "discard-current-prefix",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "current-wins-tail-below-epsilon",
+      "actual_tail_distance_bits": "3f1a36e2eb1c432c",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432e"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f2a36e2eb1c432d"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432e"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020ea04",
+          "action": "discard-following",
+          "event": 1
+        },
+        {
+          "pc": "0x10020eae8",
+          "action": "publish",
+          "event": 0
+        }
+      ]
+    },
+    {
+      "label": "following-wins-tail-below-epsilon",
+      "actual_tail_distance_bits": "3f1a36e2eb1c432c",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f2a36e2eb1c432d"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432e"
+        }
+      ],
+      "output": [
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432e"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eb54",
+          "action": "discard-current-prefix",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "overlap-at-epsilon",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432d"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eb54",
+          "action": "discard-current-prefix",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "prefix-at-epsilon",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3ff0000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "3f1a36e2eb1c432d",
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432d"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "3f1a36e2eb1c432d",
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eb58",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "current-wins-tail-at-epsilon",
+      "actual_tail_distance_bits": "3f1a36e2eb1c432d",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432d"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f2a36e2eb1c432d"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432d"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "3f1a36e2eb1c432d",
+          "end_bits": "3f2a36e2eb1c432d"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020e9b4",
+          "action": "trim-following-tail",
+          "event": 1
+        },
+        {
+          "pc": "0x10020eae8",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "following-wins-tail-at-epsilon",
+      "actual_tail_distance_bits": "3f1a36e2eb1c432d",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f2a36e2eb1c432d"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432d"
+        }
+      ],
+      "output": [
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432d"
+        },
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "3f1a36e2eb1c432d",
+          "end_bits": "3f2a36e2eb1c432d"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eab8",
+          "action": "clone-current-tail",
+          "event": 0
+        },
+        {
+          "pc": "0x10020eb54",
+          "action": "discard-current-prefix",
+          "event": 0
+        },
+        {
+          "pc": "0x10020e8a8",
+          "action": "publish",
+          "event": 1
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 0
+        }
+      ]
+    },
+    {
+      "label": "overlap-above-epsilon",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432e"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eb54",
+          "action": "discard-current-prefix",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "prefix-above-epsilon",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3ff0000000000000"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "3f1a36e2eb1c432e",
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432e"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "3f1a36e2eb1c432e",
+          "end_bits": "3ff0000000000000"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eb58",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "current-wins-tail-above-epsilon",
+      "actual_tail_distance_bits": "3f1a36e2eb1c432e",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432e"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f2a36e2eb1c432e"
+        }
+      ],
+      "output": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432e"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 1,
+          "start_bits": "3f1a36e2eb1c432e",
+          "end_bits": "3f2a36e2eb1c432e"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020e9b4",
+          "action": "trim-following-tail",
+          "event": 1
+        },
+        {
+          "pc": "0x10020eae8",
+          "action": "publish",
+          "event": 0
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 1
+        }
+      ]
+    },
+    {
+      "label": "following-wins-tail-above-epsilon",
+      "actual_tail_distance_bits": "3f1a36e2eb1c432e",
+      "input": [
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f2a36e2eb1c432e"
+        },
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432e"
+        }
+      ],
+      "output": [
+        {
+          "event": 1,
+          "ordinal": 1,
+          "priority": 2,
+          "start_bits": "0000000000000000",
+          "end_bits": "3f1a36e2eb1c432e"
+        },
+        {
+          "event": 0,
+          "ordinal": 0,
+          "priority": 1,
+          "start_bits": "3f1a36e2eb1c432e",
+          "end_bits": "3f2a36e2eb1c432e"
+        }
+      ],
+      "trace": [
+        {
+          "pc": "0x10020eab8",
+          "action": "clone-current-tail",
+          "event": 0
+        },
+        {
+          "pc": "0x10020eb54",
+          "action": "discard-current-prefix",
+          "event": 0
+        },
+        {
+          "pc": "0x10020e8a8",
+          "action": "publish",
+          "event": 1
+        },
+        {
+          "pc": "0x10020ea38",
+          "action": "publish",
+          "event": 0
+        }
+      ]
+    }
+  ],
+  "threshold_pair_cases": 12155,
+  "pair_stream_sha256": "e33d04bc91c99a2c6ddacf1cae815a7da59538b1d86927c0168eb8f987dfbdb3",
+  "maximum_priority_envelope_cases": 20000,
+  "envelope_stream_sha256": "b85ad2fba963d961b9742ce5b739ee1af9facecd1cd6ab7dad4185f98ff7a5a1",
+  "bound_4096_events_passed": true,
+  "actions_covered": [
+    "clamp",
+    "clone-current-tail",
+    "discard-current-prefix",
+    "discard-following",
+    "publish",
+    "trim-following-tail"
+  ],
+  "passed": true,
+  "limits": [
+    "Separate mathematical oracles corroborate authored branch translation, not native execution.",
+    "Chronological finite positive input only; unsorted data is rejected, not sorted.",
+    "No fades, object lifecycle, allocation failure, dynamic getter mutation, or hosted mixing contract.",
+    "No application acceptance or runtime comparison is claimed by this research output."
+  ]
+}

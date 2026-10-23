@@ -1,0 +1,75 @@
+{
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "cluster_factory_dispatch": {
+    "address": "0x104466248",
+    "file_offset": 71721544,
+    "length": 8,
+    "bytes_hex": "2ca5360001000000",
+    "sha256": "141f52fe6849d8b5c4d0b637e7c5279c796ec80eff92b5524d977e4b69348903"
+  },
+  "checked_original_records": [
+    {
+      "record": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/native-10036a52c.txt",
+        "bytes": 1502,
+        "sha256": "9717738396908a1109322a5a393eaf62bfc4eaa517bd01eeead8707faada796b"
+      },
+      "claim": "AudioCluster +f8 factory passes exact cluster as constructor x1; failure returns nil",
+      "original_words_checked": 29,
+      "first": "0x10036a52c",
+      "last": "0x10036a59c"
+    },
+    {
+      "record": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass2/native-10033d530.txt",
+        "bytes": 945,
+        "sha256": "dd0d41e13f5ed8f35c76f43fde08f6f1119bb8d370387dc3aa35ed549960e844"
+      },
+      "claim": "AudioFile format ID delegates current kind and bit-width getters",
+      "original_words_checked": 19,
+      "first": "0x10033d530",
+      "last": "0x10033d578"
+    },
+    {
+      "record": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass3/native-10033d024.txt",
+        "bytes": 2330,
+        "sha256": "1e501c0651e482ecf8ca545e25b272e80fae9a25a36506f74eef4627c5bb2a91"
+      },
+      "claim": "AudioFile kind lazy-loads then queries AudioSampleFormat",
+      "original_words_checked": 44,
+      "first": "0x10033d024",
+      "last": "0x10033d0d0"
+    },
+    {
+      "record": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass3/native-10033d308.txt",
+        "bytes": 2644,
+        "sha256": "555e6ee9f13b8ed97a0a8ba09080e0670432ee85df44d7c293c59c06f62935fa"
+      },
+      "claim": "AudioFile bits lazy-loads then queries AudioSampleSize; failure uses fallback",
+      "original_words_checked": 51,
+      "first": "0x10033d308",
+      "last": "0x10033d3d0"
+    }
+  ],
+  "literals": [
+    {
+      "address": "0x10388f5fc",
+      "file_offset": 59307516,
+      "length": 18,
+      "bytes_hex": "417564696f53616d706c65466f726d617400",
+      "sha256": "f35a1eb5e369717c746326c148c052db87193c0c5eadfeae3c0271c24b537609"
+    },
+    {
+      "address": "0x10388f01f",
+      "file_offset": 59306015,
+      "length": 16,
+      "bytes_hex": "417564696f53616d706c6553697a6500",
+      "sha256": "626bb31094d3b4428df02c47152f4b65a6f65aa1aaa1eb266df9e983d1b29245"
+    }
+  ],
+  "passed": true,
+  "target_execution": false,
+  "qualification": "Current AudioFile property queries call the lazy backend helper. These bindings do not establish registry selection, successful property population, provider identity or format invariance from a filename/CPR metadata alone."
+}

@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "id": "APP001-NATIVE-APPLICATION-001",
+  "recorded_utc": "2026-10-19T08:03:52.008884+00:00",
+  "scope": "Independent application implementation checks using self-authored audio. No Cubase runtime or conformance evidence.",
+  "final_build": {
+    "app": "Application/dist/Rebase.app",
+    "executable_sha256": "548a0dae93446e99e3d8d3c0a3c335fe2175f501d1c116968004ff711eda69b1",
+    "info_plist_sha256": "ac2d99a000b8b161a42095bde70e18aa6ae52fa194e4a82423955c8a9163ed24",
+    "build_command": "./Application/build-app.sh",
+    "release_build_exit_code": 0,
+    "native_codesign_verification": "codesign --verify --strict passed; ad hoc local development signature"
+  },
+  "sources": [
+    {
+      "path": "Application/Sources/Rebase/AmbisonicExport.swift",
+      "sha256": "4138e9ca6bde226fdd773de0793052aba46c473ade61d066e0c32f2aac69bdf0"
+    },
+    {
+      "path": "Application/Sources/Rebase/MixerView.swift",
+      "sha256": "b4650e994ae5fb7fe3c68932b1de66ddf0dafd2c0a6e40ec7749dcc269589df0"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "sha256": "e9fc327b770e970a48e765fd3b1752614d87033ce029bbc9086aea4af5824576"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "sha256": "143b45a64dff5a65ab04c670f706a99fb55f4d77020ff58db207fc9e3c3ef5e8"
+    },
+    {
+      "path": "Application/Sources/Rebase/TimelineView.swift",
+      "sha256": "1290cc50f4e1651a9d708117d2381f12168722d496aa326dad937b4fcec5c480"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "sha256": "418c3206a56cb4f6741272f566b298faf29a5c8d3750537dffec9718b78d3d86"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/OfflineRenderer.swift",
+      "sha256": "47aae4fddf451231baa9289cbeaec82141ade8919eadc442c7bc0ca7844ee6c8"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "sha256": "e8cce93c2a07e0e1752cc37f270396a99e34fb3e4bf8905e63033eeb6490a6ee"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "sha256": "8e07ab0ff73d120f88efcc8f509cf7b2ebbbbe5c8f9bccd89caacc6d906ab048"
+    },
+    {
+      "path": "Application/Sources/RebaseDSP/ambi_first_order.c",
+      "sha256": "b2af5f8622fa3c336f0c6c6abbb59ddf79151107bfe8e31a23c09dd2a9a1d240"
+    },
+    {
+      "path": "Application/Sources/RebaseDSP/include/ambi_first_order.h",
+      "sha256": "b1103f9cc0450db33aa1331297306e2619998d069cada1e4a919573df8dd0135"
+    }
+  ],
+  "core_test_evidence": "research/evidence/application/APP001/core-tests-interval.json",
+  "core_tests_passed": 23,
+  "gui_observations": [
+    {
+      "build_sha256": "ca29cb636aae286fa4d17488e1fbfed63cc247d2d1d8d4e4feb2d99ea2325197",
+      "cases": [
+        "Native Open Project loaded three fixture tracks",
+        "Play advanced time to 0.319s and actual mixer peak tap reported L/R 0.147003",
+        "Pause reset meter to zero",
+        "Split at 5.944s made two clips with adjusted source offset; Undo restored 12s clip and selected inspector",
+        "Selecting Glass Keys updated matching clip inspector",
+        "Gain increment -3.0 to -2.5dB and Undo",
+        "Move later 1.5 to 1.6s and Undo",
+        "End trim 12 to 11.9s and Undo",
+        "Mute/Solo On states and Undo",
+        "Save original restored fixture"
+      ]
+    },
+    {
+      "build_sha256": "33011d890906d80d84a438c386b3203cfa84f51c7b6b4bc946945524fd4729a1",
+      "cases": [
+        "Named project gain edit remained in memory; original manifest still Pulse 0dB",
+        "New Project displayed Save/Keep Editing/Discard Changes guard",
+        "Keep Editing retained Pulse -0.5dB and project",
+        "Quit displayed same guard; Keep Editing cancelled quit",
+        "Discard Changes closed app; original Pulse 0dB preserved"
+      ]
+    },
+    {
+      "build_sha256": "548a0dae93446e99e3d8d3c0a3c335fe2175f501d1c116968004ff711eda69b1",
+      "cases": [
+        "Native Open Project loaded original three-track fixture",
+        "Edited Pulse to -0.5dB and Save As wrote Studio Check Saved.rebaseproj",
+        "Saved destination normal directory; original Pulse 0dB, saved Pulse -0.5dB; three original media hashes match",
+        "Play advanced to 0.286s and actual mixer peak reported L/R 0.146237",
+        "Stop reset transport to 0 and peaks to 0",
+        "Native Export Mixdown reported Exported Studio Check Final Mix.wav",
+        "Native Import Audio imported exported float32 WAV as fourth 13.5s track with waveform",
+        "Undo import restored three tracks and selection; Save completed",
+        "Screenshot visually inspected at 2760x1720; arrangement, inspector and three mixer strips visible without overlap",
+        "Left application open, saved, stopped at start"
+      ]
+    }
+  ],
+  "save_as_readback": {
+    "original_project": "research/fixtures/APP001/Studio Check.rebaseproj",
+    "saved_project": "research/evidence/application/APP001/Studio Check Saved.rebaseproj",
+    "original_pulse_gain_db": 0,
+    "saved_pulse_gain_db": -0.5,
+    "destination_is_symlink": false,
+    "original_media": [
+      {
+        "path": "research/fixtures/APP001/Studio Check.rebaseproj/Media/Glass Keys.wav",
+        "sha256": "9e8e234918695063082bd7ce5ec6e2d76decb89e8ee2164687a26826a3e413c1",
+        "saved_copy_equal": true
+      },
+      {
+        "path": "research/fixtures/APP001/Studio Check.rebaseproj/Media/Low Orbit.wav",
+        "sha256": "785fbf196cac9cfac2bcfcf5b6c327425373db28584bd9e34c136c252eebd047",
+        "saved_copy_equal": true
+      },
+      {
+        "path": "research/fixtures/APP001/Studio Check.rebaseproj/Media/Pulse.wav",
+        "sha256": "8fceb6cd8e474bc18d39f72dac2131737994c02fb4b3d8aa9b41ba4c5b578ad9",
+        "saved_copy_equal": true
+      }
+    ],
+    "note": "Undo retains unreferenced copied media for recovery; imported test file is no longer in arrangement."
+  },
+  "export": {
+    "path": "research/evidence/application/APP001/Studio Check Final Mix.wav",
+    "sha256": "a482ba1d94369e57a7f3a8e3c313551bd638f285c559549887142e5a1349ae1e",
+    "independent_verification": "gui-export-final-comparison.json",
+    "independent_verification_sha256": "2c54d172dc97e4059f8e1117622b5c27533ce54bd0de60765d0c676c808b0ee8",
+    "exact_audio_payload_match": true,
+    "per_channel_peak_absolute_residual": [
+      0.0,
+      0.0
+    ]
+  },
+  "limits": [
+    "No hardware DAC capture or listening claim; peaks observe AVAudioEngine mixer buffers only",
+    "Native accessibility actions plus screenshot inspection, not an exhaustive keyboard/drag/accessibility audit",
+    "Ambisonic C kernel tested independently; full file-conversion UI not exercised",
+    "Read-only source rescue and I/O-failure Save As paths reviewed statically; native fault injection not performed",
+    "No Cubase .cpr read/write, recording, MIDI editing, VST hosting, automation or complete Cubase interaction/DSP fidelity",
+    "Tempo currently stored project metadata; no tempo grid or time stretching",
+    "Long media and realtime edits remain bounded by prepared-buffer implementation"
+  ]
+}

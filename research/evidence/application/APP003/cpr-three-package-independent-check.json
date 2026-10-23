@@ -1,0 +1,103 @@
+{
+  "id": "APP003-INDEPENDENT-CPR-THREE-PACKAGE-CHECK",
+  "created_utc": "2026-10-19T10:42:16.037864+00:00",
+  "status": "passed",
+  "method": "Read-only Python comparison of the persisted GUI-produced packages against independently decoded immutable v09 source fixtures. No application/target execution and no package writes performed by reviewer.",
+  "package_check_records": [
+    {
+      "path": "research/evidence/application/APP003/stereo-import-independent-check.json",
+      "sha256": "b0069a1fa403c0952cdb1a2ba25b09ba2b88a29a678deb7cc400215ed95fa533",
+      "checks": {
+        "preserved_original_byte_identical": true,
+        "reported_native_object_ranges_verified": 14,
+        "container_sections_verified": 7,
+        "ordered_track_name_class_offset_matches": 4,
+        "imported_audio_track_names": [
+          "Stereo Master",
+          "Reference Track"
+        ],
+        "recovered_audio_clips": 0,
+        "defaults_explicit": true,
+        "tempo_mode_in_source": "map",
+        "project_tempo_bpm": 120,
+        "unresolved_media_descriptors_checked": 0,
+        "project_differences_from_import_baseline": []
+      }
+    },
+    {
+      "path": "research/evidence/application/APP003/stereo-copy-independent-check.json",
+      "sha256": "de288538e78762c141105354701e377716a0db832f2f021a8fbc695b8056f91a",
+      "checks": {
+        "preserved_original_byte_identical": true,
+        "reported_native_object_ranges_verified": 14,
+        "container_sections_verified": 7,
+        "ordered_track_name_class_offset_matches": 4,
+        "imported_audio_track_names": [
+          "Stereo Master",
+          "Reference Track"
+        ],
+        "recovered_audio_clips": 0,
+        "defaults_explicit": true,
+        "tempo_mode_in_source": "map",
+        "project_tempo_bpm": 120,
+        "unresolved_media_descriptors_checked": 0,
+        "project_differences_from_import_baseline": [
+          "name"
+        ]
+      }
+    },
+    {
+      "path": "research/evidence/application/APP003/classic-import-independent-check.json",
+      "sha256": "43a2a9d32803d32d330aabacf3a793fa4bbd33fce6602174c2e35bb89092e8d9",
+      "checks": {
+        "preserved_original_byte_identical": true,
+        "reported_native_object_ranges_verified": 115,
+        "container_sections_verified": 7,
+        "ordered_track_name_class_offset_matches": 8,
+        "imported_audio_track_names": [
+          "Bongos"
+        ],
+        "recovered_audio_clips": 0,
+        "defaults_explicit": true,
+        "tempo_mode_in_source": "fixed",
+        "project_tempo_bpm": 126.5,
+        "unresolved_media_descriptors_checked": 1,
+        "project_differences_from_import_baseline": []
+      }
+    }
+  ],
+  "cross_package_checks": {
+    "original_stereo_recovery_retains_all_three_initial_file_hashes": true,
+    "copy_original_cpr_byte_identical_to_initial_package": true,
+    "copy_import_report_byte_identical_to_initial_package": true,
+    "copy_project_manifest_differs_only_name": true,
+    "copy_project_name": "Stereo Mastering Copy"
+  },
+  "metadata_checks": [
+    {
+      "package": "Stereo Mastering Recovery.rebaseproj",
+      "source_metadata_sample_rate": 44100.0,
+      "source_metadata_tempo": 120.0,
+      "source_metadata_signature": [
+        4,
+        4
+      ],
+      "reported_as_descriptive_not_active": true
+    },
+    {
+      "package": "Classic House Recovery.rebaseproj",
+      "source_metadata_sample_rate": 44100.0,
+      "source_metadata_tempo": 126.5,
+      "source_metadata_signature": [
+        4,
+        4
+      ],
+      "reported_as_descriptive_not_active": true
+    }
+  ],
+  "source_interpretation": "Stereo Mastering remains an active tempo-map source whose coordinates are unsupported: default120 is explicitly documented despite descriptive120. Classic House selects serialized fixed126.5; the imported sole audio track is empty Bongos. MIDI/instrument/folder/device objects and audio-event contents are retained only in original/report. No imported clip/media/playback reconstruction is claimed.",
+  "limits": [
+    "GUI interactions, Save As and reopen action provenance are parent-owned; these checks verify persisted outputs.",
+    "No Cubase runtime comparison, source mix reconstruction or full-fidelity claim."
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "assessment_id": "APP003-next-decoder-contract-001",
+  "created_utc": "2026-10-19T10:42:59.172961+00:00",
+  "status": "Read-only design recommendation; not an implemented decoder contract.",
+  "scope": "Application timing API and CPR compatibility-profile evolution. Source/evidence inspection only; no Cubase execution, target acceptance or native arithmetic equivalence established.",
+  "inputs": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "bytes": 40586,
+      "sha256": "75b82b2d3e0afadff279284d6f2872685fb2a3146ead0d7a08709eefe089e940"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/MusicalTime.swift",
+      "bytes": 12096,
+      "sha256": "ed6f3be23cd2260f074f6f651a8703d0b0872ccff0635f256a869fdb28bb202e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "bytes": 9764,
+      "sha256": "49aa45033397c8fe2c3facae0435b9a1942089dd8a372ff5d658b9af4d4a70b6"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 28235,
+      "sha256": "30292eb33dc58d671dde8f934a17a0b4419b635429290933ed06da1fe53d6e33"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectTests.swift",
+      "bytes": 22194,
+      "sha256": "a043bfe9d53fbcd3f0e95c1c26f34c676ed8a6ef62f584acca59b0cee3ed51cd"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/native/finding.json",
+      "bytes": 95671,
+      "sha256": "22b74aea8b41164f8be1bfa11333e1bfb82c335c163b92402fc0ada29536bf45"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/fixtures/structural-contract-v2.json",
+      "bytes": 127544,
+      "sha256": "76432a73e6cb9335b546ff26a113e9a6a497ce1db1bdab82931cc40b8b79b462"
+    },
+    {
+      "path": "research/evidence/application/APP003/cpr-native-review.json",
+      "bytes": 9645,
+      "sha256": "9d17fc4975b29ada0921a59e93d17e68be8064dbab05dec696c612a1385856db"
+    }
+  ],
+  "existing_application_contracts": {
+    "tempo": {
+      "coordinate": "Quarter notes from project start.",
+      "bounds": "Finite beat in [0,1e9]; first beat exactly zero; strictly increasing events; unique IDs; finite BPM in [20,400].",
+      "interpolation": "Only jump accepted. TempoCurve describes the change arriving at an event. Ramp throws unsupportedRamp.",
+      "conversion": "Application Float64 piecewise seconds += beatDelta*60/BPM. This is not recovered native timing arithmetic."
+    },
+    "signature": {
+      "coordinate": "Quarter notes from project start; first event exactly zero; unique IDs.",
+      "bounds": "Numerator 1...64; denominator one of 1,2,4,8,16; finite beat in [0,1e9].",
+      "changes": "Strictly increasing positions; (newBeat-previousBeat)/previousQuarterNotesPerBar must be an exact integer.",
+      "display": "Application policy: one-based bars and denominator beats; default480ticks/quarter; nearest ties away from zero for nonnegative display position. Native display parity unestablished."
+    },
+    "project": "Musical clips require a finite nonnegative musicalPosition whose tempo-map seconds agree with clip.position within1e-8; clip end<=86400seconds. replaceTempoMap moves musical anchors but does not time-stretch audio."
+  },
+  "constant_native_map_gate": {
+    "established": "Native item getter performs Float32 division60.0f/storedPeriod. Separate hundredths getter is a distinct API and must not substitute for BPM. Serialized fixed/map mode is a full u16 nonzero boolean.",
+    "required_before_import": [
+      "Prove the authoritative tempo object/list and its post-read lifecycle for the supported version/profile.",
+      "Prove iterator lookup returns the sole record as current and no next record for all supported application queries, including queries before and after the serialized coordinate; otherwise prove common origin plus extrapolation explicitly.",
+      "Prove relevant record kind/attribute handling cannot produce a different result. Retain finite-positive stored period and app BPM range checks.",
+      "Preserve exact Float32 division result promoted to Double, without hundredths rounding or reassociated Double division."
+    ],
+    "representation_after_gate": "One TempoEvent at application beat zero with curve jump, deterministic ID and recovered native BPM. A spatially constant value requires no conversion of an unbound event coordinate once its global constancy is proven.",
+    "limits": "A count of one, zero-valued serialized coordinates, equal metadata BPM, or equal stored values alone does not establish global lookup behavior. Scalar/map recovery does not establish native beat-to-seconds or sample-rounding arithmetic."
+  },
+  "signature_recovery_gate": {
+    "required_before_import": [
+      "Bind the authoritative signature-track object and observed class version to counted records.",
+      "Establish numerator and denominator encoding directly; do not assume denominator is literal rather than exponent/code.",
+      "Establish origin, active-record selection and extrapolation for a constant single-record subset.",
+      "For changes, bind coordinate units/origin and native event boundary behavior before converting to app quarter notes."
+    ],
+    "unsupported_policy": "Do not substitute Metadata MusicalSignature for arrangement state. Unsupported signature values/coordinates or pickup/negative-time semantics remain explicit diagnostics with original CPR retained."
+  },
+  "report_evolution": {
+    "current_failure_mode": "compatibilityReport requires schemaVersion==1 and exact equality with fresh current inspect, including strings, object inventory, defaults and recoveredProject. StudioSession.load calls it before publishing loaded state. Expanding recovery under the same interpretation can therefore prevent intact old packages from reopening.",
+    "recommendation": [
+      "Separate report serialization schema version from semantic decoder-contract/profile identity.",
+      "Treat existing schema1 reports lacking an explicit profile as the frozen reviewed v1 interpretation, not the newest decoder.",
+      "Preserve a deterministic v1 replay path or equivalent versioned semantic projection, including its fact strings, visited-object inventory, IDs, defaults and supported subset. Keep current malformed-input and custody checks.",
+      "New imports use a new explicit profile. Validate a historical report against its own profile and retained original; a new decoder result is a separate assessment.",
+      "Do not rewrite ImportReport.json, Original.cpr or edited Project.json on reopen. Offer any enhanced recovery as a distinct explicit reimport/update operation with a concrete diff.",
+      "Unknown future profiles should never be treated as freshly verified. Decide explicitly whether they produce an unsupported report state while allowing the independently valid app project to open; do not silently weaken source/report integrity verification."
+    ],
+    "security_boundary": "Source SHA verifies preserved bytes, not historical report semantics by itself. Removing fresh equality without a versioned replacement would permit altered recovery claims."
+  },
+  "recommended_tests": [
+    {
+      "id": "PROFILE-001",
+      "test": "Create/pin a v1 Stereo Mastering and Classic House package before expansion; after profile support, reopen and compare historical report and original bytes exactly.",
+      "acceptance": "Old profile validates without requiring new signature/map findings or changing edited current project state."
+    },
+    {
+      "id": "PROFILE-002",
+      "test": "Fresh v2 inspection of the same original adds only supported verified facts; compare deterministic source/object identities and explicit interpretation changes.",
+      "acceptance": "v1 historical report remains unchanged; v2 does not silently replace baseline/current Project.json."
+    },
+    {
+      "id": "PROFILE-003",
+      "test": "Mutate recovered facts, defaults, track identities, recoveredProject, source bytes and profile ID separately.",
+      "acceptance": "Applicable profile verification rejects altered semantics/custody; unknown profile is explicit unsupported, never verified."
+    },
+    {
+      "id": "PROFILE-004",
+      "test": "Repeat oversized-report, staged-compatibility, source-change-after-review and missing/redirection checks under every supported profile.",
+      "acceptance": "No unreadable project is published and source/destination custody remains unchanged on failure."
+    },
+    {
+      "id": "TEMPO-001",
+      "test": "Use native-backed fixtures where metadata, fixed scalar and map disagree; mutate full u16 mode including0x0100 in self-authored controls.",
+      "acceptance": "Only the selected verified mode is imported; inactive fixed/metadata values are never substituted."
+    },
+    {
+      "id": "TEMPO-002",
+      "test": "Once iterator/lifecycle proof exists, test the supported one-record constant subset and control variants with nonzero coordinates, before/after-boundary queries, unknown kinds and extra records.",
+      "acceptance": "Accept only the proven constant domain; unsupported variants remain diagnostics or reject without guessed coordinate conversion."
+    },
+    {
+      "id": "TEMPO-003",
+      "test": "Use mantissa-sensitive Float32 periods where direct Float32 division differs from rounded hundredths or Double division; verify promoted BPM bits and range rejection.",
+      "acceptance": "Recovered BPM follows the proven getter precision/order; no claim of native timeline arithmetic from these self-controls."
+    },
+    {
+      "id": "SIGNATURE-001",
+      "test": "After a native signature contract is pinned, test its single-record origin/extrapolation subset and numerator/denominator boundaries.",
+      "acceptance": "Only native-bound encoding and supported app range import; metadata-only, unknown versions, unsupported denominators or unbound positions do not."
+    },
+    {
+      "id": "SIGNATURE-002",
+      "test": "For a future multi-record contract, test exact bar-boundary changes, off-boundary positions, duplicates, negative/pickup coordinates and unsupported ramps.",
+      "acceptance": "No snapping, rounding or inferred units used to force invalid native data into app timing models."
+    }
+  ],
+  "files_modified": "Only this assessment artifact. No application/core source changes."
+}

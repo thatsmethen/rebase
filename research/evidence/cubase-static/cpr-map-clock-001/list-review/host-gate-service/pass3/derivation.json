@@ -1,0 +1,113 @@
+{
+  "scope": "Exact unmodified byte derivatives for static decompilation only",
+  "source": "/workspace/rebase/research/targets/derived/Cubase15-arm64",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "source_bytes": 85691328,
+  "segments": [
+    {
+      "name": "__PAGEZERO",
+      "address": 0,
+      "vm_size": 4294967296,
+      "offset": 0,
+      "file_size": 0
+    },
+    {
+      "name": "__TEXT",
+      "address": 4294967296,
+      "vm_size": 71335936,
+      "offset": 0,
+      "file_size": 71335936
+    },
+    {
+      "name": "__DATA_CONST",
+      "address": 4366303232,
+      "vm_size": 11993088,
+      "offset": 71335936,
+      "file_size": 11993088
+    },
+    {
+      "name": "__DATA",
+      "address": 4378296320,
+      "vm_size": 1507328,
+      "offset": 83329024,
+      "file_size": 458752
+    },
+    {
+      "name": "__LINKEDIT",
+      "address": 4379803648,
+      "vm_size": 1916928,
+      "offset": 83787776,
+      "file_size": 1903552
+    }
+  ],
+  "function_starts": {
+    "offset": 84211048,
+    "length": 742376,
+    "sha256": "6fcf18e04007f0482aa396b3672bf39edb5301966b8b05b7814cf1beb5484f5b"
+  },
+  "derivatives": [
+    {
+      "entry": "0x1005c1a44",
+      "next_declared_function_start": "0x1005c1b8c",
+      "source_file_offset": 6036036,
+      "length": 328,
+      "raw_file": "function-1005c1a44.arm64.bin",
+      "raw_sha256": "63510985f2c971e673f7f4cd6532f741d0481fde551775d73d7e0095a0b36636",
+      "original_segment": "__TEXT",
+      "original_native_disassembly": "native-1005c1a44.txt",
+      "native_command": [
+        "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+        "-d",
+        "--start-address=0x1005c1a44",
+        "--stop-address=0x1005c1b8c",
+        "/workspace/rebase/research/targets/derived/Cubase15-arm64"
+      ],
+      "native_stdout_sha256": "8e7f819f5fdf381f982b80d2fd30d3d4ad0bc582464a1ffbcf0c2af2a054df2e",
+      "boundary": "LC_FUNCTION_STARTS interval, not proof of exact function body; exception tails may be disconnected"
+    },
+    {
+      "entry": "0x103806fa4",
+      "next_declared_function_start": "0x1038070c4",
+      "source_file_offset": 58748836,
+      "length": 288,
+      "raw_file": "function-103806fa4.arm64.bin",
+      "raw_sha256": "dc531af4af1b90d917b76566906b1beee55c635490f55f6015ad0c8bce42d5e5",
+      "original_segment": "__TEXT",
+      "original_native_disassembly": "native-103806fa4.txt",
+      "native_command": [
+        "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+        "-d",
+        "--start-address=0x103806fa4",
+        "--stop-address=0x1038070c4",
+        "/workspace/rebase/research/targets/derived/Cubase15-arm64"
+      ],
+      "native_stdout_sha256": "9bc1af2f053a5d20069e6acb70681a31a86ad323023c5af6651ca80f52da2dff",
+      "boundary": "LC_FUNCTION_STARTS interval, not proof of exact function body; exception tails may be disconnected"
+    },
+    {
+      "entry": "0x103806748",
+      "next_declared_function_start": "0x10380683c",
+      "source_file_offset": 58746696,
+      "length": 244,
+      "raw_file": "function-103806748.arm64.bin",
+      "raw_sha256": "fe4e8bdd81145e6d747c0eec381caf75911fc7beec2c6aeba560a8e84599ee45",
+      "original_segment": "__TEXT",
+      "original_native_disassembly": "native-103806748.txt",
+      "native_command": [
+        "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+        "-d",
+        "--start-address=0x103806748",
+        "--stop-address=0x10380683c",
+        "/workspace/rebase/research/targets/derived/Cubase15-arm64"
+      ],
+      "native_stdout_sha256": "bfb8626da1b5c777dde79fecf38a130fdc74b7b399ded40270971a146b2fdb04",
+      "boundary": "LC_FUNCTION_STARTS interval, not proof of exact function body; exception tails may be disconnected"
+    }
+  ],
+  "losses": [
+    "No Mach-O headers, imports, global data, typeinfo, vtables, relocations, unwind metadata or neighboring functions are mapped in each raw image.",
+    "Original linked entry addresses are preserved, so PC-relative references still calculate original addresses, but their external bytes are unavailable.",
+    "No fake imports, data patches, additional functions or modified instructions are introduced.",
+    "Raw analysis output must be correlated with separately retained original-image evidence; this is not whole-image decompilation."
+  ]
+}

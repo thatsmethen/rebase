@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "reviewer": "independent fidelity_protocol agent",
+  "scope": "Independent original-instruction interpretation, exact-rational IEEE oracle, bounded candidate/source review and application cursor integration tests for explicit mode0 Float32 mono/stereo equal/downsample arithmetic. This is not Cubase runtime or whole-host conformance.",
+  "status": "no_open_actionable_defect_in_reviewed_conditional_domain",
+  "target_execution_count": 0,
+  "target_runtime_comparisons": 0,
+  "source_pins": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0_down.c",
+      "bytes": 10145,
+      "sha256": "e85877ab7c33c8ef9c6bf16124125504a545e3a057e4d3ec6838729bd0df676f"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0_down.h",
+      "bytes": 2587,
+      "sha256": "852af4ccba424e561634949674d2fd9788715fb2ac68e9bf4e5d8082e3adea3c"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "bytes": 9971,
+      "sha256": "7c8251bc8d65c14a9959f053a24ad79d0185e442b46fdc30043fdd37bf843670"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode0DownTests.swift",
+      "bytes": 17351,
+      "sha256": "1d8da2cc6a8484b84583eceacbdb80f80a9255e5f449ad56f9641854f84dc310"
+    }
+  ],
+  "evidence_pins": [
+    {
+      "path": "research/evidence/application/APP011/native-rate-down-oracle.py",
+      "bytes": 13297,
+      "sha256": "cc071510f036d4a8005ac8da52b1a496b7d20a1fcdc4dd0729bb03a230276468"
+    },
+    {
+      "path": "research/evidence/application/APP011/native-rate-down-oracle.json",
+      "bytes": 676820,
+      "sha256": "3938e9ce6332f9ce4155377f9f5c6d3a9c45afe173b61d11b08ef2c7923c204a"
+    },
+    {
+      "path": "research/evidence/application/APP011/native-rate-down-count-oracle.py",
+      "bytes": 5347,
+      "sha256": "c5653227fe084369009f27acf01a41c01df7d1489310437f3801ffba210639e0"
+    },
+    {
+      "path": "research/evidence/application/APP011/native-rate-down-count-oracle.json",
+      "bytes": 54574,
+      "sha256": "5398690aa9af6c45504e626439e0b12fc265bbb5c45f24bd2b9b833400ac11a7"
+    },
+    {
+      "path": "research/evidence/application/APP011/verify-downsample-instructions.py",
+      "bytes": 2085,
+      "sha256": "8e45cade80af8a87f852da5d9f676258a83a1c7ab74131613fa44a8cc38dd8ca"
+    },
+    {
+      "path": "research/evidence/application/APP011/downsample-instruction-verification.json",
+      "bytes": 1186,
+      "sha256": "428683b58d7fc074594d9299462843ce9ce7b986deb8d43c263f9f6e9fc0a19e"
+    },
+    {
+      "path": "research/evidence/application/APP011/native-rate-down-tests-first.log",
+      "bytes": 13126,
+      "sha256": "d51910c90a116f1a9502647fb7bf91925843d88292b32c0852320b3b8ab87991"
+    },
+    {
+      "path": "research/evidence/application/APP011/native-rate-down-tests-round2.log",
+      "bytes": 6667,
+      "sha256": "6d4f2d73c2353a0986b3fd5d3db42a3dded1082a57ffb2b870702c05b4f5386a"
+    },
+    {
+      "path": "research/evidence/application/APP011/native-rate-down-tests-round3.log",
+      "bytes": 2109,
+      "sha256": "5180e960d17a0667dc15447db3c8f2720b47f93ea4152a7a71554ddba97d8623"
+    }
+  ],
+  "original_instruction_check": {
+    "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+    "instructions": 552,
+    "original_bytes": 2208,
+    "records": [
+      {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/pass1/native-1003108f0.txt",
+        "sha256": "64970a7b111dc99b3f050692c281b0be8a702818a3da62a99dcdb9d24146e743",
+        "original_instruction_words_verified": 165
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/pass1/native-100310b84.txt",
+        "sha256": "03e9d10d1f6a7282dc688f3793e3f9e742fe7d8ccf3df698de25fc49400f83fe",
+        "original_instruction_words_verified": 161
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/pass1/native-10031179c.txt",
+        "sha256": "c7df5f73e8c1a3ead87186f51c4a039ec4a13b48db9b5a3619df59e2506a71b6",
+        "original_instruction_words_verified": 83
+      },
+      {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-10030ffb0.txt",
+        "sha256": "ed2436ea138d9b3fde057e124243b695d067cfabe8bc1959ac0a306705dde4c1",
+        "original_instruction_words_verified": 143
+      }
+    ]
+  },
+  "contract_findings": [
+    {
+      "id": "D1",
+      "result": "The native dispatcher selects 1<=step<2 helpers 1003108f0/100310b84 and step>=2 mono1003100dc..1003101e8/stereo10031179c. Initial phase1/history0/pending0 is retained. W4 flush is unused across these reviewed branches and zero input returns without state mutation."
+    },
+    {
+      "id": "D2",
+      "result": "Small-ratio helper tail emission depends on unsigned destination-cursor<=source-cursor. The application establishes actual disjoint ABOVE layout in one arena; BELOW sample/count arithmetic is separately tested but its external diagnostic callbacks are deliberately not executed/reconstructed."
+    },
+    {
+      "id": "D3",
+      "result": "Small-ratio initial pending interpolation narrows to Float32 before widening/storing history; later queued interpolation retains binary64 until emission. Six expected-sample controls distinguish separately rounded products plus fused add from unfused or reassociated alternatives."
+    },
+    {
+      "id": "D4",
+      "result": "Large-ratio mono carry computes RN64(RN64(RN64(phase+1)*current)-phase*history) with fused subtraction, whereas stereo computes two rounded complementary weights before product/FMA. The phase=-2^-54/history1/input0 control produces mono2^-54 and stereo0."
+    },
+    {
+      "id": "D5",
+      "result": "A reachable single-input pending branch can read one frame beyond the supplied logical input. Independent 48k->32k/16385-frame control with8192+8192+1 reproduces the analytical access failure. Candidate rejects LOOKAHEAD before caller writes. Application8192+8191+2 partition avoids it without invented lookahead/padding."
+    },
+    {
+      "id": "D6",
+      "result": "Partitions can alter both samples and counts. At48k->44.1k/16385 input frames, fixed8192+8192+1 yields15051 output frames while application8192+8191+2 yields15052. Equal-rate branch is not a transparent copy and remains unavailable in application mode0 selection."
+    }
+  ],
+  "oracle": {
+    "expectations_from_candidate": false,
+    "method": "Integer/Fraction binary32/binary64 nearest-even operation rounding; exact single-round binary64 FMA/FMSUB. Original instructions establish operation and branch order. Previous APP010 integer IEEE helper is imported read-only with exact SHA pin.",
+    "sample_vectors": 105,
+    "large_partition_vectors": 18,
+    "arithmetic_discriminators": 6,
+    "count_only_sample_call_crosschecks": 1168,
+    "large_inputs": [
+      8193,
+      16385,
+      24577
+    ],
+    "full_source_counts": [
+      {
+        "source_frames": 1058400,
+        "source_rate": 44100,
+        "output_rate": 32000,
+        "output_frames": 767967,
+        "blocks": 130
+      },
+      {
+        "source_frames": 1058400,
+        "source_rate": 44100,
+        "output_rate": 16000,
+        "output_frames": 384000,
+        "blocks": 130
+      }
+    ],
+    "zero_sign_limit": "Fraction controls use positive exact zero; signed-zero preservation is tested separately if asserted."
+  },
+  "candidate_review": {
+    "arithmetic": "Explicit volatile intermediate operations and fma match reviewed instruction rounding; nearest-even and hardware flushing checks retained. Native source/target Float32 rate bits are widened before division.",
+    "bounds": "Signed/source access bounds,16m count cap, finite sample policy, disjoint layout enforcement and preflight before all caller writes reviewed. Candidate uses no inferred tail padding. Source singletons requiring unavailable lookahead fail closed.",
+    "application": "count_blocks and conversion use the same singleton-avoidance partition policy. One Swift arena puts output after the entire input block. Zero-output blocks advance state and are not EOF; gain remains separate after conversion. Preroll resets at original source0 and discards outputs to requested frame, preserving this application partition policy.",
+    "integration_tests": "All nine safe large controls compare actual planar cursor output and five preroll suffix hashes to independent expected bytes; no candidate output generated those expected hashes."
+  },
+  "validation": {
+    "focused_tests": 8,
+    "suites": 1,
+    "passed": true,
+    "duration_seconds": 0.411,
+    "log": "research/evidence/application/APP011/native-rate-down-tests-round3.log",
+    "earlier_attempts": [
+      {
+        "log": "native-rate-down-tests-first.log",
+        "result": "Direct swift test omitted repository CommandLineTools Swift Testing framework/plugin flags; compilation stopped with missing Testing module. No test executed."
+      },
+      {
+        "log": "native-rate-down-tests-round2.log",
+        "result": "Wrapper compile reached new test file but timed out type-checking a compact flatMap expression. Replaced test fixture construction with explicit typed loop; production/oracle unchanged."
+      }
+    ],
+    "full_suite": "Parent-managed full run pending at review time; this review does not claim its result.",
+    "native_gui": "Pending parent acceptance; no GUI claim from these tests."
+  },
+  "limitations": [
+    "Explicit mode0 algorithm selection does not establish the target hosted/default backend or caller-selected buffer layout/partitioning.",
+    "ABOVE disjoint policy and singleton rebalancing are application choices; arbitrary native layouts, partitions and diagnostic callbacks are outside the application contract.",
+    "Rate conversion is the captured linear sample arithmetic, without an anti-alias filter or high-quality resampler claim.",
+    "Source PCM remains fully resident; converted output queue and ring transfer are bounded. Main-actor refill and reset/preroll seeking are application policies, not a recovered native real-time scheduler.",
+    "Whole-project MIDI/plugins/routing/automation/inversion/fades/looping and complete native playback remain gated; unchanged provenance/source-processing guards are relied on, not relaxed by this arithmetic extension.",
+    "Fraction controls do not assert signed-zero preservation beyond their explicit positive-zero domain; target FPCR state and actual runtime samples were not observed."
+  ]
+}

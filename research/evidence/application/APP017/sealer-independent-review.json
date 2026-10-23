@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "status": "passed_no_open_custody_defect_in_reviewed_scope",
+  "target_executions": 0,
+  "scope": "Read-only source review of APP017 development-record/seal workflow and reused immutable APP015/APP012 custody helpers. No sealer mutation entry point, application test, build or proprietary code was executed by this review.",
+  "source_and_evidence": [
+    {
+      "path": "research/evidence/application/APP017/seal_development.py",
+      "bytes": 10255,
+      "sha256": "271d36e04427e8397d71eb78fb2d54b09968513c1ad10da37d04e685a444fa28"
+    },
+    {
+      "path": "research/evidence/application/APP017/capture_tests.py",
+      "bytes": 1926,
+      "sha256": "3d1c1404862e1bb8f7c37cb0e32ae20b75bbf8eab1a7105435214fc031ebf664"
+    },
+    {
+      "path": "research/evidence/application/APP015/seal_application.py",
+      "bytes": 18943,
+      "sha256": "b0b259952dc55147600a25b82934fca043b9c1265706662fb8037c92b7c5d102"
+    },
+    {
+      "path": "research/evidence/application/APP012/seal_application.py",
+      "bytes": 17692,
+      "sha256": "b356f42d2b9bd3a707f4071ec412423166035b505102326066cefd84efd6c343"
+    },
+    {
+      "path": "research/evidence/application/APP016/artifact-manifest.json",
+      "bytes": 72611,
+      "sha256": "3a60466015219fe29390addc31eb5530471fd0fe1ba64db4fceb7a50017669f5"
+    },
+    {
+      "path": "research/evidence/application/APP017/core-test-run.json",
+      "bytes": 944,
+      "sha256": "c97737b76c25d1df07d1d672b4821f7e218cff38d85405aa095a4c8f6f23a183"
+    },
+    {
+      "path": "research/evidence/application/APP017/core-tests-first.log",
+      "bytes": 58844,
+      "sha256": "aed61130fd706649d063a35c99f56f84d6bed2b90389ca598e1b670b71aa54f9"
+    },
+    {
+      "path": "research/evidence/application/APP017/test-source-before.json",
+      "bytes": 50232,
+      "sha256": "08f8450759c03c49aa3f13c6fa2a863246e78ad8b9686de9ebf146f6f503110a"
+    },
+    {
+      "path": "research/evidence/application/APP017/test-source-after.json",
+      "bytes": 50232,
+      "sha256": "08f8450759c03c49aa3f13c6fa2a863246e78ad8b9686de9ebf146f6f503110a"
+    }
+  ],
+  "native_manifest_headers_checked": [
+    {
+      "name": "accessor-gain-order",
+      "finding": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/finding.json",
+        "bytes": 6408,
+        "sha256": "111dc72c995faca34ed2750f55b4565dc9a973cb42de69b73f18db0802b4214d"
+      },
+      "manifest": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-gain-order/artifact-manifest.json",
+        "bytes": 18881,
+        "sha256": "f9f1124b0022857a91758e52f8cc7adf05578246fa9e5e11c163918ef5a8aed8"
+      },
+      "expected_manifest_entries": 81
+    },
+    {
+      "name": "processed-stream-rate",
+      "finding": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/finding.json",
+        "bytes": 43502,
+        "sha256": "b05b974e7d121bb78cbc496ca1669fd8da023b0430430dc0ec34fa6ad93f067a"
+      },
+      "manifest": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/artifact-manifest.json",
+        "bytes": 128169,
+        "sha256": "d6ef99f4d68fd725ac5a9fd7338d19e16b21a013b4ce7b6c97261dcdac7494f1"
+      },
+      "expected_manifest_entries": 521
+    },
+    {
+      "name": "channel-rate-context",
+      "finding": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/finding.json",
+        "bytes": 19214,
+        "sha256": "456e462f8dbc13075ca3074ccd929654e0b856a8d61d236f05adc513e2286be6"
+      },
+      "manifest": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/artifact-manifest.json",
+        "bytes": 117670,
+        "sha256": "8d87f2d1b9d79e7225509bd0e6587da96216944b30d4719a439f3bd4edd110bf"
+      },
+      "expected_manifest_entries": 436
+    }
+  ],
+  "findings": [
+    {
+      "id": "SEAL-DEBUG-IDENTITY",
+      "status": "corrected_by_author",
+      "original_issue": "The initial draft copied whatever current debug binary existed at record time and labeled it compiled_debug_executable, despite the test capture having no binary hash. A stable copy alone could not bind that identity to the earlier test/link invocation.",
+      "resolution": "Final script labels the file post_test_debug_executable_observation, records a separate observation timestamp, and explicitly states the lack of cryptographic binding to the test invocation or link step. The original test capture is unchanged."
+    },
+    {
+      "id": "SEAL-TEST-SUMMARY",
+      "status": "corrected_by_author",
+      "original_issue": "The initial draft trusted the summary test-count fields without independently requiring the full pinned log to carry the same success result.",
+      "resolution": "verified_test_record now checks exit/source status, exact command and log path, nested pins and exactly one 271/42 success result. Both record and seal call it."
+    },
+    {
+      "id": "SEAL-SOURCE-CUSTODY",
+      "status": "confirmed",
+      "detail": "Exact sorted current source inventory must equal both test-time inventories, snapshot keys must equal current keys with matching identities, and seal repeats source/test/snapshot checks. Symlinks use link-text identity. The reviewer separately verified the current267 entries in the final integration pass."
+    },
+    {
+      "id": "SEAL-EVIDENCE-CUSTODY",
+      "status": "confirmed",
+      "detail": "APP016 manifest is pinned before recursive verification. Each of the three native findings/manifests/counts is fixed; review inputs are checked at recognized fields and recursively. The final sealer review itself is required, binding this script and its helper identities."
+    },
+    {
+      "id": "SEAL-PUBLICATION",
+      "status": "confirmed_with_limits",
+      "detail": "Exclusive output creation and final manifest verification preserve prior evidence and refuse overwrite. The later publication review must pass its input-pin checks before status snapshot/manifest creation. This review does not execute record/seal or validate a publication inventory not yet supplied."
+    },
+    {
+      "id": "SEAL-OLD-GUI",
+      "status": "confirmed_narrow_identity",
+      "detail": "The accepted APP015 executable snapshot is hash-pinned, and the current dist executable must match that identity at record. This is an executable check; the APP017 sealer does not independently reaccept the entire live GUI bundle or perform GUI observations."
+    }
+  ],
+  "checks": {
+    "final_script_sha256": "271d36e04427e8397d71eb78fb2d54b09968513c1ad10da37d04e685a444fa28",
+    "helper_manifests_confirmed": [
+      "APP015",
+      "APP012"
+    ],
+    "prior_manifest_entries": 315,
+    "native_manifest_entry_counts": {
+      "accessor-gain-order": 81,
+      "processed-stream-rate": 521,
+      "channel-rate-context": 436
+    },
+    "test_log_success": [
+      271,
+      42
+    ],
+    "mutation_entry_points_run": 0,
+    "additional_application_test_runs": 0
+  },
+  "limits": [
+    "This is source inspection plus read-only checks of fixed input headers/identities. The root will perform full recursive integrity during record/seal; this reviewer has not rerun it here.",
+    "The sealer is an exclusive evidence recorder, not an all-or-nothing transaction. An interrupted or rejected invocation can leave partial new outputs; no completed seal is claimed until final verification succeeds.",
+    "The captured debug identity is deliberately a post-test observation. The full test source/log custody does not retroactively establish test-time binary identity.",
+    "Passed scientific/application tests and preserved static findings do not establish Cubase runtime, selected host state, full product fidelity or a new GUI release."
+  ],
+  "remaining_actionable_defects": []
+}

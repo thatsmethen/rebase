@@ -1,0 +1,537 @@
+{
+  "id": "CPR-RATE-MODE1-001",
+  "schema_version": 1,
+  "created_utc": "2026-10-20T10:22:44.447155+00:00",
+  "status": "sealed_bounded_static_contract_and_reconstruction",
+  "scope": "Concrete mode1 Float32 packet and sample-producing branch, with fixed-rate mono/stereo reconstruction. No assertion that this is the active backend in every hosted Cubase context.",
+  "evidence_classes": [
+    "original-byte static analysis",
+    "retained REA dossiers",
+    "independent instruction-ordered math oracle",
+    "reconstruction-only execution"
+  ],
+  "proprietary_target_executions": 0,
+  "cubase_runtime_comparisons": 0,
+  "target": {
+    "product": "Cubase Pro15.0.30.287 macOS arm64",
+    "image": {
+      "path": "research/targets/derived/Cubase15-arm64",
+      "bytes": 85691328,
+      "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+    }
+  },
+  "native_custody": {
+    "new_functions": 10,
+    "reused_functions": 5,
+    "original_native_words": 1091,
+    "rea_instruction_addresses": 1084,
+    "bytes_verified": 4364,
+    "canonical_records": 30,
+    "canonical_import": {
+      "imported": 30,
+      "unknowns_added": 0,
+      "total": 30
+    },
+    "verification": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/verification.json",
+      "bytes": 24815,
+      "sha256": "fcda930e9043796342cdf836257e5690304a49712e86c4fffd7ac90b34fc3872"
+    },
+    "new_raw_slice_sessions_closed": 10,
+    "isolated_analysis_processes_closed": 2,
+    "import_processes_closed": 1,
+    "provider": "Pinned rea-agents6.7.0 / Ghidra raw arm64, default analyzers,2G heap.",
+    "limitations": [
+      "Raw-slice pseudocode omits original imports/globals/types/neighboring routines; the exact listed pointer/import/literal bindings supplement these gaps.",
+      "1084 retained decoded addresses differ from1091 original words; memory readbacks cover all4364 bytes, independently of pseudocode coverage.",
+      "Canonical import and byte agreement validate evidence custody; they do not establish semantic completeness or native runtime behavior."
+    ]
+  },
+  "facts": [
+    {
+      "title": "Concrete receiver and mode1 dispatch",
+      "contract": {
+        "vtable": "0x1044618f0",
+        "float32_slot": "0x40",
+        "packet": "0x10030af58",
+        "kernel": "0x10030b8a8",
+        "factory": "0x10030a008",
+        "selection": "Explicit mode1, or mode2 factory returning nil; broader host selection is independently documented in rate-selection."
+      },
+      "native_sources": [
+        {
+          "entry": "0x10030a008",
+          "evidence_ids": [
+            "ev_f5b79328734512c4e8e2d197ad22e3942b70eaa4fe4c1e34f61d42daf4ecfb61",
+            "ev_1c59ce4eac494e6ec54c9b61ee125d15828e94229425932c882439db63117511"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-10030a008.txt",
+              "sha256": "8f4ba1d7758b158d8bb2ce3e71f0ecfac027bae69cc5bc28b6c8a87ad1da05de"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/function-10030a008.json",
+              "sha256": "55c28de54da257f4b5c38ad4373f685dc99d8169f14bb5bbb5583769b57f0a54"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/bytes-10030a008.json",
+              "sha256": "1efe0fbc150bb0762ec5d6d9b51fe89216b9316cf975d7363f2d1e2e5bfb845d"
+            }
+          ]
+        },
+        {
+          "entry": "0x10030a634",
+          "evidence_ids": [
+            "ev_dce7a91bb4e9d1110ec2f102dfec2269b35b3187ea9c7f9174a1466ac58bc010",
+            "ev_7ed9dd356dd4af60a1b1f1a68471ed64968ea579e444a6a5f46177e5b7573cb7"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-10030a634.txt",
+              "sha256": "325ba529258aa737d44ed2d8dbc55065141f42e6bf314a72cf319393e6cab220"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/function-10030a634.json",
+              "sha256": "0e71a1e74c6076c8be022498e72b2dcf00f14381e6edff16a7f7d9ae9f5e4d89"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/bytes-10030a634.json",
+              "sha256": "4ab5dac1c01ba912bdb09d8d6dd7fe7d2c03b29aeb5cdd3109ff675badea9d11"
+            }
+          ]
+        },
+        {
+          "entry": "0x10030af58",
+          "evidence_ids": [
+            "ev_a550fabb796931c1910d0311b730137dcef5bf7b574affa3f32fdc797aa153a1",
+            "ev_e0988b1b8bf4b97aa05c3149a6d63dc6639ea6966a00e8f8541fe4e7d6112f7e"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-10030af58.txt",
+              "sha256": "b85fb8fb7b1ca373726a9e88f49088b83d14db438efdca599c0c8091b28d8d32"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/function-10030af58.json",
+              "sha256": "9aa564a69d768f4592739c93aa00180626e665c8623a6ca0fbe70c7ef0026b60"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/bytes-10030af58.json",
+              "sha256": "6998089efcbbfb80c0585e5decdfab500fecd9aae8a554777ad01aa90d2fc131"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Owned state and initialization",
+      "contract": {
+        "0x8": "u32 input capacity initially65536",
+        "0x10": "binary64 phase",
+        "0x18": "binary64 step",
+        "0x20": "coefficient[32769]",
+        "0x28": "difference[32769]",
+        "0x30": "per-channel binary64 storage",
+        "0x38": "per-channel working cursors",
+        "0x40": "i64 cumulative real input frames",
+        "0x48": "i64 cumulative generated frames before terminal trim",
+        "0x50": "binary64 outputRate/sourceRate",
+        "0x58": "i32 channels",
+        "0x5c": "fresh byte"
+      },
+      "native_sources": [
+        {
+          "entry": "0x10030a634",
+          "evidence_ids": [
+            "ev_dce7a91bb4e9d1110ec2f102dfec2269b35b3187ea9c7f9174a1466ac58bc010",
+            "ev_7ed9dd356dd4af60a1b1f1a68471ed64968ea579e444a6a5f46177e5b7573cb7"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-10030a634.txt",
+              "sha256": "325ba529258aa737d44ed2d8dbc55065141f42e6bf314a72cf319393e6cab220"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/function-10030a634.json",
+              "sha256": "0e71a1e74c6076c8be022498e72b2dcf00f14381e6edff16a7f7d9ae9f5e4d89"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/bytes-10030a634.json",
+              "sha256": "4ab5dac1c01ba912bdb09d8d6dd7fe7d2c03b29aeb5cdd3109ff675badea9d11"
+            }
+          ]
+        },
+        {
+          "entry": "0x10030a728",
+          "evidence_ids": [
+            "ev_f8ecdb7a5ad1171a1cd2adfb6f5aa3f546e84a6aa9ff85caa45b5e81c1df5214",
+            "ev_3daa5b02a2e8dba1bf688a4c20640b682ef7fa65f66fb87a567f6345460e1626"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/native-10030a728.txt",
+              "sha256": "8992bd07d3ebf8d5ce39450779e9622158dd8f413205eacc4cd1a271d1741cf9"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/function-10030a728.json",
+              "sha256": "8a3a1758ebe4540e8026627116d4af0cb868dc7b9324c26427b41daf91298808"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/bytes-10030a728.json",
+              "sha256": "59da040d1bc6c44e6a07a6629a635fdee2e174acda35dcd11b35340ffc3bd955"
+            }
+          ]
+        },
+        {
+          "entry": "0x10030a738",
+          "evidence_ids": [
+            "ev_090edd2b7052989393aeb1eecd802eec620fe113dd3c404ffef36741227f31af",
+            "ev_aa9de112c04b16a432f9973f9b78eda7a897b7d73ae1093af752c528d0483dba"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/native-10030a738.txt",
+              "sha256": "cdf94c336fa9c73876dc4d2105d370b532e5654db407f67932aa32cfc823586e"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/function-10030a738.json",
+              "sha256": "7eea8b4217131eca0dd799ca036fb96ad74ad75b83053651beb2dcd639975562"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/bytes-10030a738.json",
+              "sha256": "2ffe4c44b3438ab1b42e49b969f54a54eb3675075650d912f27c58e9f376088c"
+            }
+          ]
+        },
+        {
+          "entry": "0x10030a748",
+          "evidence_ids": [
+            "ev_76116c000cb78f411e67e3ffab8e72b889a8c6514b7de4389cd820f963820751",
+            "ev_979e641a000ff276ce1e5c1b804581463fd11aec421df1c4b96fa7899136d8e7"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/native-10030a748.txt",
+              "sha256": "0b9b75b3fb72b968d7bba526535ebe593d8e5c59718a0bb3e0e7a815c9760fdf"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/function-10030a748.json",
+              "sha256": "728a2529b601c984dd020822989c2f501dd1e1b88c8b3f0b89991992d303880d"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/bytes-10030a748.json",
+              "sha256": "5f6b0b06fc51a3267b4cc0888cbe6413afeffa257115d9a68ea4cee73322b074"
+            }
+          ]
+        },
+        {
+          "entry": "0x10030a7a0",
+          "evidence_ids": [
+            "ev_99445dd0976cf96510c7bb77b7977efa4fc430629dd256a0703d57416538a886",
+            "ev_e3327bfcc8d233e7ba0b31d18522b17b531dc1f8cec87bdeb08b07361db813ef"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/native-10030a7a0.txt",
+              "sha256": "9d05f94d0f2b019e231e47ecca1ff9713b98cd4c6aadc5cba4757510f726332c"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/function-10030a7a0.json",
+              "sha256": "693e3e88fa02dd81c118ba36be27d426a59d8907e6ddfde26d0ad86da3cb74c5"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/bytes-10030a7a0.json",
+              "sha256": "27bb895818e810686576ece0bd29cc76fe73103bd865826196ee00fdff1d0b2a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Coefficient generator and system math boundary",
+      "contract": {
+        "entries": 32769,
+        "step": "RN64(512 / ratio)",
+        "cutoff": "ratio<1 ? RN64(ratio*0.5) : 0.5",
+        "beta_bits": "0x4021eb851eb851ec",
+        "beta_decimal": 8.96,
+        "half_beta_bits": "0x4011eb851eb851ec",
+        "epsilon_bits": "0x3b92e3b40a0e9b4f",
+        "series": "term=sum=index=1; do { q=RN64(half/index); index=RN64(index+1); q=RN64(q*q); term=RN64(term*q); sum=RN64(sum+term); } while(term>=RN64(sum*epsilon))",
+        "sinc": "h[0]=1; increment=RN64(RN64(RN64(cutoff+cutoff)*piBits400921fb54442d18)*2^-9); h[i]=RN64(system_sin(RN64(i*increment))/RN64(i*increment)), i1..32768. Native pair invokes second index before first.",
+        "window": "r=RN64(i*2^-15); radial=FSQRT(FMA(-r,r,1)); half=RN64(RN64(radial*beta)*0.5); h[i]=RN64(h[i]*RN64(series(half)*RN64(1/series(halfBeta))))",
+        "normalization": "sum is ordered RN64 addition h[512],h[1024],...,h[32768]; scale=RN64(1/FMA(sum,2,1)); each h[i]=RN64(h[i]*scale).",
+        "difference": "d[i]=RN64(h[i+1]-h[i]), i0..32767; d[32768]=-h[32768]",
+        "math_boundary": "Exact original indirect symbol resolves to _sin. Reconstruction uses host C sin; neither target execution nor equivalence of every OS/libm implementation has been demonstrated.",
+        "early_label_correction": "An early message called beta8.6. Original MOVKs and implementation constants decode8.96; candidate always used original bits. Corrected before oracle validation or sealing."
+      },
+      "native_sources": [
+        {
+          "entry": "0x10030a748",
+          "evidence_ids": [
+            "ev_76116c000cb78f411e67e3ffab8e72b889a8c6514b7de4389cd820f963820751",
+            "ev_979e641a000ff276ce1e5c1b804581463fd11aec421df1c4b96fa7899136d8e7"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/native-10030a748.txt",
+              "sha256": "0b9b75b3fb72b968d7bba526535ebe593d8e5c59718a0bb3e0e7a815c9760fdf"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/function-10030a748.json",
+              "sha256": "728a2529b601c984dd020822989c2f501dd1e1b88c8b3f0b89991992d303880d"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/bytes-10030a748.json",
+              "sha256": "5f6b0b06fc51a3267b4cc0888cbe6413afeffa257115d9a68ea4cee73322b074"
+            }
+          ]
+        },
+        {
+          "entry": "0x10030a974",
+          "evidence_ids": [
+            "ev_4b82bbf509ca69476548d33ebca3c883ddd21c55ef5e0b9f6bd9f89c4a9edc29",
+            "ev_0e2542875765c1e4db91b8945a027c8af28efd67d8587c2468cd24e6daf99fda"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass2/native-10030a974.txt",
+              "sha256": "286f232c4b64482f5ba77d24fbb2f0b5e04fc652dfbd0afa691f4a1ff4a9d6e2"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass2/function-10030a974.json",
+              "sha256": "204e5bb4341840fe10638ffe17903f4226f64808c59aa3c9c6318abb90b1c8d3"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass2/bytes-10030a974.json",
+              "sha256": "2a8a5388b50c18fc8c25ee34bc6bad611f607449912ec98636659a62217e6b26"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Sample order, history, counts and lifecycle",
+      "contract": {
+        "fresh": "Fresh prefix64 doubles equals first Float32 widened, or zero for NULL; input begins storage[64], logical consumed counter starts64. Fresh flag clears even on a zero call.",
+        "later": "Input begins storage[128], logical consumed counter starts0. Working sample center always restarts storage[64].",
+        "terminal": "Append64 copies of the positive call last Float32 frame, or zero for NULL/zero call. Local input limit increases64; cumulative real input does not.",
+        "phase": "While trunc_i64(phase)>=512 and logical index<local limit: phase=RN64(phase-512); increment logical index and every channel center. Then emit a whole channel frame if logical index<limit; phase=RN64(phase+step); repeat.",
+        "left_taps": "m=trunc_i32(phase); f=RN64(phase-Double(m)); acc=+0; for k0..63, w=FMA(f,d[m+512k],h[m+512k]); acc=FMA(center[-k],w,acc).",
+        "right_taps": "q=RN64(512-phase); m=trunc_i32(q); f=RN64(q-Double(m)); for k0..63, w=FMA(f,d[m+512k],h[m+512k]); acc=FMA(center[k+1],w,acc). Only then narrow Float32.",
+        "carry": "Copy128 doubles starting center-64 into each buffer beginning. Storage outside copied region is retained.",
+        "count": "Always add generated frames to cumulative generated. Terminal target=trunc_i64(RN64(ratio*Double(cumulative real input))); if target<new cumulative generated, return max(current generated+target-new cumulative generated,0); otherwise return current generated. Retained generated counter is not reduced.",
+        "reset": "0x10030aeb8 clears phase and both native counters, sets fresh1; it does not clear storage/tables. Destroy/create is required for a genuinely fresh reconstruction seek.",
+        "resize": "For caller n>capacity, packet changes capacity=n+1024 then reallocates zero-filled channel buffers, without resetting phase/counters/fresh. Fixed channel count subset avoids reconfiguration/free-count uncertainty.",
+        "partition": "Short first blocks are supported and may retain zero/stale gaps. No partition invariance is asserted."
+      },
+      "native_sources": [
+        {
+          "entry": "0x10030b8a8",
+          "evidence_ids": [
+            "ev_e06f150caadc4e1415378ccb4aea9ba3f42cea71c922c393a1c068f6f2622a9e",
+            "ev_d534a8c968423aabedf6123fceeb3b153f88c972e2e24cf41d883b4a8078c870"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-10030b8a8.txt",
+              "sha256": "45bc821544a246076ef1da07af41db71aee7f500a1a3e72d17ca19b8042bff90"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/function-10030b8a8.json",
+              "sha256": "7b07d6839a36090367aa1a88ab4b68fcbd84bfdf3be20fdbc3f802203dbc629c"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/bytes-10030b8a8.json",
+              "sha256": "46130dc92d818eec52e916582c70a4b1553c27b0ed4c5950460f1bebce9540a7"
+            }
+          ]
+        },
+        {
+          "entry": "0x10030af58",
+          "evidence_ids": [
+            "ev_a550fabb796931c1910d0311b730137dcef5bf7b574affa3f32fdc797aa153a1",
+            "ev_e0988b1b8bf4b97aa05c3149a6d63dc6639ea6966a00e8f8541fe4e7d6112f7e"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-10030af58.txt",
+              "sha256": "b85fb8fb7b1ca373726a9e88f49088b83d14db438efdca599c0c8091b28d8d32"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/function-10030af58.json",
+              "sha256": "9aa564a69d768f4592739c93aa00180626e665c8623a6ca0fbe70c7ef0026b60"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/bytes-10030af58.json",
+              "sha256": "6998089efcbbfb80c0585e5decdfab500fecd9aae8a554777ad01aa90d2fc131"
+            }
+          ]
+        },
+        {
+          "entry": "0x10030aeb8",
+          "evidence_ids": [
+            "ev_30b56c88baaa180f9293dae6273de6bb08ed9d0cfa70d359a2630e0093433208",
+            "ev_55309cd908dbed400d117a725da33bfb9724c75205deb231168840e26cdcdf11"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/native-10030aeb8.txt",
+              "sha256": "d560744cf95d8171214c65409ffbfbaec0e47c6432ed615c9bc89cfd68ea5c4b"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/function-10030aeb8.json",
+              "sha256": "d477c3139433b7bd947ec7a2379da78e92f1d5a1e2becb558ff9262231722827"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1/bytes-10030aeb8.json",
+              "sha256": "7d055371c4263132a226e0649f1e0f42edac515ec2c3bbd857fabf33f09e6553"
+            }
+          ]
+        },
+        {
+          "entry": "0x10030a664",
+          "evidence_ids": [
+            "ev_5dbd14ebbc5910b747227bb7e1d173ad7dc67bee1cee7e2ade89ba9e8dffa438",
+            "ev_08d823a4a78091e83a27e6967af2651e23d8e2b60e191b7a134826715d5c463e"
+          ],
+          "files": [
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass2/native-10030a664.txt",
+              "sha256": "e1bbcedb36667e45538720054791fbd352290b54978d285db272cf120a32d6e3"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass2/function-10030a664.json",
+              "sha256": "ed11641763c7845c901b7408a1ccc37c3daf5320fbd44e39f2ce6688fa6d847e"
+            },
+            {
+              "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass2/bytes-10030a664.json",
+              "sha256": "7d1a8f3013adc846175a2b182670b70f760b7977bcae79f468282a3b28bc21a0"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "candidate": {
+    "source": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/candidate/native_rate_mode1.c",
+      "bytes": 13301,
+      "sha256": "9dd346c5f1a3f27d188e3475a8db6d92ddfbeb92da10c02af4b45b2741d66a80"
+    },
+    "header": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/candidate/native_rate_mode1.h",
+      "bytes": 3681,
+      "sha256": "25cdbb819f84bddf8a6d756a16954f2ee439309668efdbe72fb8d394dcdf0bb4"
+    },
+    "defensive_contract": {
+      "rates": "Integral8000..192000 inclusive, channels1 or2; equal rates retain filtering; nearest-even and noFTZ/FIZ.",
+      "limits": "At most1m caller input frames,16m cumulative real input and visible output. Native valid internal storage extents checked before any mutation.",
+      "native_bounds": "Nonfresh terminal input in [capacity-62,capacity] would write beyond capacity+129 doubles; reject transactionally. Calls n>capacity grow by1024 and may be safe. App8192 blocks are within initial capacity.",
+      "zero": "Zero calls require NULL source. Zero nonfinal calls reproduce state mutation. One terminal call permitted, then reset/create; repeated native terminal behavior is outside wrapper policy.",
+      "samples": "Finite normal-or-zero Float32 inputs and generated outputs; nonzero subnormal output rejects. All failures preserve caller output/count and state.",
+      "publication": "Only returned region is copied to caller. Native generated writes outside returned region are not claimed as compatible ABI side effects."
+    },
+    "transactionality": "Processing stages complete storage/output and only commits after success. Every error leaves caller output/count and state unchanged.",
+    "preserved_native_peculiarities": [
+      "Short first blocks and zero-input nonterminal state changes are not replaced by generic padding.",
+      "Metadata-only reset retains stale history. Fixed-rate create/destroy is the explicit fresh-seek policy.",
+      "Caller n>capacity reallocates zeroed channel storage with capacity n+1024 while preserving phase/counters/fresh.",
+      "Generated versus returned terminal counts remain separate; no floor(total*ratio) replacement of intermediate calls.",
+      "Equal-rate operation retains the actual filter instead of bypassing it."
+    ],
+    "application_policy": "Stereo up to8192-source-frame blocks; last positive block final; fresh create per seek/preroll; post-conversion event gain. This policy and application acceptance are separate from native host behavior."
+  },
+  "validation": {
+    "independent_review": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/validation/mode1-independent-review.json",
+      "bytes": 7061,
+      "sha256": "d9b41212d6b74d1020d0b3b2c7790e02128490791b6efee6902da325d8162905"
+    },
+    "oracle": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/validation/mode1-oracle.json",
+      "bytes": 705834,
+      "sha256": "d985ab0b74146b093ccae9ca98edd5e8a7d78e904a35f6966ec841f98340d8a9"
+    },
+    "oracle_generator": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/validation/mode1-oracle.py",
+      "bytes": 13030,
+      "sha256": "f031f38172356ca244c683c35c17c2413333f52a58a1d43048f457258d8e9238"
+    },
+    "independent_original_word_check": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/validation/mode1-instruction-verification.json",
+      "bytes": 1960,
+      "sha256": "dfce9e00cbe5f2d2513a6e67883f04bbefdcf5fbd2624503fedc713615f46ff1"
+    },
+    "independent_original_words": 895,
+    "independent_original_bytes": 3580,
+    "exact_output_samples": 2084,
+    "calls": 24,
+    "scenarios": 14,
+    "complete_coefficient_difference_table_pairs": 6,
+    "full_LoFi_count_ledgers": 4,
+    "focused_mode1_tests": 6,
+    "combined_tests": 10,
+    "combined_suites": 2,
+    "combined_seconds": 0.393,
+    "successful_log": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/validation/independent-kernels-final-02.log",
+      "bytes": 8127,
+      "sha256": "2cbb114d614e7c16c6d02fd295af2e868a638df225e12bb2d7b987061cdb7ffc"
+    },
+    "combined_suite_scope": "Six mode1 tests plus four callback-adapter tests; no claim all ten are mode1 tests.",
+    "earlier_mode1_and_stream_tests": {
+      "passed": 10,
+      "suites": 2,
+      "seconds": 1.848,
+      "log": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/validation/mode1-combined-second.log",
+        "bytes": 8225,
+        "sha256": "0690326e61eb563a45f1bc5a86ec27f552e37cd5a09a5daf6d6faf7e955ed8db"
+      }
+    },
+    "retained_initial_compile_failure": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/validation/mode1-combined-first.log",
+      "bytes": 9700,
+      "sha256": "c964440e40da212478e6d4fb7284166068ebafb4199d8a1a3e82367ad8e9b1fc"
+    },
+    "initial_failure_scope": "Swift test assertion throwing-expression syntax; not a native/candidate numerical failure.",
+    "author_stream_controls": 80,
+    "author_aggregate_controls": 35,
+    "author_negative_controls": 11,
+    "ubsan": {
+      "passed": true,
+      "log": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/controls/ubsan-controls.log",
+        "bytes": 75,
+        "sha256": "419f3b88595bc0b1da3607f2cda397488b4bc838cee85131201017d7308a634f"
+      }
+    },
+    "asan": {
+      "passed": false,
+      "status": "unavailable_before_main",
+      "evidence": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/controls/sanitizer-unavailable.json",
+        "bytes": 839,
+        "sha256": "53eb0dab3ccbd4d527b361ab8dcd20e8bf474a3f4d77920839dfca333940c6c6"
+      }
+    },
+    "oracle_independence_limit": "Coefficient oracle independently orders original operations but intentionally uses host libSystem sin. Samples use independent exact Fraction rounding/FMA. No proprietary filter execution is involved.",
+    "release_acceptance": "APP013 owns full-suite/GUI acceptance; no future application result is asserted here."
+  },
+  "remaining_limits": [
+    "No Cubase runtime/default-selection, device-output, whole-project, mixer or full-timeline equivalence.",
+    "Only this Float32 fixed-rate mono/stereo path is reconstructed; other formats, dynamic channel/rate changes and arbitrary corrupted state are outside scope.",
+    "The traced _sin dependency is /usr/lib/libSystem.B.dylib. Native and candidate system-math identity across operating systems/builds remains unmeasured.",
+    "Successful fixed-channel allocation is the native precondition; allocation/error behavior is defensively transactional rather than an ABI claim.",
+    "Native terminal allocation-overrun cases, repeated final calls, nonfinite/subnormal sample domains and arbitrary aliases are rejected.",
+    "Private raw target slices and native disassembly remain local; custody does not authorize their publication."
+  ],
+  "early_description_correction": "An early message called beta8.6. Original MOVKs and implementation constants decode8.96; candidate always used original bits. Corrected before oracle validation or sealing.",
+  "snapshot_policy": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/source-snapshots.json",
+    "bytes": 8269,
+    "sha256": "c9d5709f2945a547da5442ba5fa93dac27c4cccef9cd1b067d7b02f26df8c33e"
+  }
+}

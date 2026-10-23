@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "status": "passed_no_open_defect_in_reviewed_bounded_domain",
+  "reviewer": "independent fidelity_protocol agent",
+  "scope": "Original-instruction arithmetic and control-flow comparison of pure timeline reader, independent analytical controls, and bounded application stream tests. This is not Cubase execution or ordinary full-project playback acceptance.",
+  "target_execution_count": 0,
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_reader.c",
+      "bytes": 8196,
+      "sha256": "6697ca1b9ce8725324362b2da54ac6432b1d64c8dcbb48adfc3464322dba4e0b"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_reader.h",
+      "bytes": 4390,
+      "sha256": "910475ed5c486c662c0f0893097cfbc4551b9be5922f5fcdb398941701373014"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeTimelineReaderTests.swift",
+      "bytes": 9346,
+      "sha256": "a6407c569598b3c72ad7510f4b3cff232e589474745d80000ed5955aff4063a8"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeTimelineStreamTests.swift",
+      "bytes": 16090,
+      "sha256": "6ab9bc49f5dbd0538a616a0629a172feaf9301d53404c1cdf39f9f2e9913fad4"
+    }
+  ],
+  "independent_evidence": [
+    {
+      "path": "research/evidence/application/APP014/timeline-reader-oracle.py",
+      "bytes": 10320,
+      "sha256": "b67e58e68583f34422915bc0a1b2a42c6226b3d71bdc4a8684c2b347964272e2"
+    },
+    {
+      "path": "research/evidence/application/APP014/timeline-reader-oracle.json",
+      "bytes": 311663,
+      "sha256": "0df450ef24e5124574b720c7eeb020cd9136f3267f037ad8808426faa34641cf"
+    },
+    {
+      "path": "research/evidence/application/APP014/verify-timeline-instructions.py",
+      "bytes": 3263,
+      "sha256": "b3614b9444588de94de00262f8a15ffecdcb3dbc9d007171ed4f96163ba6618c"
+    },
+    {
+      "path": "research/evidence/application/APP014/timeline-instruction-verification.json",
+      "bytes": 3101,
+      "sha256": "86d566565d67f6233f277c6b9954aaa1a18e211c1a806f80e750f01123a5477f"
+    }
+  ],
+  "tests": {
+    "focused": {
+      "path": "research/evidence/application/APP014/timeline-tests-second.log",
+      "bytes": 8350,
+      "sha256": "1b4b18c1e9db3d09f3ed3ce0e43da8d219b1a9df3fdb628a0953c5cc8160ce90"
+    },
+    "passed": 10,
+    "suites": 2,
+    "seconds": 2.504,
+    "initial_attempt": {
+      "path": "research/evidence/application/APP014/timeline-tests-first.log",
+      "bytes": 14404,
+      "sha256": "aaf98a7d6b7215ea06d6b404238ab2c52e3e2ff3ea209cf0592ae19ed7be09c8"
+    },
+    "initial_issue": "Test-only Swift Testing #require call omitted inner try around nextBuffer. No tests ran in that first attempt. Corrected test syntax; production sources compiled. The second retained attempt passed.",
+    "broader_suite": {
+      "path": "research/evidence/application/APP014/core-tests-first.log",
+      "bytes": 54152,
+      "sha256": "43e6b818af702142aa021070cfdc76fd1a4c54c1d58e0789927fb094b0eef1ec"
+    },
+    "broader_passed": 248,
+    "broader_suites": 38,
+    "broader_seconds": 32.871,
+    "broader_scope": "Root-run full application suite; separately observed log, not a target comparison."
+  },
+  "oracle": {
+    "origin": "Independent original instruction model. Fraction/integer IEEE rounding; no candidate C calls or produced values used to generate expectations.",
+    "quantizers": 254,
+    "fma_discriminators": 19,
+    "narrowed_reciprocal_discriminators": 15,
+    "mapped_partitions": 560,
+    "separate_endpoint_discriminators": 176,
+    "integer_windows": 110,
+    "read_results": 126,
+    "total_controls": 1050,
+    "silence_partition_scope": "Analytical start/end fields are retained in oracle rows but not compared for flags bit2; original branch skips those calculations. Frames and silence flag are compared."
+  },
+  "native_comparison": {
+    "original_words_verified": 1174,
+    "intervals": 9,
+    "source_hash": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+    "conclusions": [
+      "The scale is Double(Float32(RN64(1/period))); quantization is signed truncation after fused coordinate*scale+0.5, including negative coordinates.",
+      "The native start>requestEnd and end<originalRequestStart conditions are strict. End equality yields an empty half-open read. Invalid segment skips leave the cursor unchanged. Prefix silence can precede an empty read intersection.",
+      "Source seek is quantized offset plus cursor-minus-segment-start only when cursor is later. Checked sums/differences deliberately reject native wrap/saturation cases.",
+      "Mapped length is rounded separately from mapped start and capped by remaining frames. Silence bit2 bypasses start/end integer computation.",
+      "One transient read retry is allowed only at quantized segment start and before any retry. It repeats read, not seek. Other negative errors propagate; nonnegative short/long returns map to INT32_MIN.",
+      "Provider hookup and concrete PAudioSegment getter values match the retained direct original instructions; end performs a separate floating addition. This does not establish arbitrary CPR projection or live host ownership."
+    ]
+  },
+  "application_checks": {
+    "synthetic": "Three nonoverlapping synthetic segments include leading/interior silence, touching endpoints, nonzero offsets, nonunit gains, and separately rounded descriptor endpoints. Five partition sizes and boundary/gap seek suffixes match independently constructed exact PCM.",
+    "real_fixture": "Pinned LoFi CPR plus self-authored attached PCM24 stereo. All 2,116,800 output samples match integer-only signed24/2^23 encoding. The reference CPR, package original/report/media and unresolved event remain intact.",
+    "proof_negatives": "Fresh source/report/media tampering rejects preparation. Ordinary project render/export barriers remain. A derived CPR with nonzero serialized event start has its own valid source digest but remains unplaced and rejected by this mode.",
+    "transactionality": "Invalid rate/source/frame bounds, aliases, unsupported rounding and overflow reject. Failed stream block leaves cursor unchanged. Returned mutable buffers cannot mutate source samples."
+  },
+  "limitations": [
+    "No proprietary target execution, device-output capture, or Cubase export comparison.",
+    "Actual application mode uses the existing verified zero-origin source-event plan and explicit source-rate period. Wider synthetic reader descriptors do not broaden CPR admission.",
+    "Pure output structures are transactional; original native sample buffers may already contain prefix or partial writes on an error.",
+    "Native missing/unready accessor silence, I/O backend behavior, outer mapper retry, loop/locator expansion, observers and arbitrary provider replacement are outside the value kernel.",
+    "The direct immutable memory backend returns complete reads. It does not simulate transient disk errors; retry classification is tested independently.",
+    "AVAudioEngine worker scheduling and block size remain application policy. No full timeline mixer, routing, MIDI, plugin, automation or default Cubase scheduler conformance is asserted."
+  ],
+  "open_findings": []
+}

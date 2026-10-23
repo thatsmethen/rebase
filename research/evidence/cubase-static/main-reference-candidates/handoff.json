@@ -1,0 +1,282 @@
+{
+  "created_utc": "2026-10-19T05:45:23.818370+00:00",
+  "scope": "Bounded static reference-candidate handoff. No target execution, no Ghidra/REA import, no audio behavior claim.",
+  "source": "/workspace/rebase/research/targets/derived/Cubase15-arm64",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "source_size": 85691328,
+  "digest_reverified_after_analysis": true,
+  "address_mapping": "Mach-O arm64 linked addresses, __TEXT base0x100000000. Retained segments map each source file offset; do not pass raw file offsets as Ghidra addresses.",
+  "tools": {
+    "scanner": "scan_references.py",
+    "scanner_sha256": "7e1d57795638bd6836af900a3863ee474606dd57e962e9e52183e35ddcd558a9",
+    "llvm_objdump": "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+    "llvm_version": "Apple LLVM version 17.0.0\n  Optimized build.\n\n\n  Registered Targets:\n    aarch64    - AArch64 (little endian)\n    aarch64_32 - AArch64 (little endian ILP32)\n    aarch64_be - AArch64 (big endian)\n    arm        - ARM\n    arm64      - ARM64 (little endian)\n    arm64_32   - ARM64 (little endian ILP32)\n    armeb      - ARM (big endian)\n    thumb      - Thumb\n    thumbeb    - Thumb (big endian)\n    x86        - 32-bit X86: Pentium-Pro and above\n    x86-64     - 64-bit X86: EM64T and AMD64\n"
+  },
+  "counts": {
+    "initial_candidates": 40,
+    "validated_adjacent_references": 33,
+    "rejected_shadowed_adrp": 7,
+    "distinct_string_reference_metadata_intervals": 24
+  },
+  "prioritized_functions": [
+    {
+      "address": "0x1007dd650",
+      "priority": "high",
+      "candidate_role": "Floating-point transform linked to MEqualPowerInterpolator secondary candidate vtable+0x40",
+      "observations": "Observed normalization, clamp, optional complement, call to _pow using object+0x50, and FMADD output rescale. Endpoint getters and intended calling contract unresolved.",
+      "lc_function_start": true,
+      "next_declared_start": "0x1007dd724",
+      "metadata_interval_bytes": 212,
+      "file_offset": "0x7dd650",
+      "metadata_interval_sha256": "f1a61c1e5ace66c3a715a7cecc32f21fb345d5b76d12d95ae4cd4d90c87e8dbf",
+      "disassembly_file": "disassembly-0x1007dd650.txt",
+      "rea_mcp_query": {
+        "name": "analyze_function",
+        "arguments": {
+          "procedure": "0x1007dd650"
+        }
+      }
+    },
+    {
+      "address": "0x1007dd724",
+      "priority": "high",
+      "candidate_role": "Factory callback/constructor candidate linked by registration and vtable writes",
+      "observations": "Callback address materialized with MEqualPowerInterpolator name; installs primary1044e8478 and secondary1044e8650 pointers at object offsets0/+0x10. Initializes object+0x50/+0x58 tozero; later configuration must be traced.",
+      "lc_function_start": true,
+      "next_declared_start": "0x1007dd780",
+      "metadata_interval_bytes": 92,
+      "file_offset": "0x7dd724",
+      "metadata_interval_sha256": "c4074594dbfe8ce9872c282ffc3b9f8f2b411bb0706426a02f062abe97546372",
+      "disassembly_file": "disassembly-0x1007dd724.txt",
+      "rea_mcp_query": {
+        "name": "analyze_function",
+        "arguments": {
+          "procedure": "0x1007dd724"
+        }
+      }
+    },
+    {
+      "address": "0x1007dd780",
+      "priority": "medium",
+      "candidate_role": "Primary vtable+0x188 floating helper",
+      "observations": "Checks virtual result equals3, materializes constant0x3fe6a09e667f3bcd, rescales endpoints and writes a field. Calling semantics unresolved.",
+      "lc_function_start": true,
+      "next_declared_start": "0x1007dd85c",
+      "metadata_interval_bytes": 220,
+      "file_offset": "0x7dd780",
+      "metadata_interval_sha256": "3fa502702c77ff4278ff188dd8fab3e9011fcbc685355ad8385b2f4ac705f989",
+      "disassembly_file": "disassembly-0x1007dd780.txt",
+      "rea_mcp_query": {
+        "name": "analyze_function",
+        "arguments": {
+          "procedure": "0x1007dd780"
+        }
+      }
+    },
+    {
+      "address": "0x1007dd85c",
+      "priority": "medium",
+      "candidate_role": "Secondary vtable+0x50 floating helper",
+      "observations": "Related this-adjusted path also materializes0x3fe6a09e667f3bcd; semantic connection to audio processing unproven.",
+      "lc_function_start": true,
+      "next_declared_start": "0x1007dd94c",
+      "metadata_interval_bytes": 240,
+      "file_offset": "0x7dd85c",
+      "metadata_interval_sha256": "1961a5aa6508ef5f07949b281273c8d290a16513c5249714db196de79beb1ac5",
+      "disassembly_file": "disassembly-0x1007dd85c.txt",
+      "rea_mcp_query": {
+        "name": "analyze_function",
+        "arguments": {
+          "procedure": "0x1007dd85c"
+        }
+      }
+    },
+    {
+      "address": "0x100d7c0cc",
+      "priority": "high",
+      "candidate_role": "PanLawParameter candidate vtable+0xa0 display/quantization helper",
+      "observations": "Observed FMADD4*d0+0.5 then FCVTZS W20. For unsigned index<4 loads UTF16 labels[-6dB,-3dB,0dB,-4.5dB] from104585ae0; otherwise uses a different string path. Does not establish gain law.",
+      "lc_function_start": true,
+      "next_declared_start": "0x100d7c18c",
+      "metadata_interval_bytes": 192,
+      "file_offset": "0xd7c0cc",
+      "metadata_interval_sha256": "98159e6717c5789087929877e462e12b8f13edcfe718e201edb6914f35c7dc9f",
+      "disassembly_file": "disassembly-0x100d7c0cc.txt",
+      "rea_mcp_query": {
+        "name": "analyze_function",
+        "arguments": {
+          "procedure": "0x100d7c0cc"
+        }
+      }
+    },
+    {
+      "address": "0x100d7c18c",
+      "priority": "high",
+      "candidate_role": "PanLawParameter candidate vtable+0xb8 scalar helper",
+      "observations": "Three instructions return d0*0.25. Input/output parameter meaning still requires caller/API evidence.",
+      "lc_function_start": true,
+      "next_declared_start": "0x100d7c198",
+      "metadata_interval_bytes": 12,
+      "file_offset": "0xd7c18c",
+      "metadata_interval_sha256": "8bab0417c90a0a056451dcfdaebd70438cfa9dcd89874114ca9df1794c9d3d11",
+      "disassembly_file": "disassembly-0x100d7c18c.txt",
+      "rea_mcp_query": {
+        "name": "analyze_function",
+        "arguments": {
+          "procedure": "0x100d7c18c"
+        }
+      }
+    },
+    {
+      "address": "0x100966be4",
+      "priority": "medium",
+      "candidate_role": "PanLaw string reference with object field read",
+      "observations": "Passes PanLaw string, sign-extended field object+0xcc, and flags to shared helper1000a5798. Repeated similar labels suggest serialization; that role is an inference.",
+      "lc_function_start": true,
+      "next_declared_start": "0x100966ddc",
+      "metadata_interval_bytes": 504,
+      "file_offset": "0x966be4",
+      "metadata_interval_sha256": "8922544bb879a1ac62d8b4900ac628490b2de038816a45a3aa4b17d3dd60374e",
+      "disassembly_file": "disassembly-0x100966be4.txt",
+      "rea_mcp_query": {
+        "name": "analyze_function",
+        "arguments": {
+          "procedure": "0x100966be4"
+        }
+      }
+    },
+    {
+      "address": "0x100966ddc",
+      "priority": "medium",
+      "candidate_role": "Companion PanLaw string reference",
+      "observations": "Useful paired query with100966be4; no behavior claim.",
+      "lc_function_start": true,
+      "next_declared_start": "0x100967058",
+      "metadata_interval_bytes": 636,
+      "file_offset": "0x966ddc",
+      "metadata_interval_sha256": "c0d66a8c6afa6eb1a5d567872e9853d57f9dd694284f963feccb9a5a90df8cff",
+      "disassembly_file": "disassembly-0x100966ddc.txt",
+      "rea_mcp_query": {
+        "name": "analyze_function",
+        "arguments": {
+          "procedure": "0x100966ddc"
+        }
+      }
+    },
+    {
+      "address": "0x100287f64",
+      "priority": "medium",
+      "candidate_role": "Short direct equalPower string reference",
+      "observations": "76-byte metadata interval; candidate registration/helper for follow-up, not proven DSP.",
+      "lc_function_start": true,
+      "next_declared_start": "0x100287fb0",
+      "metadata_interval_bytes": 76,
+      "file_offset": "0x287f64",
+      "metadata_interval_sha256": "5c3cadc606348d1e847d21445fae90b5888220d20769cae3a6c368415838ede6",
+      "disassembly_file": "disassembly-0x100287f64.txt",
+      "rea_mcp_query": {
+        "name": "analyze_function",
+        "arguments": {
+          "procedure": "0x100287f64"
+        }
+      }
+    },
+    {
+      "address": "0x1002750d0",
+      "priority": "low",
+      "candidate_role": "Larger direct equalPower string reference",
+      "observations": "Also contains nearby interpolation setup references; unresolved role.",
+      "lc_function_start": true,
+      "next_declared_start": "0x100275a04",
+      "metadata_interval_bytes": 2356,
+      "file_offset": "0x2750d0",
+      "metadata_interval_sha256": "f730509a58767b6c18c51e93cb9adb45bd4e3fd8480aff33ae95c9007f491bad",
+      "disassembly_file": "disassembly-0x1002750d0.txt",
+      "rea_mcp_query": {
+        "name": "analyze_function",
+        "arguments": {
+          "procedure": "0x1002750d0"
+        }
+      }
+    },
+    {
+      "address": "0x100287e44",
+      "priority": "low",
+      "candidate_role": "Direct equalPower string reference",
+      "observations": "Unresolved role; candidate helper only.",
+      "lc_function_start": true,
+      "next_declared_start": "0x100287f64",
+      "metadata_interval_bytes": 288,
+      "file_offset": "0x287e44",
+      "metadata_interval_sha256": "47ddd58b523205378eb7f2a8b6694c3ff3bff135bbcb9fcb8ffc838373448f25",
+      "disassembly_file": "disassembly-0x100287e44.txt",
+      "rea_mcp_query": {
+        "name": "analyze_function",
+        "arguments": {
+          "procedure": "0x100287e44"
+        }
+      }
+    }
+  ],
+  "interpolator_virtual_getter_candidates": [
+    {
+      "slot": "0x198",
+      "slot_address": "0x1044e8610",
+      "raw_pointer": "0x100759d14",
+      "role": "Getter semantics unresolved; called by0x1007dd650"
+    },
+    {
+      "slot": "0x1a0",
+      "slot_address": "0x1044e8618",
+      "raw_pointer": "0x100759d1c",
+      "role": "Getter semantics unresolved; called by0x1007dd650"
+    },
+    {
+      "slot": "0x1a8",
+      "slot_address": "0x1044e8620",
+      "raw_pointer": "0x100759d24",
+      "role": "Getter semantics unresolved; called by0x1007dd650"
+    },
+    {
+      "slot": "0x1b0",
+      "slot_address": "0x1044e8628",
+      "raw_pointer": "0x100759d2c",
+      "role": "Getter semantics unresolved; called by0x1007dd650"
+    }
+  ],
+  "other_links": {
+    "panLaw_no_direct_ADRP_ADD_hit": {
+      "string_address": "0x10388d54b",
+      "raw_aligned_pointer_address": "0x1044125d0",
+      "status": "Data-pointer occurrence only; not a proven code reference"
+    },
+    "equal_power_type_name": {
+      "name_address": "0x10397e7e7",
+      "candidate_typeinfo": "0x1044e86f0",
+      "primary_vtable": "0x1044e8478",
+      "secondary_vtable": "0x1044e8650"
+    },
+    "panlaw_parameter_type_name": {
+      "name_address": "0x1039dd6d9",
+      "candidate_typeinfo": "0x1045859d0",
+      "candidate_vtable": "0x104585900"
+    }
+  },
+  "evidence_files": [
+    "raw-reference-candidates.json",
+    "validated-string-references.json",
+    "disassembly-commands.json",
+    "typeinfo-pointer-candidates.json",
+    "vtable-method-candidates.json",
+    "interpolator-import-candidate.json",
+    "panlaw-label-table.json"
+  ],
+  "limitations": [
+    "ADRP+ADD scanner models at most12 subsequent instructions. All accepted references are adjacent pairs confirmed by llvm-objdump;7nonadjacent matches were rejected because a later ADRP overwrites their register.",
+    "No missing-reference inference: pointer loads, longer dataflow, offsets to string interiors, fixups, or other addressing modes may yield additional references.",
+    "LC_FUNCTION_STARTS intervals identify preceding/successor metadata entries, not guaranteed exact procedure boundaries; one interval visibly contains a separate initialization sequence. REA should determine actual function bodies.",
+    "C++ typeinfo/vtable identities are structural inferences from retained name pointers, neighboring offset/typeinfo words, and constructor writes where observed. Source pointer bytes can contain loader addends; runtime relocation has not run.",
+    "_pow name is resolved from the Mach-O indirect symbol table; actual loaded implementation and FP behavior remain unvalidated.",
+    "No inference from equalPower or pan-law display labels to Cubase audio panning is authorized by this evidence alone."
+  ]
+}

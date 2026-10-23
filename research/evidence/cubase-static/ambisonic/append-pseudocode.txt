@@ -1,0 +1,89 @@
+
+void FUN_0001c79c(long param_1,short *param_2)
+
+{
+  undefined8 *puVar1;
+  ulong uVar2;
+  ulong uVar3;
+  short sVar4;
+  undefined8 *puVar5;
+  void *pvVar6;
+  long lVar7;
+  short *psVar8;
+  ulong uVar10;
+  undefined8 *puVar11;
+  undefined8 *puVar12;
+  long lVar13;
+  size_t sVar14;
+  undefined8 *puVar15;
+  short *psVar9;
+  
+  psVar8 = param_2;
+  do {
+    psVar9 = psVar8 + 1;
+    sVar4 = *psVar8;
+    psVar8 = psVar9;
+  } while (sVar4 != 0);
+  lVar13 = (long)psVar9 - (long)param_2;
+  pvVar6 = _malloc(lVar13 * 0x80000000 >> 0x1f & 0xfffffffffffffffe);
+  if (pvVar6 != (void *)0x0) {
+    sVar14 = (lVar13 * 0x80000000 + -0x100000000 >> 0x20) * 2;
+    _memcpy(pvVar6,param_2,sVar14);
+    *(undefined2 *)((long)pvVar6 + sVar14) = 0;
+    puVar12 = *(undefined8 **)(param_1 + 0x340);
+    if (puVar12 == *(undefined8 **)(param_1 + 0x348)) {
+      puVar1 = (undefined8 *)(param_1 + 0x338);
+      puVar15 = (undefined8 *)*puVar1;
+      uVar10 = (long)puVar12 - (long)puVar15;
+      lVar13 = (long)uVar10 >> 3;
+      uVar2 = lVar13 + 1;
+      if (uVar2 >> 0x3d != 0) {
+        FUN_0001d724(puVar1);
+LAB_0001c8fc:
+                    /* WARNING: Subroutine does not return */
+        FUN_0000de9c();
+      }
+      uVar3 = (long)uVar10 >> 2;
+      if ((ulong)((long)uVar10 >> 2) <= uVar2) {
+        uVar3 = uVar2;
+      }
+      if (0x7ffffffffffffff7 < uVar10) {
+        uVar3 = 0x1fffffffffffffff;
+      }
+      if (uVar3 == 0) {
+        puVar11 = (undefined8 *)(lVar13 * 8);
+        lVar7 = 0;
+        *puVar11 = pvVar6;
+      }
+      else {
+        if (uVar3 >> 0x3d != 0) goto LAB_0001c8fc;
+        lVar7 = __Znwm(uVar3 << 3);
+        puVar11 = (undefined8 *)(lVar7 + lVar13 * 8);
+        lVar7 = lVar7 + uVar3 * 8;
+        *puVar11 = pvVar6;
+      }
+      puVar5 = puVar11 + 1;
+      if (puVar12 != puVar15) {
+        do {
+          puVar12 = puVar12 + -1;
+          puVar11 = puVar11 + -1;
+          *puVar11 = *puVar12;
+        } while (puVar12 != puVar15);
+        puVar12 = (undefined8 *)*puVar1;
+      }
+      *(undefined8 **)(param_1 + 0x338) = puVar11;
+      *(undefined8 **)(param_1 + 0x340) = puVar5;
+      *(long *)(param_1 + 0x348) = lVar7;
+      if (puVar12 != (undefined8 *)0x0) {
+        __ZdlPv(puVar12);
+      }
+    }
+    else {
+      *puVar12 = pvVar6;
+      *(undefined8 **)(param_1 + 0x340) = puVar12 + 1;
+    }
+    *(int *)(param_1 + 0x314) = *(int *)(param_1 + 0x314) + 1;
+  }
+  return;
+}
+

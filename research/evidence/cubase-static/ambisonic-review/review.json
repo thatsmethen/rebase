@@ -1,0 +1,227 @@
+{
+  "review_id": "AMBI-FOA-INDEPENDENT-001",
+  "status": "complete_no_actionable_defect_within_declared_candidate_domain",
+  "reviewer": "Independent cubase_evidence worker; did not author the traced contract or candidate implementation.",
+  "scope": "First-order, four-channel conversion kernel reconstructed from retained arm64 REA evidence, with explicit processor-state exclusions.",
+  "target_executed": false,
+  "source_identity": {
+    "component": "com.steinberg.VSTAmbiConverter",
+    "component_version": "1.5.10.152",
+    "universal_sha256": "e803dd1390ee7989306b15c0fccca52e5d3097ae7a489dc6834f82b50ba485c5",
+    "arm64_sha256": "e8341c6b31ac6b65cf7e8c18bdfbaa18ac24b20160b4287dc385b202eb29b883",
+    "independent_integrity_checks": "static-input-checks.json",
+    "provider": "Ghidra 12.1.4 through REA 6.7.0",
+    "provider_profile_digest": "3fc72c9b4b78498fb992b938f8f3389dc670244a293c1d40abf5e1d10162ed3b"
+  },
+  "static_checks": [
+    {
+      "topic": "permutation_direction",
+      "assessment": "supported_by_retained_assembly_and_exact_source_tables",
+      "claim": "The float permutation copies input[i] to output[map[i]], not output[i] from input[map[i]]. Low-mode first-order map is [0,3,1,2]; high-mode map is [0,2,3,1]. Thus low mode output order is [input0,input2,input3,input1], high mode [input0,input3,input1,input2].",
+      "locations": [
+        "0x154f1c..0x154f30",
+        "0x154f7c..0x154f94",
+        "0x18d15c",
+        "0x18d19c"
+      ],
+      "evidence_ids": [
+        "ev_8c579cccb9a2999385243abde3a396b6762626d8537f036a621e1114ecf7caae",
+        "ev_09a304b26aa532665dd8e142be4a83de850d646aa7ce8238f872572631180f40"
+      ]
+    },
+    {
+      "topic": "gain_index_and_order",
+      "assessment": "supported_by_retained_assembly",
+      "claim": "Permutation completes first. The conversion routine then scales each destination channel j by gain[j]. First-order non-W gains are exactly 1.0; their equality must not be used to generalize source-indexed gain semantics to higher orders.",
+      "locations": [
+        "0x154d6c",
+        "0x154d88..0x154db4",
+        "0x154a8c..0x154b17"
+      ],
+      "evidence_ids": [
+        "ev_cbbaed7434362e2b7f9465cdd773e5f1931f9d2c60ed615262d8668b8ab47c5b",
+        "ev_8e7f749a08b569b58f88bdce179c6bae9ec267805ccf38c75456169dc0791c70"
+      ]
+    },
+    {
+      "topic": "coefficient_precision",
+      "assessment": "exact_source_constants_verified_independently",
+      "claim": "The low-mode W binary64 coefficient is 1.4142135623730951 (little-endian cd3b7f669ea0f63f); high-mode is 0.7071067811865475 (cc3b7f669ea0e63f). The reverse value is one binary64 ULP below the usual rounded sqrt(0.5), so textbook substitution loses an observed constant. The float routine converts each stored double coefficient with fcvt s0,d0 before calling vDSP_vsmul; the double routine passes the stored double to vDSP_vsmulD.",
+      "locations": [
+        "0x18d1e0",
+        "0x18d260",
+        "0x154d94..0x154db4"
+      ],
+      "evidence_ids": [
+        "ev_09a304b26aa532665dd8e142be4a83de850d646aa7ce8238f872572631180f40",
+        "ev_cbbaed7434362e2b7f9465cdd773e5f1931f9d2c60ed615262d8668b8ab47c5b"
+      ],
+      "limits": "Actual Accelerate implementation, target FPCR, rounding, denormals and exceptional values were not executed or observed. Static arithmetic agreement is not bit-identical runtime fidelity."
+    },
+    {
+      "topic": "parameter_threshold_and_queue",
+      "assessment": "static_branch_confirmed_with_public_ABI_assisted_slot_interpretation",
+      "claim": "For a successful final-point read of parameter ID 2 and finite normalized p in [0,1], p<0.5 selects low tables and p>=0.5 selects high tables. The consumed point index is getPointCount()-1, and the returned sample offset is not used to segment this block's processing. The integer field stored by fcvtzu at processor+0x150 does not determine this comparison.",
+      "locations": [
+        "0x152148..0x152164",
+        "0x152190..0x1521b4",
+        "0x1521f4..0x152250"
+      ],
+      "evidence_ids": [
+        "ev_4f992b72aec563124a5a8828c9cd9e5f2f704d1b44726ce440a62470f802581a"
+      ],
+      "limits": "No host parameter enumeration, malformed queue, nonfinite input, state-persistence or sample-accurate automation equivalence is established. Explicit candidate p does not emulate queues."
+    },
+    {
+      "topic": "bus_gating",
+      "assessment": "branch_predicates_observed_success_still_depends_on_surrounding_state",
+      "claim": "The arrangement function requires one input and one output bus. Its acceptance branches compare population counts for equal 4/4, 9/9 or 16/16 channel arrangements, with additional existing AudioBus checks and reset/fallback branches. It does not merely test the named ambisonic mask. A four-channel math kernel is conditional on valid configured processor state and does not emulate arrangement negotiation.",
+      "locations": [
+        "0x152824..0x152c7f",
+        "0x152ccc..0x152ce7"
+      ],
+      "evidence_ids": [
+        "ev_73aeb3d9d98e4c9487109124edfcbe9e3c56df077156d651ebc77b36c4421da3"
+      ],
+      "limits": "Bus routine contains eight unresolved calls in REA relationship coverage. Do not infer all possible layout or activation outcomes from channel count alone."
+    },
+    {
+      "topic": "bypass_and_silence",
+      "assessment": "supported_static_branch_behavior_outside_candidate_kernel_scope",
+      "claim": "Parameter ID 1 sets bypass using strict p>0.5, unlike the direction threshold. When not bypassed, any nonzero input silenceFlags skips the conversion call; flags are copied unchanged to output. This skip is not an observed output-buffer clear and is not restricted to an all-channels-silent mask. When bypassed, the float bypass routine copies each corresponding channel when pointers differ, then flags are propagated.",
+      "locations": [
+        "0x1521c0..0x1521ec",
+        "0x153f40..0x153f94",
+        "0x154120..0x154134",
+        "0x154e28..0x154e9f"
+      ],
+      "evidence_ids": [
+        "ev_4f992b72aec563124a5a8828c9cd9e5f2f704d1b44726ce440a62470f802581a",
+        "ev_b2f398cfea2637930a17064bd1032da4610f721ee69cf9bb6c19f2986c2d29ae",
+        "ev_063e0b7e04af9cb4b264e12a6356f32e8fe4053282baab3e4ecf408e3a20c765"
+      ],
+      "limits": "A candidate restricted to bypass=false and silenceFlags=0 must reject or explicitly exclude other states, not silently emulate them with ordinary conversion."
+    },
+    {
+      "topic": "aliasing",
+      "assessment": "supported_static_pointer_checks_not_a_general_overlap_contract",
+      "claim": "If any corresponding pair input[i]==output[i] is found, the float remapper stages all input channels before scattering. Otherwise it copies directly. This guard does not inspect arbitrary cross-channel aliases or overlapping sample ranges. A disjoint-buffer candidate is an admissible subset, not a reconstruction of in-place behavior.",
+      "locations": [
+        "0x154ef8..0x154f14",
+        "0x154f48..0x154fa4"
+      ],
+      "evidence_ids": [
+        "ev_8c579cccb9a2999385243abde3a396b6762626d8537f036a621e1114ecf7caae",
+        "ev_eeb71a978aabe2b0b5741cba344e76f07768355f52ecc4eb92ab4a7c67d7e608"
+      ]
+    },
+    {
+      "topic": "default_and_activation",
+      "assessment": "explicit_parameter_required_for_candidate",
+      "claim": "The retained activation body initially installs the low-mode map/gain pair. Later parameter queues can replace it. This establishes one static initialization path, not the host's persistent runtime default after restoration or automation.",
+      "locations": [
+        "0x153ba0"
+      ],
+      "evidence_ids": [
+        "ev_71427cb4c15b53d125dbb8f414f8827d185a7297fbf0057f99e8618a075b5860"
+      ]
+    }
+  ],
+  "proved_static_data_checks": [
+    "Universal and thin target digests rehashed; exact thin slice equals the recorded original source interval.",
+    "REA's complete 388-byte constant table read equals the immutable source byte range.",
+    "Four conversion/bypass dispatch slots agree with raw source bytes. The full 560-byte vtable read differs elsewhere and is not claimed byte-identical.",
+    "The first four entries of the two permutation tables are inverse permutations. This is not a floating-point round-trip fidelity claim."
+  ],
+  "untested_hypotheses": [
+    "The same processing path is reached in a running, licensed Cubase host for the selected configuration.",
+    "The candidate's arithmetic agrees bit-for-bit with the runtime Accelerate implementation and floating-point environment.",
+    "The selected labels, parameter queues, bus negotiation, activation, persistence, metering and silence handling compose as expected in the full host.",
+    "The x86_64 architecture implements the same rules; only arm64 was audited."
+  ],
+  "candidate_review": {
+    "status": "source_and_tests_reviewed_independent_candidate_checks_passed",
+    "path": "candidate/ambiconverter_first_order",
+    "files": [
+      {
+        "path": "candidate/ambiconverter_first_order/README.md",
+        "sha256": "e432b2a1f245295e61e139a24c23374ac9eb1d9bbc53d193cb05256d205d1796"
+      },
+      {
+        "path": "candidate/ambiconverter_first_order/ambi_first_order.c",
+        "sha256": "b2af5f8622fa3c336f0c6c6abbb59ddf79151107bfe8e31a23c09dd2a9a1d240"
+      },
+      {
+        "path": "candidate/ambiconverter_first_order/ambi_first_order.h",
+        "sha256": "b1103f9cc0450db33aa1331297306e2619998d069cada1e4a919573df8dd0135"
+      },
+      {
+        "path": "candidate/ambiconverter_first_order/test_candidate.py",
+        "sha256": "39953b0546640f93193c0f08ba74a6d260a8b5bfe231a2cf65de422485d2e048"
+      }
+    ],
+    "required_boundary": "Explicit finite normalized p in [0,1], four channels, 1..INT32_MAX equal-length frames, bypass false, silence flags zero, eight disjoint aligned valid storage regions, FE_TONEAREST, and signed zero or 2*MIN_NORMAL <= abs(sample) <= 1.",
+    "code_assessment": [
+      "The source-to-destination maps and exact binary32/binary64 gain patterns match the source tables.",
+      "Combining scatter with multiplication is equivalent for this first-order subset: channel0 maps to itself and all other gains are1; this is not a higher-order gain-index rule.",
+      "Shape, state, alignment, overlap, rounding-mode and complete sample-domain validation occurs before output writes. C caller storage-validity preconditions remain required.",
+      "README documents target-state exclusions, candidate-specific rejection semantics, non-closed input domain, numeric environment and absent runtime target oracle."
+    ],
+    "author_test_report": {
+      "path": "../ambisonic/candidate-validation.json",
+      "reported_test_methods": 8,
+      "reported_exit_code": 0,
+      "reviewed_exact_rational_oracle": true,
+      "independently_rerun": false
+    },
+    "independent_candidate_execution": {
+      "path": "candidate-checks.json",
+      "status": "passed",
+      "check_groups": 10,
+      "precision_variants": [
+        32,
+        64
+      ],
+      "all_28_alias_pairs_per_precision": true,
+      "all_8_alignment_positions_per_precision": true,
+      "adjacent_exact_sample_domain_boundaries": true,
+      "signed_zero_permutation_frame_lengths": [
+        1,
+        2,
+        3,
+        4,
+        7,
+        8,
+        9,
+        15,
+        16,
+        17
+      ],
+      "exact_reverse_gain_at_p_half": true
+    },
+    "no_target_code_executed": true,
+    "limits": "Synthetic checks exercise original candidate C only. They do not validate target Accelerate arithmetic, host integration, or any excluded processor state."
+  },
+  "completed_at_utc": "2026-10-19T05:34:21.697839+00:00",
+  "verdict": "The finalized first-order contract and candidate faithfully transcribe the inspected static rule within their stated restrictions. No target runtime conformance, complete plugin behavior, or Cubase fidelity has been established.",
+  "actionable_findings": [],
+  "finalized_artifacts_reviewed": [
+    {
+      "path": "../ambisonic/first-order-finding.json",
+      "sha256": "26464fd1f96d299710c49a7b0735882d3095725449c0368ba894794a9ac791f9"
+    },
+    {
+      "path": "../ambisonic/first-order-byte-ranges.json",
+      "sha256": "a58036a05a6d65107e12d61a3ec08b10cf01a31eeab780b70dc7b3db6050a685"
+    },
+    {
+      "path": "../ambisonic/dsp-evidence-bundle.json",
+      "sha256": "5dbde2eda7cc4d2df246618b67e5606ee679f613001061c673952884d34a3315"
+    },
+    {
+      "path": "../ambisonic/candidate-validation.json",
+      "sha256": "b6e216364cf55d698dc3beee85ea0793ae4e46f0bdfe41b99031000524871034"
+    }
+  ],
+  "additional_integrity_checks": "17 ranges across16 functions were independently rehashed and matched source mappings and original universal byte intervals; all16 finding evidence IDs and3 external reference digests matched."
+}

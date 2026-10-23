@@ -1,0 +1,4282 @@
+{
+  "schema_version": 1,
+  "evidence_class": "independent-public-backend-wrapper-comparison",
+  "target_execution": false,
+  "candidate_or_application_bridge_used": false,
+  "library": {
+    "path": "Application/.build-soxr/install/lib/libsoxr.0.1.2.dylib",
+    "sha256": "c614df97b2c3f3881fa694efc73a6d5152fe0288ac9396adb6bd7c8c8e5f895a",
+    "bytes": 188000,
+    "version": "libsoxr-0.1.3"
+  },
+  "generator_sha256": "8f051d49f4b2e660951cfcfe8e3f7d93e73f4f2693d56124939ccd1e6eeed852",
+  "instruction_model_sha256": "13d030c982ca7154ae29839e527638cd900068f785ba5e8a05095115d6957b64",
+  "public_parameters": {
+    "io": [
+      0,
+      0
+    ],
+    "quality": [
+      6,
+      0
+    ],
+    "runtime": [
+      0
+    ]
+  },
+  "limitations": [
+    "Same pinned public backend; not independent filter implementation.",
+    "No proprietary execution or bundled SoXR conformance claim.",
+    "Explicit partitions and one terminal call; no repeated flush claim."
+  ],
+  "cases": [
+    {
+      "name": "44100-48000-impulse-positive-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 48000,
+      "channels": 2,
+      "pattern": "impulse",
+      "initial": {
+        "ratio_bits": "3ff16a3b35fc845b",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 4096,
+        "discard": 4096,
+        "input_capacity": 65536,
+        "output_capacity": 76452,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 4096,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 4820,
+          "output_sha256": "7a0c10e1e0c0cadd0abb60f87d9a82c8777c1de0407127b049c3a012d30f2a23",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40b2d4766bf908b6",
+            "cumulative_input": 8192,
+            "cumulative_visible": 4820,
+            "total_returned": 4820,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8137,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8916,
+            "output_end": 12233,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "7c6d4cc11c18c6a7342e419b6af58dbfdf10df0ea59526f8b6fdb1855bcde35a",
+              "first_bits": [
+                "3f000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 8916,
+              "used": 8192,
+              "produced": 8137,
+              "output_sha256": "55e5e1bbcd323e34f9ce6dc864853a171a9a2a1ad14fcc6ff9d63a10b79c31a3"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 4097,
+          "output_sha256": "38e36ce733732bc809b676abff13354262519b6c341b82a2c875b48ca5a60941",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40c16aaaaaaaaaab",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8917,
+            "total_returned": 8917,
+            "backend_calls": 3,
+            "backend_input_used": 11956,
+            "backend_output_produced": 12207,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 13013,
+            "output_end": 16303,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "input_frames": 3763,
+              "null_input": false,
+              "input_sha256": "2c063cbdebaf5a0939c03d73f5f25cd3f0ac84d55c335f325e8232d4cf442e27",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 4096,
+              "used": 3763,
+              "produced": 4070,
+              "output_sha256": "0acf32f219a317114c5fba2f53eb1b7fa0cfba216e7c338df563e2d43e0de5d3"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-48000-impulse-null-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 48000,
+      "channels": 2,
+      "pattern": "impulse",
+      "initial": {
+        "ratio_bits": "3ff16a3b35fc845b",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 4096,
+        "discard": 4096,
+        "input_capacity": 65536,
+        "output_capacity": 76452,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 4096,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 4820,
+          "output_sha256": "7a0c10e1e0c0cadd0abb60f87d9a82c8777c1de0407127b049c3a012d30f2a23",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40b2d4766bf908b6",
+            "cumulative_input": 8192,
+            "cumulative_visible": 4820,
+            "total_returned": 4820,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8137,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8916,
+            "output_end": 12233,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "7c6d4cc11c18c6a7342e419b6af58dbfdf10df0ea59526f8b6fdb1855bcde35a",
+              "first_bits": [
+                "3f000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 8916,
+              "used": 8192,
+              "produced": 8137,
+              "output_sha256": "55e5e1bbcd323e34f9ce6dc864853a171a9a2a1ad14fcc6ff9d63a10b79c31a3"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": false,
+          "returned": 1,
+          "output_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40b2d58d0fac687e",
+            "cumulative_input": 8193,
+            "cumulative_visible": 4821,
+            "total_returned": 4821,
+            "backend_calls": 2,
+            "backend_input_used": 8193,
+            "backend_output_produced": 8137,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8917,
+            "output_end": 12233,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          ]
+        },
+        {
+          "input_frames": 0,
+          "final": true,
+          "returned": 4096,
+          "output_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40c16aaaaaaaaaab",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8917,
+            "total_returned": 8917,
+            "backend_calls": 3,
+            "backend_input_used": 11956,
+            "backend_output_produced": 12207,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 13013,
+            "output_end": 16303,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 3763,
+              "null_input": false,
+              "input_sha256": "2c063cbdebaf5a0939c03d73f5f25cd3f0ac84d55c335f325e8232d4cf442e27",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 4096,
+              "used": 3763,
+              "produced": 4070,
+              "output_sha256": "0acf32f219a317114c5fba2f53eb1b7fa0cfba216e7c338df563e2d43e0de5d3"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-48000-ramp-positive-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 48000,
+      "channels": 2,
+      "pattern": "ramp",
+      "initial": {
+        "ratio_bits": "3ff16a3b35fc845b",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 4096,
+        "discard": 4096,
+        "input_capacity": 65536,
+        "output_capacity": 76452,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 4096,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 4820,
+          "output_sha256": "5aea2e4dffa4f4209c388e9c5424e48db1785fc1ca7ee9de889625253422506d",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40b2d4766bf908b6",
+            "cumulative_input": 8192,
+            "cumulative_visible": 4820,
+            "total_returned": 4820,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8137,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8916,
+            "output_end": 12233,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "91d745c91013a401b65c508eae191dd8bfe626937b2675b6c8be97144c1ae80a",
+              "first_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "last_bits": [
+                "427e0000",
+                "3e700000"
+              ],
+              "requested": 8916,
+              "used": 8192,
+              "produced": 8137,
+              "output_sha256": "ca359a694dd307dc4a6919fff987f5a58f66b32a9bcd40486e97ffd2a56944e0"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 4097,
+          "output_sha256": "22cb6be851e86f50eae4e13b32fe733d86f7f0241dfd3630c68fa1230fbe1ce0",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40c16aaaaaaaaaab",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8917,
+            "total_returned": 8917,
+            "backend_calls": 3,
+            "backend_input_used": 11956,
+            "backend_output_produced": 12207,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 13013,
+            "output_end": 16303,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "344d9f506a0cbc9be022e10ee34686767def7449b53818debc921353216e10ea",
+              "first_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "last_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "input_frames": 3763,
+              "null_input": false,
+              "input_sha256": "6cf758aa3db0cf83f2db4434c044d14274217f8e2ef620bee79f0b2cb597a827",
+              "first_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "last_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "requested": 4096,
+              "used": 3763,
+              "produced": 4070,
+              "output_sha256": "de9827288ab465fdcab1e06c0b273d899b520d7ea11ee170886f34fae2c422dc"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-48000-ramp-null-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 48000,
+      "channels": 2,
+      "pattern": "ramp",
+      "initial": {
+        "ratio_bits": "3ff16a3b35fc845b",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 4096,
+        "discard": 4096,
+        "input_capacity": 65536,
+        "output_capacity": 76452,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 4096,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 4820,
+          "output_sha256": "5aea2e4dffa4f4209c388e9c5424e48db1785fc1ca7ee9de889625253422506d",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40b2d4766bf908b6",
+            "cumulative_input": 8192,
+            "cumulative_visible": 4820,
+            "total_returned": 4820,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8137,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8916,
+            "output_end": 12233,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "91d745c91013a401b65c508eae191dd8bfe626937b2675b6c8be97144c1ae80a",
+              "first_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "last_bits": [
+                "427e0000",
+                "3e700000"
+              ],
+              "requested": 8916,
+              "used": 8192,
+              "produced": 8137,
+              "output_sha256": "ca359a694dd307dc4a6919fff987f5a58f66b32a9bcd40486e97ffd2a56944e0"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": false,
+          "returned": 1,
+          "output_sha256": "a6e5d2b65768c23d99bc96e9795d6d2f323292e662a5c23f9e8f23e41a4b0bb8",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40b2d58d0fac687e",
+            "cumulative_input": 8193,
+            "cumulative_visible": 4821,
+            "total_returned": 4821,
+            "backend_calls": 2,
+            "backend_input_used": 8193,
+            "backend_output_produced": 8137,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8917,
+            "output_end": 12233,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "344d9f506a0cbc9be022e10ee34686767def7449b53818debc921353216e10ea",
+              "first_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "last_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          ]
+        },
+        {
+          "input_frames": 0,
+          "final": true,
+          "returned": 4096,
+          "output_sha256": "eae1439db9085cdcdedfca198829f7568f1280a5b1454a852435d4a19f400d35",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40c16aaaaaaaaaab",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8917,
+            "total_returned": 8917,
+            "backend_calls": 3,
+            "backend_input_used": 11956,
+            "backend_output_produced": 12207,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 13013,
+            "output_end": 16303,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 3763,
+              "null_input": false,
+              "input_sha256": "2c063cbdebaf5a0939c03d73f5f25cd3f0ac84d55c335f325e8232d4cf442e27",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 4096,
+              "used": 3763,
+              "produced": 4070,
+              "output_sha256": "2d8009ce7573d93422ec43f389e6ec5ef00a4c1bc8efd5cd5a3a4a16d8cc6f4f"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-48000-nonzero-last-positive-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 48000,
+      "channels": 2,
+      "pattern": "nonzero-last",
+      "initial": {
+        "ratio_bits": "3ff16a3b35fc845b",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 4096,
+        "discard": 4096,
+        "input_capacity": 65536,
+        "output_capacity": 76452,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 4096,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 4820,
+          "output_sha256": "cdc386d855f47b21d24175f07a298f5df381c0bc0a0fe1ac4875e0162b8e7053",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40b2d4766bf908b6",
+            "cumulative_input": 8192,
+            "cumulative_visible": 4820,
+            "total_returned": 4820,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8137,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8916,
+            "output_end": 12233,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 8916,
+              "used": 8192,
+              "produced": 8137,
+              "output_sha256": "b4c6a9153a78b1c0d65d7686fe8d1b5ca5243362060d9a9f5fd004a92868a76e"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 4097,
+          "output_sha256": "d7512372ac419c1d257e188d98f282bc3e80a280475122a48ab391d3ddf7e3d4",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40c16aaaaaaaaaab",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8917,
+            "total_returned": 8917,
+            "backend_calls": 3,
+            "backend_input_used": 11956,
+            "backend_output_produced": 12207,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 13013,
+            "output_end": 16303,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "13f79938240447ab0c713836a98b4da2746e3b50552ad12d04ba0a670e2a593c",
+              "first_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "last_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "input_frames": 3763,
+              "null_input": false,
+              "input_sha256": "6f2b2956966e291748ce21e908210e8367b17c6836e43e12e9342e1205d9dfec",
+              "first_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "last_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "requested": 4096,
+              "used": 3763,
+              "produced": 4070,
+              "output_sha256": "f266f736a8197cb9ca7c5425cd1decfc1a856038b49adf426e5974a2279d6f82"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-48000-nonzero-last-null-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 48000,
+      "channels": 2,
+      "pattern": "nonzero-last",
+      "initial": {
+        "ratio_bits": "3ff16a3b35fc845b",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 4096,
+        "discard": 4096,
+        "input_capacity": 65536,
+        "output_capacity": 76452,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 4096,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 4820,
+          "output_sha256": "cdc386d855f47b21d24175f07a298f5df381c0bc0a0fe1ac4875e0162b8e7053",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40b2d4766bf908b6",
+            "cumulative_input": 8192,
+            "cumulative_visible": 4820,
+            "total_returned": 4820,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8137,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8916,
+            "output_end": 12233,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 8916,
+              "used": 8192,
+              "produced": 8137,
+              "output_sha256": "b4c6a9153a78b1c0d65d7686fe8d1b5ca5243362060d9a9f5fd004a92868a76e"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": false,
+          "returned": 1,
+          "output_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40b2d58d0fac687e",
+            "cumulative_input": 8193,
+            "cumulative_visible": 4821,
+            "total_returned": 4821,
+            "backend_calls": 2,
+            "backend_input_used": 8193,
+            "backend_output_produced": 8137,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8917,
+            "output_end": 12233,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "13f79938240447ab0c713836a98b4da2746e3b50552ad12d04ba0a670e2a593c",
+              "first_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "last_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          ]
+        },
+        {
+          "input_frames": 0,
+          "final": true,
+          "returned": 4096,
+          "output_sha256": "be51292203f4ca583d99449f8aa410429e44f4a4a7be8cdc50fc6eec900a6639",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40c16aaaaaaaaaab",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8917,
+            "total_returned": 8917,
+            "backend_calls": 3,
+            "backend_input_used": 11956,
+            "backend_output_produced": 12207,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 13013,
+            "output_end": 16303,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 3763,
+              "null_input": false,
+              "input_sha256": "2c063cbdebaf5a0939c03d73f5f25cd3f0ac84d55c335f325e8232d4cf442e27",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 4096,
+              "used": 3763,
+              "produced": 4070,
+              "output_sha256": "46341b812d3d7a4b3e4b351f46120e9504ac22b2f079628807f60be15a318667"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-48000-alternating-positive-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 48000,
+      "channels": 2,
+      "pattern": "alternating",
+      "initial": {
+        "ratio_bits": "3ff16a3b35fc845b",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 4096,
+        "discard": 4096,
+        "input_capacity": 65536,
+        "output_capacity": 76452,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 4096,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 4820,
+          "output_sha256": "9dd148b4a91f0586d15af538417206d18ab3a4a898957e20af8180bb176dbba2",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40b2d4766bf908b6",
+            "cumulative_input": 8192,
+            "cumulative_visible": 4820,
+            "total_returned": 4820,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8137,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8916,
+            "output_end": 12233,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "4232c3da27c4ec2657b5e56ffe5c12e49015f8faf4fe88c3e743246735656008",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "bf000000",
+                "3e800000"
+              ],
+              "requested": 8916,
+              "used": 8192,
+              "produced": 8137,
+              "output_sha256": "a3e814b00e6be1c33af92f4beb6fd4fa5ace261617ec4ab57634e03dc7844002"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 4097,
+          "output_sha256": "a9c36693bf9e0e4c051e6e41a462344ec08b9c14165ff258c223928b6e790b89",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40c16aaaaaaaaaab",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8917,
+            "total_returned": 8917,
+            "backend_calls": 3,
+            "backend_input_used": 11956,
+            "backend_output_produced": 12207,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 13013,
+            "output_end": 16303,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "53c0f587cb612b4908eff791773b2b8cd805eca616e5877a07b5a744c02e9c46",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "input_frames": 3763,
+              "null_input": false,
+              "input_sha256": "fd9496a362dc8ca4b5a2ba353a3772b5ca01599a07e302bcb21554fdd082672a",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "requested": 4096,
+              "used": 3763,
+              "produced": 4070,
+              "output_sha256": "a384147d29b0680986f332d0d70f576e7888721e2eef4e1be36f96624d3e66be"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-48000-alternating-null-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 48000,
+      "channels": 2,
+      "pattern": "alternating",
+      "initial": {
+        "ratio_bits": "3ff16a3b35fc845b",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 4096,
+        "discard": 4096,
+        "input_capacity": 65536,
+        "output_capacity": 76452,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 4096,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 4820,
+          "output_sha256": "9dd148b4a91f0586d15af538417206d18ab3a4a898957e20af8180bb176dbba2",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40b2d4766bf908b6",
+            "cumulative_input": 8192,
+            "cumulative_visible": 4820,
+            "total_returned": 4820,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8137,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8916,
+            "output_end": 12233,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "4232c3da27c4ec2657b5e56ffe5c12e49015f8faf4fe88c3e743246735656008",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "bf000000",
+                "3e800000"
+              ],
+              "requested": 8916,
+              "used": 8192,
+              "produced": 8137,
+              "output_sha256": "a3e814b00e6be1c33af92f4beb6fd4fa5ace261617ec4ab57634e03dc7844002"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": false,
+          "returned": 1,
+          "output_sha256": "b7cddb55820d46801118d1354ced01074c84fbedeb4f9e038354fc57a88f7e07",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40b2d58d0fac687e",
+            "cumulative_input": 8193,
+            "cumulative_visible": 4821,
+            "total_returned": 4821,
+            "backend_calls": 2,
+            "backend_input_used": 8193,
+            "backend_output_produced": 8137,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8917,
+            "output_end": 12233,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "53c0f587cb612b4908eff791773b2b8cd805eca616e5877a07b5a744c02e9c46",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          ]
+        },
+        {
+          "input_frames": 0,
+          "final": true,
+          "returned": 4096,
+          "output_sha256": "4304d324ef45fd4e5247f00c2e3c7df25829b44c8eb38d748fd1e00496e55d89",
+          "snapshot": {
+            "ratio_bits": "3ff16a3b35fc845b",
+            "cumulative_ideal_bits": "40c16aaaaaaaaaab",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8917,
+            "total_returned": 8917,
+            "backend_calls": 3,
+            "backend_input_used": 11956,
+            "backend_output_produced": 12207,
+            "channels": 2,
+            "delay": 4096,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 76452,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 13013,
+            "output_end": 16303,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 3763,
+              "null_input": false,
+              "input_sha256": "2c063cbdebaf5a0939c03d73f5f25cd3f0ac84d55c335f325e8232d4cf442e27",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 4096,
+              "used": 3763,
+              "produced": 4070,
+              "output_sha256": "34069dbfa1f143aad5e93263d6829d86d06da713c52711c31967f5a56e5a6f7c"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "48000-44100-impulse-positive-final",
+      "policy": "public",
+      "source": 48000,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "impulse",
+      "initial": {
+        "ratio_bits": "3fed666666666666",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 63284,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 5478,
+          "output_sha256": "94fa3e7d1c46c00b9c88995c343dd21e23b82200102f8bae429a1c211089cd1e",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40b5666666666666",
+            "cumulative_input": 8192,
+            "cumulative_visible": 5478,
+            "total_returned": 5478,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 6420,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 7526,
+            "output_end": 8468,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "7c6d4cc11c18c6a7342e419b6af58dbfdf10df0ea59526f8b6fdb1855bcde35a",
+              "first_bits": [
+                "3f000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 7526,
+              "used": 8192,
+              "produced": 6420,
+              "output_sha256": "6334601cfa9d24a5c430d13617c72ca723cbe7dcdec70f6ae59d7b977f12a919"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 2049,
+          "output_sha256": "f3e70dac36eb1b853d669f00f457c97c2f37cb5d8ae245305d05d661439365a7",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40bd673666666666",
+            "cumulative_input": 8193,
+            "cumulative_visible": 7527,
+            "total_returned": 7527,
+            "backend_calls": 3,
+            "backend_input_used": 10422,
+            "backend_output_produced": 8026,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 9575,
+            "output_end": 10074,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "input_frames": 2229,
+              "null_input": false,
+              "input_sha256": "727746881d6842df4f78b26ce23330652ec8e459c68c2cddb7d4410db1b2c61a",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 2048,
+              "used": 2229,
+              "produced": 1606,
+              "output_sha256": "d285c9ed9f8dcbc2a314ba601554608e88e339a25aa037aa2f48a6fbdc9224e4"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "48000-44100-impulse-null-final",
+      "policy": "public",
+      "source": 48000,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "impulse",
+      "initial": {
+        "ratio_bits": "3fed666666666666",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 63284,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 5478,
+          "output_sha256": "94fa3e7d1c46c00b9c88995c343dd21e23b82200102f8bae429a1c211089cd1e",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40b5666666666666",
+            "cumulative_input": 8192,
+            "cumulative_visible": 5478,
+            "total_returned": 5478,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 6420,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 7526,
+            "output_end": 8468,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "7c6d4cc11c18c6a7342e419b6af58dbfdf10df0ea59526f8b6fdb1855bcde35a",
+              "first_bits": [
+                "3f000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 7526,
+              "used": 8192,
+              "produced": 6420,
+              "output_sha256": "6334601cfa9d24a5c430d13617c72ca723cbe7dcdec70f6ae59d7b977f12a919"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": false,
+          "returned": 1,
+          "output_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40b5675199999999",
+            "cumulative_input": 8193,
+            "cumulative_visible": 5479,
+            "total_returned": 5479,
+            "backend_calls": 2,
+            "backend_input_used": 8193,
+            "backend_output_produced": 6420,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 7527,
+            "output_end": 8468,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          ]
+        },
+        {
+          "input_frames": 0,
+          "final": true,
+          "returned": 2048,
+          "output_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40bd673666666666",
+            "cumulative_input": 8193,
+            "cumulative_visible": 7527,
+            "total_returned": 7527,
+            "backend_calls": 3,
+            "backend_input_used": 10422,
+            "backend_output_produced": 8026,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 9575,
+            "output_end": 10074,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 2229,
+              "null_input": false,
+              "input_sha256": "727746881d6842df4f78b26ce23330652ec8e459c68c2cddb7d4410db1b2c61a",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 2048,
+              "used": 2229,
+              "produced": 1606,
+              "output_sha256": "d285c9ed9f8dcbc2a314ba601554608e88e339a25aa037aa2f48a6fbdc9224e4"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "48000-44100-ramp-positive-final",
+      "policy": "public",
+      "source": 48000,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "ramp",
+      "initial": {
+        "ratio_bits": "3fed666666666666",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 63284,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 5478,
+          "output_sha256": "f571e18650aadecb404ca5bc78311c667e04cf74453f4787737629253717ade2",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40b5666666666666",
+            "cumulative_input": 8192,
+            "cumulative_visible": 5478,
+            "total_returned": 5478,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 6420,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 7526,
+            "output_end": 8468,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "91d745c91013a401b65c508eae191dd8bfe626937b2675b6c8be97144c1ae80a",
+              "first_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "last_bits": [
+                "427e0000",
+                "3e700000"
+              ],
+              "requested": 7526,
+              "used": 8192,
+              "produced": 6420,
+              "output_sha256": "2be7bda4cb935b9627d6ac0cbe86715cf677f58bea2275f8fcb9046a4cdab854"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 2049,
+          "output_sha256": "71417c0e3bac094de7bf053dd240cc9ce801f1a2546eb699bfddf3e5c24505e9",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40bd673666666666",
+            "cumulative_input": 8193,
+            "cumulative_visible": 7527,
+            "total_returned": 7527,
+            "backend_calls": 3,
+            "backend_input_used": 10422,
+            "backend_output_produced": 8026,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 9575,
+            "output_end": 10074,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "344d9f506a0cbc9be022e10ee34686767def7449b53818debc921353216e10ea",
+              "first_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "last_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "input_frames": 2229,
+              "null_input": false,
+              "input_sha256": "c6bbc9efd96927c5486da621bfdb17f9506f25252d33403a25d02131bc9cb555",
+              "first_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "last_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "requested": 2048,
+              "used": 2229,
+              "produced": 1606,
+              "output_sha256": "ac6e3c75baa594d83fa3a8f4bbfde8beeade83c949793aab8c9d76ff53615c38"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "48000-44100-ramp-null-final",
+      "policy": "public",
+      "source": 48000,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "ramp",
+      "initial": {
+        "ratio_bits": "3fed666666666666",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 63284,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 5478,
+          "output_sha256": "f571e18650aadecb404ca5bc78311c667e04cf74453f4787737629253717ade2",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40b5666666666666",
+            "cumulative_input": 8192,
+            "cumulative_visible": 5478,
+            "total_returned": 5478,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 6420,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 7526,
+            "output_end": 8468,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "91d745c91013a401b65c508eae191dd8bfe626937b2675b6c8be97144c1ae80a",
+              "first_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "last_bits": [
+                "427e0000",
+                "3e700000"
+              ],
+              "requested": 7526,
+              "used": 8192,
+              "produced": 6420,
+              "output_sha256": "2be7bda4cb935b9627d6ac0cbe86715cf677f58bea2275f8fcb9046a4cdab854"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": false,
+          "returned": 1,
+          "output_sha256": "61a11fbec2cd70d38df96579120a063f6c45fae2e417f0dad8af7994c2e4f17d",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40b5675199999999",
+            "cumulative_input": 8193,
+            "cumulative_visible": 5479,
+            "total_returned": 5479,
+            "backend_calls": 2,
+            "backend_input_used": 8193,
+            "backend_output_produced": 6420,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 7527,
+            "output_end": 8468,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "344d9f506a0cbc9be022e10ee34686767def7449b53818debc921353216e10ea",
+              "first_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "last_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          ]
+        },
+        {
+          "input_frames": 0,
+          "final": true,
+          "returned": 2048,
+          "output_sha256": "f1440dc7551838d72e5288c3ca76f6a3882bd1962e65d2dd8dbab9c33f9d9329",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40bd673666666666",
+            "cumulative_input": 8193,
+            "cumulative_visible": 7527,
+            "total_returned": 7527,
+            "backend_calls": 3,
+            "backend_input_used": 10422,
+            "backend_output_produced": 8026,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 9575,
+            "output_end": 10074,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 2229,
+              "null_input": false,
+              "input_sha256": "727746881d6842df4f78b26ce23330652ec8e459c68c2cddb7d4410db1b2c61a",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 2048,
+              "used": 2229,
+              "produced": 1606,
+              "output_sha256": "5b53ebd906a60bccfbf4f03f39583106d991c188393c92353abfe45e6cff131c"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "48000-44100-nonzero-last-positive-final",
+      "policy": "public",
+      "source": 48000,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "nonzero-last",
+      "initial": {
+        "ratio_bits": "3fed666666666666",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 63284,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 5478,
+          "output_sha256": "0c579c4edb17704d1418977174bea6c2f0fd85cd5b1aa45074401df0de863c80",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40b5666666666666",
+            "cumulative_input": 8192,
+            "cumulative_visible": 5478,
+            "total_returned": 5478,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 6420,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 7526,
+            "output_end": 8468,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 7526,
+              "used": 8192,
+              "produced": 6420,
+              "output_sha256": "1fbdfab2e2b94fe7370412a5235d09fc7bb6735f00400634e7d29b343ec77900"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 2049,
+          "output_sha256": "f8d8f0e51c6d4fec038af8b47496cfc29fef8bf6c8a413768187e653d2feadb1",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40bd673666666666",
+            "cumulative_input": 8193,
+            "cumulative_visible": 7527,
+            "total_returned": 7527,
+            "backend_calls": 3,
+            "backend_input_used": 10422,
+            "backend_output_produced": 8026,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 9575,
+            "output_end": 10074,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "13f79938240447ab0c713836a98b4da2746e3b50552ad12d04ba0a670e2a593c",
+              "first_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "last_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "input_frames": 2229,
+              "null_input": false,
+              "input_sha256": "3df5bcd3f660b6a3780f91e42f247d4c314069751beb3a319a418536668fadbc",
+              "first_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "last_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "requested": 2048,
+              "used": 2229,
+              "produced": 1606,
+              "output_sha256": "3785e54c8db75d90524d32827bbef8a8eb5eaff730b67a5bbdcd35dbdee211b0"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "48000-44100-nonzero-last-null-final",
+      "policy": "public",
+      "source": 48000,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "nonzero-last",
+      "initial": {
+        "ratio_bits": "3fed666666666666",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 63284,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 5478,
+          "output_sha256": "0c579c4edb17704d1418977174bea6c2f0fd85cd5b1aa45074401df0de863c80",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40b5666666666666",
+            "cumulative_input": 8192,
+            "cumulative_visible": 5478,
+            "total_returned": 5478,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 6420,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 7526,
+            "output_end": 8468,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 7526,
+              "used": 8192,
+              "produced": 6420,
+              "output_sha256": "1fbdfab2e2b94fe7370412a5235d09fc7bb6735f00400634e7d29b343ec77900"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": false,
+          "returned": 1,
+          "output_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40b5675199999999",
+            "cumulative_input": 8193,
+            "cumulative_visible": 5479,
+            "total_returned": 5479,
+            "backend_calls": 2,
+            "backend_input_used": 8193,
+            "backend_output_produced": 6420,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 7527,
+            "output_end": 8468,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "13f79938240447ab0c713836a98b4da2746e3b50552ad12d04ba0a670e2a593c",
+              "first_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "last_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          ]
+        },
+        {
+          "input_frames": 0,
+          "final": true,
+          "returned": 2048,
+          "output_sha256": "131ab2a56a1cdceba96602ce31b88f7fc572e0431427ae59cfd2aa939672913d",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40bd673666666666",
+            "cumulative_input": 8193,
+            "cumulative_visible": 7527,
+            "total_returned": 7527,
+            "backend_calls": 3,
+            "backend_input_used": 10422,
+            "backend_output_produced": 8026,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 9575,
+            "output_end": 10074,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 2229,
+              "null_input": false,
+              "input_sha256": "727746881d6842df4f78b26ce23330652ec8e459c68c2cddb7d4410db1b2c61a",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 2048,
+              "used": 2229,
+              "produced": 1606,
+              "output_sha256": "391b4f2b9045c471b2d681e732e3cf4190c1e6fb1b7af7accc71cbda00b03695"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "48000-44100-alternating-positive-final",
+      "policy": "public",
+      "source": 48000,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "alternating",
+      "initial": {
+        "ratio_bits": "3fed666666666666",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 63284,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 5478,
+          "output_sha256": "68ea7977532d0a05e0ab1dfbe07e049f20c7c9a62bb36e9f9accfb8a530c82ef",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40b5666666666666",
+            "cumulative_input": 8192,
+            "cumulative_visible": 5478,
+            "total_returned": 5478,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 6420,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 7526,
+            "output_end": 8468,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "4232c3da27c4ec2657b5e56ffe5c12e49015f8faf4fe88c3e743246735656008",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "bf000000",
+                "3e800000"
+              ],
+              "requested": 7526,
+              "used": 8192,
+              "produced": 6420,
+              "output_sha256": "dd9491654ae7ec03f0a248caff7333757e51d3c652092c36a6af51c6bb425dbb"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 2049,
+          "output_sha256": "0394181aca0e992d29e43033b3c9baf05d6beeaf7b5116acba0a43793276196d",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40bd673666666666",
+            "cumulative_input": 8193,
+            "cumulative_visible": 7527,
+            "total_returned": 7527,
+            "backend_calls": 3,
+            "backend_input_used": 10422,
+            "backend_output_produced": 8026,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 9575,
+            "output_end": 10074,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "53c0f587cb612b4908eff791773b2b8cd805eca616e5877a07b5a744c02e9c46",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "input_frames": 2229,
+              "null_input": false,
+              "input_sha256": "3dfd2858ef1cf0ed3c75d111b860b70b36e93ddb978a38b8986ee72e7c777260",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "requested": 2048,
+              "used": 2229,
+              "produced": 1606,
+              "output_sha256": "c2bc11082d439cccecfd1a7f978fa02cbc2a43f0739c13a6f955aa837fc48249"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "48000-44100-alternating-null-final",
+      "policy": "public",
+      "source": 48000,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "alternating",
+      "initial": {
+        "ratio_bits": "3fed666666666666",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 63284,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 5478,
+          "output_sha256": "68ea7977532d0a05e0ab1dfbe07e049f20c7c9a62bb36e9f9accfb8a530c82ef",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40b5666666666666",
+            "cumulative_input": 8192,
+            "cumulative_visible": 5478,
+            "total_returned": 5478,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 6420,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 7526,
+            "output_end": 8468,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "4232c3da27c4ec2657b5e56ffe5c12e49015f8faf4fe88c3e743246735656008",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "bf000000",
+                "3e800000"
+              ],
+              "requested": 7526,
+              "used": 8192,
+              "produced": 6420,
+              "output_sha256": "dd9491654ae7ec03f0a248caff7333757e51d3c652092c36a6af51c6bb425dbb"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": false,
+          "returned": 1,
+          "output_sha256": "66bfeb3d8fcf33318c58a10cf0a2750d16b95b8bfff773bd7f76079992a78e19",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40b5675199999999",
+            "cumulative_input": 8193,
+            "cumulative_visible": 5479,
+            "total_returned": 5479,
+            "backend_calls": 2,
+            "backend_input_used": 8193,
+            "backend_output_produced": 6420,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 7527,
+            "output_end": 8468,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "53c0f587cb612b4908eff791773b2b8cd805eca616e5877a07b5a744c02e9c46",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          ]
+        },
+        {
+          "input_frames": 0,
+          "final": true,
+          "returned": 2048,
+          "output_sha256": "eeb4159259a669d797133ed5d328f0872cd313102db14602642a11505bd62a5f",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40bd673666666666",
+            "cumulative_input": 8193,
+            "cumulative_visible": 7527,
+            "total_returned": 7527,
+            "backend_calls": 3,
+            "backend_input_used": 10422,
+            "backend_output_produced": 8026,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 9575,
+            "output_end": 10074,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 2229,
+              "null_input": false,
+              "input_sha256": "727746881d6842df4f78b26ce23330652ec8e459c68c2cddb7d4410db1b2c61a",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 2048,
+              "used": 2229,
+              "produced": 1606,
+              "output_sha256": "39ccf454ba23c9dc681e2706ad9ece57a438e3e21dea93e0c8576fc7c861dc20"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-44100-impulse-positive-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "impulse",
+      "initial": {
+        "ratio_bits": "3ff0000000000000",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 68608,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 6144,
+          "output_sha256": "ad97382f9bfc3004c4b8d6de8d6d12f0781b9268bc70d9458f2cba062015ac70",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40b8000000000000",
+            "cumulative_input": 8192,
+            "cumulative_visible": 6144,
+            "total_returned": 6144,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8192,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8192,
+            "output_end": 10240,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "7c6d4cc11c18c6a7342e419b6af58dbfdf10df0ea59526f8b6fdb1855bcde35a",
+              "first_bits": [
+                "3f000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 8192,
+              "used": 8192,
+              "produced": 8192,
+              "output_sha256": "7c6d4cc11c18c6a7342e419b6af58dbfdf10df0ea59526f8b6fdb1855bcde35a"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 2049,
+          "output_sha256": "f3e70dac36eb1b853d669f00f457c97c2f37cb5d8ae245305d05d661439365a7",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40c0008000000000",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8193,
+            "total_returned": 8193,
+            "backend_calls": 3,
+            "backend_input_used": 10241,
+            "backend_output_produced": 10241,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 10241,
+            "output_end": 12289,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 1,
+              "output_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+            },
+            {
+              "input_frames": 2048,
+              "null_input": false,
+              "input_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 2048,
+              "used": 2048,
+              "produced": 2048,
+              "output_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-44100-impulse-null-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "impulse",
+      "initial": {
+        "ratio_bits": "3ff0000000000000",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 68608,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 6144,
+          "output_sha256": "ad97382f9bfc3004c4b8d6de8d6d12f0781b9268bc70d9458f2cba062015ac70",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40b8000000000000",
+            "cumulative_input": 8192,
+            "cumulative_visible": 6144,
+            "total_returned": 6144,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8192,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8192,
+            "output_end": 10240,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "7c6d4cc11c18c6a7342e419b6af58dbfdf10df0ea59526f8b6fdb1855bcde35a",
+              "first_bits": [
+                "3f000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 8192,
+              "used": 8192,
+              "produced": 8192,
+              "output_sha256": "7c6d4cc11c18c6a7342e419b6af58dbfdf10df0ea59526f8b6fdb1855bcde35a"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": false,
+          "returned": 1,
+          "output_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40b8010000000000",
+            "cumulative_input": 8193,
+            "cumulative_visible": 6145,
+            "total_returned": 6145,
+            "backend_calls": 2,
+            "backend_input_used": 8193,
+            "backend_output_produced": 8193,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8193,
+            "output_end": 10241,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 1,
+              "output_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+            }
+          ]
+        },
+        {
+          "input_frames": 0,
+          "final": true,
+          "returned": 2048,
+          "output_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40c0008000000000",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8193,
+            "total_returned": 8193,
+            "backend_calls": 3,
+            "backend_input_used": 10241,
+            "backend_output_produced": 10241,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 10241,
+            "output_end": 12289,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 2048,
+              "null_input": false,
+              "input_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 2048,
+              "used": 2048,
+              "produced": 2048,
+              "output_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-44100-ramp-positive-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "ramp",
+      "initial": {
+        "ratio_bits": "3ff0000000000000",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 68608,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 6144,
+          "output_sha256": "5a07d280f070772ad95c6372b082c5ded9a3e0ac1c512426adc792f0c735cd03",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40b8000000000000",
+            "cumulative_input": 8192,
+            "cumulative_visible": 6144,
+            "total_returned": 6144,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8192,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8192,
+            "output_end": 10240,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "91d745c91013a401b65c508eae191dd8bfe626937b2675b6c8be97144c1ae80a",
+              "first_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "last_bits": [
+                "427e0000",
+                "3e700000"
+              ],
+              "requested": 8192,
+              "used": 8192,
+              "produced": 8192,
+              "output_sha256": "91d745c91013a401b65c508eae191dd8bfe626937b2675b6c8be97144c1ae80a"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 2049,
+          "output_sha256": "7d37816771f4e3367add91002d39fedfa0eeef3716b810e55a422d135db0428f",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40c0008000000000",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8193,
+            "total_returned": 8193,
+            "backend_calls": 3,
+            "backend_input_used": 10241,
+            "backend_output_produced": 10241,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 10241,
+            "output_end": 12289,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "344d9f506a0cbc9be022e10ee34686767def7449b53818debc921353216e10ea",
+              "first_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "last_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 1,
+              "output_sha256": "344d9f506a0cbc9be022e10ee34686767def7449b53818debc921353216e10ea"
+            },
+            {
+              "input_frames": 2048,
+              "null_input": false,
+              "input_sha256": "ce4f1151fc14b6e974202f272bc825af3d48bf99fb17c12535133f570f97080e",
+              "first_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "last_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "requested": 2048,
+              "used": 2048,
+              "produced": 2048,
+              "output_sha256": "ce4f1151fc14b6e974202f272bc825af3d48bf99fb17c12535133f570f97080e"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-44100-ramp-null-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "ramp",
+      "initial": {
+        "ratio_bits": "3ff0000000000000",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 68608,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 6144,
+          "output_sha256": "5a07d280f070772ad95c6372b082c5ded9a3e0ac1c512426adc792f0c735cd03",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40b8000000000000",
+            "cumulative_input": 8192,
+            "cumulative_visible": 6144,
+            "total_returned": 6144,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8192,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8192,
+            "output_end": 10240,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "91d745c91013a401b65c508eae191dd8bfe626937b2675b6c8be97144c1ae80a",
+              "first_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "last_bits": [
+                "427e0000",
+                "3e700000"
+              ],
+              "requested": 8192,
+              "used": 8192,
+              "produced": 8192,
+              "output_sha256": "91d745c91013a401b65c508eae191dd8bfe626937b2675b6c8be97144c1ae80a"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": false,
+          "returned": 1,
+          "output_sha256": "7ac026f68649eea00c2b2147ebf508a4592725efcc8ff0ea13903c4aa9b33980",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40b8010000000000",
+            "cumulative_input": 8193,
+            "cumulative_visible": 6145,
+            "total_returned": 6145,
+            "backend_calls": 2,
+            "backend_input_used": 8193,
+            "backend_output_produced": 8193,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8193,
+            "output_end": 10241,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "344d9f506a0cbc9be022e10ee34686767def7449b53818debc921353216e10ea",
+              "first_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "last_bits": [
+                "427e0800",
+                "be580000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 1,
+              "output_sha256": "344d9f506a0cbc9be022e10ee34686767def7449b53818debc921353216e10ea"
+            }
+          ]
+        },
+        {
+          "input_frames": 0,
+          "final": true,
+          "returned": 2048,
+          "output_sha256": "66a617d8d27c40a7f6d3473fbc7c7d6b4ec4166284afd663a84adeda2dd97542",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40c0008000000000",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8193,
+            "total_returned": 8193,
+            "backend_calls": 3,
+            "backend_input_used": 10241,
+            "backend_output_produced": 10241,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 10241,
+            "output_end": 12289,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 2048,
+              "null_input": false,
+              "input_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 2048,
+              "used": 2048,
+              "produced": 2048,
+              "output_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-44100-nonzero-last-positive-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "nonzero-last",
+      "initial": {
+        "ratio_bits": "3ff0000000000000",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 68608,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 6144,
+          "output_sha256": "2aae7dc846aaf25f1cadf55f1666862046c6db9d65d84bdc07fa039dac405606",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40b8000000000000",
+            "cumulative_input": 8192,
+            "cumulative_visible": 6144,
+            "total_returned": 6144,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8192,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8192,
+            "output_end": 10240,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 8192,
+              "used": 8192,
+              "produced": 8192,
+              "output_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 2049,
+          "output_sha256": "9088c2e14af1f7966000bdfc62fc9c3809d5b5008c85cbb6be6aec2c7b3bddcc",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40c0008000000000",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8193,
+            "total_returned": 8193,
+            "backend_calls": 3,
+            "backend_input_used": 10241,
+            "backend_output_produced": 10241,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 10241,
+            "output_end": 12289,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "13f79938240447ab0c713836a98b4da2746e3b50552ad12d04ba0a670e2a593c",
+              "first_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "last_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 1,
+              "output_sha256": "13f79938240447ab0c713836a98b4da2746e3b50552ad12d04ba0a670e2a593c"
+            },
+            {
+              "input_frames": 2048,
+              "null_input": false,
+              "input_sha256": "c50b9ee48d7ac653641782c03b52af16d7b971912649f24cfe8013b740863ff4",
+              "first_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "last_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "requested": 2048,
+              "used": 2048,
+              "produced": 2048,
+              "output_sha256": "c50b9ee48d7ac653641782c03b52af16d7b971912649f24cfe8013b740863ff4"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-44100-nonzero-last-null-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "nonzero-last",
+      "initial": {
+        "ratio_bits": "3ff0000000000000",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 68608,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 6144,
+          "output_sha256": "2aae7dc846aaf25f1cadf55f1666862046c6db9d65d84bdc07fa039dac405606",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40b8000000000000",
+            "cumulative_input": 8192,
+            "cumulative_visible": 6144,
+            "total_returned": 6144,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8192,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8192,
+            "output_end": 10240,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 8192,
+              "used": 8192,
+              "produced": 8192,
+              "output_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": false,
+          "returned": 1,
+          "output_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40b8010000000000",
+            "cumulative_input": 8193,
+            "cumulative_visible": 6145,
+            "total_returned": 6145,
+            "backend_calls": 2,
+            "backend_input_used": 8193,
+            "backend_output_produced": 8193,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8193,
+            "output_end": 10241,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "13f79938240447ab0c713836a98b4da2746e3b50552ad12d04ba0a670e2a593c",
+              "first_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "last_bits": [
+                "3ec00000",
+                "bec00000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 1,
+              "output_sha256": "13f79938240447ab0c713836a98b4da2746e3b50552ad12d04ba0a670e2a593c"
+            }
+          ]
+        },
+        {
+          "input_frames": 0,
+          "final": true,
+          "returned": 2048,
+          "output_sha256": "0cfc3628aa7897c9e9a71c673cb2338a85a303aef87a076dd0407fde879c8c5f",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40c0008000000000",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8193,
+            "total_returned": 8193,
+            "backend_calls": 3,
+            "backend_input_used": 10241,
+            "backend_output_produced": 10241,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 10241,
+            "output_end": 12289,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 2048,
+              "null_input": false,
+              "input_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 2048,
+              "used": 2048,
+              "produced": 2048,
+              "output_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-44100-alternating-positive-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "alternating",
+      "initial": {
+        "ratio_bits": "3ff0000000000000",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 68608,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 6144,
+          "output_sha256": "9b281830f4bf52cf5772c2459c253ecb14d6106b8532c2c14a06f46811fa1aa8",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40b8000000000000",
+            "cumulative_input": 8192,
+            "cumulative_visible": 6144,
+            "total_returned": 6144,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8192,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8192,
+            "output_end": 10240,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "4232c3da27c4ec2657b5e56ffe5c12e49015f8faf4fe88c3e743246735656008",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "bf000000",
+                "3e800000"
+              ],
+              "requested": 8192,
+              "used": 8192,
+              "produced": 8192,
+              "output_sha256": "4232c3da27c4ec2657b5e56ffe5c12e49015f8faf4fe88c3e743246735656008"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 2049,
+          "output_sha256": "2966d23ea1114c45b5549957189e5f515e3a210dc9d157917395e90df1a3538e",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40c0008000000000",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8193,
+            "total_returned": 8193,
+            "backend_calls": 3,
+            "backend_input_used": 10241,
+            "backend_output_produced": 10241,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 10241,
+            "output_end": 12289,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "53c0f587cb612b4908eff791773b2b8cd805eca616e5877a07b5a744c02e9c46",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 1,
+              "output_sha256": "53c0f587cb612b4908eff791773b2b8cd805eca616e5877a07b5a744c02e9c46"
+            },
+            {
+              "input_frames": 2048,
+              "null_input": false,
+              "input_sha256": "9950cbad4cc27ca5ea37376bd6f4cc9aa64d1b319b06d2de5df2cab02d4cb6d9",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "requested": 2048,
+              "used": 2048,
+              "produced": 2048,
+              "output_sha256": "9950cbad4cc27ca5ea37376bd6f4cc9aa64d1b319b06d2de5df2cab02d4cb6d9"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "44100-44100-alternating-null-final",
+      "policy": "public",
+      "source": 44100,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "alternating",
+      "initial": {
+        "ratio_bits": "3ff0000000000000",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 68608,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 8192,
+          "final": false,
+          "returned": 6144,
+          "output_sha256": "9b281830f4bf52cf5772c2459c253ecb14d6106b8532c2c14a06f46811fa1aa8",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40b8000000000000",
+            "cumulative_input": 8192,
+            "cumulative_visible": 6144,
+            "total_returned": 6144,
+            "backend_calls": 1,
+            "backend_input_used": 8192,
+            "backend_output_produced": 8192,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8192,
+            "output_end": 10240,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 8192,
+              "null_input": false,
+              "input_sha256": "4232c3da27c4ec2657b5e56ffe5c12e49015f8faf4fe88c3e743246735656008",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "bf000000",
+                "3e800000"
+              ],
+              "requested": 8192,
+              "used": 8192,
+              "produced": 8192,
+              "output_sha256": "4232c3da27c4ec2657b5e56ffe5c12e49015f8faf4fe88c3e743246735656008"
+            }
+          ]
+        },
+        {
+          "input_frames": 1,
+          "final": false,
+          "returned": 1,
+          "output_sha256": "53c0f587cb612b4908eff791773b2b8cd805eca616e5877a07b5a744c02e9c46",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40b8010000000000",
+            "cumulative_input": 8193,
+            "cumulative_visible": 6145,
+            "total_returned": 6145,
+            "backend_calls": 2,
+            "backend_input_used": 8193,
+            "backend_output_produced": 8193,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 8193,
+            "output_end": 10241,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "53c0f587cb612b4908eff791773b2b8cd805eca616e5877a07b5a744c02e9c46",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 1,
+              "output_sha256": "53c0f587cb612b4908eff791773b2b8cd805eca616e5877a07b5a744c02e9c46"
+            }
+          ]
+        },
+        {
+          "input_frames": 0,
+          "final": true,
+          "returned": 2048,
+          "output_sha256": "a4e4fbc510964105eb16f8e91023bf95359be18286f0829d11627d1977531b02",
+          "snapshot": {
+            "ratio_bits": "3ff0000000000000",
+            "cumulative_ideal_bits": "40c0008000000000",
+            "cumulative_input": 8193,
+            "cumulative_visible": 8193,
+            "total_returned": 8193,
+            "backend_calls": 3,
+            "backend_input_used": 10241,
+            "backend_output_produced": 10241,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 68608,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 10241,
+            "output_end": 12289,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 2048,
+              "null_input": false,
+              "input_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+              "first_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "last_bits": [
+                "00000000",
+                "00000000"
+              ],
+              "requested": 2048,
+              "used": 2048,
+              "produced": 2048,
+              "output_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "48000-44100-alternating-compactions",
+      "policy": "public",
+      "source": 48000,
+      "output": 44100,
+      "channels": 2,
+      "pattern": "alternating",
+      "initial": {
+        "ratio_bits": "3fed666666666666",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 63284,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 30000,
+          "final": false,
+          "returned": 25514,
+          "output_sha256": "235a3fed2c8ea0e6573aa49bd9fa7e3638909472ba33a114d77e299bacdbbafb",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40d8eaa000000000",
+            "cumulative_input": 30000,
+            "cumulative_visible": 25514,
+            "total_returned": 25514,
+            "backend_calls": 1,
+            "backend_input_used": 30000,
+            "backend_output_produced": 27297,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 27562,
+            "output_end": 29345,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 30000,
+              "null_input": false,
+              "input_sha256": "734ce11c52300464665d077d3a9b977d0c343934bf48167440dfc3e50d362cbf",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "bf000000",
+                "3e800000"
+              ],
+              "requested": 27562,
+              "used": 30000,
+              "produced": 27297,
+              "output_sha256": "d74220fd6e01475f5257f1597fe5ae366cff8cf2b724fce60f9780d01665f578"
+            }
+          ]
+        },
+        {
+          "input_frames": 30000,
+          "final": false,
+          "returned": 27562,
+          "output_sha256": "29e96c9d92df30d962f84bb5f6bccddf7fabb6dd33907c9b571711bd50bdde32",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40e9eaa000000000",
+            "cumulative_input": 60000,
+            "cumulative_visible": 53076,
+            "total_returned": 53076,
+            "backend_calls": 2,
+            "backend_input_used": 60000,
+            "backend_output_produced": 54599,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 27562,
+            "output_end": 29085,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 30000,
+              "null_input": false,
+              "input_sha256": "734ce11c52300464665d077d3a9b977d0c343934bf48167440dfc3e50d362cbf",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "bf000000",
+                "3e800000"
+              ],
+              "requested": 27562,
+              "used": 30000,
+              "produced": 27302,
+              "output_sha256": "c16cb70acfd9599e7a1334ad68107d0f9b4fdd066e9807528312c5fc1345d9a7"
+            }
+          ]
+        },
+        {
+          "input_frames": 30000,
+          "final": false,
+          "returned": 27563,
+          "output_sha256": "02c8c58849f6a07e1191c09207323fb24141f8eec274c867537072a52d43ba52",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40f3aff800000000",
+            "cumulative_input": 90000,
+            "cumulative_visible": 80639,
+            "total_returned": 80639,
+            "backend_calls": 3,
+            "backend_input_used": 90000,
+            "backend_output_produced": 81901,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 27563,
+            "output_end": 28825,
+            "finished": 0,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 30000,
+              "null_input": false,
+              "input_sha256": "734ce11c52300464665d077d3a9b977d0c343934bf48167440dfc3e50d362cbf",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "bf000000",
+                "3e800000"
+              ],
+              "requested": 27563,
+              "used": 30000,
+              "produced": 27302,
+              "output_sha256": "a95453a7853ee783a2ec28e3e9b8187a4eac721926daa6df26c8861b1f924567"
+            }
+          ]
+        },
+        {
+          "input_frames": 1000,
+          "final": true,
+          "returned": 2967,
+          "output_sha256": "1fa25c106e05af526af70c97b9cc8e02b294288d9308cb1fd27e00ab80e4cc17",
+          "snapshot": {
+            "ratio_bits": "3fed666666666666",
+            "cumulative_ideal_bits": "40f469624ccccccd",
+            "cumulative_input": 91000,
+            "cumulative_visible": 83606,
+            "total_returned": 83606,
+            "backend_calls": 5,
+            "backend_input_used": 93229,
+            "backend_output_produced": 83949,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 63284,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 30530,
+            "output_end": 30873,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1000,
+              "null_input": false,
+              "input_sha256": "8a4b6fb7ac13b9658103bcc2ef61565a43850ee187848c17cd367201076b791f",
+              "first_bits": [
+                "3f000000",
+                "be800000"
+              ],
+              "last_bits": [
+                "bf000000",
+                "3e800000"
+              ],
+              "requested": 919,
+              "used": 1000,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "input_frames": 2229,
+              "null_input": false,
+              "input_sha256": "36a865d076d0a4c910671d4edd9f89ba70fcc181db033f3fc0b26e0f29ff7a3e",
+              "first_bits": [
+                "bf000000",
+                "3e800000"
+              ],
+              "last_bits": [
+                "bf000000",
+                "3e800000"
+              ],
+              "requested": 2048,
+              "used": 2229,
+              "produced": 2048,
+              "output_sha256": "bf5706d17fc1a6c8a1d5fa1201e9cc480ee85876113848c5f82913b5bdbf1b18"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "8000-192000-ramp-singleton",
+      "policy": "public",
+      "source": 8000,
+      "output": 192000,
+      "channels": 2,
+      "pattern": "ramp",
+      "initial": {
+        "ratio_bits": "4038000000000000",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 49152,
+        "discard": 49152,
+        "input_capacity": 65536,
+        "output_capacity": 1623040,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 49152,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 24,
+          "output_sha256": "95b9ecf738a117cd8f5537bd5e45c6035f67e4bb8ff682f9672d62c979484bea",
+          "snapshot": {
+            "ratio_bits": "4038000000000000",
+            "cumulative_ideal_bits": "4038000000000000",
+            "cumulative_input": 1,
+            "cumulative_visible": 24,
+            "total_returned": 24,
+            "backend_calls": 2,
+            "backend_input_used": 2049,
+            "backend_output_produced": 34560,
+            "channels": 2,
+            "delay": 49152,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 1623040,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 49176,
+            "output_end": 83712,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "49b5bb6ba661f8b812740b08bad0f1cd89c8bcfcab60fa5b5112dfad4657f15f",
+              "first_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "last_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "requested": 24,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "input_frames": 2048,
+              "null_input": false,
+              "input_sha256": "dec1df8ac4f2aea456eecd5becd69a78e4e56c1c843b74d26242738e3c3feb14",
+              "first_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "last_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "requested": 49152,
+              "used": 2048,
+              "produced": 34560,
+              "output_sha256": "fb8d77015a97d826e7a4a4d7347ad6a17a5c42df2403426614fd0c40afe0d691"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    },
+    {
+      "name": "192000-8000-ramp-singleton",
+      "policy": "public",
+      "source": 192000,
+      "output": 8000,
+      "channels": 2,
+      "pattern": "ramp",
+      "initial": {
+        "ratio_bits": "3fa5555555555555",
+        "cumulative_ideal_bits": "0000000000000000",
+        "cumulative_input": 0,
+        "cumulative_visible": 0,
+        "total_returned": 0,
+        "backend_calls": 0,
+        "backend_input_used": 0,
+        "backend_output_produced": 0,
+        "channels": 2,
+        "delay": 2048,
+        "discard": 2048,
+        "input_capacity": 65536,
+        "output_capacity": 5803,
+        "input_end": 0,
+        "input_consumed": 0,
+        "pending_input": 0,
+        "output_read": 0,
+        "output_end": 2048,
+        "finished": 0,
+        "failed": 0
+      },
+      "steps": [
+        {
+          "input_frames": 1,
+          "final": true,
+          "returned": 1,
+          "output_sha256": "b0bab2ebfdd85cde71006970d20d47f35c7dfcf7108038ab8f3822e946424e93",
+          "snapshot": {
+            "ratio_bits": "3fa5555555555555",
+            "cumulative_ideal_bits": "3ff0000000000000",
+            "cumulative_input": 1,
+            "cumulative_visible": 1,
+            "total_returned": 1,
+            "backend_calls": 2,
+            "backend_input_used": 49153,
+            "backend_output_produced": 1080,
+            "channels": 2,
+            "delay": 2048,
+            "discard": 0,
+            "input_capacity": 65536,
+            "output_capacity": 5803,
+            "input_end": 0,
+            "input_consumed": 0,
+            "pending_input": 0,
+            "output_read": 2048,
+            "output_end": 3127,
+            "finished": 1,
+            "failed": 0
+          },
+          "backend_calls": [
+            {
+              "input_frames": 1,
+              "null_input": false,
+              "input_sha256": "49b5bb6ba661f8b812740b08bad0f1cd89c8bcfcab60fa5b5112dfad4657f15f",
+              "first_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "last_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "requested": 1,
+              "used": 1,
+              "produced": 0,
+              "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "input_frames": 49152,
+              "null_input": false,
+              "input_sha256": "d2c30edb3d7c2c0352f1ab5f26772bd112f82eeb53f426a8baa5c7cf787ea2ae",
+              "first_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "last_bits": [
+                "befc0000",
+                "be820000"
+              ],
+              "requested": 2048,
+              "used": 49152,
+              "produced": 1080,
+              "output_sha256": "7701a525743fd7b77821ae47018e6caddd48020103e969101d1acff0ef7dc523"
+            }
+          ]
+        }
+      ],
+      "engine": "cr64"
+    }
+  ]
+}

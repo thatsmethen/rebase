@@ -72,7 +72,11 @@ public struct NativeTempoClock: Codable, Equatable {
     }
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        contract = try values.decode(String.self, forKey: .contract)
+        let storedContract = try values.decode(String.self, forKey: .contract)
+        let fixedContract = CPRContractMigration.normalize(storedContract, to: Self.fixedContract,
+            legacySHA256: "c4281baafdb89b707562d2ad937585d5d632ecbbb57bdfc37a5d94a9c374665b")
+        contract = CPRContractMigration.normalize(fixedContract, to: Self.mapContract,
+            legacySHA256: "88de8fca493a3bbebc8244b0f15c949b6f32a09191154df213d3f493f3a5c01f")
         fixedBPMBits = try values.decode(UInt32.self, forKey: .fixedBPMBits)
         mapRecords = try values.decodeIfPresent([NativeTempoMapRecord].self, forKey: .mapRecords)
         sourceSHA256 = try values.decode(String.self, forKey: .sourceSHA256)

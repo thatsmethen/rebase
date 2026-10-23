@@ -1,0 +1,64 @@
+{
+  "status": "10 new MusicalTimeTests passed",
+  "test_scope": "Synthetic application timing math, validation, Codable, explicit limits; no Cubase execution or conformity claim",
+  "test_log": "application-tests-isolated-output.log",
+  "first_build_log": "application-tests-output.log",
+  "first_build_outcome": "Timing source/tests compiled and linked, but app target failed while peer DAWProject implementation was not yet available. The already-linked test runner then executed successfully with swift test --skip-build --filter MusicalTimeTests.",
+  "coverage": [
+    "Known-duration step tempo integrals and both inverse directions across boundaries",
+    "Strict ordering, duplicate IDs, nonfinite/negative inputs, representability bounds and ramp rejection",
+    "4/4\u21923/4\u21926/8 bar continuity, tick scale, tick carry and invalid signature positions",
+    "Ordinary vs relative snap, preserved phase, nonnegative boundary and explicit signature-crossing rejection",
+    "Codable round-trip and validation after decoding"
+  ],
+  "independent_review": {
+    "reviewer": "/root/target_intake",
+    "result": "No actionable arithmetic or representability defect in declared bounded jump-only domain; inverse segment selection and signature carry/denominator tick splits consistent."
+  },
+  "read_only_reviews": {
+    "Automation.swift": "No actionable issue under precondition validate before repeated queries. Boundary/step/linear/read gate and transactional replacement inspected. No native behavior claim.",
+    "Project.swift": "replaceTempoMap atomically retimes musical starts and preserves duration/sourceOffset. Validation checks anchor consistency. Direct legacy tempo setter bypasses retiming, so callers must use replaceTempoMap; current StudioSession does."
+  },
+  "files": [
+    {
+      "path": "Application/Sources/RebaseCore/MusicalTime.swift",
+      "bytes": 12096,
+      "sha256": "ed6f3be23cd2260f074f6f651a8703d0b0872ccff0635f256a869fdb28bb202e"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/MusicalTimeTests.swift",
+      "bytes": 9123,
+      "sha256": "006062768dce1661baa344f6b7c7ea667d8222814d2d6761b189f1ede3da3cb0"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Automation.swift",
+      "bytes": 4085,
+      "sha256": "b3cf8cdafcb4d799520ad9bfa969a3e1fd04e776405051b446e242bc8738170b"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "bytes": 9473,
+      "sha256": "53e9fd93c5463fa92d4447d932519d42571dcec2ddfe68a8dd9b7a97eaea1bda"
+    },
+    {
+      "path": "research/evidence/cubase-static/musical-time-001/application-tests-isolated-output.log",
+      "bytes": 2030,
+      "sha256": "16d459d4265ab99566d0a115d510000a336ba99c30d2da044cca9c7098e44c03"
+    },
+    {
+      "path": "research/evidence/cubase-static/musical-time-001/application-tests-output.log",
+      "bytes": 4224,
+      "sha256": "dc72d2deefa5424ab4724ad20ff3d6b5ec0aa1b179f1588f5d6cc483e3b04055"
+    },
+    {
+      "path": "research/evidence/cubase-static/musical-time-001/finding.json",
+      "bytes": 8441,
+      "sha256": "5043b4594d18b7c17ff1c57324684e33663feed7f1aee92ad0bba4ae6ae3ea53"
+    },
+    {
+      "path": "research/evidence/cubase-static/musical-time-001/official-docs.json",
+      "bytes": 3409,
+      "sha256": "b457fed03b67bb04b6b5b8159bd4abd913720110569939839921195dff6050d1"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "compile_command": [
+    "/usr/bin/clang",
+    "-O2",
+    "-ffp-contract=off",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-dynamiclib",
+    "-I",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/rate-samples/candidate",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/rate-samples/candidate/native_rate_mode0.c",
+    "-o",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/rate-samples/candidate/mode0.dylib"
+  ],
+  "compile_returncode": 0,
+  "disassembly_command": [
+    "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+    "-d",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/rate-samples/candidate/mode0.dylib"
+  ],
+  "source": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0.c",
+      "bytes": 5859,
+      "sha256": "9cf22cb496e5eac010c0e027286927bdf68ef4181c195d30c30b0df2304bd7fa"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0.h",
+      "bytes": 1958,
+      "sha256": "9c3c7185a93dd54beff48dec9618c8abd69f68f01084adad30d4c4436a4cc19f"
+    }
+  ],
+  "binary": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/candidate/mode0.dylib",
+    "bytes": 33784,
+    "sha256": "b308c55dbd0dd015315361e3afe233d4d3e33eaeeebcc6a0d0b0b7ff235a90b8"
+  },
+  "optimized_assembly": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/candidate/optimized-disassembly.txt",
+    "bytes": 28037,
+    "sha256": "b6df2bef68db30ad65b03fa69df252fa409caa2f784c74965eb99c69505ffe73"
+  },
+  "method": "Compiled own reconstruction with contraction disabled; explicit fma is retained separately after a rounded multiply. Full arithmetic validation is in the independent oracle and tests.",
+  "cubase_execution": false,
+  "reconstruction_execution": true
+}

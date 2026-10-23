@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-20T00:20:20.316358+00:00",
+  "status": "passed",
+  "classification": "Independent application GUI-export arithmetic and custody check",
+  "script": {
+    "path": "research/evidence/application/APP008/check-gui-source-render.py",
+    "bytes": 10018,
+    "sha256": "167b70c1fa2908d80239cecdee2a16d4491720dac0177fbaa4a6802f7bb0c1aa"
+  },
+  "baseline": {
+    "path": "research/evidence/application/APP008/gui-package-before.json",
+    "bytes": 1032,
+    "sha256": "ca95c6a21bd7d703045e491ab65d452cc397a76e78b93ddf71cba6e63ca0afd4"
+  },
+  "source_attachment": {
+    "path": "research/evidence/application/APP008/LoFi Render QA.rebaseproj/Media/E99146CF-145D-4666-A6AD-692D42DB59A6.wav",
+    "bytes": 6350444,
+    "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+  },
+  "output": {
+    "path": "research/evidence/application/APP008/Lofi_Ambience_16_Vinyl_Crackle_LD-source-event.wav",
+    "bytes": 8467258,
+    "sha256": "6b362218fb7a0adf9d0886a46e94fca0e3cdacc4a7b15faee468fea879264c3e"
+  },
+  "original_cpr_sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
+  "association": "user-selected",
+  "selected_filename": "Synthetic LoFi Format.wav",
+  "source_file_identity": 206240,
+  "event_id": "BCFA6001-7E90-BBFB-CFFB-F85402AAB3DC",
+  "package": {
+    "path": "research/evidence/application/APP008/LoFi Render QA.rebaseproj",
+    "exact_file_set": true,
+    "files_verified_unchanged": 5,
+    "files": [
+      {
+        "path": "Compatibility/CPR/ImportReport.json",
+        "bytes": 93659,
+        "sha256": "27bfde03bdf769d3f7bc2fa55ae3382da2458f63967479781250242e054de45e",
+        "unchanged": true
+      },
+      {
+        "path": "Compatibility/CPR/Original.cpr",
+        "bytes": 1333360,
+        "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
+        "unchanged": true
+      },
+      {
+        "path": "Media/E99146CF-145D-4666-A6AD-692D42DB59A6.wav",
+        "bytes": 6350444,
+        "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a",
+        "unchanged": true
+      },
+      {
+        "path": "Media/FA176CB1-13E5-489A-8AA4-FE0DEFE4A6C0.wav",
+        "bytes": 6350444,
+        "sha256": "daeffe7263203465791405ffb2c3e87e905d27a99d306e91ba3d80e3ae722290",
+        "unchanged": true
+      },
+      {
+        "path": "Project.json",
+        "bytes": 5723,
+        "sha256": "e1b066328e3cfe60e7475c7dd9c0f5ecae34e24f74996e7342709628271b4ebc",
+        "unchanged": true
+      }
+    ]
+  },
+  "source_wave": {
+    "format_tag": 1,
+    "channels": 2,
+    "sample_rate": 44100,
+    "byte_rate": 264600,
+    "block_align": 6,
+    "bits_per_sample": 24,
+    "frames": 1058400,
+    "fact_frames": null,
+    "chunks": [
+      {
+        "id": "fmt ",
+        "header_offset": 12,
+        "bytes": 16
+      },
+      {
+        "id": "data",
+        "header_offset": 36,
+        "bytes": 6350400
+      }
+    ],
+    "riff_size": 6350436,
+    "exact_riff_end": true
+  },
+  "output_wave": {
+    "format_tag": 3,
+    "channels": 2,
+    "sample_rate": 44100,
+    "byte_rate": 352800,
+    "block_align": 8,
+    "bits_per_sample": 32,
+    "frames": 1058400,
+    "fact_frames": 1058400,
+    "chunks": [
+      {
+        "id": "fmt ",
+        "header_offset": 12,
+        "bytes": 18
+      },
+      {
+        "id": "fact",
+        "header_offset": 38,
+        "bytes": 4
+      },
+      {
+        "id": "data",
+        "header_offset": 50,
+        "bytes": 8467200
+      }
+    ],
+    "riff_size": 8467250,
+    "exact_riff_end": true
+  },
+  "comparison": {
+    "rule": "Sign-extend each little-endian 24-bit integer p; encode exact p/2^23 in binary32 using integer bit length, exponent and mantissa. Unity event gain.",
+    "implementation_independence": "No application/C kernel/AVFoundation conversion or floating division reused.",
+    "frames": 1058400,
+    "channels": 2,
+    "samples_compared": 2116800,
+    "mismatches": 0,
+    "first_mismatches": [],
+    "every_output_bit_matches": true,
+    "output_payload_sha256": "e42badb9b8206fd2913056636411474dc8f42e555624330404137697ed12ba7a",
+    "independently_expected_payload_sha256": "e42badb9b8206fd2913056636411474dc8f42e555624330404137697ed12ba7a",
+    "signed24_minimum_by_channel": [
+      -524287,
+      -262143
+    ],
+    "signed24_maximum_by_channel": [
+      524287,
+      262143
+    ],
+    "zero_samples_by_channel": [
+      21168,
+      21168
+    ]
+  },
+  "limitations": [
+    "The user-selected source is the synthetic fixture named Synthetic LoFi Format.wav; this is not recovered original Cubase media.",
+    "This verifies the application-produced file against its attachment at unity gain, not Cubase runtime audio or full-project rendering.",
+    "Nonunity gain, other formats/rates and audible output are outside this check."
+  ],
+  "proprietary_code_executed": false,
+  "cubase_runtime_comparisons": 0
+}

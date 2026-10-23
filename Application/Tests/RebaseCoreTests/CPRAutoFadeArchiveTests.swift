@@ -3,13 +3,12 @@ import Testing
 @testable import RebaseCore
 
 struct CPRAutoFadeArchiveTests {
-    private let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let root = PrivateResearchFixtures.root
     private func read(_ data: Data) throws -> CPRSourceAutoFadeArchive {
         try CPRAutoFadeArchive.read(container: CPRProject.readContainer(data))
     }
     private func source(_ name: String) throws -> Data {
-        let folder = "research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro/"
+        let folder = "templates/"
         let bytes = try Data(contentsOf: root.appendingPathComponent(folder + name + ".cpr"))
         let pins = ["LoFi Hip Hop": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
                     "Classic House": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892"]
@@ -29,8 +28,9 @@ struct CPRAutoFadeArchiveTests {
         #expect(actual.payloadSHA256 == expected["body_sha256"] as? String)
     }
 
-    @Test func pinnedFactoriesMatchIndependentForwardProbeAndInheritExactZeroFlags() throws {
-        let url = root.appendingPathComponent("research/evidence/cpr-static/cpr-audio-events-001/autofade-source/source-forward-probe.json")
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func pinnedFactoriesMatchIndependentForwardProbeAndInheritExactZeroFlags() throws {
+        let url = root.appendingPathComponent("evidence/cpr-static/cpr-audio-events-001/autofade-source/source-forward-probe.json")
         let probe = try Data(contentsOf: url)
         #expect(cprSHA256(probe) == "946f5ce59e3f3e977b9da1a4a5a8b1a040aa6dde90b9b0698f92eb3d91acb456")
         let document = try #require(JSONSerialization.jsonObject(with: probe) as? [String: Any])
@@ -161,6 +161,10 @@ struct CPRAutoFadeArchiveTests {
         #expect(throws: CPRProjectError.self) { try read(fixture(wrongRootTempo: true)) }
         #expect(throws: CPRProjectError.self) { try read(fixture(negativeKeyCount: true)) }
         #expect(throws: CPRProjectError.self) { try read(fixture(duplicateEventKey: true)) }
+    }
+
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func pinnedForwardReferencesAndShortBodiesReject() throws {
         let original = try source("LoFi Hip Hop"), decoded = try read(original)
         let track = try #require(decoded.tracks.values.first), setting = try #require(decoded.projectSetting)
         var forward = original

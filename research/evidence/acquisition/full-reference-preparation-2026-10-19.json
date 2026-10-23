@@ -1,0 +1,141 @@
+{
+  "schema": "rebase.full-reference-preparation.v1",
+  "prepared_at_utc": "2026-10-19T06:12:42.684822+00:00",
+  "execution_status": "prepared_only_waiting_for_complete_download",
+  "source": {
+    "etag": "\"b5ade2659e6a6fd9ebf7c1a35832728a-235\"",
+    "last_modified": "Tue, 02 Jun 2026 06:57:59 GMT",
+    "size": 1226998651,
+    "url": "https://download.steinberg.net/automated_updates/sda_downloads/a3d35aad-d523-4711-a5a7-119ffa8fa6eb/Cubase_15.0.30_Installer_mac.dmg"
+  },
+  "observation": {
+    "journal_status": "running",
+    "journal_sha256": "93dbeec81eb0def38695c0e035b9a4845320cf8e28b95a52b3e5f6a0285dfc50",
+    "journal_received_bytes": 431104000,
+    "contiguous_prefix_bytes": 431104000,
+    "final_filename_exists": false,
+    "whole_image_sha256": null,
+    "full_reference_directory_exists": false
+  },
+  "destination": "/workspace/rebase/research/targets/full-reference",
+  "planned_evidence_directory": "/workspace/rebase/research/evidence/acquisition/full-reference-2026-10-19",
+  "preconditions": [
+    "Journal status must be complete.",
+    "Promoted final DMG must exist with exact expected length1226998651; .part is never treated as complete.",
+    "Independently compute SHA256 and require equality with completed journal and provenance record.",
+    "Reserve new full-reference and evidence directories; never overwrite prior snapshots or the original image."
+  ],
+  "steps": [
+    {
+      "operation": "Verify DMG internal checksum without verification cache",
+      "argv": [
+        "hdiutil",
+        "verify",
+        "-nocache",
+        "/workspace/rebase/research/targets/downloads/Cubase_15.0.30_Installer_mac.dmg"
+      ],
+      "scope": "Internal container checksum; not a publisher checksum comparison."
+    },
+    {
+      "operation": "Mount the verified image read-only with no automatic opening or filesystem repair",
+      "argv": [
+        "hdiutil",
+        "attach",
+        "-readonly",
+        "-noautoopen",
+        "-noautofsck",
+        "-mountpoint",
+        "/workspace/rebase/research/targets/full-reference/mount",
+        "-plist",
+        "/workspace/rebase/research/targets/downloads/Cubase_15.0.30_Installer_mac.dmg"
+      ],
+      "scope": "Read-only attachment only; retain returned mount/device identity for exact detach."
+    },
+    {
+      "operation": "Identify actual package paths in mounted directory; record hashes and flat archive listing",
+      "argv_template": [
+        "xar",
+        "-tf",
+        "<observed-mounted-package-path>"
+      ]
+    },
+    {
+      "operation": "Verify package signature and preserve native result including certificate/trust caveats",
+      "argv_template": [
+        "pkgutil",
+        "--check-signature",
+        "<observed-mounted-package-path>"
+      ]
+    },
+    {
+      "operation": "Expand package and payloads; no installation or script execution",
+      "argv_template": [
+        "pkgutil",
+        "--expand-full",
+        "<observed-mounted-package-path>",
+        "/workspace/rebase/research/targets/full-reference/expanded"
+      ]
+    },
+    {
+      "operation": "Locate actual complete Cubase.app bundle and inventory bytes/build/version",
+      "argv_template": [
+        "python3",
+        "/workspace/rebase/scripts/intake_target.py",
+        "<observed-complete-app-path>",
+        "--out",
+        "/workspace/rebase/research/evidence/acquisition/full-reference-2026-10-19/app-intake",
+        "--inspect-file"
+      ]
+    },
+    {
+      "operation": "Verify complete app including nested code and resources",
+      "argv_template": [
+        "codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=4",
+        "<observed-complete-app-path>"
+      ]
+    },
+    {
+      "operation": "Capture signature identity separately from validity",
+      "argv_template": [
+        "codesign",
+        "--display",
+        "--verbose=4",
+        "<observed-complete-app-path>"
+      ]
+    },
+    {
+      "operation": "Compare every803 complete snapshot04 file against its corresponding full extraction path, byte length and SHA256; preserve exact differences or missing paths",
+      "input_manifest": "research/targets/downloads/partial-components-04/components.json"
+    },
+    {
+      "operation": "Detach only the device identity returned by this attachment after extraction",
+      "argv_template": [
+        "hdiutil",
+        "detach",
+        "<device-returned-by-this-attachment>"
+      ]
+    }
+  ],
+  "limits": [
+    "No installer, application, helper or bundled script will be executed.",
+    "Complete-source acquisition and native signature checks do not establish runtime licensing, Pro edition behavior, supported-OS conformance or reconstruction fidelity.",
+    "Any checksum, extraction, signature, inventory or partial/full comparison failure remains explicit; do not replace original bytes or repair a signed bundle.",
+    "Native commands and their exact stdout, stderr, exit status, timestamps and relevant hashes will be retained when run."
+  ],
+  "existing_intake_script_sha256": "2587cc78e9894caba0cf7c9d9c50452ab0b2277f67d1ff2321391b087ae25303",
+  "tools_help_checked": [
+    "hdiutil verify -help",
+    "hdiutil attach -help",
+    "pkgutil --help",
+    "xar --help"
+  ],
+  "help_notes": [
+    "Native hdiutil advertises -readonly, -noautoopen, -noautofsck and -mountpoint. Its legacy attach verb is deprecated but still documented on this host.",
+    "pkgutil --expand-full expands payloads without invoking the installation command."
+  ],
+  "download_process_control_performed": false
+}

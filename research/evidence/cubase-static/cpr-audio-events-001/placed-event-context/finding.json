@@ -1,0 +1,335 @@
+{
+  "id": "CPR-PLACED-EVENT-CONTEXT-001",
+  "evidence_class": "bounded original-image static contract and supplied-state analytical controls",
+  "target_executed": false,
+  "target_runtime_comparisons": 0,
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "conclusion": "For a direct audio-track context with zero ancestor origins, the recovered Start query converts containing-datum ticks through its bound native clock. Length and Offset use the target clip datum selected by the audio-track edit methods. This closes nonzero source coordinates under the stated fresh-resource, default-provider and explicit builder-rate conditions; it does not establish effective hosted track state.",
+  "admitted_context": [
+    "Concrete MRoot / direct MAudioTrackEvent / MListNode ancestry; no intervening folder, part or additional shared-owner ambiguity.",
+    "Root and containing audio track have positive-zero Start and Offset. Default concrete transform provider remains installed, with no substitute transform.",
+    "Containing MListNode datum0 points to the same source-bound tempo/signature roles independently accepted by the fixed or bounded jump-map clock contract.",
+    "Own PAudioClip datum10 carries the separately verified source period; its accessor/current-rate refresh is admitted only under the existing matching-rate source context.",
+    "Native event Length normalization is inert (finite length at least1); Offset normalization is inert (finite nonnegative offset). Application restriction to whole-frame length/offset is stricter.",
+    "Saved MTrackEvent v2 number is positive-zero. The reconstructed resource starts with MTrack+18 positive-zero and has no later resource-delay modification or inherited copy state.",
+    "Builder root rate is explicitly supplied. Matching the PCM source rate is an application context choice, not inference of an unknown live root+128 provider.",
+    "Finite bounded arithmetic under nearest rounding; source/media identity and all sound-processing gates remain separately required."
+  ],
+  "operations": {
+    "notation": "RN64 means a separately rounded binary64 operation. Native clock inverse is the separately sealed +0x30 tick-to-seconds operation; it preserves its own fixed/map rounding and knot rules.",
+    "start": "q=RN64(rawStart+contextOrigin); S=RN64(clock.inverse(q)/1.0), where accepted contextOrigin is +0. This is not rawStart*clipPeriod.",
+    "length": "For nonzero scalar datum10: L=RN64(RN64(rawLength*clipPeriod)/1.0). Delta helper returns +0 immediately for either signed zero. Native tag1 is a distinct direct-return path; datum0/17 use endpoint differences and are excluded for clip Length/Offset here.",
+    "offset": "Read rawOffset, FNEG, delta-convert, FNEG. For nonzero datum10: O=-RN64(RN64((-rawOffset)*clipPeriod)/1.0). Either raw zero yields -0 because the delta converter returns +0.",
+    "event_end": "E=RN64(S+L), separately from the later segment builder quantization and stored length/getter end.",
+    "ancestor_origin": "MContext+108 computes RN64(ConvertDelta(-ancestorOffset)+ConvertStart(ancestorStart)); the two canonical positive-zero ancestor inputs yield +0. Context range assignment converts this canonical value into the child datum before storing context+78.",
+    "track_shift": "MAudioTrackEvent virtual+558 returns RN64(resource+18 + track+90) when resource exists, else track+90. Ordinary caller enables this getter.10020ee24 skips the shift loop for numerical zero, otherwise adds it to each generated segment Start via virtual+d0; it does not recompute source Offset there.",
+    "ordinary_window": "1002115a0 passes [0,2592000] to10020ee24. Direct-track range collection clips the selected child event to this interval. The application nonnegative <=86400 subset is contained within it; an event-local window is equivalent there. Nested folders/parts are excluded.",
+    "builder_rate": "10020ee24 calls MContext+d0 ->1016e70ec -> context+18 root, and passes it to10020f2e8.10171c5a0 queries root+128 interface slot0 when present, otherwise returns exact44100. This rate is not automatically the serialized AudioFile sample rate."
+  },
+  "native_edges": [
+    {
+      "id": "CTX1",
+      "entries": [
+        "0x1002115a0",
+        "0x1017014e4",
+        "0x1016e6744",
+        "0x1016ea7fc",
+        "0x103104c40"
+      ],
+      "claim": "Track+280 returns its containing node. Recursive context construction gets the first associated event from node+58 list, compares it to node+30 owner, creates the root case or recurses through the parent container, then binds the explicit node if needed. This is a concrete counted/owned graph path, not nearest-name ancestry."
+    },
+    {
+      "id": "CTX2",
+      "entries": [
+        "0x1016e1894",
+        "0x1016e1ce4",
+        "0x1016e1bd0",
+        "0x1016e222c",
+        "0x1016e4d98",
+        "0x1016e20b8",
+        "0x101c247f4"
+      ],
+      "claim": "Root context begins canonical with zero ranges. Copies retain parent state, then bind child event/node datum and recompute child origin from parent+108. Context+78 is a datum-bound origin, not a raw event offset. Direct positive-zero ancestor inputs make the admitted origin zero."
+    },
+    {
+      "id": "CTX3",
+      "entries": [
+        "0x1016e300c",
+        "0x101c22dc0",
+        "0x1016e3990",
+        "0x1016e3794",
+        "0x1016e39c8"
+      ],
+      "claim": "Start uses containing datum, whereas scalar Length/Offset use audio-track-selected own clip datum. Datum0 to canonical1 calls clock+30 then divides1; datum10 multiplies its scalar then divides1. Offset negation/zero behavior is explicit."
+    },
+    {
+      "id": "CTX4",
+      "entries": [
+        "0x10174b610",
+        "0x10174b638",
+        "0x1017427e0",
+        "0x101747fe4",
+        "0x1001fc8b0",
+        "0x101744d58"
+      ],
+      "claim": "Concrete slot+558 adds runtime resource+18 and saved track+90. Resource constructor zeros+18; track constructor zeros+90; MTrackEvent v2 reads a double into+90 after its signed32 word. The normal inspected resource readers do not directly deserialize+18. This does not exclude their callbacks or later host mutation."
+    },
+    {
+      "id": "CTX5",
+      "entries": [
+        "0x10020ee24",
+        "0x1016e70ec"
+      ],
+      "claim": "The builder receives the context root as its rate receiver. The start-only shift is applied after segment construction. Rate, filtering, sample rendering and actual host scheduling remain separate concerns."
+    }
+  ],
+  "saved_fields": [
+    {
+      "fixture": "LoFi Hip Hop",
+      "source_sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
+      "track_identity": 197664,
+      "track_word": 46,
+      "number_file_offset": 243766,
+      "number_bits": "0000000000000000",
+      "number_bytes_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+      "resource_identity": 207075,
+      "resource_class": "MAudioTrack",
+      "resource_body_sha256": "40cb851b7506ea661c390fd5330e5f1fd0493c17b0b3b7e7a7cb754e215d6fb8"
+    },
+    {
+      "fixture": "Classic House",
+      "source_sha256": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892",
+      "track_identity": 207199,
+      "track_word": 46,
+      "number_file_offset": 258086,
+      "number_bits": "0000000000000000",
+      "number_bytes_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+      "resource_identity": 212449,
+      "resource_class": "MAudioTrack",
+      "resource_body_sha256": "6c66a21750ee4569d5a98515277c8d7259acb0f29b966cb3fa467c2dd4ad6866"
+    }
+  ],
+  "application_review": {
+    "scope": "Read-only review of new CPRPlacedSourceEventPlan.swift during APP015 development; final application source identity and tests belong to application acceptance.",
+    "result": "No actionable coordinate-gate defect found in reviewed direct-source domain. Source clock replay is independent of edited application tempo; track.numberBits is the correct saved shift field; whole-frame/source bounds and separate reader bounds are conservative.",
+    "qualification": "Fresh MTrack+18 zero and explicit source-rate builder are declared state choices. The saved number alone is not evidence of zero effective hosted shift. No additional arbitrary trackWord rejection is justified by these inspected coordinate paths."
+  },
+  "limits": [
+    "No Cubase executable, plugin or vendor library was run. No target audio/render/transport comparison.",
+    "Resource+18 can be copied by101742a98 and may be changed after construction. MTrack reader calls101744688 registration/callback machinery; its complete downstream effects were not traced. Fresh-resource acceptance deliberately excludes them.",
+    "The inspected concrete default transform provider rejects MRoot/MAudioTrackEvent/MListNode for audio-event/clip transforms. Replaceable global provider and later host changes are outside this conditional state.",
+    "Saved shared-node object graphs must satisfy the counted direct ancestry/role conditions. General nested origins, transformations, musical clip deltas and arbitrary shared-resource lifecycle remain unimplemented.",
+    "Root rate-provider identity and hosted project sample rate are not derived from CPR AudioFile metadata. Source-rate reconstruction is explicit.",
+    "Raw Ghidra slices omit imports, globals, vtables, relocations and unwind context. Metadata interval is not proved reachable function body; decompiler warnings and omitted exception tails are retained. Original instructions and exact table cells are authority.",
+    "Analytical controls are finite supplied-state calculations, not proprietary runtime outputs, complete numerical conformance or general project playback."
+  ],
+  "disconfirming_controls": [
+    "Positive raw Start480 with clip period1/44100 must use source clock inverse, not480/44100; change fixed BPM while leaving clip rate constant.",
+    "Move positive Start across the accepted jump knot while leaving clip Length/Offset unchanged; their seconds must remain scalar-domain values.",
+    "Nonzero saved track+90 or nonzero fresh resource+18 violates zero-shift admission. Copying a resource does not reset+18.",
+    "Changed or mismatched tempo/signature role references must not reuse an edited or stale application tempo clock.",
+    "Nonzero ancestor Start/Offset, a nested folder/part, alternate transform provider, or a changed clip-rate accessor requires another contract.",
+    "Offset+0 and Offset-0 pass through the native delta-zero fast path and both produce canonical offset-0.",
+    "Root+128 provider rate differing from file rate distinguishes hosted builder context from the explicit source-rate reconstruction."
+  ],
+  "verification": {
+    "function_intervals": 35,
+    "unique_entry_addresses": 35,
+    "source_bytes": 9312,
+    "native_words": 2328,
+    "rea_dossiers": 35,
+    "rea_instruction_addresses": 2013,
+    "unique_evidence_records": 70
+  },
+  "canonical_import": {
+    "imported": 70,
+    "unknowns_added": 0,
+    "total": 70
+  },
+  "analytical_control_count": 7,
+  "primary_artifacts": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/original-bindings.json",
+      "bytes": 18284,
+      "sha256": "3bfc25cbd878cf10adfe2849020371e3a03fcc247611e16ba4c2ebed1137246f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/verification.json",
+      "bytes": 25814,
+      "sha256": "54614bc7a4f367c502c480e78155253e1f5c46b43c46d3953cf026b0c6729883"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/evidence-bundle.json",
+      "bytes": 14131258,
+      "sha256": "ff7e8cb31ee31ff76232fc3201c3eecffe9c4ecb27743034f3a5919426dd0c67"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/evidence-import.json",
+      "bytes": 367,
+      "sha256": "4abe17b4f13bf062a0e2418289256b8bb7b929c3348ac6cac840cedbac7b0905"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/analytical-controls.json",
+      "bytes": 3961,
+      "sha256": "0a5686ab334103a537bafe4c083ac6d3b350985d9aca1f5e49920546cbaadd91"
+    }
+  ],
+  "external_references": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/finding.json",
+      "bytes": 39071,
+      "sha256": "af7178337889b779e4d37e2ac55e9eb41087c3fced9b54a0ec15e63e4204cd82"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/class-name-bindings.json",
+      "bytes": 3098,
+      "sha256": "c0671c4ff17d694b00d82c66f672804e4722246d63673be9f22c8482424c567b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/transform-provider-vtable.json",
+      "bytes": 667,
+      "sha256": "f892aca4f7ba1e27325c7dfdd72ef02afe499a68e8aea0bc6e358164a797dd83"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/containing-node-slots.json",
+      "bytes": 4390,
+      "sha256": "aa74d4fd1b169fe06b7d6f85482d4eb2315a43baaa2bb986be8f662e4a59faf5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/event-data-slots.json",
+      "bytes": 2698,
+      "sha256": "c298faa8c6642ea186ded132a07b9fc3399f1116e0836a0d2f639ff6c00e0967"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/edit-method-vtables.json",
+      "bytes": 1972,
+      "sha256": "2d8d809cac8b35cca8bdb856703ddb9dd2e7ba1f753d1da3bedf22f8d08aefb8"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/fixture-projection.json",
+      "bytes": 6094,
+      "sha256": "e9f65f7103c37aebc7aa73e7e1eecb404935b5068d502857bf5506fcec154b24"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass13/native-1016f2d88.txt",
+      "bytes": 962,
+      "sha256": "c79973ccd4ce58da9a2f8335d29dd18400514551752d03cc5e568ca4118e29a1"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass13/native-1001c4840.txt",
+      "bytes": 3664,
+      "sha256": "4779c6fd66b95eaf4403b81d17e5133064d60e642bc1b5e2788a78291482f245"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/ownership-finding.json",
+      "bytes": 7206,
+      "sha256": "14aaee2b8096ee1f0c2f502b4942140111ba4b86ecc703617e50c27d03861a85"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/ownership-linkage.json",
+      "bytes": 11989,
+      "sha256": "5ae5304e7e65b534cf91b413ab699fd47abac6827a3761c18e4de7afbf06480f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/pass7/native-1001f91a0.txt",
+      "bytes": 3706,
+      "sha256": "c34b3d390d2947bdf02dffa6d1e431599ee52025f63b9992ae5af84f54d44566"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-playback/pass3/native-1001f6500.txt",
+      "bytes": 8759,
+      "sha256": "9bd3e54ec6c71ca7f2d6f2355a169a3cf71f1f290f57af67af98d0b24846058e"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider/finding.json",
+      "bytes": 15413,
+      "sha256": "96edf3d32313581e95b804581e44af8ce4888e01148e384f6c4f12a6411ac539"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider/original-bindings.json",
+      "bytes": 16342,
+      "sha256": "d293306ced4d7644fc4bcc8ca8856bcd568469783278fc641acf17fdf9d76fda"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider/pass7/native-10171c5a0.txt",
+      "bytes": 562,
+      "sha256": "b01c900ed972072ef51c5208ffcfe9145d1cdcae01934c79e3b20c68a189af60"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/finding.json",
+      "bytes": 13349,
+      "sha256": "421a3e5bf51f892b2b68a37e69c8171440ee39d114385d9934bd05a6cc7ca08c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/source-forward-probe.json",
+      "bytes": 106578,
+      "sha256": "946f5ce59e3f3e977b9da1a4a5a8b1a040aa6dde90b9b0698f92eb3d91acb456"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/finding-v1.json",
+      "bytes": 7568,
+      "sha256": "2169213ddb52e087005c8683b38f4c3d29720f337187ff187e9b0c47be0d478e"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/finding.json",
+      "bytes": 10333,
+      "sha256": "b937ba48890bf01b333213b98e4721bb32584b9e2f67f437979965f003363c2f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/attributes/source_tools.py",
+      "bytes": 3060,
+      "sha256": "f24eb1ee109bc9a57ce54d001d56bf7c7298469df54aeac9283e08ddd1eb3791"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass16/native-100300954.txt",
+      "bytes": 1645,
+      "sha256": "b3c96fcd34b2e5bdc90a69d4235db13124039c30d3ae80a6cc7218aa3e7d9e2d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass17/native-100300950.txt",
+      "bytes": 221,
+      "sha256": "e4d88a43b8224ce8f714014d6f63bb63c0f08c595e746cb4d5272c28a12e66c1"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass18/native-100300694.txt",
+      "bytes": 6824,
+      "sha256": "0085443a8d2e07ab2576d6db0a4cf7179cb237d1a203bd770c60e04e521a0bd4"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass21/native-1001fcd0c.txt",
+      "bytes": 2844,
+      "sha256": "139f02a83de2553a37ee5d6cfabaaaccc505054446c4b8771e1799706c8a97af"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass23/native-101716fa0.txt",
+      "bytes": 2275,
+      "sha256": "ec52f8cc6ddf5d74a6f3ffca6a98195f104d014e773c53afc649559bde032c53"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass23/native-101759568.txt",
+      "bytes": 2275,
+      "sha256": "3bbd7b00219128c8032182e6a71fddb95f93e01624c60f783a3b5ec1a12e8f4c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass23/native-101725d9c.txt",
+      "bytes": 1660,
+      "sha256": "4ff8a350c915c5c85931afb3cb9417809c4878e14c6ed419344ce2e4b8f92bc8"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass24/native-101c26df0.txt",
+      "bytes": 3571,
+      "sha256": "d60bba1cdd5e07d1a04e9d5103c0f7375cbf99fcd3f3c2dea5c5d349c1f27abe"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/pass25/native-10170f3a4.txt",
+      "bytes": 2851,
+      "sha256": "e0142b14d812a3e881467b72558936aa44ff4f9acbb5b7dfaa1702c27d0b1f90"
+    }
+  ],
+  "reproduction": [
+    "derive.py N then analyze_pass.mjs N in a new unsealed directory",
+    "verify_evidence.py; combine_evidence.mjs; import_evidence.mjs",
+    "bind_source.py; analytical_controls.py; write_finding.py"
+  ],
+  "sessions": "Ten isolated raw-slice MCP clients and the canonical-import client closed explicitly."
+}

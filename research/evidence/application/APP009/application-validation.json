@@ -1,0 +1,87 @@
+{
+  "id": "APP009",
+  "created_utc": "2026-10-20T01:07:04.739089+00:00",
+  "version": "0.9.0",
+  "build": 9,
+  "status": "bounded_native_source_event_timeline_audition_implemented_and_checked",
+  "full_fidelity_objective": "incomplete",
+  "cubase_runtime_comparisons": 0,
+  "target_executions": 0,
+  "executable": {
+    "path": "research/evidence/application/APP009/final-build-snapshot/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 4775808,
+    "sha256": "469ec55e97de84d0a17155516bd61dbf5ee3c8899874d737a7652479ac95739b"
+  },
+  "source_manifest": {
+    "path": "research/evidence/application/APP009/final-source-manifest.json",
+    "bytes": 17975,
+    "sha256": "eb6f0ea222f6d3eefbd692d79e2a7feb0ce26346b222c5084f146c03ecb78e82"
+  },
+  "tests": {
+    "passed": 171,
+    "suites": 25,
+    "log": {
+      "path": "research/evidence/application/APP009/core-tests-release.log",
+      "bytes": 33562,
+      "sha256": "0dacf58a6b820a4ec85ffde10af414a1d632582b79cf251d9ab5e53018f7b446"
+    },
+    "scope": "Application and analytical controls, including every source sample at nine seek suffixes, independent integer IEEE encoding, actual native-selection end controls and257offline AVAudioEngine tail frames."
+  },
+  "build_log": {
+    "path": "research/evidence/application/APP009/build-release.log",
+    "bytes": 372,
+    "sha256": "4300562976ef6b23779db5b1d493868dfe183dd00ad59d551db78eb8fbb722c6"
+  },
+  "gui": {
+    "path": "research/evidence/application/APP009/gui-observations.json",
+    "bytes": 6901,
+    "sha256": "e47f635f947e8f78dc89cc37d8caffc62428bec069fcd0dee8a9ca1854489dec"
+  },
+  "independent_review": {
+    "path": "research/evidence/application/APP009/source-playback-independent-review.json",
+    "bytes": 6665,
+    "sha256": "a35a7162d38dab710445013b6189f37baad8dbd16a69c966f4f848b8556347ef"
+  },
+  "independent_gui_check": {
+    "path": "research/evidence/application/APP009/gui-release-independent-check.json",
+    "bytes": 9837,
+    "sha256": "db1e6878a5cece79fc2689c660c23aee63a7423f40cfa7ab1fcba24064ac113c"
+  },
+  "static_finding": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-playback/finding.json",
+    "bytes": 12437,
+    "sha256": "a2c2172126e9df179c8724a5605a6ad57039208a701a592aa95ef7dfce4cabca"
+  },
+  "native_integrity": {
+    "path": "research/evidence/application/APP009/native-final-integrity.json",
+    "bytes": 279,
+    "sha256": "869725f31ee94b9755f538fa065aca0eb4cd617b628becf48e7a613917372436"
+  },
+  "historical_integrity": {
+    "path": "research/evidence/application/APP009/historical-final-integrity.json",
+    "bytes": 245,
+    "sha256": "190bdea6b025f1194573f51050c17a497b43c87a4a8bd0c218b64169be82d3f0"
+  },
+  "implemented": [
+    "REA-derived unit-agnostic segment selector: linked traversal, one binary64 end addition, inclusive endpoint, u32 generation, cached successor and caller-owned cursor.",
+    "Fresh source/media verification shared by WAV export and stereo event-only timeline audition; source Float32 PCM and rate retained without the project resampler, pan or automation.",
+    "Play/pause, seek, return-to-start, stop and end behavior in a persistent explicit source-event scope; context changes and failed revalidation exit the mode.",
+    "Host completion waits for project duration and every dataPlayedBack callback, rejects stale callbacks by generation and avoids stopping on the audio callback thread.",
+    "Normal project playback, mixdown and DAWproject remain guarded; original CPR, report and retained event are unchanged."
+  ],
+  "limits": [
+    "One direct zero-origin complete stereo PCM24 source segment with the existing no-warp/no-fades/no-inversion gates and fresh source/no external pitch assumptions.",
+    "The selector is not a proven native live PCM consumer or seek quantizer. The singleton0/24-second descriptor comes from the separate saved-source projection; host frame rounding, half-open buffers and AVAudioEngine transport are application policy.",
+    "Device resampling, presentation latency and physical output samples have not been compared with Cubase. Observed meters and callbacks do not establish DAC bit equivalence.",
+    "Full project MIDI, instruments, inserts, sends/routing, mixer/PDC, automation, broader event semantics and CPR writing/roundtrip remain incomplete.",
+    "Matching attached-media metadata does not establish original-recording identity. Frozen import profiles V1/V2/V3/V4 are unchanged."
+  ],
+  "retained_corrections": [
+    "Initial compilation could not see the new C symbol due to a stale Swift module cache. Only RebaseTimingDSP cached PCM modules were removed; the subsequent suite passed.",
+    "Native peer review found that fresh selector traversal follows linked nodes, not array order; corrected and discriminated with a linked-order test and independent optimized C controls before acceptance.",
+    "Review identified wall-clock completion truncation risk; playback now also waits for dataPlayedBack callbacks and UI no longer stops at nominal duration alone.",
+    "GUI changed-media rejection exposed shared render-only wording; both strings generalized and final tests/build/seven GUI groups repeated.",
+    "Independent GUI review found a stale audition-paused footer after an edit returned to project mode. Invalidation now updates the status; release tests/build and all seven GUI groups repeated."
+  ],
+  "next": "Trace the native live segment consumer and its coordinate/seek conversion; reconstruct rate conversion and additional event processing before admitting full native project playback."
+}

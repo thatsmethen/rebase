@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "status": "design_assessment_before_APP015_implementation",
+  "reviewer": "independent fidelity_protocol agent",
+  "target_execution_count": 0,
+  "base_commit": "ae5de8f",
+  "scope": "Fresh source-backed placement, source offset and trim through the native timeline reader; current source inspection and sealed evidence only. No claim of ordinary full-project or hosted Cubase playback.",
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV4.swift",
+      "bytes": 10093,
+      "sha256": "311ef0ad0f120d7406b0e8469312f2e9d0083f348f52ea6704a4aa57e226f3ad"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/UnresolvedCPRAudioEvent.swift",
+      "bytes": 3139,
+      "sha256": "9986f9e3c05cf3c0b949ef8b7ddad7ad0c49d1b17aa38f85d6644896fff26e34"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioEventArchive.swift",
+      "bytes": 20165,
+      "sha256": "4dd8369fe4cc35c969da0909cc4ec835dc7c5c951197eb0fec9ae23bec7b7421"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAutoFadeArchive.swift",
+      "bytes": 15962,
+      "sha256": "b2cfa53d6e66461e792c31b80c0821a118fa6dbecf77b58843c97ebe5b83fae4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 9653,
+      "sha256": "044b0861ad09302407aedfe4fde17a0952579048f4125484709fdeb2cff8dda4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8748,
+      "sha256": "447e435835317ff3a0fb66dfeb855fa24b79d42106694d0ce9acebc9bbfab9d7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 8656,
+      "sha256": "ecb0af387fba251cc6de46ea842a56eeb2b33b2e1d25868f525e39b55aee2368"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 8552,
+      "sha256": "296e6d0983dd8c9d673fb357590c0de5821e96dd6f83fde1095d4f2526dd67a0"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/NativeTempoClock.swift",
+      "bytes": 9531,
+      "sha256": "944e6e5afa20b38959fef0458dc580df4a095df8f64b01d47024a47ff8718979"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 13673,
+      "sha256": "e426e17e26303faa9752f049652c4c08c5365e3c97c606cec387a05b1a504d39"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSegmentReadPlan.swift",
+      "bytes": 5048,
+      "sha256": "af56297a268184c07c58657beef5e7d67eb794b622614536992f65714752cae0"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider/finding.json",
+      "bytes": 15413,
+      "sha256": "96edf3d32313581e95b804581e44af8ce4888e01148e384f6c4f12a6411ac539"
+    }
+  ],
+  "current_barriers": [
+    "Frozen V4 only publishes positive-zero origin/offset placement; its original/report/unresolved-event values are replayed for custody and must not be rewritten.",
+    "The current source render plan requires event length = ACluster segment length = complete file frame count. The PCM decoder uses the same frames value for full media size. A trimmed event needs separate full file capacity and read interval.",
+    "Current playback prepares through that zero-origin plan before switching modes, and inspection shares its failure reason across all modes. A separate placed-mode gate is needed without broadening old local export or rate-converter admission.",
+    "The archive walks counted known track structures but skips unknown child classes; recovered audio events alone are not a positive inventory of whole-track/plugin/MIDI/routing/automation behavior.",
+    "The native builder quantizes canonical start, end and adjusted source offset separately and converts them back before the ordinary reader quantizes getters. Direct raw seconds passed to the existing stream would collapse that operation order."
+  ],
+  "recommended_boundary": [
+    "Derive a new ephemeral versioned projection from ProjectStore.verifiedCPRSourceEvent and a freshly replayed source-baseline NativeTempoClock. Preserve V4 and all saved source/report/current-project bytes.",
+    "Containing track datum supplies Start clock; clip type10 reciprocal supplies Length and Offset. Require exact source role identity and accepted native fixed/map profile, not metadata BPM or current generic project timing.",
+    "After explicit project timing conversion, use the verified source clock for this expressly source-preserving operation or reject; never silently substitute the edited application map.",
+    "Initially retain one direct audio track under the root, positive-zero ancestor origins/offsets, proven fresh-context transform selection and proven zero track shift. A saved raw number must not be called delay or ignored without native binding.",
+    "Retain existing zero-fade/priority/lane/inversion/pitch/warp/empty-event-attributes gates and single complete PCM24 source/ACluster segment. Broaden only event own Start/Length/Offset where the native contract is bound.",
+    "Prepare immutable complete media once, then construct one placed descriptor with explicit source bounds. The event remains retained and unresolved for project playback/export; only the named selected-event operation is authorized.",
+    "Preserve separate operation rounding: scalar conversion, context end addition, clipping difference then offset addition, signed-half quantization, conversion back, end-setter subtraction and getter addition, ordinary-reader narrowed-reciprocal quantization."
+  ],
+  "pending_native_gates": [
+    "Containing context recursive construction, ancestor accumulated origin and optional context transform: direct source predicate must bind actual fresh branch.",
+    "Track +0x558 start-only shift returns +0x90 plus optional +0x50 receiver; saved-field/default restoration and activation must be bound.",
+    "Length/Offset datum selection and signed offset delta conversion at nonzero Start, including map-knot behavior.",
+    "Builder selected rate context and zero neighbor/automatic-fade branches; ACluster frame coordinates remain distinct from PAudioSegment canonical coordinates."
+  ],
+  "planned_independent_controls": [
+    "Genuine LoFi CPR byte mutations are imported afresh, with recomputed source/report proof; original fixture stays untouched. Change only known event Start/Length/Offset fields for initial positive cases.",
+    "Before/at/after accepted jump-map knot; nonzero source Offset and shorter Length; independent integer-indexed PCM expectation with leading zeros and exact retained source slice.",
+    "Independent Fraction IEEE builder vectors around signed half boundaries, clipping start/end, offset compensation, scalar reciprocal and stored end round trips; no candidate-generated expectations.",
+    "Partition and seek suffixes around gap/event start/event end and 4096/8192 boundaries; end/repeated-end behavior and returned-buffer isolation.",
+    "Positive-zero versus negative-zero ancestors, nonzero root/track starts and offsets, unsupported containing/clip datum, changed reciprocal/rate, source capacity overrun and wrong clock identity reject.",
+    "Explicit application timing conversion/edit leaves source projection unchanged if chosen policy; unrelated active native-clock forgery still rejects.",
+    "Original/report/media tampering rejects before audio publication; all package files and retained event exact before/after successful prepare/playback; ordinary project render/export and old zero-origin local/converter gates remain closed."
+  ],
+  "limitations": [
+    "This is an implementation design assessment, not accepted APP015 behavior. Native peers are still closing the new context and builder contracts.",
+    "No Cubase execution, export comparison or device-output capture; application callback scheduling and block partition remain separately identified host policy."
+  ]
+}

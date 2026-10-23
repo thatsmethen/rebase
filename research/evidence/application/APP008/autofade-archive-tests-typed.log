@@ -1,0 +1,22 @@
+[0/1] Planning build
+Building for debugging...
+[0/10] Write sources
+[3/10] Write swift-version--1AB21518FC5DEDBE.txt
+[4/10] Compiling RebaseTimingDSP cpr_event_pcm.c
+[6/16] Emitting module RebaseCore
+[7/16] Compiling RebaseCore CPRAutoFadeArchive.swift
+[8/16] Compiling RebaseCore CPRSourceAudioInspection.swift
+[9/16] Compiling RebaseCore ProjectStore.swift
+[10/16] Compiling RebaseCore CPRProject.swift
+[11/16] Compiling RebaseCore CPRSourceEventRenderer.swift
+/workspace/rebase/Application/Sources/RebaseCore/CPRSourceEventRenderer.swift:83:17: error: cannot find 'rb_cpr_event_pcm24_f32' in scope
+ 81 |         let status = data.withUnsafeBytes { input in
+ 82 |             values.withUnsafeMutableBufferPointer { output in
+ 83 |                 rb_cpr_event_pcm24_f32(input.baseAddress!.advanced(by: samples.lowerBound).assumingMemoryBound(to: UInt8.self),
+    |                 `- error: cannot find 'rb_cpr_event_pcm24_f32' in scope
+ 84 |                     output.baseAddress!, count, plan.gain.bitPattern)
+ 85 |             }
+[12/19] Compiling RebaseCore NativeTempoClock.swift
+[13/19] Compiling RebaseCore DAWProject.swift
+[14/19] Compiling RebaseCore OfflineRenderer.swift
+error: fatalError

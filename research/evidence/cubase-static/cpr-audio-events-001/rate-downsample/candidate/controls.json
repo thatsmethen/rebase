@@ -1,0 +1,101 @@
+{
+  "kind": "Candidate defensive wrapper/count controls; not independent arithmetic oracle or target comparison",
+  "target_execution": false,
+  "reconstruction_execution": true,
+  "passed": 41,
+  "controls": [
+    "insufficient_capacity_is_transactional",
+    "late_nan_is_transactional",
+    "late_infinity_is_transactional",
+    "subnormal_input_is_transactional",
+    "overlap_is_transactional",
+    "wrong_actual_layout_is_transactional",
+    "reject_flags_(2, 0)",
+    "reject_flags_(1, 2)",
+    "reject_rate_(44100, 48000)",
+    "reject_rate_(192001, 48000)",
+    "reject_rate_(48000, 7999)",
+    "reject_rate_(nan, 44100)",
+    "reject_channels_0",
+    "reject_channels_3",
+    "reject_channels_64",
+    "zero_flush_noop_(48000, 44100, 1)",
+    "positive_call_(48000, 44100, 1)",
+    "reset_(48000, 44100, 1)",
+    "zero_flush_noop_(48000, 44100, 2)",
+    "positive_call_(48000, 44100, 2)",
+    "reset_(48000, 44100, 2)",
+    "zero_flush_noop_(48000, 48000, 1)",
+    "positive_call_(48000, 48000, 1)",
+    "reset_(48000, 48000, 1)",
+    "zero_flush_noop_(192000, 8000, 2)",
+    "positive_call_(192000, 8000, 2)",
+    "reset_(192000, 8000, 2)",
+    "unsafe_singleton_process_1",
+    "unsafe_singleton_count_1",
+    "unsafe_singleton_process_2",
+    "unsafe_singleton_count_2",
+    "count_blocks_(44100, 32000, 1058400)",
+    "count_blocks_(44100, 22050, 1058400)",
+    "count_blocks_(44100, 11025, 1058400)",
+    "count_blocks_(48000, 44100, 1151999)",
+    "count_blocks_(48000, 32000, 16385)",
+    "count_blocks_(48000, 48000, 100)",
+    "partition_8193",
+    "partition_tail2",
+    "partition_invalid2",
+    "aggregate_reject_bad_limit"
+  ],
+  "projections": [
+    {
+      "source_rate": 44100,
+      "output_rate": 32000,
+      "input_frames": 1058400,
+      "output_frames": 767967,
+      "layout": "above",
+      "input_limit": 8192
+    },
+    {
+      "source_rate": 44100,
+      "output_rate": 22050,
+      "input_frames": 1058400,
+      "output_frames": 529199,
+      "layout": "above",
+      "input_limit": 8192
+    },
+    {
+      "source_rate": 44100,
+      "output_rate": 11025,
+      "input_frames": 1058400,
+      "output_frames": 264600,
+      "layout": "above",
+      "input_limit": 8192
+    },
+    {
+      "source_rate": 48000,
+      "output_rate": 44100,
+      "input_frames": 1151999,
+      "output_frames": 1058397,
+      "layout": "above",
+      "input_limit": 8192
+    },
+    {
+      "source_rate": 48000,
+      "output_rate": 32000,
+      "input_frames": 16385,
+      "output_frames": 10921,
+      "layout": "above",
+      "input_limit": 8192
+    },
+    {
+      "source_rate": 48000,
+      "output_rate": 48000,
+      "input_frames": 100,
+      "output_frames": 98,
+      "layout": "above",
+      "input_limit": 8192
+    }
+  ],
+  "kernel_sha256": "e85877ab7c33c8ef9c6bf16124125504a545e3a057e4d3ec6838729bd0df676f",
+  "binary_sha256": "be2e24f473e8449ca6e09f52652f1b9f97ae1ad5888fa39b2a6209e6bcaa5290"
+}

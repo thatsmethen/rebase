@@ -1,0 +1,189 @@
+{
+  "evidence_class": "Analytical supplied-state model discriminators",
+  "target_executed": false,
+  "native_runtime_validation": false,
+  "passed": true,
+  "count": 11,
+  "controls": [
+    {
+      "name": "curve_preserves_rate_and_changes_format",
+      "supplied_state_result": {
+        "rate": 44100,
+        "kind": 2,
+        "bits": 32
+      },
+      "expected": {
+        "rate": 44100,
+        "kind": 2,
+        "bits": 32
+      },
+      "rejected_interpretation": "All processed streams adopt project48000 or preserve PCM24"
+    },
+    {
+      "name": "invert_preserves_rate_and_changes_format",
+      "supplied_state_result": {
+        "rate": 48000,
+        "kind": 2,
+        "bits": 32
+      },
+      "expected": {
+        "rate": 48000,
+        "kind": 2,
+        "bits": 32
+      },
+      "rejected_interpretation": "Inversion changes sample rate"
+    },
+    {
+      "name": "reference44_controls_both_member_accessors",
+      "supplied_state_result": [
+        {
+          "source_rate": 44100,
+          "output_rate": 44100,
+          "output_kind": 1,
+          "output_bits": 24
+        },
+        {
+          "source_rate": 48000,
+          "output_rate": 44100,
+          "output_kind": 1,
+          "output_bits": 24
+        }
+      ],
+      "expected": [
+        {
+          "source_rate": 44100,
+          "output_rate": 44100,
+          "output_kind": 1,
+          "output_bits": 24
+        },
+        {
+          "source_rate": 48000,
+          "output_rate": 44100,
+          "output_kind": 1,
+          "output_bits": 24
+        }
+      ],
+      "rejected_interpretation": "Every member retains its own accessor output rate, or project96000 is used"
+    },
+    {
+      "name": "reference48_changes_all_output_formats",
+      "supplied_state_result": [
+        {
+          "source_rate": 44100,
+          "output_rate": 48000,
+          "output_kind": 1,
+          "output_bits": 16
+        },
+        {
+          "source_rate": 48000,
+          "output_rate": 48000,
+          "output_kind": 1,
+          "output_bits": 16
+        }
+      ],
+      "expected": [
+        {
+          "source_rate": 44100,
+          "output_rate": 48000,
+          "output_kind": 1,
+          "output_bits": 16
+        },
+        {
+          "source_rate": 48000,
+          "output_rate": 48000,
+          "output_kind": 1,
+          "output_bits": 16
+        }
+      ],
+      "rejected_interpretation": "Group always chooses first member independent of reference index"
+    },
+    {
+      "name": "outer_warp_float32_after_inner_reference_pcm",
+      "supplied_state_result": {
+        "rate": 44100,
+        "kind": 2,
+        "bits": 32
+      },
+      "expected": {
+        "rate": 44100,
+        "kind": 2,
+        "bits": 32
+      },
+      "rejected_interpretation": "Float32 outer format permits removing inner reference-PCM conversion/quantization"
+    },
+    {
+      "name": "new_accessor_snapshot_not_live_getter",
+      "supplied_state_result": {
+        "snapshot_rate": 44100,
+        "current_source_rate": 48000
+      },
+      "expected": {
+        "snapshot_rate": 44100,
+        "current_source_rate": 48000
+      },
+      "rejected_interpretation": "Accessor+30 automatically tracks every subsequent source getter change; hypothetical mutation, not admitted host lifecycle"
+    },
+    {
+      "name": "typed_cache_is_separate_source",
+      "supplied_state_result": {
+        "cache_hit_rate": 32000,
+        "original_clip_rate": 44100
+      },
+      "expected": {
+        "cache_hit_rate": 32000,
+        "original_clip_rate": 44100
+      },
+      "rejected_interpretation": "Original clip metadata fixes an arbitrary already-cached AudioStream rate"
+    },
+    {
+      "name": "group_read_does_not_min_positive_counts",
+      "supplied_state_result": 128,
+      "expected": 128,
+      "rejected_interpretation": "Outer group read returns minimum positive member result"
+    },
+    {
+      "name": "group_read_last_negative",
+      "supplied_state_result": -7,
+      "expected": -7,
+      "rejected_interpretation": "Outer group read stops at first negative member or returns minimum count"
+    },
+    {
+      "name": "group_seek_offsets_and_success_return",
+      "supplied_state_result": {
+        "member_queries": [
+          100,
+          123
+        ],
+        "returned": 100
+      },
+      "expected": {
+        "member_queries": [
+          100,
+          123
+        ],
+        "returned": 100
+      },
+      "rejected_interpretation": "Group seek computes a common success position from rounded member seeks"
+    },
+    {
+      "name": "group_seek_negative_failure",
+      "supplied_state_result": {
+        "member_queries": [
+          100,
+          123
+        ],
+        "returned": -5
+      },
+      "expected": {
+        "member_queries": [
+          100,
+          123
+        ],
+        "returned": -5
+      },
+      "rejected_interpretation": "Successful requested position is returned despite a negative member result"
+    }
+  ],
+  "domain": "Finite positive integral rates, valid reference/index and bound getters; positive signed32 request and representable offset/byte arithmetic. No sample-DSP or provider execution.",
+  "limitation": "These assertions clarify implications and falsify alternate readings of reviewed instructions. They do not independently validate the ownership interpretation or actual host reachability."
+}

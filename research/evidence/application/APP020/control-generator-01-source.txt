@@ -1,0 +1,245 @@
+#!/usr/bin/env python3
+"""Author forward CPR parser controls, never Cubase-valid or target outputs.
+
+No vendor bytes are copied or relocated. Every archive definition/reference is
+emitted from a symbolic identity. MAudioTrack, MAutomationNode, PPool and
+ElastiquePreset are deliberately minimal opaque parser scaffolding. Their
+native validity and audible behavior are NOT established by these controls.
+"""
+from __future__ import annotations
+
+import argparse
+from contextlib import contextmanager
+import hashlib
+import json
+from pathlib import Path
+import struct
+
+
+RATE = 44_100
+FRAMES = RATE * 24
+EVENTS = [
+    dict(name="First", ticks=1440.0, first_frame=66150, frames=176400, source_frame=88200),
+    dict(name="Second", ticks=7680.0, first_frame=352800, frames=220500, source_frame=396900),
+    dict(name="Third", ticks=15360.0, first_frame=705600, frames=88200, source_frame=793800),
+]
+
+
+class Archive:
+    def __init__(self):
+        self.data = bytearray()
+        self.ids = {}
+        self.records = []
+        self.references = []
+        self.marks = {}
+
+    def integer(self, code, value):
+        self.data += struct.pack(">" + code, value)
+
+    def u16(self, value): self.integer("H", value)
+    def u32(self, value): self.integer("I", value)
+    def u64(self, value): self.integer("Q", value)
+    def f32(self, value): self.integer("f", value)
+    def f64(self, value): self.integer("d", value)
+    def zero(self, count): self.data += bytes(count)
+
+    def string(self, value):
+        raw = value.encode("utf8") + b"\0"
+        self.u32(len(raw)); self.data += raw
+
+    def base(self, name, version):
+        self.u32(0xfffffffe); self.string(name); self.u16(version)
+
+    def ref(self, label):
+        target = self.ids[label]
+        assert 0 < target < len(self.data) < 0x80000000
+        self.references.append(dict(offset=len(self.data), target=target, label=label))
+        self.u32(target)
+
+    @contextmanager
+    def obj(self, label, name, version=0):
+        assert label not in self.ids
+        start = len(self.data)
+        self.u32(0xffffffff); self.string(name); self.u16(version)
+        identity = len(self.data)
+        self.ids[label] = identity; self.u32(0)
+        payload = len(self.data)
+        yield
+        end = len(self.data)
+        struct.pack_into(">I", self.data, identity, end - payload)
+        self.records.append(dict(label=label, class_name=name, version=version,
+            object_offset=start, identity_offset=identity, payload_offset=payload,
+            payload_bytes=end-payload, end=end))
+
+    def datum(self):
+        self.u32(0); self.ref("tempo"); self.ref("signature")
+
+    def container(self):
+        def counted(s):
+            b = s.encode("ascii"); return struct.pack(">I", len(b)) + b
+        def chunk(tag, b): return tag + struct.pack(">I", len(b)) + b
+        root = chunk(b"ROOT", counted("Arrangement1") + counted("PArrangement"))
+        section = root + chunk(b"ARCH", self.data)
+        origin = 12 + len(root) + 8
+        data = b"RIFF" + struct.pack(">I", len(section)) + b"NUND" + section
+        return data, origin
+
+
+def named(w, name, code, value):
+    w.string(name); w.u16(code)
+    if code == 1: w.integer("q", value)
+    elif code == 4: w.f64(value)
+    else: raise ValueError(code)
+
+
+def path(w, label):
+    with w.obj(label, "FNPath"):
+        w.string("Symbolic Track Signal.wav"); w.u32(0)
+        for _ in range(3): w.string("")
+        w.u32(1); w.u16(0); w.string("/self-authored-controls/")
+
+
+def clip(w, index):
+    with w.obj(f"clip{index}", "PAudioClip", 4):
+        w.string(f"Symbolic source {index}"); w.u32(10); w.f64(1.0/RATE); w.u32(0)
+        if index == 0: path(w, "media-path")
+        else: w.ref("media-path")
+        w.string(""); w.u16(0); w.u32(0); w.f64(0)
+        w.u32(2); named(w, "TransposeLock", 1, 1)
+        w.string("StretchPreset"); w.u16(0x22)
+        with w.obj(f"preset{index}", "ElastiquePreset"): pass
+        if index:
+            w.ref("cluster")
+        else:
+            with w.obj("cluster", "AudioCluster"):
+                w.u32(0); w.u16(2); w.u32(1)
+                with w.obj("file", "AudioFile", 1):
+                    w.u64(FRAMES); w.u16(24); w.u16(6); w.u16(2); w.f32(RATE)
+                    w.ref("media-path"); w.u32(0)
+                w.u16(1); w.u32(1)
+                with w.obj("segment", "AClusterSegment"):
+                    w.ref("file"); w.u64(0); w.u64(FRAMES); w.u64(0)
+        w.u16(1); w.u32(0)
+
+
+def event(w, index, spec):
+    with w.obj(f"event{index}", "MAudioEvent", 6):
+        w.u16(0); w.f64(spec["ticks"]); w.f64(spec["frames"]); w.f64(spec["source_frame"])
+        clip(w, index)
+        w.u32(0); w.u32(1); w.u32(0); w.u32(0); w.f64(0); w.string(spec["name"])
+        w.u32(0); w.f32(1); w.u32(0); w.u16(0)
+        with w.obj(f"curve{index}", "VolumeCurveDataNode"):
+            w.string(""); w.u32(10); w.f64(1.0/RATE); w.u32(0)
+
+
+def make(specs, unknown=False):
+    w = Archive()
+    with w.obj("arrangement", "PArrangement", 4):
+        w.base("MEvent", 1); w.base("MTrackEvent", 2)
+        with w.obj("root", "MRoot", 6):
+            w.zero(26)
+            with w.obj("root-list", "MTrackList"):
+                w.string(""); w.u32(0)
+                with w.obj("tempo", "MTempoTrackEvent", 3):
+                    w.u32(1); w.f32(0.5); w.f64(0); w.f64(0); w.u16(0)
+                    w.f32(120); w.u16(1); w.u32(0); w.u32(0)
+                with w.obj("signature", "MSignatureTrackEvent", 3):
+                    w.u32(1); w.u32(0)
+                    for n in [4,4,0,0,0,8]: w.u16(n)
+                    w.u32(1); w.u32(0x736b6c43); w.u16(2)
+                    with w.obj("signature-fields", "FAttributes"):
+                        w.u32(1); w.string("SignatureEvent"); w.u16(2); w.u16(201); w.u32(1)
+                        w.u16(20); w.string("MTimeSignatureEvent"); w.u64(1); w.u32(7)
+                        for name,code,value in [("Flags",1,8),("Start",4,0),("Length",4,1),
+                            ("Bar",1,0),("Numerator",1,4),("Denominator",1,4),("Position",1,0)]:
+                            named(w,name,code,value)
+                w.u16(0); w.u32(1)
+                with w.obj("audio-track", "MAudioTrackEvent", 1):
+                    w.zero(26)
+                    with w.obj("audio-list", "MListNode"):
+                        w.string("Symbolic Complete Track"); w.datum()
+                        w.marks["event_count"] = len(w.data); w.u32(len(specs) + int(unknown))
+                        for i,spec in enumerate(specs): event(w,i,spec)
+                        if unknown:
+                            with w.obj("unknown-child", "UnverifiedControlEvent"): pass
+                    w.u32(0)
+                    with w.obj("resource", "MAudioTrack"): pass
+                    w.u32(46); w.f64(0)
+                    with w.obj("automation", "MAutomationNode", 1): pass
+                    w.u32(0)
+            w.u32(0); w.u16(0); w.u32(0)
+            path(w,"root-path")
+            with w.obj("pool", "PPool", 5): pass
+            w.u32(0); w.ref("tempo"); w.ref("signature")
+            with w.obj("auto-fade", "MAutoFadeSetting"):
+                w.u16(0); w.f64(0.01); w.zero(16)
+            w.u16(1); w.u16(1); w.ref("audio-track"); w.u32(0)
+        with w.obj("setup", "PArrangeSetup", 8):
+            def coordinate(): w.f64(0); w.u32(1); w.f64(1)
+            coordinate(); coordinate(); w.u32(0); w.u32(0); w.f32(RATE); w.u32(3)
+            coordinate(); w.zero(16); w.f64(1); w.f64(0); w.u32(0); w.u16(0); w.u16(0); w.u32(0)
+            for text in ["wav","WAV","PCM 24"]: w.string(text)
+            w.data += b"int24\0"; w.u32(0)
+        for _ in range(7): w.string("")
+    data,origin = w.container()
+    records = [{**r, **{k:r[k]+origin for k in ["object_offset","identity_offset","payload_offset","end"]}}
+               for r in w.records]
+    refs = [dict(offset=r["offset"]+origin, target=r["target"]+origin, label=r["label"]) for r in w.references]
+    assert all(r["target"] < r["offset"] for r in refs)
+    return data,dict(archive_origin=origin, objects=records, references=refs,
+                    event_count_offset=w.marks["event_count"]+origin)
+
+
+def sample(frame,channel):
+    # Small exact signed24 values; every frame and channel has a known oracle.
+    return ((frame * (7919 if channel == 0 else 104729) + channel * 12345) & 0xfffff) - 524288
+
+
+def wave():
+    pcm = bytearray(FRAMES*6)
+    for frame in range(FRAMES):
+        for channel in range(2):
+            at=frame*6+channel*3; value=sample(frame,channel)&0xffffff
+            pcm[at:at+3]=value.to_bytes(3,"little")
+    return (b"RIFF"+struct.pack("<I",36+len(pcm))+b"WAVEfmt "+struct.pack("<IHHIIHH",16,1,2,RATE,RATE*6,6,24)
+            +b"data"+struct.pack("<I",len(pcm))+pcm)
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out",type=Path,required=True)
+    args=parser.parse_args(); args.out.mkdir(parents=False,exist_ok=False)
+    manifest={"schema_version":1,"classification":"self-authored app-parser and composition controls",
+        "target_executed":False,"native_validity_established":False,"vendor_bytes_copied":0,
+        "relocated_existing_references":0,"source_rate":RATE,"saved_rate":RATE,"fixed_bpm":120,
+        "media_frames":FRAMES,"media_channels":2,"media_bits":24,"controls":[],
+        "sample_rule":"s24(f,c)=((f*(c==0?7919:104729)+c*12345)&0xfffff)-524288; f32=s24/8388608 exactly",
+        "limits":["MAudioTrack, MAutomationNode, PPool and ElastiquePreset bodies are minimal opaque parser scaffolding, not native-valid serialized state.",
+                  "No Cubase-generated project, target playback result or roundtrip compatibility is claimed.",
+                  "Every event has a distinct clip and identity; clips share one already-defined AudioCluster/AudioFile and native filename path.",
+                  "Expected disjoint frame maps are application composition oracles, not native runtime outputs."]}
+    cases=[("two-events",EVENTS[:2],False,"admit"),("three-events",EVENTS,False,"admit"),
+           ("unknown-child",EVENTS[:2],True,"reject complete-track admission"),
+           ("reverse-order",list(reversed(EVENTS[:2])),False,"reject unsorted counted order"),
+           ("overlap",[EVENTS[0],{**EVENTS[1],"ticks":4320.0,"first_frame":198450}],False,"reject overlap"),
+           ("touching",[EVENTS[0],{**EVENTS[1],"ticks":5280.0,"first_frame":242550}],False,"boundary policy must be tested")]
+    for name,specs,unknown,expected in cases:
+        data,structure=make(specs); 
+        if unknown: data,structure=make(specs,unknown=True)
+        dest=args.out/(name+".cpr");dest.write_bytes(data)
+        manifest["controls"].append(dict(name=name,path=dest.name,bytes=len(data),sha256=hashlib.sha256(data).hexdigest(),
+            expected=expected,events=specs,structure=structure))
+    positive=(args.out/"two-events.cpr").read_bytes(); bad=bytearray(positive)
+    count_at=manifest["controls"][0]["structure"]["event_count_offset"]
+    struct.pack_into(">I",bad,count_at,1)
+    dest=args.out/"missing-counted-event.cpr";dest.write_bytes(bad)
+    manifest["controls"].append(dict(name="missing-counted-event",path=dest.name,bytes=len(bad),
+        sha256=hashlib.sha256(bad).hexdigest(),expected="reject unconsumed second object after reduced count",changed_offset=count_at))
+    pcm=wave();dest=args.out/"Symbolic Track Signal.wav";dest.write_bytes(pcm)
+    manifest["media"]=dict(path=dest.name,bytes=len(pcm),sha256=hashlib.sha256(pcm).hexdigest())
+    manifest["generator_sha256"]=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    (args.out/"manifest.json").write_text(json.dumps(manifest,indent=2)+"\n")
+    print(json.dumps({"out":str(args.out),"controls":len(manifest["controls"]),"media_sha256":manifest["media"]["sha256"]}))
+
+
+if __name__=="__main__": main()

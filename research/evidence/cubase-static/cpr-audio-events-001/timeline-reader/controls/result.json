@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "proprietary_execution": false,
+  "controls": 16,
+  "compiler": "Apple clang version 17.0.0 (clang-1700.4.4.1)\nTarget: arm64-apple-darwin27.0.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin\n",
+  "command": [
+    "clang",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-ffp-contract=off",
+    "-fsanitize=undefined",
+    "-fno-sanitize-recover=all",
+    "-I",
+    "/workspace/rebase/Application/Sources/RebaseTimingDSP/include",
+    "/workspace/rebase/Application/Sources/RebaseTimingDSP/cpr_timeline_reader.c",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/controls/author_controls.c",
+    "-o",
+    "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/controls/author-controls-ubsan"
+  ],
+  "compile_exit": 0,
+  "run_exit": 0,
+  "inputs": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_reader.c",
+      "bytes": 8196,
+      "sha256": "6697ca1b9ce8725324362b2da54ac6432b1d64c8dcbb48adfc3464322dba4e0b"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_reader.h",
+      "bytes": 4390,
+      "sha256": "910475ed5c486c662c0f0893097cfbc4551b9be5922f5fcdb398941701373014"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/controls/author_controls.c",
+      "bytes": 2314,
+      "sha256": "ca87ce83d730f58f5b5e46ffc5262e776cfd7ad9e09d9eed6b31480b26239a65"
+    }
+  ],
+  "logs": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/controls/compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/controls/run.log",
+      "bytes": 112,
+      "sha256": "b3417fce983336b3430ea8c9d2316311750e0826e561389573d05d88437af016"
+    }
+  ],
+  "scope": "Hand-derived simple controls and defensive bounds; independent IEEE oracle is separate."
+}

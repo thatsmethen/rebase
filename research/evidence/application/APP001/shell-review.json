@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "id": "APP001-SHELL-REVIEW",
+  "created_utc": "2026-10-19T08:00:10.485980+00:00",
+  "method": "Independent read-only source and retained-evidence review. No new application execution, UI operation, test run or target execution by this reviewer.",
+  "status": "Previously reported failure paths are addressed in the pinned revision; no remaining actionable defect identified in this bounded review.",
+  "source_files": [
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "sha256": "143b45a64dff5a65ab04c670f706a99fb55f4d77020ff58db207fc9e3c3ef5e8",
+      "size": 18021
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "sha256": "e9fc327b770e970a48e765fd3b1752614d87033ce029bbc9086aea4af5824576",
+      "size": 12450
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "sha256": "418c3206a56cb4f6741272f566b298faf29a5c8d3750537dffec9718b78d3d86",
+      "size": 6844
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "sha256": "8e07ab0ff73d120f88efcc8f509cf7b2ebbbbe5c8f9bccd89caacc6d906ab048",
+      "size": 5546
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "sha256": "e8cce93c2a07e0e1752cc37f270396a99e34fb3e4bf8905e63033eeb6490a6ee",
+      "size": 4213
+    },
+    {
+      "path": "Application/Sources/RebaseCore/OfflineRenderer.swift",
+      "sha256": "47aae4fddf451231baa9289cbeaec82141ade8919eadc442c7bc0ca7844ee6c8",
+      "size": 13279
+    }
+  ],
+  "fixed_findings": [
+    {
+      "issue": "Unbounded source-offset conversion during waveform rebuilding",
+      "resolution": "Waveform conversion now checks finite products, actual source bounds and Int64 representability. Loaded clips also receive shared source-interval validation before shell assignment."
+    },
+    {
+      "issue": "Save As required writing the original project",
+      "resolution": "For a distinct destination, create a new owner-writable root, copy source children except Project.json, and save the current in-memory project only at the destination. Root/name/dirty-state commit occurs after save succeeds."
+    },
+    {
+      "issue": "Failed save could be followed by unguarded New/Open/Quit",
+      "resolution": "New/Open and applicationShouldTerminate use the same Save/Keep Editing/Discard decision. saveProject and saveProjectAs return false on errors or cancellation."
+    },
+    {
+      "issue": "Open-current-project read stale manifest before requested Save",
+      "resolution": "load now obtains replacement permission before reading the target project."
+    },
+    {
+      "issue": "Save As could copy a directory symlink instead of its package",
+      "resolution": "Source root is resolved before directory enumeration/copy; target and containment checks use resolved paths."
+    },
+    {
+      "issue": "Destination inherited readonly root permissions or a failed copy escaped cleanup",
+      "resolution": "Distinct destination root is explicitly created with mode0700; createdDestination is set immediately after successful creation, before copying children, so subsequent failure attempts removal."
+    }
+  ],
+  "control_flow_checks": [
+    {
+      "path": "Dirty -> Keep Editing",
+      "result": "returns false before New/Open state mutation; termination delegate returns terminateCancel."
+    },
+    {
+      "path": "Dirty -> Save -> write error or cancelled Save As",
+      "result": "save method returns false without clearing isDirty; replacement/termination does not proceed; project and undo history remain in memory."
+    },
+    {
+      "path": "Dirty -> Discard -> successful New",
+      "result": "returns true; new scratch project is created; only then project/root, selections, waveform and undo/redo state are replaced and isDirty is cleared."
+    },
+    {
+      "path": "Dirty -> Discard -> failed New/Open",
+      "result": "previous project and undo history remain; failed creation/read does not assign replacement state. New may already have stopped transport."
+    },
+    {
+      "path": "Dirty -> Save -> successful Open of current project",
+      "result": "save completes before target manifest is read, avoiding the stale in-memory snapshot."
+    },
+    {
+      "path": "Failed distinct-destination Save As",
+      "result": "project/root/name are not committed; cleanup is attempted for the created destination and error is shown."
+    }
+  ],
+  "meter_and_undo_review": [
+    "Meter callback reads sample buffers and computes peaks without reading actor state; delivery occurs on main queue with running/generation checks. Stop invalidates queued callbacks and resets engine and shell peak state.",
+    "Configure stops prior transport before replacing nodes and prepared buffers. Failed engine.start removes the meter tap. Hardware output quality/timing is not established by this inspection.",
+    "Undo/redo restore model snapshots, reconcile selection and rebuild waveforms. Named edits now remain in memory until explicit Save; scratch edits retain their recovery autosave."
+  ],
+  "retained_related_evidence": [
+    {
+      "path": "research/evidence/application/APP001/core-tests-interval.json",
+      "sha256": "3f947c7a0e5415cd481d274d3312f0bbeae466e60ea397f6ba4a1628e4646e6e",
+      "size": 1809
+    },
+    {
+      "path": "research/evidence/application/APP001/core-tests-interval-output.log",
+      "sha256": "36cbec31a261fecf0cc551f63773f7c39620ec64e4f1deeaf7a6103068544cbe",
+      "size": 5602
+    },
+    {
+      "path": "research/evidence/application/APP001/core-review-finite.json",
+      "sha256": "631bd3e04af766a11c2d2b3d0ac9d9db7cf270c9a1ecccfb5e7118a1a0b1078e",
+      "size": 2132
+    }
+  ],
+  "related_test_note": "The core worker retained 23 passing tests in five suites, including four interval-boundary tests. This reviewer verified referenced hashes and read the shared validator; these core tests do not automate modal shell decisions.",
+  "limitations": [
+    "Native Save As modal success, failed-save prompts, permission variants, disk-full handling and application termination remain separate runtime checks; parent UI observations are not relabeled as this reviewer's observations.",
+    "Cleanup is best effort: permission or filesystem failures can prevent removing a partial destination.",
+    "Nested copied-file permissions, ACLs, internal absolute symlinks and concurrent external file changes are not exhaustively exercised.",
+    "The peak meter measures engine mixer buffers, not DAC/speaker output; timing, native mixer arithmetic order and dropout behavior remain unverified here.",
+    "Closing a window without terminating the process is not a tested lifecycle transition in this review.",
+    "No Cubase equivalence or target execution claim."
+  ],
+  "source_mutations_by_reviewer": false
+}

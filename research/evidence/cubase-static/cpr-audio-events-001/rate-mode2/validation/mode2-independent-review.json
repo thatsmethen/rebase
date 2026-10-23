@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-20T09:31:35.052696+00:00",
+  "reviewer": "fidelity_protocol",
+  "scope": "Independent original-instruction arithmetic/buffer oracle, spying backend and pinned public SoXR wrapper integration; no Cubase execution.",
+  "status": "no_actionable_defect_in_reviewed_bounded_domain",
+  "target_execution": false,
+  "cubase_runtime_comparisons": 0,
+  "reviewed_sources_and_evidence": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode2.c",
+      "bytes": 12402,
+      "sha256": "31d246b317726458bc46c747d37a8e2ae1d582b70a55d7b69d99b2c728016380"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode2.h",
+      "bytes": 3919,
+      "sha256": "e125e7965509e74ed5e0c5302bae35f2dd5e642f6f92ccb60388954ada2bb9e7"
+    },
+    {
+      "path": "Application/Sources/RebaseSoXR/rebase_soxr.c",
+      "bytes": 2538,
+      "sha256": "6b2f8a18be586f58d7e43647874c781dd956c828ae88c366aba56b2a99beb0fe"
+    },
+    {
+      "path": "Application/Sources/RebaseSoXR/include/rebase_soxr.h",
+      "bytes": 1200,
+      "sha256": "81cce53e899e4360b831702a3be0365ac99f772bef9e5e721a10b079db3af658"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode2Tests.swift",
+      "bytes": 19713,
+      "sha256": "eb32b61fb22b286a577b18f87ede54453dd448c8870c5e11a4a5148a6ce06041"
+    },
+    {
+      "path": "research/evidence/application/APP012/mode2-wrapper-oracle.py",
+      "bytes": 16452,
+      "sha256": "13d030c982ca7154ae29839e527638cd900068f785ba5e8a05095115d6957b64"
+    },
+    {
+      "path": "research/evidence/application/APP012/mode2-wrapper-oracle.json",
+      "bytes": 365987,
+      "sha256": "bae42e6878db26177403ebd9cb622afc926794a06431dc88ba79d772af205225"
+    },
+    {
+      "path": "research/evidence/application/APP012/mode2-public-oracle.py",
+      "bytes": 6810,
+      "sha256": "8f051d49f4b2e660951cfcfe8e3f7d93e73f4f2693d56124939ccd1e6eeed852"
+    },
+    {
+      "path": "research/evidence/application/APP012/mode2-public-oracle.json",
+      "bytes": 136427,
+      "sha256": "12333d54cf1608abf0d4cbc0a18790c0309c22982ac3ad0619e48eb2956389ca"
+    },
+    {
+      "path": "research/evidence/application/APP012/verify-mode2-instructions.py",
+      "bytes": 2059,
+      "sha256": "22245749142148f92c7f6188d6f7e72af094f5b22b519a94fda7fb536d2506b7"
+    },
+    {
+      "path": "research/evidence/application/APP012/mode2-instruction-verification.json",
+      "bytes": 1668,
+      "sha256": "89966f2bdc9da0d7c14aa5913aa24909aa9b2193957e61b113959a442da705cd"
+    },
+    {
+      "path": "research/evidence/application/APP012/mode2-tests-round1.log",
+      "bytes": 7099,
+      "sha256": "77ed16b2f4c19068e51ee35b008e245fc13b07fa45e06bb37c28b8bc34cc430d"
+    },
+    {
+      "path": "research/evidence/application/APP012/mode2-tests-round2.log",
+      "bytes": 7491,
+      "sha256": "f029d355d461bb1503aa158eb91e07759c0b92faece7a0ca4bf7c318b34ae0d0"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-selection/mode2-wrapper-handoff.json",
+      "bytes": 7943,
+      "sha256": "771763571385a37fa9b6c3baa5c536ec42beb0ed774e897703b0af2f5dd32a04"
+    },
+    {
+      "path": "Application/.build-soxr/install/lib/libsoxr.0.1.2.dylib",
+      "bytes": 188000,
+      "sha256": "c614df97b2c3f3881fa694efc73a6d5152fe0288ac9396adb6bd7c8c8e5f895a"
+    }
+  ],
+  "independence": {
+    "expectations_started_before_candidate_C_read": true,
+    "count_arithmetic": "Exact Fraction arithmetic; separate nearest/ties-even binary64 rounding per original operation, including fused initialization and strict drift comparison.",
+    "sample_model": "Float32 integer-bit copying and initialized retained storage; spy generates distinguishable finite normal samples independently of candidate.",
+    "public_backend": "Python ctypes calls pinned public libsoxr directly with io(0,0), quality(6,0), runtime(0); separately authored instruction wrapper handles counters/storage/padding. Candidate C and application bridge are not loaded by either oracle generator.",
+    "public_filter_limit": "Same public backend is used on both comparison sides. This independently validates wrapper/bridge integration, not an independent SoXR filter implementation or equivalence to bundled proprietary build."
+  },
+  "original_bytes": {
+    "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+    "reviewed_and_reverified_functions": 6,
+    "instruction_words": 1531,
+    "bytes": 6124,
+    "verification": "research/evidence/application/APP012/mode2-instruction-verification.json"
+  },
+  "validation": {
+    "focused_tests": 7,
+    "suites": 1,
+    "seconds": 1.672,
+    "log": "research/evidence/application/APP012/mode2-tests-round2.log",
+    "spy_cases": 47,
+    "public_backend_cases": 27,
+    "public_output_sample_bits_checked": 561454,
+    "full_LoFi_counts": [
+      {
+        "source": 44100,
+        "output": 48000,
+        "input_frames": 1058400,
+        "block_frames": 8192,
+        "returned_frames": 1152000,
+        "final_cumulative_visible": 1151999
+      },
+      {
+        "source": 44100,
+        "output": 32000,
+        "input_frames": 1058400,
+        "block_frames": 8192,
+        "returned_frames": 768000,
+        "final_cumulative_visible": 767999
+      },
+      {
+        "source": 44100,
+        "output": 16000,
+        "input_frames": 1058400,
+        "block_frames": 8192,
+        "returned_frames": 384000,
+        "final_cumulative_visible": 383999
+      },
+      {
+        "source": 44100,
+        "output": 44100,
+        "input_frames": 1058400,
+        "block_frames": 8192,
+        "returned_frames": 1058400,
+        "final_cumulative_visible": 1058400
+      }
+    ],
+    "controls": [
+      "Exact drift equals1 does not increment; >1 does.",
+      "Initial discard less/equal/greater than requested, partial discard contribution and singleton24x ratios.",
+      "Both input/output compaction with partial consumption and output lag; preserved trailing storage.",
+      "Copy requested rather than produced, including initialized zero storage.",
+      "Positive final repeats last frame; NULL/zero final adds zeros; final NULL drain not added to cumulative_visible.",
+      "One terminal call only; no equal-rate bypass.",
+      "Capacity/sample/domain/alias/factory/rounding preflight errors; backend failures poison state with no caller output/count publication.",
+      "Counts query without backend calls or state mutation.",
+      "Impulse, ramp, nonzero final frame and alternating signs in both44.1/48k directions plus equal rate; every returned sample bit matched via SHA256."
+    ],
+    "full_suite": "not run by this reviewer; root coordinates full suite and application acceptance separately"
+  },
+  "review_finding": [
+    {
+      "id": "M2-HEADER-1",
+      "severity": "documentation",
+      "description": "Header originally implied all capacity errors leave state usable. Internal capacity/invariant failures after processing starts poison state, including failures before a later backend call.",
+      "resolution": "Header corrected to public argument/output-capacity/input-sample preflight leaves state usable; any subsequent processing error poisons state. Numerical source unchanged."
+    }
+  ],
+  "bounded_contract": [
+    "Finite integral rates8000...192000, mono/stereo Float32 normal-or-zero samples, nearest-even and hardware flushing disabled.",
+    "Caller positive blocks1...65408; one final positive block or NULL/zero final; source/returned frame limits16million.",
+    "Successful fresh initialization; checked allocated storage; no retry after backend or internal processing failure.",
+    "Explicit caller partition sequence, artificial delay/discard and EOF padding preserved; no plain-soxr_process equivalence claim."
+  ],
+  "remaining_limits": [
+    "No Cubase, bundled SoXR or target-host runtime samples were executed.",
+    "Public scalar SoXR build is a pinned substitute, not the bundled library or observed runtime selection.",
+    "Factory/availability and two retained native selection paths do not establish every hosted policy or fallback.",
+    "Current test cases do not certify arbitrary providers, unsupported data types, changed rates, repeated flush, oversized final blocks or whole-project playback.",
+    "Application stream scheduling, audio device delivery and GUI acceptance are outside this record."
+  ]
+}

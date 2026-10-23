@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "id": "APP002-NATIVE-APPLICATION-001",
+  "recorded_utc": "2026-10-19T09:00:55.988033+00:00",
+  "scope": "Independent application checks using self-authored audio and static-derived bounded processor tables. No Cubase runtime or conformance evidence.",
+  "final_build": {
+    "app": "Application/dist/Rebase.app",
+    "version": "0.2.0",
+    "build": "2",
+    "executable_sha256": "6ef6becac9de097a0b625e4d36dd3a11e30abf76d36e84759f5e382f17b2bafd",
+    "info_plist_sha256": "1700da8785b2b3c0ff1122b37cb8fd6f616c3b23fc9b41005fe3cfef945d8b29",
+    "build_command": "sh Application/build-app.sh",
+    "release_build_exit_code": 0,
+    "build_log": {
+      "path": "research/evidence/application/APP002/build-final-ui-copy.log",
+      "sha256": "62eed7877d17dff981693adcf5be0ba1e6e7af907f7b549aea84dcdc7d4893a4"
+    },
+    "native_codesign_verification": "codesign --verify --strict passed; ad hoc local development signature",
+    "third_party_notice_present": true,
+    "zipfoundation_resources_present": true
+  },
+  "sources": [
+    {
+      "path": "Application/Package.resolved",
+      "sha256": "1a98ca9308ca05618cdb7c709b01085f862a8d4eaec30514dba132dc5c386d28"
+    },
+    {
+      "path": "Application/Package.swift",
+      "sha256": "2b97cf846c373ebcbfd850a9e4c9ab5da934a9c516dee8dca3aad2b48135eec2"
+    },
+    {
+      "path": "Application/Sources/Rebase/AmbisonicExport.swift",
+      "sha256": "954e244ccce2fb9735c3a18ba5f09ae80bccf32b680a33330325b99ff2ea4827"
+    },
+    {
+      "path": "Application/Sources/Rebase/MixerView.swift",
+      "sha256": "b4650e994ae5fb7fe3c68932b1de66ddf0dafd2c0a6e40ec7749dcc269589df0"
+    },
+    {
+      "path": "Application/Sources/Rebase/ProjectEditors.swift",
+      "sha256": "c0feecf1624b0365aa09e1e8982a26a774b3f12fd77c7bf7de0afcbb332a4921"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "sha256": "7fb1b83263c785bf4dd5ccd25ec71a82815dde98f913d006869b0f7a805e79f9"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "sha256": "b9316af15f715e7797b538a23795cf6a5ae645b0539609178e1f9070eca52500"
+    },
+    {
+      "path": "Application/Sources/Rebase/TimelineView.swift",
+      "sha256": "0826c71d678a2293bcf0e8d21a557d8c9e1881b27cf70d552f82f986de76e2d4"
+    },
+    {
+      "path": "Application/Sources/RebaseAmbiDSP/ambi_processor.c",
+      "sha256": "63908b7352e8e3e72baf545348ab0cd8d54c81a6ebaedfab5528141afe76d726"
+    },
+    {
+      "path": "Application/Sources/RebaseAmbiDSP/include/ambi_processor.h",
+      "sha256": "d132434743a64bb48de6d63d0d1c73d74813eac51e5ccb3b21a4661498ea4062"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AmbisonicConverter.swift",
+      "sha256": "6caf356e617015012e0b9845bab58bbd812c6fc510e19e48db74107e030138dc"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "sha256": "418c3206a56cb4f6741272f566b298faf29a5c8d3750537dffec9718b78d3d86"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Automation.swift",
+      "sha256": "b3cf8cdafcb4d799520ad9bfa969a3e1fd04e776405051b446e242bc8738170b"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/DAWProject.swift",
+      "sha256": "206a11b11c6726181c5dfbd97a78fb666338ba0c1ea0c8eb247fef6dacb29de6"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/MusicalTime.swift",
+      "sha256": "ed6f3be23cd2260f074f6f651a8703d0b0872ccff0635f256a869fdb28bb202e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/OfflineRenderer.swift",
+      "sha256": "80bd5c60836aed724cf0d3a948691236c5de23f70c7ecd70e47b3120103a5791"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "sha256": "49aa45033397c8fe2c3facae0435b9a1942089dd8a372ff5d658b9af4d4a70b6"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "sha256": "8e07ab0ff73d120f88efcc8f509cf7b2ebbbbe5c8f9bccd89caacc6d906ab048"
+    },
+    {
+      "path": "Application/Sources/RebaseDSP/ambi_first_order.c",
+      "sha256": "b2af5f8622fa3c336f0c6c6abbb59ddf79151107bfe8e31a23c09dd2a9a1d240"
+    },
+    {
+      "path": "Application/Sources/RebaseDSP/include/ambi_first_order.h",
+      "sha256": "b1103f9cc0450db33aa1331297306e2619998d069cada1e4a919573df8dd0135"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/AmbisonicConverterTests.swift",
+      "sha256": "1295abfb8acae18d13e9262de837dfbc237b23325fd6e778905050a2fb99ba2c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/AudioValidityTests.swift",
+      "sha256": "1b0fef9ad5daa646f32b932496e7acc13232e4be8acf3fad5cd539fa67de66a6"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/AutomationTests.swift",
+      "sha256": "8c772f1723ec1f45e4be512c2984f550c46acc1f47cc800d1fe7207ab2540d36"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/DAWProjectTests.swift",
+      "sha256": "1cf2c7b1666e78330556e4738938dae655493cafe7e4b9ef6550ec1fdd99696d"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/InvalidClipIntervalTests.swift",
+      "sha256": "7ddee37b29c522c0f326cf72babd5b17c874d5fbd8eaa8959f029c00650dbc7c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/MusicalTimeTests.swift",
+      "sha256": "006062768dce1661baa344f6b7c7ea667d8222814d2d6761b189f1ede3da3cb0"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/OfflineRendererTests.swift",
+      "sha256": "0494f4934bb71716c3cab05f85590461b7f103d6ccdd98249b4668f158a9e2dc"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/ProjectBehaviorTests.swift",
+      "sha256": "ca239f0e4700ac5d23c09da497140b768a2c0fb24eea82837f3a0643f3321016"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/ProjectStoreTests.swift",
+      "sha256": "9d74c77db57d88454db3680cb5dec769dff8bc6fe767c4de9f5e808ba1a9dca3"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/RecoveredDSPTests.swift",
+      "sha256": "fab23af6773bb0f2f7ff75aa79b21ab0233d4b9d3ff0cbec55676cfcf7918c3a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/TestSupport.swift",
+      "sha256": "65b3aaf7db8d59c07f1c0fff15d5fc45a5afbbc126b01985ce82a74c28807e1e"
+    },
+    {
+      "path": "Application/build-app.sh",
+      "sha256": "a727e18dde98fa9d1b57464659cbf9f0be00fcbc33d2a2b25de1d34195e91dd6"
+    },
+    {
+      "path": "Application/test-app.sh",
+      "sha256": "e39e5fa6a959b7d73cb92fb609fd0cf091d891d6bc1b613a2cc61e820461f6b6"
+    }
+  ],
+  "source_snapshot": "research/evidence/application/APP002/final-source-snapshot",
+  "automated_tests": {
+    "command": "sh Application/test-app.sh",
+    "passed": 55,
+    "suites": 10,
+    "failures": 0,
+    "log": {
+      "path": "research/evidence/application/APP002/core-tests-accepted.log",
+      "sha256": "3447f0f8960ce966f11f5cf8fb746e451546cac8a70314172bb883079b53da77"
+    },
+    "scope": "Core data, project migration/validation, musical maps, snap, curves, renderer/transport, strict exchange, file converter and boundaries. Independent application checks.",
+    "final_changes_after_full_suite": "Three UI-only corrections: converter help now says 4/9/16; singular lane grammar; musical-position accessibility value. Final release compilation and native relaunch verified. No core or test-source change after accepted suite."
+  },
+  "processor_synthetic_tests": {
+    "methods": 13,
+    "record": {
+      "path": "research/evidence/cubase-static/ambisonic-processor-candidate/2026-10-19-integration/verification.json",
+      "sha256": "f339e6aa9e45fdd0445c900892a19f3e2d756eb66124b4e7711ce46fc5fb000d"
+    },
+    "target_executed": false
+  },
+  "gui_observations": [
+    {
+      "build_sha256": "42a4ace3d24c18db7a8472b1ca35fd8a2d91c3738eacc43efe045ba5bda2e086",
+      "cases": [
+        "Open Timing and Automation fixture: three audio tracks, jump tempo map 120 BPM at beat 0 and 90 at beat 8; signature events 4/4 at 0, 3/4 at 8, 4/4 at 20; gain/pan lanes visible.",
+        "Native Export Mixdown generated Timing and Automation.wav; independent formula comparison matched all 648000 stereo frames including signed zeros.",
+        "Pulse automation point at time 0 changed -12 to -18 dB, Update and Apply succeeded; Undo restored -12 when editor reopened; Cancel closed without changes.",
+        "Tempo editor changed beat 0 from 120 to 100 BPM; Glass Keys musical start moved from 1.5 to 1.8 seconds while 12-second duration and linear tracks remained unchanged; Undo restored 120 and 1.5 seconds.",
+        "Ordinary Bar snap Move later changed Glass Keys 1.5 to 2.0 seconds; Undo restored 1.5. Relative Bar snap preserved 1.5 for the small move.",
+        "Save As created Exchange Check.rebaseproj; switched Glass Keys whole track to Linear. Native Export DAWproject wrote Exchange Check.dawproject from current state.",
+        "Import DAWproject prompted to save outstanding linear-timebase change; Save completed. Import into Exchange Roundtrip.rebaseproj succeeded with three tracks and read lanes.",
+        "Native Export Mixdown on imported project wrote Exchange Roundtrip.wav. Independent manifest/XML/media/audio audit passed; entire WAV identical to initial export.",
+        "File Convert Ambisonics opened basis-9ch-f64-source.wav and displayed 9 channels, 64-bit float, 96000 Hz. FuMa to AmbiX wrote basis-9ch-f64-source-AmbiX.wav; all 8209 frames matched static-table exact-rational oracle payload.",
+        "Playback of imported project advanced to 0.292 seconds with engine mixer peaks left 0.136915 and right 0.074834. Stop returned time and both meters to zero.",
+        "Quit closed without an unsaved guard after saved project verification."
+      ]
+    },
+    {
+      "build_sha256": "6ef6becac9de097a0b625e4d36dd3a11e30abf76d36e84759f5e382f17b2bafd",
+      "cases": [
+        "Final packaged app launched to empty project; musical-position accessibility value is 1.1.1.0.",
+        "Opened original Timing and Automation.rebaseproj with three tracks, corrected singular lane label and saved musical timing/automation state.",
+        "Screenshot visually inspected at 2760x1720: arrangement, variable musical grid, waveforms, inspector, transport and mixer visible without overlap.",
+        "Application left open on original saved fixture, stopped at start; no additional source edits after this build."
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "path": "research/evidence/application/APP002/gui-automation-comparison.json",
+      "sha256": "b01aebee62e18cf206bf01ac8c16e9805d6412e9da5c3d59fb1e5ef946208db8"
+    },
+    {
+      "path": "research/evidence/application/APP002/gui-exchange-comparison.json",
+      "sha256": "488ef9eacf71094576f810c896f3fdf9aad61b013452ae68816f57767ba7d3d5"
+    },
+    {
+      "path": "research/evidence/application/APP002/gui-ambisonic-comparison.json",
+      "sha256": "c1e3db1eedf30d5c068cc4fbb666dc815548664e71e5bbed62967bdc32ef9fa9"
+    }
+  ],
+  "static_findings": [
+    {
+      "path": "research/evidence/cubase-static/musical-time-001/finding.json",
+      "sha256": "5043b4594d18b7c17ff1c57324684e33663feed7f1aee92ad0bba4ae6ae3ea53"
+    },
+    {
+      "path": "research/evidence/cubase-static/automation-001/finding.json",
+      "sha256": "983ad6a1da99cf9b53dc273d6d1de2312b30ec71d6b71526ff269879a937f42e"
+    },
+    {
+      "path": "research/evidence/cubase-static/dawproject-001/native-finding.json",
+      "sha256": "3cf66b9229c82ae13a193dc993c11a25a261b173d8a52edf8ea16e087f60bc10"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-container-001/finding.json",
+      "sha256": "2f5f3080179ae0a712d99c639f919efd737d9bc35621224c6bef034913252e3d"
+    }
+  ],
+  "retained_failures": [
+    {
+      "path": "research/evidence/application/APP002/core-tests-initial.log",
+      "resolution": "Spatial tap API corrected to public SpatialTapGesture."
+    },
+    {
+      "path": "research/evidence/application/APP002/core-tests.log",
+      "resolution": "Multichannel test fixture uses explicit discrete channel layout."
+    },
+    {
+      "path": "research/evidence/application/APP002/core-tests-final.log",
+      "resolution": "Source-format guard test fixture corrected to raw CAF; AVAudioFormat.standard had clamped rates or rejected multichannel shape."
+    },
+    {
+      "path": "research/evidence/application/APP002/ambisonic-integration/initial-encoder-failure",
+      "resolution": "Observed AVAudioFile float64 WAV narrowing; explicit IEEE float RIFF writer now preserves stored precision."
+    },
+    {
+      "path": "research/evidence/application/APP002/build-packaged.log",
+      "resolution": "Repeated package copy of read-only ZIPFoundation licence fixed with cp -f; subsequent package builds pass."
+    },
+    {
+      "path": "research/evidence/application/APP002/Timing and AutomExchange Check.rebaseprojation.rebaseproj",
+      "resolution": "Test-driver keyboard selection inserted name into middle of save field. Preserved accidental test package; repeated Save As with setValue and verified exact field succeeded. No user project affected."
+    }
+  ],
+  "limits": [
+    "Cubase reference runtime cases and candidate conformance cases remain zero; whole-product fidelity unestablished.",
+    "Application timing, curve, pan/balance and linear resampling policies are independently implemented. Static declarations do not establish native arithmetic.",
+    "DAWproject is a strict flat mono/stereo audio subset: no musical anchors, ramps, complex routing, plugins, MIDI or disabled automation; unsupported content rejects. Local roundtrip and XSD validity do not establish Cubase interoperability.",
+    "Ambisonic UI exercised one 9-channel float64 direction; automated file tests cover all 12 channel/precision/direction configurations. No live multichannel bus, VST lifecycle or hardware capture.",
+    "Tempo ramps, audio stretching, automation write modes, recording, MIDI editing, CPR objects, plugin hosting, PDC, complete routing and remaining DSP/UI are pending.",
+    "Prepared buffers rebuild and restart at current position on edits; not a continuous realtime mixer.",
+    "Native accessibility interactions and selected screenshot inspection are not an exhaustive mouse drag, keyboard or accessibility audit.",
+    "Output peaks observe AVAudioEngine buffers; no hardware DAC capture or listening claim. Source media and file size limits remain explicit.",
+    "GUI observations are analyst records of tool-returned state; screenshots were inspected in the conversation but not retained as separate image files."
+  ],
+  "reference_runtime_cases": 0,
+  "candidate_conformance_cases": 0,
+  "whole_product_equivalence": "unestablished"
+}

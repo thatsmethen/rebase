@@ -1,0 +1,25 @@
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[3/8] Write swift-version--1AB21518FC5DEDBE.txt
+[5/11] Emitting module RebaseCore
+[6/11] Compiling RebaseCore ProjectStore.swift
+[7/11] Compiling RebaseCore Project.swift
+[8/18] Emitting module RebaseCoreTests
+[9/18] Compiling RebaseCoreTests CPRAudioMediaAttachmentTests.swift
+macro expansion #expect:1:39: error: operator can throw but expression is not marked with 'try'
+`- /workspace/rebase/Application/Tests/RebaseCoreTests/CPRAudioMediaAttachmentTests.swift:78:77: note: expanded code originates here
+ 76 |         #expect(attachment.mediaSHA256 == cprSHA256(bytes))
+ 77 |         let copied = try ProjectStore.resolveMediaURL(attachment.mediaPath, projectRoot: package)
+ 78 |         #expect(copied != source && (try Data(contentsOf: copied)) == bytes)
+    |         |- note: in expansion of macro 'expect' here
+    |         `- note: in expansion of macro 'expect' here
+    +--- macro expansion #expect ---------------------------------------
+    |1 | Testing.__checkValue(copied != source && (try Data(contentsOf: copied)) == bytes,expression: .__fromSyntaxNode("copied != source && (try Data(contentsOf: copied)) == bytes"),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
+    |  |                                       |  `- note: call is to 'rethrows' function, but argument function can throw
+    |  |                                       `- error: operator can throw but expression is not marked with 'try'
+    +-------------------------------------------------------------------
+ 79 |         #expect(try mediaFiles(package) == [copied.lastPathComponent])
+ 80 |         #expect(project.unresolvedAudioEvents == baseline.project.unresolvedAudioEvents)
+[10/18] Emitting module Rebase
+error: fatalError

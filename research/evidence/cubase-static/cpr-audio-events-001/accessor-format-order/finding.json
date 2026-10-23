@@ -1,0 +1,101 @@
+{
+  "id": "CPR-ACCESSOR-FORMAT-ORDER-001",
+  "schema_version": 1,
+  "created_utc": "2026-10-20T23:45:07.822469+00:00",
+  "status": "sealed_conditional_native_format_composition",
+  "target": {
+    "image": {
+      "path": "research/targets/derived/Cubase15-arm64",
+      "bytes": 85691328,
+      "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+    },
+    "version": "15.0.30.287",
+    "architecture": "arm64"
+  },
+  "proprietary_target_executions": 0,
+  "cubase_runtime_comparisons": 0,
+  "native_custody": {
+    "function_intervals": 3,
+    "unique_entry_addresses": 3,
+    "source_bytes": 9256,
+    "native_words": 2314,
+    "rea_dossiers": 3,
+    "rea_instruction_addresses": 250,
+    "unique_evidence_records": 6,
+    "reused_words": 1191,
+    "original_jump_cells": 3,
+    "canonical_records_imported": 6,
+    "analysis_clients_closed": 1,
+    "import_clients_closed": 1
+  },
+  "contracts": [
+    {
+      "id": "FO1",
+      "claim": "General conversion applies rate conversion before type/channel/gain changes for source rate above output rate. For source rate below output rate it generally applies type/channel/gain first; destination24 with non24 source is a separate early-rate exception.",
+      "evidence": "1003306f0..774 and100330778..8ec; caller100330cd4 falls through after fast-path failure for unequal rates."
+    },
+    {
+      "id": "FO2",
+      "claim": "Source24 rate conversion enters10032646c via original table103934638[2]. It decodes packed24 with unity gain into Float32, invokes10030a534, then quantizes each returned value back to packed24 before later format conversion.",
+      "evidence": "10032646c..5c4; source-format flagw4=1 from100330764."
+    },
+    {
+      "id": "FO3",
+      "claim": "Quantization separately multiplies Float32 by2^23, clamps at signed24 endpoints, truncates then rounds the residual to nearest-even using binary64 comparison. Negative zero becomes integer zero. This intermediate stage can change samples relative to direct Float32 resampling.",
+      "evidence": "100326528..5c4; positive threshold0x4afffffe=8388607, negative threshold0xcb000000=-8388608; exacthalf compares odd truncated integer."
+    },
+    {
+      "id": "FO4",
+      "claim": "The subsequent24-kind1 to32-kind2 stage selects1003312c4 or1037d88d4 with gain1. Their signed24 integer decode and power-of-two scaling are exact. Original tables103934640[2] and103934680[3] bind this branch.",
+      "evidence": "100326da8..de0\u219210032725c..290\u2192100327960..978; fresh decoder dossiers and original-image tables."
+    },
+    {
+      "id": "FO5",
+      "claim": "The candidate implements only the packed24 intermediate quantize/decode stage; the app must bind actual selected-backend format and processing order before selecting it.",
+      "evidence": "candidate/cpr_accessor_format.c and original-bindings.json"
+    }
+  ],
+  "candidate": {
+    "source": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/candidate/cpr_accessor_format.c",
+      "bytes": 1859,
+      "sha256": "93867452e419fc03bdbe8a5576e8fc6f70e81ddb284930472e2cbb01e9e668e5"
+    },
+    "header": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/candidate/cpr_accessor_format.h",
+      "bytes": 751,
+      "sha256": "657a8ac70785c7a4d8ed39c25bc03048b2a14d701329d14218be9cb16d2519ad"
+    },
+    "api": "rb_cpr_accessor_pcm24_roundtrip",
+    "domain": "Finite normal-or-zero Float32; scaled values finite; nearest arm64 FIZ/AH/FZ/DN disabled; transactional rejection;1..32000000 samples. Defensive restrictions are application policy."
+  },
+  "validation": {
+    "report": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/validation/accessor-pcm24-controls.json",
+      "bytes": 6000,
+      "sha256": "b9ac5b35721ccb5f19f39d74a1f62ae04a70b552b9dffacece3568b2d37ff799"
+    },
+    "oracle": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/validation/accessor-pcm24-oracle-v2.json",
+      "bytes": 402077,
+      "sha256": "c9031fc3ba4f72298fcd7ebcef631e1912ef61b6e83395a1b110f85e1e4163d6"
+    },
+    "vectors": 681,
+    "accepted": 606,
+    "rejected": 75,
+    "assertions_per_build": 3124,
+    "builds": [
+      "optimized",
+      "UBSan"
+    ],
+    "gain_order_noncommutation_controls": 1264,
+    "scope": "Independent Fraction/IEEE expectations and own candidate execution only."
+  },
+  "limits": [
+    "A WAV extension or saved PCM24 description does not prove the current selected backend descriptor. No concrete hosted format or project/output rate is inferred here.",
+    "REA raw-slice metadata intervals omit external context. Three dossiers decoded250 instruction addresses of2314 original words; original tables and1191 reused words were checked separately. This is not complete decompilation coverage.",
+    "No complete generic converter, channel/layout path, allocator address order, resampler choice, backend availability, lifetime, EOF or nonunity gain composition is established by this study.",
+    "The first oracle version lost intermediate signed-zero metadata. It and its generator are retained; corrected v2 leaves all final output/admission expectations unchanged.",
+    "App integration and release acceptance are separate APP016 work; this seal does not assert a new GUI release."
+  ]
+}

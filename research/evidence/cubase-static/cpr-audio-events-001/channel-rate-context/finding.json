@@ -1,0 +1,317 @@
+{
+  "schema": 1,
+  "id": "CHANNEL-RATE-CONTEXT-001",
+  "target": "Cubase Pro15.0.30.287 macOS arm64",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "evidence_class": "static original instructions plus isolated REA/Ghidra; analytical controls",
+  "target_execution": false,
+  "runtime_comparisons": 0,
+  "status": "bounded local rate and dispatch contracts established; source/engine reconciliation remains unestablished",
+  "summary": "VstDeck device-management rate/factor drives the timeline datum and, on a concrete update path, an integer-truncated SequencerEngine rate. The ordinary channel branch does not select a converter by comparing source rate. Separate alternate interpolation exists but is not an admissible general mismatched-rate implementation.",
+  "claims": [
+    {
+      "id": "CRC1",
+      "title": "Reader uses VstDeck period, not selected stream rate",
+      "static_contract": "Original101d3eb78..84 loads global1050105e0 and its Double+390 period.101d3ebd4 takes datum+388; ebe0 computes RN64(1/period),ec14 narrows to Float32,ec18 widens toDouble. Quantized segment start/end/offset and seek indices use this widened multiplier. There is no selected-stream+140 rate query or accessor rate setter in this retained reader.",
+      "entry_evidence": {
+        "0x101d3eb24": [
+          "ev_cdf9ff9130018b3ea3f34035ccc4fbe91c321763d208d6325a996ebd475e5c2c",
+          "ev_9a834cae8c37ee9d35b633871ac036e535ca8f69418de64855ee6ae9815c361b"
+        ]
+      },
+      "limits": [
+        "This is the reader period arithmetic, not proof of source, project, builder or hardware rate equality."
+      ]
+    },
+    {
+      "id": "CRC2",
+      "title": "Concrete VstDeck setter and device-management inputs",
+      "static_contract": "VstDeck ctor101d99034 sets primary1047b70b0. Slots500/508/510 are101d9b3b4/101d9b5d8/101d9b5f0. On the positive-d0 setter path, product=RN64(d0*d1); datum+388 is reset to type10 with reciprocal period, self+318 receives d1 and +310 receives d0 when changed. Initialization caller101d99584 queries+510 then+508 and invokes+500 with update-device flag1 when10049473c succeeds. Both getters reach the device manager at global1050311e0: +510 ultimately1004916f0 queries manager+320 virtual+d8, accepting a positive result or using44100; +508 ultimately100491728 returns virtual+a8 of qualifying PDevice/PBaiosDevice+2b8, or1. Setter update-device branch can call1004924d8, which forwards factor to that subobject+b0 and rate to manager+320 virtual+e0.",
+      "entry_evidence": {
+        "0x101d99034": [
+          "ev_bdfc3583b7f440def26011be3e06c11ad36d5e1562fb3a1fd0b8bb19e83e8214",
+          "ev_0b8b111a111efbb19a68d797c6187030b2c7e26207c417f2c564ec9d873eb762"
+        ],
+        "0x101d9b3b4": [
+          "ev_0670d7ac02771ced6cc77f3fe8700570d2e0751784cc5f23244ae9b91cabbadc",
+          "ev_d549f1998e2a74a1dc90a3bf09c2bf0378dd786f539f720ad235b0a32b64cf21"
+        ],
+        "0x101d99584": [
+          "ev_504a7ec4712e998e5bc79751ed8d24da0a4ce49f5d584b0dbd2d05d04d50d223",
+          "ev_23c169a9ffca24259a86ea78787420b7abaa032d95ed4a4949fc5fc4ce466d9f"
+        ],
+        "0x101d9b5d8": [
+          "ev_86e3b530286b9ca837f7f29104d0767081ccf06592cae5ec6f0e99e0d38c8db4",
+          "ev_67f1bb4f9a703d3cc50aba48279c44a3eff71f5c3717bd779f945a1dbed4d308"
+        ],
+        "0x101d9b5f0": [
+          "ev_8c75b2b47cabc235a6bb99c60c99317e35c8edec33b5c566800efba936d3f65f",
+          "ev_2f12f9d7042bd79092f6249cfa9557e9ad130729c774d7bc4185b8207508ce1e"
+        ],
+        "0x100494728": [
+          "ev_09703d0628a4339187b1c8667605ed09ce2a9b78362d7385c7c394401f14eec8",
+          "ev_372b6bdee42bf9a0db6b3c1658627ff222ba413678d4bc6bb919ac7678a89a57"
+        ],
+        "0x100494734": [
+          "ev_093b3d94cb8da09689889026a72af482080d1a83317981424de794b8766a2e19",
+          "ev_4dbd13cbb8c9492d6f989af1dc1437f0b12e71b07aa21c5e7261369d419f8ee3"
+        ],
+        "0x1004916f0": [
+          "ev_0a97118d3cdc23fb654fdd5b4656716954eadbf87e98626e53cac32fbbe93238",
+          "ev_41f542f2e94bd551dbb3e769c7a32379fcf47ad8218e12d9b5f121fc6c70dbb6"
+        ],
+        "0x100491728": [
+          "ev_337ab4891607568deabf489c7bbc1e36daff84547b1903219c5fdc2a99c4b159",
+          "ev_d1fc79bbd69d2d4c401652b1f956dbb7f748d2da340d46a0f8245a898e8970b7"
+        ],
+        "0x1004924d8": [
+          "ev_b821e5db3c3b079fec3e4ee9628887f9340fbbecf721748f55f41194862ec0a4",
+          "ev_6aa959ffaeaad5203d7c51d3253e1ef1a6f7c425c248e15b9576107613483084"
+        ]
+      },
+      "limits": [
+        "Concrete device backend implementations and physical device rate are not closed.",
+        "This does not establish every setter caller or runtime startup ordering.",
+        "Callbacks may update state; the product field relation is the listed successful static path."
+      ]
+    },
+    {
+      "id": "CRC3",
+      "title": "Transport context is separate from engine rate storage",
+      "static_contract": "Components default+40\u21921005c078c returns Components+40, initialized using1005c0b18 under typed registry key Transport::ITGTransport. Default registration1005cabb0 constructs101c6a130\u2192101c69b00 with table10478ae90. VstDeck setter forwards product to this receiver+240\u2192101c6d040, which on changed value storesDouble+5c0 and reciprocal+5c8; it forwards factor to+260\u2192101c6d160. This receiver is TGTransport, not AudioEngine::SequencerEngine.",
+      "entry_evidence": {
+        "0x1005c078c": [
+          "ev_0cc31848fab9a27b825b98d25dad4af1d0056e22e4964ac06ffce6dd27725141",
+          "ev_85848fff31cc96c5f348c1a409b1066f7f5061d1be9c6e81d69a3efbed9ef9b3"
+        ],
+        "0x1005c0b18": [
+          "ev_a7f2619ad1825c0c8626f77cef09b6dea2e1b3b9f924fbbba20991ee32082bac",
+          "ev_534af82a2cb672ac6e61aebd9d0ea5d07bf09ccc13d5000af8aa79b9d30512e2"
+        ],
+        "0x1005cabb0": [
+          "ev_48254454f49aa3a5476e89aa80475946b1bdc278d15c1d829d77d2e2e2d252c8",
+          "ev_8c78066360ebdbe26c0efcf1e3c410349256ccb60c6930ebcd79c6bb8ad0d521"
+        ],
+        "0x101c6a130": [
+          "ev_a462a9aff79cdd896031ed227a592bb6893c55797eaf62c6a1a745f0395fc3f7",
+          "ev_eb4e98c71fe12e89a7d693c86609596197c07fb1548228a6b54e7914afe532b8"
+        ],
+        "0x101c69b00": [
+          "ev_fe68b8aa3d05ce98d3b55096b313eb9581d3cd2ba5933467f89dfa65fbfc1e3f",
+          "ev_472e32d7817fe1807f3a2b25b9a5ffa7229a884e61dec10a7f03f47950532c1e"
+        ],
+        "0x101c6d040": [
+          "ev_bbac8a392e7498664bb1332b272d8a48201a4ba2786c4afe790aa2091d4cc724",
+          "ev_01bf3d01113402b22749c7d5f3174492034cad84e69a8cc9534e70b79245fd50"
+        ],
+        "0x101c6d160": [
+          "ev_337f857c53c513799a908fc5f6dda14298c74f0b46d3ae73a06081ca1eb3addd",
+          "ev_10c5a816cf993b3b6729d81da2aad9222407dd5a593630a1f95315f9f4efd0e7"
+        ],
+        "0x101d9b3b4": [
+          "ev_0670d7ac02771ced6cc77f3fe8700570d2e0751784cc5f23244ae9b91cabbadc",
+          "ev_d549f1998e2a74a1dc90a3bf09c2bf0378dd786f539f720ad235b0a32b64cf21"
+        ]
+      },
+      "limits": [
+        "Typed registry entries are replaceable. No arbitrary plugin/provider invariance claimed.",
+        "TGTransport callbacks and global transport-factor effects are not fully reconstructed."
+      ]
+    },
+    {
+      "id": "CRC4",
+      "title": "Concrete engine rate update truncates the product to signed32",
+      "static_contract": "Function101ed701c at101ed7098..70e8 loads VstDeck+310 and+318, multipliesDouble, FCVTZS to signedW23, then SCVTF back toDouble. It gets current IEngine via102fc82b4, obtains its rate-pair pointer through+98 and compares the firstDouble. On inequality it invokes+a0 with the widened truncated value. Default engine factory1005c7d40 registers AudioEngine::IEngine and installs SequencerEngine primary1047d9968; +98\u2192102fc7564 returns self+268, +a0\u2192102fc756c stores rate+268 and positive reciprocal+270 (zero reciprocal for nonpositive). Getter102fc82b4 returns firstptr of global105013588;102fc797c initializes that record through typed registry subscription102fc7df0. Direct caller101ed6e48 supplies engine/config state then invokes101ed701c.",
+      "entry_evidence": {
+        "0x101ed701c": [
+          "ev_a85ac520a54edc00d38f306e1f9c8b21ca8f72fab5c246d0aa79a4faf89e7cb3",
+          "ev_bb591a24720bc06551edc83fbc4996beb10bbcb50e8998f7d17a495373958f4b"
+        ],
+        "0x101ed6e48": [
+          "ev_400504056ac94b3fbf27d83e5b4ab2b46511ac60565595ae414d36da3b76f82d",
+          "ev_033d09300dbcdb28c24a8ede58b56e8ab6a86d36fbfab63599a7e9bffd9e57e0"
+        ],
+        "0x102fc82b4": [
+          "ev_e8fd5d421faaa93717650997622da34839a7e991c56190516ba924039b8edc0b",
+          "ev_247d918f90e994f649f2c76165ab110062b6964e2f409aeada2623585a3e1b81"
+        ],
+        "0x102fc797c": [
+          "ev_6be8981c02d0e028f0e5579a035407cce492b381a4c05d58f89078e8542cb145",
+          "ev_bb73456580c8503cc57e56a85b3f4c0587de8976a070f63bd438001072e7d9a2"
+        ],
+        "0x102fc7df0": [
+          "ev_612b823bc942ac516b47b253d0ecc0a439db8eaff83dbb521f352f36cb88e63b",
+          "ev_e9a2198548fc8a7b3b0b7d4fae766c92bccfc8ddcb7bb53bbf7429bfaf34595a"
+        ],
+        "0x1005c7d40": [
+          "ev_355755c81688a35babb3f8b924376f54d0a19b80e08e7f1ad0a3da975e87650f",
+          "ev_dff3274ab32a0c2dca253fa0b393aefa1c3262aadae4b206d6d69183ded65b54"
+        ],
+        "0x102fc7564": [
+          "ev_11006f4365b28e0031a520403019d6cb830159a2c3303bc012753d32621c2e2d",
+          "ev_9cf05eeed620339e66a02a3a5dca5a0bdb056bcb82ab6541e1fcb851525b5fcb"
+        ],
+        "0x102fc756c": [
+          "ev_a5f4e25f4d7ab5cb178ed0823659636af1bae12a7fd35b53444dadbf50a175a4",
+          "ev_b3a30cb6b0b4fc25c74da0bbaa8184fbbca2c1d253228a0ce3664eb386c9a521"
+        ]
+      },
+      "limits": [
+        "Claim is conditional on the inspected default concrete engine provider and successful call path.",
+        "Signed conversion is described for finite representable products; no nonfinite/saturation application policy inferred.",
+        "It is not valid to replace reader reciprocal/narrowing with this integer engine rate for fractional products.",
+        "No proof that this is the only engine rate setter path or that it is invoked before every callback."
+      ]
+    },
+    {
+      "id": "CRC5",
+      "title": "Ordinary and alternate channel output selection",
+      "static_contract": "Float32 channel101d3fc3c obtains state through101ea1c98()->+120+658\u2192101f46378 (+8 pointer getter). For valid channel/plane preconditions, ordinary timeline-buffer path is selected if state+a8==0 OR channel+14c8->+258 byte+2ec!=0; with channel+1608==0 it calls101d0d034. This forwards to101d0d038, whose retained buffer-filling path101d0cc58 calls provider; concretechannelprovider101d3f7d8 reaches101d3e704 and mapped caller101d3ea38 / reader101d3eb24. The alternate branch is selected only when state+a8!=0 and thatbyte==0. It derives mapping state atchannel+1a58, obtains source buffer ranges and calls101d437e0 for eachchannel.101d437e0 uses an interpolation receiver selected from104fa4008 based onVstDeck+370, invoking its+30 to computeFloat32 sample data, along with position/gain mapping callbacks. It is a separate sample-producing path, not an observed automatic source-rate comparison.",
+      "entry_evidence": {
+        "0x101d3fc3c": [
+          "ev_6b5bfb75b73ae9702b386ce575b2a050fef3c6c4bba760d686d2c8a8d3c947b0",
+          "ev_a80fbd5418785137ddbbffa2e52e435f528479e7237aa621ad4d211397a73929"
+        ],
+        "0x101f46378": [
+          "ev_cfb949d2169ff96b19ac22de658b16e64a7de953e833b247739dbd6d54a1524e",
+          "ev_6d3e0083d506c0ddb4afdf5a9fcfa437d867b8bc56395abd7e047c7f955203f1"
+        ],
+        "0x101d0d034": [
+          "ev_695ae27442423910d4106c333ada7818a19c1c62997189a438265b821c8e2a69",
+          "ev_6d5cc183c6eb8a9455c6ee6ce9472ef1df896042a4971c6307b3a28b92126887"
+        ],
+        "0x101d0d038": [
+          "ev_be41267bec34c374b1d4755f37a0cd642158468f1471a9da3cca0c9b8977021f",
+          "ev_ca6225b067e09ce8d396047076dc24245ad3cb90c3e2263144ee6c8e89629f52"
+        ],
+        "0x101d0cc58": [
+          "ev_1ca584c791bc5c0b2b79fc99d8bf7271a3fd5d57da700a19135d31b8242da833",
+          "ev_5bafebf25d666bdf9e8d009e8f247f071eef69f66420fc1a823e25541b8b7f95"
+        ],
+        "0x101d3f7d8": [
+          "ev_0f01b2454243227b1c9174b275b096ff194f47625b6d4fb4cb4392431313ef0a",
+          "ev_52e7bafaf5d58710d6a5e9a5e3c1ef87efe6a91d137424e7f819605d05ba4ad1"
+        ],
+        "0x101d3e704": [
+          "ev_0e0d5153a2f0460e97cf1b48f410e7c3ca989b7a9a038e13b751307bcbf6f31d",
+          "ev_97d2311bffb504635611e99fb86944ac2e125c45e25f5f99187c1fb1d8dfed89"
+        ],
+        "0x101d3ea38": [
+          "ev_52223cae67cf9f15f0175ec948d76931335a034294fe080160327e867ad711ce",
+          "ev_8cb24798bcd40021f9aa03d356cd2fee50a569e201c85e34ec61cc965ad03842"
+        ],
+        "0x101d3eb24": [
+          "ev_cdf9ff9130018b3ea3f34035ccc4fbe91c321763d208d6325a996ebd475e5c2c",
+          "ev_9a834cae8c37ee9d35b633871ac036e535ca8f69418de64855ee6ae9815c361b"
+        ],
+        "0x101d437e0": [
+          "ev_d9fd5d9faf6b54d5df730ac3b8a0d406538dc8fdcc726fb13b97e210b5f6f105",
+          "ev_dff3c5d31bdbf39117b599917b2c9ff5c4e6fe443680a59f1692967181ec2db3"
+        ]
+      },
+      "limits": [
+        "Do not label the alternate condition as rate mismatch; no source-rate getter participates in this branch decision.",
+        "Alternate interpolation coefficient factory, mapping-state lifecycle and external callback behavior remain unclosed; no new kernel is offered.",
+        "Ordinary callback copying does not prove absence of conversion elsewhere in the host."
+      ]
+    }
+  ],
+  "validation": {
+    "new_captures": 34,
+    "new_unique_functions": 33,
+    "reused_captures": 12,
+    "bytes_verified": 17476,
+    "original_native_words": 4369,
+    "rea_instruction_addresses": 4014,
+    "closed_raw_sessions": 14,
+    "discovery_only_intervals": 3
+  },
+  "analytical_controls": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/rate-controls.json",
+    "bytes": 8732,
+    "sha256": "6743ec8524e4837fb93af69bd7439dd00cb16824d25b691348f4e106b0937423"
+  },
+  "prior_findings": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/finding.json",
+      "bytes": 12852,
+      "sha256": "111ec14e07fb9a88b26a558c75a0c99eb3c8b1d2674394a889556c26cb6f7a75"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider/finding.json",
+      "bytes": 15413,
+      "sha256": "96edf3d32313581e95b804581e44af8ce4888e01148e384f6c4f12a6411ac539"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/finding.json",
+      "bytes": 19331,
+      "sha256": "aa9e0ef239dfb7e3516bf198c77d45881a73e3fc6b0a2d51b5994f8fa1fcf1bd"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/finding.json",
+      "bytes": 33246,
+      "sha256": "889f90405c4d5607958f92f35b38e99a1b821f3708d038eda0ee53819eea657b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/finding.json",
+      "bytes": 31753,
+      "sha256": "d76301f9ef7e25345c0e22fdded03aecff7e41f5ffbd0729985a0018518a1ea2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-binding/finding.json",
+      "bytes": 17380,
+      "sha256": "336cb75ecee76b121ccfe649ba97e47256ec182694c5c7af9127c8692b644cfc"
+    }
+  ],
+  "open_boundaries": [
+    "Builder root+128 provider slot0 supplies its rate (10171c5a0, prior placed-event-context); concrete installation/equality with VstDeck is not closed here.",
+    "Ordinary direct/curve/inversion selected streams may retain their source rate; this study does not establish where arbitrary source/engine rate mismatch is reconciled. Existing differing-rate placed playback must remain gated.",
+    "Global VstDeck datum state, engine rate and physical device rate are separate stored/runtime concepts. The new coupling does not establish universal equality.",
+    "Upstream grouped stream normalization uses a reference stream in the peer study; not a proof of project or engine rate.",
+    "Alternate interpolation selection depends on two retained state fields, not source/engine rate comparison. Its complete backend/lifecycle contract remains open.",
+    "Typed Components/engine registry may select replacement providers. Only default concrete paths inspected here are bound.",
+    "No target execution, driver activation, hosted playback, device capture or exported sample comparison occurred."
+  ],
+  "scope_for_application": "A rate-context diagnostic or explicit analytical model may use the retained arithmetic. This study alone does not authorize automatic different-rate native timeline playback, source-rate substitution, or a claim of device-rate fidelity.",
+  "review_status": "author verification complete; independent review maintained separately at research/evidence/application/APP017/channel-rate-independent-review.json",
+  "canonical_import": {
+    "attempted_records": 92,
+    "unique_records": 90,
+    "imported": 90,
+    "unknowns_added": 0,
+    "initial_attempt": "evidence-import.json",
+    "initial_error": "Duplicate record IDs from the repeated 101d99584 capture. Original failure retained.",
+    "correction": "Retain first record unchanged only after equality except subject.local_path; preserve both capture dossiers and duplicate-record-custody.json.",
+    "success": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/evidence-import-unique.json",
+      "bytes": 367,
+      "sha256": "deaa9b58295f8cd3c8643d0cd660f7617812ca2f636fcd99131f5c1e4c916f39"
+    },
+    "raw_session_count": 14,
+    "import_session_count": 2,
+    "all_sessions_closed": true
+  },
+  "next_discriminating_edges": [
+    {
+      "priority": 1,
+      "entry": "0x10171c5a0",
+      "question": "Bind MRoot+128 concrete provider slot0 and its installation; does the source builder receive the same rate context as the reader datum? Existing root+128 pointer provenance remains unresolved."
+    },
+    {
+      "priority": 2,
+      "entry": "0x101d3fc3c",
+      "question": "Bind producer/lifecycle of state+a8 and channel+14c8->+258 byte+2ec; determine when the alternate mapper is selected without relabeling its condition as a rate comparison."
+    },
+    {
+      "priority": 3,
+      "entry": "0x101d437e0",
+      "question": "Bind concrete interpolation receivers at 104fa4008, their +30 sample kernel and channel+1a58 mapping state to establish the alternate path sample/count contract."
+    },
+    {
+      "priority": 4,
+      "entry": "0x101ed6e48 / 0x101ed701c",
+      "question": "Trace caller scheduling relative to VstDeck setter and live callbacks if a whole-host synchronization claim becomes necessary; current claim is this local update path only."
+    }
+  ],
+  "private_evidence_boundary": "Manifest paths identify local retained originals/raw slices/REA output; they are not a promise to publish proprietary artifacts. No target code execution occurred."
+}

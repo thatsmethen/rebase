@@ -3,9 +3,9 @@ import Foundation
 import CryptoKit
 @testable import RebaseCore
 
-private let cprWorkspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-private let cprReference = cprWorkspace.appendingPathComponent("research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro")
-private let cprLegacyEvidence = cprWorkspace.appendingPathComponent("research/evidence/application/APP003")
+private let cprWorkspace = PrivateResearchFixtures.root
+private let cprReference = cprWorkspace.appendingPathComponent("templates")
+private let cprLegacyEvidence = cprWorkspace.appendingPathComponent("evidence/application/APP003")
 
 final class CPRProjectTests {
     private func be(_ value: UInt32) -> Data {
@@ -339,7 +339,7 @@ final class CPRProjectTests {
         }
     }
 
-    @Test(.enabled(if: FileManager.default.fileExists(atPath: cprLegacyEvidence.appendingPathComponent("Classic House Recovery.rebaseproj").path), "Requires immutable APP003 GUI import artifacts; no target execution."))
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
     func frozenSchemaOneReportsReplayWithoutRewritingEditedProjects() throws {
         let records = [
             ("Classic House Recovery.rebaseproj", "d861662e75cd4fabb2b9248dd150dceac95c760501470f1baa7dae0eed5ce272", "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892", "c6fe832e355c90a27bc3594a9e1bf453cbb626af1a260a01aa94f0dd0bcf9ce7"),
@@ -379,9 +379,9 @@ final class CPRProjectTests {
         }
     }
 
-    @Test(.enabled(if: FileManager.default.fileExists(atPath: cprReference.path), "Requires the locally acquired pinned Reference template fixtures; no download or target execution."))
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
     func realShippedTemplateContainersMatchPinnedInventory() throws {
-        let path = cprWorkspace.appendingPathComponent("research/evidence/cpr-static/cpr-container-001/inventory.json")
+        let path = cprWorkspace.appendingPathComponent("evidence/cpr-static/cpr-container-001/inventory.json")
         let bytes = try Data(contentsOf: path)
         #expect(digest(bytes) == "e50ff515c541c76d857d6c093f4329b5cb53bffcd631a6e22cbc5edf86511b0d")
         let inventory = try #require(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
@@ -449,7 +449,7 @@ final class CPRProjectTests {
         }
     }
 
-    @Test(.enabled(if: FileManager.default.fileExists(atPath: cprReference.path), "Requires the locally acquired pinned CPR reference."))
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
     func fixedTempoUsesFullModeWordAndRejectsMalformedRecords() throws {
         try workspace { directory in
             let original = try Data(contentsOf: cprReference.appendingPathComponent("Classic House.cpr"))
@@ -479,7 +479,7 @@ final class CPRProjectTests {
         }
     }
 
-    @Test(.enabled(if: FileManager.default.fileExists(atPath: cprReference.path), "Requires the locally acquired pinned CPR reference."))
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
     func realAudioTemplateImportsExplicitSubsetAndPreservesOriginal() throws {
         try workspace { directory in
             let source = cprReference.appendingPathComponent("Stereo Mastering.cpr")
@@ -501,7 +501,7 @@ final class CPRProjectTests {
         }
     }
 
-    @Test(.enabled(if: FileManager.default.fileExists(atPath: cprReference.path), "Requires the locally acquired pinned CPR reference."))
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
     func realFixedClockImportPersistsCurrentProfileAndRetainsBaselineAfterExplicitConversion() throws {
         try workspace { directory in
             let source = cprReference.appendingPathComponent("Classic House.cpr")
@@ -527,7 +527,7 @@ final class CPRProjectTests {
         }
     }
 
-    @Test(.enabled(if: FileManager.default.fileExists(atPath: cprReference.path), "Requires the pinned local reference; no target execution."))
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
     func persistedNativeClockMustMatchReplayedOriginalBeforeLoadOrSave() throws {
         try workspace { directory in
             let source = cprReference.appendingPathComponent("Classic House.cpr")
@@ -566,10 +566,10 @@ final class CPRProjectTests {
         }
     }
 
-    @Test(.enabled(if: FileManager.default.fileExists(atPath: cprWorkspace.appendingPathComponent("research/evidence/application/APP004/signature-controls-v2.json").path), "Requires retained self-authored mutation controls; no target execution."))
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
     func signatureRecoveryPreservesV2MeaningAndSurvivesCurrentProfileReopen() throws {
         try workspace { directory in
-            let fixtures = cprWorkspace.appendingPathComponent("research/evidence/application/APP004")
+            let fixtures = cprWorkspace.appendingPathComponent("evidence/application/APP004")
             let controls = [("Synthetic Concordant 7-8.cpr", "3f430d7eecbf89e5e4485a4405b07f379a5cbd95fb784e5f6c1e6959b8881d49", true),
                             ("Synthetic Signature Precedence.cpr", "bf761a0fdca8ea5ec044172abc08b63174180211cf3ab23c55241fc5806e7f8e", false)]
             for (name, hash, concordant) in controls {

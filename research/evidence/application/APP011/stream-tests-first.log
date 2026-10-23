@@ -1,0 +1,87 @@
+[0/1] Planning build
+Building for debugging...
+[0/10] Write sources
+[3/10] Compiling RebaseTimingDSP native_rate_mode0_down.c
+[4/10] Write swift-version--1AB21518FC5DEDBE.txt
+error: emit-module command failed with exit code 1 (use -v to see invocation)
+[6/12] Emitting module RebaseCore
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateConvertedStream.swift:17:19: error: cannot find type 'RBMode0DownState' in scope
+ 15 |     enum ConverterState {
+ 16 |         case up(RBMode0State)
+ 17 |         case down(RBMode0DownState)
+    |                   `- error: cannot find type 'RBMode0DownState' in scope
+ 18 |     }
+ 19 |     let initialState: ConverterState
+[7/12] Compiling RebaseCore CPRRateConvertedStream.swift
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateConvertedStream.swift:17:19: error: cannot find type 'RBMode0DownState' in scope
+ 15 |     enum ConverterState {
+ 16 |         case up(RBMode0State)
+ 17 |         case down(RBMode0DownState)
+    |                   `- error: cannot find type 'RBMode0DownState' in scope
+ 18 |     }
+ 19 |     let initialState: ConverterState
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateConvertedStream.swift:47:24: error: cannot find 'RBMode0DownState' in scope
+ 45 |             state = .up(up)
+ 46 |         } else {
+ 47 |             var down = RBMode0DownState()
+    |                        `- error: cannot find 'RBMode0DownState' in scope
+ 48 |             guard rb_native_mode0_down_init(Float(sourceRate), Float(outputRate), 2, &down) == 0,
+ 49 |                   rb_native_mode0_down_count_blocks(&down, source.count / 2, Self.inputBlockFrames,
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateConvertedStream.swift:48:19: error: cannot find 'rb_native_mode0_down_init' in scope
+ 46 |         } else {
+ 47 |             var down = RBMode0DownState()
+ 48 |             guard rb_native_mode0_down_init(Float(sourceRate), Float(outputRate), 2, &down) == 0,
+    |                   `- error: cannot find 'rb_native_mode0_down_init' in scope
+ 49 |                   rb_native_mode0_down_count_blocks(&down, source.count / 2, Self.inputBlockFrames,
+ 50 |                     UInt32(RB_MODE0_DOWN_OUTPUT_ABOVE), &count) == 0 else {
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateConvertedStream.swift:49:19: error: cannot find 'rb_native_mode0_down_count_blocks' in scope
+ 47 |             var down = RBMode0DownState()
+ 48 |             guard rb_native_mode0_down_init(Float(sourceRate), Float(outputRate), 2, &down) == 0,
+ 49 |                   rb_native_mode0_down_count_blocks(&down, source.count / 2, Self.inputBlockFrames,
+    |                   `- error: cannot find 'rb_native_mode0_down_count_blocks' in scope
+ 50 |                     UInt32(RB_MODE0_DOWN_OUTPUT_ABOVE), &count) == 0 else {
+ 51 |                 throw Self.preparationError
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateConvertedStream.swift:50:28: error: cannot find 'RB_MODE0_DOWN_OUTPUT_ABOVE' in scope
+ 48 |             guard rb_native_mode0_down_init(Float(sourceRate), Float(outputRate), 2, &down) == 0,
+ 49 |                   rb_native_mode0_down_count_blocks(&down, source.count / 2, Self.inputBlockFrames,
+ 50 |                     UInt32(RB_MODE0_DOWN_OUTPUT_ABOVE), &count) == 0 else {
+    |                            `- error: cannot find 'RB_MODE0_DOWN_OUTPUT_ABOVE' in scope
+ 51 |                 throw Self.preparationError
+ 52 |             }
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateConvertedStream.swift:152:30: error: cannot find 'rb_native_mode0_down_next_block' in scope
+150 |                     // singleton with pending state. Rebalance that pair of
+151 |                     // blocks, using the identical policy as count_blocks.
+152 |                     frames = rb_native_mode0_down_next_block(total - inputPosition,
+    |                              `- error: cannot find 'rb_native_mode0_down_next_block' in scope
+153 |                         CPRRateConvertedStream.inputBlockFrames)
+154 |                     var count = 0, produced = 0
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateConvertedStream.swift:155:41: error: cannot find 'RB_MODE0_DOWN_OUTPUT_ABOVE' in scope
+153 |                         CPRRateConvertedStream.inputBlockFrames)
+154 |                     var count = 0, produced = 0
+155 |                     let layout = UInt32(RB_MODE0_DOWN_OUTPUT_ABOVE)
+    |                                         `- error: cannot find 'RB_MODE0_DOWN_OUTPUT_ABOVE' in scope
+156 |                     guard frames > 0,
+157 |                           rb_native_mode0_down_count(&down, frames, layout, 0, &count) == 0 else {
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateConvertedStream.swift:157:27: error: cannot find 'rb_native_mode0_down_count' in scope
+155 |                     let layout = UInt32(RB_MODE0_DOWN_OUTPUT_ABOVE)
+156 |                     guard frames > 0,
+157 |                           rb_native_mode0_down_count(&down, frames, layout, 0, &count) == 0 else {
+    |                           `- error: cannot find 'rb_native_mode0_down_count' in scope
+158 |                         throw conversionError
+159 |                     }
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateConvertedStream.swift:171:31: error: cannot find 'rb_native_mode0_down_process' in scope
+169 |                             input.update(from: $0.baseAddress!.advanced(by: inputPosition * 2), count: inputSamples)
+170 |                         }
+171 |                         guard rb_native_mode0_down_process(&down, input, frames, output, count,
+    |                               `- error: cannot find 'rb_native_mode0_down_process' in scope
+172 |                             layout, 0, &produced) == 0, produced == count else { throw conversionError }
+173 |                         return Array(UnsafeBufferPointer(start: output, count: count * 2))
+error: fatalError

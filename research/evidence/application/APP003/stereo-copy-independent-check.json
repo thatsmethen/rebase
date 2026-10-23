@@ -1,0 +1,57 @@
+{
+  "id": "APP003-INDEPENDENT-CPR-PACKAGE-CHECK",
+  "created_utc": "2026-10-19T10:41:52.092708+00:00",
+  "status": "passed",
+  "method": "Read-only independent Python comparison against preexisting structurally decoded v09 fixture and exact original bytes. GUI action provenance is parent-owned; this check only verifies resulting persisted files.",
+  "verifier_sha256": "f8fc2d8482b723cef0b8a9224d82ebe32711287c17f02f2645085f9cc68c8efd",
+  "input_pins": [
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/fixtures/stereo-mastering-v09.json",
+      "bytes": 54577,
+      "sha256": "4bf62b24992666564e5aa2b32b20b781f96bc893f9f5d08a45d96ff34c529c8c"
+    },
+    {
+      "path": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Stereo Mastering.cpr",
+      "bytes": 291662,
+      "sha256": "6cde8a5ce37e5f112c79f684ad8c1fc3e308979feba9f046db42bf62ecce3022"
+    },
+    {
+      "path": "research/evidence/application/APP003/Stereo Mastering Copy.rebaseproj/Compatibility/CPR/Original.cpr",
+      "bytes": 291662,
+      "sha256": "6cde8a5ce37e5f112c79f684ad8c1fc3e308979feba9f046db42bf62ecce3022"
+    },
+    {
+      "path": "research/evidence/application/APP003/Stereo Mastering Copy.rebaseproj/Compatibility/CPR/ImportReport.json",
+      "bytes": 10195,
+      "sha256": "d41ebd025fa211668fac1dad4b851a187b54ab8197766d4497459a702bbed2d3"
+    },
+    {
+      "path": "research/evidence/application/APP003/Stereo Mastering Copy.rebaseproj/Project.json",
+      "bytes": 1070,
+      "sha256": "e06ab17bcdb1b64ebf1d8013d26b4ac65bfde0668ec36f6d507597bc2dff22a8"
+    }
+  ],
+  "checks": {
+    "preserved_original_byte_identical": true,
+    "reported_native_object_ranges_verified": 14,
+    "container_sections_verified": 7,
+    "ordered_track_name_class_offset_matches": 4,
+    "imported_audio_track_names": [
+      "Stereo Master",
+      "Reference Track"
+    ],
+    "recovered_audio_clips": 0,
+    "defaults_explicit": true,
+    "tempo_mode_in_source": "map",
+    "project_tempo_bpm": 120,
+    "unresolved_media_descriptors_checked": 0,
+    "project_differences_from_import_baseline": [
+      "name"
+    ]
+  },
+  "limits": [
+    "No reference target execution or runtime comparison.",
+    "Only names/empty audio tracks and supported fixed BPM are recovered; metadata tags do not establish active time maps, track state or media playback.",
+    "Saved file hashes describe this checkpoint; later edits may change Project.json."
+  ]
+}

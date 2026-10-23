@@ -1,0 +1,76 @@
+{
+  "id": "CPR-PLACED-EVENT-BUILDER-001",
+  "scope": "Pure value projection for one already-resolved stable MAudioEvent range, no fades/neighbors/overlap. Native source interpretation and hosted project state remain separate.",
+  "rounding": "RN64 denotes separately rounded IEEE binary64 nearest/ties-even; FCVTZS is signed64 truncation. Defensive C rejects nonnearest/unsupported FP state, invalid inputs and unsafe bounds.",
+  "canonical_datum": {
+    "address": "0x10500f150",
+    "type": 1,
+    "period_bits": "3ff0000000000000",
+    "initializer": "0x101c26ea0..101c26ec0",
+    "generic_converter": "0x101c22dc0",
+    "type10_constructor": "0x101c225d0 with jump index10 ->0x101c2267c",
+    "period": "RN64(1 / builderRate)",
+    "rate_boundary": "10020f2e8 receives root/context owner;10171c5a0 asks owner+128 virtual0 when nonnil, otherwise44100. Source-rate choice is an explicit reconstruction input, not a recovered universal host rate."
+  },
+  "intersection": {
+    "reader": "0x10020e354",
+    "strict_admission": [
+      "eventStart < windowEnd",
+      "eventEnd > windowStart",
+      "clippedStart < clippedEnd"
+    ],
+    "clipped_start": "eventStart < windowStart ? windowStart : eventStart",
+    "clipped_end": "windowEnd < eventEnd ? windowEnd : eventEnd",
+    "equality": "FCSEL preserves event operands on equality, including zero sign.",
+    "event_end": "1016e2640 returns RN64(contextStart + contextConvertedLength). Repeated getters are assumed stable within the admitted invocation.",
+    "singleton_normalization": "10020e7c8 clamps start below -3600000 before publication and requires positive end-start. Candidate domain +/-86400 never reaches sentinel. Multi-object priority/split/overlap behavior remains excluded.",
+    "direct_track_scope": "10020ee24 initial range is exactly caller range;1002115a0 supplies[0,2592000]. For direct-track nonnegative event ending<=86400, using its own interval as window yields the same result. Recursive folder ranges carry additional intersections and are not generalized here."
+  },
+  "source_offset": {
+    "getter": "1016e3794: FNEG(raw event+100);1016e39c8(delta);FNEG(result). Zero delta returns+0 before final FNEG, so contextOffset may be-0.",
+    "before_snap": "delta=RN64(clippedStart-contextStart); adjustedOffset=RN64(contextOffset+delta)",
+    "instructions": "10020f4a4 FSUB followed10020f4a8 FADD. Do not distribute or fuse these operations.",
+    "datum_boundary": "Start uses containing datum; Length/Offset may use own-clip datum selected by context edit methods. The C helper only receives resolved canonical values."
+  },
+  "quantization": {
+    "converted": "local=RN64(RN64(1*canonicalCoordinate)/period)",
+    "sign": "bias=-0.5 iff local<0, otherwise+0.5",
+    "integer": "FCVTZS64(RN64(local+bias))",
+    "order": [
+      "clippedStart",
+      "clippedEnd",
+      "adjustedOffset"
+    ],
+    "instructions": "10020f454/f470/f4b8 conversions, sign choicesf460/f47c/f4c4, separate FADD/FCVTZSf630..f648",
+    "empty": "No segment on the no-fade remainder path when snappedEnd<=snappedStart.",
+    "difference_from_reader": "Reader101d3eb24 instead narrows reciprocal toFloat32 and FMADD(coordinate,multiplier,+0.5); do not collapse builder and reader stages."
+  },
+  "stores": {
+    "canonical_position": "RN64(RN64(period * Double(integer))/1)",
+    "start": "100210520..540 ->segment+d0 ->101a17ccc stores+50",
+    "end": "100210544..564 ->segment+f0 ->101a17cec; length=max(RN64(reconstructedEnd-storedStart),+0)",
+    "offset": "100210568..58c ->segment+100 ->101a17d14 stores+60",
+    "end_getter": "101a17d08 returns RN64(start+length), distinct from retaining reconstructedEnd",
+    "gain": "100210590..598 obtains event Float32volume and stores segment+68 without multiplying samples here.",
+    "nonzero_track_shift": "10020ee24 f140..f15c adds extra builder shift to segment start after construction, preserving length and source offset. This pure helper omits that separately gated operation; current direct-source admission requires zero shift."
+  },
+  "admission": [
+    "One selected stable direct MAudioEvent and one no-fade normal remainder; no neighbor-derived crossfades, explicit fade extents, loop/priority splitting or alternate selected stream.",
+    "Effective automatic fades disabled by the separately source-backed settings/ownership findings; absence of event fade pointers alone is insufficient.",
+    "Actual selected source stream and audible-state constraints come from prior studies. The helper neither executes nor proves source rendering.",
+    "Zero caller post-builder shift for the app operation; rate explicitly supplied by reconstruction context. Host resource and replaceable callbacks remain external state."
+  ],
+  "candidate_domain": {
+    "coordinates": "Finite normal-or-zero values within +/-86400; event/window endpoints ordered. Empty intersections and snapped-empty intervals are explicit dispositions.",
+    "rate": "Integral8k..192k; actual native rate getter permits a broader unvalidated runtime value.",
+    "floating_point": "arm64 FE_TONEAREST, FZ/DN/AH/FIZ off; no nonzero subnormal intermediates. Explicit volatile steps and FP_CONTRACT OFF.",
+    "defensive_difference": "Errors preserve caller output; empty unused fields are zero by wrapper convention. Native allocations/side effects are not claimed transactional.",
+    "memory": "All inputs by value, one caller output record, no target object lifetime or arbitrary callback behavior modeled."
+  },
+  "limits": [
+    "No Cubase execution/runtime PCM comparison.",
+    "Raw REA slices omit imports/globals/vtables and surrounding routines; independent original-byte bindings supply only listed context.",
+    "Not a full ordinary host playback implementation, project mixer, effects, automation, multi-event overlap, loops, routing or device schedule.",
+    "The canonical source semantics depend on separate placed-event-context and prior timebase evidence; app source gates may conservatively exclude native cases."
+  ]
+}

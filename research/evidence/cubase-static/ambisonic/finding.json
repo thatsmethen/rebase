@@ -1,0 +1,147 @@
+{
+  "id": "AMBI-PARAM-001",
+  "recorded_at_utc": "2026-10-19T04:51:04.500431+00:00",
+  "behavior": "Guarded construction of the AmbiConverter Conversion Mode parameter and its ordered direction labels",
+  "configuration_id": "cubase15-recovered-AmbiConverter-1.5.10.152-arm64-static",
+  "evidence_class": "static_observation",
+  "status": "static_parameter_contract_observed_runtime_unvalidated",
+  "artifact_sha256": "e803dd1390ee7989306b15c0fccca52e5d3097ae7a489dc6834f82b50ba485c5",
+  "architecture_slice_sha256": "e8341c6b31ac6b65cf7e8c18bdfbaa18ac24b20160b4287dc385b202eb29b883",
+  "architecture": "arm64",
+  "component_version": "1.5.10.152",
+  "component_identifier": "com.steinberg.VSTAmbiConverter",
+  "target_executed": false,
+  "scope": "One recovered complete nested VST3 component; not an installed or running Cubase application.",
+  "observation": {
+    "conditional_contract": "If the preceding initialization returns zero and the two label allocations/appends succeed, the recovered routine constructs one object with title Conversion Mode, identifier field 2, and two ordered UTF-16 labels: index 0 FuMa > AmbiX; index 1 AmbiX > FuMa.",
+    "guard": "0x1509a8 calls thunk 0x14860; 0x1509ac skips the registration body when w0 is nonzero.",
+    "identifier": "0x1509dc sets w2=2 before constructor thunk 0x1c65c; constructor 0x1c520 retains this argument and stores it at object+0x10 at instruction 0x1c604.",
+    "title": "0x1509d4/0x1509d8 form UTF-16 title address 0x192308; constructor copies it into object+0x14.",
+    "ordered_entries": [
+      {
+        "index": 0,
+        "label": "FuMa > AmbiX",
+        "string_address": "0x192328",
+        "label_reference": "0x150a00",
+        "append_call": "0x150a08"
+      },
+      {
+        "index": 1,
+        "label": "AmbiX > FuMa",
+        "string_address": "0x192342",
+        "label_reference": "0x150a18",
+        "append_call": "0x150a20"
+      }
+    ],
+    "dispatch": "Constructor stores vtable 0x1a03e0. Complete REA read of slot +0xd0 at 0x1a04b0 yields pointer 0x1c79c, agreeing with immutable source bytes.",
+    "list_method": "0x1c79c copies the UTF-16 label and terminator, appends its pointer to the vector at object+0x338/+0x340/+0x348, then increments object+0x314 at 0x1c8d0-0x1c8d8. The constructor initializes that counter to -1 at 0x1c5f4-0x1c5f8, so two successful appends leave counter 1.",
+    "ui_corroboration": "The shipped .uidesc independently declares ConverterDirectionId=2 and segment-names FuMa > AmbiX,AmbiX > FuMa."
+  },
+  "source_locations": [
+    {
+      "evidence_file": "conversion-registration-function.json",
+      "evidence_id": "ev_d578ced36109309b2d97def7d5bd6b2f22f7bbbe5a03eec57a2a7b4a85f45c8d",
+      "analysis_address_start": "0x150988",
+      "analysis_address_end_inclusive": "0x150c2f",
+      "thin_source_file_offset": 1378696,
+      "original_source_file_offset": 3541384,
+      "length": 680,
+      "source_bytes_sha256": "bdf3da8d038a4db5262912624d025cd410d9e31b1b8f24c647af3135e2b6894e",
+      "mapping_basis": "__TEXT vmaddr=0 and fileoff=0 in retained Mach-O metadata; registration entry independently mapped by REA address-to-file-offset."
+    },
+    {
+      "evidence_file": "parameter-constructor-function.json",
+      "evidence_id": "ev_5a4a6391d4bfb4519a418514201733de2dce457f2400618f98c041c5ec9f2dbd",
+      "analysis_address_start": "0x1c520",
+      "analysis_address_end_inclusive": "0x1c62b",
+      "thin_source_file_offset": 116000,
+      "original_source_file_offset": 2278688,
+      "length": 268,
+      "source_bytes_sha256": "d63c5ad3b955489853ef368674adc121dcb1b8cddf68e4b24126d0bbfcc197f5",
+      "mapping_basis": "__TEXT vmaddr=0 and fileoff=0 in retained Mach-O metadata; registration entry independently mapped by REA address-to-file-offset."
+    },
+    {
+      "evidence_file": "parameter-list-method.json",
+      "evidence_id": "ev_dcaf4a3502ce6899e6f93feabc1609d5557c28e85c1584c39e9c369fa6c8e25c",
+      "analysis_address_start": "0x1c79c",
+      "analysis_address_end_inclusive": "0x1c8ff",
+      "thin_source_file_offset": 116636,
+      "original_source_file_offset": 2279324,
+      "length": 356,
+      "source_bytes_sha256": "469d2a3f575fd4a44406f44e58c85c7339a66b5086e9e5e2c65ee3a0d5110e6f",
+      "mapping_basis": "__TEXT vmaddr=0 and fileoff=0 in retained Mach-O metadata; registration entry independently mapped by REA address-to-file-offset."
+    }
+  ],
+  "evidence_files": [
+    {
+      "path": "plist.json",
+      "evidence_id": "ev_b1468d9584a2feb9e378320471e5f7c033f840e60f391876b1b7e7cd9ffc1f14"
+    },
+    {
+      "path": "signature.json",
+      "evidence_id": "ev_f71f8651e5d9f9756c14a0e92b14a87928dbd70bab36838ab4f8b0fbadf5d431"
+    },
+    {
+      "path": "macho.json",
+      "evidence_id": "ev_57fcb29cf7bcb1fa647ffb8763a1688453ac49cb3caf85d9e3a89d153836dff2"
+    },
+    {
+      "path": "string-search.json",
+      "evidence_id": "ev_ffb366ad314017fcc801fc142835f66b623adf046f925dc95b472a39c25ae355"
+    },
+    {
+      "path": "fuma-label-xrefs.json",
+      "evidence_id": "ev_e98e9480fbd35b15a173e0a7721d4412afee66af497343cd323d2bcdca1fe70a"
+    },
+    {
+      "path": "conversion-registration-function.json",
+      "evidence_id": "ev_d578ced36109309b2d97def7d5bd6b2f22f7bbbe5a03eec57a2a7b4a85f45c8d"
+    },
+    {
+      "path": "parameter-constructor-function.json",
+      "evidence_id": "ev_5a4a6391d4bfb4519a418514201733de2dce457f2400618f98c041c5ec9f2dbd"
+    },
+    {
+      "path": "parameter-vtable-slot.json",
+      "evidence_id": "ev_6587e7909acbe50bc9ca1312f85ec62019662ab3681359ffba339248559529ba"
+    },
+    {
+      "path": "parameter-list-method.json",
+      "evidence_id": "ev_dcaf4a3502ce6899e6f93feabc1609d5557c28e85c1584c39e9c369fa6c8e25c"
+    },
+    {
+      "path": "registration-file-mapping.json",
+      "evidence_id": "ev_d42e01bb5a60eb48a01f5102aba68d11c5c6c2142acfed323b43cb0c74c4f078"
+    }
+  ],
+  "reproduction": "reproduction.json contains exact CLI operations and 2G heap setting; arm64-derivation.json contains exact source slice range; source and derived digests were rechecked after analysis.",
+  "alternative_explanations": [
+    "Unreferenced labels alone would not establish a parameter contract. Here label references, constructor writes, vtable slot bytes and the append implementation corroborate list construction.",
+    "A UI declaration could diverge from native registration. The resource tag and direction order agree with the recovered native body for this exact component.",
+    "A declaration can exist without being reached in a licensed runtime configuration. Reachability from a running Cubase instance has not been established."
+  ],
+  "disconfirming_checks_performed": [
+    "Checked assembly argument registers and constructor store instead of accepting decompiler argument names as original symbols.",
+    "Resolved the virtual +0xd0 slot with a complete eight-byte REA analysis-memory read and compared it with immutable source bytes.",
+    "Inspected the callee and found ordered pointer append plus counter increment; it is not merely a label setter or replacement operation.",
+    "Inspected allocation-failure branch at 0x1c7d8: failed allocation returns without an append/counter increment, so the contract explicitly requires successful allocation.",
+    "Static codesign --verify --strict returned 0 for the recovered full component; this is on-disk signature/resource verification, not runtime trust or fidelity."
+  ],
+  "disconfirming_test": [
+    "In a later authorized runtime study, query parameter identifier 2 and its reported choice labels/count; a different identifier, order or choice count would disconfirm applying this static construction path to that runtime configuration.",
+    "Before inferring DSP direction, trace parameter-2 consumers and use independent per-channel impulses in both modes; a label alone cannot establish permutation, gain coefficients, order limits or invertibility.",
+    "Repeat on x86_64 if a cross-architecture claim is required; this finding only covers arm64."
+  ],
+  "limitations": [
+    "No Cubase or plugin process was launched; no audio, parameter automation or UI behavior was observed.",
+    "No normalized-to-plain mapping, threshold, default runtime value, host enumeration result or processing math is claimed.",
+    "Successful component signature verification does not establish complete installer recovery, installation, edition activation or application usability.",
+    "FUN_ labels and recovered types are Ghidra-generated; pseudocode is not original source.",
+    "Ghidra indirect-call and function-boundary limitations remain in the complete retained dossiers. Initialization reachability and later state writes were not traced.",
+    "The raw +0x314 counter progression is observed; identifying it with a public SDK field requires additional type or API evidence."
+  ],
+  "reconstruction": {
+    "created": false,
+    "reason": "Parameter declaration/list population is recovered, but no complete signal-processing rule has been established."
+  }
+}

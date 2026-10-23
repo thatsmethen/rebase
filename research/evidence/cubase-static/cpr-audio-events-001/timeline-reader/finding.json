@@ -1,0 +1,207 @@
+{
+  "id": "CPR-TIMELINE-READER-001",
+  "schema_version": 1,
+  "created_utc": "2026-10-20T10:57:23.954798+00:00",
+  "status": "sealed_bounded_static_reader_contract_and_reconstruction",
+  "scope": "Ordinary channel reader value-level plan, mapped-entry rounding and exact-read result classification, conditional on supplied datum/constructed segment values. No live host or whole timeline equivalence.",
+  "proprietary_target_executions": 0,
+  "cubase_runtime_comparisons": 0,
+  "target": {
+    "product": "Cubase Pro15.0.30.287 macOS arm64",
+    "image": {
+      "path": "research/targets/derived/Cubase15-arm64",
+      "bytes": 85691328,
+      "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+    }
+  },
+  "evidence_classes": [
+    "Original native byte/instruction analysis",
+    "Pinned REA/Ghidra raw-slice dossiers",
+    "Independent exact Fraction IEEE controls",
+    "Own reconstruction-only C/Swift execution"
+  ],
+  "native_custody": {
+    "new_functions": 12,
+    "reused_functions": 4,
+    "original_native_words": 5936,
+    "rea_instruction_addresses": 2410,
+    "bytes_verified": 23744,
+    "verification": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/verification.json",
+      "bytes": 29200,
+      "sha256": "06901f0b042fbe3ef1c4790f4e79d8d12614549569f83f7cacf0448c86002980"
+    },
+    "canonical_import": {
+      "imported": 32,
+      "unknowns_added": 0,
+      "total": 32
+    },
+    "new_raw_slices_closed": 12,
+    "isolated_analysis_sessions_closed": 3,
+    "import_sessions_closed": 1,
+    "provider": "rea-agents6.7.0; Ghidra default analyzers/raw arm64/2G heap",
+    "coverage_limit": "All23744 slice bytes agree;2410 retained decoded addresses differ from5936 native words. LC_FUNCTION_STARTS intervals can contain disconnected tails or neighboring material; no full semantic coverage is inferred."
+  },
+  "contracts": {
+    "quantization": {
+      "entry": "0x101d3eb24",
+      "datum": "global1050105e0 receiver+388:tag and +390:period",
+      "scale": "Double(Float32(RN64(1 / period)))",
+      "coordinates": "Concrete getter values: start +d8, end +f8, source offset +108. PAudioSegment end itself is RN64(start+length), independently bound by timeline-provider.",
+      "result": "signed64 truncation toward zero of FMA64(coordinate,scale,+0.5)",
+      "order": "Quantize start; if start>requestEnd return tail silence. Then quantize end and apply invalid/before-request skips. Then quantize offset.",
+      "not_equivalent_to": [
+        "generic Double coordinate*nominalRate",
+        "separately rounded multiply then add",
+        "symmetric nearest rounding for negative coordinates"
+      ]
+    },
+    "datum_lifecycle": {
+      "initializer": "101d983c0 allocates0x520 and calls101d99034, then storesglobal1050105e0.",
+      "fresh": "Constructor constants+310/+318 are44100.0/1.0; separate101c22c0c initializes datum+388 as type1,period1.0. Do not infer active audio rate from constructor alone.",
+      "setter": "101d9b3b4 on d0>0 computes RN64(d0*d1), calls101c22884(datum,10,product); exact type10 switch target101c22988 stores RN64(1/product) at datum+8.",
+      "host_limits": "The effective d0/d1 inputs and subsequent host mutation are call-context state; this study does not assert runtime values. Copy ctor101d9f068 includes datum-copy call101c22a98; no complete copy/lifecycle semantic claim."
+    },
+    "window": {
+      "inputs": "original requestStart S, requestEnd E, current cursor C; S<=C<=E; actual selector returned segment or nil.",
+      "nil_or_A_greater_than_E": "Zero [C,E), terminate.",
+      "A_ge_B": "Skip selected segment with unchanged cursor.",
+      "B_less_than_S": "Strict before-request skip; B==S is not this branch.",
+      "prefix": "If C<A zero [C,A); begin=max(C,A).",
+      "seek": "Q(offset) if C<=A; otherwise Q(offset)+(C-A).",
+      "read": "[begin,min(B,E)) if positive; equality has no source read. A==E can zero prefix then terminate.",
+      "advancement": "Successful full read advances to min(B,E); zero-length intersection advances at most through prefix. Selector advancement and node lifetime are outside pure planner.",
+      "source_readiness": "Native missing source, zero source length or unready accessor zeros the planned read span. App helper does not invent accessor readiness."
+    },
+    "read_contract": {
+      "native_configuration": "101d3eb24 creates AudioAccessor via10036e34c with flags0x25/policy1; layout2 only source/output stereo, else0; output Float32/Float64 follows format1/2. Sets segment Float32gain via+160, seeks via+178, reads via+168.",
+      "retry": "Return -2147483645 is retried once only when saved readBegin equals quantized segment start; repeat the read without repeating seek.",
+      "success": "Return must equal requested positive count.",
+      "failure": "Other negative value propagates; other nonnegative value maps INT32_MIN. Native prefix/partial samples may already be written; no native transactional guarantee.",
+      "gain_scope": "Gain is passed into native accessor before read; equal-rate explicit app memory backend applies checked gain once after copying. No claim about arbitrary conversion/layout/poststage gain ordering."
+    },
+    "mapped_partition": {
+      "entry": "101d3e704",
+      "record_bytes": 40,
+      "layout": {
+        "0": "start Double",
+        "8": "end Double",
+        "16": "origin/offset Double",
+        "24": "extra qword",
+        "32": "datum type32",
+        "36": "flags32"
+      },
+      "count": "TruncSigned64(min(RN64(RN64(end-start)+0.5),Double(remainingFrames)))",
+      "start": "For non-silence: TruncSigned64(RN64(start+(start<0?-0.5:+0.5))); end=startFrame+count.",
+      "silence": "flags&4 skips start/end-frame computation and zeros count.",
+      "outer_retry": "Distinct outer retry on -2147483645 depends on entry flags bit0 or host service mode2. Not modeled by inner read_result.",
+      "mapping": "101d3ea38 selects active project mapper101c3579c when channel+1848/+90 permits; otherwise global mapper101c351e4. No automatic identity-map claim.",
+      "conditional_default_mapper": "101c351e4 tag10 threshold1; positive sub-threshold interval suppressed. Under no delegate or host mode2, obtains origin O by datum conversion, yields startOut=RN64(start-O), endOut=RN64(RN64(end-start)+startOut), offset O,type,flags0. Delegate branch remains external.",
+      "excluded": "Active loop/locator expansion, mapper ownership/default origin, general host state and external callback mutation."
+    }
+  },
+  "candidate": {
+    "source": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/candidate/cpr_timeline_reader.c",
+      "bytes": 8196,
+      "sha256": "6697ca1b9ce8725324362b2da54ac6432b1d64c8dcbb48adfc3464322dba4e0b"
+    },
+    "header": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/candidate/cpr_timeline_reader.h",
+      "bytes": 4390,
+      "sha256": "910475ed5c486c662c0f0893097cfbc4551b9be5922f5fcdb398941701373014"
+    },
+    "defensive_contract": {
+      "inputs": "Finite signed normal-or-zero coordinates, positive normal period yielding positive normal Float32 multiplier; arm64 nearest IEEE with FZ/DN/AH/FIZ off. Signed64 fused result, checked integer differences/sums and request span<=16m. Disjoint input/output structs.",
+      "validation": "Upfront finite validation can reject fields that a native early return would not consume. Invalid segments A>=B skip normally; native nonfinite/saturating/wrapping cases reject.",
+      "transactionality": "Pure outputs unchanged on validation/range/FP error; no sample buffers are owned or modified.",
+      "application_policy": "Caller supplies an explicit rate-derived period and verified constructed descriptors. Synthetic multi-segment windows do not promote arbitrary CPR objects to playable tracks."
+    },
+    "api": [
+      "rb_cpr_timeline_quantize",
+      "rb_cpr_timeline_plan",
+      "rb_cpr_timeline_partition",
+      "rb_cpr_timeline_read_result"
+    ],
+    "scope": "Pure planning, one mapped entry and exact-read status. No provider callback, source samples, accessor allocation/cache or mapper creation is implemented by C helpers."
+  },
+  "validation": {
+    "author_controls": 16,
+    "author_compile_and_ubsan": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/controls/result.json",
+      "bytes": 2146,
+      "sha256": "3e5a8164e755b530ac0482c8009d564b5c91d95d026426022a86dec498a9c574"
+    },
+    "independent_review": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/validation/APP014/timeline-reader-independent-review.json",
+      "bytes": 7228,
+      "sha256": "52fd9cdc38894a427994ecdcfbd2afd25852dd0f7b8503abcc6593157215fae3"
+    },
+    "independent_oracle": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/validation/APP014/timeline-reader-oracle.json",
+      "bytes": 311663,
+      "sha256": "0df450ef24e5124574b720c7eeb020cd9136f3267f037ad8808426faa34641cf"
+    },
+    "oracle_generator": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/validation/APP014/timeline-reader-oracle.py",
+      "bytes": 10320,
+      "sha256": "b67e58e68583f34422915bc0a1b2a42c6226b3d71bdc4a8684c2b347964272e2"
+    },
+    "independent_original_verification": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/validation/APP014/timeline-instruction-verification.json",
+      "bytes": 3101,
+      "sha256": "86d566565d67f6233f277c6b9954aaa1a18e211c1a806f80e750f01123a5477f"
+    },
+    "independent_original_words": 1174,
+    "independent_original_intervals": 9,
+    "controls": {
+      "quantizers": 254,
+      "mapped_partitions": 560,
+      "integer_windows": 110,
+      "read_results": 126,
+      "total": 1050,
+      "fma_discriminators": 19,
+      "float32_narrowing_discriminators": 15,
+      "partition_endpoint_discriminators": 176
+    },
+    "focused_tests": 10,
+    "focused_suites": 2,
+    "log": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/validation/APP014/timeline-tests-second.log",
+      "bytes": 8350,
+      "sha256": "1b4b18c1e9db3d09f3ed3ce0e43da8d219b1a9df3fdb628a0953c5cc8160ce90"
+    },
+    "test_scope": "Five numerical reader tests and five direct-memory Swift-stream tests using synthetic media and retained CPR fixtures. No proprietary reader execution.",
+    "retained_initial_test_compile_failure": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/validation/APP014/timeline-tests-first.log",
+      "bytes": 14404,
+      "sha256": "aaf98a7d6b7215ea06d6b404238ab2c52e3e2ff3ea209cf0592ae19ed7be09c8"
+    },
+    "initial_failure_scope": "Swift test-only nested throwing expression syntax; production C/Swift compiled.",
+    "author_integration_review": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/author-integration-review.json",
+      "bytes": 1619,
+      "sha256": "e4de2d90cbdb5cbcc1ccb65f6a2eaecd24fc104164e5926f128cbaf52f520d9b"
+    },
+    "release_acceptance": "APP014 owns full-suite, GUI and package acceptance; these are not asserted by this native study."
+  },
+  "remaining_limits": [
+    "The actual datum period, provider membership, mapper/loop/locator state and host callbacks remain runtime context, not fabricated constants.",
+    "Concrete segment getter pointer/instruction bindings are checked; channel/provider ownership is independently covered by timeline-provider.",
+    "The active-project mapping branch was retained but is not reconstructed; one already-mapped entry rounding does not prove identity mapping.",
+    "Accessor creation, cache invalidation, layout remapping, asynchronous I/O, outer retry and downstream mixer/plugin/poststage behavior are outside the pure candidate.",
+    "App equal-rate immutable-memory copying/gain and worker/device scheduling are application compositions, not Cubase live output comparisons.",
+    "Raw-slice Ghidra pseudocode loses imports, types, globals and neighboring calls; original listed bindings supply only bounded context.",
+    "Private native image/raw bytes/disassembly remain local research artifacts and are not intended for publication."
+  ],
+  "provider_ownership_reference": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider/finding.json",
+    "bytes": 15413,
+    "sha256": "96edf3d32313581e95b804581e44af8ce4888e01148e384f6c4f12a6411ac539"
+  },
+  "source_snapshots": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/source-snapshots.json",
+    "bytes": 7449,
+    "sha256": "86b777299d3d051cde255e26f9ba41d866a1e06731c73ecdb51379df1fa01ca2"
+  }
+}

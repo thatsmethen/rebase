@@ -1,0 +1,188 @@
+{
+  "id": "APP012-PUBLIC-SOXR-BUILD-001",
+  "created_utc": "2026-10-20T09:27:13.328206+00:00",
+  "status": "public_library_and_callback_bridge_built_and_checked",
+  "evidence_class": "Public open-source build plus independent application-tool controls; no proprietary execution",
+  "target_executions": 0,
+  "vendor_library_linked": false,
+  "vendor_sample_comparisons": 0,
+  "upstream_commit": "945b592b70470e29f917f4de89b4281fbbd540c0",
+  "upstream_url": "https://github.com/chirlu/soxr/tree/945b592b70470e29f917f4de89b4281fbbd540c0",
+  "intake": {
+    "path": "research/evidence/application/APP012/soxr-public-build/intake.json",
+    "bytes": 24807,
+    "sha256": "faeba8d39aa6eb0c4117291be67a99c207f3e0027bd3f79c1184309eca27a66d"
+  },
+  "source_custody": {
+    "tree": "Application/ThirdParty/soxr-0.1.3",
+    "entries": 138,
+    "unchanged_regular_files": 137,
+    "internal_relative_symlinks": 1,
+    "manifest": {
+      "path": "Application/ThirdParty/soxr-source-manifest.json",
+      "bytes": 24807,
+      "sha256": "faeba8d39aa6eb0c4117291be67a99c207f3e0027bd3f79c1184309eca27a66d"
+    },
+    "complete_source_and_licenses": true
+  },
+  "build": {
+    "architecture": "arm64",
+    "minimum_macos": "14.0",
+    "source_version": "0.1.3",
+    "upstream_abi_version": "0.1.2",
+    "options": {
+      "optimization": "-O3 -DNDEBUG",
+      "fast_math": false,
+      "fp_contract": "off",
+      "CR32": true,
+      "CR64": true,
+      "SIMD": false,
+      "VR32": false,
+      "PFFFT": false,
+      "AVFFT": false,
+      "OpenMP": false,
+      "high_precision_clock": true,
+      "float_standard_precision_clock": false,
+      "developer_trace": false,
+      "LSR_bindings": false
+    },
+    "compiler": "Apple clang version 17.0.0 (clang-1700.4.4.1)\nTarget: arm64-apple-darwin27.0.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+    "sdk": "26.1",
+    "cmake": "cmake version 3.28.20231116-g2c923a7\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).",
+    "two_independent_prefixes_byte_identical": true,
+    "library": {
+      "path": "Application/.build-soxr/install/lib/libsoxr.0.1.2.dylib",
+      "bytes": 188000,
+      "sha256": "c614df97b2c3f3881fa694efc73a6d5152fe0288ac9396adb6bd7c8c8e5f895a"
+    },
+    "first_manifest": {
+      "path": "research/evidence/application/APP012/soxr-public-build/build-first-manifest.json",
+      "bytes": 29574,
+      "sha256": "8d3f1639a10e2fbad39e623407b4d6be0d253cb7cf2c61f26bf470830c143d99"
+    },
+    "second_manifest": {
+      "path": "research/evidence/application/APP012/soxr-public-build/build-second-manifest.json",
+      "bytes": 29604,
+      "sha256": "83b8eda9cdf0d7b9920941f083ac3c0a8a801db930005fe8f63f3614604abadc"
+    },
+    "install_name": "@rpath/libsoxr.0.dylib",
+    "nonself_dependencies": [
+      "/usr/lib/libSystem.B.dylib"
+    ]
+  },
+  "bridge": {
+    "factory": "rb_public_soxr_backend()->RBMode2Backend",
+    "create": "Float32 interleaved io(0,0), quality(6,0)=VHQ28bit, runtime(0); finite integral8k..192k mono/stereo; nearest rounding required",
+    "process": "Reports actual library consumed/produced counts; forwards NULL input EOF. No automatic retry, gain, artificial padding, native carry or wrapper count policy. On library error caller must discard handle.",
+    "dependency_direction": "RebaseCore -> RebaseSoXR -> RebaseTimingDSP (callback header). TimingDSP does not depend on bridge.",
+    "implementation": {
+      "path": "Application/Sources/RebaseSoXR/rebase_soxr.c",
+      "bytes": 2538,
+      "sha256": "6b2f8a18be586f58d7e43647874c781dd956c828ae88c366aba56b2a99beb0fe"
+    },
+    "header": {
+      "path": "Application/Sources/RebaseSoXR/include/rebase_soxr.h",
+      "bytes": 1200,
+      "sha256": "81cce53e899e4360b831702a3be0365ac99f772bef9e5e721a10b079db3af658"
+    }
+  },
+  "controls": {
+    "bridge": {
+      "path": "research/evidence/application/APP012/soxr-public-build/bridge-controls.json",
+      "bytes": 292,
+      "sha256": "0ed395326f6e235b12bd0900706ffb1131b2fda9851496e2f9f02179f86da948"
+    },
+    "program": {
+      "path": "research/evidence/application/APP012/soxr-public-build/bridge-controls.c",
+      "bytes": 4290,
+      "sha256": "24144992fe6b2da701790ad81a47410d54cf8bbecc2c96cd68da88c93b595d3c"
+    },
+    "result": "8 mono/stereo direct-public API versus bridge comparisons at upsample/downsample/equal rates; every produced sample bit and every consumed/produced count matched. Domain/rounding/error-output controls passed. This compares two call paths to the SAME public backend.",
+    "standalone_relocation": {
+      "path": "research/evidence/application/APP012/soxr-public-build/relocation-controls.json",
+      "bytes": 1918,
+      "sha256": "21f03bd705d8802ec53fdacea84351a9520dc9529d1bf5f6cd2e054262610106"
+    },
+    "reproducibility_limit": "Byte equality demonstrated across two build directories with the same recorded host/compiler/SDK/options, not arbitrary toolchains."
+  },
+  "distribution": {
+    "source": "Complete upstream tree and build scripts bundled under Contents/Resources/ThirdParty",
+    "library": "Contents/Frameworks/libsoxr.0.dylib, dynamically replaceable",
+    "notices": [
+      "soxr-0.1.3/LICENCE",
+      "soxr-0.1.3/COPYING.LGPL",
+      "SOXR-NOTICES.txt",
+      "upstream FFT source notices and optional-source licenses retained"
+    ],
+    "rebuild_and_replacement_instructions": "Application/ThirdParty/README.md",
+    "source_modification": "REBASE_SOXR_ALLOW_MODIFIED_SOURCE=1 permits rebuilding modified source and records actual hashes. No source modification in this accepted build.",
+    "application_packaging": "build-app.sh removes development library rpath, retains bundle Frameworks rpath, signs nested library, bundles corresponding source/notices. Actual final Rebase bundle verification belongs to APP012 release acceptance."
+  },
+  "retained_issues": [
+    "Initial conservative tar extraction stopped at an internal relative symlink. Extraction resumed only after verifying every existing byte and target confinement; exact symlink preserved.",
+    "Upstream CMake emits compatibility/source-extension policy warnings on the installed newer CMake; unchanged source compiles successfully."
+  ],
+  "limits": [
+    "Public source identity and version string do not establish the bundled proprietary source modifications, compiler/SIMD/FP configuration, or output equivalence.",
+    "Scalar CR32+CR64/noSIMD/noOpenMP/noVR is an explicit independent build choice; vendor build flags remain unknown.",
+    "Native mode2 padding/carry/EOF is implemented separately by the injected wrapper; this bridge does not substitute plain soxr_process for that contract.",
+    "No Cubase runtime or DAC comparison. Complete live-engine callback topology and general project playback remain outside this study."
+  ],
+  "owned_integration_sources": [
+    {
+      "path": "Application/ThirdParty/build-soxr.sh",
+      "bytes": 1532,
+      "sha256": "c11fd58bb530586236f75004ca4008db43a777b9af1233eeb69f292813ca43e9"
+    },
+    {
+      "path": "Application/ThirdParty/verify-soxr-source.py",
+      "bytes": 1206,
+      "sha256": "676c8dcc57159015b20971215e105391c7ae181780241e2e85d2ada50b206b7c"
+    },
+    {
+      "path": "Application/ThirdParty/record-soxr-build.py",
+      "bytes": 2119,
+      "sha256": "98c59edb184613c286a9d6311f3bf815dd489b7510899d0e01eb2ffe58100146"
+    },
+    {
+      "path": "Application/ThirdParty/README.md",
+      "bytes": 3223,
+      "sha256": "22208e67dd4f81865b211b5947227580c8ebc419419932dffb82c4c183530011"
+    },
+    {
+      "path": "Application/ThirdParty/SOXR-NOTICES.txt",
+      "bytes": 3723,
+      "sha256": "32e4b78396e24840a32015ce56804dc2896f6078c684876958d94625910f686a"
+    },
+    {
+      "path": "Application/ThirdParty/soxr-source-manifest.json",
+      "bytes": 24807,
+      "sha256": "faeba8d39aa6eb0c4117291be67a99c207f3e0027bd3f79c1184309eca27a66d"
+    },
+    {
+      "path": "Application/Sources/RebaseSoXR/rebase_soxr.c",
+      "bytes": 2538,
+      "sha256": "6b2f8a18be586f58d7e43647874c781dd956c828ae88c366aba56b2a99beb0fe"
+    },
+    {
+      "path": "Application/Sources/RebaseSoXR/include/rebase_soxr.h",
+      "bytes": 1200,
+      "sha256": "81cce53e899e4360b831702a3be0365ac99f772bef9e5e721a10b079db3af658"
+    },
+    {
+      "path": "Application/Package.swift",
+      "bytes": 1868,
+      "sha256": "95831a7c96a4a59f60c97045a07e392ded69271a2c8fa1f53db97d10db843458"
+    },
+    {
+      "path": "Application/build-app.sh",
+      "bytes": 2348,
+      "sha256": "f9493df803252b6b687ac6fd09b9e9ebebba0f71a4feb290a2cb59b3c5fb8a4f"
+    },
+    {
+      "path": "Application/test-app.sh",
+      "bytes": 653,
+      "sha256": "ee23ef379333d361990125d781289d8b588434b81ffff2bbe815aed5f4b907c6"
+    }
+  ]
+}

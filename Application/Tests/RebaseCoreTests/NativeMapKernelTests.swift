@@ -3,14 +3,12 @@ import Foundation
 import CryptoKit
 import RebaseTimingDSP
 
-private let mapKernelRoot = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-    .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+private let mapKernelRoot = PrivateResearchFixtures.root
 private let mapKernelGoldens = mapKernelRoot.appendingPathComponent(
-    "research/evidence/cpr-static/cpr-map-clock-001/oracle-iterator/map-clock-goldens.json")
+    "evidence/cpr-static/cpr-map-clock-001/oracle-iterator/map-clock-goldens.json")
 
 final class NativeMapKernelTests {
-    @Test(.enabled(if: FileManager.default.fileExists(atPath: mapKernelGoldens.path),
-                   "Requires independent analytical oracle; no target execution."))
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
     func detachedMapArithmeticMatchesIndependentBits() throws {
         let bytes = try Data(contentsOf: mapKernelGoldens)
         #expect(SHA256.hash(data: bytes).map { String(format: "%02x", $0) }.joined()

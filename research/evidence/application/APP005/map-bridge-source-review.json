@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "reviewer": "fidelity_protocol",
+  "kind": "Independent read-only review of root-owned Swift map bridge and peer analytical arithmetic oracle; no Cubase execution",
+  "source_manifest": [
+    {
+      "path": "Application/Sources/RebaseCore/NativeTempoClock.swift",
+      "sha256": "9eadba57609a82fb3c555cc16e5a82637134fa8f7cf0829edd1d77b7fee1377e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/MusicalTime.swift",
+      "sha256": "65147c496c370a025fbacc296b9910b850632230ff593d9ff4009fbceb7aaa45"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "sha256": "528396c63fca659ce7597c88d7db426aad1d30a307f15dffe9d32f9c49a20ea4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "sha256": "331cc418a103a08011150c219c5f70d2e84e7f861557e0849d92da539015700f"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeMapClockTests.swift",
+      "sha256": "2bce9dbcc7911d894d40ac7d0af3a0fd7f335e2bd4fe9b9bec30d3e203c932fb"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_tempo.c",
+      "sha256": "5bd8632d38cad4c4b240ffcad58ec4ceb304ab23bb93483657028e085655aefb"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_tempo.h",
+      "sha256": "1f3da5deac941e7a1cc6a0f5c9a5d7d4da4fda3cc1c5928eb5a5d627cd623b70"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/map_oracle.py",
+      "sha256": "05b23d625aa1da2491c7e5a1158555a14d8148533ba23882ce7983648a880343"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/map-clock-goldens.json",
+      "sha256": "98b3922f598f57e51e961252a61a6503c67cead5b8d17605024e2bedc202795c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/kernel-integration.json",
+      "sha256": "291a51b5978ad16726ac9cedb171318c6aab008454f424c7059cf034b8d0a9ee"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/attributes/finding.json",
+      "sha256": "aefec343335ed49c179cb117ae00756fdfaf6c1d97a6e34e4216048f7cb570b3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/variation/finding.json",
+      "sha256": "ab8dda077be616e163094ff88e078c1e53b971f9234d0585d4d3a6be78c89ab5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/native-10173ad50.txt",
+      "sha256": "a6ee7ddd3bd3df9610a0f703142b0905472832c245d4e55b7ea40d3ac1d30c45"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/native-10173b1d4.txt",
+      "sha256": "ddf90ee8ddd2252a63baf458b014cf473de0a5fe5504173bbfbb1000d477cbd8"
+    }
+  ],
+  "finding": {
+    "severity": "hardening",
+    "status": "resolved before this snapshot",
+    "detail": "First map record offset previously only had to follow source identity. Strict version3 grammar requires identity(length-field)+8. Root applied equality and retains contiguous22-byte later stride. Source replay already prevented persistence forgery before this hardening."
+  },
+  "checks": [
+    {
+      "scope": "Historical fixed descriptor",
+      "result": "Optional mapRecords=nil retains original encoded key set; fixed profile staysv2 insidev3 import reports. Explicit fixed key-shape and APP004 compatibility-report replay tests are present; execution results belong to coordinated suite."
+    },
+    {
+      "scope": "Map shape and exact source",
+      "result": "Separate tagged map contract, sentinel fixedBPMBits0, profilev3,1/2kind0 records, exact source offsets, finite display20..400 and bounded ticks checked. C canonical validator checks origin+0, ordering and bitwise recurrence. ProjectStore requires whole active clock equality with replayed preserved source on load/save; explicit nil conversion remains permitted."
+    },
+    {
+      "scope": "Display projection/editing",
+      "result": "TempoMap validates unique IDs/order/range; NativeTempoClock.matches checks count, each beat/BPM and jump curve. Ordinary replacement cannot silently detach clock; explicit conversion returns checked display events and is applied on a candidate project."
+    },
+    {
+      "scope": "No recovered editable project",
+      "result": "A report can carry a supported source clock while recoveredProject=nil. CPRInspection.canImport remains false and import guard requires recoveredProject; no playable content is inferred."
+    },
+    {
+      "scope": "Arithmetic oracle",
+      "result": "Fraction rounding/fma logic reviewed against original10173ad50/10173b1d4 instructions for nonnegative kind0 domain. Forward\u00b10 divide/multiply bypasses quantization and retains-0. Inverse-0 follows nonnegative search then subtract/multiply/divide/add and yields+0 for+0origin. Forward uses bothFMADD sites andFRINTM; inverse uses separatemultiply/divide/add. No discrepancy found in reviewed scope."
+    },
+    {
+      "scope": "Floating point limits",
+      "result": "Candidate C gates nearest rounding, normal-or-zero coordinates/intermediates, bounded result, and underflow-to-zero when a nonzero intermediate is required. Exact quantization code uses fma thenfloor, not a split multiply/add. It makes no general FPCR or target runtime claim."
+    }
+  ],
+  "not_reviewed_or_not_claimed": [
+    "Native map list/constructor/cache/observer lifecycle proof remains root and cubase_evidence scope. This review is not independent confirmation of their closure.",
+    "No suite or target was executed by this review. Root coordinated suite and peer optimized instrument runs have separate evidence.",
+    "No overall Cubase runtime parity, arbitrary maps/ramps/attributes or audio-event placement is established."
+  ],
+  "open_actionable_findings": []
+}

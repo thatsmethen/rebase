@@ -1,0 +1,95 @@
+
+/workspace/rebase/research/targets/derived/Cubase15-arm64:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+0000000100003ecc <__text>:
+101d3e5a0: f90b0801    	str	x1, [x0, #0x1610]
+101d3e5a4: d65f03c0    	ret
+101d3e5a8: f9000c01    	str	x1, [x0, #0x18]
+101d3e5ac: d65f03c0    	ret
+101d3e5b0: 6dbc23e9    	stp	d9, d8, [sp, #-0x40]!
+101d3e5b4: a90157f6    	stp	x22, x21, [sp, #0x10]
+101d3e5b8: a9024ff4    	stp	x20, x19, [sp, #0x20]
+101d3e5bc: a9037bfd    	stp	x29, x30, [sp, #0x30]
+101d3e5c0: 9100c3fd    	add	x29, sp, #0x30
+101d3e5c4: 1e604028    	fmov	d8, d1
+101d3e5c8: 1e604009    	fmov	d9, d0
+101d3e5cc: aa0103f5    	mov	x21, x1
+101d3e5d0: aa0003f4    	mov	x20, x0
+101d3e5d4: 5282c308    	mov	w8, #0x1618             ; =5656
+101d3e5d8: 8b080013    	add	x19, x0, x8
+101d3e5dc: f94b0c08    	ldr	x8, [x0, #0x1618]
+101d3e5e0: f9400908    	ldr	x8, [x8, #0x10]
+101d3e5e4: aa1303e0    	mov	x0, x19
+101d3e5e8: d63f0100    	blr	x8
+101d3e5ec: f94c2280    	ldr	x0, [x20, #0x1840]
+101d3e5f0: b4000100    	cbz	x0, 0x101d3e610 <__text+0x1d3a744>
+101d3e5f4: d2800001    	mov	x1, #0x0                ; =0
+101d3e5f8: 978f54f6    	bl	0x1001139d0 <__text+0x10fb04>
+101d3e5fc: f94c2280    	ldr	x0, [x20, #0x1840]
+101d3e600: f9400008    	ldr	x8, [x0]
+101d3e604: f9400908    	ldr	x8, [x8, #0x10]
+101d3e608: d63f0100    	blr	x8
+101d3e60c: f90c229f    	str	xzr, [x20, #0x1840]
+101d3e610: 340004d5    	cbz	w21, 0x101d3e6a8 <__text+0x1d3a7dc>
+101d3e614: 1e602128    	fcmp	d9, #0.0
+101d3e618: 54000101    	b.ne	0x101d3e638 <__text+0x1d3a76c>
+101d3e61c: 1e602108    	fcmp	d8, #0.0
+101d3e620: 540000c1    	b.ne	0x101d3e638 <__text+0x1d3a76c>
+101d3e624: 9000dee8    	adrp	x8, 0x10391a000 <dyld_stub_binder+0x10391a000>
+101d3e628: 3dc38500    	ldr	q0, [x8, #0xe10]
+101d3e62c: 5282cd08    	mov	w8, #0x1668             ; =5736
+101d3e630: 3ca86a80    	str	q0, [x20, x8]
+101d3e634: 1400001a    	b	0x101d3e69c <__text+0x1d3a7d0>
+101d3e638: d0019688    	adrp	x8, 0x105010000 <dyld_stub_binder+0x105010000>
+101d3e63c: 91178108    	add	x8, x8, #0x5e0
+101d3e640: f9400108    	ldr	x8, [x8]
+101d3e644: 910e2115    	add	x21, x8, #0x388
+101d3e648: b0019680    	adrp	x0, 0x10500f000 <dyld_stub_binder+0x10500f000>
+101d3e64c: 91054000    	add	x0, x0, #0x150
+101d3e650: aa1503e1    	mov	x1, x21
+101d3e654: 1e604120    	fmov	d0, d9
+101d3e658: 97fb91da    	bl	0x101c22dc0 <__text+0x1c1eef4>
+101d3e65c: 1e604009    	fmov	d9, d0
+101d3e660: b0019680    	adrp	x0, 0x10500f000 <dyld_stub_binder+0x10500f000>
+101d3e664: 91054000    	add	x0, x0, #0x150
+101d3e668: aa1503e1    	mov	x1, x21
+101d3e66c: 1e604100    	fmov	d0, d8
+101d3e670: 97fb91d4    	bl	0x101c22dc0 <__text+0x1c1eef4>
+101d3e674: 9e780129    	fcvtzs	x9, d9
+101d3e678: 9e780008    	fcvtzs	x8, d0
+101d3e67c: f94b368a    	ldr	x10, [x20, #0x1668]
+101d3e680: eb09015f    	cmp	x10, x9
+101d3e684: 5400004d    	b.le	0x101d3e68c <__text+0x1d3a7c0>
+101d3e688: f90b3689    	str	x9, [x20, #0x1668]
+101d3e68c: f94b3a89    	ldr	x9, [x20, #0x1670]
+101d3e690: eb08013f    	cmp	x9, x8
+101d3e694: 5400004a    	b.ge	0x101d3e69c <__text+0x1d3a7d0>
+101d3e698: f90b3a88    	str	x8, [x20, #0x1670]
+101d3e69c: b9560e88    	ldr	w8, [x20, #0x160c]
+101d3e6a0: 32000108    	orr	w8, w8, #0x1
+101d3e6a4: b9160e88    	str	w8, [x20, #0x160c]
+101d3e6a8: f9400268    	ldr	x8, [x19]
+101d3e6ac: f9400d08    	ldr	x8, [x8, #0x18]
+101d3e6b0: aa1303e0    	mov	x0, x19
+101d3e6b4: d63f0100    	blr	x8
+101d3e6b8: a9437bfd    	ldp	x29, x30, [sp, #0x30]
+101d3e6bc: a9424ff4    	ldp	x20, x19, [sp, #0x20]
+101d3e6c0: a94157f6    	ldp	x22, x21, [sp, #0x10]
+101d3e6c4: 6cc423e9    	ldp	d9, d8, [sp], #0x40
+101d3e6c8: d65f03c0    	ret
+101d3e6cc: 14000003    	b	0x101d3e6d8 <__text+0x1d3a80c>
+101d3e6d0: 14000002    	b	0x101d3e6d8 <__text+0x1d3a80c>
+101d3e6d4: 978b16d8    	bl	0x100004234 <__text+0x368>
+101d3e6d8: aa0003f4    	mov	x20, x0
+101d3e6dc: f9400268    	ldr	x8, [x19]
+101d3e6e0: f9400d08    	ldr	x8, [x8, #0x18]
+101d3e6e4: aa1303e0    	mov	x0, x19
+101d3e6e8: d63f0100    	blr	x8
+101d3e6ec: aa1403e0    	mov	x0, x20
+101d3e6f0: 946d07ee    	bl	0x1038806a8 <dyld_stub_binder+0x1038806a8>
+101d3e6f4: 978b16d0    	bl	0x100004234 <__text+0x368>
+101d3e6f8: 9282bee8    	mov	x8, #-0x15f8            ; =-5624
+101d3e6fc: 8b080000    	add	x0, x0, x8
+101d3e700: 17ffffac    	b	0x101d3e5b0 <__text+0x1d3a6e4>

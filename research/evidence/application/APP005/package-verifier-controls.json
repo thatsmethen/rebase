@@ -1,0 +1,41 @@
+{
+  "created_utc": "2026-10-19T11:56:52.805934+00:00",
+  "scope": "Self-authored verifier controls mutate temporary copies of GUI artifact only; original remains unchanged. No app or target execution.",
+  "passed": true,
+  "verifier_sha256": "42e378d6f3c7034b07cb39ee76f8dafae87a3c83edb72b822cba80fa6d9b8429",
+  "original_package": "/workspace/rebase/research/evidence/application/APP005/LoFi Native Map.rebaseproj",
+  "original_unchanged": true,
+  "setup_note": "Initial temporary path used macOS /var symlink alias and was correctly rejected by path policy; rerun uses resolved temporary directory. No verifier code changed.",
+  "checks": [
+    {
+      "control": "positive",
+      "result": "accepted",
+      "reason": null
+    },
+    {
+      "control": "invented-clip",
+      "result": "rejected",
+      "reason": "Project differs beyond allowed name and explicit clock conversion."
+    },
+    {
+      "control": "consistent-clock-tamper",
+      "result": "rejected",
+      "reason": "Report/baseline descriptor differs from original bytes."
+    },
+    {
+      "control": "source-byte-tamper",
+      "result": "rejected",
+      "reason": "Original.cpr differs from independently pinned LoFi source."
+    },
+    {
+      "control": "object-hash-tamper",
+      "result": "rejected",
+      "reason": "Object payload differs."
+    },
+    {
+      "control": "profile-tamper",
+      "result": "rejected",
+      "reason": "Wrong report schema/profile."
+    }
+  ]
+}

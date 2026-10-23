@@ -1,0 +1,112 @@
+
+research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+00000000000038e0 <__text>:
+  1520d0: d10203ff     	sub	sp, sp, #0x80
+  1520d4: 6d0123e9     	stp	d9, d8, [sp, #0x10]
+  1520d8: a9026ffc     	stp	x28, x27, [sp, #0x20]
+  1520dc: a90367fa     	stp	x26, x25, [sp, #0x30]
+  1520e0: a9045ff8     	stp	x24, x23, [sp, #0x40]
+  1520e4: a90557f6     	stp	x22, x21, [sp, #0x50]
+  1520e8: a9064ff4     	stp	x20, x19, [sp, #0x60]
+  1520ec: a9077bfd     	stp	x29, x30, [sp, #0x70]
+  1520f0: 9101c3fd     	add	x29, sp, #0x70
+  1520f4: b4000b01     	cbz	x1, 0x152254 <__text+0x14e974>
+  1520f8: aa0103f3     	mov	x19, x1
+  1520fc: aa0003f4     	mov	x20, x0
+  152100: f9400028     	ldr	x8, [x1]
+  152104: f9400d08     	ldr	x8, [x8, #0x18]
+  152108: aa0103e0     	mov	x0, x1
+  15210c: d63f0100     	blr	x8
+  152110: 7100041f     	cmp	w0, #0x1
+  152114: 54000a0b     	b.lt	0x152254 <__text+0x14e974>
+  152118: aa0003f5     	mov	x21, x0
+  15211c: 52800016     	mov	w22, #0x0               ; =0
+  152120: 1e6c1008     	fmov	d8, #0.50000000
+  152124: f00001d9     	adrp	x25, 0x18d000 <dyld_stub_binder+0x18d000>
+  152128: 91057339     	add	x25, x25, #0x15c
+  15212c: f00001da     	adrp	x26, 0x18d000 <dyld_stub_binder+0x18d000>
+  152130: 9107835a     	add	x26, x26, #0x1e0
+  152134: f00001db     	adrp	x27, 0x18d000 <dyld_stub_binder+0x18d000>
+  152138: 9106737b     	add	x27, x27, #0x19c
+  15213c: f00001dc     	adrp	x28, 0x18d000 <dyld_stub_binder+0x18d000>
+  152140: 9109839c     	add	x28, x28, #0x260
+  152144: 1400000c     	b	0x152174 <__text+0x14e894>
+  152148: 51000701     	sub	w1, w24, #0x1
+  15214c: f94002e8     	ldr	x8, [x23]
+  152150: f9401508     	ldr	x8, [x8, #0x28]
+  152154: 910013e2     	add	x2, sp, #0x4
+  152158: 910023e3     	add	x3, sp, #0x8
+  15215c: aa1703e0     	mov	x0, x23
+  152160: d63f0100     	blr	x8
+  152164: 34000480     	cbz	w0, 0x1521f4 <__text+0x14e914>
+  152168: 110006d6     	add	w22, w22, #0x1
+  15216c: 6b1602bf     	cmp	w21, w22
+  152170: 54000720     	b.eq	0x152254 <__text+0x14e974>
+  152174: f9400268     	ldr	x8, [x19]
+  152178: f9401108     	ldr	x8, [x8, #0x20]
+  15217c: aa1303e0     	mov	x0, x19
+  152180: aa1603e1     	mov	x1, x22
+  152184: d63f0100     	blr	x8
+  152188: b4ffff00     	cbz	x0, 0x152168 <__text+0x14e888>
+  15218c: aa0003f7     	mov	x23, x0
+  152190: f9400008     	ldr	x8, [x0]
+  152194: f9401108     	ldr	x8, [x8, #0x20]
+  152198: d63f0100     	blr	x8
+  15219c: aa0003f8     	mov	x24, x0
+  1521a0: f94002e8     	ldr	x8, [x23]
+  1521a4: f9400d08     	ldr	x8, [x8, #0x18]
+  1521a8: aa1703e0     	mov	x0, x23
+  1521ac: d63f0100     	blr	x8
+  1521b0: 7100081f     	cmp	w0, #0x2
+  1521b4: 54fffca0     	b.eq	0x152148 <__text+0x14e868>
+  1521b8: 7100041f     	cmp	w0, #0x1
+  1521bc: 54fffd61     	b.ne	0x152168 <__text+0x14e888>
+  1521c0: 51000701     	sub	w1, w24, #0x1
+  1521c4: f94002e8     	ldr	x8, [x23]
+  1521c8: f9401508     	ldr	x8, [x8, #0x28]
+  1521cc: 910013e2     	add	x2, sp, #0x4
+  1521d0: 910023e3     	add	x3, sp, #0x8
+  1521d4: aa1703e0     	mov	x0, x23
+  1521d8: d63f0100     	blr	x8
+  1521dc: 35fffc60     	cbnz	w0, 0x152168 <__text+0x14e888>
+  1521e0: fd4007e0     	ldr	d0, [sp, #0x8]
+  1521e4: 1e682000     	fcmp	d0, d8
+  1521e8: 1a9fd7e8     	cset	w8, gt
+  1521ec: 3905a688     	strb	w8, [x20, #0x169]
+  1521f0: 17ffffde     	b	0x152168 <__text+0x14e888>
+  1521f4: fd4007e0     	ldr	d0, [sp, #0x8]
+  1521f8: 1e790008     	fcvtzu	w8, d0
+  1521fc: b9015288     	str	w8, [x20, #0x150]
+  152200: 3945a288     	ldrb	w8, [x20, #0x168]
+  152204: 1e682000     	fcmp	d0, d8
+  152208: 540000c5     	b.pl	0x152220 <__text+0x14e940>
+  15220c: 34000148     	cbz	w8, 0x152234 <__text+0x14e954>
+  152210: f940a688     	ldr	x8, [x20, #0x148]
+  152214: b4000108     	cbz	x8, 0x152234 <__text+0x14e954>
+  152218: a9026919     	stp	x25, x26, [x8, #0x20]
+  15221c: 17ffffd3     	b	0x152168 <__text+0x14e888>
+  152220: 34000128     	cbz	w8, 0x152244 <__text+0x14e964>
+  152224: f940a688     	ldr	x8, [x20, #0x148]
+  152228: b40000e8     	cbz	x8, 0x152244 <__text+0x14e964>
+  15222c: a902711b     	stp	x27, x28, [x8, #0x20]
+  152230: 17ffffce     	b	0x152168 <__text+0x14e888>
+  152234: f940a288     	ldr	x8, [x20, #0x140]
+  152238: b4fff988     	cbz	x8, 0x152168 <__text+0x14e888>
+  15223c: a901e919     	stp	x25, x26, [x8, #0x18]
+  152240: 17ffffca     	b	0x152168 <__text+0x14e888>
+  152244: f940a288     	ldr	x8, [x20, #0x140]
+  152248: b4fff908     	cbz	x8, 0x152168 <__text+0x14e888>
+  15224c: a901f11b     	stp	x27, x28, [x8, #0x18]
+  152250: 17ffffc6     	b	0x152168 <__text+0x14e888>
+  152254: a9477bfd     	ldp	x29, x30, [sp, #0x70]
+  152258: a9464ff4     	ldp	x20, x19, [sp, #0x60]
+  15225c: a94557f6     	ldp	x22, x21, [sp, #0x50]
+  152260: a9445ff8     	ldp	x24, x23, [sp, #0x40]
+  152264: a94367fa     	ldp	x26, x25, [sp, #0x30]
+  152268: a9426ffc     	ldp	x28, x27, [sp, #0x20]
+  15226c: 6d4123e9     	ldp	d9, d8, [sp, #0x10]
+  152270: 910203ff     	add	sp, sp, #0x80
+  152274: d65f03c0     	ret

@@ -1,0 +1,26 @@
+
+/workspace/rebase/research/targets/derived/Cubase15-arm64:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+0000000100003ecc <__text>:
+101ff60bc: b4000200    	cbz	x0, 0x101ff60fc <__text+0x1ff2230>
+101ff60c0: aa0003f4    	mov	x20, x0
+101ff60c4: f9400008    	ldr	x8, [x0]
+101ff60c8: f9402108    	ldr	x8, [x8, #0x40]
+101ff60cc: 9000c4e1    	adrp	x1, 0x103892000 <dyld_stub_binder+0x103892000>
+101ff60d0: 9121f421    	add	x1, x1, #0x87d
+101ff60d4: 52800022    	mov	w2, #0x1                ; =1
+101ff60d8: d63f0100    	blr	x8
+101ff60dc: 34000100    	cbz	w0, 0x101ff60fc <__text+0x1ff2230>
+101ff60e0: f9400288    	ldr	x8, [x20]
+101ff60e4: f9433102    	ldr	x2, [x8, #0x660]
+101ff60e8: aa1403e0    	mov	x0, x20
+101ff60ec: aa1303e1    	mov	x1, x19
+101ff60f0: a9417bfd    	ldp	x29, x30, [sp, #0x10]
+101ff60f4: a8c24ff4    	ldp	x20, x19, [sp], #0x20
+101ff60f8: d61f0040    	br	x2
+101ff60fc: a9417bfd    	ldp	x29, x30, [sp, #0x10]
+101ff6100: a8c24ff4    	ldp	x20, x19, [sp], #0x20
+101ff6104: d65f03c0    	ret
+101ff6108: d10383ff    	sub	sp, sp, #0xe0

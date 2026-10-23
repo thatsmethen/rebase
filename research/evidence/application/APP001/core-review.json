@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "id": "APP001-CORE-REVIEW",
+  "recorded_utc": "2026-10-19T07:43:54.160310+00:00",
+  "reviewer": "independent cubase_evidence worker",
+  "scope": [
+    "Project.swift validation and representation",
+    "ProjectStore.swift save/load/import/path containment",
+    "OfflineRenderer.swift preparation, resampling, timing, accumulation, export finalization",
+    "AudioTransportEngine.swift static inspection only",
+    "C target integration and linked exact coefficient behavior"
+  ],
+  "result": "No actionable core correctness defect found in the inspected bounded contracts; 16 synthetic integration tests pass.",
+  "static_review": [
+    "Project schema rejects duplicate track/clip IDs, nonfinite/out-of-range controls and invalid clip times before saving or preparing.",
+    "Media resolution rejects traversal, absolute paths, malformed separators, a redirected Media directory, external symlink targets and nonregular files. Tests exercise ordinary import, file escape, directory redirect, load rejection and source removal.",
+    "Preparation determines audible clips by solo and mute, preserves timeline endpoints independently of audibility, applies explicit application pan/gain policy and bounds decoded/prepared frame counts.",
+    "Clips select source intervals and independently rounded timeline position/length. Linear resampling is an application choice, not recovered Cubase processing.",
+    "Offline summing uses stable track/clip order, permits unclipped float peaks above one, and export writes chunks to a temporary file before move/replace. Tests inspect replacement, chunk boundary and source preservation.",
+    "Playback reuses prepared buffers, but native audio engine timing/device output remains an untested runtime surface."
+  ],
+  "dsp_provenance": [
+    {
+      "source": {
+        "path": "candidate/ambiconverter_first_order/ambi_first_order.c",
+        "size": 5231,
+        "sha256": "b2af5f8622fa3c336f0c6c6abbb59ddf79151107bfe8e31a23c09dd2a9a1d240"
+      },
+      "integrated_copy": {
+        "path": "Application/Sources/RebaseDSP/ambi_first_order.c",
+        "size": 5231,
+        "sha256": "b2af5f8622fa3c336f0c6c6abbb59ddf79151107bfe8e31a23c09dd2a9a1d240"
+      },
+      "byte_identical": true
+    },
+    {
+      "source": {
+        "path": "candidate/ambiconverter_first_order/ambi_first_order.h",
+        "size": 1123,
+        "sha256": "b1103f9cc0450db33aa1331297306e2619998d069cada1e4a919573df8dd0135"
+      },
+      "integrated_copy": {
+        "path": "Application/Sources/RebaseDSP/include/ambi_first_order.h",
+        "size": 1123,
+        "sha256": "b1103f9cc0450db33aa1331297306e2619998d069cada1e4a919573df8dd0135"
+      },
+      "byte_identical": true
+    }
+  ],
+  "dsp_scope": "Four channels only, explicit normalized direction, nonbypass, zero silence flags, positive bounded frames, disjoint buffers, nearest rounding, signed zero or conservative normal magnitude domain; kernel policy rejections are not claimed target behavior.",
+  "important_bit_check": "binary64 inverse gain is 0x3fe6a09e667f3bcc, one ULP below sqrt(0.5); linked test checks exact bits and distinguishes textbook substitution.",
+  "evidence": [
+    {
+      "path": "research/evidence/application/APP001/core-tests.json",
+      "size": 6527,
+      "sha256": "3b462449f60c0ec2507d9bce8abc3d7ededb9a44c8f66f51ad62ab0863182741"
+    },
+    {
+      "path": "research/evidence/application/APP001/core-tests-output.log",
+      "size": 3361,
+      "sha256": "152ce983678863532877fb3d7d2a5fff37d90b5d0cf95de92f2b48171b07118a"
+    }
+  ],
+  "changes_to_prior_candidate_or_static_reports": false,
+  "target_execution": false,
+  "uncovered": [
+    "Audio device playback and scheduling",
+    "GUI edit-to-render and edit-to-save journeys",
+    "Broad decoder/file corruption compatibility",
+    "Full floating-point domain and any Cubase runtime equivalence"
+  ]
+}

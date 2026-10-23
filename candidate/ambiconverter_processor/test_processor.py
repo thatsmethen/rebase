@@ -21,7 +21,7 @@ import unittest
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
-EVIDENCE = ROOT / 'research/evidence/cpr-static'
+EVIDENCE = ROOT / 'research/evidence/cubase-static'
 
 
 class State(C.Structure):

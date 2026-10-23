@@ -5,10 +5,9 @@ import Testing
 /// Actual pinned archive bytes plus deliberate mutations, without executing
 /// Reference. These test source decoding, not event placement or audible fidelity.
 struct CPRAudioEventArchiveTests {
-    private let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let root = PrivateResearchFixtures.root
     private func source(_ name: String) throws -> Data {
-        let folder = "research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro/"
+        let folder = "templates/"
         let bytes = try Data(contentsOf: root.appendingPathComponent(folder + name + ".cpr"))
         let pins = ["LoFi Hip Hop": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
                     "Classic House": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892"]
@@ -23,7 +22,8 @@ struct CPRAudioEventArchiveTests {
         bytes.replaceSubrange(offset..<(offset + MemoryLayout<T>.size), with: withUnsafeBytes(of: &big) { Data($0) })
     }
 
-    @Test func twoPinnedEventsRetainDistinctStoredTimebasesAndExactLinkedObjects() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func twoPinnedEventsRetainDistinctStoredTimebasesAndExactLinkedObjects() throws {
         for (name, frames, length, eventOffset, fileOffset, segmentOffset) in [
             ("LoFi Hip Hop", UInt64(1_058_400), Double(1_058_400), 197765, 206244, 206306),
             ("Classic House", UInt64(677_376), Double(14_880), 207293, 211609, 211671)
@@ -64,7 +64,8 @@ struct CPRAudioEventArchiveTests {
         }
     }
 
-    @Test func storedTailAndOpaqueProcessingStateArePreservedWithoutPlaybackPromotion() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func storedTailAndOpaqueProcessingStateArePreservedWithoutPlaybackPromotion() throws {
         for name in ["LoFi Hip Hop", "Classic House"] {
             let bytes = try source(name), container = try CPRProject.readContainer(bytes)
             let event = try #require(read(bytes).first)
@@ -82,7 +83,8 @@ struct CPRAudioEventArchiveTests {
         }
     }
 
-    @Test func nonzeroRawFieldsRemainExactInsteadOfBeingConvertedWithGuessedUnits() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func nonzeroRawFieldsRemainExactInsteadOfBeingConvertedWithGuessedUnits() throws {
         var bytes = try source("LoFi Hip Hop")
         let original = try #require(read(bytes).first)
         let values = [Double(44_100).nextUp, Double(88_200).nextDown, Double(220.5)]
@@ -95,7 +97,8 @@ struct CPRAudioEventArchiveTests {
         #expect(result.cluster == original.cluster)
     }
 
-    @Test func segmentReferenceMustResolveTheActualListedAudioFile() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func segmentReferenceMustResolveTheActualListedAudioFile() throws {
         let original = try source("LoFi Hip Hop"), event = try #require(read(original).first)
         let segment = try #require(event.cluster.segments.first)
         for token in [UInt32(0), UInt32(1), UInt32(event.path.object.identityOffset - 231)] {
@@ -110,7 +113,8 @@ struct CPRAudioEventArchiveTests {
         #expect(try read(bytes).first?.cluster.segments.first?.storedStart == 123)
     }
 
-    @Test func nonfiniteAndTruncatedFieldsCannotProducePartialRecords() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func nonfiniteAndTruncatedFieldsCannotProducePartialRecords() throws {
         let original = try source("LoFi Hip Hop"), event = try #require(read(original).first)
         let file = try #require(event.cluster.files.first), segment = try #require(event.cluster.segments.first)
         for index in 0..<3 {

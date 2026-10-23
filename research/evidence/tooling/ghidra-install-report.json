@@ -1,0 +1,91 @@
+{
+  "status": "ready-for-project-local-rea-cli-synthetic-calibration-passed",
+  "archive_source": "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.1.4_build/ghidra_12.1.4_PUBLIC_20260921.zip",
+  "release_tag": "Ghidra_12.1.4_build",
+  "archive_size": 569649598,
+  "archive_sha256": "ddac49f903da9d5bac833e5cc79395098b9c33cfd3279be5f31bd00387d2d4db",
+  "installation": "/workspace/rebase/.tools/ghidra",
+  "java_home": "/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home",
+  "build_command": [
+    "/usr/bin/make",
+    "-j4",
+    "ghidra_opt",
+    "ARCH_TYPE=-arch arm64",
+    "OSDIR=mac_arm_64"
+  ],
+  "native_decompiler": "/workspace/rebase/.tools/ghidra/Ghidra/Features/Decompiler/os/mac_arm_64/decompile",
+  "native_decompiler_sha256": "382c1662444ec6b42dcd141483b41a645989acf75885661d83a60c3fdb0822d5",
+  "native_decompiler_file": "/workspace/rebase/.tools/ghidra/Ghidra/Features/Decompiler/os/mac_arm_64/decompile: Mach-O 64-bit executable arm64",
+  "official_build_docs": "https://github.com/NationalSecurityAgency/ghidra/blob/Ghidra_12.1.4_build/GhidraDocs/GettingStarted.md#building-native-components",
+  "official_makefile": "https://github.com/NationalSecurityAgency/ghidra/blob/Ghidra_12.1.4_build/Ghidra/Features/Decompiler/src/decompile/cpp/Makefile",
+  "provider_recipe": "https://github.com/morluto/rea/blob/main/docs/installation.md#macos-arm64-native-decompiler",
+  "scope": "Tool installation only; no Cubase target behavior or equivalence established.",
+  "verified_at_utc": "2026-10-19T04:23:43.364576+00:00",
+  "doctor_scope_healthy": true,
+  "doctor_environment_healthy": false,
+  "doctor_scope": {
+    "mode": "explicit",
+    "clients": [],
+    "providers": [
+      "ghidra"
+    ],
+    "skill": false,
+    "target": null
+  },
+  "decompile_evidence_id": "ev_0946cd4fa4b08a5713b8ec1166a876da30d37dc77aecb991a7a78423faac3a29",
+  "decompile_subject_sha256": "29558325e15e8584a4266a6fb46d2fae046138104d2e50f67bb5a9be563966b3",
+  "fixture_source_sha256": "7ed2916abc786274d20800a8849fb9a51f56e576cc9822604b9d29b8b4df3df1",
+  "fixture_binary_sha256": "29558325e15e8584a4266a6fb46d2fae046138104d2e50f67bb5a9be563966b3",
+  "synthetic_runtime_cases_passed": 5,
+  "synthetic_runtime_case_count": 5,
+  "calibration_review": "Recovered pseudocode contains the negative-input branch returning -7, inclusive 0..100 arithmetic branch value*3+1, and greater-than-100 branch returning 100. This is a synthetic provider readiness check, not Cubase evidence.",
+  "global_registration_changed": false,
+  "rea_installation_changed": false,
+  "provider_limitations": [
+    "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+    "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+    "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+    "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+    "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+    "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+    "macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state."
+  ],
+  "retained_files": {
+    "ghidra-GettingStarted-12.1.4.md": {
+      "bytes": 26090,
+      "sha256": "e3e9b10a30f5792617fcbb8c5d1a17cf36ae1cac399a50bd0fd2b90f19cf0f36"
+    },
+    "ghidra-decompiler-Makefile-12.1.4": {
+      "bytes": 14346,
+      "sha256": "13dc7b7c44019a0af3db86a3ec743d11bd36980724e644c606a5bb31c6643524"
+    },
+    "provider-rea-installation-main.md": {
+      "bytes": 75004,
+      "sha256": "84b970e89869172cfd351994bd4ffa0ec76e96006a42dc70432ca9a21ec14457"
+    },
+    "provider-ghidra-doctor.json": {
+      "bytes": 20885,
+      "sha256": "abc8483c0e5f9770ea475c32a2b8e89ef5dc0891977bb8019d192d5d8c7b74dd"
+    },
+    "provider-ghidra-decompile.json": {
+      "bytes": 3729,
+      "sha256": "175d501a5a95240c7e1c11e3db8b4e2a409360f7e09cbbf621b980c7b837c0d3"
+    },
+    "provider-calibration-runtime.json": {
+      "bytes": 1087,
+      "sha256": "b8d7c405066b945d242d834387d67c44af2aea3f067559d5868ffd8a29573956"
+    },
+    "provider-calibration.c": {
+      "bytes": 433,
+      "sha256": "7ed2916abc786274d20800a8849fb9a51f56e576cc9822604b9d29b8b4df3df1"
+    },
+    "rea-agents/package.json": {
+      "bytes": 24696,
+      "sha256": "3f6c47fb12c8388f291a21e7f99a876495d03aee671b3b6a0708dd12d6ebb570"
+    },
+    "rea-agents/scripts/rea.mjs": {
+      "bytes": 6110,
+      "sha256": "ed06cee49505b95a3cc5fceb1b4b279167e26df86227c644bb366ffffdbaf738"
+    }
+  }
+}

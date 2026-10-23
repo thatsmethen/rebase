@@ -1,0 +1,82 @@
+{
+  "id": "CPR-SIGNATURE-NATIVE-INDEPENDENT-REVIEW",
+  "reviewer": "target_intake",
+  "created_utc": "2026-10-19T11:09:59.652379+00:00",
+  "status": "accepted revised bounded source contract; project-role/application integration is a separate review",
+  "scope": "Focused independent native review of replacement ordering, named Bar precedence, and null-alternate variation binding; source integrity checks cover all retained ranges. No target execution, application code approval, or runtime-equivalence claim.",
+  "reviewed_finding": {
+    "path": "research/evidence/cubase-static/cpr-signature-001/finding-v1.json",
+    "sha256": "9c64ed3abb8725b9efcdbb89a258f1c6ac53b46e62c6c3114a786f3802e9ed2e"
+  },
+  "issues": [
+    {
+      "id": "SIG-REVIEW-001",
+      "severity": "blocking for unconditional typed-precedence import",
+      "status": "resolved in published correction by explicit compact/typed agreement gate; broader compatibility context remains unbound",
+      "problem": "Version3 alone does not guarantee the typed signature container reaches restoration. Before the v3 lookup,101730874 conditionally removes numeric key0x736b6c43 based on product/version context obtained through global10501c7c0. The current SIG001 text and contradictory-compact counterexample are too strong without that branch precondition.",
+      "evidence": {
+        "global_context_load": "0x101730b84..0x101730bb4",
+        "context_checks": "0x101730bb8..0x101730c5c",
+        "container_removal": "0x101730c60..0x101730c70",
+        "later_lookup": "0x101730cac..0x101730cc0",
+        "typed_restore_call": "0x101730ce4"
+      },
+      "original_instruction_details": "Global context null or context+338 null skips deletion. Otherwise helper results and product-string comparisons select deletion. Actual literals are PSequencerApplication@1038b2c86, Cubase@103897952, Nuendo@1038b14cd. Context ownership and version getter meaning were not assumed from these names.",
+      "recommended_resolution": "For the initial projection require exactly one compact record at coordinate0 and exactly one typed Bar0 item, with identical supported numerator/denominator. Reject contradictory meters until creator/load-context binding is proved. Typed-only parsing is still not sufficient. This supports the same constant origin meter whichever compatibility branch executes.",
+      "fixture_effect": "All ten shipped templates satisfy this agreement: compact4/4 coordinate0, typed Bar0 numerator4 denominator4. Their Version roots declare Cubase14.0.0 or14.0.5, an observed source string rather than proof of runtime global ownership."
+    }
+  ],
+  "confirmed_contracts": [
+    {
+      "topic": "clear-before-typed-fetch",
+      "result": "101730d90 requests a mode2 accessor, invokes accessor+150 at101730ddc before first typed lookup101730df4. Concrete constructor chain1017015b8\u2192MTrackList+f0\u2192101758eec\u2192101716448\u21921016c137c stores filter+20=null. Accessor+150 maps101716db0; its loop calls+120 then releases each item. +120101716814 tails to103101e50, whose native stores unlink neighbors, zero links and decrement count. Thus successful typed restoration replaces the previous list in the bounded valid-list path."
+    },
+    {
+      "topic": "Bar precedence",
+      "result": "10172b3ac reads Bar into item+48; TBNZ bit0 at10172b3b0 bypasses all Position handling on success. Only failed Bar invokes Position and the numeric position-attribute setter. This is supported for exact integer Bar input. Present integer Bar0 wins over contradictory named Position; no broad malformed-value coercion promise."
+    },
+    {
+      "topic": "short and display fields",
+      "result": "Named Numerator/Denominator write short+50/+52. TimeSignatureDisplayFlags overrides legacy Flags at+5a when its getter succeeds. Missing required fields, short truncation/coercion, subdivision and other display semantics remain excluded from the supported projection."
+    },
+    {
+      "topic": "first typed origin",
+      "result": "Restorer tests internal numeric position attribute at101730e30; if present it sets first Bar+48=0 at101730e44. Otherwise named Bar survives. The accepted explicit Bar0 case gives origin under either branch, provided unsupported extras are constrained."
+    },
+    {
+      "topic": "null-alternate branch",
+      "result": "1017a3f98 tests variation+28; null branch resets+30, obtains current track list via+258, stores/addrefs it into variation+28, invokes concrete list+150, obtains+4f0 metadata and assigns ownership. Crucially MTrackList+150 points to1000fd154, whose entire body is RET. It is not accessor+150101716db0. The reviewed null branch does not replace/clear the current signature items."
+    },
+    {
+      "topic": "variation serialized widths",
+      "result": "Collection1030f2cdc reads i32 at+14 and remaps10\u2192-1, then1030f91c4 consumes i16 flags and i32 count followed by archive objects, finally restoring flags. Variation1017a4250 consumes name, exactly one archive object expected MDataNode, then i32. All ten exact fixtures have flags2,count1,namev1,null alternate,trailing0; native class-name bytes confirm MDataNode."
+    },
+    {
+      "topic": "source verification",
+      "result": "48 LC_FUNCTION_STARTS intervals:21348 bytes,5337 original native instruction words,3007 REA instruction addresses,exact readbacks;92 linkage spans independently checked against immutable main source. Evidence integrity is distinct from full semantic review.",
+      "path": "research/evidence/application/APP004/cpr-signature-native-byte-checks.json",
+      "sha256": "a9ab445cbe3db8c5e37d50549e0593bbc2782307feff7a298595f28e26f9b4f1"
+    }
+  ],
+  "fixture_addendum": {
+    "path": "research/evidence/cubase-static/cpr-audio-timing-001/reviewer-template-state.json",
+    "sha256": "c23cf70470d39040a731a951406c1ac61514bfa5b3b4385701ef8cb5f6c37590"
+  },
+  "limits": [
+    "No actual Cubase code executed. Runtime comparison count remains0.",
+    "Raw decompiler output omits external context and may turn valid tail branches into halt artifacts; original instruction words govern reviewed calls.",
+    "Application implementation/tests and project-global clock role binding are separate acceptance checks; this record preserves both original and corrected finding hashes."
+  ],
+  "resolution_review": {
+    "at_utc": "2026-10-19T11:10:56.770636+00:00",
+    "finding": {
+      "path": "research/evidence/cubase-static/cpr-signature-001/finding.json",
+      "sha256": "57e0dceb7e6907ae7d19a4d0c73a700899d38adc5a7cb5492a397851b6c1c231"
+    },
+    "correction": {
+      "path": "research/evidence/cubase-static/cpr-signature-001/correction-v2.json",
+      "sha256": "cc5a7e9e637412bc30d96dfd4d0fd42de50eabb8ac45161a08b7c50ee7b325a9"
+    },
+    "result": "Revised requirements explicitly require compact/typed agreement at zero origin and reject contradiction. This removes dependency on deciding which compatibility branch executes for the supported constant meter projection. Clear/replacement and Bar precedence are correctly retained as conditional facts. No remaining actionable native-contract issue in the revised bounded projection. Actual project-global role binding is expressly separate."
+  }
+}

@@ -1,0 +1,35 @@
++ set -eu
+++ dirname Application/test-app.sh
++ cd Application
+++ xcode-select -p
++ DEVELOPER_ROOT=/Library/Developer/CommandLineTools
++ case "$DEVELOPER_ROOT" in
++ swift test --scratch-path .build-tests --disable-xctest --enable-swift-testing -Xswiftc -F -Xswiftc /Library/Developer/CommandLineTools/Library/Developer/Frameworks -Xswiftc -Xfrontend -Xswiftc -disable-cross-import-overlays -Xswiftc -plugin-path -Xswiftc /Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing -Xlinker -rpath -Xlinker /Library/Developer/CommandLineTools/Library/Developer/Frameworks --filter CPRRateReadBudgetTests
+Building for debugging...
+[0/6] Write swift-version--1AB21518FC5DEDBE.txt
+[2/8] Emitting module RebaseCore
+[3/8] Compiling RebaseCore CPRRateReadBudget.swift
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateReadBudget.swift:63:14: error: expression pattern of type 'Int' cannot match values of type 'Int32'
+61 |             branch == .mode2InitialAllowance ? 1 : 0, &raw)
+62 |         switch status {
+63 |         case RB_CPR_RATE_BUDGET_OK: break
+   |              `- error: expression pattern of type 'Int' cannot match values of type 'Int32'
+64 |         case RB_CPR_RATE_BUDGET_FP_ENVIRONMENT: throw CPRRateReadBudgetError.unsupportedRoundingMode
+65 |         case RB_CPR_RATE_BUDGET_RANGE: throw CPRRateReadBudgetError.arithmeticRange
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateReadBudget.swift:64:14: error: expression pattern of type 'Int' cannot match values of type 'Int32'
+62 |         switch status {
+63 |         case RB_CPR_RATE_BUDGET_OK: break
+64 |         case RB_CPR_RATE_BUDGET_FP_ENVIRONMENT: throw CPRRateReadBudgetError.unsupportedRoundingMode
+   |              `- error: expression pattern of type 'Int' cannot match values of type 'Int32'
+65 |         case RB_CPR_RATE_BUDGET_RANGE: throw CPRRateReadBudgetError.arithmeticRange
+66 |         default: throw CPRRateReadBudgetError.invalidInput
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateReadBudget.swift:65:14: error: expression pattern of type 'Int' cannot match values of type 'Int32'
+63 |         case RB_CPR_RATE_BUDGET_OK: break
+64 |         case RB_CPR_RATE_BUDGET_FP_ENVIRONMENT: throw CPRRateReadBudgetError.unsupportedRoundingMode
+65 |         case RB_CPR_RATE_BUDGET_RANGE: throw CPRRateReadBudgetError.arithmeticRange
+   |              `- error: expression pattern of type 'Int' cannot match values of type 'Int32'
+66 |         default: throw CPRRateReadBudgetError.invalidInput
+67 |         }
+error: fatalError

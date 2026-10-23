@@ -1,0 +1,82 @@
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[3/8] Write swift-version--1AB21518FC5DEDBE.txt
+[5/13] Emitting module RebaseCore
+[6/13] Compiling RebaseCore AudioTransportEngine.swift
+[7/13] Compiling RebaseCore Project.swift
+[8/13] Compiling RebaseCore ProjectStore.swift
+[9/13] Compiling RebaseCore OfflineRenderer.swift
+[10/18] Emitting module RebaseCoreTests
+[11/18] Compiling RebaseCoreTests InvalidClipIntervalTests.swift
+[11/18] Write Objects.LinkFileList
+[12/18] Linking RebasePackageTests
+[14/18] Compiling Rebase StudioSession.swift
+[15/18] Emitting module Rebase
+[16/18] Compiling Rebase RebaseApp.swift
+[16/19] Write Objects.LinkFileList
+[17/19] Linking Rebase
+[18/19] Applying Rebase
+Build complete! (2.07s)
+􀟈  Test run started.
+􀄵  Testing Library Version: 1400
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite AudioValidityTests started.
+􀟈  Suite RecoveredDSPTests started.
+􀟈  Suite InvalidClipIntervalTests started.
+􀟈  Suite OfflineRendererTests started.
+􀟈  Suite ProjectStoreTests started.
+􀟈  Test testFiniteSourceWhoseGainOverflowsIsRejected() started.
+􀟈  Test testNonfiniteDecodedSamplesAreRejectedWithoutReplacingExistingExport() started.
+􀟈  Test testFiniteClipsWhoseOverlapOverflowsAreRejected() started.
+􀟈  Test testFloat32ExactCoefficientsAndThresholdPermutation() started.
+􀟈  Test testRejectedStateDomainAndAliasingDoNotWriteOutputs() started.
+􀟈  Test testLoadedSourceIntervalMustFitActualMedia() started.
+􀟈  Test testFourFrameBasisIsScatteredWithSignedZeroPreserved() started.
+􀟈  Test testMalformedAndEscapingMediaReferencesAreRejected() started.
+􀟈  Test testBoundaryIntervalLoadsAndRendersItsSelectedSamples() started.
+􀟈  Test testSharedMediaCacheStillValidatesEveryClip() started.
+􀟈  Test testInvalidSaveLeavesPreviouslySavedProjectReadable() started.
+􀟈  Test testLargeFiniteSourceOffsetsRejectBeforeFrameConversion() started.
+􀟈  Test testSaveLoadPreservesEditsAndImportedMediaSurvivesSourceRemoval() started.
+􀟈  Test testFloat64RetainsObservedOneULPInverseDifference() started.
+􀟈  Test testLinearResamplingReconstructsRampBetweenSourceSamples() started.
+􀟈  Test testSoloExcludesOtherTracksAndMuteOverridesSolo() started.
+􀟈  Test testOverlappingClipsAndTrackGainSumRatherThanOverwrite() started.
+􀟈  Test testMediaDirectorySymlinkCannotRedirectImports() started.
+􀟈  Test testMonoCenterPreservesEnergyAndStereoCenterPreservesEachChannel() started.
+􀟈  Test testSourceOverrunAndEmptyTimelineFailExplicitly() started.
+􀟈  Test testTrimAndPositionSelectExactFramesAndLeaveTimelineGapSilent() started.
+􀟈  Test testExportCrossesChunkBoundaryReplacesMixAndPreservesSource() started.
+􀟈  Test testExportedWAVContainsStereoFloatMix() started.
+2026-10-19 18:56:52.526 swiftpm-testing-helper[23397:10706330] Audio files cannot be non-interleaved. Ignoring setting AVLinearPCMIsNonInterleaved YES.
+2026-10-19 18:56:52.535 swiftpm-testing-helper[23397:10706332] Audio files cannot be non-interleaved. Ignoring setting AVLinearPCMIsNonInterleaved YES.
+􁁛  Test testFloat32ExactCoefficientsAndThresholdPermutation() passed after 0.030 seconds.
+􁁛  Test testFourFrameBasisIsScatteredWithSignedZeroPreserved() passed after 0.030 seconds.
+􁁛  Test testFloat64RetainsObservedOneULPInverseDifference() passed after 0.030 seconds.
+􁁛  Test testRejectedStateDomainAndAliasingDoNotWriteOutputs() passed after 0.030 seconds.
+􁁛  Test testInvalidSaveLeavesPreviouslySavedProjectReadable() passed after 0.030 seconds.
+􁁛  Test testMediaDirectorySymlinkCannotRedirectImports() passed after 0.030 seconds.
+􁁛  Test testTrimAndPositionSelectExactFramesAndLeaveTimelineGapSilent() passed after 0.030 seconds.
+􁁛  Test testSourceOverrunAndEmptyTimelineFailExplicitly() passed after 0.030 seconds.
+􁁛  Suite RecoveredDSPTests passed after 0.031 seconds.
+􁁛  Test testLinearResamplingReconstructsRampBetweenSourceSamples() passed after 0.031 seconds.
+􁁛  Test testSharedMediaCacheStillValidatesEveryClip() passed after 0.033 seconds.
+􁁛  Test testBoundaryIntervalLoadsAndRendersItsSelectedSamples() passed after 0.034 seconds.
+􁁛  Test testOverlappingClipsAndTrackGainSumRatherThanOverwrite() passed after 0.034 seconds.
+􁁛  Test testFiniteSourceWhoseGainOverflowsIsRejected() passed after 0.034 seconds.
+􁁛  Test testLoadedSourceIntervalMustFitActualMedia() passed after 0.036 seconds.
+􁁛  Test testLargeFiniteSourceOffsetsRejectBeforeFrameConversion() passed after 0.037 seconds.
+􁁛  Test testMalformedAndEscapingMediaReferencesAreRejected() passed after 0.037 seconds.
+􁁛  Suite InvalidClipIntervalTests passed after 0.037 seconds.
+􁁛  Test testFiniteClipsWhoseOverlapOverflowsAreRejected() passed after 0.037 seconds.
+􁁛  Test testSaveLoadPreservesEditsAndImportedMediaSurvivesSourceRemoval() passed after 0.037 seconds.
+􁁛  Suite ProjectStoreTests passed after 0.037 seconds.
+􁁛  Test testMonoCenterPreservesEnergyAndStereoCenterPreservesEachChannel() passed after 0.037 seconds.
+􁁛  Test testSoloExcludesOtherTracksAndMuteOverridesSolo() passed after 0.038 seconds.
+􁁛  Test testExportedWAVContainsStereoFloatMix() passed after 0.038 seconds.
+􁁛  Test testExportCrossesChunkBoundaryReplacesMixAndPreservesSource() passed after 0.041 seconds.
+􁁛  Suite OfflineRendererTests passed after 0.041 seconds.
+􁁛  Test testNonfiniteDecodedSamplesAreRejectedWithoutReplacingExistingExport() passed after 0.043 seconds.
+􁁛  Suite AudioValidityTests passed after 0.043 seconds.
+􁁛  Test run with 23 tests in 5 suites passed after 0.043 seconds.

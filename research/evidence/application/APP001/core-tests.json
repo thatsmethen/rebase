@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "id": "APP001-CORE-TESTS",
+  "recorded_utc": "2026-10-19T07:43:54.160310+00:00",
+  "status": "passed",
+  "scope": "Own application core and unchanged bounded recovered DSP kernel; synthetic audio fixtures only. No Cubase execution or runtime comparison.",
+  "test_count": 16,
+  "suite_count": 3,
+  "tests": {
+    "OfflineRendererTests": [
+      "testTrimAndPositionSelectExactFramesAndLeaveTimelineGapSilent",
+      "testOverlappingClipsAndTrackGainSumRatherThanOverwrite",
+      "testSoloExcludesOtherTracksAndMuteOverridesSolo",
+      "testMonoCenterPreservesEnergyAndStereoCenterPreservesEachChannel",
+      "testLinearResamplingReconstructsRampBetweenSourceSamples",
+      "testExportedWAVContainsStereoFloatMix",
+      "testSourceOverrunAndEmptyTimelineFailExplicitly",
+      "testExportCrossesChunkBoundaryReplacesMixAndPreservesSource"
+    ],
+    "RecoveredDSPTests": [
+      "testFloat32ExactCoefficientsAndThresholdPermutation",
+      "testFloat64RetainsObservedOneULPInverseDifference",
+      "testFourFrameBasisIsScatteredWithSignedZeroPreserved",
+      "testRejectedStateDomainAndAliasingDoNotWriteOutputs"
+    ],
+    "ProjectStoreTests": [
+      "testSaveLoadPreservesEditsAndImportedMediaSurvivesSourceRemoval",
+      "testMalformedAndEscapingMediaReferencesAreRejected",
+      "testMediaDirectorySymlinkCannotRedirectImports",
+      "testInvalidSaveLeavesPreviouslySavedProjectReadable"
+    ]
+  },
+  "working_directory": "Application",
+  "build_and_test_command": "swift test --scratch-path .build-tests --disable-xctest --enable-swift-testing -Xswiftc -F -Xswiftc /Library/Developer/CommandLineTools/Library/Developer/Frameworks -Xswiftc -Xfrontend -Xswiftc -disable-cross-import-overlays -Xswiftc -plugin-path -Xswiftc /Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing -Xlinker -rpath -Xlinker /Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+  "raw_capture_command": "swift test --skip-build --scratch-path .build-tests --disable-xctest --enable-swift-testing -Xswiftc -F -Xswiftc /Library/Developer/CommandLineTools/Library/Developer/Frameworks -Xswiftc -Xfrontend -Xswiftc -disable-cross-import-overlays -Xswiftc -plugin-path -Xswiftc /Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing -Xlinker -rpath -Xlinker /Library/Developer/CommandLineTools/Library/Developer/Frameworks > ../research/evidence/application/APP001/core-tests-output.log 2>&1",
+  "capture_note": "Original successful build and test output was returned through tool stdout. One unchanged skip-build run retained raw stdout/stderr directly in this log; exit code 0.",
+  "exit_code": 0,
+  "raw_output": {
+    "path": "research/evidence/application/APP001/core-tests-output.log",
+    "size": 3361,
+    "sha256": "152ce983678863532877fb3d7d2a5fff37d90b5d0cf95de92f2b48171b07118a"
+  },
+  "test_binary": {
+    "path": "Application/.build-tests/arm64-apple-macosx/debug/RebasePackageTests.xctest/Contents/MacOS/RebasePackageTests",
+    "size": 900816,
+    "sha256": "e4ded683bac12c7c1b76ee05659ec7418249bf5a60a95a8a5aec0045d391040d"
+  },
+  "source_files_at_capture": [
+    {
+      "path": "Application/Package.swift",
+      "size": 635,
+      "sha256": "983e688e5b2ce1bcf8cc19b3c0fdc731ad23073b19f2cda7c934d7cc05f330ce"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "size": 4754,
+      "sha256": "49bf40e943446ef08745ab57ca7852c14fda23b51931c8fd119acc0a600765a8"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/OfflineRenderer.swift",
+      "size": 9404,
+      "sha256": "a1c5181234f2183f87a64b916be3a561ccf5c9e338ab45f929d19ed9ef606d54"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "size": 4083,
+      "sha256": "225476f497083f8c2599f4c75255f0308dd60fe1f701f6fc064cdba8937ab491"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "size": 4707,
+      "sha256": "007eabf70d3e6ace3ce5ead5e10e8b076a66bd51c906460a5f3cc584129e85fe"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/OfflineRendererTests.swift",
+      "size": 6491,
+      "sha256": "0494f4934bb71716c3cab05f85590461b7f103d6ccdd98249b4668f158a9e2dc"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/ProjectStoreTests.swift",
+      "size": 3992,
+      "sha256": "9d74c77db57d88454db3680cb5dec769dff8bc6fe767c4de9f5e808ba1a9dca3"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/RecoveredDSPTests.swift",
+      "size": 5254,
+      "sha256": "fab23af6773bb0f2f7ff75aa79b21ab0233d4b9d3ff0cbec55676cfcf7918c3a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/TestSupport.swift",
+      "size": 4144,
+      "sha256": "65b3aaf7db8d59c07f1c0fff15d5fc45a5afbbc126b01985ce82a74c28807e1e"
+    },
+    {
+      "path": "Application/Sources/RebaseDSP/ambi_first_order.c",
+      "size": 5231,
+      "sha256": "b2af5f8622fa3c336f0c6c6abbb59ddf79151107bfe8e31a23c09dd2a9a1d240"
+    },
+    {
+      "path": "Application/Sources/RebaseDSP/include/ambi_first_order.h",
+      "size": 1123,
+      "sha256": "b1103f9cc0450db33aa1331297306e2619998d069cada1e4a919573df8dd0135"
+    }
+  ],
+  "host": {
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "machine": "arm64",
+    "swift_version": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)\nTarget: arm64-apple-macosx28.0",
+    "developer_directory": "/Library/Developer/CommandLineTools"
+  },
+  "environment_adjustments": [
+    "Initial XCTest attempt failed because the selected Command Line Tools does not provide the XCTest module. Tests use bundled Swift Testing instead.",
+    "Testing.framework and TestingMacros require explicit search paths on this host.",
+    "The bundled _Testing_Foundation.framework lacks its module interfaces, so test command disables cross-import overlays. No global toolchain or shell settings were changed."
+  ],
+  "diagnostics": [
+    "Fixture creation requests a noninterleaved processing format; AVAudioFile logs that audio-file storage cannot be noninterleaved and ignores that storage setting. Output WAV format is independently reopened and checked as stereo float32."
+  ],
+  "limitations": [
+    "AudioTransportEngine was read but hardware scheduling/output is not exercised by these tests.",
+    "GUI workflows, real device latency, compressed decoder variants, huge sessions and arbitrary numerical/audio inputs are not covered.",
+    "These checks do not establish Cubase fidelity, full DAW coverage or VST host compatibility."
+  ]
+}

@@ -7,14 +7,13 @@ import Testing
 
 /// Candidate/source-state controls only. No reference program is executed.
 struct CPRSourceEventRendererTests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let workspace = PrivateResearchFixtures.root
     private func le<T: FixedWidthInteger>(_ value: T) -> Data {
         var value = value.littleEndian
         return withUnsafeBytes(of: &value) { Data($0) }
     }
     private func source(_ name: String = "LoFi Hip Hop") throws -> Data {
-        try Data(contentsOf: workspace.appendingPathComponent("research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro/" + name + ".cpr"))
+        try Data(contentsOf: workspace.appendingPathComponent("templates/" + name + ".cpr"))
     }
     private func wave(samples: [Int32], frames: Int? = nil, channels: Int = 2) -> Data {
         let frameCount = frames ?? samples.count / channels, size = frameCount * channels * 3
@@ -87,7 +86,8 @@ struct CPRSourceEventRendererTests {
         }
     }
 
-    @Test func ForwardSourcePlanRejectsEnabledFadesWarpAndInversion() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func ForwardSourcePlanRejectsEnabledFadesWarpAndInversion() throws {
         let baseline = try source(), prepared = try plan(baseline)
         #expect(prepared.frames == 1_058_400 && prepared.rate == 44100 && prepared.channels == 2 && prepared.gain == 1)
         #expect(throws: RebaseCoreError.self) { try plan(source("Classic House")) }
@@ -118,7 +118,8 @@ struct CPRSourceEventRendererTests {
         #expect(throws: RebaseCoreError.self) { try plan(inverted) }
     }
 
-    @Test func WAVParsingRejectsWrongFormatCountsAndAmbiguousChunks() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func WAVParsingRejectsWrongFormatCountsAndAmbiguousChunks() throws {
         let reference = try plan()
         let small = CPRSourceEventRenderPlan(frames: 2, rate: 44100, channels: 2, gain: 1, file: reference.file)
         let valid = wave(samples: [-8388608, 8388607, -1, 1])
@@ -136,7 +137,8 @@ struct CPRSourceEventRendererTests {
         for bytes in cases { #expect(throws: RebaseCoreError.self) { try CPRSourceEventRenderer.renderPCM24Wave(bytes, plan: small) } }
     }
 
-    @Test func AttachedSourceRenderWritesExactSamplesWithoutChangingPackageAndRejectsTampering() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func AttachedSourceRenderWritesExactSamplesWithoutChangingPackageAndRejectsTampering() throws {
         let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
         let cpr = root.appendingPathComponent("Source.cpr"), package = root.appendingPathComponent("Source.rebaseproj")
         try source().write(to: cpr)

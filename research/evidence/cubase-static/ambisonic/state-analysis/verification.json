@@ -1,0 +1,251 @@
+{
+  "passed": true,
+  "scope": "Static source/REA-readback and native word-address verification only",
+  "bytes": 120,
+  "instructions": [
+    {
+      "address": "0x154b64",
+      "word": "a9bc5ff8",
+      "native": "stp\tx24, x23, [sp, #-0x40]!",
+      "rea": "stp x24, x23, [sp, #-0x40]!"
+    },
+    {
+      "address": "0x154b68",
+      "word": "a90157f6",
+      "native": "stp\tx22, x21, [sp, #0x10]",
+      "rea": "stp x22, x21, [sp, #0x10]"
+    },
+    {
+      "address": "0x154b6c",
+      "word": "a9024ff4",
+      "native": "stp\tx20, x19, [sp, #0x20]",
+      "rea": "stp x20, x19, [sp, #0x20]"
+    },
+    {
+      "address": "0x154b70",
+      "word": "a9037bfd",
+      "native": "stp\tx29, x30, [sp, #0x30]",
+      "rea": "stp x29, x30, [sp, #0x30]"
+    },
+    {
+      "address": "0x154b74",
+      "word": "9100c3fd",
+      "native": "add\tx29, sp, #0x30",
+      "rea": "add x29, sp, #0x30"
+    },
+    {
+      "address": "0x154b78",
+      "word": "b9401808",
+      "native": "ldr\tw8, [x0, #0x18]",
+      "rea": "ldr w8, [x0, #0x18]"
+    },
+    {
+      "address": "0x154b7c",
+      "word": "34000268",
+      "native": "cbz\tw8, 0x154bc8 <__text+0x1512e8>",
+      "rea": "cbz w8, 0x00154bc8"
+    },
+    {
+      "address": "0x154b80",
+      "word": "aa0303f3",
+      "native": "mov\tx19, x3",
+      "rea": "mov x19, x3"
+    },
+    {
+      "address": "0x154b84",
+      "word": "aa0203f4",
+      "native": "mov\tx20, x2",
+      "rea": "mov x20, x2"
+    },
+    {
+      "address": "0x154b88",
+      "word": "aa0103f5",
+      "native": "mov\tx21, x1",
+      "rea": "mov x21, x1"
+    },
+    {
+      "address": "0x154b8c",
+      "word": "aa0003f6",
+      "native": "mov\tx22, x0",
+      "rea": "mov x22, x0"
+    },
+    {
+      "address": "0x154b90",
+      "word": "d2800017",
+      "native": "mov\tx23, #0x0               ; =0",
+      "rea": "mov x23, #0x0"
+    },
+    {
+      "address": "0x154b94",
+      "word": "14000004",
+      "native": "b\t0x154ba4 <__text+0x1512c4>",
+      "rea": "b 0x00154ba4"
+    },
+    {
+      "address": "0x154b98",
+      "word": "910006f7",
+      "native": "add\tx23, x23, #0x1",
+      "rea": "add x23, x23, #0x1"
+    },
+    {
+      "address": "0x154b9c",
+      "word": "eb0802ff",
+      "native": "cmp\tx23, x8",
+      "rea": "cmp x23, x8"
+    },
+    {
+      "address": "0x154ba0",
+      "word": "54000142",
+      "native": "b.hs\t0x154bc8 <__text+0x1512e8>",
+      "rea": "b.cs 0x00154bc8"
+    },
+    {
+      "address": "0x154ba4",
+      "word": "d37df2e9",
+      "native": "lsl\tx9, x23, #3",
+      "rea": "lsl x9, x23, #0x3"
+    },
+    {
+      "address": "0x154ba8",
+      "word": "f8696aa0",
+      "native": "ldr\tx0, [x21, x9]",
+      "rea": "ldr x0, [x21, x9#0x0]"
+    },
+    {
+      "address": "0x154bac",
+      "word": "f8696a81",
+      "native": "ldr\tx1, [x20, x9]",
+      "rea": "ldr x1, [x20, x9#0x0]"
+    },
+    {
+      "address": "0x154bb0",
+      "word": "eb01001f",
+      "native": "cmp\tx0, x1",
+      "rea": "cmp x0, x1"
+    },
+    {
+      "address": "0x154bb4",
+      "word": "54ffff20",
+      "native": "b.eq\t0x154b98 <__text+0x1512b8>",
+      "rea": "b.eq 0x00154b98"
+    },
+    {
+      "address": "0x154bb8",
+      "word": "aa1303e2",
+      "native": "mov\tx2, x19",
+      "rea": "mov x2, x19"
+    },
+    {
+      "address": "0x154bbc",
+      "word": "94005564",
+      "native": "bl\t0x16a14c <_bundleExit+0x142a8>",
+      "rea": "bl 0x0016a14c"
+    },
+    {
+      "address": "0x154bc0",
+      "word": "b9401ac8",
+      "native": "ldr\tw8, [x22, #0x18]",
+      "rea": "ldr w8, [x22, #0x18]"
+    },
+    {
+      "address": "0x154bc4",
+      "word": "17fffff5",
+      "native": "b\t0x154b98 <__text+0x1512b8>",
+      "rea": "b 0x00154b98"
+    },
+    {
+      "address": "0x154bc8",
+      "word": "a9437bfd",
+      "native": "ldp\tx29, x30, [sp, #0x30]",
+      "rea": "ldp x29, x30, [sp, #0x30]"
+    },
+    {
+      "address": "0x154bcc",
+      "word": "a9424ff4",
+      "native": "ldp\tx20, x19, [sp, #0x20]",
+      "rea": "ldp x20, x19, [sp, #0x20]"
+    },
+    {
+      "address": "0x154bd0",
+      "word": "a94157f6",
+      "native": "ldp\tx22, x21, [sp, #0x10]",
+      "rea": "ldp x22, x21, [sp, #0x10]"
+    },
+    {
+      "address": "0x154bd4",
+      "word": "a8c45ff8",
+      "native": "ldp\tx24, x23, [sp], #0x40",
+      "rea": "ldp x24, x23, [sp], #0x40"
+    },
+    {
+      "address": "0x154bd8",
+      "word": "d65f03c0",
+      "native": "ret",
+      "rea": "ret"
+    }
+  ],
+  "evidence_id": "ev_b3ef22d317026f81c45a5d6c0167a1baa52452ded21fd642e884099ae734903f",
+  "analysis_profile": {
+    "provider": {
+      "id": "ghidra",
+      "name": "Ghidra",
+      "version": "12.1.4"
+    },
+    "parameters": {
+      "target_kind": "executable",
+      "target_format": "raw-binary",
+      "architecture": "arm64",
+      "available_architectures": [
+        "arm64"
+      ],
+      "import_mode": "ephemeral-source-immutable",
+      "annotation_policy": "atomic-function-entry-metadata-v1",
+      "load_image_observations": "source-mappings-entry-context-v2",
+      "function_body_evidence": "complete-inclusive-ranges-v1",
+      "function_references": "complete-body-and-entry-reference-manager-v2",
+      "call_relationship_coverage": "function-body-call-coverage-v5",
+      "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+      "string_inventory_evidence": "defined-data-coverage-v1",
+      "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+      "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+      "instruction_flow_evidence": "decoded-return-pcode-v1",
+      "instruction_references": "exact-address-incoming-without-synthetic-entry-v2",
+      "function_boundary_observations": "ghidra-function-boundary-limitations-v4",
+      "no_return_repair": "returning-imports-decoded-return-v2",
+      "process_launch": "inspected-jvm-launch-support-v1",
+      "load_image_evidence": "independent-raw-mapping-context-v4",
+      "jump_table_evidence": "typed-case-default-blocks-v1",
+      "decompiler_jump_loads": true,
+      "loader": "BinaryLoader",
+      "language_id": "AARCH64:LE:64:v8A",
+      "compiler_spec_id": "default",
+      "language_selection": "caller-supplied-v1",
+      "entry_point": "0x154b64",
+      "entry_seed": "external-entry-and-function-before-analysis-v1",
+      "analyzer_preset": "ghidra-default"
+    },
+    "digest": "c67864f005b37d12de6465d27f4d0cbc89e476381af7072018f4cb3ba06ca913"
+  },
+  "snapshot_and_bundle_match": true,
+  "source_original_range": {
+    "start": "0x154b64",
+    "end_inclusive": "0x154bdb",
+    "length": 120,
+    "thin_offset": 1395556,
+    "universal_offset": 3558244,
+    "sha256": "90b970fc00a7f7dccaf5c8fe51dca90cbf8707185dfdd2a7713f0719dd4502cc",
+    "raw_file": "double-bypass.arm64.bin",
+    "next_declared_start": "0x154bdc",
+    "boundary": "LC_FUNCTION_STARTS interval, not automatically proved body",
+    "command": [
+      "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+      "-d",
+      "--start-address=0x154b64",
+      "--stop-address=0x154bdc",
+      "/workspace/rebase/research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho"
+    ],
+    "native_sha256": "a67e508a11b91672583dbe834810c1e710a79d0eb32a2f432c38e7fffff40a33"
+  },
+  "raw_context_loss": "Raw slice lacks external copy helper bytes and import/vtable metadata; correlate separately with retained original-image evidence.",
+  "total_original_words_checked": 686
+}

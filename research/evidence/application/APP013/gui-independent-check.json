@@ -1,0 +1,631 @@
+{
+  "id": "APP013-GUI-INDEPENDENT-CHECK",
+  "created_utc": "2026-10-20T10:29:55.054970+00:00",
+  "status": "passed",
+  "method": "Independent read of all35 retained AX state records, visual inspection of the playing screenshot, read-only process-library mapping, exact release/test/source pins and complete package file hashes. No UI operation, application mutation, target execution or test rerun.",
+  "expected_group_names": [
+    "up_admission",
+    "transport_lifecycle",
+    "media_custody",
+    "edit_exit_undo",
+    "project_barriers",
+    "downsample_lifecycle",
+    "equalrate_admission",
+    "mode_regressions"
+  ],
+  "groups": [
+    {
+      "name": "up_admission",
+      "files": [
+        "gui-up-open.txt",
+        "gui-up-admitted.txt",
+        "gui-up-playing.txt",
+        "gui-up-playing.png",
+        "gui-loaded-public-library.json"
+      ],
+      "observations": "The 48 kHz package retains its unresolved event. Explicit mode1 admission describes a reconstructed filter, fresh seek replay and unverified reference sample equivalence. Live playback advances with nonzero stereo engine peaks and the screenshot confirms the persistent event-only banner. Read-only process mapping confirms the bundled public SoXR library used by the separate mode2 path."
+    },
+    {
+      "name": "transport_lifecycle",
+      "files": [
+        "gui-up-paused.txt",
+        "gui-up-seek.txt",
+        "gui-up-resumed.txt",
+        "gui-up-natural-end.txt",
+        "gui-up-restart.txt",
+        "gui-up-return.txt",
+        "gui-up-stop.txt"
+      ],
+      "observations": "Pause at11.768 clears peaks; paused seek shows16.000, resume advances to16.255; natural completion shows24.000 with zero peaks. Restart advances to0.392; Return while playing advances from0.388; Stop shows0.000 with zero peaks. These are retained application transport states, not a physical output measurement."
+    },
+    {
+      "name": "media_custody",
+      "files": [
+        "gui-media-tamper.json",
+        "gui-up-tamper-rejected.txt",
+        "gui-up-after-rejection.txt",
+        "gui-media-restored.json",
+        "gui-up-restored-playing.txt"
+      ],
+      "observations": "A recorded one-byte attached-media change causes an explicit refusal before using the source event and clears audition mode. Restoration to the baseline hash permits fresh mode1 playback; all15 package files are independently unchanged below."
+    },
+    {
+      "name": "edit_exit_undo",
+      "files": [
+        "gui-up-edit-exit.txt",
+        "gui-up-undo.txt"
+      ],
+      "observations": "Pan0.25 exits audition, zeros peaks, selects project Play and reports Stopped. Undo restores pan0 without re-entering audition. No package edit was published."
+    },
+    {
+      "name": "project_barriers",
+      "files": [
+        "gui-project-play-blocked.txt",
+        "gui-project-export-blocked.txt"
+      ],
+      "observations": "Ordinary project Play and Export both refuse unresolved CPR events. Explicit event audition has not silently enabled full-project playback or export."
+    },
+    {
+      "name": "downsample_lifecycle",
+      "files": [
+        "gui-down-open.txt",
+        "gui-down-admitted.txt",
+        "gui-down-playing.txt",
+        "gui-down-live-seek.txt",
+        "gui-down-natural-end.txt",
+        "gui-down-explicit-exit.txt"
+      ],
+      "observations": "The32kHz package admits explicit mode1, plays with nonzero peaks, and a live seek advances to16.284. It ends at24.000 with zero peaks; explicit exit removes the audition banner and restores project Play."
+    },
+    {
+      "name": "equalrate_admission",
+      "files": [
+        "gui-equal-open.txt",
+        "gui-equal-mode0-blocked.txt",
+        "gui-equal-mode1-admitted.txt",
+        "gui-equal-mode1-playing.txt",
+        "gui-equal-mode1-exit.txt"
+      ],
+      "observations": "At44.1kHz source/project rate, mode0 is disabled with its different-rate explanation. Explicit mode1 is admitted and observed playing, then exits to project mode with zero peaks. This does not claim the equal-rate filter is identity."
+    },
+    {
+      "name": "mode_regressions",
+      "files": [
+        "gui-mode2-admitted.txt",
+        "gui-mode2-playing.txt",
+        "gui-mode2-progress.txt",
+        "gui-mode2-exit.txt",
+        "gui-original-admitted.txt",
+        "gui-original-playing.txt",
+        "gui-original-exit.txt"
+      ],
+      "observations": "The existing public-SoXR mode2 path is admitted and advances from13.047 to21.814 before exit. A fresh inspection defaults to Original source rate; its playback advances at44.1kHz without a converter caption and exits with zero peaks."
+    }
+  ],
+  "release": {
+    "binary": {
+      "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+      "bytes": 4912720,
+      "sha256": "6ac7a0a8940f273d19b8ff415dbaadc820980fafe2345d30cd681b340607036d"
+    },
+    "version": "0.13.0",
+    "build": 13,
+    "public_library": {
+      "path": "Application/dist/Rebase.app/Contents/Frameworks/libsoxr.0.dylib",
+      "bytes": 188000,
+      "sha256": "c614df97b2c3f3881fa694efc73a6d5152fe0288ac9396adb6bd7c8c8e5f895a"
+    },
+    "loaded_public_paths_rechecked": [
+      "/workspace/rebase/Application/dist/Rebase.app/Contents/Frameworks/libsoxr.0.dylib"
+    ],
+    "packaging_check": {
+      "codesign_verify_deep_strict_exit": 0,
+      "build_log": {
+        "path": "research/evidence/application/APP013/build-release.log",
+        "bytes": 6385,
+        "sha256": "a8bd3e8e7c867e60bff45fff26d8ea702c7b8004b839658218be933273978f6b"
+      }
+    }
+  },
+  "tests": {
+    "passed": 238,
+    "suites": 36,
+    "seconds": 32.238,
+    "log": {
+      "path": "research/evidence/application/APP013/core-tests-first.log",
+      "bytes": 52064,
+      "sha256": "3108a87396bcdb1ea3b90888cededc60c8fe52f876b7373a73738068dbaf2771"
+    }
+  },
+  "packages": [
+    {
+      "path": "research/evidence/application/APP013/LoFi Mode1 Upsample QA.rebaseproj",
+      "files_checked": 5,
+      "unchanged": true,
+      "current_files": [
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Upsample QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+          "bytes": 93659,
+          "sha256": "27bfde03bdf769d3f7bc2fa55ae3382da2458f63967479781250242e054de45e"
+        },
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Upsample QA.rebaseproj/Compatibility/CPR/Original.cpr",
+          "bytes": 1333360,
+          "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495"
+        },
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Upsample QA.rebaseproj/Media/E99146CF-145D-4666-A6AD-692D42DB59A6.wav",
+          "bytes": 6350444,
+          "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+        },
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Upsample QA.rebaseproj/Media/FA176CB1-13E5-489A-8AA4-FE0DEFE4A6C0.wav",
+          "bytes": 6350444,
+          "sha256": "daeffe7263203465791405ffb2c3e87e905d27a99d306e91ba3d80e3ae722290"
+        },
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Upsample QA.rebaseproj/Project.json",
+          "bytes": 5571,
+          "sha256": "ee0b118f5a7e6eb9b427d977c26b5b4c0a06cc53ba6a90ad37f3e4815945aeda"
+        }
+      ],
+      "semantic_check": "Only name/project sampleRate differ from APP010 source package; retained source event, native clock, report, original CPR, attachment and both assets are unchanged."
+    },
+    {
+      "path": "research/evidence/application/APP013/LoFi Mode1 Downsample QA.rebaseproj",
+      "files_checked": 5,
+      "unchanged": true,
+      "current_files": [
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Downsample QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+          "bytes": 93659,
+          "sha256": "27bfde03bdf769d3f7bc2fa55ae3382da2458f63967479781250242e054de45e"
+        },
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Downsample QA.rebaseproj/Compatibility/CPR/Original.cpr",
+          "bytes": 1333360,
+          "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495"
+        },
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Downsample QA.rebaseproj/Media/E99146CF-145D-4666-A6AD-692D42DB59A6.wav",
+          "bytes": 6350444,
+          "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+        },
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Downsample QA.rebaseproj/Media/FA176CB1-13E5-489A-8AA4-FE0DEFE4A6C0.wav",
+          "bytes": 6350444,
+          "sha256": "daeffe7263203465791405ffb2c3e87e905d27a99d306e91ba3d80e3ae722290"
+        },
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Downsample QA.rebaseproj/Project.json",
+          "bytes": 5573,
+          "sha256": "7c0781cb00d47164b68aef45c736d038e9923fe661f8e19a5e3e656fad51b47f"
+        }
+      ],
+      "semantic_check": "Only name/project sampleRate differ from APP010 source package; retained source event, native clock, report, original CPR, attachment and both assets are unchanged."
+    },
+    {
+      "path": "research/evidence/application/APP013/LoFi Mode1 Equal Rate QA.rebaseproj",
+      "files_checked": 5,
+      "unchanged": true,
+      "current_files": [
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Equal Rate QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+          "bytes": 93659,
+          "sha256": "27bfde03bdf769d3f7bc2fa55ae3382da2458f63967479781250242e054de45e"
+        },
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Equal Rate QA.rebaseproj/Compatibility/CPR/Original.cpr",
+          "bytes": 1333360,
+          "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495"
+        },
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Equal Rate QA.rebaseproj/Media/E99146CF-145D-4666-A6AD-692D42DB59A6.wav",
+          "bytes": 6350444,
+          "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+        },
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Equal Rate QA.rebaseproj/Media/FA176CB1-13E5-489A-8AA4-FE0DEFE4A6C0.wav",
+          "bytes": 6350444,
+          "sha256": "daeffe7263203465791405ffb2c3e87e905d27a99d306e91ba3d80e3ae722290"
+        },
+        {
+          "path": "research/evidence/application/APP013/LoFi Mode1 Equal Rate QA.rebaseproj/Project.json",
+          "bytes": 5573,
+          "sha256": "46ed827d34a5bc94f0b4f10271d97985c10506836ed117a6316163d5a55b7294"
+        }
+      ],
+      "semantic_check": "Only name/project sampleRate differ from APP010 source package; retained source event, native clock, report, original CPR, attachment and both assets are unchanged."
+    }
+  ],
+  "package_files_unchanged": 15,
+  "source_checks": {
+    "review_pins_rechecked": 23,
+    "review_records": [
+      {
+        "path": "research/evidence/application/APP013/mode1-independent-review.json",
+        "bytes": 7061,
+        "sha256": "d9b41212d6b74d1020d0b3b2c7790e02128490791b6efee6902da325d8162905"
+      },
+      {
+        "path": "research/evidence/application/APP013/callback-independent-review.json",
+        "bytes": 6471,
+        "sha256": "16a6f7613962095dc1fdf5738bcb69651190d9278167b129bf4c0f8cd555d3b0"
+      },
+      {
+        "path": "research/evidence/application/APP013/stream-queue-independent-review.json",
+        "bytes": 4719,
+        "sha256": "faf764a2808e1592a063a383d8cdb50353bc3b135985c3b124e7715cadc40272"
+      },
+      {
+        "path": "research/evidence/application/APP013/mode1-swift-integration-review.json",
+        "bytes": 8784,
+        "sha256": "2ed1f6b357c42e9ae271bbe8c07c8312d3f08e8c7c0d5dd90738fee36126e145"
+      }
+    ],
+    "current_pins": [
+      {
+        "path": "Application/Package.swift",
+        "bytes": 1868,
+        "sha256": "95831a7c96a4a59f60c97045a07e392ded69271a2c8fa1f53db97d10db843458"
+      },
+      {
+        "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+        "bytes": 6497,
+        "sha256": "8fa76429d270bf744f287951e84488ac8c7dc0ce450b176ccfb512fd211bd41b"
+      },
+      {
+        "path": "Application/Sources/Rebase/RebaseApp.swift",
+        "bytes": 22046,
+        "sha256": "c7b56928a3ddb72e6d7b62545611a3c8838dbc7741274f395cf93f0a23ea239b"
+      },
+      {
+        "path": "Application/Sources/Rebase/StudioSession.swift",
+        "bytes": 38820,
+        "sha256": "82d7ede057a9d4a4d9cb65a37e7e0acc5d80f4011c895813d8b11d08a1eb239b"
+      },
+      {
+        "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+        "bytes": 9795,
+        "sha256": "2ad37f35cbcca0e273e83255e89c0c7c007fe085e43bb35e0a016f8a6e318dea"
+      },
+      {
+        "path": "Application/Sources/RebaseCore/CPRLiveCallbackAdapter.swift",
+        "bytes": 1312,
+        "sha256": "f9c4ac8cfa03fa3aeb5fcd23c112a254916a6bf480899c60c3925f357b3120a3"
+      },
+      {
+        "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+        "bytes": 16107,
+        "sha256": "01654e81697d79c6bb2244c004580ffee8b5d202dd64a54f14f84db4098516ce"
+      },
+      {
+        "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+        "bytes": 8628,
+        "sha256": "b882fcd909e3721ccd7744988721b9157cc42e1bed73ee428b3470a357b1dfe3"
+      },
+      {
+        "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+        "bytes": 7510,
+        "sha256": "00ffeff9ed3cd8c72ebcf4ef0b7a5561c279acef1fd226fe206e5bca563ab35a"
+      },
+      {
+        "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+        "bytes": 8144,
+        "sha256": "e85d40e2d5f79fd95a822d0b789c1805786e251556028e130f466cece125610e"
+      },
+      {
+        "path": "Application/Sources/RebaseCore/CPRStreamPlaybackQueue.swift",
+        "bytes": 4965,
+        "sha256": "db806fa154391729bb2605b38402f0e3aa204551fb723eeaeac0d039f2ab9eda"
+      },
+      {
+        "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+        "bytes": 13673,
+        "sha256": "e426e17e26303faa9752f049652c4c08c5365e3c97c606cec387a05b1a504d39"
+      },
+      {
+        "path": "Application/Sources/RebaseTimingDSP/include/module.modulemap",
+        "bytes": 529,
+        "sha256": "b8037d9fae1ef25fb332f02908cb70176684eccb122f2ee8e6d7dbf83e63bc35"
+      },
+      {
+        "path": "Application/Sources/RebaseTimingDSP/include/native_callback_adapter.h",
+        "bytes": 3863,
+        "sha256": "15c3d1a6f7ac1310d4c0c1ade8b86c0e593f8bfab0c0a8eeb8a55b93140ad02f"
+      },
+      {
+        "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode1.h",
+        "bytes": 3681,
+        "sha256": "25cdbb819f84bddf8a6d756a16954f2ee439309668efdbe72fb8d394dcdf0bb4"
+      },
+      {
+        "path": "Application/Sources/RebaseTimingDSP/native_callback_adapter.c",
+        "bytes": 7718,
+        "sha256": "5571b47c55c7b9f8360ac7bf7daced681e93b98f1348ff2585f2b75b7330d74b"
+      },
+      {
+        "path": "Application/Sources/RebaseTimingDSP/native_rate_mode1.c",
+        "bytes": 13301,
+        "sha256": "9dd346c5f1a3f27d188e3475a8db6d92ddfbeb92da10c02af4b45b2741d66a80"
+      },
+      {
+        "path": "Application/Tests/RebaseCoreTests/CPRLiveCallbackAdapterTests.swift",
+        "bytes": 2603,
+        "sha256": "2ebc43674ad46c15b05523d459c10e08b0a9f368dcdaa5216d2c5b45a5cd8297"
+      },
+      {
+        "path": "Application/Tests/RebaseCoreTests/CPRMode1StreamTests.swift",
+        "bytes": 6737,
+        "sha256": "7ed542e413ea8030df48f3551ed8e722be4969ba0f371b4071884091a139e9c2"
+      },
+      {
+        "path": "Application/Tests/RebaseCoreTests/CPRSourceEventPlaybackTests.swift",
+        "bytes": 31238,
+        "sha256": "7adf6d13e723d28190a86b0d0fd7489e031f0469a9be3d64a5ff44f91136af9e"
+      },
+      {
+        "path": "Application/Tests/RebaseCoreTests/CPRStreamPlaybackQueueTests.swift",
+        "bytes": 15384,
+        "sha256": "5401c4cbae7ad971ce2aa922ddc99182b0e06caeafee2d754d34d7206406f12c"
+      },
+      {
+        "path": "Application/Tests/RebaseCoreTests/NativeCallbackAdapterTests.swift",
+        "bytes": 9249,
+        "sha256": "46fbe3a28fd2f8c29cc63412c33b7b67dcbfa318689cddf95640a848361e7575"
+      },
+      {
+        "path": "Application/Tests/RebaseCoreTests/NativeRateMode1Tests.swift",
+        "bytes": 12583,
+        "sha256": "ff5ee7fecd27064129b432cebb2978a4d336a031e400819785b6f1b51df456e8"
+      }
+    ],
+    "frozen_CPR_profiles_match_APP012": [
+      {
+        "path": "Application/Sources/RebaseCore/CPRRecoveryV1.swift",
+        "bytes": 19302,
+        "sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4"
+      },
+      {
+        "path": "Application/Sources/RebaseCore/CPRRecoveryV2.swift",
+        "bytes": 6252,
+        "sha256": "6183ca0ea72f992cf00d1fd4aab5a9c0a014e764988d6ae7bacf89e83386a836"
+      },
+      {
+        "path": "Application/Sources/RebaseCore/CPRRecoveryV3.swift",
+        "bytes": 12082,
+        "sha256": "66d68787d337781075e7d691709d363bb2862c7f381c9a0c8c6ed888c376b949"
+      },
+      {
+        "path": "Application/Sources/RebaseCore/CPRRecoveryV4.swift",
+        "bytes": 10093,
+        "sha256": "311ef0ad0f120d7406b0e8469312f2e9d0083f348f52ea6704a4aa57e226f3ad"
+      }
+    ],
+    "original_payload_hashes_rechecked": 15
+  },
+  "gui_evidence": [
+    {
+      "path": "research/evidence/application/APP013/gui-down-admitted.txt",
+      "bytes": 1561,
+      "sha256": "c133786d4d8d563251cdd9df0583c51d5c92f457892cc123c4d6bc54ae257225"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-down-explicit-exit.txt",
+      "bytes": 5362,
+      "sha256": "51af71cbd7fc2d375d5718f1add84e8eda1215f251efa339e35ddc9cca3c8195"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-down-live-seek.txt",
+      "bytes": 5877,
+      "sha256": "c2e4f7229f7b8f8f47912ed4386273affb30465fd84311b5f3eeca4e41309ff5"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-down-natural-end.txt",
+      "bytes": 5852,
+      "sha256": "05c4fdb56cb009eac8e15ce16627404308938f0cb100c8b414d76556fc4efa9e"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-down-open.txt",
+      "bytes": 5337,
+      "sha256": "2a42376a08b506caa35a46df39ca31ddeeb812f0434dd2614e43832f3701d749"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-down-playing.txt",
+      "bytes": 5876,
+      "sha256": "8515dc942c3ae15072967d21d0b46c447c8646f37c86f9916a8efec4e78ef2b8"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-equal-mode0-blocked.txt",
+      "bytes": 1541,
+      "sha256": "7122b225f18dc8d2a6464ae27581179f8737dd4a1efcb564fe479f2001e606e2"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-equal-mode1-admitted.txt",
+      "bytes": 1561,
+      "sha256": "7ffd307ba6b72d099d005d65f7f53236abe8a8e325532181c5898bed4fbfd50a"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-equal-mode1-exit.txt",
+      "bytes": 5363,
+      "sha256": "c5c477f5c520b7c143b56b38c58bb8b918cd4b2fde4a89b3c723c8e5459564b1"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-equal-mode1-playing.txt",
+      "bytes": 5876,
+      "sha256": "f89350553e77751a9485a550afca5d0a64d6f9a70d7b3e4afcc5d43a93690d1c"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-equal-open.txt",
+      "bytes": 5337,
+      "sha256": "f1e3f1300791f7d2df6b7d8d83c33b268d329aee44327b2285d53e3625dc406e"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-loaded-public-library.json",
+      "bytes": 481,
+      "sha256": "7f6456cc24b23ee5ecbf1bb139880d34d70a6e443dec1854aa4279920553525b"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-media-restored.json",
+      "bytes": 242,
+      "sha256": "e41980406dfb9b7ed197360e0ec687d3ae4e687e2a8b02c175702f14ced2354a"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-media-tamper.json",
+      "bytes": 413,
+      "sha256": "ebf27fcc0c559a423a847975489396b2f2a1b501ecf2b5eef7e793d1872206d2"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-mode2-admitted.txt",
+      "bytes": 1533,
+      "sha256": "ea7f05515dc1acd68485499a60f5ad05c040cd64453c5d0b45ffe5cdff8850eb"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-mode2-exit.txt",
+      "bytes": 5363,
+      "sha256": "54307f28d229591cd7ed303f91a439b521dd0df82bc279da3968515ea66ec9b9"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-mode2-playing.txt",
+      "bytes": 5868,
+      "sha256": "54014c2448ac58690a14ef342960d53852aff1f679b52bdf153c883467d20588"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-mode2-progress.txt",
+      "bytes": 5868,
+      "sha256": "b54197be01bcf01ee83234964633d5c48c62b1079810a162320b472c4a9c226a"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-original-admitted.txt",
+      "bytes": 1351,
+      "sha256": "0f3c89ed0f2280d34d535b3c36121c2c6403a0996b15ee3c4d600b0f26b36908"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-original-exit.txt",
+      "bytes": 5363,
+      "sha256": "00960388f7d644b2f9d0c9ef9b827c601b80f13a617bab6fd7f8ef2e3a0b4e11"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-original-playing.txt",
+      "bytes": 5809,
+      "sha256": "ca04cbbfc662c4fa2ed17645dab3b77a315aba388a4b16c0fa78b2464601ff56"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-package-baselines.json",
+      "bytes": 3905,
+      "sha256": "8a15ea5702931773fe098eec0e440c2c76b185ea8a9d4720683cde8b72f301f5"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-project-export-blocked.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-project-play-blocked.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-release-build.json",
+      "bytes": 204,
+      "sha256": "a4ceef4dcf35bf0985904670cee2bdcf434948a8a3abdae8b536f8349f3835a8"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-admitted.txt",
+      "bytes": 1561,
+      "sha256": "7168177101c760732b8114ccad6002ad5068d0ce81b715d2b0f704d0e25f13ae"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-after-rejection.txt",
+      "bytes": 5333,
+      "sha256": "a310ec2bc30c9513ee68652b4869e04eb2a4d32ab116fbcc9a2ec2e40a692c04"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-edit-exit.txt",
+      "bytes": 5334,
+      "sha256": "3dac188bdba388ddb1c0ad7565830b6e42812e3befcd2905b85dacfa4d8df54d"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-natural-end.txt",
+      "bytes": 5850,
+      "sha256": "0e71034748b64341564cb9a0c7ee58b5533767b5e92046e5e5aec14c88524dec"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-open.txt",
+      "bytes": 5333,
+      "sha256": "5a2a08c9d18ce2762fa8ebd4bf2e265fa44ef0c94b3087f502134ea20114a6e2"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-paused.txt",
+      "bytes": 5852,
+      "sha256": "947dd191c2c66d61cbe3f8039cac09d05cb41206db887d626bf0aeb6f65b99a5"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-playing.png",
+      "bytes": 404658,
+      "sha256": "b90f877629ffa8f11be24b7e8065bcc1f4a3b3774396e63df458aab97957bad3"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-playing.txt",
+      "bytes": 5875,
+      "sha256": "a9ce3d9e47ec68c253da4fe997d1c429dff4f21677fc87845ab88cf0ee39d938"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-restart.txt",
+      "bytes": 5874,
+      "sha256": "97d8e70370cd82bd40b9ff0692de9d9e6eaa0a371fbaf826f4d8e72aa49ec8a7"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-restored-playing.txt",
+      "bytes": 5874,
+      "sha256": "d311088dbd3a7dbd7e23a32a6c29d0777e99c4be416d097a40a11f0ba94a244c"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-resumed.txt",
+      "bytes": 5874,
+      "sha256": "9fcefbcb3943fcd64d64fa5b002cd3e529f3066a1a10e8eba34b607586c89838"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-return.txt",
+      "bytes": 5873,
+      "sha256": "ff835216b25809ac87170d4569cebe8cb9fec5f3f7b81623172a3798044dd156"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-seek.txt",
+      "bytes": 5852,
+      "sha256": "d67a99300f2a6c4297c0de0125289745269e2933dc51dc58a811cd98a180d2b6"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-stop.txt",
+      "bytes": 5852,
+      "sha256": "609e1ca82b65cf7aecec603d3eb2a8ac54575e498a8859ebe42ac158a2d14623"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-tamper-rejected.txt",
+      "bytes": 394,
+      "sha256": "4b2ec7bd2949f020b3eb9dc4f96d68554d43a716febaa1fa5551e665bc52b3c0"
+    },
+    {
+      "path": "research/evidence/application/APP013/gui-up-undo.txt",
+      "bytes": 5320,
+      "sha256": "d750f9237347f8bf3416d3f2c944d311fe851da9b9ce7d8a3e79351ba063ea69"
+    }
+  ],
+  "gui_counts": {
+    "ax_records": 35,
+    "screenshots": 1,
+    "identity_and_custody_json": 5,
+    "total_records": 41
+  },
+  "issues": [],
+  "limits": [
+    "GUI values and engine peaks are application telemetry; neither physical output samples nor Cubase runtime output were measured.",
+    "The attached PCM is self-authored synthetic media and does not identify or reproduce the missing proprietary asset.",
+    "Mode1 remains an explicit reconstructed choice. Host libm context, native fallback availability and vendor runtime samples remain unverified; mode2 uses the pinned public library.",
+    "Worker off-main refill and blocked-main offline delivery are covered by separate tests, not inferred solely from this GUI sequence.",
+    "Native callback postprocessing is integrated with Rebase partitions and prefix0; actual native scheduler topology, transport state and ordinary source-provider binding are not claimed.",
+    "Full project rendering, routing, plugins, automation, arbitrary event placement, fades and warp remain outside this acceptance."
+  ],
+  "cubase_runtime_comparisons": 0,
+  "target_executions": 0
+}

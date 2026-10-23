@@ -1,0 +1,47 @@
+
+/workspace/rebase/research/targets/derived/Cubase15-arm64:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+0000000100003ecc <__text>:
+100196e28: a9bc5ff8    	stp	x24, x23, [sp, #-0x40]!
+100196e2c: a90157f6    	stp	x22, x21, [sp, #0x10]
+100196e30: a9024ff4    	stp	x20, x19, [sp, #0x20]
+100196e34: a9037bfd    	stp	x29, x30, [sp, #0x30]
+100196e38: 9100c3fd    	add	x29, sp, #0x30
+100196e3c: b4000341    	cbz	x1, 0x100196ea4 <__text+0x192fd8>
+100196e40: a94ae017    	ldp	x23, x24, [x0, #0xa8]
+100196e44: eb1802ff    	cmp	x23, x24
+100196e48: 540002e0    	b.eq	0x100196ea4 <__text+0x192fd8>
+100196e4c: aa0103f3    	mov	x19, x1
+100196e50: f94002f5    	ldr	x21, [x23]
+100196e54: 52800700    	mov	w0, #0x38               ; =56
+100196e58: 94dba7d9    	bl	0x103880dbc <dyld_stub_binder+0x103880dbc>
+100196e5c: aa0003f4    	mov	x20, x0
+100196e60: f94002a8    	ldr	x8, [x21]
+100196e64: f9412d08    	ldr	x8, [x8, #0x258]
+100196e68: aa1503e0    	mov	x0, x21
+100196e6c: d63f0100    	blr	x8
+100196e70: aa0003f6    	mov	x22, x0
+100196e74: aa1503e0    	mov	x0, x21
+100196e78: 97fd5037    	bl	0x1000eaf54 <__text+0xe7088>
+100196e7c: aa1403e0    	mov	x0, x20
+100196e80: aa1503e1    	mov	x1, x21
+100196e84: aa1603e2    	mov	x2, x22
+100196e88: 97fdb80e    	bl	0x100104ec0 <__text+0x100ff4>
+100196e8c: aa1303e0    	mov	x0, x19
+100196e90: aa1403e1    	mov	x1, x20
+100196e94: 9454c2e7    	bl	0x1016c7a30 <__text+0x16c3b64>
+100196e98: 910042f7    	add	x23, x23, #0x10
+100196e9c: eb1802ff    	cmp	x23, x24
+100196ea0: 54fffd81    	b.ne	0x100196e50 <__text+0x192f84>
+100196ea4: a9437bfd    	ldp	x29, x30, [sp, #0x30]
+100196ea8: a9424ff4    	ldp	x20, x19, [sp, #0x20]
+100196eac: a94157f6    	ldp	x22, x21, [sp, #0x10]
+100196eb0: a8c45ff8    	ldp	x24, x23, [sp], #0x40
+100196eb4: d65f03c0    	ret
+100196eb8: aa0003f3    	mov	x19, x0
+100196ebc: aa1403e0    	mov	x0, x20
+100196ec0: 94dba7b6    	bl	0x103880d98 <dyld_stub_binder+0x103880d98>
+100196ec4: aa1303e0    	mov	x0, x19
+100196ec8: 94dba5f8    	bl	0x1038806a8 <dyld_stub_binder+0x1038806a8>

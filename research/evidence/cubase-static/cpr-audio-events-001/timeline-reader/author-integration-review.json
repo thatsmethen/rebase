@@ -1,0 +1,33 @@
+{
+  "scope": "Author read-only composition review; not independent oracle, runtime or device validation.",
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 8552,
+      "sha256": "296e6d0983dd8c9d673fb357590c0de5821e96dd6f83fde1095d4f2526dd67a0"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_reader.c",
+      "bytes": 8196,
+      "sha256": "6697ca1b9ce8725324362b2da54ac6432b1d64c8dcbb48adfc3464322dba4e0b"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_reader.h",
+      "bytes": 4390,
+      "sha256": "910475ed5c486c662c0f0893097cfbc4551b9be5922f5fcdb398941701373014"
+    }
+  ],
+  "result": "No actionable plan/cursor composition defect found in the declared ordered nonoverlap/equal-rate stereo immutable-memory domain.",
+  "checks": [
+    "End equality keeps the segment until the next block planner skips its empty intersection.",
+    "Gap and tail samples begin zero; read spans are bounded by destination and source lengths.",
+    "Cursor publication occurs only after a complete block; direct full-read backend does not fabricate transient I/O behavior.",
+    "Exactly one checked gain application follows copied source samples.",
+    "No converter or audition FIFO is inserted in this direct stream."
+  ],
+  "limits": [
+    "Gain-positive and complete-media gates are stricter application policy.",
+    "Provider/datum/mapper lifetime and live Cubase behavior are not tested.",
+    "Only the current source identity was reviewed; future edits need a new review."
+  ]
+}

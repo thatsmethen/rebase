@@ -1,0 +1,45 @@
+Building for debugging...
+[0/6] Write sources
+[2/6] Write swift-version--1AB21518FC5DEDBE.txt
+[4/9] Compiling RebaseCore CPRClockRoles.swift
+[5/9] Emitting module RebaseCore
+[6/9] Compiling RebaseCore CPRSignatureRecovery.swift
+[7/15] Emitting module Rebase
+[7/15] Write Objects.LinkFileList
+[8/15] Linking Rebase
+[9/15] Applying Rebase
+[11/15] Compiling RebaseCoreTests CPRProjectTests.swift
+[12/15] Compiling RebaseCoreTests CPRSignatureRecoveryTests.swift
+[13/15] Emitting module RebaseCoreTests
+[13/15] Write Objects.LinkFileList
+[14/15] Linking RebasePackageTests
+Build complete! (8.20s)
+􀟈  Test run started.
+􀄵  Testing Library Version: 1400
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite CPRSignatureRecoveryTests started.
+􀟈  Test differentConcreteTrackPairsCannotBeMergedAndNonTrackObjectsDoNotSupplyRoles() started.
+􀟈  Test nullAlternateVariationIsAcceptedButOtherStatesAreExplicitlyGated() started.
+􀟈  Test duplicateKeysAndMalformedExtentsAreNeverDefaults() started.
+􀟈  Test unknownOrCompoundSignatureExtrasAreNotSilentlyRecovered() started.
+􀟈  Test matchingRepresentationsRecoverAndNamedBarIgnoresPosition() started.
+􀟈  Test contradictoryCompactAndTypedStateIsNotPromotedAcrossUnknownCompatibility() started.
+􀟈  Test noTypedContainerOrWrongClassCannotBecomeCompactRecovery() started.
+􀟈  Test explicitOriginAndExactIntegerTypesAreRequired() started.
+􀟈  Test missingRootRoleCannotPromoteAnUnrelatedSignature() started.
+􀟈  Test allTenPinnedFactorySignaturesRecoverWithoutExecutingTheSource() started.
+􀟈  Test nullCounterpartsRemainExplicitWithoutInventingTheMissingClock() started.
+􁁛  Test contradictoryCompactAndTypedStateIsNotPromotedAcrossUnknownCompatibility() passed after 0.002 seconds.
+􀢄  Test missingRootRoleCannotPromoteAnUnrelatedSignature() recorded an issue at CPRSignatureRecoveryTests.swift:81:9: Expectation failed: !(absent.objects.contains { $0.className == "MSignatureTrackEvent" } → <not evaluated>)
+􁁛  Test differentConcreteTrackPairsCannotBeMergedAndNonTrackObjectsDoNotSupplyRoles() passed after 0.002 seconds.
+􁁛  Test nullCounterpartsRemainExplicitWithoutInventingTheMissingClock() passed after 0.002 seconds.
+􁁛  Test noTypedContainerOrWrongClassCannotBecomeCompactRecovery() passed after 0.002 seconds.
+􁁛  Test matchingRepresentationsRecoverAndNamedBarIgnoresPosition() passed after 0.002 seconds.
+􁁛  Test unknownOrCompoundSignatureExtrasAreNotSilentlyRecovered() passed after 0.003 seconds.
+􀢄  Test missingRootRoleCannotPromoteAnUnrelatedSignature() failed after 0.003 seconds with 1 issue.
+􁁛  Test duplicateKeysAndMalformedExtentsAreNeverDefaults() passed after 0.004 seconds.
+􁁛  Test nullAlternateVariationIsAcceptedButOtherStatesAreExplicitlyGated() passed after 0.004 seconds.
+􁁛  Test explicitOriginAndExactIntegerTypesAreRequired() passed after 0.004 seconds.
+􁁛  Test allTenPinnedFactorySignaturesRecoverWithoutExecutingTheSource() passed after 0.063 seconds.
+􀢄  Suite CPRSignatureRecoveryTests failed after 0.064 seconds with 1 issue.
+􀢄  Test run with 11 tests in 1 suite failed after 0.064 seconds with 1 issue.

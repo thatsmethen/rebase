@@ -1,0 +1,196 @@
+{
+  "id": "APP018-GUI",
+  "created_utc": "2026-10-21T01:02:30.921445+00:00",
+  "final_release": true,
+  "executable": {
+    "path": "research/evidence/application/APP018/final-build-snapshot/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 5017248,
+    "sha256": "dcb4760f7eaa72db83e92237ee8e0a9ea6320fb6f9d0ffbfb9c3ad3c9e3ab8c1"
+  },
+  "groups_passed": 6,
+  "groups": [
+    {
+      "name": "admission",
+      "status": "passed",
+      "records": [
+        {
+          "path": "research/evidence/application/APP018/gui-final-admitted.txt",
+          "bytes": 1715,
+          "sha256": "92b26a2f8468e54325785ab6a1d02c300fc9461ec93a8876c1e89600abdceda5"
+        }
+      ],
+      "observations": [
+        "New menu choice admits a supplied32kHz clock, labels changed speed/pitch and unrecovered original project rate, and retains saved1.5s start/22s duration/2s offset."
+      ]
+    },
+    {
+      "name": "silent_prefix_and_output",
+      "status": "passed",
+      "records": [
+        {
+          "path": "research/evidence/application/APP018/gui-final-playing.txt",
+          "bytes": 5831,
+          "sha256": "a0315d4468bc38ac6af4f84ca6988c2f096de90b2abeb6eaf5310ff5eb6205be"
+        },
+        {
+          "path": "research/evidence/application/APP018/gui-final-output.txt",
+          "bytes": 5831,
+          "sha256": "90eb2ce53c173cb5b9196e1e76f94773236b17881a7b8f766ddc1618c5672b55"
+        }
+      ],
+      "observations": [
+        "At0.638s both engine peaks are zero; at12.138s stereo peaks are nonzero. These are own-engine buffer readings."
+      ]
+    },
+    {
+      "name": "pause_resume",
+      "status": "passed",
+      "records": [
+        {
+          "path": "research/evidence/application/APP018/gui-final-paused.txt",
+          "bytes": 5809,
+          "sha256": "b9dfb688a2c9cfaef1918d22686d2267379525c309bbae135533c9d53b7ad3d1"
+        },
+        {
+          "path": "research/evidence/application/APP018/gui-final-resumed.txt",
+          "bytes": 5830,
+          "sha256": "7010732e658fc3677abe27ca33a74aec2dabdf5a5fc55454963b925a6a651ec6"
+        }
+      ],
+      "observations": [
+        "Pause retains mode/position with zero peaks; resume advances and produces stereo peaks."
+      ]
+    },
+    {
+      "name": "seek_and_end",
+      "status": "passed",
+      "records": [
+        {
+          "path": "research/evidence/application/APP018/gui-final-seek.txt",
+          "bytes": 5808,
+          "sha256": "077ccb67e62465150b048419eace932d48735cf68478ea07b9e0558820b6b583"
+        },
+        {
+          "path": "research/evidence/application/APP018/gui-final-seek-playing.txt",
+          "bytes": 5831,
+          "sha256": "b0f292ef915ceb11e923b03bf7cff2604dc7dac761ef510bf8d3f3b923f2566a"
+        },
+        {
+          "path": "research/evidence/application/APP018/gui-final-ended.txt",
+          "bytes": 5808,
+          "sha256": "f32718582a0394dc9c9b0c78fff84664891a71bae5f38dc355f2074eacc3c4ac"
+        }
+      ],
+      "observations": [
+        "Ruler seek sets15.750s; resumed output advances with stereo peaks; natural completion reaches23.500s and stops."
+      ]
+    },
+    {
+      "name": "exit_and_project_guard",
+      "status": "passed",
+      "records": [
+        {
+          "path": "research/evidence/application/APP018/gui-final-exited.txt",
+          "bytes": 5155,
+          "sha256": "85b44825f7b39bc675050f0ba81796ef8d738dab6e41cfc7354faf2718d6baa4"
+        },
+        {
+          "path": "research/evidence/application/APP018/gui-final-project-blocked.txt",
+          "bytes": 533,
+          "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+        }
+      ],
+      "observations": [
+        "Exit removes the event mode; ordinary project playback still rejects unresolved CPR events."
+      ]
+    },
+    {
+      "name": "capacity_and_original_rate",
+      "status": "passed",
+      "records": [
+        {
+          "path": "research/evidence/application/APP018/gui-final-capacity-blocked.txt",
+          "bytes": 1856,
+          "sha256": "d1da361a9c950a81afdf8e82ba5272a12a726293a846952132e63ffd26447077"
+        },
+        {
+          "path": "research/evidence/application/APP018/gui-final-original-rate-admitted.txt",
+          "bytes": 1705,
+          "sha256": "4b8c2f0159c89f4af0fd6a76211904bbb44c148718305083f0d706da09f5ca51"
+        }
+      ],
+      "observations": [
+        "At48kHz the requested complete source window does not fit, so playback is disabled with reason; original-rate native timeline remains enabled."
+      ]
+    }
+  ],
+  "package_files_unchanged": 8,
+  "package_files": [
+    {
+      "path": "research/evidence/application/APP018/Project Clock QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+      "bytes": 93492,
+      "sha256": "608404edbfed6737c8ae02aac3003ea0c3839540f744692a06feeddbbc06807e"
+    },
+    {
+      "path": "research/evidence/application/APP018/Project Clock QA.rebaseproj/Compatibility/CPR/Original.cpr",
+      "bytes": 1333360,
+      "sha256": "9ea2b00a18ff3c1f4b3a7958a8399f46184b39dcb0696e578a3eac1fe547a4d3"
+    },
+    {
+      "path": "research/evidence/application/APP018/Project Clock QA.rebaseproj/Media/5449A2DB-0479-4D77-97F9-A8F259B95A76.wav",
+      "bytes": 6350444,
+      "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+    },
+    {
+      "path": "research/evidence/application/APP018/Project Clock QA.rebaseproj/Project.json",
+      "bytes": 5392,
+      "sha256": "de4a17707c97467e18aa0614d6b0fc73a998a22aa2e89b4e8948871a6b85c91e"
+    },
+    {
+      "path": "research/evidence/application/APP018/Incomplete Clock QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+      "bytes": 93492,
+      "sha256": "608404edbfed6737c8ae02aac3003ea0c3839540f744692a06feeddbbc06807e"
+    },
+    {
+      "path": "research/evidence/application/APP018/Incomplete Clock QA.rebaseproj/Compatibility/CPR/Original.cpr",
+      "bytes": 1333360,
+      "sha256": "9ea2b00a18ff3c1f4b3a7958a8399f46184b39dcb0696e578a3eac1fe547a4d3"
+    },
+    {
+      "path": "research/evidence/application/APP018/Incomplete Clock QA.rebaseproj/Media/5449A2DB-0479-4D77-97F9-A8F259B95A76.wav",
+      "bytes": 6350444,
+      "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+    },
+    {
+      "path": "research/evidence/application/APP018/Incomplete Clock QA.rebaseproj/Project.json",
+      "bytes": 5395,
+      "sha256": "9563ab77585bad687442a175ccedac6e3c540af04ff6091bf3965cfd1f405378"
+    }
+  ],
+  "screenshot": {
+    "path": "research/evidence/application/APP018/gui-final-project-clock.png",
+    "bytes": 394067,
+    "sha256": "05b57dcc0034b98b62422a0ddf60161da7add3476a523548f804ad5eea5f6d2a"
+  },
+  "process": {
+    "path": "research/evidence/application/APP018/gui-final-process.json",
+    "bytes": 429,
+    "sha256": "7a24b36dc1265f92df2762eacda416280bd96a65aa65bccc099ed1d41e068379"
+  },
+  "interrupted_attempts": [
+    "During final capacity rerun the CUA request timed out and reset its kernel; one subsequent getApp also timed out. Recovery found the existing open-file panel, then completed the final capacity/original-rate checks. No app/source repair or evidence overwrite."
+  ],
+  "initial_build": {
+    "executable": {
+      "path": "research/evidence/application/APP018/gui-initial-build-snapshot/Rebase.app/Contents/MacOS/Rebase",
+      "bytes": 5017248,
+      "sha256": "ed2b6bd0e0b1bff3a34eec3dd44e090350fd405dc3efff020744b48b3447a1e3"
+    },
+    "scope": "Earlier GUI captures without gui-final prefix observed the initial build before the media-offset caption was corrected to saved-offset. They are retained separately and are not final-release acceptance."
+  },
+  "limits": [
+    "Synthetic PCM in a source-derived CPR control; no original project audio is asserted.",
+    "GUI observations and engine peaks are not exact sample comparisons, DAC capture, underrun/latency certification or Cubase runtime measurements.",
+    "Supplied application integral project clock with factor1, one admitted event and complete source capacity. Whole native project/channel/device context remains incomplete."
+  ]
+}

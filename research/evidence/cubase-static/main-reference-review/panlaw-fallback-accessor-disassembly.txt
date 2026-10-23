@@ -1,0 +1,44 @@
+
+/workspace/rebase/research/targets/derived/Cubase15-arm64:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+0000000100003ecc <__text>:
+1031341a8: a9be4ff4    	stp	x20, x19, [sp, #-0x20]!
+1031341ac: a9017bfd    	stp	x29, x30, [sp, #0x10]
+1031341b0: 910043fd    	add	x29, sp, #0x10
+1031341b4: aa0003f3    	mov	x19, x0
+1031341b8: f9400400    	ldr	x0, [x0, #0x8]
+1031341bc: b4000080    	cbz	x0, 0x1031341cc <__text+0x3130300>
+1031341c0: a9417bfd    	ldp	x29, x30, [sp, #0x10]
+1031341c4: a8c24ff4    	ldp	x20, x19, [sp], #0x20
+1031341c8: d65f03c0    	ret
+1031341cc: d000f728    	adrp	x8, 0x10501a000 <dyld_stub_binder+0x10501a000>
+1031341d0: f942cd00    	ldr	x0, [x8, #0x598]
+1031341d4: b4000120    	cbz	x0, 0x1031341f8 <__text+0x313032c>
+1031341d8: f9400262    	ldr	x2, [x19]
+1031341dc: f0005a01    	adrp	x1, 0x103c77000 <dyld_stub_binder+0x103c77000>
+1031341e0: 910dd021    	add	x1, x1, #0x374
+1031341e4: 97fffda5    	bl	0x103133878 <__text+0x312f9ac>
+1031341e8: f9000660    	str	x0, [x19, #0x8]
+1031341ec: b4000060    	cbz	x0, 0x1031341f8 <__text+0x313032c>
+1031341f0: 79400008    	ldrh	w8, [x0]
+1031341f4: 35000088    	cbnz	w8, 0x103134204 <__text+0x3130338>
+1031341f8: f0005a00    	adrp	x0, 0x103c77000 <dyld_stub_binder+0x103c77000>
+1031341fc: 910dd000    	add	x0, x0, #0x374
+103134200: f9000660    	str	x0, [x19, #0x8]
+103134204: f9400268    	ldr	x8, [x19]
+103134208: eb00011f    	cmp	x8, x0
+10313420c: 54fffda1    	b.ne	0x1031341c0 <__text+0x31302f4>
+103134210: 94001752    	bl	0x103139f58 <__text+0x313608c>
+103134214: 360000e0    	tbz	w0, #0x0, 0x103134230 <__text+0x3130364>
+103134218: f9400260    	ldr	x0, [x19]
+10313421c: 940016f6    	bl	0x103139df4 <__text+0x3135f28>
+103134220: f9000660    	str	x0, [x19, #0x8]
+103134224: a9417bfd    	ldp	x29, x30, [sp, #0x10]
+103134228: a8c24ff4    	ldp	x20, x19, [sp], #0x20
+10313422c: d65f03c0    	ret
+103134230: f9400660    	ldr	x0, [x19, #0x8]
+103134234: a9417bfd    	ldp	x29, x30, [sp, #0x10]
+103134238: a8c24ff4    	ldp	x20, x19, [sp], #0x20
+10313423c: d65f03c0    	ret

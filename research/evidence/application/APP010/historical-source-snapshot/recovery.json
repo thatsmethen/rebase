@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "scope": "Historical source reconstruction matching previously sealed byte length and SHA256; no target code execution and no assertion that this supplement existed at original seal time.",
+  "recorded_at_utc": "2026-10-20T08:01:43.075141+00:00",
+  "method": "Remove only the contiguous newly added highRatioPlanarBuffersCrossRingCapacityAndWrapWithExactOracleDigest test and its following blank separator from the current source. Preserve all other bytes exactly.",
+  "current_source": {
+    "path": "Application/Tests/RebaseCoreTests/NativeRateMode0Tests.swift",
+    "bytes": 17213,
+    "sha256": "c44b27a216a0d379bc861660b47bf5cea7a910c4d036a459c8e9505642ecddcf"
+  },
+  "removed_range": {
+    "byte_start_inclusive": 8431,
+    "byte_end_exclusive": 11668,
+    "bytes": 3237,
+    "sha256": "5643f8ab53375d2995f3d765448837130d3206c8bc82e65501ff8f7ce37fa88e",
+    "start_marker": "    @Test func highRatioPlanarBuffersCrossRingCapacityAndWrapWithExactOracleDigest()",
+    "end_marker_exclusive": "    @Test func resetFirstFrameAndZeroInputNeverInventTailPadding()"
+  },
+  "recovered_snapshot": {
+    "path": "research/evidence/application/APP010/historical-source-snapshot/NativeRateMode0Tests.swift",
+    "bytes": 13976,
+    "sha256": "3756de7075cde5ef498cd40f8ece0ea7c97e0bdb9570a6285b8cc94f648c9f75"
+  },
+  "prior_attestations": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/artifact-manifest.json",
+      "sha256": "761efef019cb09863fe412caf0455de3b4d85ef23044d25360cad311d2698c4f",
+      "contains_recovered_sha256": true
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/finding.json",
+      "sha256": "45501887e870d544f0a185fddbfe97488681338a2757ca24221bc426b49f8a89",
+      "contains_recovered_sha256": true
+    }
+  ],
+  "verification": {
+    "recovered_sha256_matches_prior_attestations": true,
+    "recovered_size_matches_prior_manifest": true,
+    "current_test_unchanged": true,
+    "prior_manifest_unchanged": true,
+    "prior_finding_unchanged": true
+  },
+  "independent_confirmation": "Peer fidelity_protocol independently derived the same removed range, size, and SHA256 before snapshot creation.",
+  "supersession": "The sealed rate-samples manifest still truthfully records its historical source digest. The live test path now has an additional high-ratio ring test and a new digest. This supplemental snapshot resolves the historical bytes without rewriting that manifest."
+}

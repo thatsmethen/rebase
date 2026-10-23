@@ -1,0 +1,89 @@
+{
+  "scope": "Independent tests executed original candidate code only. No Cubase/VST target code loaded or executed.",
+  "status": "passed",
+  "target_executed": false,
+  "candidate_executed": true,
+  "candidate_source_sha256": {
+    "ambi_first_order.c": "b2af5f8622fa3c336f0c6c6abbb59ddf79151107bfe8e31a23c09dd2a9a1d240",
+    "ambi_first_order.h": "b1103f9cc0450db33aa1331297306e2619998d069cada1e4a919573df8dd0135"
+  },
+  "compile_command": [
+    "cc",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "-frounding-math",
+    "-dynamiclib",
+    "/workspace/rebase/candidate/ambiconverter_first_order/ambi_first_order.c",
+    "-o",
+    "/tmp/rebase-cache/T/tmprjwcbr8g/independent-candidate.dylib"
+  ],
+  "compile_return_code": 0,
+  "compile_stdout": "",
+  "compile_stderr": "",
+  "compiled_candidate_sha256": "abded9afcdafef534f7904d7f54869e61b5b0d2e26e2049ed398f055386ffa98",
+  "compiled_artifact_retained": false,
+  "test_source_sha256": "627fe0a6c8ccc7e1afba3173c2ff3394f5c90d4875882de019e0a9d282b5496d",
+  "checks": [
+    {
+      "name": "all_28_exact_alias_pairs_rejected_atomically",
+      "precision": 32,
+      "passed": true
+    },
+    {
+      "name": "all_8_misaligned_buffer_positions_rejected_atomically",
+      "precision": 32,
+      "passed": true
+    },
+    {
+      "name": "exact_sample_domain_endpoints_and_adjacent_bits",
+      "precision": 32,
+      "passed": true
+    },
+    {
+      "name": "signed_zero_permutation_across_10_frame_lengths",
+      "precision": 32,
+      "passed": true
+    },
+    {
+      "name": "exact_reverse_gain_at_threshold",
+      "precision": 32,
+      "expected_le_hex": "f304353f",
+      "passed": true
+    },
+    {
+      "name": "all_28_exact_alias_pairs_rejected_atomically",
+      "precision": 64,
+      "passed": true
+    },
+    {
+      "name": "all_8_misaligned_buffer_positions_rejected_atomically",
+      "precision": 64,
+      "passed": true
+    },
+    {
+      "name": "exact_sample_domain_endpoints_and_adjacent_bits",
+      "precision": 64,
+      "passed": true
+    },
+    {
+      "name": "signed_zero_permutation_across_10_frame_lengths",
+      "precision": 64,
+      "passed": true
+    },
+    {
+      "name": "exact_reverse_gain_at_threshold",
+      "precision": 64,
+      "expected_le_hex": "cc3b7f669ea0e63f",
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "These checks are not a target oracle, product conformance, host integration, or runtime bit-fidelity evidence.",
+    "Caller-provided storage validity remains a C API precondition; malformed unmapped pointers were not dereferenced."
+  ]
+}

@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "finding_id": "CPR-TIMELINE-SELECTOR-001",
+  "status": "sealed bounded static contract; live backend and runtime equivalence unverified",
+  "native_source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "target_execution": false,
+  "cubase_runtime_comparisons": 0,
+  "claims": [
+    {
+      "id": "TL1",
+      "type": "original-native static binding",
+      "claim": "A concrete MAudioTrack exposes a track-side segment producer and selector. This establishes a native object relation, not a live audio engine callback.",
+      "evidence": [
+        "0x1001f6500",
+        "0x1001fd4e4",
+        "0x1001f91a0",
+        "0x1001f96f8",
+        "0x1001f9854",
+        "linkage.json"
+      ],
+      "details": [
+        "Ctor writes MAudioTrack primary vtable10444aa98 and secondary10444acc0 at owner+120. Track setter1001fd4e4 writes owner+130.",
+        "Primary+1b0 targets1001f96f8; secondary+18 targets1001f9854 which subtracts0x120 and branches there. Secondary+20 reset1001f96e8 addresses the same generation as primary reset1001f96d8.",
+        "Interface comparison reads128 bits from global104feb498; this storage is not file-backed and its initializer/actual GUID value remains untraced. No source SDK interface name or live scheduler consumer is asserted."
+      ]
+    },
+    {
+      "id": "TL2",
+      "type": "original-native static value contract",
+      "claim": "The finite fresh search selects the first node in linked-list order whose concrete rounded end is at least the query; it performs no start comparison.",
+      "evidence": [
+        "0x1001f96f8",
+        "0x103102654",
+        "0x100212d74",
+        "0x103101a0c",
+        "0x101a17d08"
+      ],
+      "details": [
+        "Owner+68 is the segment list. Iterator constructor copies list+18 head to iterator+10; exhaustion checks this pointer; yield returns that node and advances to node+10. Thus storage-array order is not generally list order.",
+        "Segment concrete PAudioSegment vtable104436be0 +f8 is101a17d08: LDP D0,D1,[X0,#50]; FADD D0,D0,D1; RET. The stored start+50 and length+58 are added once in binary64, in that order.",
+        "Selector FCMP(end,query); B.LT continues. For finite end/query it accepts end>=query, including equality. There is no subtraction-based equivalent rewrite and no start<=query condition.",
+        "No units are encoded by these operations. Query/start/length must share the same coordinate domain; no seconds-to-frame rule is derived here."
+      ]
+    },
+    {
+      "id": "TL3",
+      "type": "original-native state transition",
+      "claim": "A matching generation plus nonnull cursor current selects its successor without consulting the query. The function does not advance cursor current.",
+      "evidence": [
+        "0x1001f96f8",
+        "0x1001f96d8",
+        "0x1001f96e8"
+      ],
+      "details": [
+        "Cursor+0 is an8-byte current pointer; cursor+8 is a32-bit generation. Other bytes are unbound. Owner generation is u32 at+138. Equality compares all32 bits; no signed ordering or epoch is used.",
+        "Matching generation and currentnonnull: read current+10; null returnsnil; nonnull calls successor virtual+8 then rereads cursor.current+10 for return. This value abstraction assumes the retain callback and other actors do not mutate the cursor or chain.",
+        "Mismatched generation OR currentnil: write owner generation to cursor+8 before scanning. The write also occurs when search returnsnil. Old cursor.current is never overwritten.",
+        "Reset1001f96d8 writes nil to cursor+0 then copies owner+138 u32 to cursor+8. Adjusted reset1001f96e8 reads secondaryreceiver+18. Reset itself does not take the selector lock.",
+        "Normal selector locks owner+20 virtual+10 and unlocks virtual+18. Successful result invokes node virtual+8; this is preserved as a reference-acquisition call, not a claim of callback immutability."
+      ]
+    },
+    {
+      "id": "TL4",
+      "type": "bounded producer relation",
+      "claim": "The track producer uses builder flags0x80 and publishes a segment-list generation; it does not supply a proved live PCM loop.",
+      "evidence": [
+        "0x1001f91a0",
+        "0x1002115a0",
+        "0x101a18078",
+        "0x101a18160",
+        "0x10011376c",
+        "0x101a181b0"
+      ],
+      "details": [
+        "Build is skipped if owneru16+c has bit2, owner+130 isnull, or10174d464 returns bit0. Otherwise constructs10020ec9c withflags0x80, optionally obtains context from track+4f0 via1017102bc, and calls1002115a0 withtrack,outlist,1.",
+        "Under ownerlock, LDRW/ADDW/STRW at1001f9244..924c increments generation modulo2^32; this occurs on the normal commit path even if build was skipped. Then101a18160 targets owner+68 and generated temporarylist. It dispatches clear+108 then copy+148 for distinct objects.",
+        "The prior sealed builder contract, under its admitted source/no-fade/no-neighbor predicates, constructs normal PAudioSegment stream+38,start+50,length+58,offset+60,gainFloat32+68 and inserts via101a181b0. General list copying, lifecycle observers, overlapping events and arbitrary virtual overrides are not generalized here.",
+        "Generation equality may recur after2^32 publishes. The native code supplies no stronger epoch guarantee. Initial generation is not assumed; reset copies the current observed generation."
+      ]
+    },
+    {
+      "id": "TL5",
+      "type": "explicit application projection",
+      "claim": "The existing admitted zero-origin LoFi source can supply a singleton descriptor to this unit-agnostic selection operation; PCM scheduling retains its separate half-open interval.",
+      "evidence": [
+        "event_rendering_final",
+        "native_event_placement",
+        "controls",
+        "application_review"
+      ],
+      "details": [
+        "The retained source projection is start0,duration24seconds,source/output44100Hz,1,058,400event frames,subject to all prior finite source,automatic-fade,pitch-state,packed24 and exact gain predicates. This study does not newly establish those units or sample equations.",
+        "A reset singleton fresh search selects at query0,any admitted query below24,and exactly24. Above24 returnsnil. If the caller has stored that singleton as current with matchinggeneration, the next selection returnsnil regardless of query.",
+        "Application scheduling may reject exactend as an empty [0,N) frame interval after native metadata selection. This is intentionally a separate rule; inclusive native segment selection is not evidence for emitting an extra sample.",
+        "Arbitrary seek rounding, rate conversion, AVAudioEngine scheduling, mixerpan/volume,automation/plugins/PDC and full-project timeline playback remain unbound by this native study."
+      ]
+    }
+  ],
+  "analytical_controls": {
+    "selection": 24,
+    "reset": 3,
+    "classification": "Synthetic exact-rational/reference-model controls, not observed proprietary behavior"
+  },
+  "application_control_result": {
+    "optimized_c_vectors": 20,
+    "classification": "Our independent C reconstruction executed; negative-query controls excluded by stricter appdomain. Not native runtime tests."
+  },
+  "rejected_or_unresolved_candidates": [
+    {
+      "entries": [
+        "0x1001f9450",
+        "0x1001f953c"
+      ],
+      "result": "Adjacent state/wrapper methods did not close a PCM consumer."
+    },
+    {
+      "entries": [
+        "0x1001f985c",
+        "0x1001f99bc",
+        "0x1001f9b64",
+        "0x1001fbcd4"
+      ],
+      "result": "Nearby event/record construction paths were retained; they are not used as proof of timeline PCM emission."
+    },
+    {
+      "paths": [
+        "selector-reference-candidates.json",
+        "selector-iid-load-candidates.json"
+      ],
+      "result": "Bounded original __text ADRP/add and direct branch candidates; scan incompleteness and dynamic dispatch prevent a no-other-callers conclusion."
+    }
+  ],
+  "independent_review": {
+    "reviewer": "/root/target_intake",
+    "evidence": "Direct message in this task; independent read of original selector/reset instructions, no new import.",
+    "conclusion": "No disagreement for finite stable-cursor scope. Explicitly highlighted successor virtual+8 followed by cursor-current reread; nonmutating callback assumption is necessary.",
+    "scope": "Narrow semantic review, not independent custody review of all16newfunctions."
+  },
+  "verification_totals": {
+    "new": {
+      "functions": 16,
+      "source_bytes": 6196,
+      "native_words": 1549,
+      "rea_instruction_addresses": 1319,
+      "records": 32
+    },
+    "reused": {
+      "functions": 7,
+      "source_bytes": 1280,
+      "native_words": 320,
+      "rea_instruction_addresses": 270,
+      "records": 14
+    },
+    "all": {
+      "functions": 23,
+      "source_bytes": 7476,
+      "native_words": 1869,
+      "rea_instruction_addresses": 1589,
+      "records": 46
+    }
+  },
+  "references": {
+    "event_rendering_final": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/finalization-finding.json",
+      "bytes": 10963,
+      "sha256": "c1f3d17a0d56dcd19ebbdd01fe3c42aa2007eab572b9f01373f0c426d14dd4ec"
+    },
+    "native_event_placement": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/finding.json",
+      "bytes": 39071,
+      "sha256": "af7178337889b779e4d37e2ac55e9eb41087c3fced9b54a0ec15e63e4204cd82"
+    },
+    "automatic_fade_source": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/finding.json",
+      "bytes": 13349,
+      "sha256": "421a3e5bf51f892b2b68a37e69c8171440ee39d114385d9934bd05a6cc7ca08c"
+    },
+    "fallback_root_ownership": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/ownership-finding.json",
+      "bytes": 7206,
+      "sha256": "14aaee2b8096ee1f0c2f502b4942140111ba4b86ecc703617e50c27d03861a85"
+    },
+    "packed24_to_float32": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/pcm24-float32/finding.json",
+      "bytes": 10785,
+      "sha256": "698f1f9fac7d3947f513ad25dbed67e5d6425eb31dfd91c99832b77aa7b231f3"
+    },
+    "custody": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-playback/verification.json",
+      "bytes": 15279,
+      "sha256": "5331e57da9405a72bab0014108a63873cd31800ffe02127e11ea58292e484137"
+    },
+    "dispatch": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-playback/linkage.json",
+      "bytes": 13608,
+      "sha256": "d9f0c3272186f0279a6bf317754bc109ed70d6dc13aef5afbc4d7a5f2e2cbd83"
+    },
+    "controls": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-playback/analytical-controls.json",
+      "bytes": 15133,
+      "sha256": "e6ca63af035b0dcaf1a2a86ec4d171b90e59413cf70eb89cf4c34e687d191a5b"
+    },
+    "canonical_import": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-playback/evidence-import.json",
+      "bytes": 367,
+      "sha256": "90f06215bd128eb269e822563f79db21d66a36038097895a920dd3f3de0d1a0c"
+    },
+    "application_review": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-playback/application-review/review.json",
+      "bytes": 2843,
+      "sha256": "5924968e89fccbd084015b914b062cf6f28646563e1e2a054568522b230d7a49"
+    }
+  },
+  "limitations": [
+    "Finite arithmetic and successful valid-memory paths only; no NaN/Infinity/overflow or abnormal callback behavior.",
+    "Raw slices omit global data, vtables, imports, exception context and surrounding bodies; original image cells/spans explicitly supply only the bindings listed.",
+    "halt_baddata warnings at valid external tail transfers are raw import limitations, not evidence of corrupt target code.",
+    "The selector is a source-derived metadata operation; no sampled hardware playback, live proprietary processing, timeline mix or host execution was performed.",
+    "The application C model validates stricter nonnegative normal-or-zero coordinates,linkbounds,4096cap,round-to-nearest and bounded cycle-failure. These are reconstruction guards absent from native code.",
+    "The wholeoffline10018fb40 action mutates tadB; only its previously sealed conditional inner PCM consumer is reused, not reclassified as a live timeline callback."
+  ]
+}

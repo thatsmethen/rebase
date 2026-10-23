@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "review_id": "APP019-SEALER-INDEPENDENT-REVIEW",
+  "reviewed_utc": "2026-10-21T02:32:14.380221+00:00",
+  "status": "passed",
+  "target_executed": false,
+  "app_or_test_executed": false,
+  "scope": "Read-only source review of new APP019 sealer plus available test/release/packaging/native components and in-memory rejection controls. Full GUI preflight and record/seal are not performed by this review.",
+  "checks": [
+    {
+      "name": "fixed source and test closure",
+      "result": "passed",
+      "detail": "Actual tests_and_release() accepted287 tests/44 suites, unchanged captured debug binaries, pinned capture script/log commands and all271 source inventory entries. Duplicate inventory paths and pre/post/current divergence are rejected."
+    },
+    {
+      "name": "final release and packaging",
+      "result": "passed",
+      "detail": "Actual bundle_matches_release() matched all151 current/snapshot bundle entries, exact version0.19.0/build19 and executable1ebf6ad071aae23a79948350840963f17a96a7d6e8a9e5cba753f3ee408b60e2. Inherited read-only codesign/rpath/public-source/library/notice checks passed."
+    },
+    {
+      "name": "native and historical closure",
+      "result": "passed",
+      "detail": "Actual native_integrity() accepted project-audio-setup finding/220-file manifest, APP018646-file manifest and recursively linked original histories/external records. It checked10438 unique file identities; known prior test supersession remains explicitly mapped to preserved exact bytes rather than relabeled unchanged."
+    },
+    {
+      "name": "review input closure",
+      "result": "passed",
+      "detail": "Actual source review pins pass through recognized source_and_evidence and recursive record checks. The new sealer now accepts the frozen passed-with-scope status and rejects all three nonempty findings fields. Own sealer-review input will be checked during final preflight after this exclusive record exists."
+    },
+    {
+      "name": "GUI and package checks by source read",
+      "result": "passed",
+      "detail": "Requires final-release observations and independent passed review with matching executable/test log, matching named group sets, nonempty evidence/observations/files, digest-checked group evidence and complete unchanged file sets for two distinct packages. Final required GUI records are still parent-owned and were not supplied to this review as completed evidence."
+    },
+    {
+      "name": "path-only native review correction",
+      "result": "passed",
+      "detail": "Sealed native finding retains its anticipated external_path project-audio-setup-independent-review.json. New acceptance explicitly records that field/path together with the actual pinned saved-project-clock-independent-review.json and states path-only correction. The sealed native finding/manifest remain unchanged."
+    },
+    {
+      "name": "publication and seal",
+      "result": "passed",
+      "detail": "record() runs preflight before exclusive outputs; captures complete source and packaging identities. seal() requires unchanged acceptance script/inputs and re-runs preflight, verifies current source versus snapshot, requires all four publication-pinned status files, then snapshots/seals with exclusive writes. verify() validates archived local inventory and pinned native histories without requiring later mutable application source to equal this old release."
+    }
+  ],
+  "corrections_during_review": [
+    {
+      "resolved": true,
+      "where": "reviews() status check",
+      "detail": "Initial exact-passed check rejected the already-frozen source review status. Author changed new sealer to accept exact passed or a space-delimited passed prefix; frozen source review unchanged."
+    },
+    {
+      "resolved": true,
+      "where": "reviews() finding check",
+      "detail": "Author added actual actionable_findings field alongside findings/open_actionable_defects. In-memory nonempty controls now reject all three."
+    }
+  ],
+  "in_memory_controls": [
+    {
+      "name": "existing passed-with-scope frozen review",
+      "result": "accepted"
+    },
+    {
+      "name": "nonempty findings",
+      "result": "rejected as expected"
+    },
+    {
+      "name": "nonempty open_actionable_defects",
+      "result": "rejected as expected"
+    },
+    {
+      "name": "nonempty actionable_findings",
+      "result": "rejected as expected"
+    },
+    {
+      "name": "failed review status",
+      "result": "rejected as expected"
+    },
+    {
+      "name": "non-delimited passed status",
+      "result": "rejected as expected"
+    },
+    {
+      "name": "stale reviewed source digest",
+      "result": "rejected as expected"
+    },
+    {
+      "name": "test record tests",
+      "result": "rejected as expected"
+    },
+    {
+      "name": "test record source_unchanged",
+      "result": "rejected as expected"
+    },
+    {
+      "name": "test record binaries_unchanged",
+      "result": "rejected as expected"
+    },
+    {
+      "name": "exclusive output precondition",
+      "result": "rejected as expected"
+    }
+  ],
+  "full_preflight": {
+    "run": false,
+    "reason": "Final GUI observations, independent GUI review and package-baseline pair are not yet all finalized; no acceptance/seal outputs were attempted."
+  },
+  "open_actionable_defects": [],
+  "limits": [
+    "The source and component checks are custody/instrument evidence, not scientific completeness, Cubase runtime or DAC verification.",
+    "No application build/test/GUI/vendor execution; codesign and otool inspections were read-only.",
+    "This report does not independently establish the final GUI claims; that review is separate."
+  ],
+  "input_pins": [
+    {
+      "path": "research/evidence/application/APP019/seal_application.py",
+      "bytes": 20579,
+      "sha256": "c251c8fc01736bf581ce14e6629aecff613d5b8e753170bcd7597f7badd51092"
+    },
+    {
+      "path": "research/evidence/application/APP019/saved-project-clock-independent-review.json",
+      "bytes": 25615,
+      "sha256": "b44c974597d999baea7643c3c10df8306e28c9b98502398beb05d0b892f83988"
+    },
+    {
+      "path": "research/evidence/application/APP019/capture_validation.py",
+      "bytes": 3465,
+      "sha256": "dbe98d14e927735e44cecc80c70d368a881550d4d2ec69552110220167a3bb98"
+    },
+    {
+      "path": "research/evidence/application/APP019/core-test-run.json",
+      "bytes": 1745,
+      "sha256": "2cd7b56b8c173674862c39dd203bcd54884611e5126039199c28e1dbaa01b513"
+    },
+    {
+      "path": "research/evidence/application/APP019/core-tests.log",
+      "bytes": 61824,
+      "sha256": "6a6bfb152dbea86db11e2b9ef57c9c26f8d9ffb0c6c3e1f3a6cdd2b2df4aa951"
+    },
+    {
+      "path": "research/evidence/application/APP019/test-build.json",
+      "bytes": 378,
+      "sha256": "3d99d24248393fb1150695cbcf974b5a2a902d0a4d619b84f37bc223699c5007"
+    },
+    {
+      "path": "research/evidence/application/APP019/test-build.log",
+      "bytes": 34353,
+      "sha256": "24edbb792ad897756c7ca9bbad5e8c33d7b19c01d6e874a1971db2eb5eacb7c2"
+    },
+    {
+      "path": "research/evidence/application/APP019/test-source-before.json",
+      "bytes": 51013,
+      "sha256": "b0fb61a58867b47f9b153fe3f4b9c810eb1fae616ee9f7b541b06e667538d8e9"
+    },
+    {
+      "path": "research/evidence/application/APP019/test-source-after.json",
+      "bytes": 51013,
+      "sha256": "b0fb61a58867b47f9b153fe3f4b9c810eb1fae616ee9f7b541b06e667538d8e9"
+    },
+    {
+      "path": "research/evidence/application/APP019/release-build.json",
+      "bytes": 834,
+      "sha256": "a48441ed4784d3edb6be3482ecf0bde2f7ed4b5d5fb3d898d221ae5cb2d00f8a"
+    },
+    {
+      "path": "research/evidence/application/APP019/final-build-release.json",
+      "bytes": 368,
+      "sha256": "36956a74f26f14089232dd10d6b7e65759b1c06559eb6585618ec5518ab7c0fb"
+    },
+    {
+      "path": "research/evidence/application/APP019/final-build-release.log",
+      "bytes": 6231,
+      "sha256": "c246c633e28a22d34bc48a74046d4d5a0dfc26494617599550027c707609e497"
+    },
+    {
+      "path": "research/evidence/application/APP019/final-build-snapshot/Rebase.app/Contents/MacOS/Rebase",
+      "bytes": 5077056,
+      "sha256": "1ebf6ad071aae23a79948350840963f17a96a7d6e8a9e5cba753f3ee408b60e2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/finding.json",
+      "bytes": 14814,
+      "sha256": "1d4576dc2679e05206e4aecedf4c1bb695c5beb1a49ceafb689e098d1666cbda"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/artifact-manifest.json",
+      "bytes": 68300,
+      "sha256": "6d5c8fe3299a10d67b818dea6e52b660374bceebb1951223521f6ac7feb65b7b"
+    },
+    {
+      "path": "research/evidence/application/APP018/artifact-manifest.json",
+      "bytes": 157957,
+      "sha256": "38c4bb55c8e14a409f0c8052dc97f77498cbf48857609fdfebdce09bc82ab7b7"
+    },
+    {
+      "path": "research/evidence/application/APP015/seal_application.py",
+      "bytes": 18943,
+      "sha256": "b0b259952dc55147600a25b82934fca043b9c1265706662fb8037c92b7c5d102"
+    },
+    {
+      "path": "research/evidence/application/APP012/seal_application.py",
+      "bytes": 17692,
+      "sha256": "b356f42d2b9bd3a707f4071ec412423166035b505102326066cefd84efd6c343"
+    },
+    {
+      "path": "research/evidence/cubase-documentation/project-rate-001/finding.json",
+      "bytes": 2682,
+      "sha256": "4065e5da3bced53d7539bd2abcd7ece22cda7097bbe12cb5a5f557a6a2c7054c"
+    }
+  ]
+}

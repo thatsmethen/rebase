@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "id": "APP005-GUI",
+  "at_utc": "2026-10-19T13:22:04.456352+00:00",
+  "method": "Direct cua_repl native AX interactions and inspected screenshots of independently authored Rebase; no Cubase execution.",
+  "builds": {
+    "initial_candidate_sha256": "b59c4d189ff07fb2feefd9ebd6884b33e4cca627d0c4fafc3f084185a0b11553",
+    "diagnostic_corrected_sha256": "53c44dcf4c89a2a8ea46d07676bc7d375ccbcdc72aaddadaefef780657c1025e",
+    "final_release_sha256": "7f67d5350605213f49cdfbcebe6976ecacafafc9236ce47de655fa8e3fde8130"
+  },
+  "check_groups": [
+    {
+      "id": "G1",
+      "build": "Initial candidate",
+      "observation": "Import pinned LoFi template through Rebase: review identifies two native jump points, one empty Vinyl Crackle track and explicit unsupported content. Save preserves original source.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP005/gui-lofi-import-review.ax.txt",
+          "bytes": 3151,
+          "sha256": "263ed3778223dff9cdfccd4ed379616036b625e988429edf816543bc39f492b5"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-lofi-import-review.png",
+          "bytes": 227677,
+          "sha256": "cbe34687e4c59eb2f10430602fdb400a1ffd12c066c5c047ac05cf47ed0e2219"
+        },
+        {
+          "path": "research/evidence/application/APP005/native-map-independent-check.json",
+          "bytes": 8371,
+          "sha256": "50a8cd0b8bdb4d695b6caf2d767c816e6e28be6c5d3c29b11084dae5787ca9de"
+        }
+      ]
+    },
+    {
+      "id": "G2",
+      "build": "Initial candidate",
+      "observation": "Native editor shows beat0/80BPM and beat800/120BPM, origin4/4, blocked tempo editing and disabled point deletion. Staging conversion then Cancel retains native timing.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP005/gui-native-map-editor.ax.txt",
+          "bytes": 1224,
+          "sha256": "bbfbe9e6f18ab3687be20af1aee8c7f41197816a27b2676ce246cbfae974d010"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-native-map-editor.png",
+          "bytes": 143999,
+          "sha256": "78fb8239652f42ccd9534b6b9702df53c8a9cd858dafe3eeebf386ca78bf2239"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-conversion-draft.ax.txt",
+          "bytes": 1148,
+          "sha256": "d35ee55edec25bf71863c6187eb4b7a4446a3a4105bad078ddf91b8e54672ffe"
+        }
+      ]
+    },
+    {
+      "id": "G3",
+      "build": "Initial candidate and diagnostic-corrected build",
+      "observation": "DAWproject export rejects active native timing with explicit conversion requirement; both rejected destinations remain absent.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP005/gui-native-export-rejection.ax.txt",
+          "bytes": 451,
+          "sha256": "a26e58a75902da66c85430d9445b7d32ea6c4c18db284bc752f788a1c29105b0"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-final-export-rejection.ax.txt",
+          "bytes": 451,
+          "sha256": "a26e58a75902da66c85430d9445b7d32ea6c4c18db284bc752f788a1c29105b0"
+        }
+      ]
+    },
+    {
+      "id": "G4",
+      "build": "Initial candidate",
+      "observation": "Apply converts timing; Undo restores protected native clock; Redo restores editable timing. Initial footer stale status is a detected defect, superseded by G9/G10.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP005/gui-conversion-undo.ax.txt",
+          "bytes": 4089,
+          "sha256": "37fc4b5625ae33f43b4d38b42eeb5dac1a6a448d558e74377c93c26f8cb3acc8"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-conversion-redo.ax.txt",
+          "bytes": 4023,
+          "sha256": "6e844caf8fc781190240ee26bce63d556ca4c4a2a67234afda225cb56b9fbe37"
+        }
+      ]
+    },
+    {
+      "id": "G5",
+      "build": "Initial candidate",
+      "observation": "Save As converted copy and DAWproject export succeed. Independent JSON/ZIP/XML inspection confirms both tempo points, preserved provenance, and untouched native package.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP005/gui-converted-export.ax.txt",
+          "bytes": 4040,
+          "sha256": "3e22aa024bae1f1ea99d79af5f5f8fbb72939e8cb97ce08e86c62a8baf79cdd7"
+        },
+        {
+          "path": "research/evidence/application/APP005/converted-copy-independent-check.json",
+          "bytes": 9979,
+          "sha256": "a207155a5b372fe6b9c3f64c42c981632b1f5e43251646ba93c5bbcbdee48797"
+        },
+        {
+          "path": "research/evidence/application/APP005/converted-exchange-independent-check.json",
+          "bytes": 8262,
+          "sha256": "cddef4da617b47c04d25a7b13f02ffe66051d557c7e54b7dfe29e71328a85e7a"
+        }
+      ]
+    },
+    {
+      "id": "G6",
+      "build": "Initial candidate",
+      "observation": "Converted project reopens with both tempo points and enabled editing.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP005/gui-converted-reopened.ax.txt",
+          "bytes": 1034,
+          "sha256": "d8ab011ef8b56820e0ad04255ccf446eac50722d87d37dc15533af37a46ba9d1"
+        }
+      ]
+    },
+    {
+      "id": "G7",
+      "build": "Diagnostic-corrected build",
+      "observation": "Native package reopens at80BPM with editing protected; editor retains both points and origin4/4.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP005/gui-final-native-reopened.ax.txt",
+          "bytes": 4079,
+          "sha256": "1c33d0239fbdf6d1b6a0eb02b110977d7347817ed691d4f2c416cc6de3c4c153"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-final-native-editor.ax.txt",
+          "bytes": 1224,
+          "sha256": "bbfbe9e6f18ab3687be20af1aee8c7f41197816a27b2676ce246cbfae974d010"
+        }
+      ]
+    },
+    {
+      "id": "G8",
+      "build": "Diagnostic-corrected build",
+      "observation": "One-ULP altered source seconds anchor is not promoted to native timing. Review reports exact-cache inconsistency and explicit120BPM default; Cancel preserves current project. Earlier misleading diagnostic retained.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP005/synthetic-noncanonical-lofi-provenance.json",
+          "bytes": 2208,
+          "sha256": "ab1b1e8a7f7766a8c54715842afc941d7a6f3a55382a8519190b17a71dd75179"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-noncanonical-review-initial.ax.txt",
+          "bytes": 3609,
+          "sha256": "80b9ad5ccc01e983c4268d8e78add79a99102c0f39e284cf11d8290e8b32d27c"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-noncanonical-review-final.ax.txt",
+          "bytes": 3618,
+          "sha256": "20b36e74f5c40f2876edcbd5a77b971b8496922538aa8e3d4ec2a750ffc0a33e"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-noncanonical-review-final.png",
+          "bytes": 228609,
+          "sha256": "18cbb4f69f1aab96cccd86856aeb3164496a1f26f0e0486b83091c18a79eb9d3"
+        }
+      ]
+    },
+    {
+      "id": "G9",
+      "build": "Diagnostic-corrected build and final release",
+      "observation": "Conversion after a prior export failure displays Converted to Rebase Timing. Undo exposed another stale footer; source correction retained and verified in G10.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP005/gui-final-conversion-status.ax.txt",
+          "bytes": 4020,
+          "sha256": "8adb814802b8c92fe93efa0d734fc9c169e77c8b1350c6ed11db9aec6407a4e6"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-final-conversion-status.png",
+          "bytes": 255293,
+          "sha256": "5a21833d33d7a46445160720127be063a49daaf384ecbbd2f163bae4eaaaa49e"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-final-conversion-undo.ax.txt",
+          "bytes": 4086,
+          "sha256": "91468690b9e17f547d13160dab3bf9b53c9e982dd161253b50be70a7e67ef1a9"
+        },
+        {
+          "path": "research/evidence/application/APP005/status-correction.json",
+          "bytes": 1046,
+          "sha256": "bfc2d9758ce62e8a243fffd6ba72a01e0efd7dfc82e1854bf36c669eece7831d"
+        },
+        {
+          "path": "research/evidence/application/APP005/undo-status-correction.json",
+          "bytes": 692,
+          "sha256": "65c856d8f6042af02b940de04c78d5a242f5ec2aff68b03fb4cfec1724c7f8e2"
+        }
+      ]
+    },
+    {
+      "id": "G10",
+      "build": "Final release",
+      "observation": "Reopened native project; Apply conversion displays80BPM editable with success. Undo displays80BPM protected and Undid last edit. Redo displays80BPM editable and Redid last edit. Quit prompts to save; test-only changes discarded.",
+      "evidence": [
+        {
+          "path": "research/evidence/application/APP005/gui-release-conversion-status.ax.txt",
+          "bytes": 4020,
+          "sha256": "8adb814802b8c92fe93efa0d734fc9c169e77c8b1350c6ed11db9aec6407a4e6"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-release-undo-status.ax.txt",
+          "bytes": 4075,
+          "sha256": "9f8b173e1027c2fc6969dd5c9fff5442432188c83fd9ecbb3896cc30f9433916"
+        },
+        {
+          "path": "research/evidence/application/APP005/gui-release-redo-status.ax.txt",
+          "bytes": 4009,
+          "sha256": "19fcf2c6e6093dee5d2d9f2f9d4d2472664b79c1c9fa329cfa689856510c8357"
+        }
+      ]
+    }
+  ],
+  "status": "All10 bounded groups passed after recorded diagnostic/status corrections. Earlier failure observations retained.",
+  "limits": [
+    "Initial saved/exported fixtures were created by the first candidate; later builds changed only diagnostics/status copy and retained packages were independently rechecked.",
+    "Empty imported tracks only; no recovered audio-event playback, audible timing conformance, target UI parity or Cubase runtime comparison.",
+    "Core retiming/arithmetic controls are separate analytical/implementation tests. AX contents may include scroll-offscreen text; screenshots document visible presentation."
+  ],
+  "target_runtime_comparisons": 0
+}

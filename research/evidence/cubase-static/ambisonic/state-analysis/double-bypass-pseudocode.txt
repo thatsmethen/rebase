@@ -1,0 +1,25 @@
+
+void entry(long param_1,long param_2,long param_3,undefined8 param_4)
+
+{
+  long lVar1;
+  long lVar2;
+  ulong uVar3;
+  ulong uVar4;
+  
+  uVar3 = (ulong)*(uint *)(param_1 + 0x18);
+  if (*(uint *)(param_1 + 0x18) != 0) {
+    uVar4 = 0;
+    do {
+      lVar1 = *(long *)(param_2 + uVar4 * 8);
+      lVar2 = *(long *)(param_3 + uVar4 * 8);
+      if (lVar1 != lVar2) {
+        func_0x0016a14c(lVar1,lVar2,param_4);
+        uVar3 = (ulong)*(uint *)(param_1 + 0x18);
+      }
+      uVar4 = uVar4 + 1;
+    } while (uVar4 < uVar3);
+  }
+  return;
+}
+

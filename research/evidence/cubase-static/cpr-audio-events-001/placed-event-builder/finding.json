@@ -1,0 +1,220 @@
+{
+  "id": "CPR-PLACED-EVENT-BUILDER-001",
+  "schema_version": 1,
+  "created_utc": "2026-10-20T23:18:45.816560+00:00",
+  "status": "sealed_bounded_static_singleton_builder_and_reconstruction",
+  "scope": "Pure value projection for one already-resolved stable MAudioEvent range, no fades/neighbors/overlap. Native source interpretation and hosted project state remain separate.",
+  "proprietary_target_executions": 0,
+  "cubase_runtime_comparisons": 0,
+  "target": {
+    "product": "Cubase Pro15.0.30.287 macOS arm64",
+    "image": {
+      "path": "research/targets/derived/Cubase15-arm64",
+      "bytes": 85691328,
+      "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+    }
+  },
+  "evidence_classes": [
+    "Original native instruction/byte analysis",
+    "Pinned REA6.7/Ghidra raw-slice analysis/readback",
+    "Independent Fraction IEEE expectations",
+    "Own reconstruction C/Swift execution"
+  ],
+  "native_custody": {
+    "new_functions": 3,
+    "reused_functions": 11,
+    "bytes_verified": 12492,
+    "original_native_words": 3123,
+    "rea_instruction_addresses": 2611,
+    "verification": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/verification.json",
+      "bytes": 31284,
+      "sha256": "fa05c962e06d0b54ca12993a925ab0b7c22100dd9a9ad5e277ebb85399a4b8ae"
+    },
+    "canonical_import": {
+      "imported": 28,
+      "unknowns_added": 0,
+      "total": 28
+    },
+    "new_raw_slices_closed": 3,
+    "analysis_sessions_closed": 1,
+    "import_sessions_closed": 1,
+    "provider": "rea-agents6.7.0/Ghidra default raw-arm64/2G",
+    "coverage_limit": "LC_FUNCTION_STARTS intervals include disconnected code; decoded-address equality and complete readback are custody, not complete hosted semantic coverage."
+  },
+  "contracts": {
+    "rounding": "RN64 denotes separately rounded IEEE binary64 nearest/ties-even; FCVTZS is signed64 truncation. Defensive C rejects nonnearest/unsupported FP state, invalid inputs and unsafe bounds.",
+    "canonical_datum": {
+      "address": "0x10500f150",
+      "type": 1,
+      "period_bits": "3ff0000000000000",
+      "initializer": "0x101c26ea0..101c26ec0",
+      "generic_converter": "0x101c22dc0",
+      "type10_constructor": "0x101c225d0 with jump index10 ->0x101c2267c",
+      "period": "RN64(1 / builderRate)",
+      "rate_boundary": "10020f2e8 receives root/context owner;10171c5a0 asks owner+128 virtual0 when nonnil, otherwise44100. Source-rate choice is an explicit reconstruction input, not a recovered universal host rate."
+    },
+    "intersection": {
+      "reader": "0x10020e354",
+      "strict_admission": [
+        "eventStart < windowEnd",
+        "eventEnd > windowStart",
+        "clippedStart < clippedEnd"
+      ],
+      "clipped_start": "eventStart < windowStart ? windowStart : eventStart",
+      "clipped_end": "windowEnd < eventEnd ? windowEnd : eventEnd",
+      "equality": "FCSEL preserves event operands on equality, including zero sign.",
+      "event_end": "1016e2640 returns RN64(contextStart + contextConvertedLength). Repeated getters are assumed stable within the admitted invocation.",
+      "singleton_normalization": "10020e7c8 clamps start below -3600000 before publication and requires positive end-start. Candidate domain +/-86400 never reaches sentinel. Multi-object priority/split/overlap behavior remains excluded.",
+      "direct_track_scope": "10020ee24 initial range is exactly caller range;1002115a0 supplies[0,2592000]. For direct-track nonnegative event ending<=86400, using its own interval as window yields the same result. Recursive folder ranges carry additional intersections and are not generalized here."
+    },
+    "source_offset": {
+      "getter": "1016e3794: FNEG(raw event+100);1016e39c8(delta);FNEG(result). Zero delta returns+0 before final FNEG, so contextOffset may be-0.",
+      "before_snap": "delta=RN64(clippedStart-contextStart); adjustedOffset=RN64(contextOffset+delta)",
+      "instructions": "10020f4a4 FSUB followed10020f4a8 FADD. Do not distribute or fuse these operations.",
+      "datum_boundary": "Start uses containing datum; Length/Offset may use own-clip datum selected by context edit methods. The C helper only receives resolved canonical values."
+    },
+    "quantization": {
+      "converted": "local=RN64(RN64(1*canonicalCoordinate)/period)",
+      "sign": "bias=-0.5 iff local<0, otherwise+0.5",
+      "integer": "FCVTZS64(RN64(local+bias))",
+      "order": [
+        "clippedStart",
+        "clippedEnd",
+        "adjustedOffset"
+      ],
+      "instructions": "10020f454/f470/f4b8 conversions, sign choicesf460/f47c/f4c4, separate FADD/FCVTZSf630..f648",
+      "empty": "No segment on the no-fade remainder path when snappedEnd<=snappedStart.",
+      "difference_from_reader": "Reader101d3eb24 instead narrows reciprocal toFloat32 and FMADD(coordinate,multiplier,+0.5); do not collapse builder and reader stages."
+    },
+    "stores": {
+      "canonical_position": "RN64(RN64(period * Double(integer))/1)",
+      "start": "100210520..540 ->segment+d0 ->101a17ccc stores+50",
+      "end": "100210544..564 ->segment+f0 ->101a17cec; length=max(RN64(reconstructedEnd-storedStart),+0)",
+      "offset": "100210568..58c ->segment+100 ->101a17d14 stores+60",
+      "end_getter": "101a17d08 returns RN64(start+length), distinct from retaining reconstructedEnd",
+      "gain": "100210590..598 obtains event Float32volume and stores segment+68 without multiplying samples here.",
+      "nonzero_track_shift": "10020ee24 f140..f15c adds extra builder shift to segment start after construction, preserving length and source offset. This pure helper omits that separately gated operation; current direct-source admission requires zero shift."
+    },
+    "admission": [
+      "One selected stable direct MAudioEvent and one no-fade normal remainder; no neighbor-derived crossfades, explicit fade extents, loop/priority splitting or alternate selected stream.",
+      "Effective automatic fades disabled by the separately source-backed settings/ownership findings; absence of event fade pointers alone is insufficient.",
+      "Actual selected source stream and audible-state constraints come from prior studies. The helper neither executes nor proves source rendering.",
+      "Zero caller post-builder shift for the app operation; rate explicitly supplied by reconstruction context. Host resource and replaceable callbacks remain external state."
+    ]
+  },
+  "candidate": {
+    "source": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/candidate/cpr_timeline_builder.c",
+      "bytes": 4119,
+      "sha256": "f744ebced17794fcb62f3a36e0d10c8bb1c735aa769612ffb652e546b28464df"
+    },
+    "header": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/candidate/cpr_timeline_builder.h",
+      "bytes": 2942,
+      "sha256": "4ce5d6eeb4229a706b86fd6a98a4a7be3731e6f459242a60a5fbe86b45d7c488"
+    },
+    "api": "rb_cpr_timeline_builder_project",
+    "defensive_domain": {
+      "coordinates": "Finite normal-or-zero values within +/-86400; event/window endpoints ordered. Empty intersections and snapped-empty intervals are explicit dispositions.",
+      "rate": "Integral8k..192k; actual native rate getter permits a broader unvalidated runtime value.",
+      "floating_point": "arm64 FE_TONEAREST, FZ/DN/AH/FIZ off; no nonzero subnormal intermediates. Explicit volatile steps and FP_CONTRACT OFF.",
+      "defensive_difference": "Errors preserve caller output; empty unused fields are zero by wrapper convention. Native allocations/side effects are not claimed transactional.",
+      "memory": "All inputs by value, one caller output record, no target object lifetime or arbitrary callback behavior modeled."
+    }
+  },
+  "validation": {
+    "author_c_controls": 32,
+    "optimized_and_ubsan": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/controls/result.json",
+      "bytes": 3432,
+      "sha256": "b7f82452305bee99c3e031ee53e022e617fbea779b1b6456b9a7d55b904243f1"
+    },
+    "author_swift_tests": 5,
+    "author_root_focused_log": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/validation/APP015/placed-tests-second.log",
+      "bytes": 13081,
+      "sha256": "7d807f5fdc170236dcc63b7c6c942a5f7d0ef91bbac360349b9519eada08d923"
+    },
+    "independent_review": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/validation/APP015/placed-source-independent-review.json",
+      "bytes": 10491,
+      "sha256": "570e26cff692b8c44bbe9c3a39d27977c8df20f53c4bd01787c94bae6f2607ae"
+    },
+    "independent_oracle": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/validation/APP015/placed-source-oracle.json",
+      "bytes": 192620,
+      "sha256": "060ca297846429da2264b1e5e68e65709b104c796ee1184ce5416765820d1711"
+    },
+    "independent_instruction_verification": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/validation/APP015/placed-instruction-verification.json",
+      "bytes": 3759,
+      "sha256": "a317e888afe831fbb07df855259388a98effe48c005ca918c1afade43d671374"
+    },
+    "builder_vectors": 180,
+    "independent_tests": {
+      "log": {
+        "path": "research/evidence/application/APP015/placed-independent-tests-fourth.log",
+        "bytes": 7079,
+        "sha256": "259b81bbc9e512eae760b8a82f7e69903041eb76cf024ca3ca16853bbec26844"
+      },
+      "passed": 5,
+      "suites": 1,
+      "seconds": 17.968,
+      "prior_attempts": [
+        {
+          "log": {
+            "path": "research/evidence/application/APP015/placed-independent-tests-first.log",
+            "bytes": 9395,
+            "sha256": "ea75dbf4ca4732eeb8be718f77f08f0dedf3c6c37718ec3e857efec5f11f7106"
+          },
+          "result": "compile failure before tests",
+          "issue": "Test-only nested #require and missing inner try, corrected without production change."
+        },
+        {
+          "log": {
+            "path": "research/evidence/application/APP015/placed-independent-tests-second.log",
+            "bytes": 8508,
+            "sha256": "362d00a49f6be44f19eabf75df0f815538c5fb1426e704a244f8373808190132"
+          },
+          "result": "four tests passed; snapshot exclusion assertion failed",
+          "issue": "Test URL enumeration returned /private/var while root used /var; relative string slicing made Project.json exclusion miss. Numerical/source windows passed."
+        },
+        {
+          "log": {
+            "path": "research/evidence/application/APP015/placed-independent-tests-third.log",
+            "bytes": 45856,
+            "sha256": "89487049a8ff78b23da3840b895aed41a84bc0f6a15bf8fb4a2ae5780eaf229b"
+          },
+          "result": "test snapshot path assertions failed",
+          "issue": "Foundation standardized/resolved URL still retained /var while enumerated children used /private/var. Replaced test helper with relative-path FileManager enumerator; exact file-set/hash comparisons retained."
+        }
+      ],
+      "production_changes_for_test_failures": []
+    },
+    "independent_expected_outputs": "Exact Fraction/IEEE operation order; no candidate-generated expected values and no target execution.",
+    "author_integration_review": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/author-integration-review.json",
+      "bytes": 2528,
+      "sha256": "0af80efd48e54bc8877327428a64a10cad3dc56cb8fb1869baa3b1672a5ab271"
+    },
+    "release_acceptance": "APP015 owns full-suite/GUI/package acceptance; this native study does not assert it."
+  },
+  "source_context_reference": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/finding.json",
+    "bytes": 19331,
+    "sha256": "aa9e0ef239dfb7e3516bf198c77d45881a73e3fc6b0a2d51b5994f8fa1fcf1bd"
+  },
+  "source_context_boundary": "Fresh resource/context and explicit source-rate root are reconstruction conditions. Arbitrary hosted callback, rate, transform and resource mutation remain unestablished.",
+  "remaining_limits": [
+    "No Cubase execution/runtime PCM comparison.",
+    "Raw REA slices omit imports/globals/vtables and surrounding routines; independent original-byte bindings supply only listed context.",
+    "Not a full ordinary host playback implementation, project mixer, effects, automation, multi-event overlap, loops, routing or device schedule.",
+    "The canonical source semantics depend on separate placed-event-context and prior timebase evidence; app source gates may conservatively exclude native cases."
+  ],
+  "source_snapshots": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/source-snapshots.json",
+    "bytes": 11302,
+    "sha256": "364bb11119455087ba87eee2c8d70edc84a3129e56af2c71a7e734d4e0119328"
+  }
+}

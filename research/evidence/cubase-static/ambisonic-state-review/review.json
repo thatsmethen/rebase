@@ -1,0 +1,120 @@
+{
+  "review_id": "AMBI-STATE-004-INDEPENDENT-REVIEW",
+  "status": "Complete; bounded state contract supported after host-valid silence-probe clarification",
+  "reviewed_finding": "../ambisonic/state-contract-finding.json",
+  "reviewed_finding_sha256_at_semantic_review": "30b8187d50a41d0ac9f4eeeeb17c92c10ff753a32e6c21594aa0e27b4e488a65",
+  "reviewed_finding_sha256_final": "f6d6f43ab8be8ab810427976a3d4384dc2a2a3d97074782d855a33947be04c0d",
+  "finalization_note": "The author added only review status/reference after semantic review. The final input digest is also recorded in native-checks.json.",
+  "input_integrity_record": "native-checks.json",
+  "actionable_contract_error_remaining": false,
+  "target_execution": false,
+  "new_ghidra_import_by_reviewer": false,
+  "candidate_changed": false,
+  "scope": "Independently inspect original instructions and retained REA evidence for process entry, parameter ordering, zero-frame exits, silence/bypass selection, metering boundaries, both bypass copies and corresponding-pointer staging. This review does not certify full plugin runtime behavior or host ABI compliance.",
+  "source": {
+    "universal_sha256": "e803dd1390ee7989306b15c0fccca52e5d3097ae7a489dc6834f82b50ba485c5",
+    "exact_arm64_slice_sha256": "e8341c6b31ac6b65cf7e8c18bdfbaa18ac24b20160b4287dc385b202eb29b883",
+    "process_entry": "0x153d98",
+    "interface_thunk": "0x154464",
+    "object_base": "X0 after the thunk subtracts0x110"
+  },
+  "independent_checks": {
+    "own_native_capture": "Nine bounded llvm-objdump outputs;615 instruction words independently matched to immutable source bytes.",
+    "author_evidence": "Separately checked all656 retained instruction records and their function ranges; verified the new120-byte double-bypass raw slice/readback equals original source and has30 decoded instructions.",
+    "dispatch": "Four relevant vtable slots independently read from source bytes: float conversion154d4c, double conversion154a8c, float bypass154e28, double bypass154b64.",
+    "meter_imports": "Independently parsed original Mach-O symbol/indirect-symbol/stub tables:16e6d4 resolves to_vDSP_maxmgv and16e6e0 to_vDSP_maxmgvD.",
+    "method_limits": "Word equality validates provenance; manual branch/dataflow review provides the bounded interpretation. Neither alone constitutes measured target behavior."
+  },
+  "reviewed_conditions": [
+    {
+      "topic": "Initial guard",
+      "verdict": "Exact conjunction correctly reported.",
+      "static_fact": "Numeric1 is returned before parameter consumption only when precisionbyte!=0, doublePointer==0 and floatPointer!=0.",
+      "anchors": ["0x153dc0", "0x153dcc", "0x153e9c", "0x153ea4"],
+      "limit": "This is not a complete readiness check. Both pointers null takes the continuation path; other invalid states are not proven safe. Numeric return values are retained without a complete API error taxonomy."
+    },
+    {
+      "topic": "Zero frames and other early exits",
+      "verdict": "Ordering correctly reported.",
+      "static_fact": "After the initial guard, input parameter changes are consumed before numSamples is loaded and tested. Zero samples returns0 before audio descriptors, silence flags, meter work, audio dispatch or accumulator work. If frames are nonzero, null inputs or firstInput.numChannels==0 likewise returns0 after parameter consumption.",
+      "anchors": ["0x153dd0", "0x153dd8", "0x153ddc", "0x153de0", "0x153de8", "0x153df0", "0x1540cc"],
+      "limit": "A successful parameter update can remain for a later block if no intervening state writer changes it. This does not establish host legality for arbitrary malformed positive-frame input, null algorithm objects or negative frame counts."
+    },
+    {
+      "topic": "Parameter threshold and block timing",
+      "verdict": "Strict bypass threshold and queue behavior correctly distinguished from direction selection.",
+      "static_fact": "Successful final-point retrieval for ID1 sets bypass iff finite normalized value>0.5; exactly0.5 is off. Direction ID2 selects its high pair at finite value>=0.5. Consumer requests count-1 and ignores returned sampleOffset; no per-sample interpolation is visible here.",
+      "anchors": ["0x1521c0", "0x1521d8", "0x1521e4", "0x1521e8", "0x1521ec", "0x152204", "0x152208"],
+      "limit": "Absent/failed updates leave the corresponding state unchanged in this consumer. Zero point counts are not guarded before index-1. Queue validity and virtual-call contracts remain external preconditions."
+    },
+    {
+      "topic": "Bypass versus silence dispatch",
+      "verdict": "Truth table agrees with native branches.",
+      "static_fact": "Nonzero bypass selects slot0x90 before checking the input mask. With bypass zero, zero silenceFlags selects conversion slot0x58; any nonzero64-bit mask skips both algorithm calls. This is a whole-mask zero test, not a per-channel loop or all-channels-silent test.",
+      "anchors": ["0x153f38", "0x153f3c", "0x153f48", "0x153f78", "0x153f80", "0x153f88", "0x154128"],
+      "limit": "All these positive-frame paths require valid initialized objects and buffers. A branch condition alone does not demonstrate which states the actual host supplies."
+    },
+    {
+      "topic": "Silence propagation and visible sample work",
+      "verdict": "Skipped conversion correctly separated from zero-filled output and from no work.",
+      "static_fact": "After bypass, conversion, or silence-skip selection, the input64-bit mask is copied directly into the output mask. The silence-skip branch itself issues no sample clear/copy/conversion call. It does not synthesize zero output data.",
+      "anchors": ["0x153f8c", "0x153f90", "0x153f94"],
+      "limit": "For a valid non-bypassed partial-mask probe, flagged input planes must be entirely zero and still have allocated storage. Unflagged planes can contain nonzero data. Output sentinel retention is a prospective static prediction, not an observed result or product defect."
+    },
+    {
+      "topic": "Meter work and counters",
+      "verdict": "State side effects around the silence branch correctly bounded.",
+      "static_fact": "Input metering precedes bypass/silence selection; output metering follows mask propagation. Both enabled paths load each channel's first sample and call the corresponding imported max-magnitude function. Positive-frame non-early-exit paths add frames to the accumulator, compare it signed against the threshold, optionally call a publication helper, and reset at threshold even when publication is skipped.",
+      "anchors": ["0x153e00", "0x153e44", "0x153ee0", "0x153f98", "0x153fd8", "0x154060", "0x1540b8", "0x1540c8", "0x154140", "0x154144"],
+      "constructor_fact": "STRH0x0101 at0x152080 writes both meter-enable bytes to1 on the traced constructor path. Subsequent lifecycle changes are not excluded.",
+      "limit": "No complete meter publication, floating-point exception, output parameter timing or concurrent mutation model is derived. Silence flags do not justify invalid memory, even on the branch that skips conversion."
+    },
+    {
+      "topic": "Bypass copies",
+      "verdict": "Both precision wrappers agree with the contract.",
+      "static_fact": "Each wrapper iterates configuredN in ascending order, skips exact corresponding self-copy, otherwise copies input[i] to output[i]. No map, gain or scratch field participates. Copy helpers move the original sample bits at the respective element widths.",
+      "anchors": ["0x154e68", "0x154e78", "0x154e80", "0x154ba4", "0x154bb4", "0x154bbc", "0x16a0fc", "0x16a14c"],
+      "limit": "Bit-preserving same-index copying is conditional on the valid disjoint/corresponding-in-place domain and reaching/returning from the inspected path. Neither helper is a general memmove guarantee. Cross-channel aliasing, partial overlap and duplicate output planes are excluded."
+    },
+    {
+      "topic": "Normal corresponding-pointer staging",
+      "verdict": "Any-match trigger and full staging correctly reported for both precisions.",
+      "static_fact": "The scan compares only input[i] with output[i]. Any exact match stages allN inputs before remapped output copies; no match directly scatters in ascending source order. Both paths then apply the previously reviewed destination-indexed gains.",
+      "anchors": ["0x154ef8", "0x154f04", "0x154f48", "0x154f7c", "0x154c34", "0x154c40", "0x154c84", "0x154cb8"],
+      "limit": "No general overlap detection is present. A cross-channel input[i]==output[j] with i!=j does not alone trigger staging. Adequate distinct scratch planes, distinct channels and stable configuration are preconditions."
+    }
+  ],
+  "abi_and_domain_review": {
+    "supported_use_of_public_headers": "Observed record offsets are consistent with the pinned LP64 VST3 declarations. The finding correctly distinguishes that correlation from recovery of the target SDK revision or a full host contract.",
+    "silence_precondition": "Pinned ivstaudioprocessor.h lines195-199 defines silence as every sample in the flagged channel being zero and requires valid storage despite the flag. The author corrected the domain and prospective cases to meet this condition.",
+    "fields_not_validated_here": "The process body uses stored precision and configuredN. It does not comprehensively validate ProcessData.symbolicSampleSize, numInputs/numOutputs, array lengths, positive sample extents or output pointer validity. Early returns and observed dereferences must not be promoted into broad malformed-input acceptance.",
+    "rounding_scope": "Normal conversion retains earlier precision/FPCR/Accelerate limitations. State-path analysis adds no bit-faithful model for exceptional arithmetic or imported meter behavior."
+  },
+  "protocol_review": {
+    "protocol": "research/protocols/archive/E002-ambiconverter-disconfirmation-v1.json",
+    "reviewed_protocol_revision": 1,
+    "protocol_provenance_note": "The reviewed revision1 was archived unchanged; this artifact does not claim review of the mutable current protocol or revision2.",
+    "quantitative_record": "E002-review.json",
+    "plane4_and_plane8_composition_predictions": "Confirmed for the conditional direct-buffer A then B model. The record includes nearest-even reference sample bits for the proposed1/8 impulses in both precisions.",
+    "clarifications_applied_by_root": [
+      "Flagged input planes are zero-filled and retain valid storage; nonzero output sentinels remain allowed.",
+      "Primary two-point queue probes retain increasing offsets and swap assigned values; reversed index/time order is not assumed valid."
+    ],
+    "state_predictions_ready_for_prospective_revision": [
+      "Zero-frame successful parameter changes can select the next positive block's state; no process-body flags/audio/meter/counter work occurs on the zero-frame return.",
+      "ID1 exactly0.5 remains bypass-off; above0.5 selects bypass for the dispatched block.",
+      "With bypass off, any nonzero valid silence mask skips normal conversion; enabled meter reads and unchanged mask propagation still occur.",
+      "Bypass copies same-index sample bits even for a nonzero valid silence mask, then propagates that mask.",
+      "Any corresponding in-place pointer match triggers all-input staging on normal conversion; arbitrary cross-channel/partial overlap is outside the prospective conformance domain."
+    ],
+    "limit": "All predictions remain prospective. No reference capture, activation, runtime validation or candidate expansion occurred."
+  },
+  "review_corrections": [
+    {
+      "issue": "An early draft's prospective silence setup mentioned nonzero input data without specifying zero samples in flagged planes.",
+      "resolution": "Corrected before this final review: only unflagged input planes carry nonzero patterns; flagged planes are zero and valid.",
+      "status": "resolved"
+    }
+  ],
+  "preservation": "Only ambisonic-state-review was written by this reviewer. Existing first-order/higher-order findings, candidate, raw-slice evidence and other reviews were preserved."
+}

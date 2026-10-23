@@ -1,0 +1,118 @@
+{
+  "id": "APP008-EVENT-LOCAL-RENDER-INTEGRATION-ASSESSMENT",
+  "created_utc": "2026-10-19T14:32:25.938017+00:00",
+  "status": "read-only design; native event-local gain/auto-fade/PCM gate still being established by other agents",
+  "recommendation": "Add a separately named single-event source-rate PCM preparation/export path. Preserve the frozen unresolved event, original report and ordinary project playback/export refusals.",
+  "existing_paths": [
+    {
+      "component": "ProjectStore.load/save",
+      "fact": "Validates current project, replayed source/report clock and event identity/track membership, selected file metadata/hash, and all linked event segments. Native provenance and attachment validators are private.",
+      "implication": "The smallest public entry starts from a saved package and eventID; it can call ProjectStore.load. Unsaved-session support needs a shared internal proof validator, never caller-supplied success booleans."
+    },
+    {
+      "component": "CPRAudioEventArchive",
+      "fact": "Current internal archive decoder retains native event volume bits, inversion, both fades, empty curve datum, clip attributes, ancestor records, segment/file identity and raw coordinates. It rejects nonempty numeric event attributes/nonempty volume-curve children.",
+      "implication": "Re-decode preserved original bytes for new processing gates. Existing UnresolvedCPRAudioEvent intentionally lacks many processing fields and must not be silently treated as a complete render authorization."
+    },
+    {
+      "component": "AudioPreparation.prepare / OfflineRenderer",
+      "fact": "Preparation requires no unresolved events, then independently applies application timeline frame rounding, Float64 linear interpolation, Double gain/pan automation and final Float32 conversion. Stable track/clip order defines Float32 mix accumulation.",
+      "implication": "Do not route recovered native events through this preparation merely because their placement is known."
+    },
+    {
+      "component": "AudioTransportEngine / StudioSession",
+      "fact": "Transport consumes AudioPreparation and one AVAudioPlayerNode per prepared clip; StudioSession separately guards play and mix export with requireResolvedAudioEvents. Hardware and AVAudioEngine rendering are additional stages.",
+      "implication": "An event-local PCM artifact is a different acceptance boundary from timeline or device playback. An eventual preview may consume that PCM explicitly while leaving ordinary project transport blocked."
+    }
+  ],
+  "proposed_api": {
+    "entry": "CPRLocalEventRenderer.render(eventID: UUID, fromPackage: URL, to: URL) throws -> CPRLocalEventRenderReceipt",
+    "alternative_for_streaming": "Internal prepare returns a privately constructed immutable proof/asset snapshot; a bounded chunk reader renders from that same snapshot. No public initializer accepts a trusted=true or backendAvailable=true flag.",
+    "receipt_fields": [
+      "eventID and native event identity",
+      "source CPR SHA256, frozen interpretation profile and new processing contract",
+      "selected asset SHA256 and explicit user-selected association",
+      "sample rate, channels, sample format, frame count",
+      "output PCM/file checksum and exact processing scope"
+    ],
+    "state_policy": "No mutation of Project, original CPR, ImportReport or attachment. No generated Clip and no replacement of the unresolved event."
+  },
+  "finite_acceptance_gate": [
+    "Replay the frozen source/profile and retain the exact event under its original track. Reject modified event projections or source proof.",
+    "Bind selected media to the original AudioFile identity and hash. Matching format does not prove the recording is the unavailable original.",
+    "Decode/hash the same immutable bounded asset bytes or stable handle-backed snapshot used by the renderer; validation followed by reopening a mutable path is not a byte custody guarantee.",
+    "Require exactly one segment/file identity and checked nonnegative native Offset/Length/Start intervals; use CPRSegmentReadPlan for direct-read bounds and ordinary full-read branch only.",
+    "Require the verified native selector predicates, native rate equality, native gain operation/order and inherited automatic-fade flags zero under their exact source binding. Unknown/inconsistent predicates reject; absent serialized fields are not generic proof of inactive hosted processing.",
+    "Use an explicit native PCM decode/convert kernel once original-byte evidence binds its PCM24 conversion and output precision. AVAudioFile Float32 conversion is useful decoding infrastructure but is not by itself that proof.",
+    "Keep LoFi output at its selected 44100 Hz rate. Its imported 48000 Hz project rate is an application default. The new rate-budget kernel provides counts only and cannot authorize unequal-rate sample conversion.",
+    "Bound frames/bytes/output RIFF sizes before work; reject short or changed reads, nonfinite data and unsupported processing. Stage output and promote only after complete successful validation."
+  ],
+  "ordinary_timeline_blockers": [
+    "Recovered source track skeleton controls (0 dB, centered, unmuted, unsoloed, empty automation) are application defaults, not recovered native mixer facts.",
+    "Track/project inherited processing, inserts, routing, gain/pan/mute/solo automation, overlap accumulation order, channel layout and remaining native content need their own supported reconstruction gates.",
+    "An event-local direct PCM proof does not reconstruct omitted MIDI/instrument content or the entire project mix.",
+    "Generic application linear resampling and pan/gain laws are not substitutes for native rate-converter or mixer evidence."
+  ],
+  "recommended_tests": [
+    "Pinned LoFi source with a self-authored matching PCM asset: exact 1058400-frame/44100-Hz source-rate result, no inserted leading silence or application-rate conversion, source/report/current event unchanged.",
+    "Independent exact PCM24 edge/LSB/sign/channel and Float32 gain vectors once native conversion is bound; distinguish multiply order and chunk boundaries, tails over8192 and nonzero segment Start/Offset.",
+    "One-gate-at-a-time controls: nonzero inherited automatic-fade flags, unknown selector attributes, warp, nonempty fades/curve, nonunit or unsupported transform, alternate file/segment, rate mismatch and changed asset/source hash reject without publishing output.",
+    "Gain and source-processing tests must not count generic app track automation or mixer output as native evidence.",
+    "Ordinary project playback/mix/DAWproject remain rejected after successful event-local export, including a source with other unsupported track content."
+  ],
+  "input_pins": [
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "bytes": 13611,
+      "sha256": "5c7837be4d55f371591fcee99cb6663aaf4f346832a21180d46568193ad3fd1d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 12457,
+      "sha256": "b31059bab1fc2a05ac15d4c8a72bd3db45d29ec1f79f260786bb115c02201a45"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioMediaAttachment.swift",
+      "bytes": 5034,
+      "sha256": "32ae14bc2db468a1ccb3ba9f15e090ff94c01ab79add0d5d9e1504cadb9f6e92"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioEventArchive.swift",
+      "bytes": 20165,
+      "sha256": "4dd8369fe4cc35c969da0909cc4ec835dc7c5c951197eb0fec9ae23bec7b7421"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/OfflineRenderer.swift",
+      "bytes": 13735,
+      "sha256": "09f0b4eb6e3608b5042418d94758113fd83f91d979a376ff0e796e478c7a0aec"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "bytes": 6844,
+      "sha256": "418c3206a56cb4f6741272f566b298faf29a5c8d3750537dffec9718b78d3d86"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 31155,
+      "sha256": "fb879681734ff9d5b49347f8ee51dc6cd6da1d44e80fcb89a6ab24ccb791acee"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/finding.json",
+      "bytes": 33370,
+      "sha256": "f3ec20b3e9b3412a30a4451a920f1c68bbd95b41906dda4a432139a5f8f23da4"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/finding.json",
+      "bytes": 22112,
+      "sha256": "a78e11153ad11bbd925a915a4e5260af19ce28188073a78a59f26cc0fe109ada"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/finding.json",
+      "bytes": 17257,
+      "sha256": "b3ed0ab7f758c91a65620dcc829be02e51684c7887e4561f9107d22fc0365c38"
+    }
+  ],
+  "application_source_edits": 0,
+  "target_executions": 0,
+  "application_executions": 0
+}

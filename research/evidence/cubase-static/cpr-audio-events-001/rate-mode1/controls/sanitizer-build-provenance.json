@@ -1,0 +1,59 @@
+{
+  "target_execution": false,
+  "candidate_source": {
+    "path": "Application/Sources/RebaseTimingDSP/native_rate_mode1.c",
+    "bytes": 13301,
+    "sha256": "9dd346c5f1a3f27d188e3475a8db6d92ddfbeb92da10c02af4b45b2741d66a80"
+  },
+  "header": {
+    "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode1.h",
+    "bytes": 3681,
+    "sha256": "25cdbb819f84bddf8a6d756a16954f2ee439309668efdbe72fb8d394dcdf0bb4"
+  },
+  "ubsan": {
+    "status": "passed",
+    "harness": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/controls/sanitizer_controls.c",
+      "bytes": 2170,
+      "sha256": "94f45154aadc3bb26590fde5149be54a220b952def95ce3b489ed701e94473f2"
+    },
+    "binary": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/controls/ubsan-controls",
+      "bytes": 56080,
+      "sha256": "4ca0e9004002cabf9b50c62f07465ecd30b939dbe0e8e290d243965028fbecec"
+    },
+    "log": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/controls/ubsan-controls.log",
+      "bytes": 75,
+      "sha256": "419f3b88595bc0b1da3607f2cda397488b4bc838cee85131201017d7308a634f"
+    },
+    "compile_flags": [
+      "-std=c11",
+      "-O1",
+      "-g",
+      "-fsanitize=undefined",
+      "-fno-sanitize-recover=all",
+      "-fno-fast-math",
+      "-ffp-contract=off"
+    ]
+  },
+  "asan": {
+    "status": "unavailable_before_main",
+    "binary": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/controls/sanitizer-controls",
+      "bytes": 107360,
+      "sha256": "b0688da24072e00f73301622c9862430808f727cdb23587217ac178ed2bbe161"
+    },
+    "harness_snapshot": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/controls/sanitizer_controls-initial.c",
+      "bytes": 2181,
+      "sha256": "d15d2ee4a64d18c76cdb75906428061c8b23a362e2abf00d6a3891a3a7fc7c4c"
+    },
+    "note": "The exact initial harness text is recovered by reverting only its final success-message label; no initial candidate code change. Subsequent UBSan-only harness uses a neutral success label.",
+    "diagnostic": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/controls/sanitizer-unavailable.json",
+      "bytes": 839,
+      "sha256": "53eb0dab3ccbd4d527b361ab8dcd20e8bf474a3f4d77920839dfca333940c6c6"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "assessment_id": "APP004-cpr-profile-review-001",
+  "created_utc": "2026-10-19T10:50:28.686958+00:00",
+  "reviewer": "Independent read-only subagent /root/cubase_evidence/profile_review",
+  "scope": "Explicit CPR interpretation dispatch, schema-1 missing-profile fallback, historical replay equality, and preservation of the existing semantic subset.",
+  "status": "No actionable findings in the reviewed change at the pinned source hashes.",
+  "findings": [],
+  "inputs": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "bytes": 23291,
+      "sha256": "be74be7fb6bd6a664e749432fb2d6c802456f895d77803eb2ed122e6882ffef2"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV1.swift",
+      "bytes": 19302,
+      "sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectTests.swift",
+      "bytes": 28610,
+      "sha256": "97e576dda2ba29d902c36606d71b8ed6d5b06894ad5a56a9120d6ba94e54b03c"
+    },
+    {
+      "path": "research/evidence/application/APP003/final-source-snapshot/Application/Sources/RebaseCore/CPRProject.swift",
+      "bytes": 40586,
+      "sha256": "75b82b2d3e0afadff279284d6f2872685fb2a3146ead0d7a08709eefe089e940"
+    },
+    {
+      "path": "research/evidence/application/APP004/cpr-profile-integration.json",
+      "bytes": 6965,
+      "sha256": "2cd49b96d8562c67edf87ca006b40468ba340e376066b4753dd684570b3ff502"
+    },
+    {
+      "path": "research/evidence/application/APP004/cpr-profile-tests.log",
+      "bytes": 3243,
+      "sha256": "c36ab731e143ac3d4565c12a14205157a891d08ec397a515c70f283d2eb8696a"
+    }
+  ],
+  "checks": [
+    "New inspection reports use schema 2 with explicit cpr-static-subset-v1. Semantic recovery dispatches through Interpretation.v1 to CPRRecoveryV1.",
+    "Only schemas 1 and 2 are accepted. Missing schema-1 profile selects the literal frozen v1 name independently of currentInterpretationProfile. Missing schema-2 profile and unknown schema/profile values reject before recovery.",
+    "Replay passes the historical schemaVersion and declared optional interpretationProfile into fresh inspection. Thus the absent schema-1 field remains nil for whole-report equality; explicit supported profiles are also retained.",
+    "Replay compares every Codable report field through synthesized Equatable, including recoveredProject, facts, defaults, native objects, and profile. It verifies preserved source size, hash and sections first.",
+    "compatibilityReport contains no write path and does not compare current edited Project.json against the import baseline.",
+    "The extracted semantic body matches APP003 exactly after removal of the new file preamble, reversal of the class rename, and restoration of two private modifiers. No signature or other recovery expansion occurs in this change.",
+    "The remaining shared wrapper diff is limited to profile storage/dispatch/replay and access changes needed by the split file; shared container/archive/string mechanics are otherwise unchanged.",
+    "All 15 path/hash/size records in cpr-profile-integration.json match files present during review, including the three immutable APP003 packages and both test logs.",
+    "The retained targeted test log records 15 passing tests with no skips or failures, including independent schema/profile combinations, legacy report replay after project edits, unchanged source/report bytes, and report tamper rejection."
+  ],
+  "normalized_semantic_body_sha256": "ab383478dfa76cd7efff9519ba0c4d5bc155c791609b93a5cf626a39beeb8258",
+  "verification": {
+    "method": "Read-only source and test review; normalized body comparison; artifact hash verification. Existing peer-produced test log inspected.",
+    "reviewer_test_runs": 0,
+    "native_target_executions": 0
+  },
+  "limitations": [
+    "This review applies only to the pinned sources and explicit dispatch/replay changes; it does not re-establish correctness of every frozen recovery interpretation.",
+    "The v1 semantic body still uses shared parsing mechanics and Project validation. Future changes to those dependencies can affect historical replay and need the pinned replay controls.",
+    "Equality is decoded report-model equality, not textual JSON equivalence. Read-only replay preserves the stored report bytes because it performs no writes.",
+    "No UI behavior, Cubase runtime acceptance, additional signature recovery, tempo-coordinate semantics, media recovery, or DSP behavior was tested."
+  ]
+}

@@ -6,6 +6,7 @@ public enum CPRSourceEventPlaybackMode: String, CaseIterable, Equatable, Sendabl
     case nativeTimelineSourceRate
     case nativeTimelineProjectClock
     case nativeTimelineSavedProjectClock
+    case nativeTrackSavedProjectClock
     case nativeMode0ProjectRate
     case nativeMode1ProjectRate
     case nativeMode2ProjectRate
@@ -16,6 +17,7 @@ public enum CPRSourceEventPlaybackMode: String, CaseIterable, Equatable, Sendabl
         case .nativeTimelineSourceRate: return "Native timeline reader"
         case .nativeTimelineProjectClock: return "Native project clock · unconverted"
         case .nativeTimelineSavedProjectClock: return "Saved project clock · unconverted"
+        case .nativeTrackSavedProjectClock: return "Complete source track · saved clock"
         case .nativeMode0ProjectRate: return "Native mode 0"
         case .nativeMode1ProjectRate: return "Native mode 1"
         case .nativeMode2ProjectRate: return "SoXR mode 2"
@@ -42,16 +44,34 @@ public struct CPRSourceEventPlaybackInfo: Equatable {
     public let mediaSHA256: String
     public var timelineRange: CPRSourceEventTimelineRange? = nil
     public var savedProjectAudioSetup: CPRProjectAudioSetup? = nil
+    /// When present, per-event media hashes cover the complete source
+    /// track. eventID/sourceSampleRate/mediaSHA256 still describe its anchor.
+    public var sourceTrack: CPRSourceTrackPlaybackInfo? = nil
+    public var auditionScope: String { sourceTrack == nil ? "Source event" : "Source track" }
     public var duration: Double { Double(frameCount) / sampleRate }
 }
 
-/// Event-only audition, independent of project mixer/routing and device output.
+/// Explicit source audition, independent of project mixer/routing and device output.
 /// The source operation is reconstructed; AVAudioEngine transport is an
 /// application implementation and does not establish Reference device behavior.
 enum CPRSourceEventPlayback {
     static func prepare(eventID: UUID, project: Project, root: URL,
                         mode: CPRSourceEventPlaybackMode = .sourceRate) throws
         -> (info: CPRSourceEventPlaybackInfo, audio: PreparedProject) {
+        if mode == .nativeTrackSavedProjectClock {
+            let prepared = try CPRSourceTrackPlayback.prepare(eventID: eventID, project: project, root: root)
+            guard let anchor = prepared.track.events.first(where: { $0.eventID == eventID }) else {
+                throw RebaseCoreError.invalidProject("The track source no longer contains its selected event.")
+            }
+            var info = CPRSourceEventPlaybackInfo(eventID: eventID, name: prepared.name,
+                sampleRate: prepared.audio.format.sampleRate, sourceSampleRate: anchor.sourceSampleRate,
+                mode: mode, frameCount: prepared.audio.frameCount, sourceSHA256: prepared.sourceSHA256,
+                mediaSHA256: anchor.mediaSHA256)
+            info.savedProjectAudioSetup = prepared.setup
+            info.timelineRange = anchor.range
+            info.sourceTrack = prepared.track
+            return (info, prepared.audio)
+        }
         if mode == .nativeTimelineSourceRate || mode == .nativeTimelineProjectClock || mode == .nativeTimelineSavedProjectClock {
             let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: project, at: root)
             let fades = try CPRAutoFadeArchive.read(container: verified.container)

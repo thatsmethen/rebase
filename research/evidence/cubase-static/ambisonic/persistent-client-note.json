@@ -1,0 +1,7 @@
+{
+  "purpose": "Reuse one REA/Ghidra arm64 session for bounded processor tracing; heap capped at 2G.",
+  "transport": "Project-local sh scripts/rea --mcp through installed @modelcontextprotocol/client 2.3.1; actual tool schemas retained before calls.",
+  "initial_adapter_failures": ["Codex node_repl absolute SDK import failed resolving @modelcontextprotocol/client/_shims.", "After adding module directory, node_repl lacked Event; no target analysis ran through that adapter."],
+  "fallback": "Standalone local Node client in rea-static-session.mjs uses ordinary installed SDK, retains each request and complete response, and restricts requests to named static operations.",
+  "target_execution": false
+}

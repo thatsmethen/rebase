@@ -119,3 +119,27 @@ public struct CPRProjectAudioSetup: Codable, Equatable {
         _ = try body.u64() // Scalar; no interface or global compatibility branch.
     }
 }
+
+extension CPRProjectAudioSetup {
+    private enum CodingKeys: String, CodingKey {
+        case contract, sourceSHA256, arrangement, root, setup
+        case baseRateBits, factorBits, baseRateOffset, factorOffset
+    }
+
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        contract = CPRContractMigration.normalize(try values.decode(String.self, forKey: .contract),
+            to: Self.contractName,
+            legacySHA256: "531a45a047f6f21261d50466ec122bea2774ed8e7499c9a2300584a510aa195d")
+        sourceSHA256 = try values.decode(String.self, forKey: .sourceSHA256)
+        arrangement = try values.decode(CPRObjectRecord.self, forKey: .arrangement)
+        root = try values.decode(CPRObjectRecord.self, forKey: .root)
+        setup = try values.decode(CPRObjectRecord.self, forKey: .setup)
+        baseRateBits = try values.decode(UInt32.self, forKey: .baseRateBits)
+        factorBits = try values.decode(UInt64.self, forKey: .factorBits)
+        baseRateOffset = try values.decode(Int.self, forKey: .baseRateOffset)
+        factorOffset = try values.decode(Int.self, forKey: .factorOffset)
+        // Historical reports retain unsupported saved values. Decoding must
+        // not silently replace them or require playback admission here.
+    }
+}

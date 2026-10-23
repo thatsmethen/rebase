@@ -1,0 +1,36 @@
+
+research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+00000000000038e0 <__text>:
+  154b64: a9bc5ff8     	stp	x24, x23, [sp, #-0x40]!
+  154b68: a90157f6     	stp	x22, x21, [sp, #0x10]
+  154b6c: a9024ff4     	stp	x20, x19, [sp, #0x20]
+  154b70: a9037bfd     	stp	x29, x30, [sp, #0x30]
+  154b74: 9100c3fd     	add	x29, sp, #0x30
+  154b78: b9401808     	ldr	w8, [x0, #0x18]
+  154b7c: 34000268     	cbz	w8, 0x154bc8 <__text+0x1512e8>
+  154b80: aa0303f3     	mov	x19, x3
+  154b84: aa0203f4     	mov	x20, x2
+  154b88: aa0103f5     	mov	x21, x1
+  154b8c: aa0003f6     	mov	x22, x0
+  154b90: d2800017     	mov	x23, #0x0               ; =0
+  154b94: 14000004     	b	0x154ba4 <__text+0x1512c4>
+  154b98: 910006f7     	add	x23, x23, #0x1
+  154b9c: eb0802ff     	cmp	x23, x8
+  154ba0: 54000142     	b.hs	0x154bc8 <__text+0x1512e8>
+  154ba4: d37df2e9     	lsl	x9, x23, #3
+  154ba8: f8696aa0     	ldr	x0, [x21, x9]
+  154bac: f8696a81     	ldr	x1, [x20, x9]
+  154bb0: eb01001f     	cmp	x0, x1
+  154bb4: 54ffff20     	b.eq	0x154b98 <__text+0x1512b8>
+  154bb8: aa1303e2     	mov	x2, x19
+  154bbc: 94005564     	bl	0x16a14c <_bundleExit+0x142a8>
+  154bc0: b9401ac8     	ldr	w8, [x22, #0x18]
+  154bc4: 17fffff5     	b	0x154b98 <__text+0x1512b8>
+  154bc8: a9437bfd     	ldp	x29, x30, [sp, #0x30]
+  154bcc: a9424ff4     	ldp	x20, x19, [sp, #0x20]
+  154bd0: a94157f6     	ldp	x22, x21, [sp, #0x10]
+  154bd4: a8c45ff8     	ldp	x24, x23, [sp], #0x40
+  154bd8: d65f03c0     	ret

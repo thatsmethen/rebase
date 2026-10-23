@@ -1,0 +1,1291 @@
+{
+  "id": "CPR-SIGNATURE-FIXTURES-001",
+  "created_utc": "2026-10-19T10:48:25.482502+00:00",
+  "status": "Bounded structural decode complete for ten immutable shipped Pro templates; native named-field restoration/coordinate binding pending.",
+  "source_scope": "Untouched extracted shipped CPR bytes. No Cubase or other proprietary code executed.",
+  "probe_source_sha256": "502a5d53c1a6135e40c0c220c99f4f509f30ccaa30cbe5a63ec5ab4b752ec63b",
+  "test_source_sha256": "737787aa37cf677ade2307b44c1d12ed4419968ab3906589ae7543e5135803a1",
+  "prior_v09_preservation": {
+    "report": "research/evidence/cubase-static/cpr-objects-001/fixtures/structural-contract-v2.json",
+    "sha256": "76432a73e6cb9335b546ff26a113e9a6a497ce1db1bdab82931cc40b8b79b462",
+    "all_ten_prior_output_hashes_rechecked_unchanged": true,
+    "generation_source_copy": "research/evidence/cubase-static/cpr-signature-001/fixtures/cpr-probe-v09-generation.py",
+    "generation_source_sha256": "b584b7fac11d87b4f54a5660b0e85c559fee8ea5553eeabe1abec73c72121b2c"
+  },
+  "layout_contract": [
+    "MSignatureTrackEvent version3 begins signed32 count and count*16 compact records (signed32 plus six signed16), then a counted fixed-u32-key attribute list. The compact record is not used alone as a recovered map.",
+    "Observed top-level value types1/0x801 consume signed64;2/0x22 consume a bounded archive object. High flag semantics are not inferred. Duplicate numeric keys reject. The MTrackVariationCollection bodies remain opaque.",
+    "Raw keybytes736b6c43/u32BE0x736b6c43 contain FAttributes version0. Its body uses named typed attributes, with a SignatureEvent type2 compound subtype201 array of one subtype20 class MTimeSignatureEvent in every fixture.",
+    "These full signature items are typed attribute compounds with an opaque64 identity and named fields; they are distinct from the compact prefix or packed archive MTimeSignatureEvent reader layout. Identity values are not treated as archive offsets or dereferenced.",
+    "Duplicate names reject at every entered named attribute container. Each count and length is bounded, every signature body and entered FAttributes body ends exactly, and unknown object bodies retain declared extents."
+  ],
+  "candidate_scalar_binding": "Exact names/types/values and source ranges only. Native setter/restore/selection and units must be independently bound before treating them as an effective signature map. All ten full items currently agree on4/4 at numerical zero; this is not a general multi-event oracle.",
+  "records": [
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Classic House.cpr",
+      "source_sha256": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892",
+      "source_bytes": 1197444,
+      "probe_output": "research/evidence/cubase-static/cpr-signature-001/fixtures/classic-house-signature-v01.json",
+      "probe_output_sha256": "3eb3f07236af84367eafd3032c5f9acb679c7ef678f99f474ac4ebcbc60e3bdb",
+      "signature_object": {
+        "offset": 996,
+        "token_offset": 996,
+        "kind": "object",
+        "class": "MSignatureTrackEvent",
+        "version": 3,
+        "class_declaration_offset": 996,
+        "class_resolution": "previously_parsed_declaration",
+        "declarations": [
+          {
+            "offset": 996,
+            "relative_offset": 765,
+            "class": "MSignatureTrackEvent",
+            "version": 3
+          }
+        ],
+        "size_offset": 1027,
+        "body_offset": 1031,
+        "body_bytes": 355,
+        "end": 1386,
+        "body_sha256": "e733591d2c5e7a91986eecd8fd802c56e0e2de0fc4ae32014f625651760a83d7",
+        "relative_object_identity": 796
+      },
+      "compact_prefix": [
+        {
+          "offset": 1035,
+          "position_i32": 0,
+          "six_i16": [
+            4,
+            4,
+            0,
+            0,
+            0,
+            8
+          ],
+          "end": 1051
+        }
+      ],
+      "fixed_key_attributes": [
+        {
+          "offset": 1055,
+          "raw_key_hex": "53636f4c",
+          "key_u32_be": 1399025484,
+          "type_code": 1,
+          "value_offset": 1061,
+          "end": 1069,
+          "object_class": null
+        },
+        {
+          "offset": 1069,
+          "raw_key_hex": "69435654",
+          "key_u32_be": 1766020692,
+          "type_code": 34,
+          "value_offset": 1075,
+          "end": 1119,
+          "object_class": "MTrackVariationCollection"
+        },
+        {
+          "offset": 1119,
+          "raw_key_hex": "73687445",
+          "key_u32_be": 1936225349,
+          "type_code": 1,
+          "value_offset": 1125,
+          "end": 1133,
+          "object_class": null
+        },
+        {
+          "offset": 1133,
+          "raw_key_hex": "736b6c43",
+          "key_u32_be": 1936419907,
+          "type_code": 2,
+          "value_offset": 1139,
+          "end": 1386,
+          "object_class": "FAttributes"
+        }
+      ],
+      "full_item_count": 1,
+      "candidate_scalar_values": {
+        "Flags": {
+          "value": 8,
+          "offset": 1246,
+          "bytes_hex": "0000000000000008"
+        },
+        "Start": {
+          "value": 0.0,
+          "offset": 1266,
+          "bytes_hex": "0000000000000000"
+        },
+        "Length": {
+          "value": 1.0,
+          "offset": 1287,
+          "bytes_hex": "3ff0000000000000"
+        },
+        "Bar": {
+          "value": 0,
+          "offset": 1305,
+          "bytes_hex": "0000000000000000"
+        },
+        "Numerator": {
+          "value": 4,
+          "offset": 1329,
+          "bytes_hex": "0000000000000004"
+        },
+        "Denominator": {
+          "value": 4,
+          "offset": 1355,
+          "bytes_hex": "0000000000000004"
+        },
+        "Position": {
+          "value": 0,
+          "offset": 1378,
+          "bytes_hex": "0000000000000000"
+        }
+      },
+      "attribute_count": 4,
+      "signature_body_consumed_exactly": true,
+      "duplicate_keys": 0,
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/LoFi Hip Hop.cpr",
+      "source_sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
+      "source_bytes": 1333360,
+      "probe_output": "research/evidence/cubase-static/cpr-signature-001/fixtures/lofi-hip-hop-signature-v01.json",
+      "probe_output_sha256": "c02452af0b257358622fe183b1f99382dd38471ae935e5fb840d483f133d6596",
+      "signature_object": {
+        "offset": 996,
+        "token_offset": 996,
+        "kind": "object",
+        "class": "MSignatureTrackEvent",
+        "version": 3,
+        "class_declaration_offset": 996,
+        "class_resolution": "previously_parsed_declaration",
+        "declarations": [
+          {
+            "offset": 996,
+            "relative_offset": 765,
+            "class": "MSignatureTrackEvent",
+            "version": 3
+          }
+        ],
+        "size_offset": 1027,
+        "body_offset": 1031,
+        "body_bytes": 355,
+        "end": 1386,
+        "body_sha256": "b530a91a337269d2f146eb6f4b2b525c4b7dd89d4a0d17127536c13c1ae095eb",
+        "relative_object_identity": 796
+      },
+      "compact_prefix": [
+        {
+          "offset": 1035,
+          "position_i32": 0,
+          "six_i16": [
+            4,
+            4,
+            0,
+            0,
+            0,
+            8
+          ],
+          "end": 1051
+        }
+      ],
+      "fixed_key_attributes": [
+        {
+          "offset": 1055,
+          "raw_key_hex": "53636f4c",
+          "key_u32_be": 1399025484,
+          "type_code": 1,
+          "value_offset": 1061,
+          "end": 1069,
+          "object_class": null
+        },
+        {
+          "offset": 1069,
+          "raw_key_hex": "69435654",
+          "key_u32_be": 1766020692,
+          "type_code": 34,
+          "value_offset": 1075,
+          "end": 1119,
+          "object_class": "MTrackVariationCollection"
+        },
+        {
+          "offset": 1119,
+          "raw_key_hex": "73687445",
+          "key_u32_be": 1936225349,
+          "type_code": 1,
+          "value_offset": 1125,
+          "end": 1133,
+          "object_class": null
+        },
+        {
+          "offset": 1133,
+          "raw_key_hex": "736b6c43",
+          "key_u32_be": 1936419907,
+          "type_code": 2,
+          "value_offset": 1139,
+          "end": 1386,
+          "object_class": "FAttributes"
+        }
+      ],
+      "full_item_count": 1,
+      "candidate_scalar_values": {
+        "Flags": {
+          "value": 8,
+          "offset": 1246,
+          "bytes_hex": "0000000000000008"
+        },
+        "Start": {
+          "value": 0.0,
+          "offset": 1266,
+          "bytes_hex": "0000000000000000"
+        },
+        "Length": {
+          "value": 1.0,
+          "offset": 1287,
+          "bytes_hex": "3ff0000000000000"
+        },
+        "Bar": {
+          "value": 0,
+          "offset": 1305,
+          "bytes_hex": "0000000000000000"
+        },
+        "Numerator": {
+          "value": 4,
+          "offset": 1329,
+          "bytes_hex": "0000000000000004"
+        },
+        "Denominator": {
+          "value": 4,
+          "offset": 1355,
+          "bytes_hex": "0000000000000004"
+        },
+        "Position": {
+          "value": 0,
+          "offset": 1378,
+          "bytes_hex": "0000000000000000"
+        }
+      },
+      "attribute_count": 4,
+      "signature_body_consumed_exactly": true,
+      "duplicate_keys": 0,
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Neo Soul.cpr",
+      "source_sha256": "8006c3f62d481369b05dc2c876941adb4f11cac4b906b0aecea92425c2664ba5",
+      "source_bytes": 2255508,
+      "probe_output": "research/evidence/cubase-static/cpr-signature-001/fixtures/neo-soul-signature-v01.json",
+      "probe_output_sha256": "7fbb8870f0f8cf90bc9baacf5c3b72646c1eb118e8eb5123b5c4670c03c25619",
+      "signature_object": {
+        "offset": 996,
+        "token_offset": 996,
+        "kind": "object",
+        "class": "MSignatureTrackEvent",
+        "version": 3,
+        "class_declaration_offset": 996,
+        "class_resolution": "previously_parsed_declaration",
+        "declarations": [
+          {
+            "offset": 996,
+            "relative_offset": 765,
+            "class": "MSignatureTrackEvent",
+            "version": 3
+          }
+        ],
+        "size_offset": 1027,
+        "body_offset": 1031,
+        "body_bytes": 355,
+        "end": 1386,
+        "body_sha256": "a90deedd944a1e4110c0ea43383e3e54cbbf7749757127500570b71c797ec07e",
+        "relative_object_identity": 796
+      },
+      "compact_prefix": [
+        {
+          "offset": 1035,
+          "position_i32": 0,
+          "six_i16": [
+            4,
+            4,
+            0,
+            0,
+            0,
+            8
+          ],
+          "end": 1051
+        }
+      ],
+      "fixed_key_attributes": [
+        {
+          "offset": 1055,
+          "raw_key_hex": "53636f4c",
+          "key_u32_be": 1399025484,
+          "type_code": 1,
+          "value_offset": 1061,
+          "end": 1069,
+          "object_class": null
+        },
+        {
+          "offset": 1069,
+          "raw_key_hex": "69435654",
+          "key_u32_be": 1766020692,
+          "type_code": 34,
+          "value_offset": 1075,
+          "end": 1119,
+          "object_class": "MTrackVariationCollection"
+        },
+        {
+          "offset": 1119,
+          "raw_key_hex": "73687445",
+          "key_u32_be": 1936225349,
+          "type_code": 1,
+          "value_offset": 1125,
+          "end": 1133,
+          "object_class": null
+        },
+        {
+          "offset": 1133,
+          "raw_key_hex": "736b6c43",
+          "key_u32_be": 1936419907,
+          "type_code": 2,
+          "value_offset": 1139,
+          "end": 1386,
+          "object_class": "FAttributes"
+        }
+      ],
+      "full_item_count": 1,
+      "candidate_scalar_values": {
+        "Flags": {
+          "value": 8,
+          "offset": 1246,
+          "bytes_hex": "0000000000000008"
+        },
+        "Start": {
+          "value": 0.0,
+          "offset": 1266,
+          "bytes_hex": "0000000000000000"
+        },
+        "Length": {
+          "value": 1.0,
+          "offset": 1287,
+          "bytes_hex": "3ff0000000000000"
+        },
+        "Bar": {
+          "value": 0,
+          "offset": 1305,
+          "bytes_hex": "0000000000000000"
+        },
+        "Numerator": {
+          "value": 4,
+          "offset": 1329,
+          "bytes_hex": "0000000000000004"
+        },
+        "Denominator": {
+          "value": 4,
+          "offset": 1355,
+          "bytes_hex": "0000000000000004"
+        },
+        "Position": {
+          "value": 0,
+          "offset": 1378,
+          "bytes_hex": "0000000000000000"
+        }
+      },
+      "attribute_count": 4,
+      "signature_body_consumed_exactly": true,
+      "duplicate_keys": 0,
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Piano Page Layout.cpr",
+      "source_sha256": "78c6672fc2e1f26325bcc6da83aa2d89db738854a4e2febb5462433e33832e78",
+      "source_bytes": 114792,
+      "probe_output": "research/evidence/cubase-static/cpr-signature-001/fixtures/piano-page-layout-signature-v01.json",
+      "probe_output_sha256": "b38792002e7b5a309c6121f9d3fcaf858536cf86dde851e784ed0ab0a4ab6766",
+      "signature_object": {
+        "offset": 1051,
+        "token_offset": 1051,
+        "kind": "object",
+        "class": "MSignatureTrackEvent",
+        "version": 3,
+        "class_declaration_offset": 1051,
+        "class_resolution": "previously_parsed_declaration",
+        "declarations": [
+          {
+            "offset": 1051,
+            "relative_offset": 820,
+            "class": "MSignatureTrackEvent",
+            "version": 3
+          }
+        ],
+        "size_offset": 1082,
+        "body_offset": 1086,
+        "body_bytes": 642,
+        "end": 1728,
+        "body_sha256": "fc5f54fb5f4a10cc5c623bd245f45e237f540edddb1cb46898dd295b30e1a4ad",
+        "relative_object_identity": 851
+      },
+      "compact_prefix": [
+        {
+          "offset": 1090,
+          "position_i32": 0,
+          "six_i16": [
+            4,
+            4,
+            0,
+            0,
+            0,
+            8
+          ],
+          "end": 1106
+        }
+      ],
+      "fixed_key_attributes": [
+        {
+          "offset": 1110,
+          "raw_key_hex": "53636f4c",
+          "key_u32_be": 1399025484,
+          "type_code": 1,
+          "value_offset": 1116,
+          "end": 1124,
+          "object_class": null
+        },
+        {
+          "offset": 1124,
+          "raw_key_hex": "69435654",
+          "key_u32_be": 1766020692,
+          "type_code": 34,
+          "value_offset": 1130,
+          "end": 1174,
+          "object_class": "MTrackVariationCollection"
+        },
+        {
+          "offset": 1174,
+          "raw_key_hex": "736b6c43",
+          "key_u32_be": 1936419907,
+          "type_code": 2,
+          "value_offset": 1180,
+          "end": 1728,
+          "object_class": "FAttributes"
+        }
+      ],
+      "full_item_count": 1,
+      "candidate_scalar_values": {
+        "Flags": {
+          "value": 8,
+          "offset": 1287,
+          "bytes_hex": "0000000000000008"
+        },
+        "Start": {
+          "value": 0.0,
+          "offset": 1307,
+          "bytes_hex": "0000000000000000"
+        },
+        "Length": {
+          "value": 1.0,
+          "offset": 1328,
+          "bytes_hex": "3ff0000000000000"
+        },
+        "Bar": {
+          "value": 0,
+          "offset": 1647,
+          "bytes_hex": "0000000000000000"
+        },
+        "Numerator": {
+          "value": 4,
+          "offset": 1671,
+          "bytes_hex": "0000000000000004"
+        },
+        "Denominator": {
+          "value": 4,
+          "offset": 1697,
+          "bytes_hex": "0000000000000004"
+        },
+        "Position": {
+          "value": 0,
+          "offset": 1720,
+          "bytes_hex": "0000000000000000"
+        }
+      },
+      "attribute_count": 3,
+      "signature_body_consumed_exactly": true,
+      "duplicate_keys": 0,
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Rhythm Section Page Layout.cpr",
+      "source_sha256": "a3c8bf93a82822a52f997c10011de7952c0114676d214eb6696eba5efb8028b2",
+      "source_bytes": 139800,
+      "probe_output": "research/evidence/cubase-static/cpr-signature-001/fixtures/rhythm-section-page-layout-signature-v01.json",
+      "probe_output_sha256": "3f869115e0914756570cef62495441da2e69b95609f6e855cf135159da72cbc8",
+      "signature_object": {
+        "offset": 1051,
+        "token_offset": 1051,
+        "kind": "object",
+        "class": "MSignatureTrackEvent",
+        "version": 3,
+        "class_declaration_offset": 1051,
+        "class_resolution": "previously_parsed_declaration",
+        "declarations": [
+          {
+            "offset": 1051,
+            "relative_offset": 820,
+            "class": "MSignatureTrackEvent",
+            "version": 3
+          }
+        ],
+        "size_offset": 1082,
+        "body_offset": 1086,
+        "body_bytes": 642,
+        "end": 1728,
+        "body_sha256": "5f8e3af525f2fe509286169b0dfefc4fead922ddfd42f8f92e90c2c6ec1f2862",
+        "relative_object_identity": 851
+      },
+      "compact_prefix": [
+        {
+          "offset": 1090,
+          "position_i32": 0,
+          "six_i16": [
+            4,
+            4,
+            0,
+            0,
+            0,
+            8
+          ],
+          "end": 1106
+        }
+      ],
+      "fixed_key_attributes": [
+        {
+          "offset": 1110,
+          "raw_key_hex": "53636f4c",
+          "key_u32_be": 1399025484,
+          "type_code": 1,
+          "value_offset": 1116,
+          "end": 1124,
+          "object_class": null
+        },
+        {
+          "offset": 1124,
+          "raw_key_hex": "69435654",
+          "key_u32_be": 1766020692,
+          "type_code": 34,
+          "value_offset": 1130,
+          "end": 1174,
+          "object_class": "MTrackVariationCollection"
+        },
+        {
+          "offset": 1174,
+          "raw_key_hex": "736b6c43",
+          "key_u32_be": 1936419907,
+          "type_code": 2,
+          "value_offset": 1180,
+          "end": 1728,
+          "object_class": "FAttributes"
+        }
+      ],
+      "full_item_count": 1,
+      "candidate_scalar_values": {
+        "Flags": {
+          "value": 8,
+          "offset": 1287,
+          "bytes_hex": "0000000000000008"
+        },
+        "Start": {
+          "value": 0.0,
+          "offset": 1307,
+          "bytes_hex": "0000000000000000"
+        },
+        "Length": {
+          "value": 1.0,
+          "offset": 1328,
+          "bytes_hex": "3ff0000000000000"
+        },
+        "Bar": {
+          "value": 0,
+          "offset": 1647,
+          "bytes_hex": "0000000000000000"
+        },
+        "Numerator": {
+          "value": 4,
+          "offset": 1671,
+          "bytes_hex": "0000000000000004"
+        },
+        "Denominator": {
+          "value": 4,
+          "offset": 1697,
+          "bytes_hex": "0000000000000004"
+        },
+        "Position": {
+          "value": 0,
+          "offset": 1720,
+          "bytes_hex": "0000000000000000"
+        }
+      },
+      "attribute_count": 3,
+      "signature_body_consumed_exactly": true,
+      "duplicate_keys": 0,
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Songwriter.cpr",
+      "source_sha256": "30da2e0944817f0a798aa1365007ff58f4c5fac7ce600f153c0c180862c04d00",
+      "source_bytes": 2288204,
+      "probe_output": "research/evidence/cubase-static/cpr-signature-001/fixtures/songwriter-signature-v01.json",
+      "probe_output_sha256": "8470c26387e0e04b83b62318cad90668939f41d8cc2a74dfc27b567bfecf22e4",
+      "signature_object": {
+        "offset": 996,
+        "token_offset": 996,
+        "kind": "object",
+        "class": "MSignatureTrackEvent",
+        "version": 3,
+        "class_declaration_offset": 996,
+        "class_resolution": "previously_parsed_declaration",
+        "declarations": [
+          {
+            "offset": 996,
+            "relative_offset": 765,
+            "class": "MSignatureTrackEvent",
+            "version": 3
+          }
+        ],
+        "size_offset": 1027,
+        "body_offset": 1031,
+        "body_bytes": 355,
+        "end": 1386,
+        "body_sha256": "b11a70f21c355e72db9bfd68cdb568278e0ec0a706d1e11fc3917599fa3e4b65",
+        "relative_object_identity": 796
+      },
+      "compact_prefix": [
+        {
+          "offset": 1035,
+          "position_i32": 0,
+          "six_i16": [
+            4,
+            4,
+            0,
+            0,
+            0,
+            8
+          ],
+          "end": 1051
+        }
+      ],
+      "fixed_key_attributes": [
+        {
+          "offset": 1055,
+          "raw_key_hex": "53636f4c",
+          "key_u32_be": 1399025484,
+          "type_code": 1,
+          "value_offset": 1061,
+          "end": 1069,
+          "object_class": null
+        },
+        {
+          "offset": 1069,
+          "raw_key_hex": "69435654",
+          "key_u32_be": 1766020692,
+          "type_code": 34,
+          "value_offset": 1075,
+          "end": 1119,
+          "object_class": "MTrackVariationCollection"
+        },
+        {
+          "offset": 1119,
+          "raw_key_hex": "73687445",
+          "key_u32_be": 1936225349,
+          "type_code": 1,
+          "value_offset": 1125,
+          "end": 1133,
+          "object_class": null
+        },
+        {
+          "offset": 1133,
+          "raw_key_hex": "736b6c43",
+          "key_u32_be": 1936419907,
+          "type_code": 2,
+          "value_offset": 1139,
+          "end": 1386,
+          "object_class": "FAttributes"
+        }
+      ],
+      "full_item_count": 1,
+      "candidate_scalar_values": {
+        "Flags": {
+          "value": 8,
+          "offset": 1246,
+          "bytes_hex": "0000000000000008"
+        },
+        "Start": {
+          "value": 0.0,
+          "offset": 1266,
+          "bytes_hex": "0000000000000000"
+        },
+        "Length": {
+          "value": 1.0,
+          "offset": 1287,
+          "bytes_hex": "3ff0000000000000"
+        },
+        "Bar": {
+          "value": 0,
+          "offset": 1305,
+          "bytes_hex": "0000000000000000"
+        },
+        "Numerator": {
+          "value": 4,
+          "offset": 1329,
+          "bytes_hex": "0000000000000004"
+        },
+        "Denominator": {
+          "value": 4,
+          "offset": 1355,
+          "bytes_hex": "0000000000000004"
+        },
+        "Position": {
+          "value": 0,
+          "offset": 1378,
+          "bytes_hex": "0000000000000000"
+        }
+      },
+      "attribute_count": 4,
+      "signature_body_consumed_exactly": true,
+      "duplicate_keys": 0,
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Stereo Mastering.cpr",
+      "source_sha256": "6cde8a5ce37e5f112c79f684ad8c1fc3e308979feba9f046db42bf62ecce3022",
+      "source_bytes": 291662,
+      "probe_output": "research/evidence/cubase-static/cpr-signature-001/fixtures/stereo-mastering-signature-v01.json",
+      "probe_output_sha256": "6529444536573f4d3e8cf39283e00b79e5a9cda52d02c6fa0c7be963db6f25f1",
+      "signature_object": {
+        "offset": 996,
+        "token_offset": 996,
+        "kind": "object",
+        "class": "MSignatureTrackEvent",
+        "version": 3,
+        "class_declaration_offset": 996,
+        "class_resolution": "previously_parsed_declaration",
+        "declarations": [
+          {
+            "offset": 996,
+            "relative_offset": 765,
+            "class": "MSignatureTrackEvent",
+            "version": 3
+          }
+        ],
+        "size_offset": 1027,
+        "body_offset": 1031,
+        "body_bytes": 355,
+        "end": 1386,
+        "body_sha256": "d16eef2a041afe6fe9cf8545b401cdc5cecd12ffcd2597c4a773f7cb0808a64a",
+        "relative_object_identity": 796
+      },
+      "compact_prefix": [
+        {
+          "offset": 1035,
+          "position_i32": 0,
+          "six_i16": [
+            4,
+            4,
+            0,
+            0,
+            0,
+            8
+          ],
+          "end": 1051
+        }
+      ],
+      "fixed_key_attributes": [
+        {
+          "offset": 1055,
+          "raw_key_hex": "53636f4c",
+          "key_u32_be": 1399025484,
+          "type_code": 1,
+          "value_offset": 1061,
+          "end": 1069,
+          "object_class": null
+        },
+        {
+          "offset": 1069,
+          "raw_key_hex": "69435654",
+          "key_u32_be": 1766020692,
+          "type_code": 34,
+          "value_offset": 1075,
+          "end": 1119,
+          "object_class": "MTrackVariationCollection"
+        },
+        {
+          "offset": 1119,
+          "raw_key_hex": "73687445",
+          "key_u32_be": 1936225349,
+          "type_code": 1,
+          "value_offset": 1125,
+          "end": 1133,
+          "object_class": null
+        },
+        {
+          "offset": 1133,
+          "raw_key_hex": "736b6c43",
+          "key_u32_be": 1936419907,
+          "type_code": 2,
+          "value_offset": 1139,
+          "end": 1386,
+          "object_class": "FAttributes"
+        }
+      ],
+      "full_item_count": 1,
+      "candidate_scalar_values": {
+        "Flags": {
+          "value": 8,
+          "offset": 1246,
+          "bytes_hex": "0000000000000008"
+        },
+        "Start": {
+          "value": 0.0,
+          "offset": 1266,
+          "bytes_hex": "0000000000000000"
+        },
+        "Length": {
+          "value": 1.0,
+          "offset": 1287,
+          "bytes_hex": "3ff0000000000000"
+        },
+        "Bar": {
+          "value": 0,
+          "offset": 1305,
+          "bytes_hex": "0000000000000000"
+        },
+        "Numerator": {
+          "value": 4,
+          "offset": 1329,
+          "bytes_hex": "0000000000000004"
+        },
+        "Denominator": {
+          "value": 4,
+          "offset": 1355,
+          "bytes_hex": "0000000000000004"
+        },
+        "Position": {
+          "value": 0,
+          "offset": 1378,
+          "bytes_hex": "0000000000000000"
+        }
+      },
+      "attribute_count": 4,
+      "signature_body_consumed_exactly": true,
+      "duplicate_keys": 0,
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/String Quartet Page Layout.cpr",
+      "source_sha256": "6bca3537c026f5878c8e65ac642f63e35f5f2b611c4b55e624c6a1fdd6dfec49",
+      "source_bytes": 145092,
+      "probe_output": "research/evidence/cubase-static/cpr-signature-001/fixtures/string-quartet-page-layout-signature-v01.json",
+      "probe_output_sha256": "27d3860d297785e9a00610bfba877f0cd662cf1c264e4cd33368ae67ddc59917",
+      "signature_object": {
+        "offset": 1051,
+        "token_offset": 1051,
+        "kind": "object",
+        "class": "MSignatureTrackEvent",
+        "version": 3,
+        "class_declaration_offset": 1051,
+        "class_resolution": "previously_parsed_declaration",
+        "declarations": [
+          {
+            "offset": 1051,
+            "relative_offset": 820,
+            "class": "MSignatureTrackEvent",
+            "version": 3
+          }
+        ],
+        "size_offset": 1082,
+        "body_offset": 1086,
+        "body_bytes": 642,
+        "end": 1728,
+        "body_sha256": "5c0e232be0311de5c4bd695068d649b823c65d4c5a1542d3951a9a22ab30b0ec",
+        "relative_object_identity": 851
+      },
+      "compact_prefix": [
+        {
+          "offset": 1090,
+          "position_i32": 0,
+          "six_i16": [
+            4,
+            4,
+            0,
+            0,
+            0,
+            8
+          ],
+          "end": 1106
+        }
+      ],
+      "fixed_key_attributes": [
+        {
+          "offset": 1110,
+          "raw_key_hex": "53636f4c",
+          "key_u32_be": 1399025484,
+          "type_code": 1,
+          "value_offset": 1116,
+          "end": 1124,
+          "object_class": null
+        },
+        {
+          "offset": 1124,
+          "raw_key_hex": "69435654",
+          "key_u32_be": 1766020692,
+          "type_code": 34,
+          "value_offset": 1130,
+          "end": 1174,
+          "object_class": "MTrackVariationCollection"
+        },
+        {
+          "offset": 1174,
+          "raw_key_hex": "736b6c43",
+          "key_u32_be": 1936419907,
+          "type_code": 2,
+          "value_offset": 1180,
+          "end": 1728,
+          "object_class": "FAttributes"
+        }
+      ],
+      "full_item_count": 1,
+      "candidate_scalar_values": {
+        "Flags": {
+          "value": 8,
+          "offset": 1287,
+          "bytes_hex": "0000000000000008"
+        },
+        "Start": {
+          "value": 0.0,
+          "offset": 1307,
+          "bytes_hex": "0000000000000000"
+        },
+        "Length": {
+          "value": 1.0,
+          "offset": 1328,
+          "bytes_hex": "3ff0000000000000"
+        },
+        "Bar": {
+          "value": 0,
+          "offset": 1647,
+          "bytes_hex": "0000000000000000"
+        },
+        "Numerator": {
+          "value": 4,
+          "offset": 1671,
+          "bytes_hex": "0000000000000004"
+        },
+        "Denominator": {
+          "value": 4,
+          "offset": 1697,
+          "bytes_hex": "0000000000000004"
+        },
+        "Position": {
+          "value": 0,
+          "offset": 1720,
+          "bytes_hex": "0000000000000000"
+        }
+      },
+      "attribute_count": 3,
+      "signature_body_consumed_exactly": true,
+      "duplicate_keys": 0,
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Symphonic Orchestra.cpr",
+      "source_sha256": "46420bf0906650dfd02a97fc9edfee69e4d41a0e453629438699fc36082e48c7",
+      "source_bytes": 6055141,
+      "probe_output": "research/evidence/cubase-static/cpr-signature-001/fixtures/symphonic-orchestra-signature-v01.json",
+      "probe_output_sha256": "077afe5390c48cf2d8359ae9ed6b2f116bc09756f8de93f68f74523aef48195f",
+      "signature_object": {
+        "offset": 509,
+        "token_offset": 531,
+        "kind": "object",
+        "class": "MSignatureTrackEvent",
+        "version": 3,
+        "class_declaration_offset": 531,
+        "class_resolution": "previously_parsed_declaration",
+        "declarations": [
+          {
+            "offset": 509,
+            "relative_offset": 278,
+            "class": "MTrackEvent",
+            "version": 2
+          },
+          {
+            "offset": 531,
+            "relative_offset": 300,
+            "class": "MSignatureTrackEvent",
+            "version": 3
+          }
+        ],
+        "size_offset": 562,
+        "body_offset": 566,
+        "body_bytes": 764,
+        "end": 1330,
+        "body_sha256": "47373b4593bbb8235817546625cbdf943ccc112edb2fb4ea804a4b740e4d33ba",
+        "relative_object_identity": 331
+      },
+      "compact_prefix": [
+        {
+          "offset": 570,
+          "position_i32": 0,
+          "six_i16": [
+            4,
+            4,
+            0,
+            0,
+            0,
+            8
+          ],
+          "end": 586
+        }
+      ],
+      "fixed_key_attributes": [
+        {
+          "offset": 590,
+          "raw_key_hex": "44494c54",
+          "key_u32_be": 1145654356,
+          "type_code": 1,
+          "value_offset": 596,
+          "end": 604,
+          "object_class": null
+        },
+        {
+          "offset": 604,
+          "raw_key_hex": "53636f4c",
+          "key_u32_be": 1399025484,
+          "type_code": 2049,
+          "value_offset": 610,
+          "end": 618,
+          "object_class": null
+        },
+        {
+          "offset": 618,
+          "raw_key_hex": "69435654",
+          "key_u32_be": 1766020692,
+          "type_code": 34,
+          "value_offset": 624,
+          "end": 762,
+          "object_class": "MTrackVariationCollection"
+        },
+        {
+          "offset": 762,
+          "raw_key_hex": "73687445",
+          "key_u32_be": 1936225349,
+          "type_code": 1,
+          "value_offset": 768,
+          "end": 776,
+          "object_class": null
+        },
+        {
+          "offset": 776,
+          "raw_key_hex": "736b6c43",
+          "key_u32_be": 1936419907,
+          "type_code": 2,
+          "value_offset": 782,
+          "end": 1330,
+          "object_class": "FAttributes"
+        }
+      ],
+      "full_item_count": 1,
+      "candidate_scalar_values": {
+        "Flags": {
+          "value": 8,
+          "offset": 889,
+          "bytes_hex": "0000000000000008"
+        },
+        "Start": {
+          "value": 0.0,
+          "offset": 909,
+          "bytes_hex": "0000000000000000"
+        },
+        "Length": {
+          "value": 1.0,
+          "offset": 930,
+          "bytes_hex": "3ff0000000000000"
+        },
+        "Bar": {
+          "value": 0,
+          "offset": 1249,
+          "bytes_hex": "0000000000000000"
+        },
+        "Numerator": {
+          "value": 4,
+          "offset": 1273,
+          "bytes_hex": "0000000000000004"
+        },
+        "Denominator": {
+          "value": 4,
+          "offset": 1299,
+          "bytes_hex": "0000000000000004"
+        },
+        "Position": {
+          "value": 0,
+          "offset": 1322,
+          "bytes_hex": "0000000000000000"
+        }
+      },
+      "attribute_count": 5,
+      "signature_body_consumed_exactly": true,
+      "duplicate_keys": 0,
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Trap.cpr",
+      "source_sha256": "ac6df94a7879ba265fc93405faf6c6b8563125f1b92d45099a1246fc2f4f0862",
+      "source_bytes": 576437,
+      "probe_output": "research/evidence/cubase-static/cpr-signature-001/fixtures/trap-signature-v01.json",
+      "probe_output_sha256": "ec44825f791df5993ca34f69831fe2630c3a536385c76bbbeb1bddb169712353",
+      "signature_object": {
+        "offset": 996,
+        "token_offset": 996,
+        "kind": "object",
+        "class": "MSignatureTrackEvent",
+        "version": 3,
+        "class_declaration_offset": 996,
+        "class_resolution": "previously_parsed_declaration",
+        "declarations": [
+          {
+            "offset": 996,
+            "relative_offset": 765,
+            "class": "MSignatureTrackEvent",
+            "version": 3
+          }
+        ],
+        "size_offset": 1027,
+        "body_offset": 1031,
+        "body_bytes": 355,
+        "end": 1386,
+        "body_sha256": "1ac16ecdd2031c34e95047d588ddc7a17931b34f8afed5e7e521d71b0fd714d4",
+        "relative_object_identity": 796
+      },
+      "compact_prefix": [
+        {
+          "offset": 1035,
+          "position_i32": 0,
+          "six_i16": [
+            4,
+            4,
+            0,
+            0,
+            0,
+            8
+          ],
+          "end": 1051
+        }
+      ],
+      "fixed_key_attributes": [
+        {
+          "offset": 1055,
+          "raw_key_hex": "53636f4c",
+          "key_u32_be": 1399025484,
+          "type_code": 1,
+          "value_offset": 1061,
+          "end": 1069,
+          "object_class": null
+        },
+        {
+          "offset": 1069,
+          "raw_key_hex": "69435654",
+          "key_u32_be": 1766020692,
+          "type_code": 34,
+          "value_offset": 1075,
+          "end": 1119,
+          "object_class": "MTrackVariationCollection"
+        },
+        {
+          "offset": 1119,
+          "raw_key_hex": "73687445",
+          "key_u32_be": 1936225349,
+          "type_code": 1,
+          "value_offset": 1125,
+          "end": 1133,
+          "object_class": null
+        },
+        {
+          "offset": 1133,
+          "raw_key_hex": "736b6c43",
+          "key_u32_be": 1936419907,
+          "type_code": 2,
+          "value_offset": 1139,
+          "end": 1386,
+          "object_class": "FAttributes"
+        }
+      ],
+      "full_item_count": 1,
+      "candidate_scalar_values": {
+        "Flags": {
+          "value": 8,
+          "offset": 1246,
+          "bytes_hex": "0000000000000008"
+        },
+        "Start": {
+          "value": 0.0,
+          "offset": 1266,
+          "bytes_hex": "0000000000000000"
+        },
+        "Length": {
+          "value": 1.0,
+          "offset": 1287,
+          "bytes_hex": "3ff0000000000000"
+        },
+        "Bar": {
+          "value": 0,
+          "offset": 1305,
+          "bytes_hex": "0000000000000000"
+        },
+        "Numerator": {
+          "value": 4,
+          "offset": 1329,
+          "bytes_hex": "0000000000000004"
+        },
+        "Denominator": {
+          "value": 4,
+          "offset": 1355,
+          "bytes_hex": "0000000000000004"
+        },
+        "Position": {
+          "value": 0,
+          "offset": 1378,
+          "bytes_hex": "0000000000000000"
+        }
+      },
+      "attribute_count": 4,
+      "signature_body_consumed_exactly": true,
+      "duplicate_keys": 0,
+      "decode_errors": []
+    }
+  ],
+  "tests": {
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_cpr_probe.py",
+      "-v"
+    ],
+    "log": "research/evidence/cubase-static/cpr-signature-001/fixtures/probe-tests-v1.log",
+    "log_sha256": "ecab562ac56de5ac4944b53b88120de0fc3b36149636c5aa8067d316e763e05b",
+    "passed_methods": 8,
+    "controls": [
+      "Synthetic compact4/4 and full7/8 values remain distinct.",
+      "Truncated/extra bytes, duplicate named/scalar fixed keys, missing required scalar, wrong scalar type, unsupported flagged type and excessive compact count reject.",
+      "An absent full-item container produces no invented full item.",
+      "All ten fixture source hashes and exact full-item values checked."
+    ]
+  },
+  "unresolved": [
+    "Named-field restoration into runtime item fields and effective precedence require retained native evidence.",
+    "Position/Start/Length/Bar coordinate units, nonzero/multiple signature changes and compatibility branches are not inferred from these all-zero initial coordinates.",
+    "Track variation objects and score nested semantics remain unconverted.",
+    "No target project load or playback conformance measured."
+  ]
+}

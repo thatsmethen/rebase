@@ -1,0 +1,239 @@
+{
+  "id": "CPR-MAP-DEFAULT-HOST-CALLBACK-001",
+  "revision": 1,
+  "created_utc": "2026-10-19T13:20:37.902259+00:00",
+  "source": {
+    "path": "research/targets/derived/Cubase15-arm64",
+    "bytes": 85691328,
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "scope": "Concrete default TrackLoopHandler callback reached from fresh tempo base-track construction, plus explicit registry replacement boundary.",
+  "result": "The retained default factory initializes a new handler and copies the fresh list scalar datum into handler-local objects. No source track/list timing mutation is present in the traced normal default path. The selected root context and keyed factory remain replaceable runtime state; this is not an invariant across arbitrary providers.",
+  "preconditions": [
+    "Successful fresh archive-factory construction10173a5ac\u219210173a7c0; base track construction101747fe4 attaches the concrete empty MTempoTrackNode.",
+    "If the IComponents predicate is enabled, the selected root context resolves to the retained default concrete implementation and its TrackLoopHandlerParam key resolves to the retained default factory. Otherwise this default-path conclusion is inapplicable.",
+    "The freshly created list+0x38 datum has kind1 and scalar1.0 before serialized source read. Both stack descriptor values supplied to the handler have kind1 and scalar1.0.",
+    "No provider replacement, keyed-factory overwrite, concurrent mutation or arbitrary postconstruction observer is presumed absent outside this explicit default-path scope."
+  ],
+  "call_chain": [
+    {
+      "entry": "0x101747fe4",
+      "statement": "After list attachment, stores the track pointer in a stack context, constructs two kind1/value1 descriptors, calls1005c01a8, stores its returned handler only in track+0x70, then destroys those local descriptors."
+    },
+    {
+      "entry": "0x1005c01a8",
+      "statement": "If selected IComponents is nil or its+0x18 predicate is false, returns nil. Otherwise obtains IRootContext, applies vptr[-0x60] adjustment, invokes adjusted+0x20 with {TrackLoopHandlerParam,contextPointer}. Extracts the returned pointer and calls ownership cleanup with null; does not itself modify the track."
+    },
+    {
+      "entry": "0x103806f64",
+      "statement": "Loads runtime selected root-context pointer from10501e350. The slot is not an immutable pointer in source bytes."
+    },
+    {
+      "entry": "0x103806748",
+      "statement": "Concrete root context sets primary104f73d78 and secondary104f73e48 at object+0x18. Secondary virtual-base adjustment is-24. Embedded registry vptr104e288c0 is initialized by10307ed44."
+    },
+    {
+      "entry": "0x1005ca2f0",
+      "statement": "Product root factory registers exact TrackLoopHandlerParam key104f866e1 with wrapper1044b0160 holding factory1005ca878. It subsequently exposes the root to optional global104fefc10 virtual+0x30, so later changes cannot be excluded."
+    },
+    {
+      "entry": "0x10307eefc",
+      "statement": "Default root+0x20 adds8 and tails10307e3d8. That bounded string-key tree lookup calls the selected factory wrapper+0 or returns an empty ownership result if absent."
+    },
+    {
+      "entry": "0x1005ca8c0",
+      "statement": "Wrapper+0 takes descriptor+8 and calls stored factory1005ca878. It returns the new handler with cleanup1005ca90c; cleanup with null immediately returns."
+    },
+    {
+      "entry": "0x1005ca878",
+      "statement": "Allocates0x4b8 bytes and calls1017664c8\u2192101765ffc with the context."
+    },
+    {
+      "entry": "0x101765ffc",
+      "statement": "Initializes newly allocated handler state, stores the source track pointer in handler+0x348, copies two context descriptors into allocated handler-local objects, and reads track+0x258/list+0x108 to copy the fresh list datum. There is no direct source-track/list store in this normal body."
+    },
+    {
+      "entry": "0x1016e9a18",
+      "statement": "Concrete list+0x108 returns list+0x38 without mutation."
+    },
+    {
+      "entry": "0x101c246b4",
+      "statement": "Initializes local descriptor kind1/value1.0."
+    },
+    {
+      "entry": "0x101c22c0c",
+      "statement": "Initializes fresh list datum kind1/value1.0."
+    },
+    {
+      "entry": "0x101c245e4",
+      "statement": "With kind1 source, copies scalar descriptor to new handler-local storage and skips interface retain branches."
+    },
+    {
+      "entry": "0x101c247b0",
+      "statement": "Converts the handler-local coordinate from its local datum to the list datum, then assigns the datum to handler-local storage. Conversion101c22dc0 takes equal kind1/value1 fast return. Assignment101c22c7c uses scalar copy; no source write or interface callback occurs in this branch."
+    }
+  ],
+  "registry_boundary": {
+    "enabled_gate": "Independent host-gate-global/finding.json proves normal concrete IComponents initialization sets byte8=1. Startup zero cannot exclude this branch.",
+    "typed_subscription": "103806fa4 subscribes under Lego::IRootContext;10380710c writes the supplied selected pointer into10501e350 and conditionally clears registry owner. Supplied/replaced root-context implementations are supported.",
+    "factory_replacement": "Default registry+0x38\u219210307eac8 locates/creates a keyed node, releases a previous factory if present, transfers new wrapper into node+0x30 and clears the caller ownership pointer. Registry replacement is an observed implementation mechanism.",
+    "product_extension_hook": "1005ca2f0 invokes optional global104fefc10+0x30 with the constructed root after default registrations. The receiver and any resulting changes are not resolved here.",
+    "not_claimed": "This finding does not identify every runtime root context/factory or assert that every provider leaves tempo data unchanged. It also does not characterize later TrackLoopHandler methods."
+  },
+  "supported_reconstruction_claim": "A source-bound parser may preserve serialized periods/anchors and apply the pinned default native arithmetic to its explicit accepted subset. Such a result is a native-derived interpretation of serialized data; it is not a measurement of the effective clock in an arbitrary hosted Cubase environment.",
+  "evidence": {
+    "verification": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/final-verification.json",
+      "bytes": 67352,
+      "sha256": "99e772cb84a06eac863e84fb733c406877396f6ddcd060853222e327e6f340be"
+    },
+    "linkage": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/closure-linkage.json",
+      "bytes": 12127,
+      "sha256": "8982f4b79ad73b5f1a28c2de97e593798e63493233c54e29c8b25e5a0a263c82"
+    },
+    "global_gate": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/host-gate-global/finding.json",
+      "bytes": 27410,
+      "sha256": "1ca8f3794f6764c810baaa0ec834731763bb74651e98e6e5f3477d4ff1be2374"
+    },
+    "canonical_bundle": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/closure-evidence-bundle-v2.json",
+      "bytes": 7718406,
+      "sha256": "ee9072ebad438925fb3b08be46b1f70c1836c9cf4de977fa19f5991b20af182e"
+    },
+    "canonical_import": {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/closure-evidence-import-v2.json",
+      "bytes": 367,
+      "sha256": "9f646535b8ef686f6b8a023da4f2e87d6fdb64049fdd5f9d17ab28238c90d217"
+    },
+    "local_function_ids": {
+      "0x1005c01a8": [
+        "ev_a4123e55a83c285ae806c4373454cddeedb099b88a83daeba1ce3bb4935afcee",
+        "ev_ac2c272628694bf224527a06550be5a1be33f8d969de58bc3cf538354c0b6963"
+      ],
+      "0x101c246b4": [
+        "ev_2d54c7af7e66cd5463233848bff24327c96732ef6844c244a3dc5fb8b33146ea",
+        "ev_be08536aade0bc0af4146866a64e0d8548a6ae1b706fbcba43f4006a3e9e55a8"
+      ],
+      "0x101c23ba8": [
+        "ev_73bd5bbe31d26eaf3388f982da45c6872b292832bdbf31ebba36e5342bf82697",
+        "ev_4be72f68a27fdc80827bfbf7c72997ad7658d299a81a9b5acbf82b384bd3b804"
+      ],
+      "0x10308fe54": [
+        "ev_feae64b6e228c8c50f55d63aa0031f5dfb530515cd137cbecd6296df77ee9f07",
+        "ev_ded345fe74862c1bbd7d12cdd64d47ea38bba53e76c192d50ca0447ddb276e81"
+      ],
+      "0x1017060f4": [
+        "ev_c6f2d7ac4fc9833ccccc0fb5e14255822e97762dda70d8a57c272a254f7ff4f7",
+        "ev_b11275daf454ee86fdb4076073ba3085480abc392404d3404b0755e7b165f070"
+      ],
+      "0x1005ca90c": [
+        "ev_797133ff726c34e75c6abfb33bea5459ec522aabe47e31e5147c2dfb5216a4fc",
+        "ev_11b883c9d85dc98adeff6c2267f21945a85af85c746a2c096abe8d3ba4a47773"
+      ],
+      "0x10307ed44": [
+        "ev_1414140ce2ecedb7eda85c0138ff126248dd7142d1dc66a7bb3dbe218f30c00f",
+        "ev_cfd3c853ff80e582abb00636e45a326e8202d4d0ffcf753c02c5e407beb27afa"
+      ],
+      "0x10307eac8": [
+        "ev_91eef6b1a9aa7df475c25706f6e6c73d066b2da9035622db3cc954072f7d01b7",
+        "ev_9d273889e98c2a76ccd8e99aefcfded88a1f2cfe6b234f4186550e872ac49393"
+      ],
+      "0x103806e44": [
+        "ev_f3d938a8864289620e0ebdb627124dcc5d7d24db2b779218109ba6ea3191bb59",
+        "ev_ac6cf53c39f04534079d3ee1298003a8d78d0d0dac4c5a99fc11ecd746ba4cf7"
+      ],
+      "0x10380711c": [
+        "ev_16f77e8fc09b8ea2ac4f5619a1de736c3f1a07fb58c21088d009c7ef6df1b778",
+        "ev_e793874aef47d634d9fc5375aa0f3fcc0bbd370028b76c78cb830f62413ddeb4"
+      ],
+      "0x103806f48": [
+        "ev_4e0933cb325cef30c14c22b0a9ac03398cdf4f3fbfe4f24744688a5370a1a052",
+        "ev_c9e2a6c90bfe52a0105afb129dccd00cba4bf5c16e7220e3a49a7c99df19255e"
+      ],
+      "0x1005c1a44": [
+        "ev_b2b3d2d86d1e26e141b5ba543b7764adaef4417518becceab31a7cf763e6d272",
+        "ev_3cd62211f13dc9441aa76304bbbb6345ad7d5df2da89e3e54c9ff75c295f18e2"
+      ],
+      "0x103806fa4": [
+        "ev_7921e5635a3c1e71034b202a3d9d44a8755ec8ed91f2a46425edcd272ab6cf9c",
+        "ev_f098d334d63fa8d3734f0fb444086da92b17fecc35142900922f54bfa78c4313"
+      ],
+      "0x103806748": [
+        "ev_0bbc012dd10287a86839476a4cd55cb4ff2dbb66a7870bf44b0afbf92c799b9c",
+        "ev_736b9a49b740b08ec29e0e8df2788fcfc06d7b2ee26723b111c11b02d37c1c75"
+      ],
+      "0x10307eefc": [
+        "ev_5fb2e34b32900c1ba190f5e36a24515c87343017006404d52001272ac7c43ec1",
+        "ev_fd97186dd19d1723a1614a43c99c0a941689b0faee41c3e5ac02bbb035bbd80a"
+      ],
+      "0x10380710c": [
+        "ev_d01f2fb2425b2bd6cae67ce844f121f8db1f76ac6cad61ea13cae50f9d452bc4",
+        "ev_e9c59be0361d0f7e18c277fb068fe38b27fd919d697a83fdd02ccefa94f5e738"
+      ],
+      "0x1005ca2f0": [
+        "ev_4a814dc9ab0f0ad180de33de470c9b055c2c54bce0f87330135186647738d373",
+        "ev_2444ba2075eac8476c6b6188f3f2825637bafafd2cd214c50d49dc5f7e400471"
+      ],
+      "0x10307e3d8": [
+        "ev_b78afc25d23e5c9a467e11c977a10f1418809af02d9abbd7e856fc1c51909ad4",
+        "ev_bf9e0f890290046fc8297199a68a316a74ecfd2140601a1390f0e6f45ab99e9b"
+      ],
+      "0x1005ca878": [
+        "ev_41b6c8003c36d7c1b7150d3eb82631684db9df86c5bf3b6d46f39ab3fbbab093",
+        "ev_59dfebe7bd2cc810a644adf2b063172b48016274639d5b6eb2458716dfad877b"
+      ],
+      "0x1017664c8": [
+        "ev_9edb463d145570f6374839f0f0d077fb8842911969fea816f9206e52a31ea622",
+        "ev_2093174bfbcc90ad15976c2f80a369488b27e2ca7916e741c430b8438bbdabb3"
+      ],
+      "0x101765ffc": [
+        "ev_2e30449216c059229befc185db23bdd015502e40a44d6718dd1df12eca77bc03",
+        "ev_7dd4ddcd8031693d70d7d41c2ea5e0ac8d688497d0c6aa4d46bb2713eb252da6"
+      ],
+      "0x1005ca8c0": [
+        "ev_81c7fd9391550c4e56adde1785356cfe6f82e0348dd2ca8652cf70e40e606c28",
+        "ev_64a661888ad13f8c9662c0d7df7c3e67644729b0245a7d4529a59b0cd22c1ab7"
+      ],
+      "0x1016e9a18": [
+        "ev_3942e293374448275ad90f814941d6bc4f6ca71f75e545d5c922073f57e20a1b",
+        "ev_65b0e4f53dda4f06b1f7ceaec5bc8fb18015177917a171ad630e10afff029f5e"
+      ],
+      "0x101c245e4": [
+        "ev_ebee6de32390d3eb00321bf79a97fc1569726a3b76a886cb10aeef913b21fe02",
+        "ev_f6abadfa218dd024e590d39b0e833c7cf70d46b39c4447c37cc2b61de8fa9334"
+      ],
+      "0x101c247b0": [
+        "ev_4a63f9b74fc0a30dbb7c6f1110cf9ae33f1f4bc0232b8384dbc0accd4c32d2ba",
+        "ev_41947f0a6243c7e2be46df0de4757f3286046689838f38ef97474bee34a3ec81"
+      ],
+      "0x101c22c0c": [
+        "ev_bad13493226f1683e2c841f0ff80d7bf8449965ac56979edcaa5d862ee202f0a",
+        "ev_4bb66f1aef71bdb16cef1a6baddcb7060cd684a81d57d45f070eaa1171c8fae1"
+      ],
+      "0x101c22c7c": [
+        "ev_9b93c9d9c2289f132eda4d583a157a5b9f2f9e21b10fc2b1c221c23cf1545003",
+        "ev_a9c45ba5c14df7bd823d85f2428718745c9418cab6bb10379fd1c4ba0a074d10"
+      ],
+      "0x103806f64": [
+        "ev_7c775e333afd78cdaf30beacc6d2cbca1dd13f12355da0481562e1e1ad2b34c0",
+        "ev_b2f951ada523f8437c8c7b6cea4e277d18689abdb0ea9cd783e2af7b985b27a8"
+      ],
+      "0x10173f4b8": [
+        "ev_a1909399b2f79b5da6e3528bb170d5654766ca13af4fa7e0a8bd3f985d854cbd",
+        "ev_199f03088ba850736e75754994c46a7c601c4cbcdbe45f67cf40ab3bdb7203c7"
+      ],
+      "0x1001fcf00": [
+        "ev_10df3a9fe73e3e523dc8933c4f48a63d97dbb41400d0658b5f1e4fd6a9881b33",
+        "ev_fe303670c5947ef44b445faa0d992617e0037a57b55bbe1893b4521a9deade7c"
+      ]
+    }
+  },
+  "limits": [
+    "Static original-byte/control-flow evidence only. Target executions and Cubase runtime comparisons are zero.",
+    "Raw imports omit linked external globals/types/vtables/imports/unwind. Original source slices and explicit linkage support the bounded interpretations; pseudocode is generated non-source and is not guaranteed compilable or bit-faithful.",
+    "Successful normal construction/read is the scope. Allocation failure, exception/unwind cleanup, concurrency and arbitrary host observers are outside it.",
+    "Exact native bytes and REA readback equality are custody checks. They do not prove the runtime globals, actual registry selection, full application behavior or target floating-point environment."
+  ]
+}

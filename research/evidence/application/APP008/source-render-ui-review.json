@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "review_id": "APP008-SOURCE-RENDER-UI-REVIEW-001",
+  "created_utc": "2026-10-20T00:15:55.840214+00:00",
+  "reviewer": "fidelity_protocol",
+  "status": "Dismissal handoff is consume-once and core remains unchanged; one conditional stale-project-context finding remains open at this source snapshot.",
+  "scope": "Read-only inspection of the UUID queue, SwiftUI sheet onDismiss wiring, native save-panel cancellation and the subsequent call into the separately reviewed source renderer. No AppKit UI operations or Application edits were performed by this reviewer.",
+  "prior_review": {
+    "path": "research/evidence/application/APP008/source-render-independent-review.json",
+    "bytes": 10988,
+    "sha256": "9ebb56527f8812d5cbcf44ab13f05df64479123ba6a201277d547b054c880ea9"
+  },
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 32937,
+      "sha256": "ebff30713a3ce76fdaf991920debcf3d5af9e03c6b3f40728e08d055415f6ce9"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "bytes": 18821,
+      "sha256": "a7802372cec6447320428fdb5d10549e4c6ffb008aff77a5fe4e389c0c3b73f6"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+      "bytes": 3140,
+      "sha256": "4acdea59a69c8b7c5af6984272eb673992b63a171f6a9ffcc28152d3d9b9f109"
+    }
+  ],
+  "context_source": {
+    "path": "Application/Sources/RebaseCore/CPRRecoveryV4.swift",
+    "bytes": 10093,
+    "sha256": "311ef0ad0f120d7406b0e8469312f2e9d0083f348f52ea6704a4aa57e226f3ad"
+  },
+  "core_custody_comparison": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 6987,
+      "sha256": "284faa13042067f64c8871fa1e1970d1d41ea1f384bd70150877a10268026e1e",
+      "matches_prior_review": true
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 6981,
+      "sha256": "6ce793eebc2a5943bffda12dcb38cfa5ceb6febb77276b5cf10da1604c34e199",
+      "matches_prior_review": true
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 13673,
+      "sha256": "e426e17e26303faa9752f049652c4c08c5365e3c97c606cec387a05b1a504d39",
+      "matches_prior_review": true
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_event_pcm.c",
+      "bytes": 1644,
+      "sha256": "1de71e140a6cf22e9abf48158c2935324deb91c1a7f6f986523d9b9fea7b3c33",
+      "matches_prior_review": true
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_event_pcm.h",
+      "bytes": 550,
+      "sha256": "b7638d7d5d7b1f9885c38b5be50de1f958df906e4913a2a9f56bcaca6d2af19b",
+      "matches_prior_review": true
+    }
+  ],
+  "verified_source_properties": [
+    "renderCPRSourceEvent stores the selected inspection event UUID and sets cprSourceAudioInspection to nil; it no longer starts runModal from the presented inspector.",
+    "RebaseApp attaches completeCPRSourceInspectionDismissal as onDismiss for the same cprSourceAudioInspection sheet binding.",
+    "completeCPRSourceInspectionDismissal reads then clears pendingCPRSourceRender before event lookup or opening NSSavePanel. Repeated callbacks and panel cancellation therefore cannot replay the consumed request.",
+    "A normal Close dismisses the inspector without enqueuing a new render. A missing event or missing project root after dismissal returns before a panel is created.",
+    "Only an OK panel result with a URL reaches the core renderer. The queued request is already cleared on every success, cancellation or failure route.",
+    "The final core operation still replays preserved source provenance and checks actual attached-media bytes before atomic publication; this UI change does not convert the source event into a playable Clip."
+  ],
+  "findings": [
+    {
+      "id": "UI-SR-1",
+      "status": "open",
+      "severity": "conditional_context_correctness",
+      "location": "StudioSession.swift: pendingCPRSourceRender and completeCPRSourceInspectionDismissal",
+      "problem": "Only the event UUID is queued. The dismissal callback checks it against the current project, and after NSSavePanel.runModal returns the renderer again receives mutable current project/projectRoot. The request is not bound to the project/package that displayed the inspection.",
+      "discriminator": "Frozen V4 event IDs derive from source SHA and object identity. Importing the same CPR into two packages therefore produces the same event ID, while the selected attached media can differ. If project replacement occurs between enqueue and completion, or through modal reentrancy while the panel is open, the current event-ID membership guard can pass for a different package and attachment.",
+      "observation_limit": "This is a source-level conditional state-flow defect; no project-switch-during-panel GUI reproduction was performed by this reviewer. The ordinary repeated-open/cancel flow is a separate parent-run GUI verification.",
+      "recommended_correction": "Queue project/package context as well as the event ID, and recheck it before and after the native panel; alternatively capture an immutable project/root request and cancel if the active context changes. The core provenance checks must remain intact.",
+      "communicated_to_parent": true
+    }
+  ],
+  "retained_caveats": [
+    "SwiftUI/AppKit presentation behavior must be checked in the actual application. Source inspection alone does not establish that the disabled-panel regression is fixed.",
+    "The prior inspection-readiness caveat remains: an attachment row does not itself establish current file/hash/PCM24-RIFF readiness; the core safely rechecks these at render time.",
+    "The operation remains a conditional fresh-source event reconstruction without external pitch context, whole-track/mixer/automation processing or runtime Cubase equivalence."
+  ],
+  "validation": {
+    "observed_core_test_log": {
+      "path": "research/evidence/application/APP008/core-tests-source-render-final.log",
+      "bytes": 35428,
+      "sha256": "85a8489bee7e7dad9acd6416e5ec56ef1e896a760e14592aa9b20a6704c97f80"
+    },
+    "observed_result": "158 tests in 23 suites passed",
+    "limit": "This is a read of the existing parent-run core log, not a new reviewer test run or validation of AppKit presentation behavior.",
+    "reviewer_test_runs": 0,
+    "reviewer_gui_operations": 0,
+    "target_executions": 0,
+    "cubase_runtime_comparisons": 0,
+    "application_writes": 0,
+    "prior_review_preserved_byte_identical": true,
+    "only_write": "research/evidence/application/APP008/source-render-ui-review.json"
+  }
+}

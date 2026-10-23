@@ -1,0 +1,562 @@
+{
+  "finding_id": "AMBI-STATE-004",
+  "created_utc": "2026-10-19T07:21:09.852884+00:00",
+  "status": "Static state-path contract independently reviewed; no actionable error remains; no target runtime validation",
+  "scope": "The already identified process entry, parameter consumer, both conversion remap paths, both bypass paths and their sample-copy helpers. Existing conversion findings and candidate are preserved.",
+  "subject": {
+    "source_path": "/workspace/rebase/research/targets/downloads/partial-components-01/components/Cubase 15.app/Contents/VST3/vstambiconverter.vst3/Contents/MacOS/vstambiconverter",
+    "source_sha256": "e803dd1390ee7989306b15c0fccca52e5d3097ae7a489dc6834f82b50ba485c5",
+    "source_evidence_id": "ev_57fcb29cf7bcb1fa647ffb8763a1688453ac49cb3caf85d9e3a89d153836dff2",
+    "architecture": "arm64",
+    "source_offset": 2162688,
+    "length": 2058208,
+    "derived_path": "/workspace/rebase/research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho",
+    "derived_sha256": "e8341c6b31ac6b65cf7e8c18bdfbaa18ac24b20160b4287dc385b202eb29b883",
+    "transformation": "Exact contiguous byte extraction of REA-inspected FAT architecture entry; no bytes rewritten."
+  },
+  "entry": {
+    "vst_processor_thunk": "0x154464",
+    "thunk_operation": "SUB X0,X0,0x110 then B 0x153d98",
+    "process_body": "0x153d98..0x15414b",
+    "object_offsets_relative_to": "Adjusted concrete processor object passed as X0 to0x153d98",
+    "arguments": "X0 processor object; X1 ProcessData-like record. This matches the retained VST3 ABI declarations and interface-vtable trace, not recovered source declarations."
+  },
+  "valid_domain": [
+    "Correctly initialized active algorithm object for the selected precision, valid fixed map/gain tables and allocated scratch capacity; stable configured channel count N in{4,9,16}. Prior findings establish those configuration branches.",
+    "For positive frames, first input and output bus descriptors, N input/output channel pointers and each storage extent are valid; frame count is nonnegative and no larger than configured scratch/buffer capacity.",
+    "For host-valid silence probes, every input plane whose silenceFlags bit is set contains only zero samples and still has valid allocated memory, matching the retained public VST3 header. Unflagged planes may remain nonzero; arbitrary nonzero data in a flagged plane is not a valid-host conformance case.",
+    "The precision byte at processor+0x168 matches prior activation/setup and actual storage precision. This process body does not validate ProcessData.symbolicSampleSize before selecting algorithm pointers.",
+    "Successful parameter values are finite normalized values in[0,1]; nonfinite/out-of-range parameter behavior is not generalized from decompiler comparisons.",
+    "Normal in-place equivalence is bounded to distinct input channels and distinct output channels, with each output either exactly its corresponding input or disjoint storage; scratch planes are valid and disjoint. Cross-channel or partial overlap is not included.",
+    "External virtual parameter queues and imported meter/scaling functions conform to their called contracts. Static branch observations do not certify dynamic library behavior, FPCR or host state."
+  ],
+  "abi_offsets": {
+    "ProcessData": {
+      "0x08": "int32 numSamples, loaded into W21 (zero-extended register use)",
+      "0x18": "inputs pointer",
+      "0x20": "outputs pointer",
+      "0x28": "inputParameterChanges",
+      "0x30": "outputParameterChanges"
+    },
+    "AudioBusBuffers": {
+      "0x00": "int32 numChannels",
+      "0x08": "uint64 silenceFlags",
+      "0x10": "sample buffer pointer array union"
+    },
+    "processor": {
+      "0x140": "float algorithm pointer",
+      "0x148": "double algorithm pointer",
+      "0x150": "direction-related integer field",
+      "0x154": "configured channel count",
+      "0x158": "meter interval sample accumulator",
+      "0x160": "meter publication threshold",
+      "0x168": "precision byte: zero selects float; nonzero selects double",
+      "0x169": "bypass byte",
+      "0x16a": "input meter enabled byte",
+      "0x16b": "output meter enabled byte"
+    },
+    "algorithm_float": {
+      "0x14": "configured channel count",
+      "0x18": "source-to-destination map pointer",
+      "0x20": "destination gain pointer",
+      "0x28": "scratch channel pointer array"
+    },
+    "algorithm_double": {
+      "0x18": "configured channel count",
+      "0x20": "source-to-destination map pointer",
+      "0x28": "destination gain pointer",
+      "0x30": "scratch channel pointer array"
+    },
+    "basis": "VST3 LP64 layout is inferred by matching the retained public header fields to observed loads. The target SDK revision and complete host calling contract are not established by those headers."
+  },
+  "ordered_process_path": [
+    {
+      "step": 1,
+      "condition": "precision!=0 AND doubleAlgorithm==NULL AND floatAlgorithm!=NULL",
+      "action": "Return numeric1 before consuming parameter changes.",
+      "evidence": [
+        "0x153dc0..0x153dcc",
+        "0x153e9c..0x153ea8"
+      ],
+      "qualification": "This is the exact conjunction, not a general readiness or null-pointer guard. Both pointers null does not satisfy it; downstream validity remains a precondition."
+    },
+    {
+      "step": 2,
+      "action": "Call parameter consumer0x1520d0 with ProcessData+0x28 before loading/checking frame count.",
+      "evidence": [
+        "0x153dd0..0x153dd8"
+      ]
+    },
+    {
+      "step": 3,
+      "condition": "numSamples==0 OR inputs==NULL OR firstInput.numChannels==0",
+      "action": "Return numeric0 after parameter consumer, before output descriptor load, meter work, conversion/bypass dispatch, silence propagation or frame-counter update.",
+      "evidence": [
+        "0x153ddc..0x153df0",
+        "0x1540cc..0x1540ec"
+      ],
+      "qualification": "The zero-frame branch comes first and does not require audio bus pointers. This is an observed early-return path, not general acceptance of malformed positive-frame ProcessData."
+    },
+    {
+      "step": 4,
+      "action": "Load first input and output channel arrays; if input meter byte is nonzero, inspect every configured input channel before choosing bypass or silence path.",
+      "evidence": [
+        "0x153df4..0x153e04",
+        "0x153e10..0x153e98",
+        "0x153eac..0x153f34"
+      ]
+    },
+    {
+      "step": 5,
+      "action": "Select bypass/normal/skip according to the dispatch truth table below.",
+      "evidence": [
+        "0x153f38..0x153f88",
+        "0x154120..0x154134"
+      ]
+    },
+    {
+      "step": 6,
+      "action": "Copy the input silenceFlags 64-bit value directly to output silenceFlags, without channel permutation or mask filtering at this store.",
+      "evidence": [
+        "0x153f8c LDP X8,X9,[ProcessData,#0x18]",
+        "0x153f90 LDR X8,[X8,#0x8]",
+        "0x153f94 STR X8,[X9,#0x8]"
+      ]
+    },
+    {
+      "step": 7,
+      "action": "If output meter byte is nonzero, inspect configured output buffers even when normal conversion was skipped for nonzero silenceFlags.",
+      "evidence": [
+        "0x153f98..0x1540b4"
+      ]
+    },
+    {
+      "step": 8,
+      "action": "Add frame count to accumulator+0x158. If signed accumulator<threshold, return0. Otherwise optionally call meter-publication helper when outputParameterChanges exists and a meter flag is enabled, then reset accumulator to0 and return0.",
+      "evidence": [
+        "0x1540b8..0x1540c8",
+        "0x1540f0..0x15411c",
+        "0x154138..0x154148"
+      ],
+      "qualification": "Publication callees0x15414c/0x1542d0 are outside the new state contract; no complete meter-output/event timing contract is claimed."
+    }
+  ],
+  "dispatch_truth_table": [
+    {
+      "frames": "positive",
+      "bypass_byte": 0,
+      "input_silenceFlags": 0,
+      "action": "normal conversion",
+      "algorithm_vtable_offset": "0x58",
+      "float_target": "0x154d4c",
+      "double_target": "0x154a8c"
+    },
+    {
+      "frames": "positive",
+      "bypass_byte": 0,
+      "input_silenceFlags": "any nonzero64-bit value",
+      "action": "skip both normal conversion and bypass call; proceed to direct silenceFlags store and optional output meter",
+      "output_samples": "No copy, clear or conversion call is issued by this branch. Do not infer output sample zeros from flags."
+    },
+    {
+      "frames": "positive",
+      "bypass_byte": "any nonzero byte",
+      "input_silenceFlags": "zero or nonzero",
+      "action": "bypass copy path selected before the silence check",
+      "algorithm_vtable_offset": "0x90",
+      "float_target": "0x154e28",
+      "double_target": "0x154b64"
+    },
+    {
+      "frames": 0,
+      "bypass_byte": "any",
+      "input_silenceFlags": "not read on this path",
+      "action": "after guard and parameter consumer, early return0; no process-body silenceFlags store or audio/meter dispatch"
+    }
+  ],
+  "parameter_state": {
+    "bypass_id": 1,
+    "consumer": "0x1520d0",
+    "successful_update": "For parameterID1, getPoint(getPointCount()-1, &sampleOffset, &value); only numeric return0 commits the byte. FCMP D0,0.5; CSET GT; STRB to processor+0x169 at0x1521e4..0x1521ec. For finite[0,1] values bypass becomes1 iff value>0.5; exactly0.5 is off.",
+    "timing": "The selected last queue point affects the current entire dispatched block; returned sampleOffset is not read. Earlier points in the same queue are not individually processed by this consumer.",
+    "no_update": "Absent queue, no matchingID1 or unsuccessful getPoint leaves prior bypass byte unchanged in this consumer. PointCount0 is not explicitly guarded before requesting index-1; valid host queue behavior is a precondition.",
+    "zero_frame_effect": "A successful bypass or direction update can persist on a zero-frame call before the early return; the next block need not resend it.",
+    "constructor_observation": "0x15206c..0x152074 zero the fields through byte+0x169; 0x152078/0x152080 write0x0101 at+0x16a, enabling both meter bytes in the traced constructor. The base constructor identity/calling convention and subsequent lifecycle writes remain preconditions.",
+    "direction_distinction": "DirectionID2 uses a separate threshold branch (finitevalue>=0.5 chooses the high table pair); bypass uses strict>.5. Existing AMBI-PARAM-001/AMBI-DSP findings are preserved.",
+    "evidence": [
+      "direction-parameter-consumer.json",
+      "processor-constructor-function.json"
+    ]
+  },
+  "bypass_contract": {
+    "float_entry": "0x154e28",
+    "double_entry": "0x154b64",
+    "rule": "For i=0..N-1 in ascending order: if input[i]==output[i], skip that channel; otherwise copy frames samples from input[i] to output[i]. No gain table, direction map or scratch array is used in these wrappers.",
+    "float_evidence": [
+      "0x154e3c count load",
+      "0x154e68..0x154e78 corresponding pointer compare",
+      "0x154e7c..0x154e88 copy call to0x16a0fc and next iteration"
+    ],
+    "double_evidence": [
+      "0x154b78 count load",
+      "0x154ba4..0x154bb4 corresponding pointer compare",
+      "0x154bb8..0x154bc4 copy call to0x16a14c and next iteration"
+    ],
+    "copy_helpers": "Float0x16a0fc copies4samples per vector iteration then0..3 scalar tail samples. Double0x16a14c copies8samples per vector iteration when count>=8 and unsigned(dst-src)>=64bytes; otherwise/for remainder it copies forward scalar samples. Neither is claimed to be memmove for arbitrary overlap.",
+    "bounded_implication": "For valid disjoint channel storage or corresponding exact in-place buffers, bypass preserves source sample bit patterns and channel order through the inspected copy instructions. No runtime validation, interpolation, smoothing or latency claim is added.",
+    "exclusions": [
+      "Cross-channel aliasing can be order-sensitive because each channel is copied directly before the next.",
+      "Partial overlap and duplicate output planes are outside this contract.",
+      "Calling bypass helper directly with zero frames would reach no sample load/store in its copy helpers, but the actual process entry returns before invoking it."
+    ]
+  },
+  "normal_alias_contract": {
+    "trigger": "Scan only corresponding pointer pairs input[i],output[i] for i=0..N-1. If ANY pair is exactly equal, stage ALL N input planes into scratch before any remapped output copy.",
+    "float_evidence": [
+      "0x154ef8..0x154f14 equality scan",
+      "0x154f48..0x154f70 all-input-to-scratch loop",
+      "0x154f7c..0x154fa4 scratch[i] to output[map[i]] loop"
+    ],
+    "double_evidence": [
+      "0x154c34..0x154c50 equality scan",
+      "0x154c84..0x154cac all-input-to-scratch loop",
+      "0x154cb8..0x154ce0 scratch[i] to output[map[i]] loop"
+    ],
+    "no_match": "If no corresponding pair is equal, directly scatter input[i] to output[map[i]] in ascending source-index order; no general range-overlap search occurs.",
+    "post_step": "The existing conversion wrapper then scales each destination channel with gain[destination], after either permutation path; first/higher-order math findings remain unchanged.",
+    "bounded_implication": "Under valid allocated scratch and corresponding-only exact aliasing/disjointness, full in-place or mixed corresponding in-place conversion follows the same scatter-then-destination-gain rule as disjoint conversion.",
+    "exclusions": [
+      "A cross-channel equality input[i]==output[j] for i!=j does not itself trigger staging.",
+      "Buffer range overlap is not detected by this scan.",
+      "Changing N or frame capacity after allocation, failed allocation, overlapping scratch planes, duplicated output planes and malformed maps are not covered."
+    ]
+  },
+  "silence_and_meter_limits": [
+    "The native64-bit CBZ at0x153f88 distinguishes only zero versus nonzero input mask; it does not test all channels silent, popcount, or only currently valid channel bits.",
+    "For bypass==0 with nonzero mask, normal conversion is skipped even when only one bit is set. This is a conditional branch observation; host behavior and whether such masks reach this state are not measured.",
+    "The mask is copied unchanged at0x153f94; there is no map-based flag permutation in that store. This does not by itself establish complete VST silence conformance or a product defect.",
+    "Input metering precedes the silence decision and output metering follows it. Both paths explicitly load each first sample (float0x153ee0/0x154060; double0x153e44/0x153fd8) before calling the corresponding max-magnitude import with frame count. Silence flags are not a permission to supply invalid buffers in this observed path.",
+    "This finding does not claim all memory is untouched on a silence-skipped block: flags, meter state and accumulator may change; output buffers are read when output metering is enabled; imported meter/publication behavior is not fully analyzed here.",
+    "Complete meter emission behavior, smoothing, allocation/lifecycle transitions and arbitrary precision-state failures remain outside this bounded contract."
+  ],
+  "prospective_disconfirming_cases": [
+    {
+      "case": "Zero-frame state update",
+      "setup": "In a valid initialized state, use zero frames and a successful finalID1 value>0.5; retain distinct output flags/data sentinels; then run a positive block with no new parameter queue.",
+      "static_prediction": "First call performs parameter update then returns0 without audio/meter/flag/counter work; next positive block chooses bypass. A mismatch would challenge ordering/persistence or host-state assumptions."
+    },
+    {
+      "case": "Threshold and queue-point selection",
+      "setup": "Use lastID1 values nextbelow(0.5), exactly0.5 and nextabove(0.5), with earlier conflicting points and varying last sampleOffset.",
+      "static_prediction": "For finite values, only last>0.5 enables bypass for the whole dispatched block. Position-dependent transitions would disconfirm the bounded consumer interpretation."
+    },
+    {
+      "case": "Single-bit silence mask",
+      "setup": "Bypass off, positive frames, valid input planes and distinct output sentinel buffers; vary silenceFlags0,1 and allNbits. Zero all samples of each flagged input plane; retain nonzero patterns only in unflagged planes. Retain meter-state context.",
+      "static_prediction": "Mask0 invokes conversion; every nonzero mask skips it and reaches unchanged-mask store. Do not expect synthesized zeros solely from flags; observed output zeros could also originate in host behavior."
+    },
+    {
+      "case": "Bypass plus silence",
+      "setup": "Repeat the host-valid nonzero-mask case with bypass enabled; use disjoint buffers, zero every flagged input plane and use distinct nonzero patterns in unflagged channels.",
+      "static_prediction": "Bypass copies same-index samples despite nonzero mask, then propagates mask. A skipped copy would challenge dispatch order or called-state assumptions."
+    },
+    {
+      "case": "Full and mixed corresponding in-place",
+      "setup": "For each supportedN, precision and direction, compare disjoint output with all corresponding buffers equal, then only one corresponding pair equal. Use distinct channels/multiframe data and valid scratch capacity.",
+      "static_prediction": "Any equal pair stages all inputs; output numerical operator should match the disjoint path within the previously stated FP limits."
+    },
+    {
+      "case": "Aliasing boundary challenge",
+      "setup": "In a controlled future harness only, introduce cross-channel equality with no corresponding equality, or partial overlap, while retaining exact memory layout.",
+      "static_prediction": "The specific staging guard is not selected by cross-channel equality alone; no faithful-output prediction is made. This probes the excluded domain, not a conformance test the current candidate supports."
+    },
+    {
+      "case": "Copy-loop boundaries",
+      "setup": "Bypass disjoint buffers at frame counts1,3,4,5,7,8,9 for both precisions, including signed zero and distinct sample bit patterns.",
+      "static_prediction": "Same-index bit copies and exact self-copy skips in the valid domain; catches mistaken element width, vector-tail count or argument binding."
+    }
+  ],
+  "evidence": {
+    "byte_provenance": "state-analysis/byte-provenance.json",
+    "byte_provenance_sha256": "ea7a51ecc688067c2b5ef59b39e2928232a6678ccbe284a8b3aedeeb662717a9",
+    "new_verification": "state-analysis/verification.json",
+    "new_verification_sha256": "c46b12f44aa22199c9ede7da9e98882ad4ccc174d7d0d3d2b97586b3e4dd3cab",
+    "original_instruction_words_checked": 686,
+    "new_double_bypass_evidence_id": "ev_b3ef22d317026f81c45a5d6c0167a1baa52452ded21fd642e884099ae734903f",
+    "new_double_bypass_bytes": 120,
+    "new_double_bypass_raw_sha256": "90b970fc00a7f7dccaf5c8fe51dca90cbf8707185dfdd2a7713f0719dd4502cc",
+    "new_double_bypass_range": {
+      "start": "0x154b64",
+      "end_inclusive": "0x154bdb",
+      "length": 120,
+      "thin_offset": 1395556,
+      "universal_offset": 3558244,
+      "sha256": "90b970fc00a7f7dccaf5c8fe51dca90cbf8707185dfdd2a7713f0719dd4502cc",
+      "raw_file": "double-bypass.arm64.bin",
+      "next_declared_start": "0x154bdc",
+      "boundary": "LC_FUNCTION_STARTS interval, not automatically proved body",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+        "-d",
+        "--start-address=0x154b64",
+        "--stop-address=0x154bdc",
+        "/workspace/rebase/research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho"
+      ],
+      "native_sha256": "a67e508a11b91672583dbe834810c1e710a79d0eb32a2f432c38e7fffff40a33"
+    },
+    "dispatch_slots": [
+      {
+        "precision": "double",
+        "role": "conversion",
+        "slot": "0x58",
+        "target": "0x154a8c",
+        "start": "0x1d7678",
+        "end_inclusive": "0x1d767f",
+        "length": 8,
+        "thin_offset": 1930872,
+        "universal_offset": 4093560,
+        "sha256": "cf4c86234c21b1921563d11d4ebcda6a6858fabe045c54d5507be08a4fa61c18"
+      },
+      {
+        "precision": "double",
+        "role": "bypass",
+        "slot": "0x90",
+        "target": "0x154b64",
+        "start": "0x1d76b0",
+        "end_inclusive": "0x1d76b7",
+        "length": 8,
+        "thin_offset": 1930928,
+        "universal_offset": 4093616,
+        "sha256": "9adfcd2af5b6e0e4f441c030cb569c7667311a7c9d497a76c1cbf6727926958d"
+      },
+      {
+        "precision": "float",
+        "role": "conversion",
+        "slot": "0x58",
+        "target": "0x154d4c",
+        "start": "0x1d7798",
+        "end_inclusive": "0x1d779f",
+        "length": 8,
+        "thin_offset": 1931160,
+        "universal_offset": 4093848,
+        "sha256": "755238b5cb63b9a5d4d7a1e30dcb598f265b4014fda12be7a649e605047b3b4b"
+      },
+      {
+        "precision": "float",
+        "role": "bypass",
+        "slot": "0x90",
+        "target": "0x154e28",
+        "start": "0x1d77d0",
+        "end_inclusive": "0x1d77d7",
+        "length": 8,
+        "thin_offset": 1931216,
+        "universal_offset": 4093904,
+        "sha256": "1715db00d3841b982a6ea80e8ca700a5508de075bb5cacbfb671246cd4e1879c"
+      }
+    ],
+    "existing_retained_function_hashes": [
+      {
+        "file": "processor-process-thunk.json",
+        "sha256": "043053d2e8027943cc1042db89af49ad8a725aaebe7601fc5000b36d80c698b5",
+        "evidence_id": "ev_c0693808fd4ea5ff43fc1385d4728d4b47466f80ab8d7473a88fa79b96f8c2a6",
+        "ranges": [
+          {
+            "start": "0x154464",
+            "end_inclusive": "0x15446b",
+            "length": 8,
+            "thin_offset": 1393764,
+            "universal_offset": 3556452,
+            "sha256": "6620079e0d6a5b3ff240c53cfb5e4e63648778b1920e5422a60238db1c5f3d87"
+          }
+        ]
+      },
+      {
+        "file": "processor-process-function.json",
+        "sha256": "87b619703b894bfb64d178b770f3d5c72175ade5dd2a46c467036476d6b63fa1",
+        "evidence_id": "ev_b2f398cfea2637930a17064bd1032da4610f721ee69cf9bb6c19f2986c2d29ae",
+        "ranges": [
+          {
+            "start": "0x153d98",
+            "end_inclusive": "0x15414b",
+            "length": 948,
+            "thin_offset": 1392024,
+            "universal_offset": 3554712,
+            "sha256": "e723e74641fb0e79ef86634b7d39fdc10bdd934912bd98aaae38d7d515c5cfaa"
+          }
+        ]
+      },
+      {
+        "file": "processor-constructor-function.json",
+        "sha256": "3448b83b132a6dacf9c065b99a71889b0b950add1eaeaba295d7eaa73f7a40aa",
+        "evidence_id": "ev_3b8728c5ecb2fb8d025cc8d8de3c5f02808798a9bda41a165619bb6e10926134",
+        "ranges": [
+          {
+            "start": "0x152028",
+            "end_inclusive": "0x15209f",
+            "length": 120,
+            "thin_offset": 1384488,
+            "universal_offset": 3547176,
+            "sha256": "3bb5ca2524f9730f7cfb1efa09daaf53f8fa33b31ff0491ee5383c755b0ef0e9"
+          }
+        ]
+      },
+      {
+        "file": "direction-parameter-consumer.json",
+        "sha256": "462b034dfe906c7426e7cc4f71f0e9bb9de2b70a831851ba7dd465a074d8b82b",
+        "evidence_id": "ev_4f992b72aec563124a5a8828c9cd9e5f2f704d1b44726ce440a62470f802581a",
+        "ranges": [
+          {
+            "start": "0x1520d0",
+            "end_inclusive": "0x152277",
+            "length": 424,
+            "thin_offset": 1384656,
+            "universal_offset": 3547344,
+            "sha256": "eb0ae8d4236360a9f899abf8efe8ab56a549ee3896a92596a043df9291041319"
+          }
+        ]
+      },
+      {
+        "file": "float-bypass-process-function.json",
+        "sha256": "b7dbf3a21bff3e8658f39b46daa6df05192c959986a43183b2f7be78e35d54d8",
+        "evidence_id": "ev_063e0b7e04af9cb4b264e12a6356f32e8fe4053282baab3e4ecf408e3a20c765",
+        "ranges": [
+          {
+            "start": "0x154e28",
+            "end_inclusive": "0x154e9f",
+            "length": 120,
+            "thin_offset": 1396264,
+            "universal_offset": 3558952,
+            "sha256": "3b4665ad57bb7dcf95e80c6e9b63d88f3d329b64deb5cf57cf1de0200d189782"
+          }
+        ]
+      },
+      {
+        "file": "float-channel-permutation-function.json",
+        "sha256": "8715aaf3268fa46159c210b93fad84f91ba2f9c72e0fc4d496436a2e007aba3e",
+        "evidence_id": "ev_8c579cccb9a2999385243abde3a396b6762626d8537f036a621e1114ecf7caae",
+        "ranges": [
+          {
+            "start": "0x154ebc",
+            "end_inclusive": "0x154fbb",
+            "length": 256,
+            "thin_offset": 1396412,
+            "universal_offset": 3559100,
+            "sha256": "344436cc73063dfbb768a5302153d96f7cda0e8f5c93ad842f708946ebe59975"
+          }
+        ]
+      },
+      {
+        "file": "double-channel-permutation-function.json",
+        "sha256": "6aebce2e199e6f7ae24648192cce288ce3c4d5746c92435befec49d0b072e185",
+        "evidence_id": "ev_eeb71a978aabe2b0b5741cba344e76f07768355f52ecc4eb92ab4a7c67d7e608",
+        "ranges": [
+          {
+            "start": "0x154bf8",
+            "end_inclusive": "0x154cf7",
+            "length": 256,
+            "thin_offset": 1395704,
+            "universal_offset": 3558392,
+            "sha256": "81f934d7d04092b225ac9b87c1aee17b72f10dd057d127cd3d89ab9d2646a90b"
+          }
+        ]
+      },
+      {
+        "file": "float-buffer-copy-function.json",
+        "sha256": "94fda0f6ff6b77e4d95deee1c4dfd7f034a485bea9649361a44553d115b9317a",
+        "evidence_id": "ev_da781b019e3e65787f4007c055181ae257d7fadad31f0fa739442f5efebce5a8",
+        "ranges": [
+          {
+            "start": "0x16a0fc",
+            "end_inclusive": "0x16a14b",
+            "length": 80,
+            "thin_offset": 1483004,
+            "universal_offset": 3645692,
+            "sha256": "5a9248d62e7927338b5481a7ba8aba2ed786dd4b9e4f3c4a60addf29e4e3d6fd"
+          }
+        ]
+      },
+      {
+        "file": "double-buffer-copy-function.json",
+        "sha256": "021afffe053938e346e644c11b9de173d26d6a17c057d432dbcc4943c6baac4f",
+        "evidence_id": "ev_440191a53535ba55af7157734fa32e827d5e3ea6c215bc7d160a26a1abe2cd67",
+        "ranges": [
+          {
+            "start": "0x16a14c",
+            "end_inclusive": "0x16a1cb",
+            "length": 128,
+            "thin_offset": 1483084,
+            "universal_offset": 3645772,
+            "sha256": "a7cccdb20d574fcb66a9ee5ffa9e33c2bdb3092ae7a52225ccd968ef7394b359"
+          }
+        ]
+      },
+      {
+        "file": "float-conversion-process-function.json",
+        "sha256": "54e4acee827b1f59e7a80858d40438834d034673b47667de45e039fd42b2e2ae",
+        "evidence_id": "ev_cbbaed7434362e2b7f9465cdd773e5f1931f9d2c60ed615262d8668b8ab47c5b",
+        "ranges": [
+          {
+            "start": "0x154d4c",
+            "end_inclusive": "0x154ddb",
+            "length": 144,
+            "thin_offset": 1396044,
+            "universal_offset": 3558732,
+            "sha256": "1ff1bbfd600a777b90a06bf9a776e4b58f653a70860616b416fcad74b3e8bb9b"
+          }
+        ]
+      },
+      {
+        "file": "double-conversion-process-function.json",
+        "sha256": "cdd578dc4320199fd0a9d7bbd049477f42f026d0eccee71d0e5d035fd09dce44",
+        "evidence_id": "ev_8e7f749a08b569b58f88bdce179c6bae9ec267805ccf38c75456169dc0791c70",
+        "ranges": [
+          {
+            "start": "0x154a8c",
+            "end_inclusive": "0x154b17",
+            "length": 140,
+            "thin_offset": 1395340,
+            "universal_offset": 3558028,
+            "sha256": "d7b37a259cf0a3299dea8d56326d2b75208fbac31b69e1ffdcbfb4783157183d"
+          }
+        ]
+      }
+    ],
+    "public_abi_references": [
+      {
+        "url": "https://raw.githubusercontent.com/steinbergmedia/vst3_pluginterfaces/4f547e8e102b47de4a8b8aaf343c73b700786372/vst/ivstaudioprocessor.h",
+        "sha256": "6289b19c8300fb381da7688414fae52d5ca139371f910830532204b860bd6549",
+        "local_file": "reference-ivstaudioprocessor.h",
+        "use": "Public ABI declarations only; not the source of the recovered component or conversion equations."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/steinbergmedia/vst3_pluginterfaces/4f547e8e102b47de4a8b8aaf343c73b700786372/vst/ivstparameterchanges.h",
+        "sha256": "4f177d8f9e207fc4f247fde5aebfbdf863d02bced08a6c2d21d759f043eea3dd",
+        "local_file": "reference-ivstparameterchanges.h",
+        "use": "Public ABI declarations only; not the source of the recovered component or conversion equations."
+      }
+    ]
+  },
+  "analysis_limits": [
+    "Static observations and conditional implications only; no plug-in or target-code execution occurred.",
+    "The new double-bypass query used an exact120-byte raw arm64 slice at its original0x154b64 address. Its outside copy target has separately retained original-image evidence; no fake imports/data or patched instructions were added.",
+    "Pseudocode is generated, not original source, not guaranteed compilable and not a bit-faithful reconstruction. Native branch/load/store instructions govern this contract.",
+    "Numeric return0/1 observations are not a complete API failure taxonomy. The peculiar initial guard is documented exactly and does not prove safe processing for other invalid pointer states.",
+    "The source files and prior first-order/higher-order findings, candidate and reviews remain unchanged. No candidate expansion is part of this finding."
+  ],
+  "session": {
+    "new_provider": "REA/Ghidra12.1.4",
+    "new_profile": "ghidra-default",
+    "heap": "2G",
+    "new_evidence_records": 2,
+    "bundle": "state-analysis/evidence-bundle.json",
+    "snapshot": "state-analysis/snapshot.json",
+    "all_close_calls_succeeded": true,
+    "mcp_exit_code": 0
+  },
+  "independent_review": {
+    "status": "Complete; no remaining actionable error after valid-host silence-probe correction",
+    "path": "../ambisonic-state-review/review.json",
+    "review_sha256_at_link_time": "51f05ba2796a044ee5e38444cf0ddbcf44a4547c116850e95f3985b2f984da20",
+    "scope": "Independent original bytes, native instruction decoding, state branch conditions, dispatch slots, meter import binding and ABI-valid prospective cases; no target execution."
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "mode": "read-only independent source review",
+  "status": "No actionable new timing integration defect found in inspected paths",
+  "scope": [
+    "Project.swift migration, validation and transactional replaceTempoMap",
+    "StudioSession.swift tempo/signature apply, move/split and time-base switches",
+    "TimelineView.swift move commit and musical grid",
+    "ProjectEditors.swift edit/apply boundary",
+    "Automation.swift interpolation/edit contract"
+  ],
+  "checks": [
+    "Tempo-map changes validate candidate, retime only musical clip starts, preserve audio duration and sourceOffset, then commit atomically.",
+    "Legacy projects obtain default maps and seconds clip bases; stale musical anchors reject on validation. Direct mutable tempo setter has now been removed.",
+    "Clip movement converts seconds to quarter-note beats, snaps using optional original phase, then derives the new musical anchor; new-event creation does not pass a relative origin.",
+    "Signature apply rejects invalid bar-boundary events; tempo ramp types reject rather than silently assuming a domain.",
+    "Automation validation precedes sample evaluation; exact-point, outgoing step/linear, boundary hold and read-disabled fallback are internally consistent."
+  ],
+  "limits": [
+    "Source review only, no additional native UI execution or target interoperability test.",
+    "The existing application validation record pins the earlier Project.swift revision before removal of the direct tempo setter; this record pins the later inspected revision.",
+    "No claim of native Cubase arithmetic, rounding, negative-time support, ramps, swing or groove behavior."
+  ],
+  "files": [
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "sha256": "d28ced71b7777974c4975c4ac424155288105a9b399a872a3ef199174f3cc8ba"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Automation.swift",
+      "sha256": "b3cf8cdafcb4d799520ad9bfa969a3e1fd04e776405051b446e242bc8738170b"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/MusicalTime.swift",
+      "sha256": "ed6f3be23cd2260f074f6f651a8703d0b0872ccff0635f256a869fdb28bb202e"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "sha256": "d677745b771da74957c6688a287efbc4aea29365e80bfb776c9bc35e5aa1ff58"
+    },
+    {
+      "path": "Application/Sources/Rebase/TimelineView.swift",
+      "sha256": "0826c71d678a2293bcf0e8d21a557d8c9e1881b27cf70d552f82f986de76e2d4"
+    },
+    {
+      "path": "Application/Sources/Rebase/ProjectEditors.swift",
+      "sha256": "c0feecf1624b0365aa09e1e8982a26a774b3f12fd77c7bf7de0afcbb332a4921"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/ProjectBehaviorTests.swift",
+      "sha256": "8b6a337446d75853e005af3e98db00ada507f73d7494914296a6ac9368633c52"
+    }
+  ]
+}

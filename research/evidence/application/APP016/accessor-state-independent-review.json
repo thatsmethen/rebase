@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "status": "passed_no_open_defect_in_reviewed_domain",
+  "target_executions": 0,
+  "scope": "Independent fixed-rate, explicitly supplied-format immutable stereo accessor reconstruction and matching-rate timeline integration. This is not proof of selected Cubase backend format/rate, runtime playback or postterminal continuation.",
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeAudioAccessor.swift",
+      "bytes": 8645,
+      "sha256": "94a667f15708382e438c3ab6237675c18f7d430cc43d45b37c4e44b296bca33c"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 9761,
+      "sha256": "7083dfbb5f2c4af394f95416a1ac9cbcc9413c19e935d32f64e08c86915d0fe1"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_seek.c",
+      "bytes": 2274,
+      "sha256": "355b2818498bf35bc756ab671fbb4aa64cadd6dc823f54ed386bfb5bf997581e"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_seek.h",
+      "bytes": 803,
+      "sha256": "b68cb079ce507d9775560c08ba3bd384fec873ac5e2d0812a907013fe3745db4"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_format.c",
+      "bytes": 1859,
+      "sha256": "93867452e419fc03bdbe8a5576e8fc6f70e81ddb284930472e2cbb01e9e668e5"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_format.h",
+      "bytes": 751,
+      "sha256": "657a8ac70785c7a4d8ed39c25bc03048b2a14d701329d14218be9cb16d2519ad"
+    }
+  ],
+  "source_and_evidence": [
+    {
+      "path": "research/evidence/application/APP016/accessor-state-oracle.py",
+      "bytes": 8462,
+      "sha256": "ae0dd3068c1628f77a6a39c4c7dc65e1fe0325aa018a6d3b4d3998423961c536"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-state-oracle.json",
+      "bytes": 735006,
+      "sha256": "5742689c7f78313468e9c682aa49735b245ff86493aefafa79508e8e9caa347a"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-state-oracle-generation.log",
+      "bytes": 261,
+      "sha256": "971633756380aa9d21b29217db39fb885a0138d87f14ad2a3769636e9afe697a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeAudioAccessorTests.swift",
+      "bytes": 13713,
+      "sha256": "732bbe5def2c32bc892bf08a3fe971cacbc9f05ec720535dcbd206d37041ef13"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-tests-first.log",
+      "bytes": 6852,
+      "sha256": "289ee5161d9f2607aa101d29b73e4f61fe3add6413f44ab821cf4577c840c466"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-tests-second.log",
+      "bytes": 11413,
+      "sha256": "b59657d4dfc54ad2e56b2a8a828f4c1d597d82e814327b14be5bb188ce675ff6"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-tests-third.log",
+      "bytes": 7498,
+      "sha256": "c3ae88d498a5ddaf67be8ba5bbf34cc9b9d5bb6ea76dfda03c2ffa3a72dfb410"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-instruction-verification.json",
+      "bytes": 1108,
+      "sha256": "dc5820ba16a3f17410f5e9736b90c2081d2b383539384623b70ffe53023beb1b"
+    },
+    {
+      "path": "research/evidence/application/APP016/rate-ownership-independent-review.json",
+      "bytes": 2597,
+      "sha256": "e628d5527812fd91265f3af8fa48e76bdcce10476c71b3dc46c14fdea5e58b91"
+    },
+    {
+      "path": "research/evidence/application/APP016/retained-accessor-architecture-review.json",
+      "bytes": 12194,
+      "sha256": "bd96566e45c0fb27483b8f113ee14e0ba22000096fe4252ca52f42731fbd5b34"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-pcm24-controls.json",
+      "bytes": 6000,
+      "sha256": "b9ac5b35721ccb5f19f39d74a1f62ae04a70b552b9dffacece3568b2d37ff799"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-pcm24-oracle-v2.json",
+      "bytes": 402077,
+      "sha256": "c9031fc3ba4f72298fcd7ebcef631e1912ef61b6e83395a1b110f85e1e4163d6"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/finding.json",
+      "bytes": 31753,
+      "sha256": "d76301f9ef7e25345c0e22fdded03aecff7e41f5ffbd0729985a0018518a1ea2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/working-contract.json",
+      "bytes": 8287,
+      "sha256": "26db6b60a03c81f90d418c96d9cf9203533d2d99f6c6aeb44104cd6b76c48570"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/finding.json",
+      "bytes": 33246,
+      "sha256": "889f90405c4d5607958f92f35b38e99a1b821f3708d038eda0ee53819eea657b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/finding.json",
+      "bytes": 5405,
+      "sha256": "26640a81ed61597bd809ffbf21febd81264f688bbb51433b049cb02de778245e"
+    }
+  ],
+  "reused_oracle_dependencies": [
+    {
+      "path": "research/evidence/application/APP016/accessor-state-oracle.py",
+      "bytes": 8462,
+      "sha256": "ae0dd3068c1628f77a6a39c4c7dc65e1fe0325aa018a6d3b4d3998423961c536"
+    },
+    {
+      "path": "research/evidence/application/APP010/native-rate-mode0-oracle.py",
+      "bytes": 7965,
+      "sha256": "6b5357c1bf923034673e9bcb240136b6dc31e8fde0276132036232811f2623a4"
+    },
+    {
+      "path": "research/evidence/application/APP013/mode1-oracle.py",
+      "bytes": 13030,
+      "sha256": "f031f38172356ca244c683c35c17c2413333f52a58a1d43048f457258d8e9238"
+    },
+    {
+      "path": "research/evidence/application/APP012/mode2-public-oracle.py",
+      "bytes": 6810,
+      "sha256": "8f051d49f4b2e660951cfcfe8e3f7d93e73f4f2693d56124939ccd1e6eeed852"
+    },
+    {
+      "path": "research/evidence/application/APP012/mode2-wrapper-oracle.py",
+      "bytes": 16452,
+      "sha256": "13d030c982ca7154ae29839e527638cd900068f785ba5e8a05095115d6957b64"
+    },
+    {
+      "path": "Application/.build-soxr/install/lib/libsoxr.0.1.2.dylib",
+      "bytes": 188000,
+      "sha256": "c614df97b2c3f3881fa694efc73a6d5152fe0288ac9396adb6bd7c8c8e5f895a"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-pcm24-oracle.py",
+      "bytes": 8456,
+      "sha256": "87c7d19a69113a6a4f9f21233058d8810eb04c51ccc705599b7cb46c6338584f"
+    }
+  ],
+  "verification": {
+    "original_accessor_instruction_words": 349,
+    "seek_vectors": 105,
+    "retained_scenarios": 10,
+    "read_calls": 24,
+    "exact_float32_output_words": 4576,
+    "focused_tests": 7,
+    "suites": 1,
+    "seconds": 0.166,
+    "log": {
+      "path": "research/evidence/application/APP016/accessor-tests-third.log",
+      "bytes": 7498,
+      "sha256": "c3ae88d498a5ddaf67be8ba5bbf34cc9b9d5bb6ea76dfda03c2ffa3a72dfb410"
+    },
+    "candidate_expected_value_calls": 0,
+    "format_candidate_byte_identical_to_reviewed_application_copy": true
+  },
+  "independent_method": [
+    "Seek and budget expectations use integer/Fraction IEEE rounding, including Float32 rate division before Double seek arithmetic. Candidate C and Swift accessor are not called to produce expectations.",
+    "Retained mode1 samples use the prior independently transcribed tap/history model with exact Fraction arithmetic and shared host sin/sqrt; retained mode2 uses an independent wrapper with the same pinned public SoXR backend. This isolates wrapper/state composition, not the shared transcendental/library implementation.",
+    "Original seek 10036f89c and read 10036eff0 instruction words were freshly compared with the pinned Mach-O bytes. Inspected first-budget, flush predicate, source-position update and seek branches match the bounded handoff.",
+    "Conditional PCM24 stage has a separate 681-vector optimized and UBSan control record. Both copies of the application format C/header exactly match that reviewed candidate."
+  ],
+  "accepted_observations": [
+    "105 seek controls include the Float32-ratio discriminator 44100 to 48000, requested 48000: stored source 44099 and returned output 47998. Seek changes position only; reads after backward/nonsequential seek retain prior mode1/mode2 history and first-budget state.",
+    "The ten sequences match all requested/budget/actual/returned counts, source cursors, first flags, EOF predicate and 4576 output Float32 words. Full first read exactly reaching source EOF does not invent terminal=true; only first short unequal-rate source read does.",
+    "Zero source budget consumes the first flag and calls no converter. Mode2 allowance is explicit supplied context separate from selected fallback child, not a backend availability claim.",
+    "PCM24 source admission rejects impossible negative zero, off-grid and out-of-range decoded values. The intermediate downsample quantizer still intentionally maps negative zero to positive integer zero.",
+    "Preflight errors preserve cursor/first/failure status; conversion errors poison the accessor because child state may already change. Terminal-state continuation is deliberately rejected rather than reset or preroll.",
+    "Immutable source and returned copies are isolated. Equal Float32 direct reads preserve first flag and return actual short counts; equal PCM24 format path consumes it.",
+    "Matching-rate timeline integration keeps one active descriptor accessor across blocks and releases it on changed/nil selection, including after a skipped descriptor. Full read counts are required, segment gain follows read once, and the output block is published only after success."
+  ],
+  "retained_test_development": [
+    {
+      "log": {
+        "path": "research/evidence/application/APP016/accessor-tests-first.log",
+        "bytes": 6852,
+        "sha256": "289ee5161d9f2607aa101d29b73e4f61fe3add6413f44ab821cf4577c840c466"
+      },
+      "outcome": "Compile failure only: test attempted to mutate immutable Read.samples. Corrected to mutate a detached value copy; no production edit."
+    },
+    {
+      "log": {
+        "path": "research/evidence/application/APP016/accessor-tests-second.log",
+        "bytes": 11413,
+        "sha256": "b59657d4dfc54ad2e56b2a8a828f4c1d597d82e814327b14be5bb188ce675ff6"
+      },
+      "outcome": "All numerical/sample/state expectations passed; 12 raw-byte assertions compared unspecified C-struct padding through Swift value copies. Corrected to inspect stable allocated sentinel-filled storage directly, retaining full byte-transactionality coverage."
+    },
+    {
+      "log": {
+        "path": "research/evidence/application/APP016/accessor-tests-third.log",
+        "bytes": 7498,
+        "sha256": "c3ae88d498a5ddaf67be8ba5bbf34cc9b9d5bb6ea76dfda03c2ffa3a72dfb410"
+      },
+      "outcome": "All seven tests passed; numerical expected values and oracle hash unchanged."
+    }
+  ],
+  "limits": [
+    "No Cubase runtime execution, proprietary PCM comparison, vendor-library identity or whole-project fidelity claim.",
+    "Source/backend format and reader-owner current rate remain explicit context; a stored PCM24 WAV or project rate does not establish the live selected stream. The current native timeline integration remains matching-rate only.",
+    "Only unity accessor gain, immutable stereo memory source, fixed integral 8000..192000 rates, bounded requests, nearest supported arm64 FP environment and the admitted format paths are implemented.",
+    "Backend seek mismatch, transient error and retry are not injected through this immutable-memory accessor. Native special retry is separately planned by the existing timeline primitive; arbitrary backend errors and mutation are not reconstructed.",
+    "Postterminal mode1 continuation and mode2 backend lifecycle remain excluded. Mode2 zero-input nonterminal remains a defensive rejection; the accessor poisons rather than adding flush or padding.",
+    "A successful returned-count query or sample test does not certify real-time scheduling, concurrency, dynamic rate changes, channel/format changes, current backend availability or alternate host callbacks.",
+    "Shared public SoXR and host transcendental dependencies are explicit. Sanitizer/control results are bounded tests, not proof for untested memory states."
+  ]
+}

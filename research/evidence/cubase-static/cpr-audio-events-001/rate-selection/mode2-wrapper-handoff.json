@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "id": "CPR-RATE-SELECTION-001-MODE2-HANDOFF",
+  "evidence_class": "static native wrapper contract and prospective implementation controls",
+  "target_execution": false,
+  "domain": "Successful prior internal-format0 initialization; finite positive constant rates; mono/stereo interleaved Float32; checked integer counts and buffer products; final input block<=65408; one terminal flush. Library calls return successfully. This is a candidate implementation domain, not proof every native input fits it.",
+  "source_evidence": {
+    "path": "../rate-converter/finding.json",
+    "sha256": "a78e11153ad11bbd925a915a4e5260af19ce28188073a78a59f26cc0fe109ada",
+    "functions": [
+      "100313adc",
+      "100313b74",
+      "100313c2c",
+      "1003141bc",
+      "100315000",
+      "100315438"
+    ],
+    "custody": "contract-verification.json rechecks retained native words and REA readbacks against immutable main source"
+  },
+  "api_outline": {
+    "create": "create(rin:Double,rout:Double,channels:Int, publicSoXRBackend) -> state, initialized with io(0,0), quality(6,0), runtime(0)",
+    "push": "push(input:[Float],frames:positive Int<=65408,final:Bool=false) -> visible output frames",
+    "finish": "Exactly one final=true invocation; optional zero-input terminal invocation is a distinct tested case. Reject push after finish in the application subset.",
+    "recreate": "Seek/rate/channel changes require a fresh declared wrapper state and deterministic preroll unless a separately traced reset contract is implemented."
+  },
+  "initial_state": {
+    "ratio": "RN64(Rout/Rin)",
+    "inputCapacity": 65536,
+    "chunkCap": 65408,
+    "padding": "P=UInt32(ceil(Rout/Rin)*2048) in the default child mode +a=0",
+    "totalDelay": "P",
+    "remainingDiscard": "P",
+    "cumulativeInput": 0,
+    "cumulativeVisibleOutput": 0,
+    "cumulativeIdeal": 0,
+    "childInputEnd": 0,
+    "childInputConsumed": 0,
+    "childPendingInput": 0,
+    "childOutputRead": 0,
+    "childOutputEnd": "P",
+    "childBuffers": "Float32 input atchild+38; output atchild+40. The output allocation is explicitly cleared before initial P frames become visible to wrapper bookkeeping. Do not replace this artificial padding with an unproven soxr_delay result.",
+    "capacity": "Native output capacity is ceil(FMA(Double(inputCapacity),ratio,Double(P))+1024); relevant original operations100315180..19c. Preserve rounding and checked bounds."
+  },
+  "positive_block": [
+    "ideal=RN64(Double(n)*ratio), base=trunc_i32(ideal).",
+    "drift=RN64(RN64(cumulativeIdeal+ideal)-Double(cumulativeVisibleOutput+base)). requested=base+(drift>1 ?1:0); requested==0 becomes1. Original10031427c..2e4 uses separate multiply/add/sub, strict greater comparison.",
+    "Call buffered child with original n and requested output frames. If remainingDiscard>=requested: return0 for this block, subtract requested from discard, contribution0. If 0<discard<requested: retain suffix after discard, visible=requested-discard, contribution=RN64(ideal-Double(discard)), clear discard. Otherwise visible=requested and contribution=ideal.",
+    "cumulativeInput+=n; cumulativeVisibleOutput+=visible; cumulativeIdeal=RN64(cumulativeIdeal+contribution). Advance caller output only by visible. These are wrapper counts, not library outputProduced."
+  ],
+  "buffered_child": {
+    "input_compaction": "Before appending n, if inputCapacity<=inputEnd+n and inputConsumed!=0, move unconsumed [inputConsumed,inputEnd) to the start; inputEnd-=inputConsumed; inputConsumed=0. Format0 branch is selected by original byte jump table, absent from raw pseudocode.",
+    "output_compaction": "If floor(outputCapacity/2)<=outputEnd+requested and outputRead!=0, move [outputRead,outputEnd) to start; outputEnd-=outputRead; outputRead=0.",
+    "call": "Append n interleaved frames. For nonnull input and n>0: pass input+inputConsumed*channels, pendingInput+n, &inputUsed, output+outputEnd*channels, requested, &outputProduced to soxr_process. For null input or n==0: pass NULL and clear pendingInput before the call.",
+    "update": "pendingInput+=n-low32(inputUsed); inputConsumed+=low32(inputUsed); outputEnd+=low32(outputProduced). Copy exactly requested frames from outputRead to caller destination. Then inputEnd+=n and outputRead+=requested; reset inputEnd/inputConsumed when equal, and outputRead/outputEnd when equal.",
+    "limits": "Native code ignores returned error pointer and does not retry until outputProduced==requested. Independent implementation must distinguish zero-initialized retained storage from produced samples and preserve native buffering, or label an alternative adapter. A fail-closed candidate may reject failed calls/capacity invariants outside successful domain. Do not equate input n, inputUsed, outputProduced and visible output."
+  },
+  "terminal_flush": {
+    "instructions": [
+      "100314414..438",
+      "100314450..4a4",
+      "1003144dc..560"
+    ],
+    "rule": [
+      "Compute extra=trunc_i32(Double(totalDelay)/ratio), with separate division.",
+      "For positive final input, build extra copies of that final frame. For null input or zero count, build zero frames instead.",
+      "Recurse once with this padding and final=false. Copy returned visible tail; restore cumulativeInput to its pre-padding value. Other counters, including cumulativeVisibleOutput, retain padding processing updates.",
+      "remaining=trunc_i64(RN64(Double(savedCumulativeInput)*ratio))-cumulativeVisibleOutput. If remaining>0, call buffered child with NULL input, n=0, requested=remaining, and append that many frames. This last addition is not written to cumulativeVisibleOutput in the inspected tail."
+    ],
+    "critical_bounds": [
+      "The native oversized-block split advances x24 while preserving original input in x26. Terminal last-frame address100314474 uses x26+(remainingCount-1)*channels, not the advanced pointer. This handoff therefore limits final caller block<=65408; it makes no assertion that oversized final calls repeat the original overall last frame.",
+      "Repeated flush and post-flush reuse are not accepted. A zero-length flush is distinct from a positive block and needs an explicit test.",
+      "This wrapper extends with repeated last frame before a NULL library call; directly sending EOF to public SoXR omits that behavior."
+    ]
+  },
+  "minimum_independent_build_controls": [
+    "Pin the complete public0.1.3 source commit and licenses; record compiler, architecture, FP contraction, constant-rate/variable-rate engines, SIMD/FFT options, OpenMP and clock options. No vendor library execution.",
+    "First distinguish plain SoXR from wrapper behavior with impulse, nonzero final frame, ramps and alternating signs at44100\u219248000 and48000\u219244100. Record backend inputUsed/outputProduced separately from wrapper visible count.",
+    "Check n=1, n immediately around initial discard,65408/65409 no-flush split, exact drift1 versus greater1, and block partition changes. These are independent candidate controls, not target PCM comparisons.",
+    "Check positive final short block, full exact-end block, zero-input final, deliberately repeated final rejected, and a final count65409 rejected by this subset.",
+    "Exercise unavailable library/factory failure policy separately from successful mode2 samples; do not silently fall back to mode0.",
+    "Do not use the generic native per-buffer sample count as total project timeline duration or as proof of native live callback scheduling."
+  ],
+  "remaining_unknowns": [
+    "Exact bundled source modifications/build flags and any runtime environment influence.",
+    "Live VstOpTrack receiver+230 callback invocation and its relationship to this accessor.",
+    "Runtime successful consumption/production and output sample equivalence with a rebuilt public source."
+  ],
+  "implementation_status": "No new application code or public-source library build in this study."
+}

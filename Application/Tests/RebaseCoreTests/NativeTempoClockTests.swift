@@ -4,8 +4,8 @@ import Darwin
 import CryptoKit
 @testable import RebaseCore
 
-private let nativeClockWorkspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-private let independentClockVectors = nativeClockWorkspace.appendingPathComponent("research/evidence/cpr-static/cpr-audio-timing-001/reviewer-fixed-clock-vectors.json")
+private let nativeClockWorkspace = PrivateResearchFixtures.root
+private let independentClockVectors = nativeClockWorkspace.appendingPathComponent("evidence/cpr-static/cpr-audio-timing-001/reviewer-fixed-clock-vectors.json")
 
 final class NativeTempoClockTests {
     private func clock(_ bits: UInt32 = 0x42fd0000) throws -> NativeTempoClock {
@@ -70,7 +70,7 @@ final class NativeTempoClockTests {
         expectThrows(try c.nativeTick(atSeconds: Double.greatestFiniteMagnitude))
     }
 
-    @Test(.enabled(if: FileManager.default.fileExists(atPath: independentClockVectors.path), "Requires the retained independent analytical clock oracle; no target execution."))
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
     func reviewerOracleCoversMantissaAndOperationOrderDiscriminators() throws {
         let bytes = try Data(contentsOf: independentClockVectors)
         let hash = SHA256.hash(data: bytes).map { String(format: "%02x", $0) }.joined()

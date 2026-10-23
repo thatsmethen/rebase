@@ -1,0 +1,27 @@
+{
+  "at_utc": "2026-10-19T14:11:25.673133+00:00",
+  "scope": "Read-only independent source review; no test rerun.",
+  "inputs": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRSegmentReadPlan.swift",
+      "sha256": "af56297a268184c07c58657beef5e7d67eb794b622614536992f65714752cae0"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSegmentReadPlanTests.swift",
+      "sha256": "3b78f2abdc0f531b08776a70f7deb3b163395a37ced25d65704003ba1f7071af"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/native-10036d22c.txt",
+      "sha256": "fb1954438f233f4fd72a5ee932324cfbad4c42eb991efd64e2f4f82298b2b0a8"
+    }
+  ],
+  "findings": [],
+  "conclusion": "No actionable defect found in the documented single-segment, matching-format, full-success domain.",
+  "checked": [
+    "Native min uses signed64 remaining and sign-extended positive Int32 request before subsequent w28 uses; selected count safely fits Int32.",
+    "Half-open position bound, source Start=p-Start+Offset, source count=min(request,Start+Length-p), padded next position=p+request agree with original instructions.",
+    "Entire source extent/byte-size/endpoints are explicit stricter application guards, not claims that native itself validates them.",
+    "Tests cover immutable six analytical controls and real factory references without claiming playback."
+  ],
+  "target_execution_count": 0
+}

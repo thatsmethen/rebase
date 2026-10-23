@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "id": "APP004-NEXT-MAP-CLOCK-CONTRACT",
+  "created_utc": "2026-10-19T11:27:20.558866+00:00",
+  "author": "target_intake",
+  "status": "prospective gates; map-clock import remains unsupported",
+  "recommendation": "First establish an origin-only one-record active map clock, with direct serialized reciprocal Float32 period and native positive-forward quantization. Close its tempo-specific attribute and post-read/list-state edges before promotion. Then add two-record jump maps using LoFi as the discriminating real fixture; defer general multi-point and ramps until iterator and cache semantics are complete.",
+  "already_traced": [
+    "Supported project timing roles are counted shared interface pairs (APP004), not scanned tempo objects. Preserve this requirement and the corrected explicit-default fallback.",
+    "Tempo v3 body: i32 count, count\u00d722-byte records (f32 reciprocal period, f64 seconds A, f64 native ticks B, i16 kind), f32 fixedBPM, u16 fixed/map mode, track attrs, then exactly one attr group per item. Mode0 selects map. Do not derive period from rounded/display BPM.",
+    "10173ad50 forward jump/last path: delta=seconds-A; quotient=delta/Double(storedPeriod); rawTick=fma(quotient,480,B). Positive result then floor(fma(rawTick,1000,0.5))/1000 via native FMADD+FRINTM. Zero uses another forward branch. Inverse10173b1d4: delta=tick-B; separate multiply byperiod,/480,+A. One-point is not fixed-mode arithmetic.",
+    "One-record forward10173b064 selects index0 without cache preparation; inverse1016c3ee0 selects index0 after10173b4cc. Reader sets list+50bit0x200 before post-read. Cache builder returns if set; otherwise zeroes first A/B and recomputes later A.",
+    "Count2 forward selects index0 for seconds<=lastA and last index for seconds>lastA. Count2 inverse delegates to real helper1016c1424; raw-decompiler warning is not a native-code failure.",
+    "Signature study retains shared variation helpers, but its no-replacement proof used a concrete signature list. The native agent confirms tempo-specific attribute/cache/list binding remains separate."
+  ],
+  "fixture_priorities": [
+    "Four fixed, four active one-point maps, two active two-point maps; all first A/B are0. Exact source hashes/offsets/count consumption are retained in reviewer-template-state.json.",
+    "Piano/Rhythm Section/String Quartet one-point maps use stored periodbits0x3ee540f5, not inactive fixed135. Each carries itemkey0x5343436e\u2192ScoreEventAttributeContainer v1 with the same46-byte body SHA2dabbd6790db042b84108331f69a5b6f15b412d08ab2fadbe58f3bbba8fcd6c9. Symphonic one-point period0.5 has a179-byte container and additional track attrs.",
+    "Therefore rejecting all nonempty item attrs supports zero shipped one-point maps. An empty-attrs synthetic milestone is honest but is not factory-map recovery.",
+    "LoFi is the next two-point discriminator: periods0.75 then0.5, anchors(0s,0ticks)/(600s,384000ticks), kind0/0, empty item attrs. Stereo has equal0.5 periods and600s/576000ticks; it can hide wrong segment selection.",
+    "All observed tempo variations: collectionv0,index10(native-1),flags2,count1; childv0,namev1,null MDataNode alternate, trailing i32zero. Nullness alone is not a lifecycle proof."
+  ],
+  "ordered_gates": [
+    {
+      "id": "M1",
+      "scope": "one-point state",
+      "blocker": "Unknown tempo item-attribute and list-finalization effects.",
+      "minimum_work": "Reuse reader10173bdac/attribute helper1000ee8c4. Resolve concrete tempo+268 accessor and list+68 targets, bind track attr key loaded from1050802e4. Structurally decode the46-byte score container, locate its actual archive reader/materialization, and trace only attachment/callback effects on period+48,A+50,B+58,kind+60,list membership/cache. A score-related name is not proof of display-only behavior.",
+      "pass_gate": "Full object/count consumption, duplicate-key rejection, native-justified attr allowlist. Otherwise explicitly reject those attrs and label the milestone synthetic-only."
+    },
+    {
+      "id": "M2",
+      "scope": "one-point lifecycle",
+      "blocker": "Tempo-specific post-read and later cache invalidation may change selected state.",
+      "minimum_work": "Bind tempo+5f8 to10174c194, then reuse1017a5898\u21921017a4fb4\u21921017a3f98 and1017064c4. Resolve concrete tempo+258/+4f0/list+150 receivers for the observed null-alternate form and both feature branches. Also inspect cleanup10173af68..af90/10173b3f4..b41c, which can clear0x200 based on iterator mode/list+90. Resolve mode from101700eb4 and iterator setup/cleanup.",
+      "pass_gate": "Prove same selected list/period and stable cache, or branch-invariant origin-only A=B=0 results. Do not borrow signature-list no-op semantics or assume a runtime feature setting."
+    },
+    {
+      "id": "M3",
+      "scope": "one-point arithmetic",
+      "blocker": "Map-specific candidate/oracle is missing; fixed-clock reuse is wrong.",
+      "minimum_work": "No new REA needed for positive arithmetic/quantizer. Reconcile zero with retained instructions. Define descriptor retaining original reciprocal-f32 bits and source/record identity. Derive Fraction IEEE goldens with each rounded operation and explicit fma/floor, then verify optimized candidate instructions. Declare nearest/ties-even finite normal-or-zero bounded domain; reject invalid intermediates.",
+      "pass_gate": "State gates M1/M2 plus exact analytical vectors. Preserve lossy positive quantization; do not assert forward/inverse round-trip identity or reconstruct period through display BPM."
+    },
+    {
+      "id": "M4",
+      "scope": "two-point jump selection",
+      "blocker": "Concrete inverse iterator boundary/current-index/filter semantics incomplete.",
+      "minimum_work": "Reuse1016c1424,1016c3ee0,1016c31b0,1016c36f0,1016c38b8 and10173b064. Existing vtable104676228 pins missing slots d0\u21921016c3478,e0\u21921016c37d4,f8\u21921016c34b8,100\u21921016c35c4; obtain bounded REA/native dossiers only for these four targets initially. Trace initial state and before/at/after knot through final current/next item.",
+      "pass_gate": "Explicit selected segment for count2, strict increasing coordinates and supportedkind0. Reject duplicates/unsorted/count>2 until separately traced. Count>=3 binary search needs its own exact-tie/duplicate walk proof."
+    },
+    {
+      "id": "M5",
+      "scope": "multi-point cache policy",
+      "blocker": "Saved seconds A may differ bitwise from recomputed integrals and cleanup can invalidate cache.",
+      "minimum_work": "Reuse10173b4cc and M2 edges. Either prove stable source-cache use or require exact equality with native recomputation across all reachable invalidation branches. Derive jump recurrence with native subtract/multiply/divide/add order. Perturb A while preserving B/period to distinguish the policies.",
+      "pass_gate": "No silent recomputation or tolerance-based equivalence. Reject results dependent on unbound lifecycle state; origin-only branch invariance may be accepted first."
+    },
+    {
+      "id": "M6",
+      "scope": "deferred ramps",
+      "blocker": "Kind1 math-library/threshold/full FP contract uncertified.",
+      "minimum_work": "Keep kind!=0 unsupported. Later resolve actual imported stubs1038814ac/1038811ac and certify next-item kind ownership, tiny-interval threshold and operation order.",
+      "pass_gate": "Separate future contract; unnecessary for one-point/two-point jump milestone."
+    }
+  ],
+  "negative_controls": [
+    "Wrong timing slot/shared counterpart, detached tempo object; never promote unbound BPM/map. Zero/truncated count, missing/extra item groups, duplicate attrs, malformed refs/versions reject.",
+    "One-point nonzero A/B, non-null alternate, changed collection index/flags/count/trailing value, unknown score/track attrs reject unless separately proved. Exercise saved-valid versus invalidated-cache paths.",
+    "Stored periodbits0x3ee540f5 and adjacent f32; zero and smallest admitted positive; quantizer half-steps \u00b1one representable neighbor; fused-versus-split-operation discriminators. Compare map and fixed branches at equal displayed BPM.",
+    "Non-nearest FP mode, nonfinite/subnormal intermediates, overflow and oversized coordinates reject before output mutation. Assert exact composed quantized oracle result, not identity round-trip.",
+    "LoFi before/at/after600seconds/384000ticks with nextDown/nextUp; asymmetric periods at exact knot; perturbed saved A; duplicates/reversed anchors; count3 interior knot before broader acceptance. Stereo equal-period cases alone are insufficient.",
+    "Future integration: new interpretation profile for expanded map promotion; preserve historical V1/V2 replay. Active descriptor must equal preserved-source replay, including raw period/anchor bits. Explicit conversion/export warning and transactional cancel/apply/undo; unsupported maps retain original bytes and diagnostics."
+  ],
+  "next_turn_outputs": [
+    "One source-verified tempo reader\u2192attributes\u2192list\u2192post-read\u2192cache callflow; reuse dossiers and add only missing bound callees.",
+    "Exact46-byte score-container structural/consumer addendum and accepted/rejected gates; do not generalize to179-byte Symphonic payload without review.",
+    "One-point operation contract plus independent fused/floor oracle; implement only after M1/M2 close. Two-point LoFi selection/cache proof is a subsequent increment."
+  ],
+  "stop_rule": "If a focused tempo attribute/variation/cache edge remains unresolved, record it and stop promotion. No whole-main repeat import, target execution, app changes or generic importer claims are part of this plan.",
+  "evidence": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/finding-v1.json",
+      "sha256": "2169213ddb52e087005c8683b38f4c3d29720f337187ff187e9b0c47be0d478e",
+      "bytes": 7568
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/timing-independent-review.json",
+      "sha256": "01167af84b0319ef792622d26b2354b8be097677bf88d148260fbfd567908d4c",
+      "bytes": 7891
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/reviewer-template-state.json",
+      "sha256": "c23cf70470d39040a731a951406c1ac61514bfa5b3b4385701ef8cb5f6c37590",
+      "bytes": 96917
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/tempo-iterator-vtable.json",
+      "sha256": "486f1f1294c65ee3b557f5ef1bd564b12b303cca1e63fb5e5397ee2c91fec4fe",
+      "bytes": 1171
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-signature-001/finding.json",
+      "sha256": "57e0dceb7e6907ae7d19a4d0c73a700899d38adc5a7cb5492a397851b6c1c231",
+      "bytes": 1099984
+    },
+    {
+      "path": "research/evidence/application/APP004/cpr-v2-integration-review.json",
+      "sha256": "30a75f5153ac5ce771134bdd15c0cb0ec80d621a539b5c577acf941a4082ccd3",
+      "bytes": 15548
+    }
+  ],
+  "conformance_counts": {
+    "reference_runtime": 0,
+    "candidate_target_runtime_comparisons": 0
+  },
+  "limits": "Planning only. No new target behavior established or source/fixture/application bytes changed.",
+  "mandatory_report_evolution": {
+    "current_published_contract": "Application0.4 publishes schema2/cpr-static-subset-v2 packages. Its exact replay behavior is now historical evidence, including defaults, recovered facts, unsupported diagnostics, object sets and native fixed-clock descriptor.",
+    "requirement": "Introduce a new interpretation profile, preferably cpr-static-subset-v3, for any new map recovery; explicit dispatch must retain the current V2 body/behavior unchanged. Do not extend V2 historical replay silently. Keep cubase-15.0.30.287-arm64-fixed-v1 numeric contract unchanged; a new map descriptor requires its own distinct contract.",
+    "regression_gate": "Replay retained published V2 packages byte-for-byte/equality against their stored reports without rewriting them; confirm defaults/facts/object sets remain exact even where V3 newly recovers a map. New V3 imports must advertise V3, and unknown profiles must still reject."
+  }
+}

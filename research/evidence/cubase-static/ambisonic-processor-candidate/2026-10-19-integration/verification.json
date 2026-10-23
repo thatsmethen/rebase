@@ -1,0 +1,50 @@
+{
+  "scope": "Synthetic original-candidate checks against pinned raw tables and exact-rational arithmetic; no target execution or application integration.",
+  "at_utc": "2026-10-19T08:32:19.128345+00:00",
+  "status": "pass",
+  "test_methods": 13,
+  "failures": 0,
+  "errors": 0,
+  "target_executed": false,
+  "application_modified": false,
+  "source_record": {
+    "path": "/workspace/rebase/research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho",
+    "sha256": "e8341c6b31ac6b65cf7e8c18bdfbaa18ac24b20160b4287dc385b202eb29b883",
+    "table_sha256": "c49accecf95f469477a7f57bcc31e6e35ff5d51ee1ff63479b9268bb5a3fc874"
+  },
+  "environment": {
+    "machine": "arm64",
+    "initial_fp_control_hex": "0x0"
+  },
+  "compile_argv": [
+    "cc",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "-frounding-math",
+    "-dynamiclib",
+    "/workspace/rebase/candidate/ambiconverter_processor/ambi_processor.c",
+    "/tmp/rebase-cache/T/ambip-candidate-bbz43ah3/environment.c",
+    "-o",
+    "/tmp/rebase-cache/T/ambip-candidate-bbz43ah3/candidate.dylib"
+  ],
+  "files": [
+    {
+      "path": "/workspace/rebase/candidate/ambiconverter_processor/ambi_processor.h",
+      "sha256": "d132434743a64bb48de6d63d0d1c73d74813eac51e5ccb3b21a4661498ea4062"
+    },
+    {
+      "path": "/workspace/rebase/candidate/ambiconverter_processor/ambi_processor.c",
+      "sha256": "63908b7352e8e3e72baf545348ab0cd8d54c81a6ebaedfab5528141afe76d726"
+    },
+    {
+      "path": "/workspace/rebase/candidate/ambiconverter_processor/test_processor.py",
+      "sha256": "1378ace958fc592757eb43afeff416803adcbc9844cc5177eb14dd7f10f76373"
+    }
+  ],
+  "test_log": "test_all_channel_basis_vectors_exact_coefficients (__main__.ProcessorTests.test_all_channel_basis_vectors_exact_coefficients) ... ok\ntest_bypass_preserves_finite_bits_and_copy_loop_boundaries (__main__.ProcessorTests.test_bypass_preserves_finite_bits_and_copy_loop_boundaries) ... ok\ntest_configuration_shape_precision_and_capacity (__main__.ProcessorTests.test_configuration_shape_precision_and_capacity) ... ok\ntest_direction_and_bypass_thresholds_are_different (__main__.ProcessorTests.test_direction_and_bypass_thresholds_are_different) ... ok\ntest_empty_failed_and_invalid_parameter_boundaries (__main__.ProcessorTests.test_empty_failed_and_invalid_parameter_boundaries) ... ok\ntest_fp_mode_rejection_and_bitcopy_separation (__main__.ProcessorTests.test_fp_mode_rejection_and_bitcopy_separation) ... ok\ntest_full_and_mixed_corresponding_aliases_stage_all_inputs (__main__.ProcessorTests.test_full_and_mixed_corresponding_aliases_stage_all_inputs) ... ok\ntest_higher_order_nonidentity_is_not_replaced_by_inverse_standard (__main__.ProcessorTests.test_higher_order_nonidentity_is_not_replaced_by_inverse_standard) ... ok\ntest_multiframe_signed_zero_and_rational_product_rounding (__main__.ProcessorTests.test_multiframe_signed_zero_and_rational_product_rounding) ... ok\ntest_numeric_domain_boundaries_and_finite_products (__main__.ProcessorTests.test_numeric_domain_boundaries_and_finite_products) ... ok\ntest_queue_last_successful_updates_persist_and_offsets_are_ignored (__main__.ProcessorTests.test_queue_last_successful_updates_persist_and_offsets_are_ignored) ... ok\ntest_silence_skip_preserves_output_bytes_and_propagates_entire_mask (__main__.ProcessorTests.test_silence_skip_preserves_output_bytes_and_propagates_entire_mask) ... ok\ntest_unsupported_aliases_rejected_before_state_or_output_writes (__main__.ProcessorTests.test_unsupported_aliases_rejected_before_state_or_output_writes) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 0.365s\n\nOK\n"
+}

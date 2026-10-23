@@ -1,0 +1,119 @@
+{
+  "id": "CPR-EVENT-ROOT-OWNERSHIP-001",
+  "status": "bounded static ownership receiver closed",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "target_execution": false,
+  "runtime_comparisons": 0,
+  "conclusion": "The normal successful MRoot restoration path propagates that exact root pointer through concrete MTrackList/MListNode children into the audio track data node. With a null local auto-fade setting, the track getter therefore selects the MAutoFadeSetting at that root +0xc0. The +0x250 attachment alone was insufficient: the decisive step is MRoot post-read +0x220(root, root).",
+  "contract": [
+    {
+      "id": "O1",
+      "claim": "MEvent reader1017017a0 passes a successfully read data node to receiver+250 at101701884..890. For actual MRoot table104671208, +250 is10171752c: it stores root+58, retains the node and links the owning event via1016e9a30. This is not itself a list+30 write.",
+      "functions": [
+        "0x1017017a0",
+        "0x10171752c",
+        "0x1016e9a30"
+      ]
+    },
+    {
+      "id": "O2",
+      "claim": "MRoot reader101722120 stores the decoded MAutoFadeSetting at root+c0, and later1017225c8..5d8 calls root+220 with x0=root and x1=root. Concrete root+220 is101701318. It obtains its own data node via+258 (root+58) and calls that node+140 with the same x1 root.",
+      "functions": [
+        "0x101722120",
+        "0x101701318",
+        "0x10171759c"
+      ]
+    },
+    {
+      "id": "O3",
+      "claim": "Concrete MTrackList+140 is101758ee8, a tail branch to101715cf8. MListNode+140 is101715cf8 directly. Unless the stored owner already equals the argument, this calls1016e8e80;1016e8eec writes the supplied root to node+30. Fresh old-owner nil cleanup +68 has no external callback: concrete1016e9058 takes its nil-owner branch and only clears node+90.",
+      "functions": [
+        "0x101758ee8",
+        "0x101715cf8",
+        "0x1016e8e80",
+        "0x1016e9058"
+      ]
+    },
+    {
+      "id": "O4",
+      "claim": "1016e8e80 requests concrete node+f0 iterator with mode2, then calls child+220(child,sameRoot) until iterator+d0 is true. Both concrete iterator families initialize filter+20=nil and current+30=node+b0; mode2 skips +158 refresh. +d0 tests current==nil; +d8 returns current then advances to current+10. Thus this is direct counted-child traversal, not a class-name search or arbitrary root inference.",
+      "functions": [
+        "0x101758eec",
+        "0x1017154a0",
+        "0x101716448",
+        "0x1016c137c",
+        "0x101715bac",
+        "0x101715bbc"
+      ]
+    },
+    {
+      "id": "O5",
+      "claim": "Concrete MAudioTrackEvent+220 is10174a2c4. On normal return from its preliminary branches it tail-calls101701318 with the original track and root arguments. Its own +258 is10174a698 loading track+58, so its data node receives the same root through +140. Extra auxiliary collections are traversed separately; this claim does not require assigning them an invented source role.",
+      "functions": [
+        "0x10174a2c4",
+        "0x101701318",
+        "0x10174a698"
+      ]
+    },
+    {
+      "id": "O6",
+      "claim": "1001f7554 returns track+170 when nonnull. Only when local setting is null does track+618\u21921001fcf1c\u2192101700eb4 obtain the own data node (+258 preferred, +280 fallback) and load node+30. If that root is nonnull,101720d58 returns root+c0. This binds the inherited fallback receiver to the same restored MRoot, subject to the successful normal path and no later replacement.",
+      "functions": [
+        "0x1001f7554",
+        "0x1001fcf1c",
+        "0x101700eb4",
+        "0x101720d58"
+      ]
+    }
+  ],
+  "applicability": [
+    "Actual known MRoot, MTrackList/MListNode and MAudioTrackEvent concrete objects and successfully restored counted hierarchy.",
+    "Actual target track owns a nonnull data node; no substitution with an arbitrary similarly named archive object.",
+    "Source setting is nonnull and the local track setting is null; otherwise evaluate the local override or retain unsupported state.",
+    "Read/attachment/post-read calls complete normally. No later host edit, replacement, external observer or extension mutation is included."
+  ],
+  "source_fixture_correlation": {
+    "scope": "Root-owned independent forward parse, cited at its exact hash; source-byte interpretation is separate from native control-flow evidence.",
+    "source": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/source-forward-probe.json",
+      "sha256": "946f5ce59e3f3e977b9da1a4a5a8b1a040aa6dde90b9b0698f92eb3d91acb456"
+    },
+    "lofi": {
+      "root_identity": 392,
+      "track_identity": 197664,
+      "local_null_token_offset": 243938,
+      "root_setting_identity": 1291031,
+      "root_setting_body": 1291035,
+      "serialized_flags": 0
+    },
+    "classic": {
+      "track_identity": 207199,
+      "local_null_token_offset": 258258,
+      "root_setting_identity": 1154672,
+      "root_setting_body": 1154676,
+      "serialized_flags": 0
+    }
+  },
+  "implications": [
+    "Combined with independently forward-decoded nonnull source MAutoFadeSetting flags0 and local-null token, this resolves which saved setting the normal track fallback reads.",
+    "Builder zero-flags gate is already retained in event-rendering pass1/final-linkage; this ownership appendix does not use builder override0x28 as a substitute for source settings.",
+    "This closes one source-backed automatic-fade predicate for a bounded event-local reconstruction. It does not promote the containing project to playable timeline equivalence."
+  ],
+  "limitations": [
+    "No Cubase execution, runtime comparison, target modification or whole-image Ghidra analysis.",
+    "Normal-path data-flow is established; arbitrary callbacks, exceptions, allocation failure, later owner replacement or hosted state mutation are not proven invariant.",
+    "MAudioTrackEvent+220 also has preliminary +5f0/+538 behavior; its final forwarding arguments are preserved. This is not an assertion that every side effect of those branches is harmless.",
+    "When node datum tag is0,1016e8e80 also fills its datum using root+518/+520; this appendix makes no new time-unit or audio-processing claim from that branch.",
+    "Raw REA slices omit imports, globals, neighboring functions and type layouts. Original-image cells and instructions supply the specific linkage; C-like output is not original or necessarily compilable/bit-faithful source.",
+    "No claim about nonzero auto-fade flags, fade shape interpolation, track mixing, plugins, PDC, transport, or whole-host rendering."
+  ],
+  "custody": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/ownership-verification.json",
+    "sha256": "b821d4d98d599a55835f23a8be2905c8b9afec757b1e05e5a2af4d271e320b25"
+  },
+  "linkage": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/ownership-linkage.json",
+    "sha256": "5ae5304e7e65b534cf91b413ab699fd47abac6827a3761c18e4de7afbf06480f"
+  },
+  "preservation": "Earlier event-rendering and sealed application/evidence records are unchanged; this is a new ownership appendix."
+}

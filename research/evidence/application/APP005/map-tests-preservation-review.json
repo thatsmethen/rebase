@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "created_utc": "2026-10-19T11:55:59.707012+00:00",
+  "reviewer": "target_intake",
+  "scope": "Read-only review of peer new map bridge/recovery tests plus explicit self-review of own C/kernel tests/CPRProjectTests changes. Fixed source is compared directly against sealed APP004 bytes. No application or target execution in this review.",
+  "status": "no actionable test-regression defect found in reviewed subset",
+  "fixed_preservation": {
+    "old_source": "research/evidence/application/APP004/final-source-snapshot/Application/Sources/RebaseTimingDSP/native_tempo.c",
+    "old_source_sha256": "00d86967975e90f88ade6d1f4223db6a7db5543729f8c39fbc9556a53967d3f3",
+    "new_prefix_byte_identical": true,
+    "fixed_swift_test_file_byte_identical": true,
+    "fixed_swift_test_sha256": "a5f112f10cf2392ef5ce07dddad4a33c27e790272a6286b7e6b1c5b274044bc2",
+    "optimized_regression": "All36 existing independent fixed oracle vectors pass in optimized current C; original Float32 division and ordered Float64 sites verified in retained disassembly."
+  },
+  "test_review": [
+    "CPRRecoveryV3Tests generated controls exercise direct record fields, both default NoteData encodings, changed/unknown attributes, selector/count/flags/nonnull alternate variation, duplicate keys, noncanonical anchors, negative zero anchor, rampkind, count3, trailing and truncated payloads.",
+    "Factory test reads ten SHA-pinned inputs and distinguishes6map/4fixed; fixed result project/objects/facts and source preservation compared to actual frozen V2 interpreter.",
+    "Persistence control forges a different internally canonical map with matching display projection and original hash/offset; save/load reject through preserved-source replay, then original manifest restored.",
+    "NativeMapClockTests checks map bits against independent oracle for canonical sets and rejection of unequal-anchor synthetic controls; checks descriptor shape/offset/domain, display coupling, explicit conversion atomicity and3published APP004 package replays.",
+    "Own CPRProjectTests keeps old unknown/profile/tamper controls, constructs genuine V2 reports for historical semantics, and adds exact LoFi descriptor/projection assertions; no old negative assertion was waived.",
+    "Own NativeMapKernelTests tests all105 detached vectors, one-ULP canonical rejection without anchor rewriting, before-write malformed-input failures and signed-zero distinction."
+  ],
+  "execution_evidence": {
+    "source": "core-tests-round2.log",
+    "observed_summary": "108 tests in16 suites passed",
+    "first_compile_error_preserved": "core-tests-initial.log",
+    "correction": "Numeric literal member syntax in a test changed to Double(600).nextDown/nextUp; no C arithmetic change."
+  },
+  "limits": [
+    "These tests exercise the reconstructed app/parser and analytical oracles; they do not execute Cubase or establish runtime conformance.",
+    "Factory source recovery remains bounded to empty audio track skeletons and clock/signature subset; absent media/events are not reconstructed.",
+    "No new broad suite was run by this reviewer; accepted root log is pinned below."
+  ],
+  "files": [
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectTests.swift",
+      "sha256": "db65813448e3bc6a5c16beff28070819f76b290db16f64a04019edae1f30f343"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeTempoClockTests.swift",
+      "sha256": "a5f112f10cf2392ef5ce07dddad4a33c27e790272a6286b7e6b1c5b274044bc2"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeMapKernelTests.swift",
+      "sha256": "1a6fd199bdf3130726cdfaa1b617c663c510e73fc4367df175f0420ba616d5f4"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeMapClockTests.swift",
+      "sha256": "2bce9dbcc7911d894d40ac7d0af3a0fd7f335e2bd4fe9b9bec30d3e203c932fb"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRecoveryV3Tests.swift",
+      "sha256": "6b716f44af9281603a885870288d155d9788e5f98fa91e56a0dd162a5b370d11"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_tempo.c",
+      "sha256": "5bd8632d38cad4c4b240ffcad58ec4ceb304ab23bb93483657028e085655aefb"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_tempo.h",
+      "sha256": "1f3da5deac941e7a1cc6a0f5c9a5d7d4da4fda3cc1c5928eb5a5d627cd623b70"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV1.swift",
+      "sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV2.swift",
+      "sha256": "6183ca0ea72f992cf00d1fd4aab5a9c0a014e764988d6ae7bacf89e83386a836"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/NativeTempoClock.swift",
+      "sha256": "9eadba57609a82fb3c555cc16e5a82637134fa8f7cf0829edd1d77b7fee1377e"
+    },
+    {
+      "path": "research/evidence/application/APP005/core-tests-initial.log",
+      "sha256": "4162f09dac1041151266f6f46989df72271b79fc4d6b1bafd9498409608e1d73"
+    },
+    {
+      "path": "research/evidence/application/APP005/core-tests-round2.log",
+      "sha256": "fb249a160935ae2cde9b91166774cd999e4ef74860f88337b258f3ebb6531932"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/optimized-map-kernel-comparison.json",
+      "sha256": "dfaa294926c456b5344be8c7863b076bec442edd35a00df33d627de057a68857"
+    }
+  ]
+}

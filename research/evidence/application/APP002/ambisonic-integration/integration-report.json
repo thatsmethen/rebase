@@ -1,0 +1,97 @@
+{
+  "id": "APP002-AMBI-FILE-INTEGRATION",
+  "at_utc": "2026-10-19T08:46:14.574158+00:00",
+  "status": "pass",
+  "target_executed": false,
+  "native_runtime_parity_claimed": false,
+  "gui_interaction_tested_by_this_report": false,
+  "validation_scope": "Actual application converter core invoked headlessly; C processor uses independently reviewed static contracts. No live mixer insert.",
+  "candidate_tests": {
+    "methods": 13,
+    "status": "pass",
+    "evidence": "research/evidence/cubase-static/ambisonic-processor-candidate/2026-10-19-integration/verification.json"
+  },
+  "independent_c_review": "research/evidence/application/APP002/ambisonic-source-review.json",
+  "application_tests": {
+    "methods": 6,
+    "status": "pass",
+    "log": "targeted-tests.log",
+    "checks": [
+      "12 file pipelines: channels4/9/16 x binary32/binary64 x both directions, 8209frames96kHz; every interleaved output byte equals independently encoded exact power-of-two basis expectation.",
+      "Every output reopened using Core Audio; channelcount/precision/length retained, final17frames read with a one-ULP mantissa-sensitive final sample.",
+      "Corresponding in-place buffers stage all inputs; bypass preserves minimum subnormal and signed-zero bit patterns for all configurations.",
+      "Late-block NaN in both precisions rejects without altering source or existing destination, removes temporary, and leaves absent destination absent.",
+      "Identical source path, hardlink and symlink outputs rejected; folder, malformed source, empty audio and unsupported counts rejected.",
+      "Existing output replacement and PCM16 source -> binary32 conversion succeed; checked RIFF size boundary and Int64.max reject before processing."
+    ]
+  },
+  "resolved_integration_defects": [
+    "AVAudioFormat commonFormat/channels initializer returns nil for >2 channels; tests use explicit DiscreteInOrder layout.",
+    "AVAudioFile output requested as binary64 produced a binary32 WAV in this environment. Replaced with explicit IEEE-float RIFF writer; both raw-byte and Core Audio readback tests now pass.",
+    "Swift Testing large Data equality diagnostics computed expensive byte-sequence differences; report a boolean plus first mismatched byte instead."
+  ],
+  "application_behavior": {
+    "source_float64": "kept binary64",
+    "other_decoded_sources": "binary32",
+    "sample_rate": "preserved exactly; positive integer RIFF rate required",
+    "container": "IEEE-float WAV with fmt/fact/data; arbitrary source metadata and speaker tags not preserved",
+    "flags": "file conversion explicitly bypassoff and zero silence mask; C state/bypass/silence paths are separately tested",
+    "promotion": "temporary output synchronized and closed before replacement; same source inode rejected",
+    "limits": "RIFF payload below UInt32.max minus4096-byte header reserve; finite normal-domain samples or signed zero; explicit FP-control restrictions"
+  },
+  "missing": [
+    "Live multichannel track buses/inserts",
+    "Target runtime differential comparison",
+    "Full native lifecycle/state serialization/meters/host bus behavior"
+  ],
+  "files": [
+    {
+      "path": "candidate/ambiconverter_processor/README.md",
+      "sha256": "bef188975be7fd2debb48c8aa6816277227bafe8d4aab94c5b2c8e2e1ae5fc2d"
+    },
+    {
+      "path": "candidate/ambiconverter_processor/ambi_processor.c",
+      "sha256": "63908b7352e8e3e72baf545348ab0cd8d54c81a6ebaedfab5528141afe76d726"
+    },
+    {
+      "path": "candidate/ambiconverter_processor/ambi_processor.h",
+      "sha256": "d132434743a64bb48de6d63d0d1c73d74813eac51e5ccb3b21a4661498ea4062"
+    },
+    {
+      "path": "candidate/ambiconverter_processor/test_processor.py",
+      "sha256": "1378ace958fc592757eb43afeff416803adcbc9844cc5177eb14dd7f10f76373"
+    },
+    {
+      "path": "candidate/ambiconverter_processor/make_file_fixtures.py",
+      "sha256": "890c9010bd92a46bff0f161fd7721795bc2820859cef3067051c65c1a9395ca5"
+    },
+    {
+      "path": "Application/Sources/RebaseAmbiDSP/ambi_processor.c",
+      "sha256": "63908b7352e8e3e72baf545348ab0cd8d54c81a6ebaedfab5528141afe76d726"
+    },
+    {
+      "path": "Application/Sources/RebaseAmbiDSP/include/ambi_processor.h",
+      "sha256": "d132434743a64bb48de6d63d0d1c73d74813eac51e5ccb3b21a4661498ea4062"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AmbisonicConverter.swift",
+      "sha256": "6caf356e617015012e0b9845bab58bbd812c6fc510e19e48db74107e030138dc"
+    },
+    {
+      "path": "Application/Sources/Rebase/AmbisonicExport.swift",
+      "sha256": "954e244ccce2fb9735c3a18ba5f09ae80bccf32b680a33330325b99ff2ea4827"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/AmbisonicConverterTests.swift",
+      "sha256": "1295abfb8acae18d13e9262de837dfbc237b23325fd6e778905050a2fb99ba2c"
+    },
+    {
+      "path": "Application/Package.swift",
+      "sha256": "2b97cf846c373ebcbfd850a9e4c9ab5da934a9c516dee8dca3aad2b48135eec2"
+    },
+    {
+      "path": "Application/build-app.sh",
+      "sha256": "bbec929909c6592e2fa0f23ec4633e7f18cb6bce620bfeb0b66a8bce9acc114c"
+    }
+  ]
+}

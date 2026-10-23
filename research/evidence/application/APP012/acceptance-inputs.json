@@ -1,0 +1,77 @@
+{
+  "id": "APP012-ACCEPTANCE-INPUTS",
+  "created_utc": "2026-10-20T09:45:21.443870+00:00",
+  "tests": {
+    "path": "research/evidence/application/APP012/core-tests-first.log",
+    "bytes": 50713,
+    "sha256": "b4041a5946f89bcb0fc4e9f75a2b8a1f55be60f7f22966374fe20df537bf71f1",
+    "passed": 212,
+    "suites": 31
+  },
+  "build_log": {
+    "path": "research/evidence/application/APP012/build-packaged.log",
+    "bytes": 6059,
+    "sha256": "18d4dfa1a9848835add91d17382fad7a07c454f354514a02d6dac72b16e6eb4b"
+  },
+  "executable_sha256": "3cb6b102a31314d7bd05d38c72f5bb7dcc54c9c6af19863e44029609ca154d87",
+  "native_studies": [
+    {
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode2",
+      "finding_sha256": "9cf6f1bfe3179df980021a5e52d0044f43349d1e8a970561888fc6b6a10a7955",
+      "manifest_sha256": "8ba0806f48292fedbdeb8231f5ba5193e950c481c209f2fc7e2fb297bd85633c",
+      "files": 199,
+      "study_relative": false
+    }
+  ],
+  "reviews": [
+    "research/evidence/application/APP012/mode2-independent-review.json",
+    "research/evidence/application/APP012/mode2-swift-integration-review.json"
+  ],
+  "controls": [
+    "research/evidence/application/APP012/mode2-wrapper-oracle.py",
+    "research/evidence/application/APP012/mode2-wrapper-oracle.json",
+    "research/evidence/application/APP012/mode2-public-oracle.py",
+    "research/evidence/application/APP012/mode2-public-oracle.json",
+    "research/evidence/application/APP012/verify-mode2-instructions.py",
+    "research/evidence/application/APP012/mode2-instruction-verification.json",
+    "research/evidence/application/APP012/public-build-packaging-amendment.json",
+    "research/evidence/application/APP012/public-build-packaging-amendment-02.json",
+    "research/evidence/application/APP012/packaged-build-check.json",
+    "research/evidence/application/APP012/gui-loaded-public-library.json"
+  ],
+  "retained_corrections": [
+    {
+      "record": {
+        "path": "research/evidence/application/APP012/module-cache-repair.json",
+        "bytes": 723,
+        "sha256": "8b9459c0b5babab12a260dcca7dfa0ab65284c36c4f3e5d017da0d0d609f8122"
+      },
+      "scope": "Stale generated Testing build Clang module cache repaired; initial failure log retained."
+    },
+    {
+      "record": {
+        "path": "research/evidence/application/APP012/release-module-cache-repair.json",
+        "bytes": 680,
+        "sha256": "b2f9dd91b4dd07d75c10906370917b32f6422c51edd75b9e9c0582e0fcf8f34b"
+      },
+      "scope": "Stale generated release Clang module cache repaired; initial release failure log retained."
+    },
+    {
+      "record": {
+        "path": "research/evidence/application/APP012/public-build-packaging-amendment.json",
+        "bytes": 1368,
+        "sha256": "7e205c57eee1df0b6dabbb0df087f60c6cf69da43f40e71b7a54bdc5789e8948"
+      },
+      "scope": "Fresh writable combined-notices file fixes read-only copied-license destination. Sealed public study preserved."
+    },
+    {
+      "record": {
+        "path": "research/evidence/application/APP012/public-build-packaging-amendment-02.json",
+        "bytes": 1954,
+        "sha256": "7c3717e0dc4731c6071cdf3cc215b97caaf4ccaf33205547ef13660754387b4b"
+      },
+      "scope": "Later packaging change removes non-system absolute rpaths; supersedes earlier build-script pin without changing public library or application runtime sources."
+    }
+  ],
+  "limits": "Acceptance waits for independent completed GUI review; public-library wrapper validation is not Cubase runtime or bundled-library sample equivalence."
+}

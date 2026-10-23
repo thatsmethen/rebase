@@ -3,7 +3,7 @@ import Foundation
 import CryptoKit
 @testable import RebaseCore
 
-private let mapWorkspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+private let mapWorkspace = PrivateResearchFixtures.root
 
 final class NativeMapClockTests {
     private func records() -> [NativeTempoMapRecord] {
@@ -18,8 +18,9 @@ final class NativeMapClockTests {
         return TempoMap(events: records().map { TempoEvent(beat: $0.beat, bpm: $0.displayBPM) }, nativeClock: clock)
     }
 
-    @Test func swiftClockMatchesIndependentMapOracle() throws {
-        let bytes = try Data(contentsOf: mapWorkspace.appendingPathComponent("research/evidence/cpr-static/cpr-map-clock-001/oracle-iterator/map-clock-goldens.json"))
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func swiftClockMatchesIndependentMapOracle() throws {
+        let bytes = try Data(contentsOf: mapWorkspace.appendingPathComponent("evidence/cpr-static/cpr-map-clock-001/oracle-iterator/map-clock-goldens.json"))
         #expect(cprSHA256(bytes) == "98b3922f598f57e51e961252a61a6503c67cead5b8d17605024e2bedc202795c")
         let document = try #require(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
         let maps = try #require(document["maps"] as? [String: [[String: Any]]])
@@ -106,8 +107,9 @@ final class NativeMapClockTests {
         #expect(c.mapRecords == nil && c.interpretationProfile == "cpr-static-subset-v2")
     }
 
-    @Test func publishedV2PackagesReplayWithoutRewriting() throws {
-        let root = mapWorkspace.appendingPathComponent("research/evidence/application/APP004")
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func publishedV2PackagesReplayWithoutRewriting() throws {
+        let root = mapWorkspace.appendingPathComponent("evidence/application/APP004")
         for name in ["Classic House Native.rebaseproj", "Concordant Signature Recovery.rebaseproj", "Converted Signature Copy.rebaseproj"] {
             let package = root.appendingPathComponent(name)
             let paths = ["Project.json", CPRProject.reportRelativePath, CPRProject.originalRelativePath].map { package.appendingPathComponent($0) }

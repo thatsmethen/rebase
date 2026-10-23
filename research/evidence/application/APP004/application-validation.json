@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "id": "APP004",
+  "at_utc": "2026-10-19T11:26:22.298367+00:00",
+  "status": "Bounded application milestone verified; full Cubase implementation remains incomplete; autonomous goal remains active.",
+  "build": {
+    "version": "0.4.0",
+    "build": "4",
+    "executable_sha256": "b88568b4015d79898e071a0d09476d25e05e435a36b2371caf3bec877b7db39f",
+    "source_manifest_sha256": "94d620d7315684bfd7da3f7764416ff0e632b074437fb2b499d71616488203d9",
+    "release_log_sha256": "b045af6956bf271512c1e573f6dbee6a29da8df5fb2377d032d71aca2b191ccd",
+    "codesign_strict_exit": 0,
+    "codesign_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "implementation": [
+    "Frozen CPR v1 historical interpretation and explicit schema/profile replay; v2 preserves source/report provenance on load and save.",
+    "Counted track hierarchy with consistent optional tempo/signature interface identities supplies timing authority; wrong roles cannot supply scalar tempo.",
+    "Bounded native fixed-tempo arithmetic preserves original Float32 BPM/period and binary64 operation order. Independent C kernel integrated into the actual macOS app.",
+    "Origin signature recovered only for supported compact and typed representations that agree, with explicit version/attribute/variation gates.",
+    "Explicit conversion UI preserves native timing until Apply, supports Cancel and undo/redo, and gates DAWproject export."
+  ],
+  "checks": {
+    "swift_tests": {
+      "passed": 92,
+      "suites": 13,
+      "classification": "Self-authored implementation tests;includes ten shipped source fixtures and synthetic mutation controls."
+    },
+    "optimized_fixed_kernel": {
+      "exact_vectors": 36,
+      "vectors": 36,
+      "classification": "Independent rational IEEE analytical oracle versus self-authored optimized C kernel."
+    },
+    "native_gui": {
+      "check_groups": 12,
+      "record": "research/evidence/application/APP004/gui-observations.json",
+      "classification": "Observed Rebase0.4 UI;no reference execution."
+    },
+    "persisted_packages": {
+      "verified": 3,
+      "scope": "Exact source/report preservation;source scalar bytes and identities;project native clock and signature;explicit converted copy retains report."
+    },
+    "converted_exchange": {
+      "status": "pass",
+      "scope": "ZIP/XML content inspected independently;126.5BPM,7/8,oneemptyBongostrack,noaudio."
+    },
+    "historical_files": {
+      "unchanged": 9,
+      "packages": 3
+    },
+    "release": {
+      "swift_release_build": "passed",
+      "strict_local_codesign": "passed"
+    }
+  },
+  "accepted_corrections": [
+    "Native compatibility can remove typed signature state before restoration. Earlier unconditional precedence expectation withdrawn; conflicting representations remain unsupported. Original finding and control retained.",
+    "Factory root list is a scalar node. Authority comes from consistent optional interface pairs throughout known counted track nodes; unrelated scanned objects cannot supply timing.",
+    "An active persisted native clock must equal the independently replayed import report before load/save; forged source hashes, offsets and BPM cannot be promoted.",
+    "V2 rejected-role fallback must also remove inherited V1 scalar-tempo claim and use explicit120BPM default. Frozen V1 unchanged.",
+    "Foundation URL cached resource metadata caused a false changed-size failure when rewriting a test fixture; readSource now clears cached URL values before preflight. Failed run retained."
+  ],
+  "limitations": [
+    "No Cubase/proprietary runtime execution;no measured reference conformance;no whole-image analysis claim.",
+    "CPR import still creates empty audio track skeletons. Audio-event timeline/timebase/source-offset/AudioCluster binding and playable media recovery remain unresolved.",
+    "Native map-mode clocks and ramps are not imported;120BPM default remains explicit. Origin meter only;full signature changes/display/score state unsupported.",
+    "Native fixed clock restricted to nearest rounding and bounded nonnegative finite normal-or-zero arithmetic. Target runtime FP mode has not been measured.",
+    "No CPR writer or Cubase project roundtrip. Converted DAWproject export is application data;no receivingDAW/XSD/runtimeinterop test in this milestone.",
+    "Recording,MIDIediting,VSThosting,PDC,fullmixer,automationwrite,stretching and complete UI fidelity remain major gaps.",
+    "GUI conversion controls here used empty imported tracks;musical-anchor retiming is tested separately in coretests,not an audible referencecomparison."
+  ],
+  "evidence": [
+    {
+      "path": "research/evidence/application/APP004/build-identity.json",
+      "sha256": "3561bf41cc3823401971f0aecdf7d92ef455e3b58394c635538fca20fd12af37"
+    },
+    {
+      "path": "research/evidence/application/APP004/core-tests-final.log",
+      "sha256": "171ac07a178f78a1b3b5756f7696f248ff93526f25264411d2e4fea7ce1c5bbb"
+    },
+    {
+      "path": "research/evidence/application/APP004/build-release.log",
+      "sha256": "b045af6956bf271512c1e573f6dbee6a29da8df5fb2377d032d71aca2b191ccd"
+    },
+    {
+      "path": "research/evidence/application/APP004/codesign-verify.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "research/evidence/application/APP004/final-source-manifest.json",
+      "sha256": "94d620d7315684bfd7da3f7764416ff0e632b074437fb2b499d71616488203d9"
+    },
+    {
+      "path": "research/evidence/application/APP004/gui-observations.json",
+      "sha256": "4d542ee4942de5c52abe107ce04203ce77a1b3463686800a2ebbfb2e275902d4"
+    },
+    {
+      "path": "research/evidence/application/APP004/native-clock-optimized-comparison.json",
+      "sha256": "d1f1a6c65ea10d244accc4ec66c57c5dd157727728bb25a060bb535326496b1a"
+    },
+    {
+      "path": "research/evidence/application/APP004/native-fixed-clock-integration.json",
+      "sha256": "6b8b4be6de1e2896e1efba67231f3afcd21ffa6d10f40beb5ca7b366abd80b8c"
+    },
+    {
+      "path": "research/evidence/application/APP004/native-fixed-clock-integration-correction-v2.json",
+      "sha256": "9680d22fe7765baaf33c064f4a4bce312849e6ce850d30e5cce036a6365e8f04"
+    },
+    {
+      "path": "research/evidence/application/APP004/signature-integration.json",
+      "sha256": "7ff67a5bd2cae76f18452143319d036d0ede1b39443e6bc6a72281b6ff8baced"
+    },
+    {
+      "path": "research/evidence/application/APP004/cpr-signature-native-review.json",
+      "sha256": "25d708f4c0d3a8d93b1a6906f2c0403dedd3429dca92949a127d1313173b28e6"
+    },
+    {
+      "path": "research/evidence/application/APP004/cpr-v2-integration-review.json",
+      "sha256": "30a75f5153ac5ce771134bdd15c0cb0ec80d621a539b5c577acf941a4082ccd3"
+    },
+    {
+      "path": "research/evidence/application/APP004/classic-native-independent-check.json",
+      "sha256": "1cd2e3a6ab91cbeb5dca1f48958af172649144479e0f4cc1de314c42f05a31de"
+    },
+    {
+      "path": "research/evidence/application/APP004/concordant-native-independent-check.json",
+      "sha256": "28fe75afc2d254893e82f11eedec74c75f923e74a70c94d81811c0abdc0e94c1"
+    },
+    {
+      "path": "research/evidence/application/APP004/converted-copy-independent-check.json",
+      "sha256": "27479bae2488332cd892b19836b9347872b0d5dba4ebbcf59415004ccc96f67a"
+    },
+    {
+      "path": "research/evidence/application/APP004/converted-exchange-independent-check.json",
+      "sha256": "0a9b53e684542cdee61711b48547cd6ecd02f402b0ffc75490153d3584086246"
+    },
+    {
+      "path": "research/evidence/application/APP004/historical-packages-before.json",
+      "sha256": "86de24f19e7178e53c8f119bab3678085667b7ab3385107d83bd57877bb2009d"
+    },
+    {
+      "path": "research/evidence/application/APP004/historical-packages-after.json",
+      "sha256": "2c7d4ee814f19538af29351b0c3f11871908b0a38caea776ddc9a167790b5f5f"
+    },
+    {
+      "path": "research/evidence/application/APP004/signature-controls-v2.json",
+      "sha256": "1174aaf8b15779607b639c3212b1d54d4bc256439b7684f83485dfe42eca66d8"
+    }
+  ],
+  "native_evidence": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/finding-v1.json",
+      "sha256": "2169213ddb52e087005c8683b38f4c3d29720f337187ff187e9b0c47be0d478e"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/timing-independent-review.json",
+      "sha256": "01167af84b0319ef792622d26b2354b8be097677bf88d148260fbfd567908d4c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/manifest-v1.json",
+      "sha256": "0bbf2d9f01623ee7c6c3386aabd1df48680bd52cb28b005b200e442ac4da141d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-signature-001/correction-v2.json",
+      "sha256": "cc5a7e9e637412bc30d96dfd4d0fd42de50eabb8ac45161a08b7c50ee7b325a9"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-signature-001/manifest.json",
+      "sha256": "9e7ee851cbd8895c95edab4e971d1c27ab96637b4d38c9ff4b98330c5dde6ca1"
+    }
+  ],
+  "cubase_runtime_comparisons": 0,
+  "full_product_completion": false,
+  "next": "Recover native map-clock authority, per-item attribute restoration, lookup/quantization/cache behavior, then bind audio-event and AudioCluster semantics into playable recovery."
+}

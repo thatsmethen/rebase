@@ -1,0 +1,354 @@
+{
+  "created_utc": "2026-10-19T06:16:07.462432+00:00",
+  "status": "Independently reviewed; no contradictory instruction/argument/index evidence found; target runtime unvalidated",
+  "scope": "Argument/index/order challenge for9/16channel static interpretation",
+  "checks": [
+    {
+      "alternative": "Caller input/output buffers were interpreted backwards",
+      "evidence": [
+        "processor-process-function.json"
+      ],
+      "instructions": [
+        "0x153de4: load ProcessData.inputs from +0x18",
+        "0x153df4: load input channel buffers at bus+0x10 into x23",
+        "0x153df8..0x153dfc: load ProcessData.outputs +0x20 and its buffers into x22",
+        "0x153f6c..0x153f78: x1=x23, x2=x22, x3=numSamples for algorithm call"
+      ],
+      "result": "ABI declarations and retained caller agree: algorithm argument1 is input buffer array; argument2 is output buffer array."
+    },
+    {
+      "alternative": "Table lookup is output-to-input (gather)",
+      "evidence": [
+        "float-channel-permutation-function.json",
+        "double-channel-permutation-function.json",
+        "float-buffer-copy-function.json",
+        "double-buffer-copy-function.json"
+      ],
+      "instructions": [
+        "Float0x154ee8/0x154eec: x20=output array,x22=input array",
+        "Float0x154f1c..0x154f30: x0=input[i],w8=map[i],x1=output[w8],call copy",
+        "Double0x154c24/0x154c28 and0x154c58..0x154c6c perform same lookup",
+        "Copy helpers load from x0 and store to x1"
+      ],
+      "result": "Inspected instructions establish source-indexed scatter input[i]\u2192output[map[i]]."
+    },
+    {
+      "alternative": "Gain precedes permutation or uses source index",
+      "evidence": [
+        "float-conversion-process-function.json",
+        "double-conversion-process-function.json"
+      ],
+      "instructions": [
+        "Float0x154d64 saves incoming x2 (output array) into x19;0x154d6c calls remap helper before scale loop",
+        "Float0x154d88..0x154db4 loads output[j] and gain[j], narrowsD\u2192S, then calls vDSP_vsmul in place",
+        "Double0x154aa4 saves incoming x2;0x154aac calls remap;0x154ac8..0x154af0 loads output[j] and gain[j] then calls vDSP_vsmulD in place"
+      ],
+      "result": "Scale loop uses post-permutation destination indexj. No inverse-map lookup appears in either gain loop."
+    },
+    {
+      "alternative": "Direction selection conjugates or offsets gain tables",
+      "evidence": [
+        "direction-parameter-consumer.json"
+      ],
+      "instructions": [
+        "0x152124..0x152140 materializes exact mapA18d15c/gainA18d1e0/mapB18d19c/gainB18d260",
+        "0x152204..0x15224c stores one fixed pair for each finitep branch into selected precision object"
+      ],
+      "result": "No channel-count-dependent pointer adjustment or gain conjugation appears in this consumer. Other uninspected lifecycle writes remain outside scope."
+    },
+    {
+      "alternative": "The9/16 branch dispatches a different process kernel or shifts table origin",
+      "evidence": [
+        "processor-bus-arrangement-function.json",
+        "processor-activation-function.json",
+        "processor-process-function.json"
+      ],
+      "instructions": [
+        "0x1528a8..0x1528c4 tests input/output popcounts9/9 or16/16",
+        "0x152918 or0x152b48 stores input count at processor+0x154",
+        "0x152c24..0x152c4c stores sameN at double+0x18 orfloat+0x14 and calls configuration",
+        "Activation0x153c4c..0x153c5c /0x153d58..0x153d68 initializes pairA, storesN and passesN asw2 to configuration",
+        "Normal dispatch0x154120..0x154134 selects vtableindex11 for either precision without testingN"
+      ],
+      "result": "Inspected9/16 path changes loop/scratch channel count, not map/gain base or normal dispatch slot."
+    },
+    {
+      "alternative": "Scratch path changes permutation interpretation",
+      "evidence": [
+        "float-channel-permutation-function.json",
+        "double-channel-permutation-function.json"
+      ],
+      "instructions": [
+        "Corresponding pointer equality triggers all-input\u2192scratch copies",
+        "Float0x154f7c..0x154f94 anddouble0x154cb8..0x154cd0 copy scratch[i]\u2192output[map[i]]"
+      ],
+      "result": "Same scatter interpretation on staged path, conditional on valid scratch and distinct channel storage. Arbitrary aliasing remains excluded."
+    },
+    {
+      "alternative": "Configuration conjugates or offsets table pointers after direction/count setup",
+      "evidence": [
+        "float-algorithm-configuration.json",
+        "higher-order-double-configuration-assembly.txt",
+        "higher-order-configuration-cleanup-assembly.txt"
+      ],
+      "instructions": [
+        "Double154694..1547ac writes scratch/meter fields+0x30,+0x38,+0x40,+0x48,+0x50; no map/gain field write",
+        "Double cleanup1547b0..154860 clears scratch/meter fields+0x30 onward, not map+0x20/gain+0x28",
+        "Float retained configuration154864 and cleanup154984..154a34 write scratch/meter fields+0x28 onward, not map+0x18/gain+0x20"
+      ],
+      "result": "No table-pointer transformation in the inspected configuration/cleanup bodies. Valid allocated objects and stableN remain preconditions; live channel-count transitions are not established."
+    }
+  ],
+  "retained_evidence": [
+    {
+      "file": "direction-parameter-consumer.json",
+      "file_sha256": "462b034dfe906c7426e7cc4f71f0e9bb9de2b70a831851ba7dd465a074d8b82b",
+      "evidence_id": "ev_4f992b72aec563124a5a8828c9cd9e5f2f704d1b44726ce440a62470f802581a",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "processor-bus-arrangement-function.json",
+      "file_sha256": "69a39139f48467730f772ad5dd244c68cd63e506a3f872372175eb0d0a36a198",
+      "evidence_id": "ev_73aeb3d9d98e4c9487109124edfcbe9e3c56df077156d651ebc77b36c4421da3",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "processor-activation-function.json",
+      "file_sha256": "bb538ce7880177aef67bc7392b1d4ed6405006ae08e40f5f4f98fd6dc9edbf60",
+      "evidence_id": "ev_71427cb4c15b53d125dbb8f414f8827d185a7297fbf0057f99e8618a075b5860",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "processor-process-function.json",
+      "file_sha256": "87b619703b894bfb64d178b770f3d5c72175ade5dd2a46c467036476d6b63fa1",
+      "evidence_id": "ev_b2f398cfea2637930a17064bd1032da4610f721ee69cf9bb6c19f2986c2d29ae",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "float-conversion-process-function.json",
+      "file_sha256": "54e4acee827b1f59e7a80858d40438834d034673b47667de45e039fd42b2e2ae",
+      "evidence_id": "ev_cbbaed7434362e2b7f9465cdd773e5f1931f9d2c60ed615262d8668b8ab47c5b",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "float-channel-permutation-function.json",
+      "file_sha256": "8715aaf3268fa46159c210b93fad84f91ba2f9c72e0fc4d496436a2e007aba3e",
+      "evidence_id": "ev_8c579cccb9a2999385243abde3a396b6762626d8537f036a621e1114ecf7caae",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "float-buffer-copy-function.json",
+      "file_sha256": "94fda0f6ff6b77e4d95deee1c4dfd7f034a485bea9649361a44553d115b9317a",
+      "evidence_id": "ev_da781b019e3e65787f4007c055181ae257d7fadad31f0fa739442f5efebce5a8",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "double-conversion-process-function.json",
+      "file_sha256": "cdd578dc4320199fd0a9d7bbd049477f42f026d0eccee71d0e5d035fd09dce44",
+      "evidence_id": "ev_8e7f749a08b569b58f88bdce179c6bae9ec267805ccf38c75456169dc0791c70",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "double-channel-permutation-function.json",
+      "file_sha256": "6aebce2e199e6f7ae24648192cce288ce3c4d5746c92435befec49d0b072e185",
+      "evidence_id": "ev_eeb71a978aabe2b0b5741cba344e76f07768355f52ecc4eb92ab4a7c67d7e608",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "double-buffer-copy-function.json",
+      "file_sha256": "021afffe053938e346e644c11b9de173d26d6a17c057d432dbcc4943c6baac4f",
+      "evidence_id": "ev_440191a53535ba55af7157734fa32e827d5e3ea6c215bc7d160a26a1abe2cd67",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "float-algorithm-configuration.json",
+      "file_sha256": "71e6d974c3b0d12d03bcb9816fcd027791bed9823b7534c01ad556ca0f9ef06f",
+      "evidence_id": "ev_44e0691da3cebbbefadf943655ed5bd6ac3954e3f11cc564601d74646f97b883",
+      "operation": "analyze_function"
+    },
+    {
+      "file": "algorithm-vtables.json",
+      "file_sha256": "363c1e86a518df7fbead5577d2a8365318095762e83fadf049a24f75997b4ff7",
+      "evidence_id": "ev_67b1cf21639caa0a645eeab97a1aee8058a304392abf536219d78ba63c42642f",
+      "operation": "read_bytes"
+    },
+    {
+      "file": "conversion-constant-tables.json",
+      "file_sha256": "bc39325209b98bf77b657e681318b54f3b5c09039a8ed03c41767888581667b1",
+      "evidence_id": "ev_09a304b26aa532665dd8e142be4a83de850d646aa7ce8238f872572631180f40",
+      "operation": "read_bytes"
+    }
+  ],
+  "source_function_ranges": [
+    {
+      "evidence_file": "processor-process-function.json",
+      "evidence_id": "ev_b2f398cfea2637930a17064bd1032da4610f721ee69cf9bb6c19f2986c2d29ae",
+      "ranges": [
+        {
+          "address_start": "0x153d98",
+          "address_end_inclusive": "0x15414b",
+          "length": 948,
+          "thin_file_offset": 1392024,
+          "original_file_offset": 3554712,
+          "sha256": "e723e74641fb0e79ef86634b7d39fdc10bdd934912bd98aaae38d7d515c5cfaa"
+        }
+      ],
+      "non_contiguous": false
+    },
+    {
+      "evidence_file": "processor-bus-arrangement-function.json",
+      "evidence_id": "ev_73aeb3d9d98e4c9487109124edfcbe9e3c56df077156d651ebc77b36c4421da3",
+      "ranges": [
+        {
+          "address_start": "0x152824",
+          "address_end_inclusive": "0x152c7f",
+          "length": 1116,
+          "thin_file_offset": 1386532,
+          "original_file_offset": 3549220,
+          "sha256": "3ab9048d6b62397c8c4e80ccdac4d3fd46d14399425483058a8cbb8382a114f7"
+        },
+        {
+          "address_start": "0x152ccc",
+          "address_end_inclusive": "0x152ce7",
+          "length": 28,
+          "thin_file_offset": 1387724,
+          "original_file_offset": 3550412,
+          "sha256": "c21f67f4305a6397fa439d98601070efc7542651929d6d99fd56ba0b182330cd"
+        }
+      ],
+      "non_contiguous": true
+    },
+    {
+      "evidence_file": "processor-activation-function.json",
+      "evidence_id": "ev_71427cb4c15b53d125dbb8f414f8827d185a7297fbf0057f99e8618a075b5860",
+      "ranges": [
+        {
+          "address_start": "0x153ba0",
+          "address_end_inclusive": "0x153d83",
+          "length": 484,
+          "thin_file_offset": 1391520,
+          "original_file_offset": 3554208,
+          "sha256": "aced35cc0d89cc72fc2d4557e81b28a9c6dde8b30ccc51b497c0fe294b5fc9e1"
+        }
+      ],
+      "non_contiguous": false
+    },
+    {
+      "evidence_file": "direction-parameter-consumer.json",
+      "evidence_id": "ev_4f992b72aec563124a5a8828c9cd9e5f2f704d1b44726ce440a62470f802581a",
+      "ranges": [
+        {
+          "address_start": "0x1520d0",
+          "address_end_inclusive": "0x152277",
+          "length": 424,
+          "thin_file_offset": 1384656,
+          "original_file_offset": 3547344,
+          "sha256": "eb0ae8d4236360a9f899abf8efe8ab56a549ee3896a92596a043df9291041319"
+        }
+      ],
+      "non_contiguous": false
+    },
+    {
+      "evidence_file": "float-conversion-process-function.json",
+      "evidence_id": "ev_cbbaed7434362e2b7f9465cdd773e5f1931f9d2c60ed615262d8668b8ab47c5b",
+      "ranges": [
+        {
+          "address_start": "0x154d4c",
+          "address_end_inclusive": "0x154ddb",
+          "length": 144,
+          "thin_file_offset": 1396044,
+          "original_file_offset": 3558732,
+          "sha256": "1ff1bbfd600a777b90a06bf9a776e4b58f653a70860616b416fcad74b3e8bb9b"
+        }
+      ],
+      "non_contiguous": false
+    },
+    {
+      "evidence_file": "float-channel-permutation-function.json",
+      "evidence_id": "ev_8c579cccb9a2999385243abde3a396b6762626d8537f036a621e1114ecf7caae",
+      "ranges": [
+        {
+          "address_start": "0x154ebc",
+          "address_end_inclusive": "0x154fbb",
+          "length": 256,
+          "thin_file_offset": 1396412,
+          "original_file_offset": 3559100,
+          "sha256": "344436cc73063dfbb768a5302153d96f7cda0e8f5c93ad842f708946ebe59975"
+        }
+      ],
+      "non_contiguous": false
+    },
+    {
+      "evidence_file": "float-buffer-copy-function.json",
+      "evidence_id": "ev_da781b019e3e65787f4007c055181ae257d7fadad31f0fa739442f5efebce5a8",
+      "ranges": [
+        {
+          "address_start": "0x16a0fc",
+          "address_end_inclusive": "0x16a14b",
+          "length": 80,
+          "thin_file_offset": 1483004,
+          "original_file_offset": 3645692,
+          "sha256": "5a9248d62e7927338b5481a7ba8aba2ed786dd4b9e4f3c4a60addf29e4e3d6fd"
+        }
+      ],
+      "non_contiguous": false
+    },
+    {
+      "evidence_file": "double-conversion-process-function.json",
+      "evidence_id": "ev_8e7f749a08b569b58f88bdce179c6bae9ec267805ccf38c75456169dc0791c70",
+      "ranges": [
+        {
+          "address_start": "0x154a8c",
+          "address_end_inclusive": "0x154b17",
+          "length": 140,
+          "thin_file_offset": 1395340,
+          "original_file_offset": 3558028,
+          "sha256": "d7b37a259cf0a3299dea8d56326d2b75208fbac31b69e1ffdcbfb4783157183d"
+        }
+      ],
+      "non_contiguous": false
+    },
+    {
+      "evidence_file": "double-channel-permutation-function.json",
+      "evidence_id": "ev_eeb71a978aabe2b0b5741cba344e76f07768355f52ecc4eb92ab4a7c67d7e608",
+      "ranges": [
+        {
+          "address_start": "0x154bf8",
+          "address_end_inclusive": "0x154cf7",
+          "length": 256,
+          "thin_file_offset": 1395704,
+          "original_file_offset": 3558392,
+          "sha256": "81f934d7d04092b225ac9b87c1aee17b72f10dd057d127cd3d89ab9d2646a90b"
+        }
+      ],
+      "non_contiguous": false
+    },
+    {
+      "evidence_file": "double-buffer-copy-function.json",
+      "evidence_id": "ev_440191a53535ba55af7157734fa32e827d5e3ea6c215bc7d160a26a1abe2cd67",
+      "ranges": [
+        {
+          "address_start": "0x16a14c",
+          "address_end_inclusive": "0x16a1cb",
+          "length": 128,
+          "thin_file_offset": 1483084,
+          "original_file_offset": 3645772,
+          "sha256": "a7cccdb20d574fcb66a9ee5ffa9e33c2bdb3092ae7a52225ccd968ef7394b359"
+        }
+      ],
+      "non_contiguous": false
+    }
+  ],
+  "instruction_validation": "higher-order-instruction-validation.txt",
+  "instruction_commands": "higher-order-instruction-commands.json",
+  "unresolved": [
+    "Other lifecycle code may alter current algorithm pointers/state; contract requires the traced initialization/direction path and valid active objects.",
+    "Actual runtime vDSP implementation/FPCR, host buffer ordering and complete activation/state restoration are not observed.",
+    "Live count transitions and allocation failure are not validated. Cleanup uses current channel count; the contract requires correctly allocated stableN or successful fresh initialization, not an arbitrary activeN change."
+  ],
+  "new_bounded_configuration_evidence": [
+    "higher-order-double-configuration-provenance.json",
+    "higher-order-configuration-cleanup-provenance.json"
+  ],
+  "independent_review": "../ambisonic-higher-order-review/review.json"
+}

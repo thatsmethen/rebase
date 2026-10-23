@@ -8,8 +8,7 @@ import Testing
 /// test separately preserves the frozen zero-origin source interpretation.
 @Suite(.serialized)
 struct CPRNativeTimelineStreamTests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let workspace = PrivateResearchFixtures.root
     private func rejects(_ body: () throws -> Void) -> Bool {
         do { try body(); return false } catch { return true }
     }
@@ -167,11 +166,12 @@ struct CPRNativeTimelineStreamTests {
         return result
     }
 
-    @Test func RealSourceReaderMatchesEveryPCMFrameAndKeepsProofAndProjectBarriers() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func RealSourceReaderMatchesEveryPCMFrameAndKeepsProofAndProjectBarriers() throws {
         let temporary = FileManager.default.temporaryDirectory.appendingPathComponent("NativeTimeline-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: temporary, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: temporary) }
-        let original = workspace.appendingPathComponent("research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro/LoFi Hip Hop.cpr")
+        let original = workspace.appendingPathComponent("templates/LoFi Hip Hop.cpr")
         let originalData = try Data(contentsOf: original)
         #expect(cprSHA256(originalData) == "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495")
         let package = temporary.appendingPathComponent("Source.rebaseproj")
@@ -238,11 +238,12 @@ struct CPRNativeTimelineStreamTests {
         #expect(try Data(contentsOf: original) == originalData)
     }
 
-    @Test func SourceBackedNonzeroCPRControlStaysUnplacedAndRequiresMedia() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func SourceBackedNonzeroCPRControlStaysUnplacedAndRequiresMedia() throws {
         let temporary = FileManager.default.temporaryDirectory.appendingPathComponent("TimelineUnplaced-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: temporary, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: temporary) }
-        let original = workspace.appendingPathComponent("research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro/LoFi Hip Hop.cpr")
+        let original = workspace.appendingPathComponent("templates/LoFi Hip Hop.cpr")
         let originalData = try Data(contentsOf: original)
         #expect(cprSHA256(originalData) == "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495")
         // Known pinned event MEvent prefix: u16 then start/length/offset f64BE.

@@ -1,0 +1,30 @@
+{
+  "scope": "Synthetic tests of the XAR audit instrument; not Cubase target evidence.",
+  "at_utc": "2026-10-19T06:29:33.946372+00:00",
+  "auditor_sha256": "19003d87d919808d5840d1c48203057360aa714b67b6f8e9ff06b25f13da1d50",
+  "tests_sha256": "874043992a1b87cd71faecad703840c5f4b907e09276bc9e744fe8de552521a1",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_audit_xar.py",
+    "-v"
+  ],
+  "observed_result": {
+    "exit_code": 0,
+    "tests_run": 5,
+    "passed": 5,
+    "skipped": 0
+  },
+  "controls": [
+    "native-generated XAR with raw gzip Payload and bzip2 metadata exceeding streaming-buffer size",
+    "payload bit flip rejected",
+    "truncated archive rejected",
+    "wrong declared TOC length rejected",
+    "valid XAR containing bad gzip CRC rejected"
+  ]
+}

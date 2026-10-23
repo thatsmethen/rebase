@@ -1,0 +1,231 @@
+{
+  "study_id": "CPR-PROJECT-AUDIO-SETUP-001",
+  "status": "bounded static contract; sealed local evidence; no target runtime comparison",
+  "target": "Cubase Pro15.0.30.287 arm64",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "target_executed": false,
+  "tooling": {
+    "rea_agents": "6.7.0",
+    "provider": "Ghidra12.1.4",
+    "method": "isolated original-address raw slices, retained REA analysis/readback/snapshots and canonical import"
+  },
+  "claims": [
+    {
+      "id": "SETUP-1",
+      "claim": "PArrangement restores a typed MRoot followed immediately by a typed PArrangeSetup and installs the arrangement adjusted rate interface on that root.",
+      "addresses": [
+        "0x100959290..0x100959334"
+      ],
+      "details": [
+        "Root result is stored at arrangement+108, setup result at+110; null either causes a failed read.",
+        "Root+128 receives arrangement+40, root+130 receives arrangement+48. Concrete primary/adjusted table bindings and RTTI are rechecked in verification.json.",
+        "PArrangement v4 then reads seven length-prefixed strings: three from version>=1 and four from version>=4. Version2 has another branch, outside this parser."
+      ],
+      "evidence": [
+        "ev_9c90f514ded9d2207627bd24573b0ece408341f2b5d072a09b74e6b5ab5e15f9",
+        "ev_417baecc728a1c7b289f5a5083319ca5f6850d60e779b2700cc193a1e26eb75f"
+      ]
+    },
+    {
+      "id": "SETUP-2",
+      "claim": "The native reader stores the serialized Float32 base at configuration+ac and, from version2, serialized Float64 factor at+b0. The writer emits those exact fields.",
+      "addresses": [
+        "0x1009666c8..0x1009666d0",
+        "0x1009667bc..0x1009667c0",
+        "0x100966ab0..0x100966ab8",
+        "0x100966b30..0x100966b38"
+      ],
+      "details": [
+        "Complete forward versioned order is field-schema.json; neither general setup extent nor later offsets are fixed because embedded datum forms and strings vary.",
+        "With the concrete installed provider and unchanged stored values, root getter10171c5a0 reaches1009573dc: RN64(Double(baseFloat32) * factorFloat64).",
+        "This binds saved configuration to the same provider used by the builder. It does not establish current device/engine/global period equality."
+      ],
+      "evidence": [
+        "ev_23ea21082950b29a643a5461ef29ad8e82cc4f5de26546e8e93601821fe66c65",
+        "ev_688828f7427e9ec97e33ff2f4a737cd956712a9165c71a09872a35efc4bc32e4",
+        "ev_814787e385e74120a5ab2536dcb5eb142f2d5c63ccfab7f568a5755aa73eb899",
+        "ev_edc8fce74f90799cb12e98d3c2a24b72c7c6f813290cfd820ade5d190d71bac3",
+        "ev_19077be3b1ed7225cb4e1a7a08b096b4346f1a3c59bd31422fb226f80232780c",
+        "ev_ef9e110e5f2fcf56394f1773a921dbe294edad1b3e9af520e01e8f7098fe0b83",
+        "ev_c6291a63d8174ea027918babdaef8478a80e4e160c6cc2e3a5df07e2b7e7ccb0",
+        "ev_208d2663851d3e06ffdd74aaeba18595524857b169cb8a52d6da5d95f55b1fba",
+        "ev_61aedbd3bc1a778ee836f5fac8ce2fd4babcd23bdef711be3d5a32ff3d6269e2",
+        "ev_e3d7fa7c2fa672e631a5979f1472163e77a497aff1f6d1e5070549508c49c6d1",
+        "ev_8505f2eeae180292ce3ac1ad6da6572e219d5d7a03bda5972c115e575bb6536a",
+        "ev_0bb854ab00cd10ca3062164554139f261e38ae3be8b4ac112e3127f44e1b51fd",
+        "ev_990a242c2b7793fa0edeca95b615a178a91079160b63e6a30335d0548856312c",
+        "ev_dfde814f692700e55493862dc93f2df0bc3c8420a546747332dd8cec718387d7",
+        "ev_cde71f60828ea48aafb10d8a79e9b3b1f61f25585e2bd8a9d60b84c673b51cf1",
+        "ev_cb4d947a8532a208acf508f594fc8b88c55fb025b0bf784dfd6d4b5081e6d116",
+        "ev_a1b7987f5745dfe9a59b0f5c4ef02a2f151544b732159094393e8fcf5a228b04",
+        "ev_74434ee00e4acfdc8b5d90e9d626a828c49e162397afaf513bde2e7257269f0f"
+      ]
+    },
+    {
+      "id": "SETUP-3",
+      "claim": "Native base-rate fallback is a specific floating-point branch, not finite validation; missing setup is not a saved44100 value.",
+      "addresses": [
+        "0x1009666f4..0x100966720"
+      ],
+      "details": [
+        "For ordered input outside inclusive[10000,1024000], native writes Float32 bits472c4400=44100. Inclusive bounds remain unchanged.",
+        "FCMP then FCCMP conditionPL with false flags0, then B.LE skips the fallback. Unordered NaN follows the skip path; positive/negative infinity take fallback. Thirteen analytical flag controls retain this distinction.",
+        "Raw Ghidra pseudocode rewrites the first comparison in a way that changes NaN behavior. Original instructions govern this claim.",
+        "Factor has no local finite/range guard. Versions below2 explicitly store Double+1. Config/owner absent fallbacks in getters are separate from PArrangement read failure and cannot become recovered saved state."
+      ],
+      "evidence": [
+        "ev_23ea21082950b29a643a5461ef29ad8e82cc4f5de26546e8e93601821fe66c65",
+        "ev_688828f7427e9ec97e33ff2f4a737cd956712a9165c71a09872a35efc4bc32e4",
+        "ev_9c90f514ded9d2207627bd24573b0ece408341f2b5d072a09b74e6b5ab5e15f9",
+        "ev_417baecc728a1c7b289f5a5083319ca5f6850d60e779b2700cc193a1e26eb75f",
+        "ev_990a242c2b7793fa0edeca95b615a178a91079160b63e6a30335d0548856312c",
+        "ev_dfde814f692700e55493862dc93f2df0bc3c8420a546747332dd8cec718387d7",
+        "ev_a1b7987f5745dfe9a59b0f5c4ef02a2f151544b732159094393e8fcf5a228b04",
+        "ev_74434ee00e4acfdc8b5d90e9d626a828c49e162397afaf513bde2e7257269f0f"
+      ]
+    },
+    {
+      "id": "SETUP-4",
+      "claim": "Scalar embedded datums and inline file-type/string framing are concretely bound, supporting an exact forward v8 parser.",
+      "details": [
+        "Embedded object readers101c25998/write101c259d8 use a Double coordinate then tagged datum reader101c23184/writer101c23368. Tags1/10 have i32 tag plus Double scalar, total20 bytes including coordinate. Tags0/17 can carry interface objects and context-sensitive coercion; authored subset rejects them.",
+        "Inline FFileType concrete vtable104e45588 reader10319b8b8 consumes i32 plus three length-prefixed strings. No archive object header surrounds this inline member.",
+        "String helper103109ff0 consumes signed count, handles zero and optional leading/trailing UTF8 BOM. Authored parser rejects negative/over50000 lengths and requires strict UTF8/terminal NUL for nonempty carriers; native has additional permissive paths.",
+        "Format token reader10221e70c has ten-byte limit and NUL/newline/CR handling. Authored subset admits printableASCII with a NUL within ten bytes only. Native writer10221e6c4 includes the terminal NUL."
+      ],
+      "evidence": [
+        "ev_fc9b65dba01352860ced993743af5676cc2208b916636c37b9592efbee39ec2a",
+        "ev_a1c24bdf53c626c87e4a257a5dbc8395bc08ec993adf94507149281e8e81a35f",
+        "ev_d52cfaf936ef281d65f02a96406f16bb6d8b0c8030f3ab0a031dbfb741dde168",
+        "ev_85a2d985a9e5102cbf122b274f8e2e5b33024b76afe89f75dd667bd5b35e6505",
+        "ev_d12307ab1debc9d268e367de405547a194bf90486528e9cd7ea0a0a70318a1c5",
+        "ev_a5b37b37b87f8079c037043beb1451467f5b6ea2a00d36d7822eda040b5bbf94",
+        "ev_4ae1ee4215a0b0358ded9a20e4c05deb2b6538853760a012b05b6dcfda6f36b6",
+        "ev_abc229699cbc8f95e6639dd7e330abbfc8312ea6ad3af75aa12d7666bb9d4429",
+        "ev_5581735ae4061e2b0bc035f9f56bee631fe2c9fa7ad95db30f3c8cf54f67adc5",
+        "ev_83df27d2b93fe54cd1ad3bd206264c7c56b4fe2625e61f76d9f56ac8dd61163b",
+        "ev_2d54c7af7e66cd5463233848bff24327c96732ef6844c244a3dc5fb8b33146ea",
+        "ev_be08536aade0bc0af4146866a64e0d8548a6ae1b706fbcba43f4006a3e9e55a8",
+        "ev_cc535b700c68997fa32354b6aee8512705c95bf0c477997735378c48d43a4bf8",
+        "ev_9408c0d94accf60091a1f2e31e2481f1c76d27d8a3da57e575337ab5bf05b7a6",
+        "ev_f076c0fc71a9bbb8bc9496aa4501101c831ab71f58157c676acdb8e2fc0b8b85",
+        "ev_e652df2c48fad2a52bc1f6642e548a587f57d18062da40ebd38d519108d607fa",
+        "ev_e82b08d3eb8e1d0bf80d1cf5a3d4e6102eb3aec19c85fdedbd392bfb2673d434",
+        "ev_db326b6d01705902d4c308f6288a28831d09f50f50c4510cb78b76d80e747538",
+        "ev_9eba06a1c095c1eb85e6d542f893bbed9fa5a305329924f1707c407afdd68a9e",
+        "ev_4688cf7d85da28adba87d11e02162709d7edcd36668abfa2cd61ad2f2b1198a9",
+        "ev_565a26356456e3b7d22ed1c7d4abdaf0e28d21fdcf93485df2a1e7ca0779db02",
+        "ev_e4a282ee13dbba923cc16fca64ef23a751b35dd6eac0f5ff2709267faf627687",
+        "ev_69a9f0df2fc1c147fe0c75c3bdff2b70afc012fda7c394f9a4a4b0ee2b5b9d51",
+        "ev_de3cda24f4d5c33e312eeb729b1650950ef69b1528cacfb6f64681b4adbb24d6",
+        "ev_650ade32478e5a4f1eda4b68789de423374d2853a26a62517a210ccc37978585",
+        "ev_d5b86352b3caa0ccdb0e2166f649ef1d78ca31a54852109d23c6ede818c1fbf2"
+      ]
+    },
+    {
+      "id": "SETUP-5",
+      "claim": "All ten pinned factory CPRs structurally expose a direct version8 setup with saved base44100 and exactfactor+1.",
+      "details": [
+        "Each reached PArrangementv4 contains an explicit MRootv6 then explicit PArrangeSetupv8; no positive root/setup reference occurs in these fixtures. All arrangement/ARCH/setup extents consume exactly.",
+        "Each factory setup body is169bytes; base atbody+48 andfactor atbody+92 in these scalar fixtures. The three file-type strings and token lengths are observations, not universal offsets.",
+        "Every embedded datum is tag1 with scalar+1. Configuration base/factor are source observations independent of metadata MusicalTempo and source media sample rates.",
+        "Thirty synthetic parser controls challenge variable-length strings, datum tags, token/framing limits and truncation. They validate the instrument, not Cubase runtime acceptance."
+      ],
+      "evidence_file": "schema-probe.json"
+    },
+    {
+      "id": "SETUP-6",
+      "claim": "Post-read host effects remain a bounded interpretation boundary.",
+      "details": [
+        "Config helper100965f54 resolves PAudioDevice registry results and updates/copies file-type state and index+160; no direct store to+ac/+b0 appears in its inspected body. Registry targets can have external effects.",
+        "PArrangement callback100956f80 invokes registry/global callbacks and root+538\u219210171e9fc. Inspected local writes concern root/cache/flags, with nested callbacks still conditional.",
+        "The finding supports exact saved fields and a fresh reconstruction consuming them. It does not assert that all native hosted states remain equal to saved values, registry replacements cannot occur, or playback/export matches Cubase."
+      ],
+      "evidence": [
+        "ev_9d50aaeba3dfed78d25631cf74de84f20b04319ec09dbef74dd558b83a79ba28",
+        "ev_591dcdac33b50a34ae341c6d706025adb9805e0c9627eed23f296d0ed916f9d4",
+        "ev_4579051d0cab770516c2c6d240dbd7357a388f2e9278a914252506371298b7bb",
+        "ev_65b7bb80af3ce5fa4333414d4a3a903bd589bd2fb4c2288267a14f990abceeda",
+        "ev_3ea466b45f8a4434d1ec8f646446b98bbf1223d47445b9c1e54c1d1999ec2199",
+        "ev_ebbf84de0df783deac0908723259a4b0b540eb8ddac50ebfb3d7d8e0b79b57be"
+      ]
+    },
+    {
+      "id": "SETUP-7",
+      "claim": "A defensible initial playback subset can use explicit saved base and exactfactor+1 without emulating malformed/defaulted native state.",
+      "details": [
+        "Require typed forward PArrangementv4/MRootv6/PArrangeSetupv8, supported scalar tags and complete bounded extents; do not scan for a setup class name or infer from media.",
+        "Retain raw rate/factor bits including unsupported values; admission is separate. Proposed application domain is finite integral10000..192000 base with exactDouble+1 factor. This upper bound and strict parsing are application limits, not inferred full native capabilities.",
+        "Missing setup, unresolved object references, other versions, malformed strings, nonfinite/out-of-domain rate or nonunity factor remain explicitly unsupported. No44100 fallback is promoted to saved source authority."
+      ]
+    }
+  ],
+  "field_schema": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/field-schema.json",
+    "bytes": 4120,
+    "sha256": "415481c2db76cb00c5cc0715c55522335a5795c8d73355e6ad7ad9662efd292a"
+  },
+  "fixture_probe": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/schema-probe.json",
+    "bytes": 108959,
+    "sha256": "3a60593bf6c893c5aee0aeade220789a220f473cf638873db9f0023616f46819"
+  },
+  "verification": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/verification.json",
+    "bytes": 55956,
+    "sha256": "81075da37258e88dc582a1ac3d3a929804641a8112abb3b105f8263842b493e6"
+  },
+  "canonical_import": {
+    "records": 62,
+    "unknowns_added": 0,
+    "all_sessions_closed": true,
+    "raw_sessions_closed": 5,
+    "import_sessions_closed": 1,
+    "response": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/evidence-import-final.json",
+      "bytes": 367,
+      "sha256": "3e2f65bfb025dd472257f905bd499f088c8bf755d0142cbf01fe4a03b8283e04"
+    },
+    "run_log": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/import-final-run.log",
+      "bytes": 89,
+      "sha256": "c11d3ba70001003a53b9cc7b69b64800c3c451f11f0d9ee7a33ea23469b55178"
+    }
+  },
+  "summary": {
+    "new_captures": 19,
+    "reused_captures": 12,
+    "bytes_verified": 7496,
+    "original_native_words": 1874,
+    "rea_instruction_addresses": 1788,
+    "closed_raw_sessions": 5,
+    "canonical_records": 62
+  },
+  "prior_findings": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/finding.json",
+      "bytes": 15602,
+      "sha256": "f6448e5a71e2110f70246febd2d66c6b7965f97ff23bc9e9075a6abf3c4bc121"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/finding.json",
+      "bytes": 19331,
+      "sha256": "aa9e0ef239dfb7e3516bf198c77d45881a73e3fc6b0a2d51b5994f8fa1fcf1bd"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-container-001/inventory.json",
+      "bytes": 24781,
+      "sha256": "e50ff515c541c76d857d6c093f4329b5cb53bffcd631a6e22cbc5edf86511b0d"
+    }
+  ],
+  "review": {
+    "scope": "Independent peer original/schema/core review is external and not part of this seal.",
+    "external_path": "research/evidence/application/APP019/project-audio-setup-independent-review.json"
+  },
+  "remaining": [
+    "No target launch, re-save, export, playback or device comparison.",
+    "No general archive identity/reference recovery inside opaque MRoot in this focused probe.",
+    "Older/future setup versions are not authored parser admission; callback/environment effects after restore remain conditional.",
+    "No claim that saved rate/factor alone establishes complete project playback fidelity or all live engine relationships."
+  ]
+}

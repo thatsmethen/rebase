@@ -1,0 +1,68 @@
+{
+  "scope": "Own reconstructed C only; no proprietary target linked or executed.",
+  "undefined_behavior_sanitizer": {
+    "passed": true,
+    "candidate_process_calls": 22400,
+    "flags": [
+      "-O1",
+      "-g",
+      "-fsanitize=undefined",
+      "-fno-fast-math",
+      "-ffp-contract=off"
+    ],
+    "log": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/ubsan-stress.log",
+      "bytes": 85,
+      "sha256": "17093facf58949e9b8a68a96ace2b8eaf332ff658706ae5c0ed5c7068baa4588"
+    },
+    "test_source": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/stress.c",
+      "bytes": 1749,
+      "sha256": "a3e69627e0b95f4d42440fb5516e8e3e03716ff8bbd6edba0dfbc73c8d5ee73a"
+    },
+    "binary": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/stress-ubsan",
+      "bytes": 70784,
+      "sha256": "d4f2a5e975cc5b3d3b2a33ffc12d5f83fcb8a8d0eb572c1192f29c0e9fac32cf"
+    },
+    "kernel_source": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/native_rate_mode0_down.c",
+      "bytes": 10145,
+      "sha256": "e85877ab7c33c8ef9c6bf16124125504a545e3a057e4d3ec6838729bd0df676f"
+    }
+  },
+  "address_sanitizer": {
+    "passed": false,
+    "status": "runtime initialization stalled; manually terminated ownedprocess70733 after bounded observation",
+    "flags": [
+      "-fsanitize=address,undefined"
+    ],
+    "evidence": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/asan-startup-sample.txt",
+      "bytes": 7221,
+      "sha256": "4e7dd688b0b702b98e915be735f85c5399a334e80d6bf02376a90662f5345f4a"
+    },
+    "observation": "All691 sampled stacks were within dyld/libSystem/ASan initialization and StaticSpinMutex, before candidate main. No address-sanitizer result is claimed.",
+    "empty_log": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/sanitizer-stress.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "binary": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/stress",
+      "bytes": 72616,
+      "sha256": "08bdd85f0481ba8645b9c7977d335ab22d18fe6e86bd0e6cf4a04844983aa7e0"
+    },
+    "reconstructed_initial_test_source": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/stress-initial.c",
+      "bytes": 1748,
+      "sha256": "ebce41ade7c4cc196e613ead9e084804827e03f67719ab48ede0c85d9f375719"
+    }
+  },
+  "record_correction": "Initial UBSan run passed but its fixed printf incorrectly labeled address,undefined because the test source had been reused from the ASan attempt. Original log preserved. Source label changed to candidate-stress and UBSan rerun passed22,400 calls. Compiler flags, not printf, determine actual sanitizer coverage.",
+  "initial_mislabeled_log": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/candidate/ubsan-stress-initial-mislabeled.log",
+    "bytes": 84,
+    "sha256": "ff9df975db5e00cba4e43169c8922d222a32a781c965d0fbd8c05b6487839bcc"
+  }
+}

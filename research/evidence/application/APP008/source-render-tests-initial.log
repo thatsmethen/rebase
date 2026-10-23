@@ -1,0 +1,58 @@
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--1AB21518FC5DEDBE.txt
+[3/9] Compiling RebaseCore CPRSourceEventRenderer.swift
+[4/9] Emitting module RebaseCore
+[5/40] Emitting module Rebase
+[6/40] Compiling RebaseCoreTests ProjectStoreTests.swift
+[7/40] Compiling RebaseCoreTests ProjectBehaviorTests.swift
+[8/40] Compiling RebaseCoreTests MusicalTimeTests.swift
+[9/40] Compiling RebaseCoreTests OfflineRendererTests.swift
+[10/41] Compiling Rebase CPRSourceAudioView.swift
+[11/41] Compiling Rebase AmbisonicExport.swift
+[12/41] Compiling RebaseCoreTests TestSupport.swift
+[13/41] Compiling Rebase ProjectEditors.swift
+[14/41] Compiling Rebase StudioSession.swift
+[15/41] Compiling Rebase MixerView.swift
+[16/41] Compiling Rebase TimelineView.swift
+[17/41] Compiling Rebase RebaseApp.swift
+[17/41] Write Objects.LinkFileList
+[18/41] Linking Rebase
+[19/41] Applying Rebase
+[21/41] Compiling RebaseCoreTests NativeTempoClockTests.swift
+[22/41] Compiling RebaseCoreTests NativeMapClockTests.swift
+[23/41] Compiling RebaseCoreTests CPRRecoveryV3Tests.swift
+[24/41] Compiling RebaseCoreTests CPRRecoveryV4Tests.swift
+[25/41] Compiling RebaseCoreTests NativeMapKernelTests.swift
+[26/41] Compiling RebaseCoreTests InvalidClipIntervalTests.swift
+[27/41] Compiling RebaseCoreTests AutomationTests.swift
+[28/41] Compiling RebaseCoreTests CPRAudioEventArchiveTests.swift
+[29/41] Compiling RebaseCoreTests CPRProjectTests.swift
+[30/41] Compiling RebaseCoreTests CPRRateReadBudgetTests.swift
+[31/41] Compiling RebaseCoreTests CPRAudioMediaAttachmentTests.swift
+[32/41] Compiling RebaseCoreTests CPRAutoFadeArchiveTests.swift
+[33/41] Emitting module RebaseCoreTests
+[34/41] Compiling RebaseCoreTests CPRSegmentReadPlanTests.swift
+[35/41] Compiling RebaseCoreTests CPRSignatureRecoveryTests.swift
+[36/41] Compiling RebaseCoreTests AmbisonicConverterTests.swift
+[37/41] Compiling RebaseCoreTests AudioValidityTests.swift
+[38/41] Compiling RebaseCoreTests CPRSourceEventRendererTests.swift
+/workspace/rebase/Application/Tests/RebaseCoreTests/CPRSourceEventRendererTests.swift:158:93: error: argument passed to call that takes no arguments
+156 |         #expect(snapshot == after && project.tracks.flatMap(\.clips).isEmpty)
+157 |         #expect(try ProjectStore.load(from: package) == project)
+158 |         #expect(throws: RebaseCoreError.self) { try project.requireResolvedAudioEvents(for: "test") }
+    |                                                                                             `- error: argument passed to call that takes no arguments
+159 |         let attachment = try #require(project.cprMediaAttachments.first)
+160 |         let copied = try ProjectStore.resolveMediaURL(attachment.mediaPath, projectRoot: package)
+[39/41] Compiling RebaseCoreTests DAWProjectTests.swift
+/workspace/rebase/Application/Tests/RebaseCoreTests/CPRSourceEventRendererTests.swift:158:93: error: argument passed to call that takes no arguments
+156 |         #expect(snapshot == after && project.tracks.flatMap(\.clips).isEmpty)
+157 |         #expect(try ProjectStore.load(from: package) == project)
+158 |         #expect(throws: RebaseCoreError.self) { try project.requireResolvedAudioEvents(for: "test") }
+    |                                                                                             `- error: argument passed to call that takes no arguments
+159 |         let attachment = try #require(project.cprMediaAttachments.first)
+160 |         let copied = try ProjectStore.resolveMediaURL(attachment.mediaPath, projectRoot: package)
+error: input file '/workspace/rebase/Application/Tests/RebaseCoreTests/CPRSourceEventRendererTests.swift' was modified during the build
+error: input file '/workspace/rebase/Application/Tests/RebaseCoreTests/CPRSourceEventRendererTests.swift' was modified during the build
+error: fatalError

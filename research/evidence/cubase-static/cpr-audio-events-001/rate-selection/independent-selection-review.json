@@ -1,0 +1,63 @@
+{
+  "scope": "Independent narrow retained original-disassembly semantic review only, not new target analysis or execution.",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "reviewer": "cubase_evidence",
+  "result": "No concrete disagreement found in the reviewed conditional selection/quality-argument chain.",
+  "observations": [
+    {
+      "address": "100309fe8",
+      "fact": "Returns1 when availability call1003136b4 returnszero,2 whennonzero."
+    },
+    {
+      "address": "10030a008",
+      "fact": "Mode2 passes literalw1=1 to1003136b8; nullresult explicitly storesmode1 and constructs10030a634. Mode0 is a separate supplied selection."
+    },
+    {
+      "address": "1003136b8",
+      "fact": "Preserves inputarg1 inx21 and forwards it asw1 tochildvirtual+30."
+    },
+    {
+      "address": "100314fe8",
+      "fact": "Storesw1 lowbyte atreceiver+9."
+    },
+    {
+      "address": "1003150bc..1003150f0",
+      "fact": "Whenbyte+9nonzero andbyte+a=0, choosesliteral6; byte+a nonzero chooses0x46. Whenbyte+9zero chooses4. Secondargument toselected qualityfunction is0."
+    }
+  ],
+  "conditions_and_exclusions": [
+    "Child concrete vtable and named import bindings are established by author evidence and are not independently reverified here.",
+    "The constructor zero ofbyte+a is not part of this narrow review.",
+    "No claim of actual host configuration, provider loading, selected mode during execution, or sample/runtime equivalence.",
+    "Public SoXR recipe numeric meaning was not independently verified in this review.",
+    "Original words are viewed through retained source disassembly, not a second byte readback audit."
+  ],
+  "inputs": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-selection/pass1/native-100309fe8.txt",
+      "bytes": 522,
+      "sha256": "94dac6ecc308fd837681bc776f17a2108175872a771896fd485884e35f8c9eeb"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-10030a008.txt",
+      "bytes": 5736,
+      "sha256": "8f4ba1d7758b158d8bb2ce3e71f0ecfac027bae69cc5bc28b6c8a87ad1da05de"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-1003136b8.txt",
+      "bytes": 3491,
+      "sha256": "341b6cc44d3c13af3e00cbd6a892180286dbc50d52a0aa71fec0a5c2f2a910af"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-selection/pass5/native-100314fe8.txt",
+      "bytes": 237,
+      "sha256": "f400077d4136caa749641a0f7df4f7e68805bb380f687c776e4bc6ac98971d2b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100315000.txt",
+      "bytes": 8527,
+      "sha256": "36813476dbb0c437836148d10d72b233c4dd9482622cac70be50ec333bf428a3"
+    }
+  ],
+  "target_execution": false
+}

@@ -1,0 +1,609 @@
+{
+  "id": "APP015-GUI-INDEPENDENT-CHECK",
+  "created_utc": "2026-10-20T23:22:02.331491+00:00",
+  "status": "passed",
+  "method": "Independent read of retained AX records and screenshot; exact hash/entry-set custody checks of current and prior QA packages, source mutation bytes, executable and test log. No UI operation, proprietary execution, source edits or test rerun.",
+  "expected_group_names": [
+    "import_and_attachment",
+    "placed_admission_and_legacy_guard",
+    "silent_prefix_and_live_output",
+    "pause_seek_resume",
+    "completion_and_exit",
+    "project_barriers",
+    "media_custody",
+    "original_conversion_regressions"
+  ],
+  "groups": [
+    {
+      "name": "import_and_attachment",
+      "status": "passed",
+      "records": [
+        "gui-import-review.txt",
+        "gui-imported.txt",
+        "gui-attached-saved.txt"
+      ],
+      "observations": [
+        "Source-derived control imports with frozen V4 unresolved event; explicit media attachment is saved. Imported track contains zero playable clips."
+      ]
+    },
+    {
+      "name": "placed_admission_and_legacy_guard",
+      "status": "passed",
+      "records": [
+        "gui-placed-inspection-original-blocked.txt",
+        "gui-native-placed-admitted-02.txt"
+      ],
+      "observations": [
+        "Original source-rate render/audition gate remains disabled for this nonzero control. Explicit native timeline mode admits1.5s placement,22s length,2s source offset."
+      ]
+    },
+    {
+      "name": "silent_prefix_and_live_output",
+      "status": "passed",
+      "records": [
+        "gui-native-placed-playing.txt",
+        "gui-native-placed-live-return.txt",
+        "gui-native-placed-prefix-pause.txt",
+        "gui-native-placed-progress.txt",
+        "gui-native-placed.png"
+      ],
+      "observations": [
+        "Retained active prefix snapshots at0.522s/0.282s show zero engine peaks; paused0.466s also zero. At7.122s both engine peaks are nonzero. Screenshot visually shows placement and22s audition overlay while imported event remains unresolved."
+      ]
+    },
+    {
+      "name": "pause_seek_resume",
+      "status": "passed",
+      "records": [
+        "gui-native-placed-pause.txt",
+        "gui-native-placed-resume.txt",
+        "gui-native-placed-seek.txt",
+        "gui-native-placed-seek-playing.txt"
+      ],
+      "observations": [
+        "Pause shows7.240s/zero peaks; resume7.720s/nonzero peaks; paused seek16.000s then active16.385s/nonzero peaks."
+      ]
+    },
+    {
+      "name": "completion_and_exit",
+      "status": "passed",
+      "records": [
+        "gui-native-placed-end.txt",
+        "gui-native-placed-exit.txt"
+      ],
+      "observations": [
+        "Natural completion displays23.500s and zero peaks. Exit removes source audition mode and restores normal project Play with project-playback-selected status."
+      ]
+    },
+    {
+      "name": "project_barriers",
+      "status": "passed",
+      "records": [
+        "gui-project-play-blocked.txt",
+        "gui-project-export-blocked.txt"
+      ],
+      "observations": [
+        "Ordinary project Play and export both refuse unresolved Cubase audio events. This selected-source path does not authorize full-project playback."
+      ]
+    },
+    {
+      "name": "media_custody",
+      "status": "passed",
+      "records": [
+        "gui-media-tamper.json",
+        "gui-native-placed-tamper-rejected.txt",
+        "gui-media-restored.json",
+        "gui-native-placed-restored-admitted-02.txt",
+        "gui-native-placed-restored-playing.txt",
+        "gui-native-placed-restored-exit.txt"
+      ],
+      "observations": [
+        "Tampered attachment is rejected. Restored bytes match baseline exactly; fresh native admission/playback succeeds in the silent prefix at0.617s, followed by exit. No post-restoration nonzero-output claim is made."
+      ]
+    },
+    {
+      "name": "original_conversion_regressions",
+      "status": "passed",
+      "records": [
+        "gui-conversion-open.txt",
+        "gui-mode0-admitted.txt",
+        "gui-mode0-playing.txt",
+        "gui-mode0-exit.txt",
+        "gui-mode1-admitted.txt",
+        "gui-mode1-playing.txt",
+        "gui-mode1-exit.txt",
+        "gui-mode2-admitted.txt",
+        "gui-mode2-playing.txt",
+        "gui-mode2-exit.txt",
+        "gui-mode1-end-or-progress.txt"
+      ],
+      "observations": [
+        "Original zero-origin source admits each explicit mode0,mode1,public-SoXR mode2 path44.1\u219248k. Each shows active transport and nonzero engine peaks, and exits to normal project mode. Mode1 additionally reaches natural end24.000s."
+      ]
+    }
+  ],
+  "release": {
+    "binary": {
+      "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+      "bytes": 4983136,
+      "sha256": "65d0704e0897752c235d48e66ce96443f9f4b0a6c9366916efa5be2796d2fd41"
+    },
+    "version": "0.15.0",
+    "build": 15,
+    "record": {
+      "path": "research/evidence/application/APP015/gui-release-build.json",
+      "bytes": 166,
+      "sha256": "cb3bbd241894ea73bbebfca3175ed42bb34c24405a7ea98fafef41773ee886bf"
+    },
+    "build_log": {
+      "path": "research/evidence/application/APP015/build-release.log",
+      "bytes": 6505,
+      "sha256": "ec98fbf69d75896fe29c901671dcd20d124d373b96528c0826e89c7571adb2da"
+    }
+  },
+  "tests": {
+    "passed": 258,
+    "suites": 40,
+    "seconds": 33.698,
+    "log": {
+      "path": "research/evidence/application/APP015/core-tests-first.log",
+      "bytes": 56188,
+      "sha256": "a7fbe87b02cf451dc66d16a55bbd3f498c62a01f0d24f9266c60dcfc37623170"
+    }
+  },
+  "packages": [
+    {
+      "path": "research/evidence/application/APP015/Placed Trimmed Source.rebaseproj",
+      "files_checked": 4,
+      "unchanged": true,
+      "current_files": [
+        {
+          "path": "research/evidence/application/APP015/Placed Trimmed Source.rebaseproj/Compatibility/CPR/ImportReport.json",
+          "bytes": 93492,
+          "sha256": "608404edbfed6737c8ae02aac3003ea0c3839540f744692a06feeddbbc06807e"
+        },
+        {
+          "path": "research/evidence/application/APP015/Placed Trimmed Source.rebaseproj/Compatibility/CPR/Original.cpr",
+          "bytes": 1333360,
+          "sha256": "9ea2b00a18ff3c1f4b3a7958a8399f46184b39dcb0696e578a3eac1fe547a4d3"
+        },
+        {
+          "path": "research/evidence/application/APP015/Placed Trimmed Source.rebaseproj/Media/5449A2DB-0479-4D77-97F9-A8F259B95A76.wav",
+          "bytes": 6350444,
+          "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+        },
+        {
+          "path": "research/evidence/application/APP015/Placed Trimmed Source.rebaseproj/Project.json",
+          "bytes": 5549,
+          "sha256": "e0729bb0bcf34c30b04d6bd4433ca68bbaf949f73ca61cba7a253ffd1bf7d0f8"
+        }
+      ]
+    },
+    {
+      "path": "research/evidence/application/APP015/Original Conversion QA.rebaseproj",
+      "files_checked": 5,
+      "unchanged": true,
+      "current_files": [
+        {
+          "path": "research/evidence/application/APP015/Original Conversion QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+          "bytes": 93659,
+          "sha256": "27bfde03bdf769d3f7bc2fa55ae3382da2458f63967479781250242e054de45e"
+        },
+        {
+          "path": "research/evidence/application/APP015/Original Conversion QA.rebaseproj/Compatibility/CPR/Original.cpr",
+          "bytes": 1333360,
+          "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495"
+        },
+        {
+          "path": "research/evidence/application/APP015/Original Conversion QA.rebaseproj/Media/E99146CF-145D-4666-A6AD-692D42DB59A6.wav",
+          "bytes": 6350444,
+          "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+        },
+        {
+          "path": "research/evidence/application/APP015/Original Conversion QA.rebaseproj/Media/FA176CB1-13E5-489A-8AA4-FE0DEFE4A6C0.wav",
+          "bytes": 6350444,
+          "sha256": "daeffe7263203465791405ffb2c3e87e905d27a99d306e91ba3d80e3ae722290"
+        },
+        {
+          "path": "research/evidence/application/APP015/Original Conversion QA.rebaseproj/Project.json",
+          "bytes": 5571,
+          "sha256": "ee0b118f5a7e6eb9b427d977c26b5b4c0a06cc53ba6a90ad37f3e4815945aeda"
+        }
+      ]
+    }
+  ],
+  "package_files_unchanged": 9,
+  "source_checks": {
+    "control": {
+      "path": "research/evidence/application/APP015/gui-source-control.json",
+      "bytes": 861,
+      "sha256": "65301df4cd8b1b537f5691568529d2afb2634463cde326a8b51d4fcdb2c6442e"
+    },
+    "exact_three_double_mutations": true,
+    "original_unchanged": true,
+    "projects": [
+      {
+        "path": "research/evidence/application/APP015/Placed Trimmed Source.rebaseproj",
+        "playable_clips": 0,
+        "unresolved_events": 1,
+        "interpretation_profile": "cpr-static-subset-v4"
+      },
+      {
+        "path": "research/evidence/application/APP015/Original Conversion QA.rebaseproj",
+        "playable_clips": 0,
+        "unresolved_events": 1,
+        "interpretation_profile": "cpr-static-subset-v4"
+      }
+    ]
+  },
+  "gui_evidence": [
+    {
+      "path": "research/evidence/application/APP015/gui-attached-saved.txt",
+      "bytes": 5130,
+      "sha256": "5cb49a892673039033520f767e43e3ab2e7640036755ef9280b3614344b70685"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-conversion-open.txt",
+      "bytes": 5367,
+      "sha256": "b3b78ee8930d7f28624eb810ef85807b67a1fc4a2da17cb2a87588c886dd7e82"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-import-review.txt",
+      "bytes": 3654,
+      "sha256": "f2e30a36e141d3472061159d4db1f1ff3f68c31d6f0da2b1cac333bc0a922c3f"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-imported.txt",
+      "bytes": 5089,
+      "sha256": "918d312f2db87a1ec00d460c44e3292931ad0c7be1a6472b4873b88a8860f1f3"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-media-restored.json",
+      "bytes": 233,
+      "sha256": "26b5b469457df0eae77a9e239219e08f23159766a07f41968f0d7e8738c69cf6"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-media-tamper.json",
+      "bytes": 375,
+      "sha256": "dc6687378bd117e9197517dfe66e4681dd7b6a27e8174279a40817cdd9b6a496"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-mode0-admitted.txt",
+      "bytes": 1625,
+      "sha256": "bd7ecc198c1c9754dd8d0e4517b346b174654b51c62671e4c4116bc60b24fd71"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-mode0-exit.txt",
+      "bytes": 5395,
+      "sha256": "df93effe94e2cc111a07d9d302dbb5991da29304c30ce7a549296846b4274e38"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-mode0-playing.txt",
+      "bytes": 5871,
+      "sha256": "5718de9da3eb051be71a235335776733a3eddf0547ff5a1886b3f9ba8ce0b77f"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-mode1-admitted.txt",
+      "bytes": 1561,
+      "sha256": "7168177101c760732b8114ccad6002ad5068d0ce81b715d2b0f704d0e25f13ae"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-mode1-end-or-progress.txt",
+      "bytes": 5850,
+      "sha256": "403c4b4db3b9dc84b53377743ad15fb28811360390e0a73526a502f28d78022a"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-mode1-exit.txt",
+      "bytes": 5394,
+      "sha256": "a62ec2133cf9c00f580d047491c6e8715f8347b61cd1bb46e028b8584e36999a"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-mode1-playing.txt",
+      "bytes": 5874,
+      "sha256": "bf0147aa2e3d9943fbbf3566b7dccb13a4b20611f3a6a839c44114c8d7b3f404"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-mode2-admitted.txt",
+      "bytes": 1533,
+      "sha256": "bd04a47d71d9c8ad65a3ef299d3b2c3baced05574dd3f040c6df9a2a00fb5b26"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-mode2-exit.txt",
+      "bytes": 5395,
+      "sha256": "da1052f80d47317028a89cc194c7c161f90e7335e7aca4f69e421fa49834672e"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-mode2-playing.txt",
+      "bytes": 5866,
+      "sha256": "248906d67623a24da7ddcb415d3ae82e60464eafab970b926b6a6f63c297d3c0"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-admitted-02.txt",
+      "bytes": 1705,
+      "sha256": "4b8c2f0159c89f4af0fd6a76211904bbb44c148718305083f0d706da09f5ca51"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-admitted.txt",
+      "bytes": 1632,
+      "sha256": "369eaeb36b4699639702585dd0659cbf40fc9b9b1dcce5de485549c5709bd026"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-end.txt",
+      "bytes": 5797,
+      "sha256": "8ad3dbda8e16b63398ca5105d23c76f27bc8d4a589db1f754f4e53c6d33cc2b5"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-exit.txt",
+      "bytes": 5160,
+      "sha256": "5b74294ba19621bc1deacf1484700bdf28cd42d88238e5be6b82c60268fb8e28"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-live-return.txt",
+      "bytes": 5820,
+      "sha256": "22dd2801f1510dd41033c6407514056aef07ac0411b161f39e269aa911a57d24"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-pause.txt",
+      "bytes": 5798,
+      "sha256": "82fe532e6a0fc803304ba8702f4157242f1501ea4ff21feaf16b1d5c87cf9614"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-playing.txt",
+      "bytes": 5820,
+      "sha256": "c368ceef3d906d2e928030be49f56111419f8ebae5d88bf6dbd24217f05dd3ec"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-prefix-pause.txt",
+      "bytes": 5798,
+      "sha256": "d315084c24a5360794cd9feb6b83923f120f73774bf803dfac0e5c5e26b97530"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-progress.txt",
+      "bytes": 5821,
+      "sha256": "c231ec589fd7a48f16d2fafbd679aae520c17fbb7904d8542b6b07e972847c98"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-restored-admitted-02.txt",
+      "bytes": 1705,
+      "sha256": "4b8c2f0159c89f4af0fd6a76211904bbb44c148718305083f0d706da09f5ca51"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-restored-admitted.txt",
+      "bytes": 1632,
+      "sha256": "369eaeb36b4699639702585dd0659cbf40fc9b9b1dcce5de485549c5709bd026"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-restored-exit.txt",
+      "bytes": 5160,
+      "sha256": "5eec97e2d62ff074e5ab9259207e405fd853994a200ae1fc28bf19bb512a36ad"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-restored-playing.txt",
+      "bytes": 5820,
+      "sha256": "5758cd903919ddbd0026089e03500f9a2d9b03ddb53acee13b015793a2a51626"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-resume.txt",
+      "bytes": 5820,
+      "sha256": "c2bb6bfe344a73291f3363b73dbd14b7b03fd19c72ff15e0b4b1581ff30445c6"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-seek-playing.txt",
+      "bytes": 5820,
+      "sha256": "3350cc9e00c49e1bba1c6943faa5cf9e46642fa02879de0c934958ac8cb887ce"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-seek.txt",
+      "bytes": 5798,
+      "sha256": "0fe83b026354731ebfc91f53c7641c2bae8b814951e7acf3459a772d3dc951b6"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed-tamper-rejected.txt",
+      "bytes": 394,
+      "sha256": "4b2ec7bd2949f020b3eb9dc4f96d68554d43a716febaa1fa5551e665bc52b3c0"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-native-placed.png",
+      "bytes": 399712,
+      "sha256": "15c26dc60bef97806e9a1a471c83b2bfdc3552da0201b87bb2af6c203d54e70d"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-package-baselines.json",
+      "bytes": 1976,
+      "sha256": "8357179df5be2eea64da3a37f688a8df9dd40891eacc0f49ef2cfe497ad09505"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-placed-inspection-original-blocked.txt",
+      "bytes": 1329,
+      "sha256": "ccb7973f77de341346593caad73b5fd1394c0b93a71aadd44badb601189a1d06"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-project-export-blocked.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-project-play-blocked.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-release-build.json",
+      "bytes": 166,
+      "sha256": "cb3bbd241894ea73bbebfca3175ed42bb34c24405a7ea98fafef41773ee886bf"
+    },
+    {
+      "path": "research/evidence/application/APP015/gui-source-control.json",
+      "bytes": 861,
+      "sha256": "65301df4cd8b1b537f5691568529d2afb2634463cde326a8b51d4fcdb2c6442e"
+    }
+  ],
+  "gui_evidence_counts": {
+    "ax_text": 34,
+    "screenshots": 1,
+    "json_custody": 5,
+    "total": 40
+  },
+  "additional_custody": {
+    "prior_QA_packages": [
+      {
+        "baseline": {
+          "path": "research/evidence/application/APP014/gui-package-baselines.json",
+          "bytes": 1193,
+          "sha256": "a44a495d97b8e4837f3cf0adf5c63ad6d2b88110a60b223251a1468cdd3855ec"
+        },
+        "packages": [
+          {
+            "path": "research/evidence/application/APP014/LoFi Native Timeline QA.rebaseproj",
+            "files_checked": 5,
+            "unchanged": true,
+            "current_files": [
+              {
+                "path": "research/evidence/application/APP014/LoFi Native Timeline QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+                "bytes": 93659,
+                "sha256": "27bfde03bdf769d3f7bc2fa55ae3382da2458f63967479781250242e054de45e"
+              },
+              {
+                "path": "research/evidence/application/APP014/LoFi Native Timeline QA.rebaseproj/Compatibility/CPR/Original.cpr",
+                "bytes": 1333360,
+                "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495"
+              },
+              {
+                "path": "research/evidence/application/APP014/LoFi Native Timeline QA.rebaseproj/Media/E99146CF-145D-4666-A6AD-692D42DB59A6.wav",
+                "bytes": 6350444,
+                "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+              },
+              {
+                "path": "research/evidence/application/APP014/LoFi Native Timeline QA.rebaseproj/Media/FA176CB1-13E5-489A-8AA4-FE0DEFE4A6C0.wav",
+                "bytes": 6350444,
+                "sha256": "daeffe7263203465791405ffb2c3e87e905d27a99d306e91ba3d80e3ae722290"
+              },
+              {
+                "path": "research/evidence/application/APP014/LoFi Native Timeline QA.rebaseproj/Project.json",
+                "bytes": 5571,
+                "sha256": "ee0b118f5a7e6eb9b427d977c26b5b4c0a06cc53ba6a90ad37f3e4815945aeda"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "baseline": {
+          "path": "research/evidence/application/APP013/gui-package-baselines.json",
+          "bytes": 3905,
+          "sha256": "8a15ea5702931773fe098eec0e440c2c76b185ea8a9d4720683cde8b72f301f5"
+        },
+        "packages": [
+          {
+            "path": "research/evidence/application/APP013/LoFi Mode1 Upsample QA.rebaseproj",
+            "files_checked": 5,
+            "unchanged": true,
+            "current_files": [
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Upsample QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+                "bytes": 93659,
+                "sha256": "27bfde03bdf769d3f7bc2fa55ae3382da2458f63967479781250242e054de45e"
+              },
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Upsample QA.rebaseproj/Compatibility/CPR/Original.cpr",
+                "bytes": 1333360,
+                "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495"
+              },
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Upsample QA.rebaseproj/Media/E99146CF-145D-4666-A6AD-692D42DB59A6.wav",
+                "bytes": 6350444,
+                "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+              },
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Upsample QA.rebaseproj/Media/FA176CB1-13E5-489A-8AA4-FE0DEFE4A6C0.wav",
+                "bytes": 6350444,
+                "sha256": "daeffe7263203465791405ffb2c3e87e905d27a99d306e91ba3d80e3ae722290"
+              },
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Upsample QA.rebaseproj/Project.json",
+                "bytes": 5571,
+                "sha256": "ee0b118f5a7e6eb9b427d977c26b5b4c0a06cc53ba6a90ad37f3e4815945aeda"
+              }
+            ]
+          },
+          {
+            "path": "research/evidence/application/APP013/LoFi Mode1 Downsample QA.rebaseproj",
+            "files_checked": 5,
+            "unchanged": true,
+            "current_files": [
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Downsample QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+                "bytes": 93659,
+                "sha256": "27bfde03bdf769d3f7bc2fa55ae3382da2458f63967479781250242e054de45e"
+              },
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Downsample QA.rebaseproj/Compatibility/CPR/Original.cpr",
+                "bytes": 1333360,
+                "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495"
+              },
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Downsample QA.rebaseproj/Media/E99146CF-145D-4666-A6AD-692D42DB59A6.wav",
+                "bytes": 6350444,
+                "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+              },
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Downsample QA.rebaseproj/Media/FA176CB1-13E5-489A-8AA4-FE0DEFE4A6C0.wav",
+                "bytes": 6350444,
+                "sha256": "daeffe7263203465791405ffb2c3e87e905d27a99d306e91ba3d80e3ae722290"
+              },
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Downsample QA.rebaseproj/Project.json",
+                "bytes": 5573,
+                "sha256": "7c0781cb00d47164b68aef45c736d038e9923fe661f8e19a5e3e656fad51b47f"
+              }
+            ]
+          },
+          {
+            "path": "research/evidence/application/APP013/LoFi Mode1 Equal Rate QA.rebaseproj",
+            "files_checked": 5,
+            "unchanged": true,
+            "current_files": [
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Equal Rate QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+                "bytes": 93659,
+                "sha256": "27bfde03bdf769d3f7bc2fa55ae3382da2458f63967479781250242e054de45e"
+              },
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Equal Rate QA.rebaseproj/Compatibility/CPR/Original.cpr",
+                "bytes": 1333360,
+                "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495"
+              },
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Equal Rate QA.rebaseproj/Media/E99146CF-145D-4666-A6AD-692D42DB59A6.wav",
+                "bytes": 6350444,
+                "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+              },
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Equal Rate QA.rebaseproj/Media/FA176CB1-13E5-489A-8AA4-FE0DEFE4A6C0.wav",
+                "bytes": 6350444,
+                "sha256": "daeffe7263203465791405ffb2c3e87e905d27a99d306e91ba3d80e3ae722290"
+              },
+              {
+                "path": "research/evidence/application/APP013/LoFi Mode1 Equal Rate QA.rebaseproj/Project.json",
+                "bytes": 5573,
+                "sha256": "46ed827d34a5bc94f0b4f10271d97985c10506836ed117a6316163d5a55b7294"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "prior_package_files_checked": 20
+  },
+  "setup_notes": [
+    "The initial admitted and restored-admitted records retain an open popup menu and old selected value; actual admission is assessed from their -02 snapshots.",
+    "Operator reported saving a pre-existing unsaved session to an independent copy before the new binary launch. No independent replay of that action was performed. APP013/APP014 sealed QA package files were independently checked unchanged."
+  ],
+  "limitations": [
+    "Application GUI/engine telemetry only, not DAC capture, audible-output measurement or Cubase runtime equivalence.",
+    "The CPR timing changes and attached PCM are controlled research inputs; the changed CPR was not generated by Cubase.",
+    "Prefix zero levels are discrete GUI observations. Exact sample scheduling is covered separately by application tests and analytical controls.",
+    "Track processing, project routing/mixing, automation and general hosted resource state remain outside selected-source audition.",
+    "Frozen V4 import provenance and source media remain intact; no general importer/playable-clip promotion is claimed."
+  ]
+}

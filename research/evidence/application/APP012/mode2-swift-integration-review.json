@@ -1,0 +1,72 @@
+{
+  "id": "APP012-MODE2-SWIFT-INTEGRATION-REVIEW",
+  "created_utc": "2026-10-20T09:30:14.162991+00:00",
+  "status": "no_actionable_defect_found_within_declared_domain",
+  "method": "Independent read-only review; no application source mutation or test rerun. Public backend controls are separate soxr-public-build artifacts.",
+  "checked": [
+    "Planner creates and destroys its own wrapper/backend. Every cursor constructs a new owned opaque handle; filter history cannot leak between cursors or count planning. Swift deinit calls native destroy.",
+    "Finite integral8k..192k rates and stereo array/count bounds are validated before allocation. C count guards bound resulting count<=16m before Swift count*2 allocations and Int64 conversion. Equal-rate mode2 is deliberately admitted, without the mode0 transparent-copy assumption.",
+    "The loop sends positive input blocks<=8192, with final=true exactly on the last source block. It does not follow this by a second zero-input flush. Count prediction uses the same block size and terminal policy.",
+    "Native zero-output blocks still advance inputPosition and native state and continue the loop; they are not mistaken for EOF. Produced count must match prediction.",
+    "Seeking always rebuilds filter state from source zero, executes identical blocks, drops complete preroll blocks and retains the exact gained crossing-block suffix. End seek emits nothing. This remains an application policy.",
+    "The shared source renderer applies event gain only for original-rate mode. Converted modes filter raw verified PCM, then apply the separate Float32 event gain exactly once.",
+    "Planar conversion still routes output through existing stereo ring in<=8192-frame transfer chunks, even when one resampling output block exceeds ring admission. Channel indexing remains interleaved L/R into planar L/R.",
+    "AudioTransportEngine keeps the existing four-buffer queue, generation-gated dataPlayedBack callbacks and end conditions. Processing errors throw; callback path records failure and stops/releases cursor. Initial preparation errors exit source mode through StudioSession catch.",
+    "Inspection is eligibility information; actual Play/resume/seek replays source/report/media proof in configureCPRSourceEvent. Unresolved original events are preserved and normal project playback/export barriers remain separate.",
+    "Explicit picker/display labels distinguish original rate, mode0 and public-SoXR mode2. Caption states public0.1.3 and unverified reference sample equivalence. No automatic native availability or mode1 fallback claim is introduced."
+  ],
+  "limits": [
+    "No direct re-execution of GUI or Cubase. Test outcomes remain attributed to their separately retained logs and independent wrapper oracle.",
+    "A post-conversion gain error occurs after converter/input state advances. Caller must discard the failed cursor, as current engine/session error paths do; the cursor is not generally transactional.",
+    "A count planner predicts native-wrapper returned counts, not public library produced samples or actual native runtime output. Backend underproduction/retained storage behavior is the separate C wrapper contract.",
+    "Resident source PCM, main-actor refill, four-buffer queue, 8192-input partitioning and reset/preroll seek do not establish native live callback topology, hard realtime operation or device-rate sample equivalence.",
+    "Exact public backend equality with proprietary SoXR source/build remains unverified."
+  ],
+  "source_pins": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "bytes": 13202,
+      "sha256": "a62f00c9edce330a4a715f38321db3632973dc9070721dfe82cb3dd4a807d758"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 7348,
+      "sha256": "9ffbfc0420b37f63f9f8da1948d9e83c7a65f5984f558fbe6387a9cb13309f2b"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 8283,
+      "sha256": "e97941c4d3eb24748f178507eb3b8201fa9ee4d274a2405484a994a522f7fc04"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRLiveStereoTransfer.swift",
+      "bytes": 2297,
+      "sha256": "484361ae02a1d116e2d05da7d1811cb36ef8503aa3a872f522da0ca8469e3a00"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "bytes": 10727,
+      "sha256": "3cdac99694256430b8fe4aaf5e67962a803c0a471ded0048ab68cd37eda0a47c"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 38820,
+      "sha256": "82d7ede057a9d4a4d9cb65a37e7e0acc5d80f4011c895813d8b11d08a1eb239b"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+      "bytes": 5832,
+      "sha256": "783411f2f9cd6e2f84ff2d06fa695a61a2fbf7eba6df9d1435f37032e8d53335"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "bytes": 21769,
+      "sha256": "847ebb0722afc0461b6ee8a5adc8d0393aa4a81c12c3527c67bb5a761602df3a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRMode2StreamTests.swift",
+      "bytes": 6679,
+      "sha256": "39dd2f7e56416c2d60ee6f3a645862896e190a9b87909c8d8249571899f729a3"
+    }
+  ]
+}

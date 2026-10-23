@@ -1,0 +1,115 @@
+{
+  "scope": "One bounded sequential HTTP1.1 versus HTTP2 comparison on the same already-verified1MiB range, after user-reported network repair. No installer completeness claim.",
+  "at_utc": "2026-10-19T06:33:04.137421+00:00",
+  "source": {
+    "etag": "\"b5ade2659e6a6fd9ebf7c1a35832728a-235\"",
+    "last_modified": "Tue, 02 Jun 2026 06:57:59 GMT",
+    "size": 1226998651,
+    "url": "https://download.steinberg.net/automated_updates/sda_downloads/a3d35aad-d523-4711-a5a7-119ffa8fa6eb/Cubase_15.0.30_Installer_mac.dmg"
+  },
+  "probe_order": [
+    "1.1",
+    "2"
+  ],
+  "max_seconds_each": 60,
+  "active_downloader_workers": 4,
+  "active_downloader_untouched": true,
+  "runs": [
+    {
+      "requested_http_version": "1.1",
+      "negotiated_http_version": "1.1",
+      "returncode": 0,
+      "started_utc": "2026-10-19T06:31:07.514011+00:00",
+      "finished_utc": "2026-10-19T06:31:28.191339+00:00",
+      "actual_bytes": 1048576,
+      "range_start": 0,
+      "range_end_inclusive": 1048575,
+      "sha256": "ddc7b6aa671ce1eb752bbce6507a37980062b93cbc7188e2eb2d038a6a56a4ea",
+      "equals_previously_verified_range": true,
+      "response_validators": {
+        "content-range": "bytes 0-1048575/1226998651",
+        "content-length": "1048576",
+        "etag": "\"b5ade2659e6a6fd9ebf7c1a35832728a-235\"",
+        "last-modified": "Tue, 02 Jun 2026 06:57:59 GMT",
+        "content-encoding": null,
+        "x-amz-version-id": "ztHHSGH8n0oHFMZnkMeI59e9sQt4_uiz"
+      },
+      "timing_seconds": {
+        "time_namelookup": 0.002675,
+        "time_connect": 2.838327,
+        "time_appconnect": 4.89553,
+        "time_starttransfer": 7.524252,
+        "time_total": 20.666565
+      },
+      "reported_bytes_per_second": 50737,
+      "remote_ip": "3.169.252.65",
+      "raw_result": {
+        "path": "research/targets/downloads/range-probes/post-repair-2026-10-19/http1.1-result.json",
+        "sha256": "89a6d25c13ddda734b284eaef24fd2ba8e8315c5a637e6cd596dc5f916fbbca4"
+      },
+      "response_headers": {
+        "path": "research/targets/downloads/range-probes/post-repair-2026-10-19/http1.1.headers",
+        "sha256": "26ed8ab84ea5c53af7269b1ba3eb6fefc9943b8aea80c625f8de4a513345d940"
+      },
+      "body": {
+        "path": "research/targets/downloads/range-probes/post-repair-2026-10-19/http1.1.bin",
+        "sha256": "ddc7b6aa671ce1eb752bbce6507a37980062b93cbc7188e2eb2d038a6a56a4ea"
+      }
+    },
+    {
+      "requested_http_version": "2",
+      "negotiated_http_version": "2",
+      "returncode": 0,
+      "started_utc": "2026-10-19T06:31:37.270404+00:00",
+      "finished_utc": "2026-10-19T06:32:23.184182+00:00",
+      "actual_bytes": 1048576,
+      "range_start": 0,
+      "range_end_inclusive": 1048575,
+      "sha256": "ddc7b6aa671ce1eb752bbce6507a37980062b93cbc7188e2eb2d038a6a56a4ea",
+      "equals_previously_verified_range": true,
+      "response_validators": {
+        "content-range": "bytes 0-1048575/1226998651",
+        "content-length": "1048576",
+        "etag": "\"b5ade2659e6a6fd9ebf7c1a35832728a-235\"",
+        "last-modified": "Tue, 02 Jun 2026 06:57:59 GMT",
+        "content-encoding": null,
+        "x-amz-version-id": "ztHHSGH8n0oHFMZnkMeI59e9sQt4_uiz"
+      },
+      "timing_seconds": {
+        "time_namelookup": 0.003063,
+        "time_connect": 1.995433,
+        "time_appconnect": 2.356774,
+        "time_starttransfer": 2.972603,
+        "time_total": 45.902965
+      },
+      "reported_bytes_per_second": 22843,
+      "remote_ip": "3.169.252.15",
+      "raw_result": {
+        "path": "research/targets/downloads/range-probes/post-repair-2026-10-19/http2-result.json",
+        "sha256": "60b1d6c76e1cb70d4e1cef67173b591022592061dd21c5e2a5b3e1780f64a6c8"
+      },
+      "response_headers": {
+        "path": "research/targets/downloads/range-probes/post-repair-2026-10-19/http2.headers",
+        "sha256": "4f78aaaa9e7d7b8e801adfdae367d4c4bc6727ceeae3186bb06b3a08f7a2bdec"
+      },
+      "body": {
+        "path": "research/targets/downloads/range-probes/post-repair-2026-10-19/http2.bin",
+        "sha256": "ddc7b6aa671ce1eb752bbce6507a37980062b93cbc7188e2eb2d038a6a56a4ea"
+      }
+    }
+  ],
+  "http2_speed_ratio_to_http1_from_equal_size_total_durations": 0.4502228777596392,
+  "limits": [
+    "One request per protocol, fixed order, with four concurrent main-transfer workers. Temporal load and connection setup are confounded with protocol.",
+    "Both bodies match the old reference range; equality does not establish acquisition of any other range or the complete image.",
+    "No networking settings or active downloader settings changed.",
+    "The requests resolved to different CDN IP addresses, so this pair does not isolate the HTTP protocol effect."
+  ],
+  "journal_after": {
+    "status": "running",
+    "received_bytes": 835761229,
+    "sha256": "172aec07c8f9a6628e0a7ec0f45ae67bda255482852acf3d5d819983694cbf63"
+  },
+  "decision": "HTTP1.1 was about2.22times faster on this equal-size pair and is a reasonable bounded trial for the next resume. Do not change the running downloader; retain and compare next-run aggregate throughput because CDN endpoint and background load confound this observation.",
+  "observed_http1_speed_ratio_to_http2": 2.2211221361653477
+}

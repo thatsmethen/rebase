@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "created_utc": "2026-10-19T11:49:06.979251+00:00",
+  "scope": "Bounded self-authored C jump-map primitives derived from static native instruction evidence, with independent analytical validation. No target execution or runtime-conformance claim.",
+  "api": {
+    "rb_native_jump_point": "uint32 period_bits; double seconds; double ticks",
+    "rb_native_map_validate": "Canonical 1/2-point state check; exact binary64 anchor recurrence, not a tolerance or rewrite.",
+    "rb_native_map_seconds": "Detached tick-to-second arithmetic; exact knot chooses new point; separate SUB/MUL/DIV/ADD.",
+    "rb_native_map_ticks": "Detached second-to-tick arithmetic; exact knot chooses preceding point; positive path uses two explicit FMA sites then floor/div1000; zero path bypasses quantizer."
+  },
+  "domain": {
+    "count": [
+      1,
+      2
+    ],
+    "period": "Direct positive normal binary32 bits; no reconstructed reciprocal BPM. Display BPM domain is caller responsibility.",
+    "anchors": "First seconds and ticks must be positive zero; second finite normal positive and strictly increasing; seconds <=3e9 and ticks <=480e9.",
+    "query": "Finite normal nonnegative or signed zero, within coordinate bounds; intermediate underflow/overflow and out-of-domain results reject.",
+    "floating_environment": "FE_TONEAREST required; compiler -fno-fast-math -ffp-contract=off -frounding-math.",
+    "errors": "Return INVALID=1, FP_ENVIRONMENT=2, UNREPRESENTABLE=3; conversion output unchanged on error.",
+    "sign_zero": "Forward seconds=-0 retains tick=-0 via explicit zero path; inverse tick=-0 yields seconds=+0 through final +0 anchor addition."
+  },
+  "canonicality": "Conversions deliberately preserve detached serialized anchors and do not silently canonicalize. Importer must additionally call rb_native_map_validate and prove role/lifecycle/source state; this C API alone does not establish active native list/cache identity.",
+  "validation": {
+    "passed": true,
+    "map_vectors": 105,
+    "raw_fma_vectors": 3,
+    "quantizer_vectors": 30,
+    "rejection_checks": 68,
+    "fixed_regression_vectors": 36,
+    "instruction_checks_passed": true,
+    "unchanged_fixed_prefix_sha256": "00d86967975e90f88ade6d1f4223db6a7db5543729f8c39fbc9556a53967d3f3"
+  },
+  "emitted_code": "Optimized ARM64 public forward body contains exactly two FMADD instructions plus FRINTM. Inverse and canonical validation retain separate SUB/MUL/DIV/ADD. Fixed functions retain their Float32 FDIV and ordered Float64 operations. Exact symbol-relative inventories retained in comparison record.",
+  "oracle_limits": [
+    "The three raw-FMA distinctions disappear after final quantization; no final-output distinction is claimed for those three.",
+    "The fused quantizer discriminator outside the public tick bound exercises a test-only internal wrapper, absent from app; it does not expand API bounds.",
+    "Synthetic unequal-anchor vectors validate detached arithmetic and deliberately fail canonical import validation."
+  ],
+  "fixed_preservation": "Original complete C prefix has unchanged SHA256; all36 retained fixed-clock oracle vectors still bit-exact in optimized build.",
+  "swift_tests": "Three targeted NativeMapKernelTests methods authored; not run in this step because root coordinates SwiftPM suite.",
+  "review": "Independent source review requested from cubase_evidence; pending at record time.",
+  "files": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_tempo.c",
+      "bytes": 7951,
+      "sha256": "5bd8632d38cad4c4b240ffcad58ec4ceb304ab23bb93483657028e085655aefb"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_tempo.h",
+      "bytes": 1878,
+      "sha256": "1f3da5deac941e7a1cc6a0f5c9a5d7d4da4fda3cc1c5928eb5a5d627cd623b70"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeMapKernelTests.swift",
+      "bytes": 4627,
+      "sha256": "d647ad8086f9a233e9ee0a6289d92f97b90fa91fa194db0eef8fc00d8afb824e"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/finding.json",
+      "bytes": 12973,
+      "sha256": "d5b75db7c23c2ddcf44ebc9dd9bd3f566a147567a682407ae157eb149b6686e4"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/map-clock-goldens.json",
+      "bytes": 88972,
+      "sha256": "98b3922f598f57e51e961252a61a6503c67cead5b8d17605024e2bedc202795c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/test_map_kernel.py",
+      "bytes": 12761,
+      "sha256": "ff70b3b79518eece7af003542771e6df4edfea6212a7e66f1d9a82fe874be301"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/optimized-map-kernel-comparison.json",
+      "bytes": 34484,
+      "sha256": "dfaa294926c456b5344be8c7863b076bec442edd35a00df33d627de057a68857"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/optimized-map-kernel-disassembly.txt",
+      "bytes": 44948,
+      "sha256": "d5561a7b26eba9cb07732c73f6851e365b254f082158054cb6fc60d2c27e3051"
+    }
+  ]
+}

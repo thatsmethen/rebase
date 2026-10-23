@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-20T00:51:47.114792+00:00",
+  "scope": "Independent source review and six application audition tests; no target execution or device-output comparison.",
+  "review_status": "No actionable failure found in the reviewed finite selected-event path or normal completion-generation flow.",
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "sha256_at_review": "8139b728c040eafe50713cfc258f5426ed6c71632c7c44ee03a330ee3dd45eda"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "sha256_at_review": "d576030b85d9a8f4533b4c9e596c6f625fa6343cd2a515b62539dd74d34e40e2"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "sha256_at_review": "5c9d63547ed9c3e52dad13b9f86c253f0a9da21ab6c2a21a921fc3c74483f897"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRTimelineSelection.swift",
+      "sha256_at_review": "b08ace23f823c5bf28b54bea8fa32e531234569378574ab6257b7caf9b735e30"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "sha256_at_review": "b11a8a2007fd63a1d5f81081fb5d027086fe10e9d26fb215c6281d61fccb9573"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceEventPlaybackTests.swift",
+      "sha256_at_review": "cfa6dfcc1449a486e1549044881c7d7807ed0b499a9b511c15ebff9fa1baa147"
+    }
+  ],
+  "admission": [
+    "Fresh preserved-CPR/report replay, retained event/track identity, source processing gates and attached-media SHA are checked through shared renderer preparation on each configuration.",
+    "The selected zero-origin stereo source stays at its saved 44100 Hz and 1058400 frames. Ordinary 48000 Hz project resampling, gain, pan, mute, solo and automation are bypassed by the explicit source-audition policy.",
+    "Preparation retains the original unresolved event and historical report; full-project playback, offline export and DAWproject barriers remain in place."
+  ],
+  "test_oracle": {
+    "input": "Synthetic signed24 stereo patterns attached to the preserved LoFi template; the media is not asserted to be the original Cubase sound.",
+    "method": "Sign-extend each source triplet. Construct exact Float32 p/2^23 bits with integer magnitude bit length, biased exponent and mantissa; no converter, AVAudioFile or floating division supplies the expected bits.",
+    "checks": [
+      "All initial prepared samples.",
+      "Every sample/channel in nine actual schedule-buffer suffixes starting at 0,1,8191,8192,9999,10000,10001,1058398,1058399; copied suffixes cannot alias the original buffer.",
+      "Native selection is present; times24, nextUp(24), and greatest finite Double produce startFrame1058400 and no spans, despite inclusive native end selection.",
+      "Generic half-frame ties, delay frames, last frame, end clamping and rejection of NaN, infinities and negative seeks.",
+      "Same-size media/source/report changes with restored modification time reject fresh admission; previously admitted immutable PCM is preserved and restored input succeeds.",
+      "Removed/changed selected event, moved track identity and altered placement reject; all package file bytes are preserved.",
+      "Offline AVAudioEngine unity routing of the final257 source frames at source rate compares every output bit without opening an audio device."
+    ]
+  },
+  "completion_review": [
+    "stop increments playbackGeneration before stopping players, clears pending count, cancels the timeline task and resets meter state. Queued callbacks from a stopped/configured previous generation cannot finish a new run.",
+    "The pending count is set for every scheduled player before scheduling starts; callbacks return through DispatchQueue.main before mutating actor state or stopping the engine.",
+    "Completion requires both timelineElapsed and pendingPlayers==0 from dataPlayedBack callbacks. This preserves silent tails and no longer treats elapsed wall time alone as audio completion.",
+    "The UI timer consults engine.isPlaying instead of stopping at playhead>=duration; audition duration is engine duration, not the zero ordinary-clip project duration.",
+    "Invalid new play arguments stop the previous run first; failed configuration clears prior prepared state."
+  ],
+  "execution_status": {
+    "final_full_run": "research/evidence/application/APP009/core-tests-final.log",
+    "log_sha256": "c20534e359c5a43ee41f26f4bf4d2f2178e46b9baeaadb9ed47c2bfd4b6ff7b7",
+    "observed_result": "171 tests in 25 suites passed; all six audition tests passed, including the added native-selection exact-end assertions and offline AVAudioEngine output comparison.",
+    "test_source_sha256": "cfa6dfcc1449a486e1549044881c7d7807ed0b499a9b511c15ebff9fa1baa147",
+    "executed_by": "Root coordinated full suite; reviewer independently checked retained log and current test source.",
+    "this_review_reran_tests": false
+  },
+  "limitations": [
+    "The tests prove admitted buffer arithmetic and application scheduling/copy policy, not a Cubase live scheduler or whole-project signal path.",
+    "The offline AVAudioEngine test does not exercise real-time completion races, hardware resampling, device latency or DAC output. Generation gating was inspected in source; final GUI playback/pause/seek/completion checks remain root-owned.",
+    "No claim is made that unsupported MIDI, plugins, routing, automation or other native events were reconstructed."
+  ],
+  "target_execution_count": 0,
+  "cubase_runtime_comparisons": 0,
+  "production_source_changes_by_reviewer": 0,
+  "finalization": {
+    "checked_utc": "2026-10-20T00:58:34.384234+00:00",
+    "previous_review_sha256": "fd15f7c61f7f771693c31ca7129b704c288b8de4433337aa2fd68a4ede52c685",
+    "changes_since_initial_review": [
+      {
+        "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+        "previous_sha256": "5ba51e7405aad787ea2d55f436610d9effdc13a0615a9d1b2d00b989e29eddca",
+        "current_sha256": "d576030b85d9a8f4533b4c9e596c6f625fa6343cd2a515b62539dd74d34e40e2",
+        "check": "Reversing exactly the two reported attachment-error wording changes reproduces the previous reviewed byte hash. No other source changes."
+      }
+    ],
+    "other_reviewed_sources_unchanged": true,
+    "executable_identity_only": {
+      "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+      "bytes": 4775808,
+      "sha256": "00d22d2969e3f13671c3f8ed93151035789885a6ac1d28b8fcd77cd665288fa9"
+    },
+    "gui_validation": "Root-owned final GUI checks are outside this independent source/test review."
+  }
+}

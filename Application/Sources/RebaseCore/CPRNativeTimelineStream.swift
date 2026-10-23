@@ -8,13 +8,39 @@ import RebaseTimingDSP
 /// fields. The separately verified placed-source plan constructs them from a preserved
 /// CPR. Synthetic descriptors additionally exercise multiple-segment behavior.
 struct CPRNativeTimelineStream {
+    /// Immutable identity owned by this allocation, never a caller-provided key.
+    /// Fragments may share one verified snapshot without multiplying its budget.
+    final class Source {
+        let samples: [Float]
+        let sourceRate: Double
+        init(samples: [Float], sourceRate: Double) {
+            self.samples = samples; self.sourceRate = sourceRate
+        }
+    }
+
     struct Segment {
         let start: Double
         let length: Double
         let offset: Double
-        let samples: [Float]
+        let source: Source
         let gain: Float
-        let sourceRate: Double
+        var samples: [Float] { source.samples }
+        var sourceRate: Double { source.sourceRate }
+
+        init(start: Double, length: Double, offset: Double, samples: [Float], gain: Float, sourceRate: Double) {
+            self.init(start: start, length: length, offset: offset,
+                source: Source(samples: samples, sourceRate: sourceRate), gain: gain)
+        }
+        init(start: Double, length: Double, offset: Double, source: Source, gain: Float) {
+            self.start = start; self.length = length; self.offset = offset
+            self.source = source; self.gain = gain
+        }
+    }
+
+    enum SegmentPolicy { case ordinary, normalizedTrack }
+    private struct SourceGainKey: Hashable {
+        let identity: ObjectIdentifier
+        let gainBits: UInt32
     }
 
     private struct BoundSegment {
@@ -29,21 +55,27 @@ struct CPRNativeTimelineStream {
     private let period: Double
     private let segments: [BoundSegment]
 
-    init(sampleRate: Double, segments: [Segment]) throws {
+    init(sampleRate: Double, segments: [Segment], policy: SegmentPolicy = .ordinary) throws {
+        let segmentLimit = policy == .normalizedTrack ? 8192 : 4096
         guard sampleRate.rounded() == sampleRate, (8_000...192_000).contains(sampleRate),
-              !segments.isEmpty, segments.count <= 4096 else { throw Self.invalid }
+              !segments.isEmpty, segments.count <= segmentLimit else { throw Self.invalid }
         let period = 1 / sampleRate
         var bound: [BoundSegment] = []
         var previousEnd: Int64 = 0
         var totalSamples = 0
+        var countedSources = Set<ObjectIdentifier>()
+        var checkedGains = Set<SourceGainKey>()
         for source in segments {
             guard source.start >= 0, source.length > 0, source.offset >= 0,
                   source.sourceRate.rounded() == source.sourceRate,
                   (8_000...192_000).contains(source.sourceRate),
                   source.gain.isNormal, source.gain > 0,
-                  !source.samples.isEmpty, source.samples.count % 2 == 0,
-                  source.samples.count <= 32_000_000 - totalSamples else { throw Self.invalid }
-            totalSamples += source.samples.count
+                  !source.samples.isEmpty, source.samples.count % 2 == 0 else { throw Self.invalid }
+            let identity = ObjectIdentifier(source.source)
+            if countedSources.insert(identity).inserted {
+                guard source.samples.count <= 32_000_000 - totalSamples else { throw Self.invalid }
+                totalSamples += source.samples.count
+            }
             // The concrete native end getter performs this addition separately
             // before the reader's FMA and signed integer conversion.
             let end = source.start + source.length
@@ -57,10 +89,12 @@ struct CPRNativeTimelineStream {
                   last - first <= Int64(source.samples.count / 2) - offset else { throw Self.invalid }
             // Reject unsupported arithmetic before live scheduling. The actual
             // multiply still follows each direct read, exactly once.
-            for value in source.samples {
-                let result = value * source.gain
-                guard value.isFinite, value == 0 || value.isNormal,
-                      result.isFinite, result == 0 ? value == 0 : result.isNormal else { throw Self.invalid }
+            if checkedGains.insert(SourceGainKey(identity: identity, gainBits: source.gain.bitPattern)).inserted {
+                for value in source.samples {
+                    let result = value * source.gain
+                    guard value.isFinite, value == 0 || value.isNormal,
+                          result.isFinite, result == 0 ? value == 0 : result.isNormal else { throw Self.invalid }
+                }
             }
             bound.append(BoundSegment(descriptor: descriptor, source: source,
                                       startFrame: first, endFrame: last))

@@ -1,0 +1,106 @@
+{
+  "status": "passed",
+  "created_utc": "2026-10-23T04:09:21.483341+00:00",
+  "target_executed": false,
+  "native_runtime_comparisons": 0,
+  "scope": "Exact authored C-kernel output bits against retained analytical models and independently stated resource-bound intervals; not reference runtime behavior.",
+  "source_before": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_track_overlap.c",
+      "bytes": 6593,
+      "sha256": "9d012c451b189eb12c91693da6d3e21c0093a5529bd8e0f1b04c74f221ad893c"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_track_overlap.h",
+      "bytes": 1575,
+      "sha256": "e4a4224896e37306c54866e73526e716895abebf7dcf1b3a073542a713a4f01a"
+    }
+  ],
+  "source_after": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_track_overlap.c",
+      "bytes": 6593,
+      "sha256": "9d012c451b189eb12c91693da6d3e21c0093a5529bd8e0f1b04c74f221ad893c"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_track_overlap.h",
+      "bytes": 1575,
+      "sha256": "e4a4224896e37306c54866e73526e716895abebf7dcf1b3a073542a713a4f01a"
+    }
+  ],
+  "live_source_unchanged": true,
+  "compiled_sources": [
+    {
+      "path": "research/evidence/application/APP021/overlap-kernel-check/cpr_track_overlap.c",
+      "bytes": 6593,
+      "sha256": "9d012c451b189eb12c91693da6d3e21c0093a5529bd8e0f1b04c74f221ad893c"
+    },
+    {
+      "path": "research/evidence/application/APP021/overlap-kernel-check/cpr_track_overlap.h",
+      "bytes": 1575,
+      "sha256": "e4a4224896e37306c54866e73526e716895abebf7dcf1b3a073542a713a4f01a"
+    }
+  ],
+  "compile_command": [
+    "clang",
+    "-std=c11",
+    "-O2",
+    "-ffp-contract=off",
+    "-dynamiclib",
+    "/workspace/rebase/research/evidence/application/APP021/overlap-kernel-check/cpr_track_overlap.c",
+    "-I",
+    "/workspace/rebase/research/evidence/application/APP021/overlap-kernel-check",
+    "-o",
+    "/workspace/rebase/research/evidence/application/APP021/overlap-kernel-check/kernel.dylib"
+  ],
+  "compile_exit_code": 0,
+  "compiled_library": {
+    "path": "research/evidence/application/APP021/overlap-kernel-check/kernel.dylib",
+    "bytes": 33552,
+    "sha256": "a27cc06ba7264adc9169df0484690d142f01407e38bcbee3d48418e00c1547b1"
+  },
+  "inputs": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/track-overlaps/branch-controls.json",
+      "bytes": 30278,
+      "sha256": "5cbf4db26969512b4ad5a02d4b6bfbf0fa85706e4c9c167ad50ca595eac700cb"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/track-overlaps/normalizer_model.py",
+      "bytes": 4929,
+      "sha256": "a25b097ff451def31a418204465c805114155e252049ac9be1667cf3e4279916"
+    },
+    {
+      "path": "research/evidence/application/APP021/check_overlap_kernel.py",
+      "bytes": 6744,
+      "sha256": "f7957c9fbc3771123e61c1e4b14284b218aee933446bd70e7c22bea100e66421"
+    }
+  ],
+  "retained_cases": 24,
+  "clustered_epsilon_cases": 20000,
+  "output_stream_sha256": "079143b60536bf623ae09def445c56a18ac4680f954a653dd2113a647ccaf281",
+  "quadratic_4096_passed": true,
+  "nested_4096_fragments": 8191,
+  "transactional_rejections": [
+    {
+      "label": "unsorted",
+      "status": 1,
+      "output_unchanged": true
+    },
+    {
+      "label": "duplicate-ordinal",
+      "status": 1,
+      "output_unchanged": true
+    },
+    {
+      "label": "nan",
+      "status": 1,
+      "output_unchanged": true
+    },
+    {
+      "label": "short-output",
+      "status": 3,
+      "output_unchanged": true
+    }
+  ]
+}

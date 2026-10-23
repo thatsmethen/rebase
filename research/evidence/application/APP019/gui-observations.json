@@ -1,0 +1,230 @@
+{
+  "id": "APP019-GUI",
+  "created_utc": "2026-10-21T02:47:42.329685+00:00",
+  "final_release": true,
+  "executable": {
+    "path": "research/evidence/application/APP019/final-build-snapshot/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 5077056,
+    "sha256": "1ebf6ad071aae23a79948350840963f17a96a7d6e8a9e5cba753f3ee408b60e2"
+  },
+  "groups_passed": 6,
+  "groups": [
+    {
+      "name": "new_import",
+      "result": "passed",
+      "records": [
+        {
+          "path": "research/evidence/application/APP019/gui-import-review.txt",
+          "bytes": 3848,
+          "sha256": "873a3bd9f92ae0f0a9bc956208d406803f6c4c7ab58f9fb5c4fcc9e06af16659"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v5-imported.txt",
+          "bytes": 5324,
+          "sha256": "c5e730730a7407bf7d9033331a712385b1065df66213911e8f9b209cf3121500"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v5-attached.txt",
+          "bytes": 5363,
+          "sha256": "dfa9ccdfd6b20c6487540d369b7a98298654c4462b9db3e23aef16049c66f207"
+        }
+      ],
+      "observations": [
+        "Final GUI imported the source-derived32k setup into V5, displayed32000Hz recovered configuration and attached matching self-authored PCM."
+      ]
+    },
+    {
+      "name": "historical_configuration",
+      "result": "passed",
+      "records": [
+        {
+          "path": "research/evidence/application/APP019/gui-v4-opened.txt",
+          "bytes": 5318,
+          "sha256": "dbf82856bf9b5f0619d0afebeb10e14b35b1483845d67fe7e73d551dc396ad03"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v4-saved-clock.txt",
+          "bytes": 1748,
+          "sha256": "e20388ca4ee4d0d6439a62630e2b873625c7528fe1bd548214f6b70c055752fe"
+        }
+      ],
+      "observations": [
+        "Historical V4 package retains32000Hz application rate while fresh saved configuration shows44100Hz and admits saved-clock audition."
+      ]
+    },
+    {
+      "name": "historical_transport",
+      "result": "passed",
+      "records": [
+        {
+          "path": "research/evidence/application/APP019/gui-v4-playing.txt",
+          "bytes": 5736,
+          "sha256": "329650eac272addb59b2365fad5dd031aef59230ca4a875ec53c919b9f85ccad"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v4-output.txt",
+          "bytes": 5737,
+          "sha256": "9a27d19859c2ca7a1e793abadabc8c330adad36eb2484127d8d578ce3f103677"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v4-paused.txt",
+          "bytes": 1122,
+          "sha256": "bc2b6e54f3574e54f29453b648a4005800f4eef282c134a0b9fd23adebdf86aa"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v4-resumed.txt",
+          "bytes": 1144,
+          "sha256": "9b758e0aaf033be9b707d8d4170842093ef2ec2ab130c04e49df07b65e59e06d"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v4-ended.txt",
+          "bytes": 5714,
+          "sha256": "0962ece56521e7c0550b6827433f2a0807ae54192380d1cb6df0536328a0b856"
+        }
+      ],
+      "observations": [
+        "Saved44100Hz audition has silent prefix, nonzero stereo engine peaks, pause/resume and natural23.5s completion."
+      ]
+    },
+    {
+      "name": "whole_project_guard",
+      "result": "passed",
+      "records": [
+        {
+          "path": "research/evidence/application/APP019/gui-project-blocked.txt",
+          "bytes": 673,
+          "sha256": "04a87b41d580429dffaa2caca6fd3fa30ded5541a93aaa420875b4bd7ddea636"
+        }
+      ],
+      "observations": [
+        "Whole-project playback still rejects unresolved native events after source audition exit."
+      ]
+    },
+    {
+      "name": "edited_rate_admission",
+      "result": "passed",
+      "records": [
+        {
+          "path": "research/evidence/application/APP019/gui-v5-edited-opened.txt",
+          "bytes": 5096,
+          "sha256": "33ae4f347ce1d72bb178e36749d8c3626a521ae59d4015686a37e3667abfa167"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v5-rebase-clock-rejected-final.txt",
+          "bytes": 1884,
+          "sha256": "60b85df8e939bea7c811d7acf1e20c6c9fe57b775571b9dd26bf28954aef96d7"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v5-saved-clock-final.txt",
+          "bytes": 1748,
+          "sha256": "92d2d1a1c0ec17ecbe5063b345ac85befe9237709d5425f304a7b25002cb02a1"
+        }
+      ],
+      "observations": [
+        "Edited48000Hz application clock exceeds raw source capacity and is rejected; preserved32000Hz setup admits the same source window."
+      ]
+    },
+    {
+      "name": "saved_clock_seek_output",
+      "result": "passed",
+      "records": [
+        {
+          "path": "research/evidence/application/APP019/gui-v5-playing.txt",
+          "bytes": 5720,
+          "sha256": "e66a0051e6807c340d99c5256b63f3b64632f2ed232532b303272c70a08727e8"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v5-seek.txt",
+          "bytes": 865,
+          "sha256": "4eea8db30240c0c799ea4b1792cd72ae4075da04ea483f4a3bacc1ab54a50e24"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v5-seek-output.txt",
+          "bytes": 1144,
+          "sha256": "a07722a98f7ebabbd07131865dd00aca58470da3a61bba964ef7c53153810420"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v5-ended.txt",
+          "bytes": 5697,
+          "sha256": "8d2f0ee5fcd264d8152300e90bf79cbf9456d2cd16c59e7063af19e7b15efc6b"
+        },
+        {
+          "path": "research/evidence/application/APP019/gui-v5-exited.txt",
+          "bytes": 1059,
+          "sha256": "769c2bffaae1b0a68478d4d6e3ba7e7a7b5976ae05d4abe00bca6a54b750d80d"
+        }
+      ],
+      "observations": [
+        "Saved32000Hz mode preserves silent prefix and seek15.75s, produces nonzero stereo engine peaks, ends23.5s and restores48000Hz project transport."
+      ]
+    }
+  ],
+  "package_files_unchanged": 8,
+  "package_files": [
+    {
+      "path": "research/evidence/application/APP019/Historical V4 QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+      "bytes": 93492,
+      "sha256": "608404edbfed6737c8ae02aac3003ea0c3839540f744692a06feeddbbc06807e"
+    },
+    {
+      "path": "research/evidence/application/APP019/Historical V4 QA.rebaseproj/Compatibility/CPR/Original.cpr",
+      "bytes": 1333360,
+      "sha256": "9ea2b00a18ff3c1f4b3a7958a8399f46184b39dcb0696e578a3eac1fe547a4d3"
+    },
+    {
+      "path": "research/evidence/application/APP019/Historical V4 QA.rebaseproj/Media/5449A2DB-0479-4D77-97F9-A8F259B95A76.wav",
+      "bytes": 6350444,
+      "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+    },
+    {
+      "path": "research/evidence/application/APP019/Historical V4 QA.rebaseproj/Project.json",
+      "bytes": 5392,
+      "sha256": "de4a17707c97467e18aa0614d6b0fc73a998a22aa2e89b4e8948871a6b85c91e"
+    },
+    {
+      "path": "research/evidence/application/APP019/Saved V5 QA.rebaseproj/Compatibility/CPR/ImportReport.json",
+      "bytes": 95169,
+      "sha256": "2762eaa67127548bfcc3ae0087f6abe561a9a74c7ccf7275caf7ece0ce1db2b9"
+    },
+    {
+      "path": "research/evidence/application/APP019/Saved V5 QA.rebaseproj/Compatibility/CPR/Original.cpr",
+      "bytes": 1333360,
+      "sha256": "8c3b29245633078f968e696318585bb27db79fdf2196eb050d1dcbc4fc2cd63a"
+    },
+    {
+      "path": "research/evidence/application/APP019/Saved V5 QA.rebaseproj/Media/ECE44C80-D13F-43A2-B19E-ACE1983A54A6.wav",
+      "bytes": 6350444,
+      "sha256": "f2d56a6176c2572f5eab92090978bc029d970ca4d8033c0404468a8d918df53a"
+    },
+    {
+      "path": "research/evidence/application/APP019/Saved V5 QA.rebaseproj/Project.json",
+      "bytes": 5375,
+      "sha256": "60c902a2aa5825a02d84c6e61d52787ddbd681eb3883aea055139cddfcc6fd23"
+    }
+  ],
+  "source_controls": {
+    "path": "research/evidence/application/APP019/gui-source-inputs.json",
+    "bytes": 947,
+    "sha256": "4304c2abc1195ba10836303d0c7255c05712a889be22a3b83aa501230932c2ef"
+  },
+  "screenshot": {
+    "path": "research/evidence/application/APP019/gui-saved-clock.png",
+    "bytes": 222803,
+    "sha256": "384251ad4358cea94ded41427bb2311cf53dfb457607e4a307bcadaa5c1c95a2"
+  },
+  "process": {
+    "path": "research/evidence/application/APP019/gui-process.json",
+    "bytes": 354,
+    "sha256": "4eab89fe1230b2bc7da241d42a7ab87d9c551b05183952f44d04b463c673cdb8"
+  },
+  "intermediate_observations": [
+    "Media-path keyboard submission repeatedly returned to a slash-only Go To field; reconnecting CUA and selecting the visible path row with a double-click completed attachment.",
+    "Two rate-menu captures retained a selected menu before its dismissal; final-suffix captures record the completed states. One stale-element call failed during that transition without changing the app.",
+    "The first V5 playback completed before an output capture; clicking the transport then restarted it, so gui-v5-paused.txt does not prove pause. Final seek-output and ended records establish the accepted V5 transport observations."
+  ],
+  "limits": [
+    "All audio is self-authored synthetic PCM; source-derived CPR controls are not original project audio.",
+    "Own-engine peaks and GUI observations are not DAC capture, latency certification, callback equivalence or Cubase runtime output.",
+    "Only selected source-event playback is accepted; complete native contributors, routing, mixer, effects and automation remain unresolved."
+  ]
+}

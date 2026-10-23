@@ -8,9 +8,8 @@ import Testing
 /// arithmetic and explicitly shared host libm primitives for the table.
 @Suite(.serialized)
 struct NativeRateMode1Tests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-    private let evidence = "research/evidence/application/APP013/"
+    private let workspace = PrivateResearchFixtures.root
+    private let evidence = "evidence/application/APP013/"
     private struct Snapshot: Decodable, Equatable {
         let ratio_bits, step_bits, phase_bits: String
         let cumulative_input, cumulative_generated, total_returned: UInt64
@@ -90,7 +89,8 @@ struct NativeRateMode1Tests {
         return result
     }
 
-    @Test func CompleteCoefficientTablesMatchIndependentInstructionGenerator() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func CompleteCoefficientTablesMatchIndependentInstructionGenerator() throws {
         for table in try oracle().tables {
             let state = try make(table.source_rate, table.output_rate, channels: 1)
             defer { rb_native_mode1_destroy(state) }
@@ -106,7 +106,8 @@ struct NativeRateMode1Tests {
         }
     }
 
-    @Test func EveryReturnedSampleAndHistoryMatchesIndependentFractionOracle() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func EveryReturnedSampleAndHistoryMatchesIndependentFractionOracle() throws {
         for vector in try oracle().vectors {
             let state = try make(vector.source_rate, vector.output_rate, channels: vector.channels)
             defer { rb_native_mode1_destroy(state) }
@@ -144,7 +145,8 @@ struct NativeRateMode1Tests {
         }
     }
 
-    @Test func FullSourceCountQueriesMatchIndependentLedgerWithoutMutatingState() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func FullSourceCountQueriesMatchIndependentLedgerWithoutMutatingState() throws {
         for vector in try oracle().full_source_counts {
             let state = try make(vector.source_rate, vector.output_rate)
             defer { rb_native_mode1_destroy(state) }

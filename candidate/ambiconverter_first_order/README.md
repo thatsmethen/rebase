@@ -1,10 +1,10 @@
 # First-order AmbiConverter research candidate
 
 This small C kernel transcribes one static path observed in the arm64 slice of
-Reference AmbiConverter 1.5.10.152. It has **not been compared with a running
-plug-in**, and is not a VST plug-in or a Reference reconstruction. Evidence and
+Steinberg AmbiConverter 1.5.10.152. It has **not been compared with a running
+plug-in**, and is not a VST plug-in or a Cubase reconstruction. Evidence and
 conditions are recorded in
-[`AMBI-DSP-002`](../../research/evidence/cpr-static/ambisonic/first-order-finding.json).
+[`AMBI-DSP-002`](../../research/evidence/cubase-static/ambisonic/first-order-finding.json).
 
 For a supplied finite normalized direction `p`, four planar input channels `x`,
 and each sample index, the derived equations are:

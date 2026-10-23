@@ -1,0 +1,178 @@
+{
+  "review_id": "MIDI-REMOTE-001-INDEPENDENT-REVIEW",
+  "status": "Complete; no actionable error remaining after citation-range clarification",
+  "reviewed_finding": "finding.json",
+  "reviewed_finding_sha256": "20faf134985013b5c06eb1887546a33ee81f87e1aaf6355f4b4187a8fac743b4",
+  "reviewed_derivation": "derive_contract.py",
+  "reviewed_derivation_sha256": "55fb4992421b3c756951fa48bd5c479a496f41d8989eb5daca1349a35a5f8cb6",
+  "source_execution": false,
+  "new_REA_analysis": false,
+  "method": "Read and independently check the three actual source files, their outer CodeResources hash2 entries, retained REA source selection/graph nodes, mapping call arguments and selected API bodies. Read derive_contract.py without running it or importing any target JavaScript.",
+  "source_custody": {
+    "app": "/workspace/rebase/research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app",
+    "code_resources_sha256": "c7b8e3234e2efefb0c7aa2ddf815d413c69ac710460b6908ccdcfdf655ac2c8e",
+    "all_three_actual_source_sha256_equal_resource_hash2_and_finding": true,
+    "sources": [
+      {
+        "path": ".api/v1/package.json",
+        "bytes": 68,
+        "sha256": "0cdf31518d5897694e06abb2f489fdef6c5557b03c5c18cff7c33ca3448b35c2"
+      },
+      {
+        "path": ".api/v1/midiremote_api_v1.js",
+        "bytes": 204315,
+        "sha256": "b4c72dcfa0954dd85596c757c62e5f0846bae5f20434649f356647e159e3cf86"
+      },
+      {
+        "path": "Public/examplecompany/simpledevice/ExampleCompany_SimpleDevice.js",
+        "bytes": 3134,
+        "sha256": "5429d818103374c8953ecced2c4982261443ba59ff7550cad9547498c905b614"
+      }
+    ],
+    "complete_app_signature_evidence": {
+      "path": "research/evidence/acquisition/full-reference-2026-10-19/native-app-signatures.json",
+      "sha256": "d5621084bd5ec07043b3aa9442c010425b756313ac69601a8066a82de5515629",
+      "check": "app-verify",
+      "observed_returncode": 0,
+      "qualification": "Previously retained native deep/strict/all-architectures verification of this app path; reviewer did not rerun codesign. Current selected files and resource manifest were independently hashed."
+    }
+  },
+  "REA_scope_check": {
+    "record_sha256": "4de86b9c6b494acb2e19be81151c3401f312efe23cb2dfb01ee1d63b44e275f5",
+    "evidence_id": "ev_666fd86a6f748efa5ba9583ac8853812e6756be8bf358d6725a4be3a5264409c",
+    "requested_files": 3,
+    "parsed_javascript_files": 2,
+    "read_source_bytes": 207517,
+    "bytes_equal_three_source_file_sizes": true,
+    "unselected_relevant_files": 77,
+    "graph_coverage": "partial",
+    "qualification": "The retained whole-directory artifact digest is a REA inventory identity. Review verifies the selected source custody and record consistency, not complete relationships through all unselected files."
+  },
+  "mapping_review": {
+    "driver_line": 9,
+    "port_detection_line_ranges": [
+      [
+        17,
+        19
+      ],
+      [
+        21,
+        23
+      ]
+    ],
+    "knob_lines": [
+      31,
+      32,
+      33,
+      34
+    ],
+    "knob_coordinate_arguments": [
+      [
+        0,
+        0,
+        1,
+        1.5
+      ],
+      [
+        1,
+        0,
+        1,
+        1.5
+      ],
+      [
+        2,
+        0,
+        1,
+        1.5
+      ],
+      [
+        3,
+        0,
+        1,
+        1.5
+      ]
+    ],
+    "cc_calls": [
+      {
+        "line": 40,
+        "channel_argument": 0,
+        "cc_argument": 21
+      },
+      {
+        "line": 45,
+        "channel_argument": 0,
+        "cc_argument": 22
+      },
+      {
+        "line": 50,
+        "channel_argument": 0,
+        "cc_argument": 23
+      },
+      {
+        "line": 55,
+        "channel_argument": 0,
+        "cc_argument": 24
+      }
+    ],
+    "page_creation_line": 62,
+    "selection_line": 65,
+    "host_binding_lines": [
+      69,
+      70,
+      71,
+      72
+    ],
+    "host_targets": [
+      "selected track channel volume",
+      "selected track channel send index0 level",
+      "selected track channel send index1 level",
+      "selected track channel send index2 level"
+    ],
+    "verdict": "All declarations, call arguments and corrected line references match actual source. The field remains MIDI channel argument0; no additional user-facing channel numbering or runtime routing semantics are inferred."
+  },
+  "stub_body_review": {
+    "selected_REA_nodes_and_source_ranges_match_actual_file_digest": true,
+    "increment_bodies_empty_at": [
+      4746,
+      5176
+    ],
+    "corresponding_decrement_bodies_empty_at": [
+      4754,
+      5184
+    ],
+    "makeValueBinding_lines": [
+      1926,
+      1929
+    ],
+    "makeValueBinding_observation": "The body returns a new MR_ValueBinding and does not reference its surfaceValue or hostValue formal arguments. This is a local body observation, not a claim that all constructors or runtime bindings have no effects.",
+    "takeover_jump_lines": [
+      7738,
+      7741
+    ],
+    "takeover_jump_observation": "The body returns this with no additional statement. The adjacent Pickup body also returns this.",
+    "interpretation": "The development-facing API shape/stub classification is appropriately marked as inference. These bodies do not establish native host implementation, actual runtime module resolution or that Cubase ignores an action."
+  },
+  "package_role_review": {
+    "package_main": "./midiremote_api_v1.js",
+    "supporting_node": "jag_node_86dfd7488140b6d0e05ba5b5e22f30414f616fb3a016a5a791c588ce281877a1",
+    "observed_REA_kind": "electron-main",
+    "observed_mechanism": "package.json:main",
+    "verdict": "The role is a generic tool classification of a package entrypoint. Its identity, resolution_context and mechanism support only that entrypoint relation; no Electron runtime conclusion is justified."
+  },
+  "derivation_review": {
+    "resource_assertions": "The script compares each selected actual source digest with outer files2.hash2.",
+    "node_selection": "The script selects four semantic function nodes by file and start line, retaining their actual graph IDs/ranges/digests; independently checked those nodes against source.",
+    "manual_facts": "Example mapping facts and role commentary are pinned manual observations in the derivation script, not a general mapping extractor. They are independently checked for this exact source version; future source changes require renewed review rather than trusting regenerated hardcoded values.",
+    "target_execution": "No JavaScript import or execution occurs in this script."
+  },
+  "correction": {
+    "issue": "Original line arrays could be mistaken for two declarations rather than interval endpoints.",
+    "resolution": "Author changed port detection to explicit two ranges and enumerated all four knob declaration lines before final digest pin.",
+    "status": "resolved"
+  },
+  "limits": [
+    "No MIDI receipt, scaling, takeover, feedback or selected-track runtime behavior was observed.",
+    "The native module-provider bridge, object lifetimes and complete source graph remain unmapped.",
+    "No native-host implementation, plugin or product fidelity claim follows from this source contract."
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "APP018-SEALER-INDEPENDENT-REVIEW",
+  "created_utc": "2026-10-21T01:07:03.704459+00:00",
+  "status": "passed",
+  "reviewer": "cubase_evidence",
+  "scope": "Read-only design review of the APP018 acceptance/sealing script and its immutable custody helpers. No acceptance, seal, build, GUI replay or proprietary code execution was performed by this review.",
+  "reviewed_sources": [
+    {
+      "path": "research/evidence/application/APP018/seal_application.py",
+      "bytes": 20709,
+      "sha256": "73681a16dba57ab5282015a5d1438353c0eba0b9d713a3d06046e442b2c6b8be"
+    },
+    {
+      "path": "research/evidence/application/APP015/seal_application.py",
+      "bytes": 18943,
+      "sha256": "b0b259952dc55147600a25b82934fca043b9c1265706662fb8037c92b7c5d102"
+    },
+    {
+      "path": "research/evidence/application/APP012/seal_application.py",
+      "bytes": 17692,
+      "sha256": "b356f42d2b9bd3a707f4071ec412423166035b505102326066cefd84efd6c343"
+    }
+  ],
+  "checks": [
+    "Pins helper hashes before import; verifies exact test command, 280/43 completion log, pre/post unchanged source and fixed test binaries, and identical current source universe.",
+    "Verifies final release command/log/source record; compares complete live and saved bundle inventories including link identity, version/build, packaging, signatures and relative dependency checks through the pinned helper.",
+    "Revalidates four exact native study manifests and recursive APP017 custody; rejects absent/nonzero-review-pin failures and checks nested review records.",
+    "Requires final GUI binary identity, all expected groups, retained evidence files, both complete QA package inventories and eight unchanged package files. Initial GUI binary is verified separately and not used as final acceptance.",
+    "Performs full preflight before creating acceptance outputs; refuses overwriting output paths. A failed copy can require manual handling of new partial output directories but cannot overwrite prior records.",
+    "Seal rechecks acceptance-pinned records and script identity, reruns preflight, compares key acceptance fields, rechecks source manifest, and requires publication pins for all four status files.",
+    "Historical verification checks the complete local manifest plus native/prior custody without requiring mutable future application or build directories to equal the archived milestone."
+  ],
+  "open_actionable_defects": [],
+  "limitations": [
+    "This is a bounded code inspection, not a proof against a malicious concurrent filesystem writer or a replacement for the final acceptance run.",
+    "Scientific conclusions and GUI truth are supplied by their reviewed evidence; content hashes establish custody rather than product fidelity.",
+    "No additional negative controls were executed by this reviewer; peer-authored in-memory controls are separate evidence."
+  ]
+}

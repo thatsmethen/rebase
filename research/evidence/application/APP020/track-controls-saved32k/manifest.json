@@ -1,0 +1,56 @@
+{
+  "classification": "synthetic app-parser control; not native-valid or Cubase-generated",
+  "target_executed": false,
+  "parent": {
+    "path": "research/evidence/application/APP020/track-controls-01/two-events.cpr",
+    "bytes": 2147,
+    "sha256": "bad521c4fcf152c745312495b2e967355ae8b474f142377e8d86b4bfb0a998c3"
+  },
+  "result": {
+    "path": "research/evidence/application/APP020/track-controls-saved32k/two-events-saved32k.cpr",
+    "bytes": 2147,
+    "sha256": "bc74b4fbcfbce1bdacd9f26df1bffd734268140cc1bfcd07200ceb097121669b"
+  },
+  "setup": {
+    "label": "setup",
+    "class_name": "PArrangeSetup",
+    "version": 8,
+    "object_offset": 1927,
+    "identity_offset": 1951,
+    "payload_offset": 1955,
+    "payload_bytes": 157,
+    "end": 2112
+  },
+  "only_mutated_field": {
+    "name": "saved Float32 base rate",
+    "offset": 2003,
+    "byte_count": 4,
+    "before": 44100,
+    "after": 32000
+  },
+  "changed_byte_offsets": [
+    2003,
+    2004,
+    2005
+  ],
+  "source_sample_rate": 44100,
+  "saved_sample_rate": 32000,
+  "factor": 1,
+  "expected_raw_timeline_segments": [
+    {
+      "first": 48000,
+      "end": 176000,
+      "source_first": 64000
+    },
+    {
+      "first": 256000,
+      "end": 416000,
+      "source_first": 288000
+    }
+  ],
+  "limits": [
+    "Source/file frame rate stays44100; no transparent resampler is implied.",
+    "Expected maps are independent integer composition controls, not target runtime output.",
+    "Minimal ancillary objects retain their parent parser-only scope."
+  ]
+}

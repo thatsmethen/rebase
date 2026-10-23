@@ -8,8 +8,7 @@ import Testing
 /// These do not supply a Reference scheduler, transport state or block partition.
 @Suite(.serialized)
 struct NativeCallbackAdapterTests {
-    private let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let root = PrivateResearchFixtures.root
     private struct Window: Decodable {
         let position: Int64
         let offset_bits, rate_bits: String
@@ -44,7 +43,7 @@ struct NativeCallbackAdapterTests {
         let postprocess: [Planes]
     }
     private func oracle() throws -> Oracle {
-        let folder = root.appendingPathComponent("research/evidence/application/APP013")
+        let folder = root.appendingPathComponent("evidence/application/APP013")
         let data = try Data(contentsOf: folder.appendingPathComponent("callback-adapter-oracle.json"))
         #expect(cprSHA256(data) == "47fbe487b5665fbf211b0b097f744f9c70f17bf5ebf37b41ccadf617b9aeb923")
         let result = try JSONDecoder().decode(Oracle.self, from: data)
@@ -72,7 +71,8 @@ struct NativeCallbackAdapterTests {
         pointers.map { pointer in (0..<capacity).map { pointer![$0].bitPattern } }
     }
 
-    @Test func FusedWindowAndSeparateReciprocalOffsetMatchIndependentIEEEValues() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func FusedWindowAndSeparateReciprocalOffsetMatchIndependentIEEEValues() throws {
         let expected = try oracle()
         // Twelve deliberately searched controls plus four independently
         // discriminating near-half/integer boundary cases in the base grid.
@@ -95,7 +95,8 @@ struct NativeCallbackAdapterTests {
         }
     }
 
-    @Test func AdmissionUsesBitZeroButPrefixUsesWholeNonzeroTransportResult() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func AdmissionUsesBitZeroButPrefixUsesWholeNonzeroTransportResult() throws {
         for present: Int32 in [0, 1, -1] {
             for transport: Int32 in [0, 1, 2, 3, -1, -2, .min] {
                 for forced: Int32 in [0, 1, -1] {
@@ -117,7 +118,8 @@ struct NativeCallbackAdapterTests {
         #expect(rb_native_callback_prefix(&overflow, 0, 0, .max, &untouched) == RB_NATIVE_CALLBACK_OK && untouched == 0)
     }
 
-    @Test func SentinelSelectionAlternatingRoundingAndPrefixOrderingMatchExactBits() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func SentinelSelectionAlternatingRoundingAndPrefixOrderingMatchExactBits() throws {
         for row in try oracle().postprocess {
             let input = row.input_bits.map { $0.map { UInt32($0, radix: 16)! } }
             withPlanes(input) { pointers in

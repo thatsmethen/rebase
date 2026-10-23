@@ -1,0 +1,583 @@
+{
+  "id": "CPR-ACCESSOR-SEEK-STATE-001",
+  "schema_version": 1,
+  "created_utc": "2026-10-20T23:47:02.690015+00:00",
+  "status": "sealed_bounded_static_lifecycle_and_seek_reconstruction",
+  "scope": "Fixed-rate AudioAccessor seek and read state transitions, budget/terminal predicates, mode-specific ratio updates, and current AudioFile metadata/reader-factory boundaries.",
+  "proprietary_target_executions": 0,
+  "cubase_runtime_comparisons": 0,
+  "target": {
+    "product": "Cubase Pro 15.0.30.287 macOS arm64",
+    "image": {
+      "path": "research/targets/derived/Cubase15-arm64",
+      "bytes": 85691328,
+      "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+    }
+  },
+  "evidence_classes": [
+    "Original native instruction/dispatch bytes",
+    "Pinned REA6.7/Ghidra raw-slice analysis/readback",
+    "Exact Fraction/IEEE analytical controls",
+    "Own root-authored C reconstruction execution"
+  ],
+  "native_custody": {
+    "new_functions": 10,
+    "reused_functions": 31,
+    "bytes_verified": 14548,
+    "original_native_words": 3637,
+    "rea_instruction_addresses": 2656,
+    "concrete_dispatch_cells": 19,
+    "additional_original_bytes": 126,
+    "verification": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/verification.json",
+      "bytes": 73003,
+      "sha256": "f38829aebb0ecc3aec03b64c3c97ade3a2477868647e695a3c9358d39edd6926"
+    },
+    "provider": "rea-agents6.7.0/Ghidra default raw-arm64/2G",
+    "raw_analysis_sessions_closed": 3,
+    "new_raw_slices_closed": 10,
+    "canonical_import_sessions_closed": 2,
+    "current_canonical_records": 82,
+    "canonical_import": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/evidence-import-v02.json",
+      "bytes": 367,
+      "sha256": "9f646535b8ef686f6b8a023da4f2e87d6fdb64049fdd5f9d17ab28238c90d217"
+    },
+    "session_closure_log": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/import-run-v02.log",
+      "bytes": 89,
+      "sha256": "3b2c4124be43a4f883b9fac8f7e2e260777935b10cbb46da5e9b1832f853481f"
+    },
+    "scope_limit": "Readback and original-word equality validate custody; they do not establish all host/backend paths or runtime behavior."
+  },
+  "contracts": {
+    "fields": {
+      "accessor+18": "i64 current source frame",
+      "accessor+20": "nullable persistent format/rate converter",
+      "accessor+28": "underlying reader, whose+8 is source stream",
+      "accessor+30": "Float32 requested output rate",
+      "accessor+34": "Float32 gain",
+      "accessor+49": "constructor policy byte, propagated to converter+a9",
+      "accessor+4a": "first converted-read budget byte, initialized1",
+      "converter+0/14": "Float32 source/output rates refreshed before budget",
+      "converter+30": "nullable persistent rate wrapper; distinct from accessor+30 rate"
+    },
+    "seek": {
+      "entry": "0x10036f89c",
+      "preconditions": "nonnull reader and stream; output rate !=0; claimed arithmetic subset finite positive rates and conversion in range",
+      "equal": "when Float32 stream rate equals output rate: sourceCursor=request; return request",
+      "unequal": [
+        "r=RN32(sourceRate/outputRate)",
+        "p=RN64(Double(request)*Double(r))",
+        "sourceCursor=trunc_i64(p)",
+        "return trunc_i64(RN64(Double(sourceCursor)/Double(r)))"
+      ],
+      "state_effect": "Only accessor+18 is assigned. No converter replacement, ratio setter, first-byte rearm, history reset or preroll occurs in this function. Source rate virtual getter is called twice on unequal branch; the fixed-rate contract requires stable getter results."
+    },
+    "read_order": [
+      "Positive i32 request and nonnull reader required; otherwise return INT32_MIN before budget.",
+      "Call underlying reader+20 seek(accessor.sourceCursor). If its returned i64 differs: return -2147483645 only for that exact transient code, otherwise INT32_MIN. First-byte and converter untouched on this path.",
+      "Call accessor+188 needs-conversion. Concrete10036fb74 compares rate, bit depth, frame bytes, kind, layout, channels, extra format and gain1. No mismatch: reader+10 reads requested count directly; positive result advances sourceCursor by that count, else no cursor advance. Does not consume first byte.",
+      "Conversion: reuse accessor+20; lazily allocate0xb0/1003237d8(policy+49) only if absent. Refresh source format through100323904(stream+10), destination through100323b24(accessor+10), copy gain to converter+28.",
+      "Compute budget100330d84(request, firstByte); save oldFirst and clear accessor+4a immediately. Budget<1 returns0 without source read/conversion, keeping consumed first status.",
+      "Allocate source-format storage for budget; underlying reader+10 reads budget. Negative source result returns unchanged numeric error; no accessor cursor advance, but firstByte remains0.",
+      "For nonnegative source result, rate mismatch computes terminal=(reader.tell>=source.length)&&oldFirst&&(budget>sourceRead). Equal rates force terminalfalse.",
+      "Pass actual source count by reference to100330cd4(destination, sourceStorage, &count, terminal). Success: advance sourceCursor by original actual SOURCE count if nonzero, return rewritten count. Failure: return INT32_MIN; accessor cursor unchanged, first remains0, and underlying source may already have advanced. No transactional rollback of backend/source state is established."
+    ],
+    "budget": {
+      "entries": [
+        "0x100330d84",
+        "0x10030a430",
+        "0x100313bf8"
+      ],
+      "selection": "Policy+a9 zero selects0; otherwise100309fe8 chooses current availability-conditioned2/1 on EVERY budget call, not the retained child identity.",
+      "equal": "return request directly, ignoring first allowance",
+      "unequal": "if chosen mode2 and first and backend available: P=ceil(RN64(outputRate/sourceRate))*2048, elseP0. t=request+P; k=ceil_i32(RN64(RN64(sourceRate/outputRate)*Double(t))). While trunc_i32(RN64(RN64(outputRate/sourceRate)*Double(k)))>t decrement k. Returnk. Rates widen from binary32 before binary64 divisions; this is distinct from seek's binary32 ratio.",
+      "limits": "Positive finite rates, checked Int32 arithmetic/FCVT range and stable availability assumed; changing policy may disagree with a previously created fallback child."
+    },
+    "conversion_lifecycle": {
+      "entry": "0x1003261a8",
+      "existing_wrapper": "Refresh only checks stored Double source/output rates. Calls10030a1dc if either differs. Channel/format changes are not a fresh-allocation check in this function.",
+      "ratio_setter": "10030a1dc updates rates, computes RN64(output/source) in[0.01,100] or0 outside. Calls child+10 only when ratio nonzero and differs from previous ratio; same ratio retains child state.",
+      "then": "Check child+28 through10030a3bc. Only if false invoke child+20 through10030a3a4.",
+      "mode0": "child+10 stores input/output step only. Ready+28 readsbyte+25. Thus changed step can retain history/phase; not a fresh reset.",
+      "mode1": "child+10 stores output/input ratio only. Ready+28 tests coefficient pointer+20. An already ready child does not regenerate coefficients/step/history merely because ratio field changes.",
+      "mode2": "child+10\u2192100313adc calls child rate setter, replaces wrapper delay/discard from child+40, stores ratio, marks+4c1. Ready+28 thenfalse; initialization+20\u2192100313b74 clears4c and restarts child resources. This is mode-specific, not universal."
+    },
+    "after_terminal": {
+      "mode1": "10030af58 and10030b8a8 have no finished guard. Terminal call appends64 repeated last/zero input, updates phase/history and real/generated counters; return-only trimming does not reduce generated counter. Later nonterminal call continues these states. Full continuation controls still required before application admission.",
+      "mode2": "1003141bc has no finished flag and retains cumulative/padding/child buffers. Its terminal tail may call SoXR withNULL input. Subsequent positive input behavior then depends on external backend lifecycle/errors; no safe continuation claim is made.",
+      "application_boundary": "Current candidate finished flags are defensive policy. Retained accessor seek after terminal is unsupported until separately reconstructed and controlled; do not silently reset or preroll and call it native."
+    },
+    "concrete_stream_boundary": {
+      "AudioFile_factory": "AudioFile+f8\u219210033a4f8 is a reader factory, not sample read. Lazy10033a054 may call self+38 backend+e0; factory calls backend+d0 to obtain reader. Actual backend identity/read method remains a boundary.",
+      "cluster_reader": "Concrete table104466378 binds+10\u219210036d22c,+20\u219210036d848,+28\u219210036d87c. Seek normally updates reader+10; a write-mode/multiple-entry guard may reject requested change. Reader count/mapping semantics remain covered by prior one-segment finding.",
+      "metadata": "File metadata getters can invoke lazy setup and query the prepared property bag; serialized PCM24/rate alone does not prove a live backend format.",
+      "current_format_properties": "AudioFile+150\u219210033d024 calls lazy setup, then queries AudioSampleFormat; status0 returns flagged integer value (noninteger0), nonzero status defaults1. +158\u219210033d308 queries AudioSampleSize similarly; nonzero status invokes10036e084 integer(frameBytes/channels)*8 whenchannels>=1,else0. +168\u219210033d530 maps these through10012c64c and returns descriptor+18 ID. No filename-extension shortcut.",
+      "backend_selection": "100339108 releases old backend, clears file+38, iterates global10502c0f8 registry entries by type match or probe callback, calls selected creator+18, and can consult filesystem service104fe1b90 fallback. Registry contents/creator callback and resulting backend read ABI are not bound here."
+    },
+    "retry_scope": "Accessor itself does not retry. Ordinary101d3eb24 retries -2147483645 only under its separately proven saved-read-begin==quantized-segment-start condition; do not generalize to all errors or all positions."
+  },
+  "entry_evidence": [
+    {
+      "entry": "0x10033d530",
+      "new": true,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass2",
+      "original_bytes_sha256": "43fa25621fb9825f43705542e2cbcc3a7da82cb79f20fbfdce11899413fb1c44",
+      "evidence_ids": [
+        "ev_686e3606a419ccc0291f878d30f876de777d23be351e2a23725c653327a068f7",
+        "ev_c3dd40ec1ef123f7bfc5ee8839549a846104aeb4ad0f486009959c9b566ba3b6"
+      ]
+    },
+    {
+      "entry": "0x100339108",
+      "new": true,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass2",
+      "original_bytes_sha256": "7c6a020eb174792448ee907d10bd87ee217338a4128775ba5ad0cc8ab495c943",
+      "evidence_ids": [
+        "ev_9f1f1ffa9c42aa9fd51bea1ea960186d4a82ba210a0de5d2c60681d22a3f8209",
+        "ev_8048ee6f37a6345e19ee2c9dc450d9eb62f7e0a8dfb2ebdb39122682b52a0c57"
+      ]
+    },
+    {
+      "entry": "0x10033d024",
+      "new": true,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass3",
+      "original_bytes_sha256": "6db2adf0b134da3627a7598559a3e1962e6e667dfbaf10929385bc79071c0d0a",
+      "evidence_ids": [
+        "ev_8b2cfad4a307b29b1b0a466207d689d28691a5b929a0257f536c829c64a7a1a2",
+        "ev_66909e06e119c9b7061f727444345de1f061989004dc0733258b2a780b12912c"
+      ]
+    },
+    {
+      "entry": "0x10033d308",
+      "new": true,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass3",
+      "original_bytes_sha256": "8ef17a626e0fce7c7502b67c8e78bac398f6744acdb71bc5140fb4f2cd12afcb",
+      "evidence_ids": [
+        "ev_cf502bf6bae95a8b1265f4115d1aa37e2dc9c21c454fadab573a5458945b2f62",
+        "ev_cd9f68a0dead05dfebf55533f21cb24cd7533d742fbad53c14b209746de1e726"
+      ]
+    },
+    {
+      "entry": "0x10036f89c",
+      "new": true,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass1",
+      "original_bytes_sha256": "1ab27e59108a61074b1d02ba4bb4c98f5d3e817a4b6f7a4aff0eb96d3d84a46d",
+      "evidence_ids": [
+        "ev_9fbab1e59ddd6c3669447438d5891187664b7b617fe6978e90c69313ef75a085",
+        "ev_3fbfd09fb262a04c2364e410fc77d3d2fca6676f9404dd678e91f7525aff9706"
+      ]
+    },
+    {
+      "entry": "0x10036eff0",
+      "new": true,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass1",
+      "original_bytes_sha256": "91b834e40414749679c9b53f5c873a6e54ce1a278785edfed445cc8ae2ebd43e",
+      "evidence_ids": [
+        "ev_0084c64c7fee1ea6bb7df34562477e72cae17bff0fab9c04b6d42b051e27acc5",
+        "ev_a01fb0a52c5814f6ac4aeab60a44fc39010c48483d21d6478572fc513168f931"
+      ]
+    },
+    {
+      "entry": "0x1003261a8",
+      "new": true,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass1",
+      "original_bytes_sha256": "af5bc7c007918d667378a0a0c308130539678b8187febd19f59616fe2da97c87",
+      "evidence_ids": [
+        "ev_d35c6647273e18b8c28d937d6b2e5a9a408519bb4cf547cda11955e12bdd0d3c",
+        "ev_a6cd3185dac31fb392177b3b15adb6b13cff62722bdc53457f1d6380540fb042"
+      ]
+    },
+    {
+      "entry": "0x10030a1dc",
+      "new": true,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass1",
+      "original_bytes_sha256": "3ce6f0957767e4e0ebe9c5f7022748b3095ed8ed46b4b185c63d3db0b641cbe1",
+      "evidence_ids": [
+        "ev_650cda0df95b3cc171e8d3c93a1a154421e20f772d56a01d35dd4a864987d376",
+        "ev_c30a535533b23b952d2e0614943b040d70f0cdc12d2af96372333681bd2411cb"
+      ]
+    },
+    {
+      "entry": "0x10033a4f8",
+      "new": true,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass1",
+      "original_bytes_sha256": "23a87b3121b9c6fb8f1c213b30f0401cd4762ffb31507cdc03ea1fc40f4f527a",
+      "evidence_ids": [
+        "ev_03b380b68cf62a1fa0289086ec6b46a8df81c09fbba680c56ba8122aa7e78e21",
+        "ev_1976303ffa1c5761c9e05b7cfd46c6d1ca18171da87561f8cb9bf6a42797a55b"
+      ]
+    },
+    {
+      "entry": "0x10033a054",
+      "new": true,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass1",
+      "original_bytes_sha256": "e35d0de59e8e48636dccf672f84be196ddd3318acc57893e1143ba1ac2ea79db",
+      "evidence_ids": [
+        "ev_9cc43514f8f876fd560cf0f2296e5d336b5469103dcedc2876994219b84ef922",
+        "ev_313b9330f4ad2ce0da930ffe13eef71aca7610f7e059068d0444e8d1edb7d8d1"
+      ]
+    },
+    {
+      "entry": "0x10036e34c",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer",
+      "original_bytes_sha256": "48e86f3885747328b573ea07b0ca154e78219c259803cade267c35fabebaaae3",
+      "evidence_ids": [
+        "ev_fba9c0423c0acb23514d925f752030d23e2316628ae927b993aea2dc80f3ffeb",
+        "ev_fef319331e0d6be57eb0f1a39cc84036b65f05c8cf88093f96661fc328a93d12"
+      ]
+    },
+    {
+      "entry": "0x10036e858",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer",
+      "original_bytes_sha256": "fcca38c9d755b28f3441477f1f65552a5e45991fcd4c8287a7d791fcf8b08b39",
+      "evidence_ids": [
+        "ev_4419f7ce4d1c1a48fd656e22b9b4b2955e05fbe64dd1d537ea7e626b45a22bce",
+        "ev_d5f3d5cb624946f996a02c94eb110bece57e9ccf11d6b87669d121e788c35bd1"
+      ]
+    },
+    {
+      "entry": "0x10036fb74",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer",
+      "original_bytes_sha256": "f6cbfc0fc60b0cfe7f17675d3556a95853b59954b7a5915e312e65bf989bb349",
+      "evidence_ids": [
+        "ev_39379677444819a1b39057adbf9b2520ff1bcb390c991d459a88edcf84428193",
+        "ev_22be6431c423a5d58f9783a4abf5003fc7f340fa92f2c9a61b4e92a9fadc861e"
+      ]
+    },
+    {
+      "entry": "0x10036d22c",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer",
+      "original_bytes_sha256": "ec614a88fd88dcaf9972aa820718fdba46de6894ba56a99570ea26a77966517f",
+      "evidence_ids": [
+        "ev_064ab2a675253a13f6e2cfe567c613eaa04d8a0ea8bf0d94262a7c63266e706d",
+        "ev_5603d5a0785af56a5e968f8e54568a0f677f180ba57051cd78237673446071bf"
+      ]
+    },
+    {
+      "entry": "0x10036d848",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer",
+      "original_bytes_sha256": "a4a3a41431a816aa084fe1334cf3ca117368c6768ffc534588dd15eded050af4",
+      "evidence_ids": [
+        "ev_246721472969767cff17de38d2947e249cd56e0f2b7eede4dc3537fce5ab0dc8",
+        "ev_c323842f5502379c6d51d5adc506be28c34598b24fe0e8f6728937d80b4ac284"
+      ]
+    },
+    {
+      "entry": "0x10036d87c",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer",
+      "original_bytes_sha256": "dfb556a413c8bda5332942d0202e8d5f1e52f45158aec3676294cf11ad5909cb",
+      "evidence_ids": [
+        "ev_142b19d0886e8fdbd80338c9a5e95cfb16d840910b31bd61208f86ed57fa0058",
+        "ev_896d1e0b7634108353eefec7d716ebf102d31401757da2e641dd81bac9c489b5"
+      ]
+    },
+    {
+      "entry": "0x10036cd94",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer",
+      "original_bytes_sha256": "fe3777582bd84a5651bdf5b420fe41c1c590f1fee82087da127e3168d14788bd",
+      "evidence_ids": [
+        "ev_a3b2ffef032f8c94f62949de7fbcb6bd7f115bdea348f91455d2eed38930d04d",
+        "ev_1ff1bc7fa3a00fdd80a3b241cae7fa17277b1aebf4c194237880a967ccf1e1a4"
+      ]
+    },
+    {
+      "entry": "0x100323904",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "1b746327682218edb2363317fb2b84fa86da928bfa3842b12ccf4990d49a45d9",
+      "evidence_ids": [
+        "ev_29b47556a163aab1b896906a0f0369aa1da7f175afd31eee350db244fd9d4e58",
+        "ev_8d6d43487e70497dd78e3a9cb43022b9b2b987d44add77132071bf63ea8ada86"
+      ]
+    },
+    {
+      "entry": "0x100323b24",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "160f4b0723dc10c16c0e293061cf1a953fd3e81632c810de05220831f33ec014",
+      "evidence_ids": [
+        "ev_03d4b7d62760e349fbb99ff8c5ac475f431eeca814ad4ae0b55c927514616147",
+        "ev_b2e06138b633c6d7e2706127abc7e7b2204edd37228fb03705700c7b7e245bbd"
+      ]
+    },
+    {
+      "entry": "0x1003237d8",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "57b15347c31cc0bac427a2bdd6e9eac3a08c65fc84ee705258058ea8e1e3106a",
+      "evidence_ids": [
+        "ev_12efdadbd2d59c30394141645d5b1d15e769e448213633d722b7cb8489105e9b",
+        "ev_ffd01b02fd9bea9ca05f6024eeaf1a2c1eb3362ba785a2da73715ad4ea0b22c7"
+      ]
+    },
+    {
+      "entry": "0x100323688",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "0a3714d4ac026cc197594e0fe5c7f740f7894d56700e0ec1d016f3d016aaf207",
+      "evidence_ids": [
+        "ev_fc4bbbe58d1eaed054344c6c52a26c00adbc9b3c3f360f7a93fea039e82d0a4a",
+        "ev_20b2598c0f2d64a5e7f7b41cd77af5eb5efc17b3b1f43df35cef1e458301e022"
+      ]
+    },
+    {
+      "entry": "0x100330d84",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "a7e1806d38da1baac61a59b7f472e4f2ac1e5bb30a607eca29e34ffc17e56b78",
+      "evidence_ids": [
+        "ev_a6da20ae960fe77248a27323a42c026e200d58ca625b44a7eb53e95749e6aa33",
+        "ev_4035ea0958ef549e341876a3eb84fe87c047b57803d614f7f6fa5668ba0501de"
+      ]
+    },
+    {
+      "entry": "0x100330cd4",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "cb7b3bf827fcd150a963145ece03b72f53050cc7e90baaac9b6964ddc438eab6",
+      "evidence_ids": [
+        "ev_3ffaed81e955dd16db33e87bf75a551408980d1a61450d3b3421d0fbcf3ef543",
+        "ev_5841d60af3794dc1f75885206e9bfac6285213d1ac0334a03a2144d10120f951"
+      ]
+    },
+    {
+      "entry": "0x10030a3bc",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "439f670d2c66b82c3a28dd322d0cef69cafe6706d1debf8acf3f5e245e9cb40f",
+      "evidence_ids": [
+        "ev_a4e00183de1a5ad729983e5336f1d0683993212d4f9407f3b4c54f84c71dd9ca",
+        "ev_8787cf7d7b0dd10974f64ad54310eddb1d9ae48ec747f7e66eed9e8b1d434be6"
+      ]
+    },
+    {
+      "entry": "0x10030a3a4",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "7b552123e341cc3d4e3b1de01bca6d65e346d92fdf8d1100281002000567ae40",
+      "evidence_ids": [
+        "ev_92103ed8a31c355b7a710b373cad54802a8a28c51d29cf33105e2f2b1f894510",
+        "ev_5889a3c3ea54cd5eddab98b68e44f700e0df838314a14c7d25e83c231365ab29"
+      ]
+    },
+    {
+      "entry": "0x10030a430",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "a4dadc8787330325721f554412a368750f89fc61fe476efda01d0f7f9485a5ab",
+      "evidence_ids": [
+        "ev_ecdfd1a5cda0133a43b25487a92b4e7b0d09cb939948c56cf9c2750903036685",
+        "ev_c0313438334a4909686d0303d598428615a06dd167be049d021dd24398369e9e"
+      ]
+    },
+    {
+      "entry": "0x100313bf8",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "9f03d0e0e5c8f93a06fec0dd55343d52339f80fb76dae3e73d23d19df3f682ac",
+      "evidence_ids": [
+        "ev_5e312d53fd1a148a80da704bf138588cde544c69ad781c82a5a0b98b9c1ee57c",
+        "ev_3301cced632c0accb805d4ea4ad68bb2907491f17c95b004768f1c6805cd781f"
+      ]
+    },
+    {
+      "entry": "0x100313adc",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "1d3354122244a727d81b2b2aa3fecf1ba5f81c958dd97c584d45ac8e9d84f88d",
+      "evidence_ids": [
+        "ev_3cd7538b681980dfc8372d891fcbf464b940eec211885086c7e55f6522a785e3",
+        "ev_9a67754660949be01a0861b2043f8f0164769348e2f8475e165681c83cd58e32"
+      ]
+    },
+    {
+      "entry": "0x100313b74",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "8d302ef16ac5bb156e2ceb1b4b1e1f766bc79159a2a042287ce086d85ddeb96d",
+      "evidence_ids": [
+        "ev_1e735362ff6f4bae5efebfc7d559378599797e54fdf827e400257f9559bc1b9b",
+        "ev_2e987335ac9616c1567742e510527eb23be165beaa14f95ade24c19b0bb871a6"
+      ]
+    },
+    {
+      "entry": "0x100313c2c",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "f15c27fb59dda26d8a37897c6becfe7f8e97d2dd450239a741e4571ed450bdcc",
+      "evidence_ids": [
+        "ev_8de88afa8f21eba0d591c35e3d120d1943ab7a983604d6c86d031981e88383e0",
+        "ev_077d785386943e44377f72e16316cd5587fcd275f791a8d976840a072938d312"
+      ]
+    },
+    {
+      "entry": "0x10031542c",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "04d63990d737e9b1c54f43eb89304f2b27873d85e0b71a0f00dd4109dbb6e578",
+      "evidence_ids": [
+        "ev_54802d0f0555a58d7c0f1816b100c25d197b1949b4cb04ccaac1fb5eb84dc7e1",
+        "ev_1ed102694d4dbe3fbf3fbef64ab32ca8562c57f729a1ee6581da45e4353e7989"
+      ]
+    },
+    {
+      "entry": "0x10030af58",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "afcc20a28afc661dd6fad735121dc0be4cef2a4e07e61923ce11fee9d4abb80c",
+      "evidence_ids": [
+        "ev_a550fabb796931c1910d0311b730137dcef5bf7b574affa3f32fdc797aa153a1",
+        "ev_e0988b1b8bf4b97aa05c3149a6d63dc6639ea6966a00e8f8541fe4e7d6112f7e"
+      ]
+    },
+    {
+      "entry": "0x10030b8a8",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "d4ed225a51047c2b46e1f32a20e13f3a3352e8f30786adf078e659b2cd8eaf67",
+      "evidence_ids": [
+        "ev_e06f150caadc4e1415378ccb4aea9ba3f42cea71c922c393a1c068f6f2622a9e",
+        "ev_d534a8c968423aabedf6123fceeb3b153f88c972e2e24cf41d883b4a8078c870"
+      ]
+    },
+    {
+      "entry": "0x1003141bc",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "12bbca451f199815c5473df1f5b2d2444480c4d9c100e93ebada1133119074a0",
+      "evidence_ids": [
+        "ev_aae3b8b1879861ee86509d18a7dd67a6996f8b4e471dca0a03b3fd5e223f3bbe",
+        "ev_b7183adf516bce965c8a12b0ceaceb3ce358748f6931d10f4d1b93201f65ad82"
+      ]
+    },
+    {
+      "entry": "0x100315438",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter",
+      "original_bytes_sha256": "076d6255b577b5839ec7d70ea9760571ba70fe81a2d140fdecdc06d5e57418cd",
+      "evidence_ids": [
+        "ev_5a3210efa60e7565ce38dbeb4b7e5836247195a3a4702e7c77c8ce77402fab48",
+        "ev_c6db3fe4492c1b44506d84c28467f54fcec5c7088e50270b6af12a3ca0f281aa"
+      ]
+    },
+    {
+      "entry": "0x10030c5b8",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/pass1",
+      "original_bytes_sha256": "eb857d2fab90c6402611877cb3f131bdcf08e4c10c7af882d28226c92c9cc996",
+      "evidence_ids": [
+        "ev_93c03998372b6281353737fc1ceceae20cc3c244b3ab007bd3cffb00d97f2658",
+        "ev_25cd6c8dff5c776a8df39dd3668fd624f3076e832c88191edeffd9cd6c06de4c"
+      ]
+    },
+    {
+      "entry": "0x10030c620",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/pass1",
+      "original_bytes_sha256": "b0237a6d3c08c040991b9487dc67a85bda62f45819f89a5aa70d1a79d7d2bc9c",
+      "evidence_ids": [
+        "ev_8f5d31af2779029ebc9c3e32b63e2b6077bc4956ce76b6a91032a0b71a694899",
+        "ev_466cacd8b038b072d98b01347b43016efb0a60bf38854e7e1f7f4d40a21f95b5"
+      ]
+    },
+    {
+      "entry": "0x10030c664",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/pass1",
+      "original_bytes_sha256": "a4c7e927c881764bb54da612af763cf7a936c804c88eb5308fc7c342c9ef7435",
+      "evidence_ids": [
+        "ev_8459873d97c57211f20129be19cc84c86cdc06a7f417a1b350a53656bac8abce",
+        "ev_ece834db203a0f844f77d8361e83fe997b6bbf6ca81b6fc1f44489604bf1f438"
+      ]
+    },
+    {
+      "entry": "0x10030a728",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1",
+      "original_bytes_sha256": "17cf37dac59e75b5c259bb97b74f1c450ce5d6418bb5e7b10862b90cd854eebe",
+      "evidence_ids": [
+        "ev_f8ecdb7a5ad1171a1cd2adfb6f5aa3f546e84a6aa9ff85caa45b5e81c1df5214",
+        "ev_3daa5b02a2e8dba1bf688a4c20640b682ef7fa65f66fb87a567f6345460e1626"
+      ]
+    },
+    {
+      "entry": "0x10030a748",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1",
+      "original_bytes_sha256": "8e3cc6513188c4cfb28557c0bc9a751b6d9add06aececfa814ad1a487e8be035",
+      "evidence_ids": [
+        "ev_76116c000cb78f411e67e3ffab8e72b889a8c6514b7de4389cd820f963820751",
+        "ev_979e641a000ff276ce1e5c1b804581463fd11aec421df1c4b96fa7899136d8e7"
+      ]
+    },
+    {
+      "entry": "0x10030ae8c",
+      "new": false,
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/rate-mode1/pass1",
+      "original_bytes_sha256": "f7a8bf96e2d66fe4f86c1d95247e97d73fcc1dcf110dc315c83466eb6d77f1d5",
+      "evidence_ids": [
+        "ev_60a48718b406f23ce4ebd02c60606ef0345fbd5c300b4daf7ecbeeee775022cb",
+        "ev_6d77d018b72020e4007cb2c084a37dd84acedf8d3437515b7a6d8d791bb4e30a"
+      ]
+    }
+  ],
+  "candidate": {
+    "source": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/candidate/cpr_accessor_seek.c",
+      "bytes": 2274,
+      "sha256": "355b2818498bf35bc756ab671fbb4aa64cadd6dc823f54ed386bfb5bf997581e"
+    },
+    "header": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/candidate/cpr_accessor_seek.h",
+      "bytes": 803,
+      "sha256": "b68cb079ce507d9775560c08ba3bd384fec873ac5e2d0812a907013fe3745db4"
+    },
+    "api": "rb_cpr_accessor_seek",
+    "review": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/candidate-review.json",
+      "bytes": 2751,
+      "sha256": "73c1858eba44b784224d9d73136301d233a93232c0ec23ae069bd2630b1b7989"
+    },
+    "defensive_domain": "arm64 IEEE nearest/ties-even; default non-flushing FPCR; positive integral binary32 rates8k..192k; requested frames0..2^53; fail-before-output publication.",
+    "native_difference": "Defensive validation and transactionality are reconstruction policy. Native seek mutates only source cursor; it does not reset converter/history or rearm the first-budget byte."
+  },
+  "validation": {
+    "seek_exact_vectors": 112,
+    "invalid_transactional_controls": 9,
+    "FP_environment_transactional_controls": 1,
+    "candidate_controls": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/controls/seek-controls.json",
+      "bytes": 32100,
+      "sha256": "1b91be52a507b74994e0fa37a81ba1ec02d47084a9a2ab8a6ad7ad0908d55a6b"
+    },
+    "terminal_truth_table_rows": 54,
+    "budget_fraction_rows": 72,
+    "analytical_controls": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/lifecycle-controls.json",
+      "bytes": 71284,
+      "sha256": "340a4a2af2fa5d450a1c195431b3ceb53b7a5ccf569c7f854dfc62febd9a5a3a"
+    },
+    "application_acceptance": "Deferred to separate APP016 state/oracle/Swift/full-suite/GUI evidence; no such completion is asserted here."
+  },
+  "remaining_limits": [
+    "No target execution or proprietary PCM comparison.",
+    "No arbitrary host callback/concurrency invariance.",
+    "No automatic backend selection or actual file parser conformance.",
+    "No replacement of the app's explicit old converter preroll with a claim of retained native seek.",
+    "An AudioFile reader factory is not its eventual sample-read implementation; registry creator/probe and active backend ABI remain unbound.",
+    "Serialized PCM24 metadata is not sufficient to assert the active prepared property bag or native file decoder.",
+    "A first-short terminal conversion is not equivalent to general end-of-stream. Post-terminal mode1 continuation needs its own controls; mode2 after NULL EOF is backend-dependent and not admitted.",
+    "Format arithmetic/order is owned by a separate study; this lifecycle finding does not assert decoded-Float32 input equivalence for every native source format.",
+    "Changing rates can retain mode0/1 state; a generic reset-on-seek or reset-on-any-rate-change is not this native contract.",
+    "The read path may mutate first-byte, underlying source and converter on an error. Candidate pure-seek output transactionality must not be projected onto the whole accessor."
+  ]
+}

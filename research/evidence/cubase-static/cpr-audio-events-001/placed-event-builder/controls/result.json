@@ -1,0 +1,90 @@
+{
+  "passed": true,
+  "controls": 32,
+  "commands": [
+    [
+      "/usr/bin/clang",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-ffp-contract=off",
+      "-fno-fast-math",
+      "-O2",
+      "-I",
+      "/workspace/rebase/Application/Sources/RebaseTimingDSP/include",
+      "/workspace/rebase/Application/Sources/RebaseTimingDSP/cpr_timeline_builder.c",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/controls/control.c",
+      "-o",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/controls/optimized"
+    ],
+    [
+      "/usr/bin/clang",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-ffp-contract=off",
+      "-fno-fast-math",
+      "-O1",
+      "-g",
+      "-fsanitize=undefined",
+      "-fno-sanitize-recover=all",
+      "-I",
+      "/workspace/rebase/Application/Sources/RebaseTimingDSP/include",
+      "/workspace/rebase/Application/Sources/RebaseTimingDSP/cpr_timeline_builder.c",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/controls/control.c",
+      "-o",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/controls/ubsan"
+    ]
+  ],
+  "proprietary_target_executions": 0,
+  "inputs": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_builder.c",
+      "bytes": 4119,
+      "sha256": "f744ebced17794fcb62f3a36e0d10c8bb1c735aa769612ffb652e546b28464df"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_builder.h",
+      "bytes": 2942,
+      "sha256": "4ce5d6eeb4229a706b86fd6a98a4a7be3731e6f459242a60a5fbe86b45d7c488"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/controls/control.c",
+      "bytes": 1976,
+      "sha256": "d1f3db7c8c58685062b03c1cea22bd7494f6ee316d0badc56f406383ba2b1b38"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/controls/run_controls.py",
+      "bytes": 1579,
+      "sha256": "0ec76b56773379d4d3cbb187a5a2a7e2662efd7f2d614f961a3c758c07a258a2"
+    }
+  ],
+  "logs": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/controls/optimized-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/controls/optimized-run.log",
+      "bytes": 90,
+      "sha256": "2b08acf1e7eac7ddc015de44652059c5884b7a1cc5609aaece5af1e2aa08f1bb"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/controls/ubsan-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/controls/ubsan-run.log",
+      "bytes": 90,
+      "sha256": "2b08acf1e7eac7ddc015de44652059c5884b7a1cc5609aaece5af1e2aa08f1bb"
+    }
+  ],
+  "limits": [
+    "Hand-computable author controls, not an independent native behavioral oracle.",
+    "UBSan execution covers own reconstructed helper only."
+  ]
+}

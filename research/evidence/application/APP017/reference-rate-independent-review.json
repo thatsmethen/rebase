@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "status": "passed_with_reference_label_correction",
+  "target_executions": 0,
+  "scope": "Narrow read-only argument and register-flow challenge of the group-member accessor rate setter and selected reference getter; not complete provider or application integration review.",
+  "source_and_evidence": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/pass9/native-1002d91a4.txt",
+      "bytes": 6657,
+      "sha256": "c21bfa508f3cd445d44ff1a9b9e5a6c445cf291cbb0959585edf27715c3e72ca"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/pass8/native-1002d9034.txt",
+      "bytes": 586,
+      "sha256": "d620c981204122b0beb53afc9a64e6ae93fa95faf5ebf7e010ca83ab3be21728"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/pass4/native-1002d8c20.txt",
+      "bytes": 2089,
+      "sha256": "8c6bb0018e43ea0155fe10f1bf1b408b29e17b1d5f1768c2d15164eb562ba8a9"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/processed-stream-rate/pass1/native-1002eeea8.txt",
+      "bytes": 9775,
+      "sha256": "2d60dabd201f769a59863ac1174873ca35846799f09e9d9b279aa8bbb89ba5f8"
+    }
+  ],
+  "findings": [
+    {
+      "id": "REFERENCE-RATE-1",
+      "status": "confirmed",
+      "detail": "1002d91a4 keeps incoming manager in x21; each loop constructs a member AudioAccessor in x22. At1002d9300..931c manager virtual+140 returns S0 and member accessor virtual+f0 receives that unchanged Float32 argument. This is a manager/reference-derived rate, not a project-rate argument."
+    },
+    {
+      "id": "REFERENCE-RATE-2",
+      "status": "confirmed",
+      "detail": "1002d9034 loads index+38, indexes 16-byte entries at+20, forwards selected entry object+140; null selected object returns0.1002d8c20 writes that index only when incoming W3 is nonzero and valid member/index gates pass."
+    },
+    {
+      "id": "REFERENCE-RATE-3",
+      "status": "label_corrected_by_author",
+      "detail": "In1002eeea8 X23 initially holds incoming X3, but1002eefa4 overwrites X23 with the first collected entry before the loop.1002ef07c compares that first entry with enumerated X26;1002ef080 passes equality asW3. This supports first-collected-reference selection, not automatic identity with the original incoming/current event."
+    }
+  ],
+  "limits": [
+    "The collection ordering, cached manager reuse, all source/provider selections and effective hosted group membership are outside this narrow review.",
+    "Vtable identities are author-supplied source bindings; this review independently read the retained instruction argument flows but did not rerun their full binder.",
+    "No native execution, audio-output comparison, application source edit or claim that this branch is admitted by the current source-event plan."
+  ]
+}

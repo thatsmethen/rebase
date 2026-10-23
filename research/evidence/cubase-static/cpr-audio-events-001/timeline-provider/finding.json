@@ -1,0 +1,285 @@
+{
+  "schema": 1,
+  "study": "TIMELINE-PROVIDER-001",
+  "status": "bounded static provider and segment binding established; generalized saved-event placement remains gated",
+  "created_utc": "2026-10-20T10:55:21.300206+00:00",
+  "target": {
+    "path": "research/targets/derived/Cubase15-arm64",
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+    "architecture": "arm64",
+    "product": "Cubase Pro 15.0.30"
+  },
+  "evidence_class": "Original executable bytes, native disassembly and isolated REA/Ghidra analysis; no target execution or live-host observation.",
+  "result": [
+    "The concrete VSTAudioChannel QueryInterface implementation accepts the same 128-bit IID address used by MAudioTrack, returns channel+0x15f8, and the returned interface setter stores MAudioTrack+0x120 into channel+0x1610.",
+    "The installed interface resolves to the already retained MAudioTrack segment selector/reset pair; the ordinary channel reader can therefore receive the concrete PAudioSegment descriptor produced by that track builder on this successful concrete-class path.",
+    "PAudioSegment getter +0xd8 returns stored binary64 start at +0x50, +0xf8 computes start+length from +0x50/+0x58, and +0x108 returns stored offset at +0x60. Source stream and Float32 gain occupy +0x38 and +0x68.",
+    "The native builder independently quantizes canonical start, end and source offset into its selected sample datum, then stores canonical-time descriptor coordinates. Its selected rate is an external provider value or an explicit 44100 fallback, not an automatic AudioFile-rate assertion.",
+    "Saved event start uses the containing context datum. Length and offset may select the event clip datum. This study does not authorize replacing all three by savedScalar/sampleRate or admitting arbitrary nonzero CPR positions."
+  ],
+  "provider_assignment": {
+    "channel_constructor": {
+      "entry": "0x101d3b918",
+      "primary_vtable": "0x1047ac688",
+      "secondary_offset": "0x15f8",
+      "secondary_vtable": "0x1047ad130",
+      "prior": "../live-binding/pass18/native-101d3b918.txt"
+    },
+    "query": {
+      "entry": "0x101d42e70",
+      "range": "0x101d42e84..0x101d42ed8 exclusive",
+      "iid_address": "0x104feb4b0",
+      "condition": "Both requested 64-bit words equal the two words at this IID address.",
+      "effect": "Calls primary +0x8 retain; stores channel+0x15f8 into caller output; returns 0.",
+      "evidence": "pass4/native-101d42e70.txt"
+    },
+    "track_registration": {
+      "entry": "0x1001f9090",
+      "range": "0x1001f90a8..0x1001f9128 exclusive",
+      "condition": "track+0xd8 exists, QI returns zero, returned interface is nonnull.",
+      "order": [
+        "interface+0x20(interface, track+0x128)",
+        "interface+0x18(interface, track+0x120)",
+        "release returned interface through +0x10"
+      ],
+      "later": "Calls track list rebuild 0x1001f91a0.",
+      "evidence": "pass3/native-1001f9090.txt"
+    },
+    "store": {
+      "primary": "0x101d3e5a0: STR X1,[X0,#0x1610]; RET",
+      "secondary": "0x101d3e5a8: STR X1,[X0,#0x18]; RET",
+      "identity": "0x15f8 + 0x18 = 0x1610",
+      "ownership": "The store itself does not retain or release the provider. QI balances the temporary channel-interface reference; track/provider lifetime beyond this successful binding is not inferred."
+    },
+    "selector": {
+      "track_primary": "0x10444aa98",
+      "track_secondary": "0x10444acc0 at owner+0x120",
+      "secondary_select_slot": "0x18 -> 0x1001f9854 -> owner-adjusted 0x1001f96f8",
+      "secondary_reset_slot": "0x20 -> 0x1001f96e8",
+      "prior_contract": "../timeline-playback/finding.json",
+      "behavior": "Fresh/stale cursor scans first segment whose computed end >= query, without a start check. Matching generation plus nonnull current returns its successor without re-evaluating query. Reset clears current and captures owner generation."
+    },
+    "range_invalidation": {
+      "entry": "0x1001f95f8",
+      "effect": "Rebuild first, query same IID, call interface+0x28 with preserved d0/d1 and w1=1; release interface.",
+      "target": "0x1047ad130+0x28 -> 0x101d3e6f8 -> owner-adjusted 0x101d3e5b0",
+      "limits": "This report does not assign an unproved unit to the invalidation range or the separately installed +0x128 helper."
+    },
+    "class_condition": "The channel+0xd8 dynamic relation must be the captured concrete channel/QI path. This is not a claim that all host channels always have this class or that the same virtual slot on another class means the same operation."
+  },
+  "descriptor": {
+    "class": "PAudioSegment",
+    "vtable": "0x104436be0",
+    "constructor": "0x10011376c",
+    "producer": "0x10020f2e8",
+    "fields": {
+      "0x38": "retained selected source stream",
+      "0x50": "binary64 start",
+      "0x58": "binary64 length",
+      "0x60": "binary64 source offset",
+      "0x68": "Float32 gain"
+    },
+    "getters": [
+      {
+        "slot": "0xd8",
+        "entry": "0x101a17cd4",
+        "operation": "load binary64 +0x50"
+      },
+      {
+        "slot": "0xf8",
+        "entry": "0x101a17d08",
+        "operation": "load +0x50,+0x58; one binary64 FADD"
+      },
+      {
+        "slot": "0x108",
+        "entry": "0x101a17d1c",
+        "operation": "load binary64 +0x60"
+      }
+    ],
+    "setters": {
+      "0xd0": "0x101a17ccc stores start",
+      "0xe0": "0x101a17cdc stores length",
+      "0xf0": "0x101a17cec subtracts existing start from end and clamps nonnegative before +0xe0",
+      "0x100": "0x101a17d14 stores offset"
+    },
+    "distinction": "This descriptor is not AClusterSegment; its three binary64 coordinates must not be replaced by the latter class's serialized integer fields."
+  },
+  "ordinary_reader_connection": {
+    "prior": "../live-binding/finding.json",
+    "path": [
+      "VSTAudioChannel+0x15e8 callback -> 0x101d40088 -> 0x101d3fc3c",
+      "embedded provider at channel+0x15f0 -> 0x101d3f7d8 -> 0x101d3e704",
+      "partition helper 0x101d3ea38 -> reader 0x101d3eb24",
+      "reader uses channel+0x1610 selector/reset and descriptor start/end/offset getters"
+    ],
+    "read_operations": "The retained reader constructs AudioAccessor via 0x10036e34c (flags0x25, policy1) and calls gain/seek/read virtual slots +0x160/+0x178/+0x168.",
+    "numeric_contract": "The separate timeline-reader study owns exact integer partitioning, global datum and seek/read order. No sample kernel or scheduler equivalence is asserted here."
+  },
+  "saved_event_to_descriptor": {
+    "status": "Construction trace retained; broader nonzero saved-state projection is not admitted.",
+    "source_roles": "Prior timebase/finding.json binds serialized MAudioEvent Start/Length/Offset to event getters. Start is converted from containing context datum; event-specific edit methods can choose the own-clip datum for delta length/offset.",
+    "context_start": {
+      "entry": "0x1016e300c",
+      "order": "event+0xe0 -> optional context+0xd0 transformation (after datum binding) -> binary64 add context+0x78 -> 0x101c22dc0 from context+0x50 datum to canonical10500f150."
+    },
+    "context_length": {
+      "entry": "0x1016e3990",
+      "order": "event+0xf0 -> delta converter0x1016e39c8. Context end0x1016e2640 then adds context start and converted length."
+    },
+    "context_offset": {
+      "entry": "0x1016e3794",
+      "order": "event+0x100 -> negate -> delta converter0x1016e39c8 -> negate. Do not simplify away signs/operation order for general floating-point inputs."
+    },
+    "intersection": {
+      "entry": "0x10020e354",
+      "effect": "Creates context, obtains S and E, skips S>=requestedEnd or E<=requestedStart; stores max(S,requestedStart), min(E,requestedEnd), event and context in range nodes.",
+      "normalization": "0x10020e7c8 handles overlaps/priorities. Only the singleton positive nonnegative interval publication branch is used here; general overlap semantics remain out of scope."
+    },
+    "builder": {
+      "entry": "0x10020ee24",
+      "effect": "Builds/intersects ranges then invokes0x10020f2e8. A nonzero extra builder shift is added to published segment starts afterward.",
+      "caller": "0x1002115a0 obtains the context via0x1016e6744; a conditional track+0x558 shift is a next-work binding, not presumed zero for arbitrary projects."
+    },
+    "sample_datum": {
+      "rate_getter": "0x10171c5a0",
+      "behavior": "If owner+0x128 is nonnull, tailcall its slot0 and return the resulting Double. Otherwise return exact44100.",
+      "constructor": "0x101c225d0 tag10 dispatches through original jump table103ada008 to0x101c2267c, storing RN64(1/rate) at datum+8.",
+      "application_boundary": "Using the source rate as this context is an explicit bounded reconstruction input, not a recovered global host default."
+    },
+    "normal_remainder": "The retained0x10020f2e8 branch converts range start/end and adjusted source offset to the selected sample datum, uses signed half adjustment followed by signed64 FCVTZS, then converts those integer coordinates back to canonical time before PAudioSegment start/end/offset setters. The offset includes the range-start minus original context-start adjustment. Fade/neighbour branches may change these integers earlier.",
+    "eligible_initial_subset": [
+      "One direct source-bound audio event with verified zero ancestors, zero event start and zero source offset.",
+      "Verified clip datum, direct stereo PCM source and equal source/output rate under an explicitly supplied source-rate builder context.",
+      "Previously established no-fade/no-neighbour/no-loop/no-warp source gates remain required.",
+      "No overlap/priority or arbitrary folder-offset inference. The caller controls the reconstruction scope; omitted project content does not become playable implicitly."
+    ]
+  },
+  "next_discriminating_steps": [
+    {
+      "gate": "Nonzero start",
+      "targets": [
+        "0x1016e6744",
+        "0x1016e1ce4",
+        "0x1016e300c",
+        "0x101c22dc0"
+      ],
+      "required": "Bind the actual restored context datum and recursive origin for the desired saved-event ancestry; compare a nonzero musical start against an own-clip sample offset to prevent conflating units."
+    },
+    {
+      "gate": "Additional track shift",
+      "targets": [
+        "0x1002115a0",
+        "track+0x558",
+        "0x10020ee24"
+      ],
+      "required": "Identify saved-state source/default and conditional activation of the extra start-only shift before admitting nonzero placement."
+    },
+    {
+      "gate": "Builder/current source rate",
+      "targets": [
+        "0x10171c5a0",
+        "owner+0x128 slot0",
+        "clip datum refresh0x1000f8598"
+      ],
+      "required": "Bind the concrete provider and source/backend refresh for the broader scenario, or keep an explicit reconstruction context with strict matching checks."
+    },
+    {
+      "gate": "Range selection",
+      "targets": [
+        "0x10020e354",
+        "0x10020e7c8",
+        "0x10020f2e8"
+      ],
+      "required": "Use clipped-start and overlapping-event controls before widening beyond one unclipped positive interval; preserve end and source-offset independent quantization."
+    }
+  ],
+  "disconfirming_checks": [
+    "Wrong IID or unsuccessful/null QI must not be treated as provider installation.",
+    "A secondary offset other than0x15f8 or a setter displacement other than0x18 would break the observed channel+0x1610 identity.",
+    "A same-offset virtual call in PTimeView or MIDI Remote DTO is not evidence of this channel interface.",
+    "A segment whose end equals the selector query is selected by the retained >= predicate even if a half-open renderer subsequently produces no overlap.",
+    "Nonzero Start under containing datum0 must not be interpreted as raw clip frames; nonzero Length/Offset may use scalar datum10.",
+    "A differing builder rate, nonzero extra shift, overlap, neighbour/fade branch, transformed context or refreshed clip datum can invalidate the simple saved-event projection."
+  ],
+  "negative_discovery": "Pass2 functions101ff6070/101ff825c/101ffe6bc and other same-slot candidates were retained but rejected as provider proof. Shared virtual-slot offsets alone do not bind dynamic receiver identity.",
+  "verification": {
+    "totals": {
+      "function_intervals": 23,
+      "unique_entry_addresses": 23,
+      "source_bytes": 7220,
+      "native_words": 1805,
+      "rea_dossiers": 23,
+      "rea_instruction_addresses": 1549,
+      "unique_evidence_records": 46
+    },
+    "canonical_import": {
+      "imported": 46,
+      "total": 46,
+      "unknowns_added": 0
+    },
+    "sessions": "Seven isolated raw-analysis sessions plus canonical import client completed and closed.",
+    "method": "Mach-O/LC_FUNCTION_STARTS derivative bytes, original llvm-objdump words, REA readback equality, original-image table cells and selected instruction spans.",
+    "limits": [
+      "Metadata intervals are not proved reachable bodies; exception tails remain retained.",
+      "Raw-slice Ghidra omits external calls, global data, RTTI and unwind context. Incomplete jump-table/control-flow warnings are retained; original instructions and explicit source-cell checks are authoritative.",
+      "Pseudocode is not compilable or numerically faithful original source.",
+      "No proprietary execution, target audio result, runtime object graph, DAC capture or full project fidelity was measured."
+    ]
+  },
+  "custody": [
+    {
+      "path": "verification.json",
+      "bytes": 17456,
+      "sha256": "42bf0638eebcd7f709256f58dac39d1cadcdea489b7ac06f84a1e9beb60f263a"
+    },
+    {
+      "path": "original-bindings.json",
+      "bytes": 16342,
+      "sha256": "d293306ced4d7644fc4bcc8ca8856bcd568469783278fc641acf17fdf9d76fda"
+    },
+    {
+      "path": "evidence-bundle.json",
+      "bytes": 9194963,
+      "sha256": "6abe3301a158dc20f298f7d5513ca07428c0a24d1b44f6b8ddba2c5596defdab"
+    },
+    {
+      "path": "evidence-import.json",
+      "bytes": 367,
+      "sha256": "90f06215bd128eb269e822563f79db21d66a36038097895a920dd3f3de0d1a0c"
+    },
+    {
+      "path": "derive.py",
+      "bytes": 1104,
+      "sha256": "c928484cf17b1199154d7c9fc6fe53ad2e6f02cfea94d3c9eff756331a0748b0"
+    },
+    {
+      "path": "bind_source.py",
+      "bytes": 4639,
+      "sha256": "36aeb7624ad798bae0835bc54eecf1b559c317afaf1e7291b2a31eccfbd18c69"
+    },
+    {
+      "path": "verify_evidence.py",
+      "bytes": 5156,
+      "sha256": "302ba245248b49fb9ec8b5f40f6002fb6881b2779ea83462f7842761371bfcc5"
+    },
+    {
+      "path": "analyze_pass.mjs",
+      "bytes": 2894,
+      "sha256": "dc4f6a9c7f5820a712375aee558871cf614d5d26ed0ccfa253780a07a4e0d095"
+    }
+  ],
+  "independent_review": {
+    "status": "Narrow independent source review agrees; no actionable disagreement reported.",
+    "reviewer": "/root/fidelity_protocol",
+    "scope": [
+      "Read original1001f9090 provider registration,101d3e5a8 adjusted store, and concrete three segment getters.",
+      "Confirmed direct receiver linkage and separately rounded computed end."
+    ],
+    "exclusions": [
+      "The reviewer did not report independently rechecking all23ranges, the full QI constructor chain, or generalized source-to-descriptor coordinate construction."
+    ],
+    "record": "independent-source-review.json"
+  },
+  "target_execution_count": 0,
+  "target_runtime_comparison_count": 0
+}

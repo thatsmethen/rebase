@@ -1,0 +1,76 @@
+Fetching https://github.com/weichsel/ZIPFoundation.git from cache
+Fetched https://github.com/weichsel/ZIPFoundation.git from cache (0.02s)
+Creating working copy for https://github.com/weichsel/ZIPFoundation.git
+Working copy of https://github.com/weichsel/ZIPFoundation.git resolved at 0.9.20
+Building for debugging...
+[0/15] /workspace/rebase/Application/.build-musical-tests/arm64-apple-macosx/debug/RebasePackageTests.derived/runner.swift
+[1/15] Write sources
+[6/15] Copying PrivacyInfo.xcprivacy
+[7/15] Write Rebase-entitlement.plist
+[8/15] Write swift-version--1AB21518FC5DEDBE.txt
+[9/15] Compiling RebaseDSP ambi_first_order.c
+[11/37] Compiling ZIPFoundation URL+ZIP.swift
+[12/37] Compiling ZIPFoundation FileManager+ZIP.swift
+[13/37] Compiling ZIPFoundation Entry+Serialization.swift
+[14/37] Compiling ZIPFoundation Date+ZIP.swift
+[15/38] Compiling ZIPFoundation Data+Serialization.swift
+[16/38] Compiling ZIPFoundation FileManager+ZIPDeprecated.swift
+[17/38] Compiling ZIPFoundation Archive+Progress.swift
+[18/38] Compiling ZIPFoundation Archive+Reading.swift
+[19/38] Compiling ZIPFoundation Data+CompressionDeprecated.swift
+[20/38] Compiling ZIPFoundation Archive+ReadingDeprecated.swift
+[21/38] Compiling ZIPFoundation Archive+Writing.swift
+[22/38] Compiling ZIPFoundation Archive+WritingDeprecated.swift
+[23/38] Compiling ZIPFoundation Archive+ZIP64.swift
+[24/38] Compiling ZIPFoundation Entry+ZIP64.swift
+[25/38] Compiling ZIPFoundation Archive.swift
+[26/38] Compiling ZIPFoundation Data+Compression.swift
+[27/38] Emitting module ZIPFoundation
+[28/38] Compiling ZIPFoundation Archive+Helpers.swift
+[29/38] Compiling ZIPFoundation Archive+MemoryFile.swift
+[30/38] Compiling ZIPFoundation Archive+BackingConfiguration.swift
+[31/38] Compiling ZIPFoundation Archive+Deprecated.swift
+[32/38] Compiling ZIPFoundation Entry.swift
+[33/38] Compiling ZIPFoundation resource_bundle_accessor.swift
+[34/45] Compiling RebaseCore ProjectStore.swift
+[35/45] Compiling RebaseCore Project.swift
+[36/45] Compiling RebaseCore Automation.swift
+[37/45] Compiling RebaseCore MusicalTime.swift
+[38/45] Compiling RebaseCore AudioTransportEngine.swift
+[39/45] Emitting module RebaseCore
+[40/45] Compiling RebaseCore OfflineRenderer.swift
+[41/60] Compiling RebaseCoreTests TestSupport.swift
+[42/60] Compiling RebaseCoreTests ProjectStoreTests.swift
+[43/60] Compiling RebaseCoreTests RecoveredDSPTests.swift
+[44/60] Compiling RebaseCoreTests OfflineRendererTests.swift
+[45/60] Compiling RebaseCoreTests AutomationTests.swift
+[46/60] Compiling RebaseCoreTests AudioValidityTests.swift
+[47/60] Compiling RebaseCoreTests InvalidClipIntervalTests.swift
+[48/60] Compiling RebaseCoreTests MusicalTimeTests.swift
+[49/60] Emitting module RebaseCoreTests
+[50/62] Emitting module RebasePackageTests
+[51/62] Compiling RebasePackageTests runner.swift
+[51/62] Write Objects.LinkFileList
+[52/62] Linking RebasePackageTests
+[54/62] Compiling Rebase MixerView.swift
+[55/62] Compiling Rebase TimelineView.swift
+[56/62] Compiling Rebase RebaseApp.swift
+[57/62] Compiling Rebase AmbisonicExport.swift
+[58/62] Emitting module Rebase
+[59/62] Compiling Rebase StudioSession.swift
+/workspace/rebase/Application/Sources/Rebase/StudioSession.swift:356:30: error: cannot find 'DAWProject' in scope
+354 |         if root.pathExtension != "rebaseproj" { root.appendPathExtension("rebaseproj") }
+355 |         do {
+356 |             let loaded = try DAWProject.importProject(from: source, to: root)
+    |                              `- error: cannot find 'DAWProject' in scope
+357 |             stop(); project = loaded; projectRoot = root
+358 |             isScratch = false; isDirty = false; undoStack = []; redoStack = []
+
+/workspace/rebase/Application/Sources/Rebase/StudioSession.swift:370:17: error: cannot find 'DAWProject' in scope
+368 |         if url.pathExtension != "dawproject" { url.appendPathExtension("dawproject") }
+369 |         do {
+370 |             try DAWProject.export(project: project, projectRoot: projectRoot, to: url)
+    |                 `- error: cannot find 'DAWProject' in scope
+371 |             status = "Exported \(url.lastPathComponent)"
+372 |         } catch { show(error) }
+error: fatalError

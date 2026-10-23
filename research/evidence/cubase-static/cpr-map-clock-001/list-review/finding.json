@@ -1,0 +1,140 @@
+{
+  "id": "CPR-MAP-LIST-INDEPENDENT-REVIEW-001",
+  "revision": 1,
+  "created_utc": "2026-10-19T13:20:37.902259+00:00",
+  "source": {
+    "path": "research/targets/derived/Cubase15-arm64",
+    "bytes": 85691328,
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "scope": "Independent root list passes1\u20137/retry review, three missing local receiver/tail functions, and bounded default host-constructor callback closure. No app edits and no target execution.",
+  "decision": {
+    "serialized_source_reconstruction": "Supported under the explicit source-shape, metadata, default-path and canonical arithmetic gates. This means interpreting pinned source records with recovered native calculations, preserving original source and unsupported state.",
+    "unconditional_whole_host_invariance": "Not supported. Registry-selected components/factories and external observers are concrete runtime dependencies.",
+    "actionable_unsafe_import_found_in_this_scope": false,
+    "qualification": "No unsafe parser behavior or newly unsupported numeric field interpretation was identified by this bounded comparison. This is not a full security or app correctness audit."
+  },
+  "checked_claims": [
+    {
+      "claim": "Archivefactory10173a5ac selects empty constructor10173a7c0, not default-item constructor10173a5ec. The successful retry and original64-byte instructions agree. Nonempty accepted source items therefore do not silently retain a preinserted default item."
+    },
+    {
+      "claim": "Base list1016e8a68 zeros owner+0x30, owner-chain head/tail+0x70/+0x78 and dirty+0x90. Parent list ctor1016c24d4 initializes array state; tempo ctor clears list+0x50 bit0x8."
+    },
+    {
+      "claim": "Track+0x250\u219210174a630 writes track+0x58 and calls1016e9a30. That appends track to linked owners at list+0x58 and clears bit0x40, with no list+0x30 store.103103ed0 tests head pointer, not count, before assigning head/tail on first append; the base constructor explicitly zeroes both pointers."
+    },
+    {
+      "claim": "1017379b8 forces accessor mode2 when list+0x30 is nil.1016c31b0/1016c32dc avoid mode0/1 close-notification branches for mode2. Unmapped tail-branch halt_baddata warnings in raw decompilation are not target bad instructions; full original branch words are retained."
+    },
+    {
+      "claim": "Reader append1016c3a8c\u21921016c1df4 uses103105a2c and item+0x80 comparator1017016e4, whose Start getter is101739edc. Only strictly ordered accepted source coordinates are claimed; malformed/duplicate ordering is excluded."
+    },
+    {
+      "claim": "1016e9d58 attaches item through+0x288\u21921017014ec (item+0x38=list). Nil list+0x30 excludes context propagation. Item+0x348\u21921000f01a0 returns0; +0x3a8\u21921000f01b4 returns. Dirty flags change; this is not an unchanged-object claim."
+    },
+    {
+      "claim": "List+0x100\u21921016e93fc sets dirty flags and checks ownertrack+0x2e0\u21921. Tempo class predicate10173f4b8 only strcmp-checks the MTrackEvent string; +0x5881001fcf00 reads track+0x78 bit0x40 without writes. Neither can mutate timing fields. Constructor-cleared list bit0x8 excludes the downstream coordinate-propagation branch."
+    },
+    {
+      "claim": "Concrete list+0x68\u21921016e9058 clears dirty+0x90 directly for nil list+0x30. Nonempty +0x1501017409ec skips default insertion, but may initialize name and dirty6 then notify. No assertion of arbitrary notification/observer invariance is made."
+    },
+    {
+      "claim": "Ctor tail1017060f4(track,1) sets scalar key0x696e6943 via track+0x20 attributes and1000eed94. Fresh scalar setter has no release callback. The positive source attribute read clears old collection contents before serialized track attrs. No direct track+0x50/+0x58/+0x68 write occurs in this tail."
+    },
+    {
+      "claim": "The newly traced host construction path is closed for the retained default provider as documented separately. It stores the handler into track+0x70 and copies fresh scalar datum into handler-local state. Arbitrary replacement providers are not covered."
+    },
+    {
+      "claim": "1017411c8 writes key0x6b636f4c at1050802e4 before its retained later MTempoTrackEvent class-factory/version3 registration. It is reached from1017407c4. This proves local ordering conditional on that registration path, not that1017411c8 is a Mach-O module initializer or that all startup paths were inspected."
+    }
+  ],
+  "acceptance_gates": [
+    "Structurally shared track timing role and exact supported v3 tempo object; original source digest/object/record ranges retained. Unknown classes/versions/alternate identities remain unsupported.",
+    "One or two finite jump records with positive binary32 periods and exact positive-zero origin, strictly increasing coordinates, supported bounded domain and kind. Ramp and extrapolated unsupported kinds are excluded.",
+    "Canonical stored anchor must equal the separately rounded recovered cache recurrence bit-for-bit; this makes the accepted stored-cache/recomputed-anchor interpretations agree. Floating-point environment and actual host execution remain unobserved.",
+    "Exact observed supported positive track-attribute combinations, singleton null alternate and absent ThiD per variation/finding.json; only default per-item score attributes per attributes/finding.json. Arbitrary metadata is not declared timing-inert.",
+    "Default local fresh-construction receiver chain as retained, with later hosted overrides/observers outside the source-bound reconstruction claim."
+  ],
+  "source_comparison": {
+    "reviewed_reader": {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV3.swift",
+      "bytes": 12082,
+      "sha256": "66d68787d337781075e7d691709d363bb2862c7f381c9a0c8c6ed888c376b949"
+    },
+    "observed_gates": "CPRJumpMapReader rejects extra bytes/unknown keys, unverified track combinations, non-singleton or non-null alternate variations and nondefault score attrs. NativeTempoClock validation is a separately reviewed arithmetic boundary.",
+    "wording_boundary": "The phrase branch-invariant applies to explicitly proved local/default arithmetic and cache branches. It must not be expanded to all possible host providers or registry states.",
+    "source_unchanged": true
+  },
+  "verification_summary": {
+    "root_unique_functions": 45,
+    "root_attempts": 46,
+    "root_bytes": 12060,
+    "root_words": 3015,
+    "root_rea_addresses": 1654,
+    "new_unique_functions": 30,
+    "new_bytes": 5004,
+    "new_words": 1251,
+    "new_rea_addresses": 1045,
+    "supporting_reused_functions": 11,
+    "root_canonical_records": 90,
+    "local_plus_supporting_canonical_records": 82,
+    "alias_only_rendering_differences": 4,
+    "semantic_word_discrepancies": 0
+  },
+  "failure_custody": "The original pass6 analyze_function10173a5ac failed because the Ghidra bridge class could not be written during temporary disk exhaustion. The original function failure remains pinned, while readback/bundle/close succeeded. Separate retry-factory response succeeded; no attempt is overwritten or retroactively relabeled.",
+  "evidence": [
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/peer-byte-audit.json",
+      "bytes": 168955,
+      "sha256": "3bb801f395917a36d0446913e202dff434eeed394bccc788a2de2a0f271c6a53"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/final-verification.json",
+      "bytes": 67352,
+      "sha256": "99e772cb84a06eac863e84fb733c406877396f6ddcd060853222e327e6f340be"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/closure-linkage.json",
+      "bytes": 12127,
+      "sha256": "8982f4b79ad73b5f1a28c2de97e593798e63493233c54e29c8b25e5a0a263c82"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/supporting-evidence-checks-v2.json",
+      "bytes": 16612,
+      "sha256": "350ab5567ecacc6e55d18f7dc06e250a6591cabd34097818c9a90d007b20804a"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/host-gate-service/finding.json",
+      "bytes": 13905,
+      "sha256": "4c6cf13504d95a59e39dc928cf0b9d07c58f0b57011568d36bf650bf478ea6ba"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list/final-linkage.json",
+      "bytes": 11796,
+      "sha256": "d9180d502407880be1f1638b1ccdc3866e90a04ac9dc29f6244c6b71e70e77b8"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/variation/finding.json",
+      "bytes": 16591,
+      "sha256": "ab8dda077be616e163094ff88e078c1e53b971f9234d0585d4d3a6be78c89ab5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/attributes/finding.json",
+      "bytes": 28679,
+      "sha256": "aefec343335ed49c179cb117ae00756fdfaf6c1d97a6e34e4216048f7cb570b3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/host-gate-global/finding.json",
+      "bytes": 27410,
+      "sha256": "1ca8f3794f6764c810baaa0ec834731763bb74651e98e6e5f3477d4ff1be2374"
+    }
+  ],
+  "limits": [
+    "Static original-byte/control-flow evidence only. Target executions and Cubase runtime comparisons are zero.",
+    "Raw imports omit linked external globals/types/vtables/imports/unwind. Original source slices and explicit linkage support the bounded interpretations; pseudocode is generated non-source and is not guaranteed compilable or bit-faithful.",
+    "Successful normal construction/read is the scope. Allocation failure, exception/unwind cleanup, concurrency and arbitrary host observers are outside it.",
+    "Exact native bytes and REA readback equality are custody checks. They do not prove the runtime globals, actual registry selection, full application behavior or target floating-point environment.",
+    "Scope excludes every later handler method, unknown registration providers, lifecycle edits, variations, arbitrary extensions and runtime observer effects. No broad closure of all Cubase code is claimed."
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "id": "APP004-CPR-PROFILE-SECOND-INDEPENDENT-REVIEW",
+  "created_utc": "2026-10-19T10:51:11.704582+00:00",
+  "reviewer": "/root/target_intake",
+  "status": "No actionable defect found.",
+  "scope": "Read-only source comparison, retained test/log review and current persisted input hash verification. No source/UI edits, no proprietary target execution, no additional Swift test rerun.",
+  "source_pins": [
+    {
+      "path": "research/evidence/application/APP003/final-source-snapshot/Application/Sources/RebaseCore/CPRProject.swift",
+      "sha256": "75b82b2d3e0afadff279284d6f2872685fb2a3146ead0d7a08709eefe089e940"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "sha256": "be74be7fb6bd6a664e749432fb2d6c802456f895d77803eb2ed122e6882ffef2"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV1.swift",
+      "sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectTests.swift",
+      "sha256": "97e576dda2ba29d902c36606d71b8ed6d5b06894ad5a56a9120d6ba94e54b03c"
+    },
+    {
+      "path": "research/evidence/application/APP004/cpr-profile-integration.json",
+      "sha256": "2cd49b96d8562c67edf87ca006b40468ba340e376066b4753dd684570b3ff502"
+    },
+    {
+      "path": "research/evidence/application/APP004/cpr-profile-tests.log",
+      "sha256": "c36ab731e143ac3d4565c12a14205157a891d08ec397a515c70f283d2eb8696a"
+    }
+  ],
+  "findings": [],
+  "independent_checks": {
+    "frozen_v1_semantic_body_equal_after_name_visibility_normalization": true,
+    "semantic_body_utf8_bytes": 18859,
+    "semantic_body_sha256": "ab383478dfa76cd7efff9519ba0c4d5bc155c791609b93a5cf626a39beeb8258",
+    "shared_mechanics_equal_after_visibility_normalization": true,
+    "mechanical_body_utf8_bytes": 8680,
+    "mechanical_body_sha256": "bcc66a12729300f0e4a763d158accc58d4f5dbd26a5c7c9ce843ba05b811a94b",
+    "legacy_package_input_hashes_rechecked": 9
+  },
+  "contract_review": [
+    "Schema1 missing/null optional profile selects literal cpr-static-subset-v1, preserving nil when constructing the replay report. Schema1 explicit known profile is accepted without rewriting representation.",
+    "New inspection/import emits schema2 with explicit cpr-static-subset-v1. Schema2 nil/missing profile rejects. Unknown profile or unknown schema rejects; neither falls through to the latest decoder.",
+    "Replay retains regular unredirected paths, source size/hash/sections, Project validation and complete report equality. It does not rewrite report/source/current Project.json or compare current user edits to the old baseline.",
+    "The entire moved named-attribute and recovery implementation is byte-identical after only normalization of private modifiers and class rename. Shared cursor/string/archive/hash helpers are likewise unchanged.",
+    "Retained15-test pass covers profile/schema acceptance and rejection, three historical packages, name/gain edits in temporary copies, unchanged originals and tampered-default rejection. All nine original package file hashes remain pinned."
+  ],
+  "limits": [
+    "Current application replay only; no native Cubase runtime or newly recovered signature/tempo/media semantics.",
+    "Future changes to shared parsers or Project defaults can still affect old replay and need pinned tests.",
+    "No additional tests were rerun because the relevant accepted15-test log and source hashes already match."
+  ],
+  "prior_independent_review_preserved": {
+    "path": "research/evidence/application/APP004/cpr-profile-review.json",
+    "sha256": "c6f7f3d50fb4ee4f160b1dd232463497822cb3041ae02f4fa04dde55db96aeb6"
+  }
+}

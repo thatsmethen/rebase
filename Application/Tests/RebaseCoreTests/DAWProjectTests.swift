@@ -79,7 +79,23 @@ final class DAWProjectTests: AudioTestCase {
         assertPlane(output, channel: 1, equals: [0, 0, 0, 0])
     }
 
-    @Test func selfRoundtripPreservesAudioCurvesMapsAndSchema() throws {
+    @Test func selfRoundtripPreservesAudioCurvesAndMaps() throws {
+        _ = try roundtrip()
+    }
+
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason),
+          .enabled(if: FileManager.default.isExecutableFile(atPath: "/usr/bin/xmllint"), "Requires the system xmllint executable."))
+    func exportedRoundtripXMLMatchesExternalSchema() throws {
+        let xmlURL = try roundtrip()
+        let process = Process(); process.executableURL = URL(fileURLWithPath: "/usr/bin/xmllint")
+        process.arguments = ["--nonet", "--noout", "--schema",
+            PrivateResearchFixtures.root.appendingPathComponent("references/dawproject/Project.xsd").path, xmlURL.path]
+        let log = Pipe(); process.standardError = log; try process.run(); process.waitUntilExit()
+        let message = String(data: log.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
+        #expect(process.terminationStatus == 0, Comment(rawValue: message))
+    }
+
+    private func roundtrip() throws -> URL {
         var a = try importClip([[0.1, -0.2, 0.3, -0.4, 0.5, -0.6]])
         a.name = "Name <&> \"quote\""; a.position = 2 / rate; a.sourceOffset = 1 / rate; a.duration = 4 / rate
         let b = try importClip([[0.2, 0.4, 0.6], [0.1, 0.3, 0.5]])
@@ -97,14 +113,6 @@ final class DAWProjectTests: AudioTestCase {
         let entry = try #require(zip["project.xml"])
         var xml = Data(); _ = try zip.extract(entry) { xml.append($0) }
         let xmlURL = temporary.appendingPathComponent("export.xml"); try xml.write(to: xmlURL)
-        if FileManager.default.isExecutableFile(atPath: "/usr/bin/xmllint") {
-            let repo = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-            let process = Process(); process.executableURL = URL(fileURLWithPath: "/usr/bin/xmllint")
-            process.arguments = ["--nonet", "--noout", "--schema", repo.appendingPathComponent("research/references/dawproject/Project.xsd").path, xmlURL.path]
-            let log = Pipe(); process.standardError = log; try process.run(); process.waitUntilExit()
-            let message = String(data: log.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
-            #expect(process.terminationStatus == 0, Comment(rawValue: message))
-        }
         let importedRoot = temporary.appendingPathComponent("Roundtrip.rebaseproj")
         let imported = try DAWProject.importProject(from: archiveURL, to: importedRoot)
         #expect(imported.name == project.name)
@@ -121,6 +129,7 @@ final class DAWProjectTests: AudioTestCase {
             let expected = Array(UnsafeBufferPointer(start: before.floatChannelData![channel], count: Int(before.frameLength)))
             assertPlane(after, channel: channel, equals: expected)
         }
+        return xmlURL
     }
 
     @Test func unsupportedSemanticsAndAmbiguousInterpolationRejectTransactionally() throws {

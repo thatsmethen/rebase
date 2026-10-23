@@ -160,9 +160,10 @@ final class CPRSignatureRecoveryTests {
         rejects(envelope(second:signature(defaults()+[extra])))
     }
 
-    @Test func allTenPinnedFactorySignaturesRecoverWithoutExecutingTheSource() throws {
-        let workspace = URL(fileURLWithPath:#filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-        let manifestURL = workspace.appendingPathComponent("research/evidence/cpr-static/cpr-signature-001/fixtures/finding-v1.json")
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func allTenPinnedFactorySignaturesRecoverWithoutExecutingTheSource() throws {
+        let workspace = PrivateResearchFixtures.root
+        let manifestURL = workspace.appendingPathComponent("evidence/cpr-static/cpr-signature-001/fixtures/finding-v1.json")
         let manifest = try #require(JSONSerialization.jsonObject(with:Data(contentsOf:manifestURL)) as? [String:Any])
         let records = try #require(manifest["records"] as? [[String:Any]])
         #expect(records.count == 10)
@@ -171,7 +172,7 @@ final class CPRSignatureRecoveryTests {
             let expectedSHA = try #require(record["source_sha256"] as? String)
             let object = try #require(record["signature_object"] as? [String:Any])
             let offset = try #require(object["offset"] as? Int)
-            let source = workspace.appendingPathComponent(path)
+            let source = try PrivateResearchFixtures.template(recordedPath: path)
             let before = try Data(contentsOf:source)
             #expect(cprSHA256(before) == expectedSHA)
             let recovered = try recover(before)

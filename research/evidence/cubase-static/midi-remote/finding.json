@@ -1,0 +1,210 @@
+{
+  "finding_id": "MIDI-REMOTE-001",
+  "evidence_class": "static source observations and bounded interpretation",
+  "target_executed": false,
+  "source_scope": "Three selected files in the complete signed MIDI Remote factory-script tree",
+  "sources": [
+    {
+      "relative_path": ".api/v1/package.json",
+      "bytes": 68,
+      "sha256": "0cdf31518d5897694e06abb2f489fdef6c5557b03c5c18cff7c33ca3448b35c2",
+      "outer_resource_sha256_matches": true
+    },
+    {
+      "relative_path": ".api/v1/midiremote_api_v1.js",
+      "bytes": 204315,
+      "sha256": "b4c72dcfa0954dd85596c757c62e5f0846bae5f20434649f356647e159e3cf86",
+      "outer_resource_sha256_matches": true
+    },
+    {
+      "relative_path": "Public/examplecompany/simpledevice/ExampleCompany_SimpleDevice.js",
+      "bytes": 3134,
+      "sha256": "5429d818103374c8953ecced2c4982261443ba59ff7550cad9547498c905b614",
+      "outer_resource_sha256_matches": true
+    }
+  ],
+  "rea": {
+    "evidence_id": "ev_666fd86a6f748efa5ba9583ac8853812e6756be8bf358d6725a4be3a5264409c",
+    "record": "research/evidence/cubase-static/midi-remote/rea-static-analysis.json",
+    "record_sha256": "4de86b9c6b494acb2e19be81151c3401f312efe23cb2dfb01ee1d63b44e275f5",
+    "root_artifact_sha256": "283475118198b4de4a0755876c225ce24b7b426649f126c215634c75eb3027d1",
+    "statistics": {
+      "relevant_files": 80,
+      "nested_asar_containers": 0,
+      "text_bytes_read": 207517,
+      "invalid_utf8_files": 0,
+      "parsed_javascript_files": 2,
+      "skipped_javascript_files": 0,
+      "visited_ast_nodes": 9871,
+      "findings": 3,
+      "modules": 0,
+      "parse_failures": 0
+    },
+    "graph_coverage": {
+      "status": "partial",
+      "truncated": false,
+      "omitted_count": null,
+      "limits": []
+    },
+    "unselected_relevant_files": 77,
+    "limitations": [
+      "Caller-selected source analysis leaves 77 inventoried files outside analysis scope. Inventory identity covers the complete artifact; relationships through unselected sources remain unknown.",
+      "CommonJS and ESM binding relationships were recovered from inert syntax and resolved only within the inventoried artifact container.",
+      "Graph coverage is incomplete; unavailable facts remain explicit and must not be read as absence.",
+      "JavaScript and HTML were parsed as inert text; bundle bootstrap code was never executed.",
+      "Static imports, entrypoints, workers, endpoints, and storage relationships do not prove runtime execution.",
+      "Static paths and relationships may remain unresolved when expressions are dynamic or obfuscated.",
+      "Webpack/Rspack factories were recovered from AST literals; REA did not invoke push handlers or bundle bootstrap code."
+    ]
+  },
+  "declared_example_mapping": {
+    "source": "Public/examplecompany/simpledevice/ExampleCompany_SimpleDevice.js",
+    "driver_declaration_line": 9,
+    "port_detection_line_ranges": [
+      [
+        17,
+        19
+      ],
+      [
+        21,
+        23
+      ]
+    ],
+    "surface_knob_declaration_lines": [
+      31,
+      32,
+      33,
+      34
+    ],
+    "midi_channel_argument": 0,
+    "control_change_numbers": [
+      21,
+      22,
+      23,
+      24
+    ],
+    "cc_binding_lines": [
+      40,
+      45,
+      50,
+      55
+    ],
+    "page_creation_line": 62,
+    "host_selection_line": 65,
+    "host_binding_lines": [
+      69,
+      70,
+      71,
+      72
+    ],
+    "targets_in_knob_order": [
+      "selected track volume",
+      "selected track send index 0 level",
+      "selected track send index 1 level",
+      "selected track send index 2 level"
+    ],
+    "claim_scope": "Source declares these calls and arguments; runtime registration, MIDI receipt, host lookup, scaling, takeover and feedback remain unmeasured."
+  },
+  "api_file_interpretation": {
+    "observation": "The bundled API JavaScript includes empty increment/decrement bodies, methods returning fresh type objects without using supplied binding arguments, and takeover methods returning this without implementing takeover state.",
+    "source_ranges": [
+      {
+        "node_id": "jsrg_node_84faa3239547a6bd7fa73d115a0f8f772d98d6abfeaf1200427422606289a924",
+        "name": "increment",
+        "source_range": {
+          "start": {
+            "line": 5176,
+            "column": 1
+          },
+          "end": {
+            "line": 5179,
+            "column": 2
+          }
+        },
+        "artifact_sha256": "b4c72dcfa0954dd85596c757c62e5f0846bae5f20434649f356647e159e3cf86"
+      },
+      {
+        "node_id": "jsrg_node_aeb4ac1feb10a43d3368aceac52d53fffe4a28470f778539a8bc0124ed26b7a9",
+        "name": "increment",
+        "source_range": {
+          "start": {
+            "line": 4746,
+            "column": 1
+          },
+          "end": {
+            "line": 4749,
+            "column": 2
+          }
+        },
+        "artifact_sha256": "b4c72dcfa0954dd85596c757c62e5f0846bae5f20434649f356647e159e3cf86"
+      },
+      {
+        "node_id": "jsrg_node_bda93ef6851785e173421b75bd69fc8ee77330605156d33e766e6e129b66a64b",
+        "name": "setValueTakeOverModeJump",
+        "source_range": {
+          "start": {
+            "line": 7738,
+            "column": 1
+          },
+          "end": {
+            "line": 7741,
+            "column": 2
+          }
+        },
+        "artifact_sha256": "b4c72dcfa0954dd85596c757c62e5f0846bae5f20434649f356647e159e3cf86"
+      },
+      {
+        "node_id": "jsrg_node_e78992a8c5ff6c0c3f10f4511fa294c308d71023a8b4153cb0f7b371cd8c9f24",
+        "name": "makeValueBinding",
+        "source_range": {
+          "start": {
+            "line": 1926,
+            "column": 1
+          },
+          "end": {
+            "line": 1929,
+            "column": 2
+          }
+        },
+        "artifact_sha256": "b4c72dcfa0954dd85596c757c62e5f0846bae5f20434649f356647e159e3cf86"
+      }
+    ],
+    "inference": "This file serves as a development-facing API shape/stub, not sufficient implementation evidence for the native host behavior.",
+    "negative_conclusion_disallowed": "Empty stub bodies do not establish that Cubase ignores the corresponding actions.",
+    "unresolved_boundary": "The actual runtime module provider, native host bridge, object lifetime and value transformations have not been mapped."
+  },
+  "tool_interpretation_correction": {
+    "observation": "REA assigns an electron-main role from package.json main in this selected SDK package.",
+    "supporting_node": "jag_node_86dfd7488140b6d0e05ba5b5e22f30414f616fb3a016a5a791c588ce281877a1",
+    "interpretation": "The retained relation supports a package entrypoint only. It is not evidence that Cubase is an Electron application."
+  },
+  "next_discriminating_work": [
+    "Trace the native module-provider registration for the literal midiremote_api_v1 before inferring host semantics from the stubs.",
+    "In a later runtime phase, test one declared CC binding with recorded track/send selection and explicit takeover mode, preserving MIDI input, feedback and host-value observations."
+  ],
+  "reproduction": {
+    "analysis": [
+      "sh",
+      "scripts/rea",
+      "analyze-javascript-application",
+      "/workspace/rebase/research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/midiremote_factory_scripts",
+      "--artifact-format",
+      "directory",
+      "--source-path",
+      ".api/v1/package.json",
+      "--source-path",
+      ".api/v1/midiremote_api_v1.js",
+      "--source-path",
+      "Public/examplecompany/simpledevice/ExampleCompany_SimpleDevice.js",
+      "--analysis-timeout-ms",
+      "60000",
+      "--max-heap-mb",
+      "1024",
+      "--format",
+      "json",
+      "--full-output"
+    ],
+    "derivation_script": "research/evidence/cubase-static/midi-remote/derive_contract.py",
+    "derivation_sha256": "55fb4992421b3c756951fa48bd5c479a496f41d8989eb5daca1349a35a5f8cb6"
+  }
+}

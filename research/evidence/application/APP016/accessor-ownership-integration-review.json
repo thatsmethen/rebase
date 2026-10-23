@@ -1,0 +1,183 @@
+{
+  "id": "APP016-ACCESSOR-OWNERSHIP-INTEGRATION-REVIEW-001",
+  "created_utc": "2026-10-20T23:49:53.276643+00:00",
+  "review_type": "Independent read-only native ownership and Swift integration review; no new test execution",
+  "result": "No actionable defect found in the reviewed fixed supplied-rate accessor and equal-rate timeline integration domain.",
+  "actionable_findings": [],
+  "reviewed_contracts": [
+    {
+      "topic": "Rate and source-format ownership",
+      "assessment": "CPRNativeAudioAccessor receives fixed explicit source/output rates and source format. It does not infer the hosted native backend from a file extension. Native timeline constructs both rates from its explicit source-rate format, so the new differing-rate capability is not silently exposed as ordinary project-rate timeline behavior."
+    },
+    {
+      "topic": "Snapshot and input domain",
+      "assessment": "Swift array value semantics retain immutable source contents; initialization rejects odd/empty/excessive arrays, unsupported rates, nonfinite/subnormal source samples, and invalid PCM24 lattice samples including negative zero. Source position cannot exceed the fixed source extent through admitted seeks or reads."
+    },
+    {
+      "topic": "Seek and first-read state",
+      "assessment": "seek uses the recovered Float32 ratio kernel, updates source position only, and preserves the existing converter/first-read state. Read clears the first conversion byte at the budget point, distinguishes fixed backend-availability context from chosen converter, and publishes the actual source/output counts. Terminal continuation is explicitly rejected; this is stricter than native behavior, not a hidden reset/preroll."
+    },
+    {
+      "topic": "Failure boundaries",
+      "assessment": "Invalid input/unsupported budget rejects before cursor progress. A backend failure can mutate retained state and sets failed, preventing a fabricated retry. Timeline requires exact requested count through the recovered read-result helper; it does not pad or borrow output to hide differing-rate/partition behavior."
+    },
+    {
+      "topic": "Format ordering",
+      "assessment": "For explicitly supplied PCM24 input and sourceRate>outputRate, the foundation preserves the recovered post-rate signed24 roundtrip before returning Float32 samples. This review checks the integration branch and exact sealed C copy, not an independent proof of every sample or proprietary backend format."
+    },
+    {
+      "topic": "Current timeline lease",
+      "assessment": "Final source holds one active (segment index, accessor). It preserves the same descriptor across block boundaries, clears before selection of another descriptor or nil, and clears on the next selection after SKIP. This matches the admitted ordered static-list lease boundary at101d3ec60..ed00 and101d3f484..4a0; no runtime mutable provider/lifecycle equivalence is claimed."
+    },
+    {
+      "topic": "Gain and source admission",
+      "assessment": "Native timeline prepareMedia uses its default applyEventGain=false, supplies the separately validated descriptor/gain and source-rate context, and applies event gain once after each equal-rate read. The new accessor is instantiated as Float32 memory source after explicit PCM24 decode, not presented as the actual vendor AudioFile backend."
+    },
+    {
+      "topic": "Publication of progress",
+      "assessment": "Timeline publishes deliveredFrames/segmentIndex only after the complete output block succeeds. Its admitted equal-rate memory accessors can be re-sought exactly; this does not establish a general transactional guarantee for differing-rate filters."
+    }
+  ],
+  "resolved_during_review": [
+    {
+      "issue": "Initial dictionary retained an accessor for every visited segment beyond the native last-descriptor lease.",
+      "resolution": "Root replaced it with activeAccessor and selection-based clearing before freeze.",
+      "impact": "No differing-rate timeline was admitted and equal-rate sample behavior was inert, but the correction avoids carrying an unsupported lifetime into future integration."
+    }
+  ],
+  "limits": [
+    "This is a source read/identity review. It does not assert that pending APP016 tests passed, that a release was built, or that native UI/device playback was exercised.",
+    "The supplied-state differing-rate accessor is a development foundation. General project-rate placement remains gated; builder rate, reader coordinate period, current backend format and selected reader-owner rate are distinct native state.",
+    "Fixed-rate immutable stereo memory excludes transient source/backend errors, dynamic format/rate changes, unsupported terminal continuation and arbitrary provider mutation. The application policies are stricter than native behaviors in those branches.",
+    "Rebase worker queue, block sizes, cancellation and AVAudioEngine scheduling remain application policies. No Cubase process, vendor library, target audio comparison or DAC capture was executed.",
+    "APP015 remains the prior accepted release checkpoint until APP016 receives its separate final acceptance."
+  ],
+  "tests_run_by_this_review": 0,
+  "proprietary_target_executions": 0,
+  "source_and_evidence": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeAudioAccessor.swift",
+      "bytes": 8645,
+      "sha256": "94a667f15708382e438c3ab6237675c18f7d430cc43d45b37c4e44b296bca33c"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 9761,
+      "sha256": "7083dfbb5f2c4af394f95416a1ac9cbcc9413c19e935d32f64e08c86915d0fe1"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 9395,
+      "sha256": "3896d4274da33007ac2fd193ab61938b3f2221b07bed82728031e4887f704a9e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8748,
+      "sha256": "447e435835317ff3a0fb66dfeb855fa24b79d42106694d0ce9acebc9bbfab9d7"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_seek.c",
+      "bytes": 2274,
+      "sha256": "355b2818498bf35bc756ab671fbb4aa64cadd6dc823f54ed386bfb5bf997581e"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_seek.h",
+      "bytes": 803,
+      "sha256": "b68cb079ce507d9775560c08ba3bd384fec873ac5e2d0812a907013fe3745db4"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_format.c",
+      "bytes": 1859,
+      "sha256": "93867452e419fc03bdbe8a5576e8fc6f70e81ddb284930472e2cbb01e9e668e5"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_format.h",
+      "bytes": 751,
+      "sha256": "657a8ac70785c7a4d8ed39c25bc03048b2a14d701329d14218be9cb16d2519ad"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeAudioAccessorTests.swift",
+      "bytes": 13395,
+      "sha256": "5e4b7de691bb6d8c814aa80a427f8c02e0f449a4b84091be899a85bfc7530491"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/finding.json",
+      "bytes": 33246,
+      "sha256": "889f90405c4d5607958f92f35b38e99a1b821f3708d038eda0ee53819eea657b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/artifact-manifest.json",
+      "bytes": 83621,
+      "sha256": "5d7d93282408b2b3b703ec9d6d8df5694d15ee1953cb3126c42b66a94ccaa0a8"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/finding.json",
+      "bytes": 31753,
+      "sha256": "d76301f9ef7e25345c0e22fdded03aecff7e41f5ffbd0729985a0018518a1ea2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/finding.json",
+      "bytes": 5405,
+      "sha256": "26640a81ed61597bd809ffbf21febd81264f688bbb51433b049cb02de778245e"
+    },
+    {
+      "path": "research/evidence/application/APP016/rate-ownership-independent-review.json",
+      "bytes": 2597,
+      "sha256": "e628d5527812fd91265f3af8fa48e76bdcce10476c71b3dc46c14fdea5e58b91"
+    }
+  ],
+  "sealed_kernel_identity": [
+    {
+      "application": {
+        "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_seek.c",
+        "bytes": 2274,
+        "sha256": "355b2818498bf35bc756ab671fbb4aa64cadd6dc823f54ed386bfb5bf997581e"
+      },
+      "sealed_candidate": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/candidate/cpr_accessor_seek.c",
+        "bytes": 2274,
+        "sha256": "355b2818498bf35bc756ab671fbb4aa64cadd6dc823f54ed386bfb5bf997581e"
+      },
+      "byte_identical": true
+    },
+    {
+      "application": {
+        "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_seek.h",
+        "bytes": 803,
+        "sha256": "b68cb079ce507d9775560c08ba3bd384fec873ac5e2d0812a907013fe3745db4"
+      },
+      "sealed_candidate": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/candidate/cpr_accessor_seek.h",
+        "bytes": 803,
+        "sha256": "b68cb079ce507d9775560c08ba3bd384fec873ac5e2d0812a907013fe3745db4"
+      },
+      "byte_identical": true
+    },
+    {
+      "application": {
+        "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_format.c",
+        "bytes": 1859,
+        "sha256": "93867452e419fc03bdbe8a5576e8fc6f70e81ddb284930472e2cbb01e9e668e5"
+      },
+      "sealed_candidate": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/candidate/cpr_accessor_format.c",
+        "bytes": 1859,
+        "sha256": "93867452e419fc03bdbe8a5576e8fc6f70e81ddb284930472e2cbb01e9e668e5"
+      },
+      "byte_identical": true
+    },
+    {
+      "application": {
+        "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_format.h",
+        "bytes": 751,
+        "sha256": "657a8ac70785c7a4d8ed39c25bc03048b2a14d701329d14218be9cb16d2519ad"
+      },
+      "sealed_candidate": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/candidate/cpr_accessor_format.h",
+        "bytes": 751,
+        "sha256": "657a8ac70785c7a4d8ed39c25bc03048b2a14d701329d14218be9cb16d2519ad"
+      },
+      "byte_identical": true
+    }
+  ]
+}

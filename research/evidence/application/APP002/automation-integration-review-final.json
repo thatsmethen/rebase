@@ -1,0 +1,56 @@
+{
+  "id": "REBASE-AUTOMATION-INTEGRATION-REVIEW-FINAL",
+  "created_utc": "2026-10-19T08:47:16.394172+00:00",
+  "reviewer": "target_intake",
+  "scope": "Source review addendum for track-level time base and strict DAWproject exchange guards. Synthetic fixture execution only; no GUI, audio hardware, or Cubase target execution.",
+  "prior_review": {
+    "path": "research/evidence/application/APP002/automation-integration-review.json",
+    "sha256": "29d98b8ca54de813b47c6d729c1848a7a5b27f30a16a020913ceedf08acd276b",
+    "preserved": true
+  },
+  "status": "No actionable source integration issue identified in reviewed domain; eight DAWproject test methods pass after correcting the new test fixture.",
+  "checks": [
+    "Project.validate requires every clip timeBase to equal its containing track timeBase; missing Track.timeBase decodes as seconds.",
+    "StudioSession.setTrackTimeBase changes the whole track on a candidate, derives or clears every clip anchor, validates before commit, and records one undo state. Existing clip position, source offset and duration are preserved at conversion.",
+    "Project.replaceTempoMap retimes musical anchors transactionally; seconds tracks and audio sample lengths are unchanged. New audio imports create seconds tracks.",
+    "The inspector binds time-base selection to the track. Automation integration checks from the initial review remain applicable to the pinned source.",
+    "DAWproject export rejects musical tracks even when empty, preventing silent loss of track anchor semantics.",
+    "DAWproject export validates the decoded file format as mono/stereo with a finite integral sample rate from 8000 through192000 Hz before serialization. Unsupported media is rejected without resampling or metadata truncation.",
+    "The CAF format test constructs explicit file bytes and independently verifies AVAudioFile.fileFormat and two-frame length before exercising rejection. Cases are44100.5,4000,384000 Hz and four channels at48000 Hz."
+  ],
+  "files": {
+    "Application/Sources/RebaseCore/Project.swift": "49aa45033397c8fe2c3facae0435b9a1942089dd8a372ff5d658b9af4d4a70b6",
+    "Application/Sources/RebaseCore/OfflineRenderer.swift": "80bd5c60836aed724cf0d3a948691236c5de23f70c7ecd70e47b3120103a5791",
+    "Application/Sources/Rebase/StudioSession.swift": "3fa5946e048b0b7560cc009f2a3fa1d8c54a5659d748ef2aa0c44041b2022678",
+    "Application/Sources/Rebase/ProjectEditors.swift": "c0feecf1624b0365aa09e1e8982a26a774b3f12fd77c7bf7de0afcbb332a4921",
+    "Application/Sources/Rebase/RebaseApp.swift": "9c69d8b57f609d2a88ea2ce67db41ff6d8a69cbd337bf707c749df48f73e05b4",
+    "Application/Sources/RebaseCore/Automation.swift": "b3cf8cdafcb4d799520ad9bfa969a3e1fd04e776405051b446e242bc8738170b",
+    "Application/Tests/RebaseCoreTests/AutomationTests.swift": "8c772f1723ec1f45e4be512c2984f550c46acc1f47cc800d1fe7207ab2540d36",
+    "Application/Sources/RebaseCore/DAWProject.swift": "206a11b11c6726181c5dfbd97a78fb666338ba0c1ea0c8eb247fef6dacb29de6",
+    "Application/Tests/RebaseCoreTests/DAWProjectTests.swift": "1cf2c7b1666e78330556e4738938dae655493cafe7e4b9ef6550ec1fdd99696d",
+    "Application/Tests/RebaseCoreTests/ProjectBehaviorTests.swift": "ca239f0e4700ac5d23c09da497140b768a2c0fb24eea82837f3a0643f3321016"
+  },
+  "validation": {
+    "command": "Application/test-app.sh --filter DAWProjectTests",
+    "exit_code": 0,
+    "passed_test_methods": 8,
+    "log": "research/evidence/application/APP002/exchange-guards-tests.log",
+    "log_sha256": "1dbcf0bdfa4990de7f912418c841f99a298fc19d1922a9eb1f4afbdeea640ece",
+    "prior_failure": {
+      "log": "research/evidence/application/APP002/core-tests-final.log",
+      "preserved": true,
+      "interpretation": "The previous new format fixture used AVAudioFormat.standard initializer, which clamped4000/384000 rates and returned nil for four channels. That fixture did not establish the requested source formats. The raw CAF replacement removes that invalid premise; all eight targeted methods now pass."
+    }
+  },
+  "native_context": {
+    "path": "research/evidence/cubase-static/dawproject-001/native-finding.json",
+    "sha256": "3cf66b9229c82ae13a193dc993c11a25a261b173d8a52edf8ea16e087f60bc10",
+    "application_implication": "The bounded native TempoAutomation parser fallback is confirmed linear, whereas pinned official RealPoint documentation defaults hold. Our strict portable subset emits interpolation explicitly and rejects missing interpolation. This does not establish native host tempo time units, curve domain, or DSP parameter conversion."
+  },
+  "limits": [
+    "GUI track switching/apply/cancel/undo is root-owned verification; this record does not claim those interactions were exercised.",
+    "Targeted eight-method pass is not a full-suite pass for the final source revision.",
+    "Self-roundtrip and XSD checks do not prove successful Cubase import/export or matching DSP behavior.",
+    "No Cubase Touch/AutoLatch/Overwrite writer state machine is implemented from unresolved native evidence."
+  ]
+}

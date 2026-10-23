@@ -1,0 +1,117 @@
+{
+  "id": "APP008-INDEPENDENT-RATE-BUDGET-CHECK",
+  "at_utc": "2026-10-19T14:32:45.379504+00:00",
+  "status": "passed",
+  "commands": [
+    [
+      "clang",
+      "-O2",
+      "-std=c11",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-frounding-math",
+      "-I",
+      "/workspace/rebase/Application/Sources/RebaseTimingDSP/include",
+      "-dynamiclib",
+      "/workspace/rebase/Application/Sources/RebaseTimingDSP/cpr_rate_budget.c",
+      "/workspace/rebase/research/evidence/application/APP008/reviewer-rate-budget-shim.c",
+      "-o",
+      "/workspace/rebase/research/evidence/application/APP008/reviewer-rate-budget.dylib"
+    ],
+    [
+      "clang",
+      "-O2",
+      "-std=c11",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-frounding-math",
+      "-I",
+      "/workspace/rebase/Application/Sources/RebaseTimingDSP/include",
+      "-S",
+      "/workspace/rebase/Application/Sources/RebaseTimingDSP/cpr_rate_budget.c",
+      "-o",
+      "/workspace/rebase/research/evidence/application/APP008/reviewer-rate-budget.arm64.s"
+    ]
+  ],
+  "compiler": "Apple clang version 17.0.0 (clang-1700.4.4.1)",
+  "sealed_vectors": 244,
+  "additional_cases": 1743,
+  "accepted": 1283,
+  "rejected": 704,
+  "corrected_cases": 512,
+  "max_correction": 1,
+  "max_search": 33,
+  "exact_intermediate_bits_checked": true,
+  "error_output_preserved": true,
+  "rounding_modes_rejected": [
+    4194304,
+    8388608,
+    12582912
+  ],
+  "rounding_environment_restored": true,
+  "null_output_rejected": true,
+  "emitted_operations": {
+    "required": [
+      "fdiv",
+      "fmul",
+      "frintp",
+      "fcvtzs"
+    ],
+    "fused_operations_absent": true,
+    "scope": "Presence check plus exact control results, not formal compiler proof"
+  },
+  "pins": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_rate_budget.c",
+      "sha256": "76cbf90501ed9512057da1f91fb725e26d07b538f444d5a911926e0587e111fb",
+      "bytes": 5789
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_rate_budget.h",
+      "sha256": "3110d27e2ab99a18d3b26722e489b6b5b492648a7ba57e9a1b0e5e938ccf170e",
+      "bytes": 1528
+    },
+    {
+      "path": "research/evidence/application/APP008/reviewer-check-rate-budget.py",
+      "sha256": "4daf487dfe1ae3b08bfbe63267a59ae176f162a849f1974f811ca373cc9ce439",
+      "bytes": 7853
+    },
+    {
+      "path": "research/evidence/application/APP008/reviewer-rate-budget-shim.c",
+      "sha256": "662f447393bd81d4ff5822715ca4d836e9eed12b1ce2587752b7f78bd7a498fc",
+      "bytes": 200
+    },
+    {
+      "path": "research/evidence/application/APP008/reviewer-rate-budget.dylib",
+      "sha256": "a079d60da238d4df1b3f2a0c70ab6c9f31ef3af3a728fd53ad7c1964d60f4585",
+      "bytes": 33656
+    },
+    {
+      "path": "research/evidence/application/APP008/reviewer-rate-budget.arm64.s",
+      "sha256": "19c81467dd278b0e174fcd4afea7b28a6ae1c6bc3e0b9e26d3b46a96698c2136",
+      "bytes": 6277
+    },
+    {
+      "path": "research/evidence/application/APP008/reviewer-rate-budget-controls.json",
+      "sha256": "03cb3c1f1c72f85c5f39e521d0fc905dafdb444edfc7f652622dce9a82c9a474",
+      "bytes": 761704
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/map_oracle.py",
+      "sha256": "05b23d625aa1da2491c7e5a1158555a14d8148533ba23882ce7983648a880343",
+      "bytes": 14553
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/count_oracle.py",
+      "sha256": "f4973e1c259792aca92a3e30202ba75acde3e7a88ed58cbe024c396859bdd6d2",
+      "bytes": 8384
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/analytical-count-controls.json",
+      "sha256": "5d9e87d6e0608e14808fc1142f3273c4cae3e96f9c41a84de63060e87d948c92",
+      "bytes": 219569
+    }
+  ],
+  "scope": "Only self-authored candidate arithmetic executed. New controls use independent Fraction instruction rounding with literal native decrement loop; no Cubase, backend, sample-resampling or runtime fidelity claim.",
+  "target_executions": 0
+}

@@ -1,0 +1,108 @@
+{
+  "id": "E002",
+  "revision": 2,
+  "title": "Disconfirm the static AmbiConverter channel operators and process-state model",
+  "status": "prospective; no target execution authorized or performed in this phase",
+  "purpose": "Test predictions from the retained instructions against independently captured target outputs. A static derivation and its synthetic transcription tests are not reference observations.",
+  "reference": {
+    "component": "AmbiConverter 1.5.10.152",
+    "universal_sha256": "e803dd1390ee7989306b15c0fccca52e5d3097ae7a489dc6834f82b50ba485c5",
+    "arm64_sha256": "e8341c6b31ac6b65cf7e8c18bdfbaa18ac24b20160b4287dc385b202eb29b883",
+    "static_first_order": "research/evidence/cubase-static/ambisonic/first-order-finding.json",
+    "static_higher_orders": "research/evidence/cubase-static/ambisonic/higher-order-table-contract.json",
+    "independent_higher_order_review": "research/evidence/cubase-static/ambisonic-higher-order-review/review.json",
+    "static_state_contract": "research/evidence/cubase-static/ambisonic/state-contract-finding.json",
+    "static_state_contract_sha256": "f6d6f43ab8be8ab810427976a3d4384dc2a2a3d97074782d855a33947be04c0d",
+    "independent_state_review": "research/evidence/cubase-static/ambisonic-state-review/review.json"
+  },
+  "prerequisites": [
+    "Identify the complete bundle, architecture, legitimate activation state and actually loaded executable/dependencies. Pin the processing precision, sample rate, block size, bus arrangements and floating-point control state.",
+    "Separate direct plug-in process calls in a controlled host from Cubase project exports. Direct calls can test buffer-index semantics; they cannot establish Cubase routing or product equivalence.",
+    "Qualify the capture instrument with a separately authored transparent processor and deliberate channel swaps, gain changes, one-sample offsets and output-sentinel preservation controls.",
+    "Keep each input and output plane, parameter queue including point offsets, input/output silence flags, pointer relationship, process return status and pre-call output contents. Preserve exact sample bits before any file export or layout conversion.",
+    "Repeat each initial condition three times, including fresh instance creation and a restart. Interpret agreement as observed repeatability only. Do not replace failed captures or select a favourable repeat."
+  ],
+  "primary_predictions": [
+    {
+      "id": "basis",
+      "configuration": "N = 4, 9, 16; both float32 and float64; disjoint planes; positive frame count; bypass false; silence flags zero; explicit direction p = 0 or 1",
+      "stimulus": "One input plane at a time contains exactly +1/8 at a known sample index; all other samples are +0. Use every plane and repeat with -1/8. Retain all output planes.",
+      "prediction": "The retained source-to-destination permutation selects the sole nonzero output plane, then its destination-indexed stored gain is applied in sample precision.",
+      "disconfirmation": "A nonzero sample in another plane, an unexpected sample position or a different coefficient disconfirms the bounded prediction. First assess capture/routing controls; do not infer a product defect from disagreement."
+    },
+    {
+      "id": "direction-boundary-and-queue",
+      "stimulus": "Use distinct signed dyadic values on every plane. Supply p immediately below 0.5, exactly 0.5 and immediately above 0.5 as binary64 values. Then supply two direction points at increasing sample offsets and swap the values assigned to those offsets in a separate case. Keep index/time order valid; reversed time order is a separate exploratory malformed-input question until interface legality is established.",
+      "prediction": "The traced consumer uses the final retrieved point for parameter ID 2 before processing the block. The static branch chooses A below 0.5 and B at or above 0.5 for finite values in [0,1].",
+      "disconfirmation": "A within-block switch or a different queue/boundary selection contradicts this prediction under the recorded lifecycle and queue conditions."
+    },
+    {
+      "id": "higher-order-composition",
+      "configuration": "Direct raw-buffer chaining; N = 9 first; fresh and fully configured instances A then B; no host permutation, normalization or intermediate conversion",
+      "stimulus": "Probe input plane 4 and input plane 8 separately, with exactly 1/8 and all other planes zero. Record the intermediate and final buffers.",
+      "prediction": "The traced permutations compose to the original plane, but destination-indexed gains predict a non-unit coefficient product for these two planes. Plane 4 has coefficient product 0.8660254037844386; plane 8 has 1.1547005383792517 before per-stage sample rounding. Use the retained bit patterns to compute rounded predictions, not these display decimals.",
+      "alternatives": [
+        "The static call-path or table interpretation is wrong.",
+        "A lifecycle or parameter condition selects a different path.",
+        "The measured host inserts a channel permutation or another transform."
+      ],
+      "interpretation": "A non-identity result is a prospective prediction for this exact raw-buffer composition, not an established audible result or a Cubase defect. Measure single-stage operators before interpreting the composition."
+    }
+  ],
+  "secondary_state_matrix": {
+    "status": "Prospective predictions fixed from independently reviewed AMBI-STATE-004; no reference calls or captures performed.",
+    "variables": [
+      "Zero, one and multiple frames, with parameter updates on zero-frame calls",
+      "Bypass false/true and transitions, using distinct nonzero pre-call output sentinels",
+      "Each input silence bit separately, all silence bits and zero flags; every flagged input plane must actually contain only zero samples and retain valid storage. Nonzero output sentinels remain permitted. Record both output data and flags.",
+      "Disjoint buffers versus corresponding in-place buffers; retain pointer relationships",
+      "Direction queue absent after explicit A or B, plus fresh construction and state restoration as separate histories"
+    ],
+    "cross_alias_policy": "Do not treat arbitrary cross-channel overlaps as valid until the host interface contract and target preconditions have been established. Static branch inspection alone does not establish caller legality.",
+    "preconditions": "Use valid stable algorithm, precision, tables, scratch capacity and bus storage under the complete finding valid_domain. Do not generalize the unusual initial precision/pointer guard into a complete validation check.",
+    "predictions": [
+      {
+        "case": "Zero-frame parameter update",
+        "sequence": "After valid setup, submit direction ID2 and bypass ID1 updates on a zero-frame call, then process positive frames without resending those queues. Keep the instrument able to distinguish parameter consumption from audio processing.",
+        "prediction": "The traced parameter consumer runs before the zero-frame early return, so successful updates can affect the subsequent block. The zero-frame path issues no audio/meter dispatch or process-body output silenceFlags store."
+      },
+      {
+        "case": "Bypass threshold and precedence",
+        "sequence": "Use bypass ID1 immediately below, exactly at, and immediately above 0.5, separately from direction ID2. Supply both zero and valid nonzero input silence masks.",
+        "prediction": "For finite normalized values the bypass byte is set iff p>0.5. A nonzero byte chooses same-index copy before the silence test; this differs from direction ID2, whose high branch includes 0.5. Corresponding identical pointers skip their copy."
+      },
+      {
+        "case": "Partial silence mask",
+        "sequence": "For each channel in turn, zero that entire input plane and set exactly its silence bit; keep other planes nonzero and output planes prefilled with distinct finite sentinels. Compare bypass off and on.",
+        "prediction": "With bypass off the traced branch issues neither normal conversion nor bypass copy for any nonzero mask, then stores the mask unchanged. Input/output meter paths and frame accounting may still run. With bypass on, the copy path is selected.",
+        "qualification": "Retain full before/after output and flags. Do not infer zero samples from a silence flag or claim that all memory is untouched. Attribute untouched sample bytes only after the capture instrument and called meter-function contracts are qualified; meter emission remains outside this static contract."
+      },
+      {
+        "case": "Corresponding in-place storage",
+        "sequence": "Compare disjoint planes against distinct-channel configurations in which one or more output pointers exactly equal their same-index input pointers and all remaining regions are disjoint. Preserve valid scratch capacity.",
+        "prediction": "The normal conversion equality scan selects staging of all input channels when it finds any same-index equality. Bypass instead skips each same-index self-copy. Cross-channel/partial overlaps remain excluded."
+      }
+    ]
+  },
+  "comparison_and_acceptance": {
+    "primary": "Exact output sample bits, positions, buffer order and side effects under the named condition; no alignment, gain fitting, channel relabeling or hidden tolerance.",
+    "numerical_diagnostics": "Retain absolute and ULP differences alongside the exact result. A discrepancy may justify a separately preregistered model of library rounding or FP state; it does not retroactively turn an exact comparison into a pass.",
+    "separate_acceptance_levels": [
+      "Capture-instrument control success",
+      "Reference repeatability for the named conditions",
+      "Static-prediction agreement or disconfirmation",
+      "Independent candidate conformance on reserved conditions",
+      "Integration within an identified Cubase configuration"
+    ],
+    "held_out_cases": "After fixing the prediction and candidate, use separately generated multi-plane dyadic sequences, non-power-of-two block lengths and compound state histories. Retain the generation seed and all failures with the evidence.",
+    "not_established_by_this_experiment": "Full plug-in behavior, all exceptional floating-point inputs, all lifecycle states, all platforms, other bundled processors or whole-product Cubase fidelity."
+  },
+  "review_notes": [
+    "Independent review confirmed the plane4/8 coefficient predictions and required valid zero-filled planes for silence flags and increasing offsets in primary queue tests. The broader state predictions remain pending.",
+    "Revision2 adds state predictions from independent AMBI-STATE-004 review. Native host execution and runtime conformance remain pending; revision1 is preserved with its digest."
+  ],
+  "prior_revision": {
+    "path": "research/protocols/archive/E002-ambiconverter-disconfirmation-v1.json",
+    "sha256": "e04122855e955f4e3c02d2faed59591bbab564260b82631d9c71766a6f336bc2"
+  }
+}

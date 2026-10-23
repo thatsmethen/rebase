@@ -1,0 +1,352 @@
+{
+  "schema_version": 1,
+  "review_id": "APP011-GUI-INDEPENDENT-001",
+  "created_utc": "2026-10-20T09:06:07.794960+00:00",
+  "status": "passed",
+  "method": "Read-only independent review of retained AX records and screenshot, with fresh package/executable hashes. No reviewer GUI operation, test rerun or proprietary execution.",
+  "expected_group_names": [
+    "admit_and_play_32k",
+    "transport_32k",
+    "changed_media_rejected_and_restored",
+    "edit_exits_and_undo",
+    "full_project_barriers",
+    "admit_transport_and_exit_16k",
+    "equal_rate_negative_control",
+    "original_rate_regression_and_exit"
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "name": "admit_and_play_32k",
+      "status": "supported_by_retained_records",
+      "observations": "32k is explicitly selected and plays with nonzero stereo output peaks; unresolved-event/provenance labels remain.",
+      "files": [
+        "gui-32k-open.ax.txt",
+        "gui-32k-inspector.ax.txt",
+        "gui-32k-selection-success.ax.txt",
+        "gui-32k-playing.ax.txt",
+        "gui-32k-playing.png"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "transport_32k",
+      "status": "supported_by_retained_records",
+      "observations": "Pause zeroes peaks; return resets0; seek16.000/resume16.275 observed; natural end23.998 returns stopped state; restart and stop observed.",
+      "files": [
+        "gui-32k-paused.ax.txt",
+        "gui-32k-return-start.ax.txt",
+        "gui-32k-seek.ax.txt",
+        "gui-32k-resumed.ax.txt",
+        "gui-32k-natural-end.ax.txt",
+        "gui-32k-restart.ax.txt",
+        "gui-32k-stop.ax.txt"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "changed_media_rejected_and_restored",
+      "status": "supported_by_retained_records",
+      "observations": "Changed media rejects and clears audition. Preserved backup reproduces the reported last-byte mutation hash; fresh exact restoration supports32k playback.",
+      "files": [
+        "gui-media-tamper.json",
+        "gui-32k-tamper-rejected.ax.txt",
+        "gui-32k-after-rejection.ax.txt",
+        "gui-media-restored.json",
+        "gui-32k-restored-playing.ax.txt"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "edit_exits_and_undo",
+      "status": "supported_by_retained_records",
+      "observations": "Pan0.25 edit exits to project mode and zero peaks with accurate stopped status. Undo restores pan0 and remains project mode.",
+      "files": [
+        "gui-32k-edit-exit.ax.txt",
+        "gui-32k-undo.ax.txt"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "full_project_barriers",
+      "status": "supported_by_retained_records",
+      "observations": "Normal project Play and Export both refuse unresolved Cubase audio events.",
+      "files": [
+        "gui-32k-project-play-blocked.ax.txt",
+        "gui-32k-project-export-blocked.ax.txt"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "admit_transport_and_exit_16k",
+      "status": "supported_by_retained_records",
+      "observations": "Actual high-ratio project opens,16k is selected, live output and16.243 seek are observed; natural end24.000 zeroes peaks; explicit exit returns project mode.",
+      "files": [
+        "gui-16k-open-confirmed.ax.txt",
+        "gui-16k-admitted.ax.txt",
+        "gui-16k-playing.ax.txt",
+        "gui-16k-live-seek.ax.txt",
+        "gui-16k-natural-end.ax.txt",
+        "gui-16k-explicit-exit.ax.txt"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "equal_rate_negative_control",
+      "status": "supported_by_retained_records",
+      "observations": "Equal-rate mode0 choice is disabled with explanatory text and no Converts caption.",
+      "files": [
+        "gui-equal-open.ax.txt",
+        "gui-equal-conversion-blocked.ax.txt"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "original_rate_regression_and_exit",
+      "status": "supported_by_retained_records",
+      "observations": "Original-rate option is admitted on44100 project, produces nonzero stereo peaks at44100, and explicitly exits to stopped project mode.",
+      "files": [
+        "gui-equal-original-admitted.ax.txt",
+        "gui-equal-original-playing.ax.txt",
+        "gui-equal-original-exit.ax.txt"
+      ]
+    }
+  ],
+  "gui_evidence": [
+    {
+      "path": "research/evidence/application/APP011/gui-16k-admitted.ax.txt",
+      "bytes": 1625,
+      "sha256": "344b36cb9addc90708d3bf555fddf80c35922b5c9731945d2c839574738f220a"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-16k-explicit-exit.ax.txt",
+      "bytes": 5367,
+      "sha256": "74a0183b385d5a4f044913fffdaf4eac52469adf5b29c33edd215e873f7e6240"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-16k-live-seek.ax.txt",
+      "bytes": 5878,
+      "sha256": "03922b5eadc72b93f7d0ff3e47e4c7ec1c1cc809f0e44f7d3ddbcd6362217393"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-16k-natural-end.ax.txt",
+      "bytes": 5854,
+      "sha256": "2b700f067d6c679abca82fd9a5eae37412b1cfbfaa5b5227f98ae8c6a5e3175e"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-16k-open-confirmed.ax.txt",
+      "bytes": 5347,
+      "sha256": "9dcb6debb2db98c2f327183966e2f1e78f6d8f6e1b15e972a186aec34acdfebe"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-16k-open.ax.txt",
+      "bytes": 477,
+      "sha256": "f279934f33f6b2081b5715f753685b07daecf9436abebb93617374a47e86bb5b"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-16k-playing.ax.txt",
+      "bytes": 5878,
+      "sha256": "64d8db03add375837a2c50bd9d68a435594ef3551865cdfceff4729acab90b16"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-admitted-current.ax.txt",
+      "bytes": 1351,
+      "sha256": "0f3c89ed0f2280d34d535b3c36121c2c6403a0996b15ee3c4d600b0f26b36908"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-admitted.ax.txt",
+      "bytes": 1351,
+      "sha256": "0f3c89ed0f2280d34d535b3c36121c2c6403a0996b15ee3c4d600b0f26b36908"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-after-rejection.ax.txt",
+      "bytes": 5329,
+      "sha256": "fb9b51b140b7b27f8b16d0bcfda3aa0d872406d1223277eff127e7f00ab9b03e"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-edit-exit.ax.txt",
+      "bytes": 5330,
+      "sha256": "a308da1fc5c3951e8bd5f7edfc5c7304b1a5ca9cf923ef7e79ed9004f2b16346"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-inspector.ax.txt",
+      "bytes": 1351,
+      "sha256": "0f3c89ed0f2280d34d535b3c36121c2c6403a0996b15ee3c4d600b0f26b36908"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-natural-end.ax.txt",
+      "bytes": 5845,
+      "sha256": "8de206de32b6ccd03671490c24d3e6da0c52531dcba1a34f8476b89ebce77b8f"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-open.ax.txt",
+      "bytes": 5325,
+      "sha256": "ef7b02259c574707d662dd9af4553d03da10bb9cb32fcfb23fb9b28b652ed354"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-paused.ax.txt",
+      "bytes": 5845,
+      "sha256": "b2af2a7416ad7f1d632d86be876df5d015c0b42fd9bf9ff18ac54f3ed38ed556"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-playing.ax.txt",
+      "bytes": 5868,
+      "sha256": "b14304fc8db48f5cd22c8ca063ceb1f881225a93ef5498949e49e9154e94c6e3"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-playing.png",
+      "bytes": 402106,
+      "sha256": "21b9f98e7f357931b4b7c9d56a0fc07e5230269f7e28f081092b9c3275452449"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-project-export-blocked.ax.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-project-play-blocked.ax.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-restart.ax.txt",
+      "bytes": 5867,
+      "sha256": "4168f8de48c87890fe34108f9a5eeb4d39ef3da11eab7d1e4ffaed6bc606e415"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-restored-playing.ax.txt",
+      "bytes": 5866,
+      "sha256": "3009066c35cf999c2f324eed976ff70d4d2d8fa30c46f775d6bd0d61ae82b324"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-resumed.ax.txt",
+      "bytes": 5867,
+      "sha256": "418018121df584899863afe55ab9ca6333304ddae210705dd74287240369d2a7"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-return-start.ax.txt",
+      "bytes": 5844,
+      "sha256": "5afeeec789b700aff6860bb77cb195d249938fd5b0d15ffe346aca4e526a5a9f"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-seek.ax.txt",
+      "bytes": 5845,
+      "sha256": "c061604e7ae763b19e7825c48fb49db6dd0091b7105487298218e6f6c00902bf"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-selection-success.ax.txt",
+      "bytes": 1625,
+      "sha256": "1dce00cb143e9a37cad22617b834005559012c139860096a49518ec6c2294f73"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-stop.ax.txt",
+      "bytes": 5845,
+      "sha256": "f660ff6c0a54e356a9273cc71bb12de420f6ffd5c1f53b8762da358dcd7b14da"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-tamper-rejected.ax.txt",
+      "bytes": 394,
+      "sha256": "4b2ec7bd2949f020b3eb9dc4f96d68554d43a716febaa1fa5551e665bc52b3c0"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-32k-undo.ax.txt",
+      "bytes": 5316,
+      "sha256": "2771d660798d20a5cf40a4d88fef2c90fae42587d7212ccad4d3a27750d4a583"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-equal-conversion-blocked.ax.txt",
+      "bytes": 1541,
+      "sha256": "7122b225f18dc8d2a6464ae27581179f8737dd4a1efcb564fe479f2001e606e2"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-equal-open.ax.txt",
+      "bytes": 5325,
+      "sha256": "90c8c5e93913ba28b57f4bc5b3b68dd2ed812e78e41db00bf4212063b59623ca"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-equal-original-admitted.ax.txt",
+      "bytes": 1351,
+      "sha256": "0f3c89ed0f2280d34d535b3c36121c2c6403a0996b15ee3c4d600b0f26b36908"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-equal-original-exit.ax.txt",
+      "bytes": 5357,
+      "sha256": "07558b127cfa6f2c35d736600fb89d30a78150ac6d5358463882f896beab6a88"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-equal-original-playing.ax.txt",
+      "bytes": 5803,
+      "sha256": "1dbd112e3b7576a6e0ab2e34da80d87fba07adf67d757b71ef14c52eaea1a738"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-media-restored.json",
+      "bytes": 218,
+      "sha256": "c2fb4c6ba39b87fdf4e9da49bddbee308bff1686655f89a962bc9d3bc0f394ce"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-media-tamper.json",
+      "bytes": 350,
+      "sha256": "78065d746dad2ed35153318c7c6c85029292a8980bd68e624b474811575f1bb8"
+    }
+  ],
+  "packages": [
+    {
+      "path": "research/evidence/application/APP011/LoFi Downsample QA.rebaseproj",
+      "source_rate": 44100,
+      "project_rate": 32000,
+      "files_checked": 5,
+      "files_unchanged": true
+    },
+    {
+      "path": "research/evidence/application/APP011/LoFi High Ratio Downsample QA.rebaseproj",
+      "source_rate": 44100,
+      "project_rate": 16000,
+      "files_checked": 5,
+      "files_unchanged": true
+    },
+    {
+      "path": "research/evidence/application/APP011/LoFi Equal Rate QA.rebaseproj",
+      "source_rate": 44100,
+      "project_rate": 44100,
+      "files_checked": 5,
+      "files_unchanged": true
+    }
+  ],
+  "package_baseline": {
+    "path": "research/evidence/application/APP011/gui-package-baselines.json",
+    "bytes": 3900,
+    "sha256": "b64db62ce0e5b2aeaab435e57f04951e74e17257639f1daafb520e648f191db5"
+  },
+  "release": {
+    "binary": {
+      "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+      "bytes": 4853280,
+      "sha256": "48f957c4c3df0224f0322b9abfc88535a94fcad03a80d57a4abcb6ad4938b995"
+    },
+    "version": "0.11.0",
+    "build": 11,
+    "observed_build": {
+      "path": "research/evidence/application/APP011/gui-release-build.json",
+      "bytes": 204,
+      "sha256": "401d0af8c76ce23e1cf90824e37a9b5cc58b8996dedea2da6887a1841a195e66"
+    }
+  },
+  "tests": {
+    "passed": 200,
+    "suites": 29,
+    "log": {
+      "path": "research/evidence/application/APP011/core-tests-first.log",
+      "bytes": 39111,
+      "sha256": "74c2a05b6c7d6a2413b04f71818cb5a683d8676dbc9c157653cdc7ea548220d9"
+    }
+  },
+  "setup_and_limits": [
+    "gui-32k-admitted and admitted-current show Original source rate, not successful converted selection. Successful selection is separately retained in gui-32k-selection-success. Operator reported stale/dismissed popup actions before that same-call selection.",
+    "gui-16k-open is the unsaved-changes prompt, not high-ratio project evidence. gui-16k-open-confirmed is the actual16k project after discarding disposable edits; all original package bytes match, so no saved edit is inferred.",
+    "Screenshot independently inspected:32k source-audition banner, active pause state, visible output meters, unresolved event and0clips are consistent with AX observations. Screenshot time differs slightly because captures are sequential.",
+    "Peaks are AVAudioEngine telemetry. Retained AX states do not prove DAC samples, callback deadlines, native host behavior or Cubase runtime fidelity.",
+    "32k displayed23.998 and16k displayed24.000 are UI observations; exact aggregate frame counts remain separately established by analytical controls and application tests."
+  ],
+  "target_execution_count": 0,
+  "open_blockers": []
+}

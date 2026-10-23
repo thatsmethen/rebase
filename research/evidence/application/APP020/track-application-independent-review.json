@@ -1,0 +1,261 @@
+{
+  "schema_version": 1,
+  "review_id": "APP020-TRACK-APPLICATION-INDEPENDENT-001",
+  "created_utc": "2026-10-23T03:13:27.870379+00:00",
+  "status": "passed bounded source review; no blocking application defect found",
+  "reviewer": "independent app020_review agent",
+  "scope": "Read-only review of complete direct-track source audition against sealed TRACK-CONTRIBUTORS-001 and its independent native review. Source admission, immutable context, per-event media preparation, transport integration and user-visible scope were traced. This review is not final release or GUI acceptance.",
+  "authorship": "Reviewer did not author or modify the application implementation, tests, native study or control fixtures. Only this new review record was written. No application build, tests, GUI actions or proprietary execution were performed by this reviewer.",
+  "head_at_review": "8619330443b77f2cf28b06603d1733c8d0ed71e7",
+  "proprietary_target_executed": false,
+  "native_runtime_comparisons": 0,
+  "actionable_findings": [],
+  "source_and_evidence": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRTrackContributorArchive.swift",
+      "bytes": 10198,
+      "sha256": "25e9cc29d0fb1d36ad0170f203f20680c900636c69dbe6cdcb50b6ab15be0875"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceTrackPlan.swift",
+      "bytes": 6716,
+      "sha256": "8f291390fb0de9d5e5b4756cff6bd978a7f09158e79580ee6d2d361a553d2fb5"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceTrackPlayback.swift",
+      "bytes": 3186,
+      "sha256": "4ffb5727790bd16fa94741aa5aad63bf559195625e4e9dfdc4e2083e041f54c0"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRPlacedSourceEventPlan.swift",
+      "bytes": 11044,
+      "sha256": "af220b38898a00238f40bb246cb42249bdb026bc037b18765077391e833ab43e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 11848,
+      "sha256": "ad970bb38fc8029383b75daa72b9eb690ea46f4c8dd520f65bb42e2f3b04116a"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 13207,
+      "sha256": "0cf41ba17e410ad8cfd2a7283bda4424fa8929a6ea2a9b40f92093819a7f5adc"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioEventArchive.swift",
+      "bytes": 20165,
+      "sha256": "4dd8369fe4cc35c969da0909cc4ec835dc7c5c951197eb0fec9ae23bec7b7421"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 13673,
+      "sha256": "e426e17e26303faa9752f049652c4c08c5365e3c97c606cec387a05b1a504d39"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "bytes": 13611,
+      "sha256": "5c7837be4d55f371591fcee99cb6663aaf4f346832a21180d46568193ad3fd1d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8748,
+      "sha256": "447e435835317ff3a0fb66dfeb855fa24b79d42106694d0ce9acebc9bbfab9d7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 9920,
+      "sha256": "4d34133eac2884913b702fd865fbca361be92023838369eeab26235d18103819"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "bytes": 10183,
+      "sha256": "71546c1169e2ddfeb563052159021ae19e7248ef37460ebe10b29b80955d8bd0"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 38996,
+      "sha256": "0f028211270b03149e439b05908adf7f698d6582a72722d34c56f65c9fecd1f4"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+      "bytes": 11220,
+      "sha256": "d557d4b71666eac2d2fba000e28fc5ad01647cf19e00771cb20f0ff1e1ff3aa5"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "bytes": 23662,
+      "sha256": "e4eb4e728511f3af412e0f545428ebc925223f75765b51f10287baf071d45d65"
+    },
+    {
+      "path": "Application/Sources/Rebase/TimelineView.swift",
+      "bytes": 28156,
+      "sha256": "aaeb4bbdac850226c63046ba196bf7794e6606336bfd75b66dd128164251339d"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRTrackContributorArchiveTests.swift",
+      "bytes": 17990,
+      "sha256": "5ce65b280190dc43ff055444b2aaa6e789213fb075acd3d9f796d09fc2b1de2c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRPlacedSourceContextTests.swift",
+      "bytes": 6115,
+      "sha256": "69242a5321e1bdaa5d07a1d4a7eb905f1078964543631d68b0c1de3ae0f80f23"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceTrackPlaybackTests.swift",
+      "bytes": 12427,
+      "sha256": "d4eeaac0cbe57cc490578ca797be18168276bc0929daa158c9380617614fd1da"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/finding.json",
+      "bytes": 29024,
+      "sha256": "d77daf2de0721ed483e554e0f3f1004cbb6127361072c1c32767c38fa3c1bff5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/artifact-manifest.json",
+      "bytes": 87454,
+      "sha256": "3f2c114f375cbc5cfdff7fe9f2ad1247380915d396326f6e33532055e75907b3"
+    },
+    {
+      "path": "research/evidence/application/APP020/track-contributors-independent-review.json",
+      "bytes": 14988,
+      "sha256": "7b577ae768279f0d3c38ec4cb340f956ab345f7de7ee0d40fed148e408d653e2"
+    },
+    {
+      "path": "research/evidence/application/APP020/track-controls-independent-check.json",
+      "bytes": 4235,
+      "sha256": "7ed4efe27277030464be320981ffd576ff369294acbc30ec304fc6d177cf231e"
+    },
+    {
+      "path": "research/evidence/application/APP020/contributor-inventory-validation.json",
+      "bytes": 10137,
+      "sha256": "7cf2aa0716aafe01ae0e51ebcb1acdf77ef451ddc685877c60a2550dac4d60a1"
+    },
+    {
+      "path": "research/evidence/application/APP020/placement-context-validation.json",
+      "bytes": 7429,
+      "sha256": "a313091fcafbc16c410f301dee977868baa1a848d427ddf6c5797ea5843e7ddb"
+    },
+    {
+      "path": "research/evidence/application/APP020/track-integration-tests-first.json",
+      "bytes": 569,
+      "sha256": "7b15d7ec2389f8b1eabc3721ccaab030601b66db75fe121a9dc5739d198ae602"
+    },
+    {
+      "path": "research/evidence/application/APP020/contributor-inventory-tests-first.log",
+      "bytes": 11010,
+      "sha256": "7b7da4de7e16c62622826ef22369b5edb1f99c9024c035b459972011669f41b2"
+    },
+    {
+      "path": "research/evidence/application/APP020/placement-context-tests-second.log",
+      "bytes": 12480,
+      "sha256": "0238c3061360c12bca43d73d12f330a7b83020873c84f1c953931192bd54a9ed"
+    },
+    {
+      "path": "research/evidence/application/APP020/track-integration-tests-first.log",
+      "bytes": 7516,
+      "sha256": "62919be4b8401e2796566683ab35ea2af3dfcb31f5d89f1b5540a9b388f5caba"
+    },
+    {
+      "path": "research/evidence/application/APP020/test-source-before.json",
+      "bytes": 52209,
+      "sha256": "4f7a6ce884e987d3524c0a7397d88e06c272b458d24c39db58df5bf2f57bd965"
+    }
+  ],
+  "input_consistency": {
+    "application_source_manifest": {
+      "path": "research/evidence/application/APP020/test-source-before.json",
+      "bytes": 52209,
+      "sha256": "4f7a6ce884e987d3524c0a7397d88e06c272b458d24c39db58df5bf2f57bd965"
+    },
+    "entries": 277,
+    "regular_files": 276,
+    "symlinks": 1,
+    "all_current_bytes_and_symlink_targets_match": true,
+    "native_finding_and_manifest_match_independent_peer_pins": true,
+    "qualification": "This reviewer checked the finding/manifest identities against the native peer review; it did not repeat the peer original-image disassembly and full recursive custody audit."
+  },
+  "semantic_checks": [
+    {
+      "topic": "Counted membership and ownership",
+      "result": "supported",
+      "detail": "CPRTrackContributorArchive walks typed PArrangement4/MRoot6/MTrackList0 and every counted child of visited nodes; each child retains its ordinal, token offset and complete descriptor. Unknown versions/bodies remain explicit. Null entries, unconsumed node bytes, duplicate/shared ownership, cycles and depth/entry overflow reject. CPRSourceTrackPlan requires one direct MAudioTrackEvent1 and all selected-node children to be MAudioEvent6. Placement separately requires MListNode0, excluding the distinct MTrackList iterator contract. Source order is preserved; only the outer track inventory is restored to preorder."
+    },
+    {
+      "topic": "Deleted, added or moved retained contributors",
+      "result": "supported",
+      "detail": "ProjectStore.verifiedCPRSourceEvent validates the whole project and replays its frozen compatibility profile. Every retained event must equal a baseline event on its original imported track. The track plan then requires exact child/current-retained/source counts and identity sets, checks complete descriptors, and rejects added clips. Explicitly deleting another retained event cannot turn a partial track into complete source audition."
+    },
+    {
+      "topic": "Native filtering, fades and source gates",
+      "result": "supported conditionally",
+      "detail": "The contract and playback info explicitly identify fresh root mode0, and the UI describes fresh default filtering. Every event has source.eventWord0; the audio reader requires zero numeric event attributes, empty volume curve/history. Existing completeMedia admission retains nil fades, inversion0, priority1, lanes0, effective auto-fade flags0, supported clip selector/attributes, stereo PCM24 and complete-source capacity. This composes with the sealed default filter/neighbor/remainder proof; it does not infer saved or hosted root mode from prefix flags."
+    },
+    {
+      "topic": "Immutable context and rate ownership",
+      "result": "supported",
+      "detail": "Shared SourceContext construction is file-private and binds original container bytes/SHA, typed root, tempo/signature descriptors and freshly replayed V3 clock. SavedProjectContext binds that source to the saved setup and supported rate. Each event rechecks source/root/fade owner and retained event/clip/cluster descriptors. Placement arithmetic retains the earlier tick conversion, scalar multiplication, negation order, builder projection and reader capacity checks. Edited application tempo/rate are not substituted. Each source accessor stays at its own source rate; the saved timeline rate consumes unconverted frames."
+    },
+    {
+      "topic": "Canonical versus frame overlap",
+      "result": "supported",
+      "detail": "Each event yields a positive finite admitted builder/reader window. The new canonicalStart/canonicalEnd retain the pre-snap interval. Adjacent counted entries require next canonical start >= prior canonical end and next reader first frame >= prior reader end. Thus rounding cannot hide an actual source overlap, and reversed source order is rejected rather than sorted. The stream validates nonoverlapping frame order again. Touching intervals are admitted under the sealed normalizer identity case."
+    },
+    {
+      "topic": "Every media attachment and aggregate capacity",
+      "result": "supported by source trace",
+      "detail": "A 32,000,000 interleaved-sample aggregate limit is checked over all complete per-event sources before loading any audio. Each factor is already bounded to <=16,000,000 frames and exactly two channels, preventing multiplication overflow. Every entry independently calls prepareMedia with its own retained file reference, attachment validation, safe project-local path, actual full-file SHA/size/file-identity checks and PCM24 decode. All work must succeed before PreparedProject installation. Every event records its own media SHA, source rate, ordinal and range; the anchor hash is documented as anchor-only. Repeated shared media count against the aggregate budget for every prepared source."
+    },
+    {
+      "topic": "Per-event stream and gap behavior",
+      "result": "supported",
+      "detail": "Each event becomes its own segment with complete source PCM, its saved gain and source rate. The existing direct timeline stream retains an accessor only for the current segment, uses zero-filled gap output, applies gain once after reading and requires complete reads. Adjacent descriptors switch accessors. A block is published only after successful completion. These mechanisms are unchanged from the prior qualified stream; the five track tests exercise their new composition."
+    },
+    {
+      "topic": "Resume, seek, end and project guard",
+      "result": "supported by source trace; runtime acceptance separate",
+      "detail": "StudioSession keeps the anchor/mode and immutable project/root context. Resume and every seek call configureCPRSourceEvent again, redoing complete membership and media checks. Failure clears the audition and stops transport. Seeking while paused remains paused, live seek restarts from a new cursor, play at end rewinds, and normal end waits for both timeline elapsed and player delivery callbacks. Exiting restores the ordinary project path, whose requireResolvedAudioEvents guard remains intact. Playback never promotes unresolved events to Clips."
+    },
+    {
+      "topic": "User-visible source scope and timeline placement",
+      "result": "supported with minor clarity limitation",
+      "detail": "The source dialog, mode/button, banner, transport menu/control, output meter, footer count and status distinguish complete source track from event audition and disclose bypassed routing/effects/mixer/automation. Timeline eventRange uses each included event ID and its actual saved-clock range. Selecting a different event exits the current audition conservatively. The individual lane labels/tooltips retain older anchor-only wording as described below."
+    }
+  ],
+  "development_test_evidence_read": {
+    "inventory": {
+      "tests": 7,
+      "suites": 1,
+      "result": "passed",
+      "coverage": "All ten shipped fixture inventories compared to pinned independent counted probes; mixed/unknown/future children, duplicate/shared/cyclic/null ownership, exact extents, count/depth and datum cases."
+    },
+    "focused_context_and_track": {
+      "tests": 29,
+      "suites": 5,
+      "result": "passed",
+      "coverage": "Shared versus fresh context bit equality before/after tempo change, foreign source/hash/descriptors rejection, prior saved-clock/placement cases, contributor inventory and five track compositions."
+    },
+    "track_composition": {
+      "tests": 5,
+      "suites": 1,
+      "result": "passed",
+      "coverage": "Two/three event PCM and gaps across varying partitions and boundary seeks, touching separate accessors, unknown/reversed/overlap/missing contributor rejection, deleted retained event, missing attachment, changed media and saved32k clock despite app48k/tempo edits."
+    },
+    "qualification": "Reviewer inspected test bodies and retained passed logs, but did not rerun them. These are development runs, not frozen release acceptance. Symbolic multi-event CPR controls are explicitly not native-valid or Cubase-generated projects."
+  },
+  "nonblocking_observations": [
+    {
+      "priority": "low",
+      "file": "Application/Sources/Rebase/TimelineView.swift",
+      "line": 231,
+      "detail": "While complete-track audition is active, the anchor lane label still says Source event audition and other participating lanes say Unresolved audio; non-anchor tooltips also retain the older saved-coordinate wording. The banner/footer/count and positions are correct, so this is a local clarity issue rather than omitted playback or a broad fidelity claim. Full project events intentionally remain unresolved."
+    }
+  ],
+  "remaining_limits": [
+    "No final full-suite, release-binary, live GUI, audio-device or pause/resume/end runtime acceptance is established by this source review; those require their own current records.",
+    "The new track controls use a shared authored PCM24 WAV and unity gain. Different media files, mixed per-event source rates/gains and aggregate-limit rejection are traced in code here, not independently executed multi-media controls.",
+    "The canonical overlap check is directly reviewed; existing track controls cover clear overlap/reverse/touching cases, not a separate overlap-small-enough-to-round-away fixture.",
+    "Whole-channel/project routing, inserts, automation, overlaps, dynamic callbacks, hosted root mode and Cubase acoustic equivalence remain outside this admitted source-track contract.",
+    "Application preparation is reached through the main-actor transport configuration. This review makes no large-track UI-latency or real-time performance guarantee."
+  ]
+}

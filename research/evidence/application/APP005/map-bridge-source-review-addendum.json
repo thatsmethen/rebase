@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "reviewer": "fidelity_protocol",
+  "review_kind": "Read-only author recheck of CPRRecoveryV3 and independent review of root-owned NativeTempoClock/integration. Adds to the prior review without replacing it.",
+  "target_executed": false,
+  "application_source_edited": false,
+  "tests_executed_by_this_review": false,
+  "result": "No actionable source-decoding or native-clock bridge defect found in the reviewed bounded serialized-source interpretation. This is not acceptance of effective hosted Cubase runtime behavior.",
+  "source_manifest": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV3.swift",
+      "sha256": "66d68787d337781075e7d691709d363bb2862c7f381c9a0c8c6ed888c376b949"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/NativeTempoClock.swift",
+      "sha256": "944e6e5afa20b38959fef0458dc580df4a095df8f64b01d47024a47ff8718979"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV2.swift",
+      "sha256": "6183ca0ea72f992cf00d1fd4aab5a9c0a014e764988d6ae7bacf89e83386a836"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRClockRoles.swift",
+      "sha256": "b73cb45c6663be109e91ba7eecf63dca8c54dcfacdea47adbf7a9b41aba6366d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/MusicalTime.swift",
+      "sha256": "65147c496c370a025fbacc296b9910b850632230ff593d9ff4009fbceb7aaa45"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "sha256": "c3a6974a3d1b736ae2e3b3b03f4a9e5a74268fb66e779655c21189f85d4bf167"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "sha256": "528396c63fca659ce7597c88d7db426aad1d30a307f15dffe9d32f9c49a20ea4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "sha256": "331cc418a103a08011150c219c5f70d2e84e7f861557e0849d92da539015700f"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_tempo.c",
+      "sha256": "5bd8632d38cad4c4b240ffcad58ec4ceb304ab23bb93483657028e085655aefb"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRecoveryV3Tests.swift",
+      "sha256": "6b716f44af9281603a885870288d155d9788e5f98fa91e56a0dd162a5b370d11"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeMapClockTests.swift",
+      "sha256": "2bce9dbcc7911d894d40ac7d0af3a0fd7f335e2bd4fe9b9bec30d3e203c932fb"
+    }
+  ],
+  "evidence_manifest": [
+    {
+      "path": "research/evidence/application/APP005/map-bridge-source-review.json",
+      "sha256": "6c333d91adb6dc1042295328a01c10f5e760f7d1f639d3e14c6af235706690a8"
+    },
+    {
+      "path": "research/evidence/application/APP005/core-tests-final.log",
+      "sha256": "3c06f7eb932f4be3cd128cc39ff92ad9bcb1db931510c05833ddf3a39dca3e4a"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/attributes/finding.json",
+      "sha256": "aefec343335ed49c179cb117ae00756fdfaf6c1d97a6e34e4216048f7cb570b3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/variation/finding.json",
+      "sha256": "ab8dda077be616e163094ff88e078c1e53b971f9234d0585d4d3a6be78c89ab5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/finding.json",
+      "sha256": "d5b75db7c23c2ddcf44ebc9dd9bd3f566a147567a682407ae157eb149b6686e4"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/oracle-iterator/kernel-integration.json",
+      "sha256": "291a51b5978ad16726ac9cedb171318c6aab008454f424c7059cf034b8d0a9ee"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/host-gate-global/finding.json",
+      "sha256": "1ca8f3794f6764c810baaa0ec834731763bb74651e98e6e5f3477d4ff1be2374"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/host-gate-service/service-default-linkage.json",
+      "sha256": "257e07853264793ae766fbd0a15ce14556a917bdafb181da0e9106ea1d4fafd1"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/host-gate-service/pass5/function-1005ca878.json",
+      "sha256": "72f7727ae96a10b5e937d1ea40cd3f0dc80f25199b066f845bfd84c2bc289586"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/host-gate-service/pass7/function-101765ffc.json",
+      "sha256": "f8dfb5c5ce99c0bf4819306cf96b5bd37ca736f63dd9b534d3fb5036655e8727"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-map-clock-001/list-review/host-gate-service/pass12/function-10307eac8.json",
+      "sha256": "ca05943789e1e9f2635817d97d2e2d10806d4bc09ef3cab8f234fd06891a2174"
+    },
+    {
+      "path": "research/evidence/application/APP005/next-cpr-audio-event-slice.json",
+      "sha256": "5f3efca8816c4ef432a1282390e3dd881aaa5f9b2b999ad3233d76722076353d"
+    }
+  ],
+  "checks": [
+    {
+      "scope": "Map promotion and fallback",
+      "result": "V3 composes unchanged V2 and returns the original fixed-clock result. Map-only promotion requires the consistent counted hierarchy role, exact version3 body, one/two records and explicit mode0. Unsupported semantic cases retain the baseline and append a reason; malformed bounds/duplicate identities fail. The current rejection prose does not substitute inactive fixed BPM or metadata BPM and explicitly labels120 as an application default."
+    },
+    {
+      "scope": "Full bounded attribute interpretation",
+      "result": "Positive track counts2/3/6 and exact key/type/value combinations exclude unknown keys and ThiD. Direct iCVT collection requires selector10, flags2, singleton version0 variation, bounded name, null alternate and trailing0. Item attrs require count0 or one direct SCCn0x22 score container1, flags1/singleton and exact default NoteData2/3. Collection/member/tempo bodies must be fully consumed. Changed flags, extra fields and unsupported alias/object forms cannot silently promote a map."
+    },
+    {
+      "scope": "Canonical map descriptor",
+      "result": "Separate contract/profilev3 and fixedBPMBits0 sentinel preserve fixed profilev2. Raw f32 period/f64 anchor bits are retained. Kind0, one/two points, positive normal periods, display20..400BPM, explicit positive-zero origin, ordered finite bounded coordinates and exact canonical second-anchor recurrence are checked. First record identity+8 and subsequent22-byte strides are constrained; actual preserved-source replay separately proves the file extent and identities."
+    },
+    {
+      "scope": "Arithmetic bridge",
+      "result": "No BPM reconstruction feeds map arithmetic. Swift supplies widened original periods and exact anchors to strictly ordered C operations. The native tick APIs remain explicit; beat API conversion at480ticks/quarter is a separate projection. Fixed nil mapRecords retains old encoded shape. The new canonical-validation diagnostic only describes the existing rejection conditions; unsupported floating-point mode remains distinct."
+    },
+    {
+      "scope": "Current-project source proof and conversion",
+      "result": "ProjectStore load/save binds an active clock to replayed preserved CPR report values. A different canonical descriptor with matching display cannot be persisted as recovered. Display count/beat/BPM/curve must match every native record. Explicit conversion removes the native descriptor while preserving the original import report/source; canceled editor changes are not an implicit conversion. No new editable project is manufactured when recovery.project is nil."
+    },
+    {
+      "scope": "Test evidence",
+      "result": "The inspected root-owned final log records108 passing tests in16 suites. Existing tests cover real six-map/four-fixed fixture separation, attribute/variation rejects, one-ULP anchor rejection, malformed tails, fixedV2 equality, canonical alternative/source forgery, explicit exchange conversion and historicalV2 replay. The suite was not rerun for this read-only addendum; those results test candidate behavior, not Cubase execution."
+    }
+  ],
+  "host_override_boundary": {
+    "confirmed_global": "Default Context virtual+18 reads its enable byte; successful concrete initialization writes1. The nullable global and initial zero do not prove the constructor callback is absent. Typed IComponents binding is replaceable.",
+    "service_scope": "Retained service dossiers support a concrete default TrackLoopHandler factory/constructor path and show a keyed factory replacement method10307eac8. The service trace is being sealed separately; this review does not certify every provider, product hook or later handler use.",
+    "interpretation": "The importer reads a versioned serialized-source subset and reproduces the separately bound native arithmetic/cache branches. It does not reconstruct live host registry contents or establish the clock after arbitrary provider/factory replacement.",
+    "wording": "The class-comment phrase branch-invariant must be understood as the named arithmetic/cache/local-default branches. Release/report wording should explicitly retain serialized-source interpretation and zero target-runtime comparisons; it must not become an unconditional Cubase restoration-parity claim."
+  },
+  "open_actionable_source_findings": [],
+  "explicitly_outside_acceptance": [
+    "Arbitrary host component/root-context replacement, product hooks, concurrent observers and subsequent editing/playback lifecycle.",
+    "Maps with more than two points, ramps, alternate variations, unknown auxiliary attributes, noncanonical saved anchors or unsupported FP domains.",
+    "Audio-event placement, duration/source-offset units, warp/segment mapping, native media resolution, mixer/automation/plugin restoration and target audio parity."
+  ],
+  "next_slice": {
+    "path": "research/evidence/application/APP005/next-cpr-audio-event-slice.json",
+    "sha256": "5f3efca8816c4ef432a1282390e3dd881aaa5f9b2b999ad3233d76722076353d"
+  }
+}

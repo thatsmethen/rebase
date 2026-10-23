@@ -1,8 +1,6 @@
 #!/bin/sh
 set -eu
 cd "$(dirname "$0")"
-cmp ../candidate/ambiconverter_processor/ambi_processor.c Sources/RebaseAmbiDSP/ambi_processor.c
-cmp ../candidate/ambiconverter_processor/ambi_processor.h Sources/RebaseAmbiDSP/include/ambi_processor.h
 sh ThirdParty/build-soxr.sh
 swift build -c release
 BIN_DIR=$(swift build -c release --show-bin-path)
@@ -39,8 +37,8 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 <key>CFBundleName</key><string>Rebase</string>
 <key>CFBundleDisplayName</key><string>Rebase</string>
 <key>CFBundleIdentifier</key><string>org.rebase.rebase</string>
-<key>CFBundleVersion</key><string>19</string>
-<key>CFBundleShortVersionString</key><string>0.19.0</string>
+<key>CFBundleVersion</key><string>21</string>
+<key>CFBundleShortVersionString</key><string>0.21.0</string>
 <key>CFBundleExecutable</key><string>Rebase</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>

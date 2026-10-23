@@ -1,0 +1,55 @@
+{
+  "scope": "Prospective prediction review only; no target execution or sample capture.",
+  "reviewed_protocol": "/workspace/rebase/research/protocols/archive/E002-ambiconverter-disconfirmation-v1.json",
+  "reviewed_protocol_sha256": "e04122855e955f4e3c02d2faed59591bbab564260b82631d9c71766a6f336bc2",
+  "plane4_and_plane8_coefficients_agree": true,
+  "conditional_nearest_even_reference_predictions": [
+    {
+      "input_plane": 4,
+      "precision": 32,
+      "input_value": "1/8",
+      "A_output_plane": 6,
+      "B_output_plane": 4,
+      "effective_gain_bits": "0x3f5db3d7",
+      "final_reference_sample_bits": "0x3dddb3d7",
+      "final_reference_value_for_display": 0.10825317353010178
+    },
+    {
+      "input_plane": 4,
+      "precision": 64,
+      "input_value": "1/8",
+      "A_output_plane": 6,
+      "B_output_plane": 4,
+      "effective_gain_bits": "0x3febb67ae8584caa",
+      "final_reference_sample_bits": "0x3fbbb67ae8584caa",
+      "final_reference_value_for_display": 0.10825317547305482
+    },
+    {
+      "input_plane": 8,
+      "precision": 32,
+      "input_value": "1/8",
+      "A_output_plane": 4,
+      "B_output_plane": 8,
+      "effective_gain_bits": "0x3f93cd3a",
+      "final_reference_sample_bits": "0x3e13cd3a",
+      "final_reference_value_for_display": 0.14433756470680237
+    },
+    {
+      "input_plane": 8,
+      "precision": 64,
+      "input_value": "1/8",
+      "A_output_plane": 4,
+      "B_output_plane": 8,
+      "effective_gain_bits": "0x3ff279a74590331d",
+      "final_reference_sample_bits": "0x3fc279a74590331d",
+      "final_reference_value_for_display": 0.14433756729740646
+    }
+  ],
+  "numerical_conditions": "Direct A then B chaining with source-derived tables and no intervening transform; float32 coefficient narrowing uses nearest-even; ordinary normal arithmetic. Multiplication by 1/8 changes exponent exactly and the other stage multiplies by1. Actual vDSP/FPCR behavior remains unobserved.",
+  "protocol_clarifications_sent_and_applied": [
+    "Every flagged input plane must be entirely zero and still have valid memory. Nonzero output sentinels remain useful.",
+    "Keep queue offsets increasing and swap values between them for the primary two-point comparison; reversed index/time order is not assumed valid."
+  ],
+  "state_matrix": "Pending final state-contract review and root revision before captures.",
+  "provenance_note": "The inspected revision1 has been archived unchanged under this path. The current E002 file is revision2 and is not claimed reviewed by this artifact."
+}

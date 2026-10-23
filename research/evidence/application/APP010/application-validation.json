@@ -1,0 +1,130 @@
+{
+  "id": "APP010",
+  "created_utc": "2026-10-20T08:02:08.927104+00:00",
+  "version": "0.10.0",
+  "build": 10,
+  "status": "bounded_native_mode0_rate_conversion_and_stereo_transfer_integrated_and_checked",
+  "full_fidelity_objective": "incomplete",
+  "cubase_runtime_comparisons": 0,
+  "target_executions": 0,
+  "executable": {
+    "path": "research/evidence/application/APP010/final-build-snapshot/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 4849984,
+    "sha256": "d88fc0761b23ef0cb91c15b9cf67abf3e92c9e23a24a04563fc3ea6c15a0dc33"
+  },
+  "source_manifest": {
+    "path": "research/evidence/application/APP010/final-source-manifest.json",
+    "bytes": 20163,
+    "sha256": "a5b7c458beec5b43e25aa33e45d8656ae446580b5723b29c6d3f34774d3487d0"
+  },
+  "tests": {
+    "passed": 191,
+    "suites": 28,
+    "log": {
+      "path": "research/evidence/application/APP010/core-tests-final.log",
+      "bytes": 37322,
+      "sha256": "96b68e3fbd0ef38a32be53d6ba0aefe980e52601ab893919710bffc5a38ef4af"
+    },
+    "scope": "Application regression suite, exact rational/IEEE rate oracle, partition and seek suffix controls, gain order, stereo ring branches and high-ratio wrapper delivery.",
+    "earlier_release_run": "core-tests-release.log records190tests; the final191test run adds an independent test only, with no application source change."
+  },
+  "build_log": {
+    "path": "research/evidence/application/APP010/build-release.log",
+    "bytes": 604,
+    "sha256": "ce7d7551d337a069200c6e29da323595e840f9c069e56b31defb7f32f4e2d23a"
+  },
+  "gui": {
+    "path": "research/evidence/application/APP010/gui-observations.json",
+    "bytes": 9552,
+    "sha256": "ad0cf9c09aaf7a43faba8ae03606941e3720a0ae08dcc07c689a634a5a0bfc42"
+  },
+  "independent_reviews": [
+    {
+      "path": "research/evidence/application/APP010/rate-stream-independent-review.json",
+      "bytes": 8398,
+      "sha256": "1b1318a6acb0620ea86e54ce01cb8d8311e6feb9c5fc48d943bbb62f495cce25"
+    },
+    {
+      "path": "research/evidence/application/APP010/rate-stream-ring-review-addendum.json",
+      "bytes": 5085,
+      "sha256": "a2e39da0bd627e611d9aca1bf1a54c25e31dfb32d379803110d5a92a86b1c3d9"
+    },
+    {
+      "path": "research/evidence/application/APP010/rate-gain-order-review.json",
+      "bytes": 3092,
+      "sha256": "e0f35504ef026a22734126dc836dc4ff29e69c3b7efd1d2849522b24ec1b4c60"
+    },
+    {
+      "path": "research/evidence/application/APP010/gui-independent-check.json",
+      "bytes": 15286,
+      "sha256": "46d89a7e61a60a2feb016c10a2a0987c230be9446b6a1bf1cb628911866bf467"
+    }
+  ],
+  "independent_oracles": [
+    {
+      "path": "research/evidence/application/APP010/native-rate-mode0-oracle.py",
+      "bytes": 7965,
+      "sha256": "6b5357c1bf923034673e9bcb240136b6dc31e8fde0276132036232811f2623a4"
+    },
+    {
+      "path": "research/evidence/application/APP010/native-rate-mode0-oracle.json",
+      "bytes": 749565,
+      "sha256": "d2c91862a7a93b744f6da5793d92ec00b58aab56f0c15772121835b2843c9aa5"
+    },
+    {
+      "path": "research/evidence/application/APP010/native-rate-mode0-ring-oracle.py",
+      "bytes": 2917,
+      "sha256": "05c7b7b072ffb7e51e55e17f7b13d4e74c5978b9cdb54c1977a77f9eda7bd899"
+    },
+    {
+      "path": "research/evidence/application/APP010/native-rate-mode0-ring-oracle.json",
+      "bytes": 2352,
+      "sha256": "166c38dc41dd59b3a702f509d4d8dd8e1008b23324a944a2e718247bb49b57da"
+    }
+  ],
+  "static_findings": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/finding.json",
+      "bytes": 13251,
+      "sha256": "45501887e870d544f0a185fddbfe97488681338a2757ca24221bc426b49f8a89"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-consumer/finding.json",
+      "bytes": 13469,
+      "sha256": "aace5c1d98347cfa2ee9fbc9a1d15bab3ef61a2bbea99e76de665bd64d13e04e"
+    }
+  ],
+  "native_integrity": {
+    "path": "research/evidence/application/APP010/native-final-integrity.json",
+    "bytes": 1701,
+    "sha256": "932ad0102595c57a15afe59e5bbecd9238c4900a8cf8d43f704437b6c246028a"
+  },
+  "historical_integrity": {
+    "path": "research/evidence/application/APP010/historical-final-integrity.json",
+    "bytes": 790,
+    "sha256": "ba63ac9d8f5087a7198c962e907d53db0048e68011c93c65cc637ea43611415e"
+  },
+  "implemented": [
+    "Explicit project-rate audition uses the recovered native mode0 upsampling recurrence, preserving binary64 phase/history, FMA operation order, binary32 outputs and exact emitted count across8192-source-frame blocks.",
+    "Verified PCM is converted before a separate binary32 event-gain multiplication. Conversion admission, floating-point environment, capacity and finite sample checks reject unsupported inputs.",
+    "Recovered32768-frame stereo ring producer/consumer value operations are integrated through a serialized fill/drain wrapper; output blocks larger than ring capacity split into at most8192-frame transfers.",
+    "Four converted buffers are retained and queued to AVAudioEngine, with generation checks, refill error handling and completion waiting for delivered buffers and stream EOF.",
+    "Seek resets and prerolls the converter from source zero, retaining the crossing-block suffix; pause/resume/seek revalidate source and attached media.",
+    "Original-rate audition remains the default. Explicit selection, edit/undo and failed verification preserve the existing barriers on unresolved full-project playback and export."
+  ],
+  "limits": [
+    "One admitted direct zero-origin complete stereo PCM24 source event; other event processing, routing, instruments, mixer/PDC, automation and CPR writing remain incomplete.",
+    "Only explicitly selected mode0 upsampling at integral8000..192000Hz rates is admitted. Downsampling, equal-rate conversion, SoXR/default converter selection and upstream native engine routing are unresolved.",
+    "The recovered ring is filled and drained before AVAudioEngine scheduling. This does not reproduce the native callback graph, polling, concurrent producer scheduling or device timing.",
+    "Source PCM remains resident in memory. Four-buffer refill runs on the main actor and can underrun during sufficiently long UI stalls; it is not a hard real-time streaming engine.",
+    "Preroll seeking, output frame rounding and host scheduling are application policy. No native seek quantizer, DAC output, device resampling or Cubase runtime equivalence has been established.",
+    "Exact original bytes, earlier failures and superseded application test identity are retained. Raw vendor artifacts and local build/GUI captures are not distributed with the private repository."
+  ],
+  "retained_corrections": [
+    "Initial full-suite compilation hit a Swift type-check timeout in a nested test helper expression; an explicit typed loop resolved it before final tests/build.",
+    "A throwing-initializer probe confirmed Swift runs deinit after stored properties initialize; manual failure-branch deallocation was removed to avoid double-free before the final build.",
+    "The earlier renderer-selection inference from w2=5 at10046e60c was corrected by the new live-consumer study: the argument is open flags, not a PCM format.",
+    "The native rate study sealed an earlier test-file identity. The later independent high-ratio test supersedes it; both byte identities are verified without rewriting that study's manifest."
+  ],
+  "next": "Trace the native default rate backend and downsampling behavior, then bind the live consumer to upstream engine/event routing and recover native seek coordinates before broadening project playback."
+}

@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "open_findings": [],
+  "scope": "Independent review of the APP015 custody/acceptance instrument and isolated synthetic negative controls. This does not run application acceptance, seal status, execute Cubase, or establish runtime compatibility.",
+  "reviewed_sources": [
+    {
+      "path": "research/evidence/application/APP015/seal_application.py",
+      "bytes": 18943,
+      "sha256": "b0b259952dc55147600a25b82934fca043b9c1265706662fb8037c92b7c5d102"
+    },
+    {
+      "path": "research/evidence/application/APP015/sealer-negative-controls.py",
+      "bytes": 8788,
+      "sha256": "704006299304e378b870903ed14c5513236bb51d9d86dd6d623cde7bac286125"
+    }
+  ],
+  "validation_inputs": [
+    {
+      "path": "research/evidence/application/APP015/sealer-negative-controls-final.json",
+      "bytes": 4262,
+      "sha256": "e8d131f07b5351b5c0aea6dd955818320e976fc821f725da75ff7003d5f7d443"
+    },
+    {
+      "path": "research/evidence/application/APP015/sealer-readonly-preflight-final.json",
+      "bytes": 11280,
+      "sha256": "425a42915ac00942438765068bbd763ba6987b97295faa379d187c526c567535"
+    },
+    {
+      "path": "research/evidence/application/APP015/sealer-precorrection-probe.json",
+      "bytes": 438,
+      "sha256": "c20e3814251c8b10ccf027ff946fccb3dad30984ca5aa1a90f36fc20caf62e62"
+    }
+  ],
+  "adaptation_review": {
+    "previous_application": "APP014",
+    "expected_previous_manifest_rows": 479,
+    "expected_previous_manifest_sha256": "af55a1c48ca2fe1a11f901bd053d2546e168b7f1311a9357e108c40eff6114f7",
+    "release_version": "0.15.0",
+    "release_build": "15",
+    "native_studies": [
+      "placed-event-builder",
+      "placed-event-context"
+    ],
+    "gui_package_cardinality": "Configuration-provided package and file counts, checked by the acceptance path; current GUI acceptance is independent of these instrument controls."
+  },
+  "fixed_findings": [
+    {
+      "issue": "A valid hash-only pinned record reached the historical size-required matcher and raised KeyError instead of verifying its digest.",
+      "correction": "A single strict identity matcher requires a valid SHA-256 and verifies bytes when present; symlink targets use their distinct exact identity. The imported matcher is replaced only in memory; historical source is unchanged."
+    },
+    {
+      "issue": "A digestless recursive manifest row could pass because the earlier matcher compared only keys present in the expected record.",
+      "correction": "Regular-file SHA-256 is mandatory and syntactically validated. Optional sizes must be nonnegative integers. Digestless, size-only and malformed digest records reject."
+    },
+    {
+      "issue": "Recursive custody traversal did not verify external_references of every visited historical/native manifest.",
+      "correction": "Every visited manifest now verifies its external references, retaining the existing explicit preserved-byte substitution rule."
+    },
+    {
+      "issue": "Review pin recognition needed to cover source_and_evidence and research evidence, and control records were captured after earlier acceptance publication.",
+      "correction": "All six supported review pin keys verify source and evidence identities. Review, control and finding records are captured before the first acceptance output is written."
+    }
+  ],
+  "controls": {
+    "passed": 42,
+    "negative_rejections": 30,
+    "domain": "Disposable authored files only",
+    "coverage": [
+      "Exact source inventory additions, removals, byte changes and symlink identity",
+      "Hash-only nested records and optional size; wrong hashes and changed sources",
+      "All six supported review pin keys, including source_and_evidence, with source and research-evidence changes",
+      "Recursive native manifest identity, duplicate paths and declared row count",
+      "Transitive hash-only external references and changed external bytes",
+      "Explicit preserved same-byte substitution and tampered preservation/linkage records"
+    ],
+    "failure_assertion": "Negative controls require AssertionError; incidental KeyError is not accepted as a valid rejection."
+  },
+  "real_readonly_preflight": {
+    "manifests": 24,
+    "unique_file_identities_read": 5411,
+    "external_references_checked": 68,
+    "current_review_pins_checked": 11,
+    "result": "All configured APP014 and APP015 native roots and their recursively referenced custody manifests verified."
+  },
+  "retained_history": {
+    "initial_probe": {
+      "path": "research/evidence/application/APP015/sealer-precorrection-probe.json",
+      "bytes": 438,
+      "sha256": "c20e3814251c8b10ccf027ff946fccb3dad30984ca5aa1a90f36fc20caf62e62"
+    },
+    "earlier_controls": {
+      "path": "research/evidence/application/APP015/sealer-negative-controls.json",
+      "bytes": 4262,
+      "sha256": "9b11d2cba742c29be02c1a225098620a734205e0fcfc11d3d110aa602105ff2d"
+    },
+    "earlier_preflight": {
+      "path": "research/evidence/application/APP015/sealer-readonly-preflight.json",
+      "bytes": 11281,
+      "sha256": "44c59eb8697f3d2254a4a4d9b8df0f6a0f734c7ef471a96c95c929897e6b2fa8"
+    },
+    "prepublication_order_sources": [
+      {
+        "path": "research/evidence/application/APP015/sealer-prepublication-order-snapshot/seal_application.py",
+        "bytes": 18831,
+        "sha256": "4fb092a139df8755e688d99ee495c3da849cbeaeac4b6cd3ad1ea79a427c071e"
+      },
+      {
+        "path": "research/evidence/application/APP015/sealer-prepublication-order-snapshot/sealer-negative-controls.py",
+        "bytes": 8782,
+        "sha256": "21d2f86cbc4f1b05222417bdb6295633264566418d8694b0b9f6e1171b5799f7"
+      }
+    ],
+    "policy": "Earlier unsealed reports remain as historical evidence of the intermediate revision; final controls and final preflight pin the current sealer."
+  },
+  "limits": [
+    "These tests validate the custody instrument, not the truth or completeness of a research claim.",
+    "The acceptance configuration and final GUI/app evidence must still be checked by the parent acceptance run.",
+    "No Application source, proprietary input, prior sealed study, or historical package was changed by this audit.",
+    "No Cubase runtime or exported-audio comparison was performed."
+  ]
+}

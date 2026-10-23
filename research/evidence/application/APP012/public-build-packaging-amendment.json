@@ -1,0 +1,23 @@
+{
+  "id": "APP012-PUBLIC-BUILD-PACKAGING-AMENDMENT-001",
+  "created_utc": "2026-10-20T09:34:50.071997+00:00",
+  "reason": "Release packaging copied the read-only ZIPFoundation LICENSE to ThirdPartyNotices.txt, so append failed with permission denied. Public library and application source compilation had already succeeded.",
+  "sealed_study_preserved": {
+    "path": "research/evidence/application/APP012/soxr-public-build/finding.json",
+    "sha256": "b1a89c059919631331be61bea29940fb39d7a0cf38fd0d685b29d2279e2d8965"
+  },
+  "superseded_build_script": {
+    "path": "Application/build-app.sh",
+    "bytes": 2348,
+    "sha256": "f9493df803252b6b687ac6fd09b9e9ebebba0f71a4feb290a2cb59b3c5fb8a4f"
+  },
+  "current_build_script": {
+    "path": "Application/build-app.sh",
+    "bytes": 2441,
+    "sha256": "2b9893210a0598535f9eb8b75e460e7e91f0a01013190fda9c258410d92a963d"
+  },
+  "change": "Create combined notices in a fresh writable temporary file, set that new file to0644, then replace the generated destination atomically. No upstream source/license permissions or bytes are changed.",
+  "retained_failure_log": "research/evidence/application/APP012/build-release.log",
+  "scope": "Packaging-only correction; public library/source/bridge and Swift/C runtime implementation unchanged. Final release packaging still needs rerun.",
+  "source_licenses_unchanged": true
+}

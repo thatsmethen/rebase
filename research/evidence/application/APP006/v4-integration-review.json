@@ -1,0 +1,134 @@
+{
+  "id": "APP006-V4-INTEGRATION-REVIEW",
+  "created_utc": "2026-10-19T13:51:15.516607+00:00",
+  "status": "no actionable defect found within reviewed scope",
+  "scope": "Independent source review and nine authored regression tests for the V4 bounded saved-source audio-event interpretation; no target execution or rendered-fidelity comparison.",
+  "sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV4.swift",
+      "bytes": 10093,
+      "sha256": "311ef0ad0f120d7406b0e8469312f2e9d0083f348f52ea6704a4aa57e226f3ad"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/UnresolvedCPRAudioEvent.swift",
+      "bytes": 3139,
+      "sha256": "9986f9e3c05cf3c0b949ef8b7ddad7ad0c49d1b17aa38f85d6644896fff26e34"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "bytes": 11675,
+      "sha256": "9c52325a486a631a11d8ab9079978940c2e67f13bbaf384fa331580ec666282a"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 7138,
+      "sha256": "88daee5424f17e27a7c7ba6e21925161368f57130cc0ccbc4cb8c261e7849e55"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioEventArchive.swift",
+      "bytes": 20165,
+      "sha256": "4dd8369fe4cc35c969da0909cc4ec835dc7c5c951197eb0fec9ae23bec7b7421"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "bytes": 24587,
+      "sha256": "be87ce058901a7250a15ca591fc3a38692a0689e08edeaeeb172814e3aba008f"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/OfflineRenderer.swift",
+      "bytes": 13735,
+      "sha256": "09f0b4eb6e3608b5042418d94758113fd83f91d979a376ff0e796e478c7a0aec"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/DAWProject.swift",
+      "bytes": 41274,
+      "sha256": "6a5e44ee6abbdeb80c09b6bcfbba10154f47c4dd6c623e758f48c9cdda40c82a"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/NativeTempoClock.swift",
+      "bytes": 9531,
+      "sha256": "944e6e5afa20b38959fef0458dc580df4a095df8f64b01d47024a47ff8718979"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRecoveryV4Tests.swift",
+      "bytes": 19591,
+      "sha256": "d26a826b2890d8b3f134d6aa03c74711701809ef3201d55c834d2ac197d506ae"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/finding.json",
+      "bytes": 39071,
+      "sha256": "af7178337889b779e4d37e2ac55e9eb41087c3fced9b54a0ec15e63e4204cd82"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/fixture-projection.json",
+      "bytes": 6094,
+      "sha256": "e9f65f7103c37aebc7aa73e7e1eecb404935b5068d502857bf5506fcec154b24"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/cluster/finding.json",
+      "bytes": 13948,
+      "sha256": "12131650ca7510f4fe85d55ed0e2e8e6e96a1fa827ca57abeb345388553ecc6f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/finding.json",
+      "bytes": 28600,
+      "sha256": "12ce949821b80d579cb69ba0cca51bd20e5adcfad99f7ae26d36c3cb15c4a2f9"
+    }
+  ],
+  "checks": [
+    {
+      "subject": "Source coordinate acceptance",
+      "result": "Reviewed direct root/audio-track/list/event ancestry, zero word and exact positive-zero Start/Offset bits, finite ancestry lengths, shared tempo/signature identity, accepted native clock, type10 scalar, one declared file, exact reciprocal of saved Float32 rate, rawLength>=1 and finite positive duration<=86400. LoFi yields exact duration bits4038000000000000; Classic retains its musical datum and remains unplaced."
+    },
+    {
+      "subject": "Floating point environment",
+      "result": "Synchronous inherited NativeTempoClock validation rejects upward, downward and toward-zero modes before projection. All three negative controls pass and preserve caller mode. Nearest restores the exact24-second result."
+    },
+    {
+      "subject": "Historical decoder behavior",
+      "result": "Direct V3 recovery on both pinned sources has no unresolved events and omits the new field in JSON. Removing only V4 event additions gives the same Project and clock as V3."
+    },
+    {
+      "subject": "Persistent source binding",
+      "result": "Native clock and retained events require the replayed compatibility report. Valid-syntax alterations to raw length, projected duration, source hash, file name, event payload hash and containing project track are rejected by save before manifest writes and by load after deliberate manifest injection. A standalone project retaining events cannot save without source proof."
+    },
+    {
+      "subject": "Package custody",
+      "result": "Both pinned fixtures import, save, copy and reopen with exact unresolved objects. Original.cpr and ImportReport.json remain byte-identical."
+    },
+    {
+      "subject": "Playback and exchange barriers",
+      "result": "After explicit native timing conversion, render/WAV/DAWproject still reject unresolved events with the specific unresolved-audio error. Existing WAV destination bytes remain unchanged; rejected exchange is not created. Explicit deletion permits empty-track DAWproject export and leaves original/report intact."
+    }
+  ],
+  "validation": {
+    "command": "Application/test-app.sh --filter CPRRecoveryV4Tests",
+    "test_count": 9,
+    "suite_count": 1,
+    "passed": true,
+    "duration_seconds": 0.773,
+    "log": {
+      "path": "research/evidence/application/APP006/v4-tests-round2.log",
+      "bytes": 2720,
+      "sha256": "f80b4aa82604dca600dba216d2e3f3217b660be04633f6e32fc8f0f02ffef4db"
+    },
+    "initial_attempt": {
+      "log": {
+        "path": "research/evidence/application/APP006/v4-tests-initial.log",
+        "bytes": 7817,
+        "sha256": "ae618a9214f0f1f30582406bc650248ddd85ab5cb82eda3863c53469a4f18a1d"
+      },
+      "result": "Plain swift test failed at Testing module discovery before tests ran. The repository test wrapper supplied the required framework/plugin flags."
+    }
+  },
+  "limits": [
+    "No Cubase execution, effective hosted-state claim, playback conformance, backend-rate observation or media relink authorization.",
+    "The saved reciprocal/rate projection is source reconstruction; runtime backend rate refresh, host/provider replacement, event callbacks, segment mapping and audible processing remain separate unresolved contracts.",
+    "Only unresolved source objects are created. No source event becomes a playable Clip.",
+    "The review is scoped to listed source files and bounded predicates; parser-wide security or arbitrary CPR compatibility is not asserted."
+  ],
+  "application_source_edits_by_reviewer": 0,
+  "findings": []
+}

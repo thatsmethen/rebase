@@ -1,0 +1,91 @@
+{
+  "scope": "Static parsing of certificate declarations recovered from the package TOC. This is not verification of package signatures or certificate trust.",
+  "at_utc": "2026-10-19T06:29:33.944988+00:00",
+  "source_path": "research/targets/downloads/partial-components-04/package-toc.xml",
+  "source_sha256": "c76792546bd8bcf5a78e622d058c6c97c0875a4d446d55cac5d6d360428871c9",
+  "certificates": [
+    {
+      "file": "research/evidence/acquisition/package-signature-preparation-2026-10-19/certificate-1.der",
+      "bytes": 1521,
+      "sha256": "e7b8120cab1e62ff234da99393bb5d2c4952720f6a9424ca7f4a5400399780ba",
+      "inspection": {
+        "argv": [
+          "openssl",
+          "x509",
+          "-inform",
+          "DER",
+          "-in",
+          "research/evidence/acquisition/package-signature-preparation-2026-10-19/certificate-1.der",
+          "-noout",
+          "-subject",
+          "-issuer",
+          "-dates",
+          "-fingerprint",
+          "-sha256"
+        ],
+        "returncode": 0,
+        "stdout": "subject= /UID=5PMY476BJ6/CN=Developer ID Installer: Steinberg Media Technologies GmbH (5PMY476BJ6)/OU=5PMY476BJ6/O=Steinberg Media Technologies GmbH/C=DE\nissuer= /CN=Developer ID Certification Authority/OU=G2/O=Apple Inc./C=US\nnotBefore=May 14 11:52:58 2025 GMT\nnotAfter=May 15 11:52:57 2030 GMT\nSHA256 Fingerprint=E7:B8:12:0C:AB:1E:62:FF:23:4D:A9:93:93:BB:5D:2C:49:52:72:0F:6A:94:24:CA:7F:4A:54:00:39:97:80:BA\n",
+        "stderr": ""
+      }
+    },
+    {
+      "file": "research/evidence/acquisition/package-signature-preparation-2026-10-19/certificate-2.der",
+      "bytes": 1090,
+      "sha256": "f16cd3c54c7f83cea4bf1a3e6a0819c8aaa8e4a1528fd144715f350643d2df3a",
+      "inspection": {
+        "argv": [
+          "openssl",
+          "x509",
+          "-inform",
+          "DER",
+          "-in",
+          "research/evidence/acquisition/package-signature-preparation-2026-10-19/certificate-2.der",
+          "-noout",
+          "-subject",
+          "-issuer",
+          "-dates",
+          "-fingerprint",
+          "-sha256"
+        ],
+        "returncode": 0,
+        "stdout": "subject= /CN=Developer ID Certification Authority/OU=G2/O=Apple Inc./C=US\nissuer= /C=US/O=Apple Inc./OU=Apple Certification Authority/CN=Apple Root CA\nnotBefore=Sep 22 18:55:10 2021 GMT\nnotAfter=Sep 17 00:00:00 2031 GMT\nSHA256 Fingerprint=F1:6C:D3:C5:4C:7F:83:CE:A4:BF:1A:3E:6A:08:19:C8:AA:A8:E4:A1:52:8F:D1:44:71:5F:35:06:43:D2:DF:3A\n",
+        "stderr": ""
+      }
+    },
+    {
+      "file": "research/evidence/acquisition/package-signature-preparation-2026-10-19/certificate-3.der",
+      "bytes": 1215,
+      "sha256": "b0b1730ecbc7ff4505142c49f1295e6eda6bcaed7e2c68c5be91b5a11001f024",
+      "inspection": {
+        "argv": [
+          "openssl",
+          "x509",
+          "-inform",
+          "DER",
+          "-in",
+          "research/evidence/acquisition/package-signature-preparation-2026-10-19/certificate-3.der",
+          "-noout",
+          "-subject",
+          "-issuer",
+          "-dates",
+          "-fingerprint",
+          "-sha256"
+        ],
+        "returncode": 0,
+        "stdout": "subject= /C=US/O=Apple Inc./OU=Apple Certification Authority/CN=Apple Root CA\nissuer= /C=US/O=Apple Inc./OU=Apple Certification Authority/CN=Apple Root CA\nnotBefore=Apr 25 21:40:36 2006 GMT\nnotAfter=Feb  9 21:40:36 2035 GMT\nSHA256 Fingerprint=B0:B1:73:0E:CB:C7:FF:45:05:14:2C:49:F1:29:5E:6E:DA:6B:CA:ED:7E:2C:68:C5:BE:91:B5:A1:10:01:F0:24\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "native_validation_plan": [
+    "After final image integrity checks, retain pkgutil --check-signature output and its exit status for the actual full mounted package.",
+    "Retain codesign strict/deep validation and identity display for the complete extracted app.",
+    "Report local native trust decisions verbatim; do not substitute certificate parsing or validity dates for signature verification."
+  ],
+  "limits": [
+    "Embedded certificate text alone does not establish control of the corresponding private key or authenticity of package data.",
+    "Mathematical signature checks, trust-store decisions, revocation checks and notarization are distinct claims.",
+    "Native trust output does not by itself document fresh online revocation queries. No independent revocation or notarization check is currently claimed.",
+    "The later full-package SHA256 is a local custody fingerprint unless a publisher checksum is independently supplied."
+  ]
+}

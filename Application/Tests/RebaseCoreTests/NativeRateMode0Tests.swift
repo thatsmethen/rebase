@@ -7,9 +7,8 @@ import Testing
 /// Independent Fraction/IEEE controls, not captured target output. These test
 /// only the explicitly selected, bounded mode0 upsampling reconstruction.
 struct NativeRateMode0Tests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-    private let evidence = "research/evidence/application/APP010/"
+    private let workspace = PrivateResearchFixtures.root
+    private let evidence = "evidence/application/APP010/"
 
     private struct Oracle: Decodable {
         struct Difference: Decodable { let index: Int; let correct: String, wrong: String }
@@ -86,7 +85,8 @@ struct NativeRateMode0Tests {
         return (result, state)
     }
 
-    @Test func allIndependentOracleSamplesAndStateBitsMatch() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func allIndependentOracleSamplesAndStateBitsMatch() throws {
         let vectors = try oracle().vectors
         #expect(vectors.count == 9)
         #expect(vectors.reduce(0) { $0 + $1.output_f32_bits.count } == 19_592)
@@ -104,7 +104,8 @@ struct NativeRateMode0Tests {
         }
     }
 
-    @Test func fusedMultiplyAndSeparatelyRoundedTermsAreDiscriminated() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func fusedMultiplyAndSeparatelyRoundedTermsAreDiscriminated() throws {
         let vector = try #require(try oracle().vectors.first { $0.name == "two-frame-stereo-fma-cancellation" })
         var state = try state(for: vector)
         let output = try process(vector.input, state: &state).map(\.bitPattern)
@@ -117,7 +118,8 @@ struct NativeRateMode0Tests {
         #expect(output == [0xbf130000, 0x3e930000, 0xa3f80000, 0x23780000])
     }
 
-    @Test func partitionsPreserveSamplesPhaseAndHistoryAcross8192Boundary() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func partitionsPreserveSamplesPhaseAndHistoryAcross8192Boundary() throws {
         for vector in try oracle().vectors {
             var initial = try state(for: vector)
             _ = try process(vector.input, state: &initial)
@@ -129,7 +131,8 @@ struct NativeRateMode0Tests {
         }
     }
 
-    @Test func liveCursorAndPrerollSuffixesMatchIndependentSampleBits() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func liveCursorAndPrerollSuffixesMatchIndependentSampleBits() throws {
         let vectors = try oracle().vectors.filter {
             $0.channels == 2 && $0.output_frames > 0 && $0.name != "adjacent-f32-rate-mantissa"
         }
@@ -160,7 +163,8 @@ struct NativeRateMode0Tests {
         }
     }
 
-    @Test func highRatioPlanarBuffersCrossRingCapacityAndWrapWithExactOracleDigest() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func highRatioPlanarBuffersCrossRingCapacityAndWrapWithExactOracleDigest() throws {
         struct RingOracle: Decodable {
             struct Block: Decodable { let cumulative_output_frames: Int }
             let generator_sha256, ieee_helper_sha256: String
@@ -213,7 +217,8 @@ struct NativeRateMode0Tests {
         #expect(cursor.isAtEnd && cursor.deliveredFrames == stream.frameCount)
     }
 
-    @Test func resetFirstFrameAndZeroInputNeverInventTailPadding() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func resetFirstFrameAndZeroInputNeverInventTailPadding() throws {
         var state = try makeState()
         #expect(state.phase.bitPattern == Double(1).bitPattern)
         #expect(try process([0.5, -0.25], state: &state).isEmpty)

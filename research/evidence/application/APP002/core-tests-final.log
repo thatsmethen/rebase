@@ -1,0 +1,148 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write swift-version--1AB21518FC5DEDBE.txt
+Build complete! (0.15s)
+􀟈  Test run started.
+􀄵  Testing Library Version: 1400
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite OfflineRendererTests started.
+􀟈  Suite ProjectStoreTests started.
+􀟈  Suite AmbisonicConverterTests started.
+􀟈  Suite InvalidClipIntervalTests started.
+􀟈  Suite RecoveredDSPTests started.
+􀟈  Suite ProjectBehaviorTests started.
+􀟈  Suite DAWProjectTests started.
+􀟈  Suite MusicalTimeTests started.
+􀟈  Suite AutomationTests started.
+􀟈  Suite AudioValidityTests started.
+􀟈  Test testSoloExcludesOtherTracksAndMuteOverridesSolo() started.
+􀟈  Test testOverlappingClipsAndTrackGainSumRatherThanOverwrite() started.
+􀟈  Test testExportCrossesChunkBoundaryReplacesMixAndPreservesSource() started.
+􀟈  Test testSourceOverrunAndEmptyTimelineFailExplicitly() started.
+􀟈  Test testExportedWAVContainsStereoFloatMix() started.
+􀟈  Test testMediaDirectorySymlinkCannotRedirectImports() started.
+􀟈  Test failedLateBlockPreservesDestinationAndRemovesTemporary() started.
+􀟈  Test testSaveLoadPreservesEditsAndImportedMediaSurvivesSourceRemoval() started.
+􀟈  Test outputSizePreflightRejectsOverflowBeforeProcessing() started.
+􀟈  Test testInvalidSaveLeavesPreviouslySavedProjectReadable() started.
+􀟈  Test successReplacesExistingOutputAndIntegerPCMConvertsToFloat32() started.
+􀟈  Test testSharedMediaCacheStillValidatesEveryClip() started.
+􀟈  Test testRejectedStateDomainAndAliasingDoNotWriteOutputs() started.
+􀟈  Test testMonoCenterPreservesEnergyAndStereoCenterPreservesEachChannel() started.
+􀟈  Test testBoundaryIntervalLoadsAndRendersItsSelectedSamples() started.
+􀟈  Test testFourFrameBasisIsScatteredWithSignedZeroPreserved() started.
+􀟈  Test testLoadedSourceIntervalMustFitActualMedia() started.
+􀟈  Test testFloat32ExactCoefficientsAndThresholdPermutation() started.
+􀟈  Test inPlaceBufferStagesAllChannelsAndBypassCopiesBits() started.
+􀟈  Test sameFileLinksMalformedAndUnsupportedCountsAreRejected() started.
+􀟈  Test testMalformedAndEscapingMediaReferencesAreRejected() started.
+􀟈  Test testTrimAndPositionSelectExactFramesAndLeaveTimelineGapSilent() started.
+􀟈  Test testFloat64RetainsObservedOneULPInverseDifference() started.
+􀟈  Test unsupportedSemanticsAndAmbiguousInterpolationRejectTransactionally() started.
+􀟈  Test automationReadOffUsesManualAndRejectsDuplicateParameterLanes() started.
+􀟈  Test independentFixtureImportsTrimMixAndJumpMaps() started.
+􀟈  Test archiveTraversalDuplicateSymlinkAndDTDRejectBeforePublishing() started.
+􀟈  Test exportRejectsUnrepresentableSourceAudioFormat() started.
+􀟈  Test consumedAudioCRCAndTruncatedDirectoryReject() started.
+􀟈  Test exportRejectsMusicalTracksIncludingEmptyTracks() started.
+􀟈  Test testLargeFiniteSourceOffsetsRejectBeforeFrameConversion() started.
+􀟈  Test musicalModelsCodableRoundTripAndDecodedInvalidStateStillRejects() started.
+􀟈  Test legacyProjectDefaultsAndStaleAnchorReject() started.
+􀟈  Test allConfigurationsPreserveExactSamplesAndTail() started.
+􀟈  Test tempoMapRetimesOnlyMusicalStartsTransactionally() started.
+􀟈  Test conversionRejectsNegativeNonfiniteAndUnrepresentableCoordinates() started.
+􀟈  Test exportUnsupportedReadStateAndExistingDestinationsRemainUnchanged() started.
+􀟈  Test signaturesRejectNonBarChangesAndInvalidRulerFields() started.
+􀟈  Test testLinearResamplingReconstructsRampBetweenSourceSamples() started.
+􀟈  Test signatureAwareGridUsesDenominatorBeatsAndRejectsUnknownCrossing() started.
+􀟈  Test displayTicksAreConfigurableAndRoundWithBoundaryCarry() started.
+􀟈  Test selfRoundtripPreservesAudioCurvesMapsAndSchema() started.
+􀟈  Test ordinaryAndRelativeSnapHaveDifferentCreationDragResults() started.
+􀟈  Test tempoInverseAcrossManySegmentsAndBothDirections() started.
+􀟈  Test automationUsesAbsoluteSampleTimeAcrossClipAndExportBoundary() started.
+􀟈  Test rulerChangesMeterWithoutResettingBarNumbers() started.
+􀟈  Test tempoIntegratesKnownDurationsAndIsContinuousAtChanges() started.
+􀟈  Test pointEditingAndCodablePreserveIdentityAndSegments() started.
+􀟈  Test tempoRejectsUnsupportedRampsAndInvalidMapsWithoutSorting() started.
+􀟈  Test gainInterpolatesInDecibelsAndReadGateUsesManualValue() started.
+􀟈  Test mixedOutgoingSegmentsAndExactBoundaries() started.
+􀟈  Test malformedPointsRejectWithoutChangingLane() started.
+􀟈  Test testFiniteClipsWhoseOverlapOverflowsAreRejected() started.
+􀟈  Test testFiniteSourceWhoseGainOverflowsIsRejected() started.
+􀟈  Test testNonfiniteDecodedSamplesAreRejectedWithoutReplacingExistingExport() started.
+2026-10-19 19:45:10.177 swiftpm-testing-helper[33154:10785988] Audio files cannot be non-interleaved. Ignoring setting AVLinearPCMIsNonInterleaved YES.
+􁁛  Test outputSizePreflightRejectsOverflowBeforeProcessing() passed after 0.033 seconds.
+􀢄  Test exportRejectsUnrepresentableSourceAudioFormat() recorded an issue at DAWProjectTests.swift:210:13: Expectation failed: (decoded.processingFormat.sampleRate → 8000.0) == (sourceRate → 4000.0)
+􀢄  Test exportRejectsUnrepresentableSourceAudioFormat() recorded an issue at DAWProjectTests.swift:217:13: Expectation failed: expected error of type DAWProjectError, but "invalidProject("The clip “Unsupported CAF” extends beyond its source audio.")" of type RebaseCoreError was thrown instead
+􀢄  Test exportRejectsUnrepresentableSourceAudioFormat() recorded an issue at DAWProjectTests.swift:210:13: Expectation failed: (decoded.processingFormat.sampleRate → 192000.0) == (sourceRate → 384000.0)
+2026-10-19 19:45:10.203 swiftpm-testing-helper[33154:10785987] Audio files cannot be non-interleaved. Ignoring setting AVLinearPCMIsNonInterleaved YES.
+􁁛  Test testFloat32ExactCoefficientsAndThresholdPermutation() passed after 0.048 seconds.
+􁁛  Test testRejectedStateDomainAndAliasingDoNotWriteOutputs() passed after 0.048 seconds.
+􁁛  Test testFourFrameBasisIsScatteredWithSignedZeroPreserved() passed after 0.049 seconds.
+􁁛  Test inPlaceBufferStagesAllChannelsAndBypassCopiesBits() passed after 0.050 seconds.
+􁁛  Test testInvalidSaveLeavesPreviouslySavedProjectReadable() passed after 0.050 seconds.
+􀢄  Test exportRejectsUnrepresentableSourceAudioFormat() recorded an issue at DAWProjectTests.swift:217:13: Expectation failed: an error was expected but none was thrown
+􀢄  Test exportRejectsUnrepresentableSourceAudioFormat() recorded an issue at DAWProjectTests.swift:218:13: Expectation failed: !((FileManager.default → <NSFileManager: 0x1027681e0>).fileExists(atPath: out.path → "/tmp/rebase-cache/T/RebaseTests-98DA6EF2-37FA-40C8-AF69-7FCB63C94897/81B463B7-9EA9-483D-A11E-37E0F960E110.dawproject") → true)
+􀢄  Test exportRejectsUnrepresentableSourceAudioFormat() recorded an issue at DAWProjectTests.swift:219:13: Expectation failed: Set(try FileManager.default.contentsOfDirectory(atPath: temporary.path)) == before
+2026-10-19 19:45:10.206 swiftpm-testing-helper[33154:10785993] Audio files cannot be non-interleaved. Ignoring setting AVLinearPCMIsNonInterleaved YES.
+􀢄  Test exportRejectsUnrepresentableSourceAudioFormat() recorded an issue at DAWProjectTests.swift:199:30: Expectation failed: AVAudioFormat(standardFormatWithSampleRate: (sourceRate → 48000.0), channels: (AVAudioChannelCount(channels) → 4)) → nil
+􁁛  Test testMediaDirectorySymlinkCannotRedirectImports() passed after 0.051 seconds.
+􁁛  Test testFloat64RetainsObservedOneULPInverseDifference() passed after 0.050 seconds.
+􁁛  Test testSourceOverrunAndEmptyTimelineFailExplicitly() passed after 0.051 seconds.
+􁁛  Test testTrimAndPositionSelectExactFramesAndLeaveTimelineGapSilent() passed after 0.051 seconds.
+􁁛  Test testOverlappingClipsAndTrackGainSumRatherThanOverwrite() passed after 0.051 seconds.
+􁁛  Test testBoundaryIntervalLoadsAndRendersItsSelectedSamples() passed after 0.051 seconds.
+􁁛  Test testSharedMediaCacheStillValidatesEveryClip() passed after 0.051 seconds.
+􁁛  Test testExportedWAVContainsStereoFloatMix() passed after 0.051 seconds.
+􁁛  Test testLoadedSourceIntervalMustFitActualMedia() passed after 0.051 seconds.
+􁁛  Test testSaveLoadPreservesEditsAndImportedMediaSurvivesSourceRemoval() passed after 0.051 seconds.
+􁁛  Test musicalModelsCodableRoundTripAndDecodedInvalidStateStillRejects() passed after 0.051 seconds.
+􁁛  Test successReplacesExistingOutputAndIntegerPCMConvertsToFloat32() passed after 0.051 seconds.
+􁁛  Test testMalformedAndEscapingMediaReferencesAreRejected() passed after 0.051 seconds.
+􁁛  Test testMonoCenterPreservesEnergyAndStereoCenterPreservesEachChannel() passed after 0.052 seconds.
+􁁛  Test conversionRejectsNegativeNonfiniteAndUnrepresentableCoordinates() passed after 0.051 seconds.
+􁁛  Test testExportCrossesChunkBoundaryReplacesMixAndPreservesSource() passed after 0.052 seconds.
+􁁛  Test signaturesRejectNonBarChangesAndInvalidRulerFields() passed after 0.051 seconds.
+􁁛  Test testSoloExcludesOtherTracksAndMuteOverridesSolo() passed after 0.052 seconds.
+􁁛  Test automationReadOffUsesManualAndRejectsDuplicateParameterLanes() passed after 0.051 seconds.
+􁁛  Test exportRejectsMusicalTracksIncludingEmptyTracks() passed after 0.051 seconds.
+􁁛  Test signatureAwareGridUsesDenominatorBeatsAndRejectsUnknownCrossing() passed after 0.051 seconds.
+􁁛  Test ordinaryAndRelativeSnapHaveDifferentCreationDragResults() passed after 0.051 seconds.
+􁁛  Test legacyProjectDefaultsAndStaleAnchorReject() passed after 0.051 seconds.
+􁁛  Test tempoMapRetimesOnlyMusicalStartsTransactionally() passed after 0.051 seconds.
+􁁛  Test tempoIntegratesKnownDurationsAndIsContinuousAtChanges() passed after 0.051 seconds.
+􁁛  Test pointEditingAndCodablePreserveIdentityAndSegments() passed after 0.051 seconds.
+􁁛  Test tempoRejectsUnsupportedRampsAndInvalidMapsWithoutSorting() passed after 0.051 seconds.
+􁁛  Test gainInterpolatesInDecibelsAndReadGateUsesManualValue() passed after 0.051 seconds.
+􁁛  Test mixedOutgoingSegmentsAndExactBoundaries() passed after 0.051 seconds.
+􁁛  Test exportUnsupportedReadStateAndExistingDestinationsRemainUnchanged() passed after 0.051 seconds.
+􁁛  Test rulerChangesMeterWithoutResettingBarNumbers() passed after 0.051 seconds.
+􁁛  Test malformedPointsRejectWithoutChangingLane() passed after 0.051 seconds.
+􁁛  Test consumedAudioCRCAndTruncatedDirectoryReject() passed after 0.052 seconds.
+􁁛  Test archiveTraversalDuplicateSymlinkAndDTDRejectBeforePublishing() passed after 0.052 seconds.
+􁁛  Test displayTicksAreConfigurableAndRoundWithBoundaryCarry() passed after 0.051 seconds.
+􁁛  Suite RecoveredDSPTests passed after 0.052 seconds.
+􁁛  Suite ProjectStoreTests passed after 0.052 seconds.
+􁁛  Test tempoInverseAcrossManySegmentsAndBothDirections() passed after 0.051 seconds.
+􁁛  Suite AutomationTests passed after 0.052 seconds.
+􁁛  Suite MusicalTimeTests passed after 0.052 seconds.
+􁁛  Test independentFixtureImportsTrimMixAndJumpMaps() passed after 0.052 seconds.
+􁁛  Test testLinearResamplingReconstructsRampBetweenSourceSamples() passed after 0.052 seconds.
+􁁛  Suite OfflineRendererTests passed after 0.053 seconds.
+􁁛  Test testLargeFiniteSourceOffsetsRejectBeforeFrameConversion() passed after 0.052 seconds.
+􁁛  Suite InvalidClipIntervalTests passed after 0.053 seconds.
+􀢄  Test exportRejectsUnrepresentableSourceAudioFormat() failed after 0.052 seconds with 7 issues.
+􁁛  Test testFiniteSourceWhoseGainOverflowsIsRejected() passed after 0.053 seconds.
+􁁛  Test automationUsesAbsoluteSampleTimeAcrossClipAndExportBoundary() passed after 0.054 seconds.
+􁁛  Suite ProjectBehaviorTests passed after 0.055 seconds.
+􁁛  Test unsupportedSemanticsAndAmbiguousInterpolationRejectTransactionally() passed after 0.056 seconds.
+􁁛  Test testFiniteClipsWhoseOverlapOverflowsAreRejected() passed after 0.055 seconds.
+􁁛  Test testNonfiniteDecodedSamplesAreRejectedWithoutReplacingExistingExport() passed after 0.062 seconds.
+􁁛  Suite AudioValidityTests passed after 0.063 seconds.
+􁁛  Test selfRoundtripPreservesAudioCurvesMapsAndSchema() passed after 0.063 seconds.
+􀢄  Suite DAWProjectTests failed after 0.064 seconds with 7 issues.
+􁁛  Test sameFileLinksMalformedAndUnsupportedCountsAreRejected() passed after 0.083 seconds.
+􁁛  Test failedLateBlockPreservesDestinationAndRemovesTemporary() passed after 0.087 seconds.
+􁁛  Test allConfigurationsPreserveExactSamplesAndTail() passed after 1.994 seconds.
+􁁛  Suite AmbisonicConverterTests passed after 1.994 seconds.
+􀢄  Test run with 55 tests in 10 suites failed after 1.994 seconds with 7 issues.

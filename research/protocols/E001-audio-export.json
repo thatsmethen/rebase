@@ -1,0 +1,59 @@
+{
+  "id": "E001",
+  "title": "Reference repeatability and transparent stereo export",
+  "status": "not_run_on_cubase",
+  "output_format_and_layout_validation_status": "pending_target_exports",
+  "hypothesis": "For the explicitly specified unity route and PCM24 export, decoded output equals the imported stimulus at the same sample indices. This is a hypothesis to test, not an assumption about defaults.",
+  "configuration_required": [
+    "Application executable digest, bundle version and build, verified running edition",
+    "OS version/build, hardware architecture and process execution architecture",
+    "Audio driver/device, device clock, sample rate, buffer, processing precision and ASIO-Guard",
+    "Project source and saved project hashes, sample start, musical/linear time base, tempo and meter",
+    "Track type, channel count/order, route, fader/pre-gain/pan law and balance, main output gain",
+    "Explicit absence/state of inserts, sends, channel strip, automation, normalization, dither, fades, crossfades, stretching and resampling",
+    "Ordinary Export Audio Mixdown path, exact selected output, offline/real-time mode, locator positions in samples, PCM24 WAV output",
+    "Preference snapshot or complete relevant settings record, plugin versions and dependencies"
+  ],
+  "procedure": [
+    "Generate and retain the deterministic stimulus corpus and its manifest with the local audio_probe tool.",
+    "Create a fresh project at 48000 Hz. Import one stereo stimulus without conversion at sample zero; explicitly establish the full configuration above.",
+    "Set the ordinary mixdown range to exactly [0, input frame count) in samples. Save the project and record the action trace.",
+    "Export three independently retained files under the same settings, including a project close/reopen and application restart across repeats. Record exact order and any observed changes.",
+    "Before accepting any export, record its actual decoded header: signed PCM24, 48000 Hz, two channels and 288000 frames. Validate channel layout separately: an absent mask, zero mask or FL/FR mask 3 is eligible only with a retained routing trace verifying stored left/right order. A conflicting or unknown declared layout cannot establish the required order. This format and layout check remains pending until target exports exist.",
+    "First compare reference repeats to one another. Report file-byte equality separately from decoded sample equality. Investigate mismatches before introducing tolerances.",
+    "Then compare each export to the source stimulus. Preserve signed outcomes even when they contradict the transparent-route hypothesis.",
+    "Only after reference behavior is measured, implement a bounded candidate from the behavioral specification and compare its output with reserved reference cases."
+  ],
+  "initial_criteria": {
+    "required_actual_output_format": {
+      "encoding": "pcm_signed",
+      "bits_per_sample": 24,
+      "sample_rate_hz": 48000,
+      "channels": 2,
+      "frames": 288000
+    },
+    "required_actual_channel_layout": {
+      "eligible_channel_masks": [null, 0, 3],
+      "stored_channel_order": ["left", "right"],
+      "verified_routing_trace_required": true,
+      "unknown_or_conflicting_declared_layout": "Cannot establish required channel order; do not accept E001."
+    },
+    "same_sample_rate": true,
+    "same_channel_count_and_order": true,
+    "same_frame_count": true,
+    "same_absolute_sample_positions": true,
+    "decoded_peak_absolute_error_maximum": 0,
+    "decoded_rms_error_maximum": 0,
+    "file_byte_identity_required": false,
+    "alignment_or_gain_fitting_allowed_for_acceptance": false,
+    "post_hoc_tolerance_changes": "Require a new protocol revision with independent reference evidence; never tune against candidate failures."
+  },
+  "interpretation": [
+    "Comparator pass establishes only the numerical sample-comparison condition. Actual output format and channel layout require the separate recorded validation above; comparator pass alone is not E001 acceptance or evidence of input provenance.",
+    "Three repeats establish only observed repeatability for these cases, not a stochastic error distribution.",
+    "A mismatch can originate in configuration, instrument parsing, export semantics or target behavior; it is not automatically an audio-engine defect.",
+    "Matched output does not identify the internal algorithm uniquely.",
+    "Quick Audio Export is a separate experiment because its documented range and tail behavior differ from ordinary mixdown.",
+    "macOS 27 observations remain exploratory until reproduced on a supported OS."
+  ]
+}

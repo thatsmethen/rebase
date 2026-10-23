@@ -6,10 +6,9 @@ import Testing
 /// Pinned source bytes and deliberate mutations test a bounded saved-coordinate
 /// interpretation. No test executes Reference or asserts playable audio fidelity.
 struct CPRRecoveryV4Tests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let workspace = PrivateResearchFixtures.root
     private func sourceURL(_ name: String) -> URL {
-        workspace.appendingPathComponent("research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro/" + name + ".cpr")
+        workspace.appendingPathComponent("templates/" + name + ".cpr")
     }
     private func source(_ name: String = "LoFi Hip Hop") throws -> Data {
         let bytes = try Data(contentsOf: sourceURL(name))
@@ -58,7 +57,7 @@ struct CPRRecoveryV4Tests {
         } catch { Issue.record("Unexpected error instead of the explicit unresolved-audio gate: \(error)") }
     }
 
-    @Test func pinnedLoFiHasExactTwentyFourSecondSourceExtentAndClassicStaysUnplaced() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func pinnedLoFiHasExactTwentyFourSecondSourceExtentAndClassicStaysUnplaced() throws {
         for name in ["LoFi Hip Hop", "Classic House"] {
             let bytes = try source(name), result = try recover(bytes)
             let project = try #require(result.recovery.project)
@@ -91,7 +90,7 @@ struct CPRRecoveryV4Tests {
         }
     }
 
-    @Test func frozenV3HasNoNewEventsOrChangedSerialization() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func frozenV3HasNoNewEventsOrChangedSerialization() throws {
         for name in ["LoFi Hip Hop", "Classic House"] {
             let bytes = try source(name), container = try CPRProject.readContainer(bytes)
             let old = try CPRRecoveryV3(container: container).decode(sourceName: name + ".cpr")
@@ -107,7 +106,7 @@ struct CPRRecoveryV4Tests {
         }
     }
 
-    @Test func everyAncestorAndEventRequiresPositiveZeroOffsetsAndZeroPrefixWord() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func everyAncestorAndEventRequiresPositiveZeroOffsetsAndZeroPrefixWord() throws {
         let original = try source(), decoded = try archiveEvent(original)
         #expect(decoded.ancestorTracks.count == 1)
         let objects = [decoded.root] + decoded.ancestorTracks + [decoded.event]
@@ -136,7 +135,7 @@ struct CPRRecoveryV4Tests {
         }
     }
 
-    @Test func minimumLengthReciprocalAndRateAreRealPlacementGates() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func minimumLengthReciprocalAndRateAreRealPlacementGates() throws {
         let original = try source(), decoded = try archiveEvent(original)
         var clipPrefix = CPRCursor(data: original, lower: decoded.clip.payloadOffset,
                                    upper: decoded.clip.payloadOffset + decoded.clip.payloadByteCount)
@@ -170,7 +169,7 @@ struct CPRRecoveryV4Tests {
         #expect(try event(otherRate).placement?.duration == (1.0 / 48_000) * 1_058_400)
     }
 
-    @Test func invalidNativeClockAndWrongTrackDatumKeepSourceEventsUnplaced() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func invalidNativeClockAndWrongTrackDatumKeepSourceEventsUnplaced() throws {
         let original = try source(), container = try CPRProject.readContainer(original)
         let roles = try CPRClockRoles.resolve(container: container)
         let tempo = try #require(roles.tempo)
@@ -194,7 +193,7 @@ struct CPRRecoveryV4Tests {
         #expect(try event(alternateTag).placement == nil)
     }
 
-    @Test func nonNearestFloatingPointModesCannotPublishSourceProjection() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func nonNearestFloatingPointModesCannotPublishSourceProjection() throws {
         let bytes = try source(), saved = fegetround()
         defer { _ = fesetround(saved) }
         for mode in [FE_UPWARD, FE_DOWNWARD, FE_TOWARDZERO] {
@@ -206,7 +205,7 @@ struct CPRRecoveryV4Tests {
         #expect(try event(bytes).placement?.duration.bitPattern == 0x4038000000000000)
     }
 
-    @Test func packageRoundTripPreservesOriginalReportAndExactUnresolvedEvents() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func packageRoundTripPreservesOriginalReportAndExactUnresolvedEvents() throws {
         let root = try temporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
         for name in ["LoFi Hip Hop", "Classic House"] {
             let bytes = try source(name), package = root.appendingPathComponent(name + ".rebaseproj")
@@ -228,7 +227,7 @@ struct CPRRecoveryV4Tests {
         }
     }
 
-    @Test func alteredRawProjectionMediaAndTrackIdentityFailSourceProofBeforeSave() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func alteredRawProjectionMediaAndTrackIdentityFailSourceProofBeforeSave() throws {
         let root = try temporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
         let package = root.appendingPathComponent("Source.rebaseproj")
         let imported = try CPRProject.importProject(from: sourceURL("LoFi Hip Hop"), to: package, allowPartial: true)
@@ -275,7 +274,7 @@ struct CPRRecoveryV4Tests {
         #expect(!FileManager.default.fileExists(atPath: missingProof.path))
     }
 
-    @Test func unresolvedAudioBlocksRenderingAndExchangeUntilExplicitRemoval() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason)) func unresolvedAudioBlocksRenderingAndExchangeUntilExplicitRemoval() throws {
         let root = try temporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
         let package = root.appendingPathComponent("Source.rebaseproj")
         let imported = try CPRProject.importProject(from: sourceURL("LoFi Hip Hop"), to: package, allowPartial: true)

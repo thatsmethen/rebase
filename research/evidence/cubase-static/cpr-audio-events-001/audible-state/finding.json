@@ -1,0 +1,620 @@
+{
+  "finding_id": "CPR-AUDIO-AUDIBLE-001",
+  "revision": 1,
+  "created_utc": "2026-10-19T13:46:35.010676+00:00",
+  "status": "source-field and conditional local branch contract; audible playback remains unresolved",
+  "target": {
+    "path": "/workspace/rebase/research/targets/derived/Cubase15-arm64",
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "question": "Do the actual Classic House and LoFi Hip Hop MAudioEvent v6 / PAudioClip v4 source tails establish a safe plain-audio playback subset?",
+  "answer": "No. Exact source properties and bounded local no-warp branches are established, but stored preset presence does not establish active stretch processing, and source absence does not exclude callback or host-provided state. Recovering placement as an unresolved/missing-media event is separate from authorizing plain playback after relink.",
+  "source_observations": [
+    {
+      "source": {
+        "path": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Classic House.cpr",
+        "sha256": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892",
+        "bytes": 1197444
+      },
+      "event_body_offset": 207293,
+      "event_end": 211847,
+      "event_body_sha256": "c2feb5d89dfb27f28539f287af1df4ce6f4bb5686f83dde204e98bb9abdc45ba",
+      "clip_body_offset": 207371,
+      "clip_end": 211705,
+      "event_fields": {
+        "Additional Attributes": 0,
+        "Priority": 1,
+        "SnapPoint": 0.0,
+        "Lane": 0,
+        "Volume": 1.0,
+        "Inverted": 0
+      },
+      "source_flags_word": 0,
+      "fade_in": "null",
+      "fade_out": "null",
+      "volume_curve_children": 0,
+      "edit_history": {
+        "offset": 211699,
+        "end": 211705,
+        "hex": "000100000000",
+        "sha256": "01cf85cfeb36d628ca2e6f583fa2331be029b6b28e877e1008fb3f862306c086",
+        "list_word": 1,
+        "count": 0,
+        "exact_tail_consumption": true
+      },
+      "named_clip_attribute_names": [
+        "AUID",
+        "GridDef",
+        "HPFilterMode",
+        "HPPeakThreshold",
+        "HPThreshold",
+        "SampleEditorModelData",
+        "StretchPreset",
+        "TransposeLock",
+        "Warpscale"
+      ],
+      "hitpoint_object_count_in_exact_clip_structure": 84,
+      "note": "All offsets/field hashes, both Lane reads and curve datum are preserved in fixture-fields.json. Native labels identify properties; they do not establish a rendered signal."
+    },
+    {
+      "source": {
+        "path": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/LoFi Hip Hop.cpr",
+        "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
+        "bytes": 1333360
+      },
+      "event_body_offset": 197765,
+      "event_end": 206473,
+      "event_body_sha256": "b680870ff2855f1792068d92710c89e73e18f33f67ac5df3c7736f5296ddc89c",
+      "clip_body_offset": 197843,
+      "clip_end": 206340,
+      "event_fields": {
+        "Additional Attributes": 0,
+        "Priority": 1,
+        "SnapPoint": 0.0,
+        "Lane": 0,
+        "Volume": 1.0,
+        "Inverted": 0
+      },
+      "source_flags_word": 0,
+      "fade_in": "null",
+      "fade_out": "null",
+      "volume_curve_children": 0,
+      "edit_history": {
+        "offset": 206334,
+        "end": 206340,
+        "hex": "000100000000",
+        "sha256": "01cf85cfeb36d628ca2e6f583fa2331be029b6b28e877e1008fb3f862306c086",
+        "list_word": 1,
+        "count": 0,
+        "exact_tail_consumption": true
+      },
+      "named_clip_attribute_names": [
+        "AUID",
+        "GridDef",
+        "HPFilterMode",
+        "HPPeakThreshold",
+        "HPThreshold",
+        "StretchPreset",
+        "TransposeLock"
+      ],
+      "hitpoint_object_count_in_exact_clip_structure": 214,
+      "note": "All offsets/field hashes, both Lane reads and curve datum are preserved in fixture-fields.json. Native labels identify properties; they do not establish a rendered signal."
+    }
+  ],
+  "contracts": [
+    {
+      "id": "A1",
+      "claim": "Native named writer1000ef058 binds event+58 to Volume (Float), +a0 to Inverted, +90/+98 to FadeIn/FadeOut, +50 to VolCurve, +78 to SnapPoint, +80 to Priority, +84 to Lane, +20 to Additional Attributes, and +60/+68/+70 to Start/Length/Offset. Both actual source events have Volume bits3f800000, Inverted serialized u16zero, null fades, empty VolumeCurveDataNode, SnapPoint0, Priority1, Lane0, and numeric attribute count0. Event tails consume exactly275 combined bytes; edit histories consume12 combined bytes.",
+      "evidence": [
+        {
+          "entry": "0x1000ef058",
+          "directory": "pass3",
+          "evidence_ids": [
+            "ev_1f7ff742b581fe6b0288e79de69ffe7fed595622d16ec1561771294c9067bea6",
+            "ev_fa857c07b0045ee0ceff61f2c67f46437bd76508246846a54660f7eda2c17449"
+          ]
+        },
+        {
+          "entry": "0x1000ee164",
+          "reused": true,
+          "evidence_ids": [
+            "ev_a0aec2785fb3d041bd20c334518d846094a893e0cb9eeb8f9d88bb92a57f84cb",
+            "ev_ed13a871b1e6eb449ed2895394e2d933ea94e35380690722b338b2451e851571"
+          ],
+          "function_path": "research/evidence/cubase-static/cpr-objects-001/audio-native/function-1000ee164.arm64.bin"
+        },
+        {
+          "entry": "0x1017017a0",
+          "reused": true,
+          "evidence_ids": [
+            "ev_39be9e71e4564f9d1d67594dba40c5ac5c90e7afdd676eafb2e99d782262bf3e",
+            "ev_89eb8010ebb16db3d20005ea2bc95d94668ccff7e0ed7eaa3937880ab8b4bc14"
+          ],
+          "function_path": "research/evidence/cubase-static/cpr-objects-001/audio-native/function-1017017a0.arm64.bin"
+        }
+      ],
+      "limits": [
+        "The labels do not prove gain law, mute, loop, playback overlap/priority or phase-processing implementation.",
+        "In normal mode1000ee164 clamps Length>=1 and Offset>=0 before its remaining tail. The alternate branch depends on global104ff4020 bit1.",
+        "MEvent read ORs masked source flags into existing flags; mask101701934 is0x585a. Zero source flags are not a general hosted mute-state proof."
+      ]
+    },
+    {
+      "id": "A2",
+      "claim": "PAudioClip v4 reads a new PAudioEditHistory, whose source list word is1 and count0 in both fixtures. The history post-read and owner-assignment loops skip their per-entry bodies for count<1. This establishes no serialized edit-history entries in these exact tails.",
+      "evidence": [
+        {
+          "entry": "0x1000faff8",
+          "reused": true,
+          "evidence_ids": [
+            "ev_06805c6ab1306195b56b465f36dba2a84192c79a1a298df7d2c0c92d65bf494a",
+            "ev_464335c4412e5d1c00b20a904b9dc0c18aaa78b9a7106daa269ce5d846ab1565"
+          ],
+          "function_path": "research/evidence/cubase-static/cpr-objects-001/audio-native/function-1000faff8.arm64.bin"
+        },
+        {
+          "entry": "0x1000fdaf4",
+          "directory": "pass1",
+          "evidence_ids": [
+            "ev_13d93078142b14228e0714d2d714c326aa4ff14605b54985ccd5efa38b407b19",
+            "ev_52491c3773d1cff05e287bb2e49c21b51d6207223f21b4bde0d5d60e9e47659f"
+          ]
+        },
+        {
+          "entry": "0x100201cc8",
+          "directory": "pass2",
+          "evidence_ids": [
+            "ev_30364a30f52ab09322c8c2dc956474508f2f5160b4656f617471a6b2f33649aa",
+            "ev_dd072b3662b9e256e6adb00ed19c80acf748ddfed6b18a2e29834c078adfe802"
+          ]
+        },
+        {
+          "entry": "0x1030f91c4",
+          "reused": true,
+          "evidence_ids": [
+            "ev_43672960b11b9ee3b6b6944bd035e1dda6d4910c6cf63d69b7323dde608b2909",
+            "ev_6925e23f0c022cad28396e6edba4c9914db122956fd422d43ed142c1bfa3bd1c"
+          ],
+          "function_path": "research/evidence/cubase-static/cpr-objects-001/audio-native/function-1030f91c4.arm64.bin"
+        },
+        {
+          "entry": "0x100201724",
+          "directory": "pass3",
+          "evidence_ids": [
+            "ev_62c9776aaefff31316483b4230bb05fe621f91137da9ac8ef9a40b2cf67c55f5",
+            "ev_d7448f812a49c11883826751f6c0414d211abf38de6d7bec75ebcfc456842e65"
+          ]
+        },
+        {
+          "entry": "0x100200aec",
+          "directory": "pass1",
+          "evidence_ids": [
+            "ev_792cfd8937cc89f270c48ded091a9ba3a1f2f4e42c1a2100686263184775d0ae",
+            "ev_9a1a851337d1d8d616cb45b2215111ea225d45e02da8705026015adea61c6aa5"
+          ]
+        }
+      ],
+      "limits": [
+        "The full clip still has named attributes, children and post-read processing; an empty history is not proof of an unprocessed clip."
+      ]
+    },
+    {
+      "id": "A3",
+      "claim": "Clip post-read1000fb420 calls1003010f0. That path looks up existing Warpscale via100300a7c, retains/reattaches an existing scale and assigns its owner at+20; this direct path does not construct a missing Warpscale. It separately looks up StretchPreset via100300eb0; a missing/failed preset interface can invoke registry-selected fallback and100300fe0 attachment/notification. Both source presets are the same173-byte ElastiquePreset body, sha256af5a0372cfdf843c262b12858326deba5ae19a520eb7589029d505d1a060c967.",
+      "evidence": [
+        {
+          "entry": "0x1000fb420",
+          "directory": "pass1",
+          "evidence_ids": [
+            "ev_535fedacdbd087ae0b77e253d2eb2e30f436b8bae3957477b87636fd48557f80",
+            "ev_67e34414ae3a300289008f49be54d99bcf89b2f46bc4826cb9674bb03d504a9a"
+          ]
+        },
+        {
+          "entry": "0x1003010f0",
+          "directory": "pass2",
+          "evidence_ids": [
+            "ev_583f7620b1e35f98f438ef7cf4668feba847ee7e31092d34213fea8c4d8bca8d",
+            "ev_a1c0f28f14a2926c63b38cf2c28e8d94d725e5757d6eefcaaa70bdbb0ae3b2e4"
+          ]
+        },
+        {
+          "entry": "0x100300a7c",
+          "directory": "pass3",
+          "evidence_ids": [
+            "ev_03d8b1d72af7704e628c81754ee77c0d808a1504c61abc9e71bfe666ed8a2c13",
+            "ev_695c3c2118dde2392b74d157af6cc13cd9550d2409e29e68363db7d007bf8bc1"
+          ]
+        },
+        {
+          "entry": "0x100300eb0",
+          "directory": "pass3",
+          "evidence_ids": [
+            "ev_349b2a2105e44ea9e676f05004e045cc43758f06c2887a61cf839851b6ba81bd",
+            "ev_ed035e11bb8eab947c3b9ee99c9808a36d96cce47a75949e82432a205ed2a918"
+          ]
+        },
+        {
+          "entry": "0x100300fe0",
+          "directory": "pass3",
+          "evidence_ids": [
+            "ev_54601e78600fe3a1ee4699411bbed73d41cd1cb05d583efee1d80799b7c04679",
+            "ev_e15ed6115cf3a2f618ff43c0e78cb290d84625b90fc8d6d7f12ee655abe10e76"
+          ]
+        }
+      ],
+      "limits": [
+        "The actual preset QueryInterface success and processing backend are not established here.",
+        "Preset storage/restoration is not an activation predicate.",
+        "GridDef ownership, possible RHYI migration and marker-related post-read operations are separate; actual source clips have no RHYI attribute."
+      ]
+    },
+    {
+      "id": "A4",
+      "claim": "100300a7c returnsnil when the Warpscale key is absent from the current clip attribute collection. LoFi has no such serialized key; Classic has one PAudioWarpScale v2 with count2, ordered pairs (item+10,item+18)=(0,0),(677376,15360), discarded compatibility doubles1,1,1,1 and additional item+20 doubles0,0. The84-byte object is consumed exactly by1002fc338.",
+      "evidence": [
+        {
+          "entry": "0x100300a7c",
+          "directory": "pass3",
+          "evidence_ids": [
+            "ev_03d8b1d72af7704e628c81754ee77c0d808a1504c61abc9e71bfe666ed8a2c13",
+            "ev_695c3c2118dde2392b74d157af6cc13cd9550d2409e29e68363db7d007bf8bc1"
+          ]
+        },
+        {
+          "entry": "0x1002fc338",
+          "directory": "pass4",
+          "evidence_ids": [
+            "ev_d32d0f74cb91bd19b7bc07502386ac6566b0f4ab16e523429f3ed464ae1e7ecd",
+            "ev_dab399a83b7582f1d8979b3a5a0d2ab195f0e2086ffe45fdc5a40f5cc17203c8"
+          ]
+        },
+        {
+          "entry": "0x1002fcee8",
+          "directory": "pass10",
+          "evidence_ids": [
+            "ev_2699e2738e434b80f12c47352eab3208a71ee7ad9a805f0c20c640fe9500e0a1",
+            "ev_811c6e812a3eee5f2fdff85f735b21539a7dc68ab27519ab50a8291f8d031651"
+          ]
+        }
+      ],
+      "limits": [
+        "LoFi nil at call-time is conditional on current collection matching source absence; it is not a whole-host invariance claim.",
+        "Field offsets are not assigned audio-sample/beat units here."
+      ]
+    },
+    {
+      "id": "A5",
+      "claim": "1003015d4/100301604 returnfalse for nil scale. Existing-scale interior predicate1002fc89c returnsfalse for count<3, so Classic two-point scale takes that branch. Endpoint predicate1002fca24 requirescount>=2 and compares endpoint+10 against a datum conversion of endpoint+18 between clip descriptors reached through clip+108 and1002fb118(ownerclip+110). Classic endpoint result is not claimed without that conversion context.",
+      "evidence": [
+        {
+          "entry": "0x1003015d4",
+          "directory": "pass5",
+          "evidence_ids": [
+            "ev_4b97b7c15214888f93d586c3c607277fab99849e5da239ac01ece05306667aee",
+            "ev_f1d9a5eceaac23151e4b5ce7084954235edd51b62eff8cbf602c76a1456dc28b"
+          ]
+        },
+        {
+          "entry": "0x100301604",
+          "directory": "pass5",
+          "evidence_ids": [
+            "ev_601a0f83e2fcba0c2ea002f4bb1b59466a71a97e436b58ce3fe40c71dff888c2",
+            "ev_c15c5568856da848c2b572a96920c623743c9c63f0a61a69aa1e7e2f5520b685"
+          ]
+        },
+        {
+          "entry": "0x1002fc89c",
+          "directory": "pass5",
+          "evidence_ids": [
+            "ev_88d6bab2eb612eb402e22469f02350b36e99d0c16347bd0712b61c70bb6561a7",
+            "ev_b26ff9b59de8f1aeaf48a433674dbb0e4c1a1408d9d112432df423ffc70a32dd"
+          ]
+        },
+        {
+          "entry": "0x1002fca24",
+          "directory": "pass5",
+          "evidence_ids": [
+            "ev_0f105070fe27dafc57b0383979d23d3905bebd0f7f8bbb6a3ad577610d3490a6",
+            "ev_dbf4846e134ebbe45dd3c291582a24be5b61e60ccbe27dbd0845a35ceeb5ac75"
+          ]
+        },
+        {
+          "entry": "0x1002fb118",
+          "directory": "pass6",
+          "evidence_ids": [
+            "ev_575e50249435e97d3d76d32eeb9e3ce4d90e350d2de77e3301b4365af9359186",
+            "ev_5edd02e9b698a85188cb3431ef985de226b4e88832088ec2fd7d22d759a8bd06"
+          ]
+        }
+      ],
+      "limits": [
+        "These local predicates distinguish stored warp maps and conditional differences. No call here is established as the actual audio-render selector.",
+        "Presence of two anchors is not equivalent to an active nonidentity transform."
+      ]
+    },
+    {
+      "id": "A6",
+      "claim": "Clip+2081000f652c and related1000f6580 combine additional conditions with warp checks.1003016e4 is feature-dependent;10073b9cc/10073cd7c examine LiquidAudio::NoteEvent properties and MicroPitchChangeFactors. The actual counted clip children are MHitPointEvent (84Classic,214LoFi), with no serialized NoteEvent or MicroPitchChangeFactors. Missing MicroPitchChangeFactors causes10073cf08 to create an MDefaultInterpolator; constructor and reserve chain initialize logical count0, so count predicate100759078 isfalse for that newly created empty object.",
+      "evidence": [
+        {
+          "entry": "0x1000f652c",
+          "directory": "pass6",
+          "evidence_ids": [
+            "ev_8c06b9032e51cfbd229fc575103e57d87bc754497519845ff2ee4ce335f4fb20",
+            "ev_98287be24e149e602b754d0b8d97143c8f1fa0bb2a8c31dc49e97dea1cf9ac47"
+          ]
+        },
+        {
+          "entry": "0x1000f6580",
+          "directory": "pass6",
+          "evidence_ids": [
+            "ev_407adbadb26a970355884c4c2e3498b28ff9521717c3c4807793c241b6739792",
+            "ev_80792befe5b0db82e353b0159271f55adf1014d5e52ed1dbe66c8555b3600d23"
+          ]
+        },
+        {
+          "entry": "0x1003016e4",
+          "directory": "pass7",
+          "evidence_ids": [
+            "ev_9f5a9c60e8d83dd4c887fbddab1f53d9b7e4205da12d269441a3cbb9baabba29",
+            "ev_dba176f088594763d7a7ad24f14c8a8315fe554ccd6eaca098ab740fed29e683"
+          ]
+        },
+        {
+          "entry": "0x10073b9cc",
+          "directory": "pass8",
+          "evidence_ids": [
+            "ev_c280d2adb5b632e40331c7fe68230ff54f4f8ae5e64829ff7b23e160db35d011",
+            "ev_e103984ec6dbc4a024ae05ceaa9c9d4877844a256c200071b66199166b554370"
+          ]
+        },
+        {
+          "entry": "0x10073cd7c",
+          "directory": "pass9",
+          "evidence_ids": [
+            "ev_897303132e431077b25cf722977ed3ee68616344be5ab013de28d2aba2aa1f3b",
+            "ev_a83bd0c25f0bedbe4d7eeec8374a1f2abb559308f1b04579cd50a7b6ef6bf26d"
+          ]
+        },
+        {
+          "entry": "0x10073cf08",
+          "directory": "pass10",
+          "evidence_ids": [
+            "ev_0d9461372b08dd4ac80a441f03737a2d92673b8c79c3b3e56cf5dd63be11fdba",
+            "ev_e4e2d25642ec659e8f8fa25e94af0407213e558dc0edb818ca259cb49cb9cae4"
+          ]
+        },
+        {
+          "entry": "0x1007589ec",
+          "directory": "pass11",
+          "evidence_ids": [
+            "ev_15d4172da43314e83baf22b43ebcfeed722551e7b8f3f768e496c71af8e72ca1",
+            "ev_a5d9c3f05f1cf834d1842343c4c4fb13457130b78ca823d8677ec2fc6d3cf2a5"
+          ]
+        },
+        {
+          "entry": "0x1007d9400",
+          "directory": "pass12",
+          "evidence_ids": [
+            "ev_3bbfffe78b616c0cf7ab9f58058be5e466bd122374dcbe47e5e226755f083e6f",
+            "ev_924bdd714fc3253de54d70011fe7ad5b644e68b793c6eb44c0771d219af35c5b"
+          ]
+        },
+        {
+          "entry": "0x1007db82c",
+          "directory": "pass13",
+          "evidence_ids": [
+            "ev_d4ecb6c9043777e72d9c5356b39ab5e2237c78a4f6a1885648eb58c3d26da28f",
+            "ev_e39cc29a1e5c7bd6b2a575f6cccb7de1a16365cdb1629ab23c50788850d604f2"
+          ]
+        },
+        {
+          "entry": "0x100759078",
+          "directory": "pass11",
+          "evidence_ids": [
+            "ev_2828584b8cb2a8416bd4c3d2406a16ba93f069f740fa597b35eb8d59587f8cf4",
+            "ev_d2e4777b6aa98554fdc6958bdb5af8b942e6901ec90fedf19035cefaeb9a7b32"
+          ]
+        },
+        {
+          "entry": "0x100759d04",
+          "directory": "pass12",
+          "evidence_ids": [
+            "ev_bb2d0baf2cfebe2ad84d88926d045a9bfd9f20ee4f90e29c0c3826e5e6bbb061",
+            "ev_e4843021ad954750b0b6f7b1ddbc2eb87fc136995f789aeb135e08ec582847a5"
+          ]
+        }
+      ],
+      "limits": [
+        "The iterator/filter dispatch for arbitrary runtime NoteEvent membership and feature availability is not closed here.",
+        "Missing microcurve creation mutates attributes; false predicate does not mean the clip remains unchanged.",
+        "The composite predicates are not relabeled as a proven direct-playback switch."
+      ]
+    },
+    {
+      "id": "A7",
+      "claim": "1000edb70 tests numeric key0x46727453 at event+20 through1000e8b84. A nil collection yieldsfalse and the getter returns exact Double1 (bits3ff0000000000000). A present key tails to1000eda78, not traced here. Fresh event constructor1000e9148 calls101700aac, which zeros+20, and performs no subsequent attribute insertion in the retained constructor body. But count0 in1000ee8c4 preserves existing attrs rather than clearing them.",
+      "evidence": [
+        {
+          "entry": "0x1000edb70",
+          "directory": "pass14",
+          "evidence_ids": [
+            "ev_5e61374bfd615689caed1b12e8fdda61f5324957996c67289e68ed648b253ea8",
+            "ev_68a5453ca4a64354ac9c1677f2988a43858f342240799fc7de11ef5fcff8b6a5"
+          ]
+        },
+        {
+          "entry": "0x1000e8b84",
+          "directory": "pass15",
+          "evidence_ids": [
+            "ev_00497a9b419ce6ecdabdb5f984448201f4db71ab01441b4e9f9058fd47edc866",
+            "ev_dda1aa36c0aa577dbf0efbf24795d5c0c036c923a6a7d8d3fd90ddaa348fc692"
+          ]
+        },
+        {
+          "entry": "0x1000e9148",
+          "directory": "pass15",
+          "evidence_ids": [
+            "ev_923fe6a4a4b36e560f04eeef0b2a603e3e82e64c1c06b9965025f9b82680f53f",
+            "ev_9c78cf23546acda2b3c73bb5ab9ef90491b365134e2e0fef0a76c47bdb9ac5a3"
+          ]
+        },
+        {
+          "entry": "0x101700aac",
+          "reused": true,
+          "evidence_ids": [
+            "ev_cd0bdf475be4412f5650de9822a2f62e93a9ec63bbdd2d3a762ccbeed6968797",
+            "ev_dbcdd01572d63d26a23ad83fe3d4ea5af2b2508403ffd3502c6d7a1898fa113a"
+          ],
+          "function_path": "research/evidence/cubase-static/cpr-map-clock-001/attributes/pass3/function-101700aac.arm64.bin"
+        },
+        {
+          "entry": "0x1000ee8c4",
+          "reused": true,
+          "evidence_ids": [
+            "ev_375e45ac1821361deef664b4b905f0f15bc5136721a66643f5845271331175c0",
+            "ev_c798942c413d27479142f615257cbed03f11dc8d8be4c859047f6eee6d17c1df"
+          ],
+          "function_path": "research/evidence/cubase-static/cpr-objects-001/audio-native/function-1000ee8c4.arm64.bin"
+        }
+      ],
+      "limits": [
+        "Absence at getter time is the sufficient local condition. Serialized count0 alone does not establish this after all restoration callbacks.",
+        "Base reader attaches the clip through+250 before reading the count0 group; the later registered callbacks can also see the event.",
+        "The fresh constructor evidence is not an assertion that every hosting path uses an untouched fresh object.",
+        "The unmapped external tail appears as halt_baddata in raw decompilation; original B instruction is valid and the target address is recorded."
+      ]
+    },
+    {
+      "id": "A8",
+      "claim": "Native reader1000ee164 iterates callback registry global105025688: callback+0 in its normal-mode branch, then callback+8 when registry exists, before final v6 volume-curve attachment. Their concrete registrations and effects are not closed in this finding.",
+      "evidence": [
+        {
+          "entry": "0x1000ee164",
+          "reused": true,
+          "evidence_ids": [
+            "ev_a0aec2785fb3d041bd20c334518d846094a893e0cb9eeb8f9d88bb92a57f84cb",
+            "ev_ed13a871b1e6eb449ed2895394e2d933ea94e35380690722b338b2451e851571"
+          ],
+          "function_path": "research/evidence/cubase-static/cpr-objects-001/audio-native/function-1000ee164.arm64.bin"
+        }
+      ],
+      "limits": [
+        "This is a concrete reachable mutation boundary, not a presumed harmless notification.",
+        "Consequently source Volume/fades/flags/factor observations are not promoted to unconditional final hosted state or rendered output."
+      ]
+    }
+  ],
+  "consumer_cross_reference": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/finding.json",
+    "scope": "Peer timebase evidence, separate from this field/warp investigation. Default provider event branch100300b5c attaches a scale through100300a7c and consults1000edb70; factor!=1 appends102103344. Parent-track placement and child/clip transform contexts are distinct. This finding does not claim identity of a nonnil empty composite or inherit a whole-host playback guarantee."
+  },
+  "admissibility": {
+    "accepted_for_source_inspection": [
+      "Exact MAudioEventv6/PAudioClipv4 objects reached through the existing strict counted hierarchy; bounded and fully consumed tails; exact source hashes retained.",
+      "Report the observed fields, empty lists and optional transform-related state. Treat these as source metadata and recovery diagnostics."
+    ],
+    "placement_only": "The peer timebase finding may independently establish the LoFi placement projection. This finding neither broadens that timing domain nor authorizes audio processing.",
+    "plain_playback_after_relink": "not established; keep the recovered event unresolved and explicitly require additional supported audible-state/backend gates before enabling playback",
+    "must_remain_opaque_or_unsupported": [
+      "Unknown object versions or unconsumed tail bytes.",
+      "Nonempty fades/history/volume-curve lists and unbound event numeric attributes.",
+      "Unbound flags, loop/overlap/priority semantics, active stretch/pitch backend, variable transforms or source-rate refresh.",
+      "Arbitrary host registry callbacks/providers or extensions."
+    ]
+  },
+  "next_discriminating_edges": [
+    {
+      "priority": 1,
+      "question": "Which concrete registrations populate105025688 and what do their+0/+8 callbacks write for these exact source states?",
+      "reason": "Closes whether source unity/fades/attribute absence survive reader completion."
+    },
+    {
+      "priority": 2,
+      "question": "Which render/preparation consumer uses the clip predicates1000f652c/1000f6580, Warpscale and event factor to choose processing?",
+      "reason": "Separates stored preset/transform state from active playback."
+    },
+    {
+      "priority": 3,
+      "question": "For the supported backend, what source-range/rate and empty-curve/empty-composite behavior is consumed?",
+      "reason": "Placement, source samples and final processing have separate coordinate/state contracts."
+    }
+  ],
+  "verification": {
+    "new": {
+      "functions": 38,
+      "source_bytes": 8896,
+      "native_words": 2224,
+      "rea_instruction_addresses": 2108,
+      "unique_evidence_ids": 76
+    },
+    "reused": {
+      "functions": 7,
+      "bytes": 4364,
+      "native_words": 1091,
+      "rea_instruction_addresses": 1044
+    },
+    "canonical_bundle_records": 90,
+    "canonical_imported_records": 90,
+    "all_new_sessions_closed": true,
+    "target_executions": 0,
+    "native_runtime_comparisons": 0,
+    "app_edits": 0,
+    "raw_slice_limits": [
+      "Only exact original instruction intervals mapped; externals, globals, RTTI, vtables and unwind metadata are not mapped into the raw provider.",
+      "LC_FUNCTION_STARTS boundaries are evidence intervals and can include disconnected cleanup tails; omitted decompiler instructions do not invalidate original bytes.",
+      "Generated pseudocode is not source code, not guaranteed compilable and not a proof of floating-point or host-runtime equivalence.",
+      "Original linked vtable cells, literal bytes and instruction spans are pinned separately in linkage.json."
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/fixture-fields.json",
+      "sha256": "c8904e51484ed3f658273bc3fc030abe9b33c325a6ce2de4024fdd76ec0b3183",
+      "bytes": 24620
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/warp-fields.json",
+      "sha256": "5d1464724b5c4b143b810f286b7f9ed5a54858449de839c1aa3135a9aa5a2928",
+      "bytes": 1988
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/linkage.json",
+      "sha256": "a169ff97656f20845ebbe789ce5c18ae702ef13f5998515c5d2d3a79e8fa2781",
+      "bytes": 16896
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/verification.json",
+      "sha256": "b1a8cfa58a119a1459997a3a00d62795c034ed677aa6d74548dbdf27ea257ca6",
+      "bytes": 21630
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/support-verification.json",
+      "sha256": "c98b7ce7f8d8684e5f372cc7d2ff5ccbb0524604caddcd81e26134e62dbad3ef",
+      "bytes": 16457
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/evidence-bundle.json",
+      "sha256": "fa674788cf311cc366879b2ac5f24307a6c621aed3917de16fdcb9ff137ef644",
+      "bytes": 15031208
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/evidence-import.json",
+      "sha256": "deaa9b58295f8cd3c8643d0cd660f7617812ca2f636fcd99131f5c1e4c916f39",
+      "bytes": 367
+    }
+  ],
+  "external_references": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/finding.json",
+      "sha256": "af7178337889b779e4d37e2ac55e9eb41087c3fced9b54a0ec15e63e4204cd82",
+      "bytes": 39071
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-signature-001/fixtures/cpr-probe-v09-generation.py",
+      "sha256": "b584b7fac11d87b4f54a5660b0e85c559fee8ea5553eeabe1abec73c72121b2c",
+      "bytes": 21365
+    }
+  ]
+}

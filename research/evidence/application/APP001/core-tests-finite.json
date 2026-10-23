@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "id": "APP001-CORE-TESTS-FINITE-002",
+  "recorded_utc": "2026-10-19T07:49:50.227860+00:00",
+  "status": "passed",
+  "test_count": 19,
+  "suite_count": 4,
+  "tests": {
+    "OfflineRendererTests": [
+      "testTrimAndPositionSelectExactFramesAndLeaveTimelineGapSilent",
+      "testOverlappingClipsAndTrackGainSumRatherThanOverwrite",
+      "testSoloExcludesOtherTracksAndMuteOverridesSolo",
+      "testMonoCenterPreservesEnergyAndStereoCenterPreservesEachChannel",
+      "testLinearResamplingReconstructsRampBetweenSourceSamples",
+      "testExportedWAVContainsStereoFloatMix",
+      "testSourceOverrunAndEmptyTimelineFailExplicitly",
+      "testExportCrossesChunkBoundaryReplacesMixAndPreservesSource"
+    ],
+    "RecoveredDSPTests": [
+      "testFloat32ExactCoefficientsAndThresholdPermutation",
+      "testFloat64RetainsObservedOneULPInverseDifference",
+      "testFourFrameBasisIsScatteredWithSignedZeroPreserved",
+      "testRejectedStateDomainAndAliasingDoNotWriteOutputs"
+    ],
+    "AudioValidityTests": [
+      "testNonfiniteDecodedSamplesAreRejectedWithoutReplacingExistingExport",
+      "testFiniteSourceWhoseGainOverflowsIsRejected",
+      "testFiniteClipsWhoseOverlapOverflowsAreRejected"
+    ],
+    "ProjectStoreTests": [
+      "testSaveLoadPreservesEditsAndImportedMediaSurvivesSourceRemoval",
+      "testMalformedAndEscapingMediaReferencesAreRejected",
+      "testMediaDirectorySymlinkCannotRedirectImports",
+      "testInvalidSaveLeavesPreviouslySavedProjectReadable"
+    ]
+  },
+  "working_directory": "/workspace/rebase",
+  "command": "sh Application/test-app.sh > research/evidence/application/APP001/core-tests-finite-output.log 2>&1",
+  "exit_code": 0,
+  "raw_output": {
+    "path": "research/evidence/application/APP001/core-tests-finite-output.log",
+    "size": 5142,
+    "sha256": "5e5dccc42e4a32594eb0722bfb74c06b3536b817a88da12b0845f12e945902ee"
+  },
+  "test_binary": {
+    "path": "Application/.build-tests/arm64-apple-macosx/debug/RebasePackageTests.xctest/Contents/MacOS/RebasePackageTests",
+    "size": 1011344,
+    "sha256": "bf16397dc1938c85eab7b169d6705efa028e61ec05e1d1ec9cc4a058be3c883a"
+  },
+  "source_files_at_capture": [
+    {
+      "path": "Application/Package.swift",
+      "size": 635,
+      "sha256": "983e688e5b2ce1bcf8cc19b3c0fdc731ad23073b19f2cda7c934d7cc05f330ce"
+    },
+    {
+      "path": "Application/test-app.sh",
+      "size": 615,
+      "sha256": "7ef1ac6cd8482f3c356478793f747ccc8ddb6c4de203b663ec8e52339efe6115"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "size": 4754,
+      "sha256": "49bf40e943446ef08745ab57ca7852c14fda23b51931c8fd119acc0a600765a8"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/OfflineRenderer.swift",
+      "size": 12545,
+      "sha256": "b4283ef12690cd0658d2729e7731fb34c8b28a80406aad6080705790522956b2"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "size": 4145,
+      "sha256": "819b5a6312e195fc16715cfdc9e98fd8f36d67a7e44a35b187054c21b7cadbc8"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "size": 5113,
+      "sha256": "3abb256ffb11c80be43acbd3143956a2d024775d858b5b883c511233ad5ab259"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/AudioValidityTests.swift",
+      "size": 4710,
+      "sha256": "1b0fef9ad5daa646f32b932496e7acc13232e4be8acf3fad5cd539fa67de66a6"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/OfflineRendererTests.swift",
+      "size": 6491,
+      "sha256": "0494f4934bb71716c3cab05f85590461b7f103d6ccdd98249b4668f158a9e2dc"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/ProjectStoreTests.swift",
+      "size": 3992,
+      "sha256": "9d74c77db57d88454db3680cb5dec769dff8bc6fe767c4de9f5e808ba1a9dca3"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/RecoveredDSPTests.swift",
+      "size": 5254,
+      "sha256": "fab23af6773bb0f2f7ff75aa79b21ab0233d4b9d3ff0cbec55676cfcf7918c3a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/TestSupport.swift",
+      "size": 4144,
+      "sha256": "65b3aaf7db8d59c07f1c0fff15d5fc45a5afbbc126b01985ce82a74c28807e1e"
+    },
+    {
+      "path": "Application/Sources/RebaseDSP/ambi_first_order.c",
+      "size": 5231,
+      "sha256": "b2af5f8622fa3c336f0c6c6abbb59ddf79151107bfe8e31a23c09dd2a9a1d240"
+    },
+    {
+      "path": "Application/Sources/RebaseDSP/include/ambi_first_order.h",
+      "size": 1123,
+      "sha256": "b1103f9cc0450db33aa1331297306e2619998d069cada1e4a919573df8dd0135"
+    }
+  ],
+  "previous_run_preserved": [
+    {
+      "path": "research/evidence/application/APP001/core-tests.json",
+      "size": 6527,
+      "sha256": "3b462449f60c0ec2507d9bce8abc3d7ededb9a44c8f66f51ad62ab0863182741"
+    },
+    {
+      "path": "research/evidence/application/APP001/core-tests-output.log",
+      "size": 3361,
+      "sha256": "152ce983678863532877fb3d7d2a5fff37d90b5d0cf95de92f2b48171b07118a"
+    },
+    {
+      "path": "research/evidence/application/APP001/core-review.json",
+      "size": 3904,
+      "sha256": "38eb9f0e635c75b3dd990f5249845b88688a1fa098bd829f6af747d9e5a9bea6"
+    }
+  ],
+  "environment_adjustments": [
+    "Initial XCTest attempt failed because the selected Command Line Tools does not provide the XCTest module. Tests use bundled Swift Testing instead.",
+    "Testing.framework and TestingMacros require explicit search paths on this host.",
+    "The bundled _Testing_Foundation.framework lacks its module interfaces, so test command disables cross-import overlays. No global toolchain or shell settings were changed."
+  ],
+  "scope": "New synthetic nonfinite-source and finite-overflow cases plus all 16 prior core/DSP integration tests. No audio hardware or Cubase execution.",
+  "new_coverage": [
+    "NaN, +Infinity and -Infinity are confirmed present after WAV decoding; typed nonFiniteAudio rejection is required during import, load, render and export. Failed imports leave no copied media.",
+    "Finite Float.max at +24dB is rejected when gain produces nonfinite Float output.",
+    "Two individually renderable stereo clips each containing +/-0.75*Float.max are rejected when overlapping accumulation overflows.",
+    "Every rejected render/export case preserves an existing valid destination byte for byte and leaves no temporary output.",
+    "Original finite-over-one test still passes, preserving ordinary unclipped floating-point mix behavior."
+  ],
+  "limitations": [
+    "Malformed media are tiny PCM float WAV fixtures, not an exhaustive decoder/corruption study.",
+    "No AudioTransportEngine hardware mixer ordering or precision is established by these tests.",
+    "Source hashes pin this tested revision; subsequent UI or transport changes require their own evidence.",
+    "The unchanged recovered kernel remains a bounded static reconstruction, not target-runtime equivalence."
+  ],
+  "diagnostics": [
+    "Fixture creation requests a noninterleaved processing format; AVAudioFile logs that audio-file storage cannot be noninterleaved and ignores that storage setting. Output WAV format is independently reopened and checked as stereo float32."
+  ]
+}

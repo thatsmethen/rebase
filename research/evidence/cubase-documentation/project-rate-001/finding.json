@@ -1,0 +1,32 @@
+{
+  "id": "CUBASE15-DOCUMENTED-PROJECT-RATE-001",
+  "retrieved_utc": "2026-10-21T00:37:08.137923+00:00",
+  "evidence_class": "official documentation, distinct from original-image static contracts and runtime observation",
+  "product_version": "Cubase Pro 15.0",
+  "target_executed": false,
+  "target_runtime_comparisons": 0,
+  "sources": [
+    {
+      "title": "Importing Media",
+      "url": "https://www.steinberg.help/r/cubase-pro/15.0/en/cubase_nuendo/topics/pool/pool_media_importing_c.html",
+      "short_quote": "Files that have a different sample rate than the project sample rate are played back at the wrong speed and pitch.",
+      "claim": "The documented ordinary workflow does not promise automatic transparent rate conversion for an unconverted file."
+    },
+    {
+      "title": "Project Setup Dialog",
+      "url": "https://www.steinberg.help/r/cubase-pro/15.0/en/cubase_nuendo/topics/project_handling/project_handling_project_setup_dialog_r.html",
+      "claim": "Project sample rate governs recording and playback. Changing it after audio exists requires file conversion for proper playback; supported internal hardware settings are changed to match, while external clock mismatches can be accepted."
+    },
+    {
+      "title": "Import Options Dialog for Audio Files",
+      "url": "https://www.steinberg.help/r/cubase-pro/15.0/en/cubase_nuendo/topics/importing_audio_and_midi/importing_audio_and_midi_open_options_dialog_r.html",
+      "claim": "Import can convert differing sample rate or bit depth to project settings and can copy files into the project. Those are file-import choices, not a universal live resampling contract."
+    }
+  ],
+  "hypothesis_revision": "Prior APP016/APP017 work correctly withheld arbitrary differing-rate placement but sought possible source/project reconciliation. Do not require a hypothetical transparent live conformer as the only faithful resolution: the direct raw-reader path and documented changed speed/pitch are mutually consistent. Test the concrete builder, reader, source and output-rate relationships, including saved clip duration/offset and positive short-read failure semantics.",
+  "limits": [
+    "Documentation is not observed runtime behavior and does not specify exact frame arithmetic, EOF behavior, saved CPR rate ownership, backend choice or all processed/warp/scrub branches.",
+    "No existing conversion mode is reclassified as the ordinary native path. Explicit file conversion and unconverted timeline reading remain distinct.",
+    "The original native build is15.0.30.287; these help pages describe the15.0 family. Exact static evidence remains authoritative for implementation arithmetic."
+  ]
+}

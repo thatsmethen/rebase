@@ -1,0 +1,164 @@
+{
+  "id": "APP009-GUI",
+  "created_utc": "2026-10-20T01:07:04.739089+00:00",
+  "groups_passed": 7,
+  "executable": {
+    "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 4775808,
+    "sha256": "469ec55e97de84d0a17155516bd61dbf5ee3c8899874d737a7652479ac95739b"
+  },
+  "groups": [
+    {
+      "id": "open_inspect",
+      "result": "passed",
+      "observation": "Native Open loads the copied source-backed project; inspector offers the separately gated timeline action.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP009/release-gui-open.ax.txt",
+          "bytes": 5325,
+          "sha256": "761738e719ac729a685b02eb0ad408d9046d2f8b21513f020f68f690df3f1321"
+        },
+        {
+          "path": "research/evidence/application/APP009/release-gui-inspection.ax.txt",
+          "bytes": 1215,
+          "sha256": "a465e41a0ef3f0ee3443ff4a8becc6c457ea4213b9d655a2c16eb74f0d11f1aa"
+        }
+      ]
+    },
+    {
+      "id": "play_pause_seek_end",
+      "result": "passed",
+      "observation": "Source event plays at44100Hz with nonzero mixer tap peaks; pause retains position and silences meters; seek to16seconds and resume reach natural24-second completion.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP009/release-gui-playing.ax.txt",
+          "bytes": 5804,
+          "sha256": "87c9a4c34928d10373731a9550e12a80b8b5deda0463bbf914ba4f916f7e134d"
+        },
+        {
+          "path": "research/evidence/application/APP009/release-gui-paused.ax.txt",
+          "bytes": 5781,
+          "sha256": "6ac73e80b25b629f1dbf9b599abcce761405f5254900ac4765abc7e5f28c0e71"
+        },
+        {
+          "path": "research/evidence/application/APP009/release-gui-paused-seek.ax.txt",
+          "bytes": 5781,
+          "sha256": "c75c56b084e296a87adff892b0c57943eeefce95a24bb769cde7691c4688ffae"
+        },
+        {
+          "path": "research/evidence/application/APP009/release-gui-resumed.ax.txt",
+          "bytes": 5803,
+          "sha256": "f7a228d90f6701924128922d33e58335066e8a69da5ecc823e948f047859d7c6"
+        },
+        {
+          "path": "research/evidence/application/APP009/release-gui-natural-end.ax.txt",
+          "bytes": 5779,
+          "sha256": "d6689dd582b4408a6a80b1632f0fe6f327d4c617c5ef5c9e4952eaa8ee6495a3"
+        }
+      ]
+    },
+    {
+      "id": "restart_stop_bounds",
+      "result": "passed",
+      "observation": "Explicit Play at end restarts; Return to Start replaces an active schedule; Stop resets position; seeking beyond the source clamps to24seconds with no playback.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP009/release-gui-restart-at-end.ax.txt",
+          "bytes": 5803,
+          "sha256": "3a00a876942396bbc9fe587410a43b02c86e1b446365843420e1877e7cf222ee"
+        },
+        {
+          "path": "research/evidence/application/APP009/release-gui-return-to-start.ax.txt",
+          "bytes": 5803,
+          "sha256": "d0e62e51698eac079aa9ccb2525bbf263e6b9f96ed001155606a88d757b16556"
+        },
+        {
+          "path": "research/evidence/application/APP009/release-gui-stop.ax.txt",
+          "bytes": 5781,
+          "sha256": "90647080ed7d96de87438e68631d3af6dd37a0e94661058168cd08bea40d1006"
+        },
+        {
+          "path": "research/evidence/application/APP009/release-gui-seek-past-end.ax.txt",
+          "bytes": 5530,
+          "sha256": "6e273ce215a02c43fa5628b58db6b76bc44d528ff13d6e309a64e67389771257"
+        }
+      ]
+    },
+    {
+      "id": "changed_media",
+      "result": "passed",
+      "observation": "A same-size single-byte PCM change rejects resume and clears audition; original bytes restored exactly and a fresh inspection admits playback again.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP009/release-gui-changed-media-rejected.ax.txt",
+          "bytes": 394,
+          "sha256": "4b2ec7bd2949f020b3eb9dc4f96d68554d43a716febaa1fa5551e665bc52b3c0"
+        },
+        {
+          "path": "research/evidence/application/APP009/release-gui-rejected-mode-cleared.ax.txt",
+          "bytes": 5080,
+          "sha256": "06235a5605a59a9bfba13749e5fb309116135fe4877f4ec5acac7622d04b92f7"
+        },
+        {
+          "path": "research/evidence/application/APP009/release-gui-restored-media-playing.ax.txt",
+          "bytes": 5555,
+          "sha256": "7e88065a26a0c443ded963f6cb7ca5fac6e69aa6c0348518f6bed4cea1c908f6"
+        }
+      ]
+    },
+    {
+      "id": "project_barriers",
+      "result": "passed",
+      "observation": "Ordinary project playback and full mixdown still reject unresolved CPR content.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP009/release-gui-project-play-refused.ax.txt",
+          "bytes": 533,
+          "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+        },
+        {
+          "path": "research/evidence/application/APP009/release-gui-project-export-refused.ax.txt",
+          "bytes": 533,
+          "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+        }
+      ]
+    },
+    {
+      "id": "edit_undo",
+      "result": "passed",
+      "observation": "Mute edit stops and exits audition; Undo restores the track control without reactivating source audio.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP009/release-gui-edit-exits-audition.ax.txt",
+          "bytes": 5087,
+          "sha256": "d3be04ee80bc3c913b8a56763fff23e96520421755afc14d9792e23850976709"
+        },
+        {
+          "path": "research/evidence/application/APP009/release-gui-undo-stays-project-mode.ax.txt",
+          "bytes": 5067,
+          "sha256": "07fac8b77f1ab4fafd440b18d43c1e7bd7efb148da5c06b843c963d45e7b845e"
+        }
+      ]
+    },
+    {
+      "id": "explicit_exit",
+      "result": "passed",
+      "observation": "Exit Audition stops source playback, removes the persistent mode and restores project transport.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP009/release-gui-exit-audition.ax.txt",
+          "bytes": 5108,
+          "sha256": "3f6af401721d8a7fe2bb2e545dfc012544f07272fc6a6e760aded58225970d19"
+        }
+      ]
+    }
+  ],
+  "screenshot": {
+    "path": "research/evidence/application/APP009/release-gui-playing.png",
+    "bytes": 384090,
+    "sha256": "49b63efdc0c8267e2d54276249e4ea6c1ab20048abd2d8839b12fc862bd0f35c"
+  },
+  "scope": "Final binary observed through native GUI with self-authored synthetic PCM. Meter values are engine tap observations, not DAC captures or Cubase runtime comparisons.",
+  "package_files_unchanged": 5,
+  "earlier_runs": "Unprefixed gui-* and final-gui-* records retain prior observations. The release binary repeats all seven groups after two shared error strings and the edit-exit status label were corrected."
+}

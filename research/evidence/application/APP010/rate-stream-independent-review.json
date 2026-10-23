@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-20T07:20:55.119991+00:00",
+  "status": "Scoped independent arithmetic/source review complete; final integrated test and GUI acceptance pending.",
+  "scope": "Explicit native-derived mode0 Float32 upsampling and the application source-event cursor/queue. No target executable or target DSP was run. No full Cubase live-scheduler, default converter, SoXR or device-output claim.",
+  "reviewed_files": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0.c",
+      "bytes": 5859,
+      "sha256": "9cf22cb496e5eac010c0e027286927bdf68ef4181c195d30c30b0df2304bd7fa"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0.h",
+      "bytes": 1958,
+      "sha256": "9c3c7185a93dd54beff48dec9618c8abd69f68f01084adad30d4c4436a4cc19f"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_event_pcm.c",
+      "bytes": 2813,
+      "sha256": "4180d6062120ba0de5c284d886f5170fb0cd79d65edfbdc936b8b7b286130939"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_event_pcm.h",
+      "bytes": 783,
+      "sha256": "75f6da9eb338c2dbcf15d45a5f3f366c10a66ebf6e9634f63a8e39c3d30e77f7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "bytes": 6932,
+      "sha256": "5b59da8a80b30b9306cbe34f484b74c1797134f956e8dd8f52b4985197552e86"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 6991,
+      "sha256": "6b5c61430771e57b9a983c0752c95de6221bf8cd41762bcb5133195a2d02e54f"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "bytes": 10727,
+      "sha256": "3cdac99694256430b8fe4aaf5e67962a803c0a471ded0048ab68cd37eda0a47c"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8144,
+      "sha256": "e85d40e2d5f79fd95a822d0b789c1805786e251556028e130f466cece125610e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 7895,
+      "sha256": "bc9948b188ff43d1b6b4bd67be38868530d89f0112abfaee7f38f33a6e6c610f"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode0Tests.swift",
+      "bytes": 13976,
+      "sha256": "3756de7075cde5ef498cd40f8ece0ea7c97e0bdb9570a6285b8cc94f648c9f75"
+    },
+    {
+      "path": "research/evidence/application/APP010/native-rate-mode0-oracle.py",
+      "bytes": 7965,
+      "sha256": "6b5357c1bf923034673e9bcb240136b6dc31e8fde0276132036232811f2623a4"
+    },
+    {
+      "path": "research/evidence/application/APP010/native-rate-mode0-oracle.json",
+      "bytes": 749565,
+      "sha256": "d2c91862a7a93b744f6da5793d92ec00b58aab56f0c15772121835b2843c9aa5"
+    },
+    {
+      "path": "research/evidence/application/APP010/converted-tests-first.log",
+      "bytes": 4162,
+      "sha256": "34db613cefadfd09d7de5f59f4b1ab76ca817af29b55cc1face1f03e36f6d70f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/pass1/native-1003101ec.txt",
+      "bytes": 2892,
+      "sha256": "f2b01b3c13f99fa684bd791d4cf29db22b8d595cb0244ae2d1e39b5e29039e5a"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/original-bindings.json",
+      "bytes": 7693,
+      "sha256": "638767d4bc9f5f1b5d8883d64c80492b406a0344f9868278521a906ce8015cfb"
+    }
+  ],
+  "original_instruction_check": {
+    "address": "0x1003101ec",
+    "bytes": 252,
+    "file_offset": 3211756,
+    "sha256": "50d3b0fe18a9589dcbe56dd1ad1ac4b9c87af9516dc032256871ff98e92aa488",
+    "original_range_matches_retained_bytes": true,
+    "image_path": "research/targets/derived/Cubase15-arm64",
+    "full_image_hash_recomputed_this_review": false
+  },
+  "independent_oracle": {
+    "method": "Integer/Fraction IEEE nearest/ties-even rounding for each binary64 division/subtraction/product/addition, one rounding for fused multiply-add and a separate Float32 output rounding. Expected sample bits are not produced by the candidate C, AVFoundation, a resampling library or target execution.",
+    "vectors": 9,
+    "output_sample_bits": 19592,
+    "fma_discriminating_samples": 2,
+    "distributed_interpolation_discriminating_samples": 2,
+    "input_boundary_control_frames": 8195,
+    "notable_count_control": "11 input frames at 8000\u2192192000 produce 241 frames under rounded phase recurrence, not 240 from ideal arithmetic."
+  },
+  "review_results": [
+    "Original stereo instructions widen the two Float32 history/input samples, separately round phase\u00d7next, fuse (1\u2212phase)\u00d7previous into that product, narrow once, add step and subtract one in binary64, and persist phase/history. Candidate and oracle match this order.",
+    "Count uses the state recurrence rather than a rate-ratio estimate. Reset phase1 consumes the first input as history with no output; zero input does not flush and EOF does not synthesize a final frame.",
+    "Kernel performs sample/capacity/alias preflight before committing state/output and rejects non-nearest and hardware flush modes. Nonzero subnormal Float32 output is rejected; a correctly rounded zero is permitted.",
+    "Immutable input continues to be obtained through the existing source/report/attachment replay and exact media hash. Converted playback defers event gain until after interpolation, then applies a separate Float32 multiply.",
+    "Cursor reset/preroll preserves state across discarded blocks and retains the crossing block suffix. Zero-output blocks advance input rather than becoming EOF. Independent cursor suffix tests are added but were not part of the interim log.",
+    "Queue keeps each buffer alive by UUID, rejects stale callback generations before touching counters, removes the completed buffer before refilling, and completes only after EOF, no pending buffers and the nominal timeline condition. Main actor handles refill/stop outside the audio callback."
+  ],
+  "findings_addressed": [
+    {
+      "issue": "Kernel header claimed all output underflow rejected while normal-or-zero policy accepts a nonzero Double mix rounding to Float32 zero.",
+      "resolution": "Header corrected to nonzero subnormal output rejection; sample arithmetic unchanged."
+    },
+    {
+      "issue": "New standalone post-conversion gain helper initially checked nearest rounding but not hardware flushing.",
+      "resolution": "Root added the matching FZ/FIZ or FTZ/DAZ guard before this review hash."
+    }
+  ],
+  "open_actionable_defects_in_reviewed_scope": [],
+  "validation": {
+    "interim_log": {
+      "path": "research/evidence/application/APP010/converted-tests-first.log",
+      "bytes": 4162,
+      "sha256": "34db613cefadfd09d7de5f59f4b1ab76ca817af29b55cc1face1f03e36f6d70f"
+    },
+    "interim_tests": 18,
+    "interim_suites": 3,
+    "interim_owned_kernel_tests": 7,
+    "current_owned_tests": 8,
+    "current_owned_cursor_test_and_added_frame_cap_control_in_interim_log": false,
+    "final_integrated_suite_pending": true,
+    "gui_acceptance_pending": true
+  },
+  "limits": [
+    "The complete verified source PCM remains resident. Only converted output buffering is bounded; this is not a file-streaming implementation.",
+    "Preparation, seek preroll and refill run synchronously on the main actor. Four queued buffers offer headroom but cannot guarantee uninterrupted playback during arbitrary stalls. Wall-clock display is not a measurement of delivered frames after underrun.",
+    "Backend selection, 8192-input blocks, four output buffers, reset-and-discard seeks and AVAudioEngine delivery are application choices. This review does not establish native host scheduling or active default-backend selection.",
+    "Converted count/duration derives from finite recurrence and no artificial tail. A hardware device may perform additional sample-rate conversion independently.",
+    "Normal project playback/mix and unsupported native processing remain gated. This is source-event-only reconstruction with fresh-source assumptions.",
+    "Negative-zero preservation outside individually tested IEEE operations and proprietary runtime FP environment were not measured.",
+    "The new live ring-transfer work is outside this record and was not yet integrated into the reviewed queue."
+  ],
+  "target_execution_count": 0,
+  "cubase_runtime_comparison_count": 0
+}

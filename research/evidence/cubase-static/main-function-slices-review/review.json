@@ -1,0 +1,92 @@
+{
+  "review_id": "MAIN-RAW-SLICES-INDEPENDENT-001",
+  "status": "Complete; no actionable context-gap error found in the bounded report",
+  "reviewed_report": "../main-function-slices/raw-slice-analysis.json",
+  "reviewed_report_sha256_at_semantic_review": "0df08a25d4ee60ed4724470375750bdb26125d6afc5fa088011c1f009a19d276",
+  "reviewed_report_sha256_final": "417ab81ea9c9a827bf8dd39080c3e099b7b936d3cc0d365d59330d389d85fdb1",
+  "finalization_note": "After semantic review, the report added an explicit no-compilability/no-bit-faithfulness caveat and review status/reference. These additions agree with this review; source evidence and substantive function observations were unchanged.",
+  "input_checks": "checks.json",
+  "scope": "Audit of byte custody, decoded coverage and stated raw-image context limitations. No target execution, new import or additional behavior inference.",
+  "method": {
+    "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+    "independent_work": [
+      "Parsed source Mach-O segments and LC_FUNCTION_STARTS ULEB deltas independently of the author script.",
+      "Checked all five raw derivatives against source bytes and retained REA initialized-memory readback.",
+      "Matched native instruction words against source bytes, and all retained REA assembly addresses and mnemonics against native records, allowing only the identified b.cs/b.hs alias.",
+      "Read original and raw-slice instructions and pseudocode for the three highlighted functions, and checked the report's other two function summaries against retained native records.",
+      "Decoded both external B immediates directly from original instruction words."
+    ],
+    "target_executed": false,
+    "new_ghidra_import": false,
+    "existing_files_changed": false
+  },
+  "mechanical_results": {
+    "source_raw_and_readback_bytes_equal": 928,
+    "native_interval_words_verified": 232,
+    "rea_decoded_instruction_addresses_verified": 227,
+    "next_declared_entry_boundaries_verified": 5,
+    "single_mnemonic_difference": {
+      "address": "0x100d7c108",
+      "word": "54000122",
+      "rea": "b.cs",
+      "native": "b.hs",
+      "assessment": "Equivalent aliases for carry set / unsigned higher-or-same."
+    },
+    "limit": "These checks establish evidence consistency and local instruction coverage. They do not certify recovered source types, complete control flow, all operand rendering, callee behavior or runtime semantics."
+  },
+  "context_review": [
+    {
+      "function": "0x1007dd454",
+      "assessment": "Report correctly treats halt_baddata as a raw-image analysis limitation, not target behavior.",
+      "facts": [
+        "All 73 interval instructions are decoded.",
+        "At 0x1007dd560, word17fff238 independently decodes to B0x1007d9e40, outside this raw mapping.",
+        "The native branch follows register restoration; it is a valid tail transfer. The separate unequal-count path reaches RET0x1007dd574.",
+        "The raw pseudocode omits the external tail behavior and must not be used to infer a runtime halt or completed callback/lifecycle contract.",
+        "At 0x1007dd548, STR D0 writes floating result bits to object+0x50. The pseudocode's param_1[10]=(long)(...) is an inferred type artifact and does not establish native integer conversion. The report correctly describes a floating-result store."
+      ],
+      "unresolved": "The raw image alone cannot establish the two external call identities, virtual targets, repeated getter stability, or tail-callee side effects. Separate whole-image evidence must remain separately attributed."
+    },
+    {
+      "function": "0x1007dd780",
+      "assessment": "Both the unmapped-tail and overlapping-global warnings are appropriately bounded.",
+      "facts": [
+        "All 55 interval instructions are decoded.",
+        "At 0x1007dd814, word17ffff10 independently decodes to B0x1007dd454 after restoration. The destination exists as a separate source slice but is not mapped in this raw analysis.",
+        "The initialization sequence embeds bits3fe6a09e667f3bcd. This identifies a value written on that branch; it does not establish current runtime global contents or guard/helper outcomes.",
+        "FMADD0x1007dd7fc has one fused multiply-add operation. Its C-like multiplication-plus-add rendering must not be treated as evidence for two separately rounded operations.",
+        "Generated global symbols and their overlapping type warning do not demonstrate overlapping source objects or defective target storage."
+      ],
+      "unresolved": "Guard/global state, virtual getter targets and side effects, external initialization helpers, and the tail continuation require original-image context."
+    },
+    {
+      "function": "0x100d7c0cc",
+      "assessment": "The report accurately separates the metadata interval from the recovered REA body.",
+      "facts": [
+        "All 192 bytes equal the source and REA readback. Native disassembly has 48 words; the REA body has 43 instruction addresses ending at RET0x100d7c174.",
+        "The five omitted words are exactly0x100d7c178/17c/180/184/188. They are preserved, not missing acquisition bytes.",
+        "The trailing sequence contains calls to0x1022256cc and0x1038806a8. Exception cleanup is plausible, but association and exceptional reachability require missing unwind/LSDA context.",
+        "FMADD0x100d7c0e8 precedes signed FCVTZS W20,D0 at0x100d7c0ec. The later comparison/branch interprets W20 as unsigned for selection below4. Native signed conversion followed by unsigned range selection must not be replaced by the pseudocode's unsigned C cast.",
+        "Table pointer loads and a fallback-global address are visible, but their external data and actual displayed text are absent from this raw image. Separate original-image correlations are appropriately labeled."
+      ],
+      "unresolved": "NaN/out-of-range conversion, imported helper behavior, exceptional control flow and actual localized display remain outside this raw-slice contract. Display quantization does not establish an audio pan law."
+    },
+    {
+      "functions": ["0x1007dd650", "0x100d7c18c"],
+      "assessment": "The report's local decoding summaries agree with retained native instructions.",
+      "facts": [
+        "The650 interval has53 instructions through its local RET; the18c interval has3 instructions (FMOV0.25, FMUL, RET).",
+        "No raw slice proves caller semantics or source return types. The undefined1[16] return rendering is correctly identified as an inferred register artifact.",
+        "The650 import name correlation is explicitly separate original-image evidence. Raw external targets and virtual calls alone do not establish actual audio processing use."
+      ]
+    }
+  ],
+  "overall_disposition": {
+    "actionable_report_error_found": false,
+    "raw_pseudocode_is_executable_specification": false,
+    "whole_image_analysis_complete": false,
+    "runtime_fidelity_established": false,
+    "safe_use": "Use these slices as source-pinned local instruction evidence, retaining the native arithmetic and branch semantics and separately citing any original-image data/import/vtable correlation."
+  },
+  "preservation": "Only this new main-function-slices-review directory was written. Previous first-order, higher-order, main-reference and raw-slice artifacts were left unchanged."
+}

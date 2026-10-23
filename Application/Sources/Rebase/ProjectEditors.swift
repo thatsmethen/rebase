@@ -32,7 +32,7 @@ struct TempoEditor: View {
                 .foregroundStyle(.secondary)
             if tempo.nativeClock != nil {
                 HStack(alignment: .top) {
-                    Text("Recovered Reference timing is preserved. To edit tempo or export DAWproject, switch to Rebase timing. Musical clip starts may shift slightly.")
+                    Text("Recovered source timing is preserved. To edit tempo or export DAWproject, switch to Rebase timing. Musical clip starts may shift slightly.")
                         .font(.callout).fixedSize(horizontal: false, vertical: true)
                     Button("Use Rebase Timing") {
                         do {

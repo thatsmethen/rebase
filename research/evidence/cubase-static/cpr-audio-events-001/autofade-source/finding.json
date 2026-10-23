@@ -1,0 +1,308 @@
+{
+  "id": "CPR-AUTOFADE-SOURCE-001",
+  "status": "sealed bounded static saved-source contract",
+  "target_executed": false,
+  "runtime_comparisons": 0,
+  "native_source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "conclusion": "Forward structural parsing reaches the project and local audio-track automatic-fade slots in both pinned templates. Both local slots are null; both nonnull project MAutoFadeSetting v0 objects store flags0. The separately sealed root-ownership study binds the normal fallback to this same project setting. Zero flags satisfy the retained builder automatic-fade bypass predicate; no entire event or timeline rendering equivalence follows.",
+  "claims": [
+    {
+      "id": "AF1",
+      "claim": "MRoot reader101722120 calls10170ee20\u219210171862c\u21921017017a0. After the MEvent26-byte prefix/data-node/numeric-attribute sequence,1030f91c4 consumes a u16 list word, signed32 count and counted archive objects. The pinned root auxiliary count is0. Remaining normal version6 slots are FNPath, PPool, marker, tempo, signature, MAutoFadeSetting, signed16 keyed-event count and pairs, then loudness; the probe reaches exact root end in both templates.",
+      "functions": [
+        "0x101722120",
+        "0x10170ee20",
+        "0x10171862c",
+        "0x1017017a0",
+        "0x1030f91c4"
+      ]
+    },
+    {
+      "id": "AF2",
+      "claim": "Normal MAudioTrackEvent reader1001f76dc first calls10174b638, which restores MEvent, required MTrack resource, versioned signed32 word/double and optional MAutomationNode. Audio-track version1 then reads the MAutoFadeSetting slot into+170. The pinned source has a literal null there and exact track end. The special0x46706d49 import branch and arbitrary post-read callbacks are outside this normal-restoration contract.",
+      "functions": [
+        "0x1001f76dc",
+        "0x10174b638",
+        "0x1017017a0"
+      ]
+    },
+    {
+      "id": "AF3",
+      "claim": "103116a6c reads the numeric ID then tail-branches to103116478 for typed payload. Native type-bit dispatch distinguishes objects/strings/integer/double and other families. The probe deliberately supports only its explicit observed type allowlist and rejects unknown types/counts/references; it is not a general attribute decoder.",
+      "functions": [
+        "0x103116a6c",
+        "0x103116478"
+      ]
+    },
+    {
+      "id": "AF4",
+      "claim": "Both source project settings are MAutoFadeSetting version0, 364-byte bodies: u16flags0, f64duration bits3f847ae147ae147b (0.01), followed by four MLinearInterpolator version0 objects of68-byte bodies. The existing native setting reader10018cd6c expects four MInterpolator objects and binds flags to+c/duration to+10. Probe class checks are a stricter observed subset; interpolator bodies are retained opaque, not decoded as curves.",
+      "external_reader": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/pass5/function-10018cd6c.json",
+        "bytes": 244946,
+        "sha256": "265bbeec2143b41f04138361ad15cc8fbacff748f2ace3fbb2bbaa807c42158f"
+      }
+    },
+    {
+      "id": "AF5",
+      "claim": "Source-local null does not independently prove automatic fades disabled. The linked ownership finding supplies the normal restored MRoot fallback; the retained builder10020f2e8 obtains that effective setting and skips automatic-fade work when its u16+c iszero. Builder override flags0x28 are not substituted for this source-backed predicate.",
+      "ownership": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/ownership-finding.json",
+        "bytes": 7206,
+        "sha256": "14aaee2b8096ee1f0c2f502b4942140111ba4b86ecc703617e50c27d03861a85"
+      },
+      "builder_linkage": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/final-linkage.json",
+        "bytes": 20822,
+        "sha256": "d7679ccaddd0d4dd2592b32713331f066d2b769dea40d407df777ba02370cad5"
+      }
+    }
+  ],
+  "parser_scope": {
+    "arrangement": "PArrangement version4 containing MRoot version6 via existing bounded archive walker",
+    "base_versions": {
+      "MEvent": 1,
+      "MTrackEvent": 2
+    },
+    "required_root_roles": [
+      {
+        "class_name": "FNPath",
+        "version": 0
+      },
+      {
+        "class_name": "PPool",
+        "version": 5
+      },
+      {
+        "class_name": "MTempoTrackEvent",
+        "version": 3
+      },
+      {
+        "class_name": "MSignatureTrackEvent",
+        "version": 3
+      }
+    ],
+    "nullable_root_roles": [
+      {
+        "class_name": "MMarkerTrackEvent",
+        "version": 0
+      },
+      {
+        "class_name": "MLoudnessTrackEvent",
+        "version": 0
+      }
+    ],
+    "track_classes": {
+      "event": "MAudioTrackEvent v1",
+      "resource": "MAudioTrack v0",
+      "automation": "MAutomationNode v1 nullable"
+    },
+    "settings": "MAutoFadeSetting v0 nullable in parser; this zero-flag source conclusion requires actual nonnull effective setting. Null project setting is unresolved default, never silently zero.",
+    "numeric_attribute_types": [
+      "0x1",
+      "0x801",
+      "0x2",
+      "0x12",
+      "0x22",
+      "0x92",
+      "0x8(CmString v0)"
+    ],
+    "boundaries": "Exact source class/identity resolution, duplicate/key/count checks, exact object-end checks; no nearest-string resynchronization."
+  },
+  "fixtures": [
+    {
+      "fixture": "LoFi Hip Hop",
+      "source": {
+        "path": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/LoFi Hip Hop.cpr",
+        "bytes": 1333360,
+        "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495"
+      },
+      "root_identity": 392,
+      "root_parsed_end": 1291447,
+      "root_attribute_count": 23,
+      "root_auxiliary_count": 0,
+      "root_keyed_event_count": 7,
+      "setting_identity": 1291031,
+      "setting_body": 1291035,
+      "setting_end": 1291399,
+      "flags_offset": 1291035,
+      "flags": 0,
+      "duration_bits": "3f847ae147ae147b",
+      "interpolators": [
+        {
+          "identity": 1291099,
+          "class_name": "MLinearInterpolator",
+          "version": 0,
+          "body_bytes": 68,
+          "body_sha256": "7f46da594ae6c04423adc0538ac883e8e8c2b521d913e6a2d89ac8f02af99de8"
+        },
+        {
+          "identity": 1291175,
+          "class_name": "MLinearInterpolator",
+          "version": 0,
+          "body_bytes": 68,
+          "body_sha256": "2caaf0c3de8b31abdc1b07fd910688b43d2d910333776490ab9b3cc333813861"
+        },
+        {
+          "identity": 1291251,
+          "class_name": "MLinearInterpolator",
+          "version": 0,
+          "body_bytes": 68,
+          "body_sha256": "7f46da594ae6c04423adc0538ac883e8e8c2b521d913e6a2d89ac8f02af99de8"
+        },
+        {
+          "identity": 1291327,
+          "class_name": "MLinearInterpolator",
+          "version": 0,
+          "body_bytes": 68,
+          "body_sha256": "2caaf0c3de8b31abdc1b07fd910688b43d2d910333776490ab9b3cc333813861"
+        }
+      ],
+      "tracks": [
+        {
+          "identity": 197664,
+          "parsed_end": 243942,
+          "numeric_attribute_count": 6,
+          "local_null_offset": 243938,
+          "effective_origin": "project",
+          "effective_flags": 0,
+          "opaque_word": 46,
+          "opaque_number_bits": "0000000000000000"
+        }
+      ]
+    },
+    {
+      "fixture": "Classic House",
+      "source": {
+        "path": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Classic House.cpr",
+        "bytes": 1197444,
+        "sha256": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892"
+      },
+      "root_identity": 392,
+      "root_parsed_end": 1155094,
+      "root_attribute_count": 23,
+      "root_auxiliary_count": 0,
+      "root_keyed_event_count": 8,
+      "setting_identity": 1154672,
+      "setting_body": 1154676,
+      "setting_end": 1155040,
+      "flags_offset": 1154676,
+      "flags": 0,
+      "duration_bits": "3f847ae147ae147b",
+      "interpolators": [
+        {
+          "identity": 1154740,
+          "class_name": "MLinearInterpolator",
+          "version": 0,
+          "body_bytes": 68,
+          "body_sha256": "7f46da594ae6c04423adc0538ac883e8e8c2b521d913e6a2d89ac8f02af99de8"
+        },
+        {
+          "identity": 1154816,
+          "class_name": "MLinearInterpolator",
+          "version": 0,
+          "body_bytes": 68,
+          "body_sha256": "2caaf0c3de8b31abdc1b07fd910688b43d2d910333776490ab9b3cc333813861"
+        },
+        {
+          "identity": 1154892,
+          "class_name": "MLinearInterpolator",
+          "version": 0,
+          "body_bytes": 68,
+          "body_sha256": "7f46da594ae6c04423adc0538ac883e8e8c2b521d913e6a2d89ac8f02af99de8"
+        },
+        {
+          "identity": 1154968,
+          "class_name": "MLinearInterpolator",
+          "version": 0,
+          "body_bytes": 68,
+          "body_sha256": "2caaf0c3de8b31abdc1b07fd910688b43d2d910333776490ab9b3cc333813861"
+        }
+      ],
+      "tracks": [
+        {
+          "identity": 207199,
+          "parsed_end": 258262,
+          "numeric_attribute_count": 6,
+          "local_null_offset": 258258,
+          "effective_origin": "project",
+          "effective_flags": 0,
+          "opaque_word": 46,
+          "opaque_number_bits": "0000000000000000"
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "native": {
+      "functions": 9,
+      "source_bytes": 5716,
+      "native_words": 1429,
+      "rea_instruction_addresses": 1326,
+      "unique_evidence_ids": 18
+    },
+    "canonical_records_imported": 18,
+    "fixture_replays": 2,
+    "source_controls": 20,
+    "rejected_controls": 16,
+    "accepted_classification_controls": 4,
+    "control_scope": "In-memory mutated parser inputs only: flagsnonzero disables zero bypass; nonfinite duration, unknown version/type/reference, wrong local/loudness class and negative counts reject; track word stays opaque."
+  },
+  "limitations": [
+    "No Cubase execution, native reader invocation, audio capture, runtime comparison or full timeline equivalence.",
+    "Flags0 only bypasses automatic-fade construction; event fades/gain/warp/source selection and PCM are separate contracts.",
+    "The four interpolation payloads, pool/resource/automation and unknown attribute bodies remain opaque. No curve shape or nonzero fade mode is inferred.",
+    "Typed class/version and bounds checks are intentionally narrower than all native acceptance paths; special import/legacy/recovery branches are not projected.",
+    "Root and track callbacks may change live state. The separate ownership proof covers successful normal restoration, not later hosted mutation or extension replacement.",
+    "Raw slices omit global data/types/imports and can omit disconnected exception tails.103116a6c halt_baddata is the valid unmapped external tail branch to103116478, not evidence of a broken target.",
+    "REA instruction-address counts and parser controls establish evidence custody/mechanical consistency, not semantic or acoustic equivalence."
+  ],
+  "references": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/source-forward-probe.json",
+      "bytes": 106578,
+      "sha256": "946f5ce59e3f3e977b9da1a4a5a8b1a040aa6dde90b9b0698f92eb3d91acb456"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/source-controls.json",
+      "bytes": 9237,
+      "sha256": "0f098d89d603bff690b222138228c2919f80c4be1af6bd4724c7fe4e1015f821"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/reader-class-literals.json",
+      "bytes": 2742,
+      "sha256": "9c65b8e130dcb3fce6569d7d09a897e585525ea4f5d638fb3b1acf3b83aebe26"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/verification.json",
+      "bytes": 5755,
+      "sha256": "197d378d7a5938d60a62c4de98edda509356482ff1a7c329923c087591718226"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/seal-verification.json",
+      "bytes": 3894,
+      "sha256": "b1d1990d4889ace2bbed1c122da5ede627565456e93e3a87dee07a6baa98bd12"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/evidence-import.json",
+      "bytes": 367,
+      "sha256": "e67cf87eb49f17bdb5b7bdd979438858d1ddd5376d9ef34576564eace07a5f7e"
+    },
+    {
+      "path": "scripts/cpr_probe.py",
+      "bytes": 25831,
+      "sha256": "502a5d53c1a6135e40c0c220c99f4f509f30ccaa30cbe5a63ec5ab4b752ec63b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/probe_source.py",
+      "bytes": 9586,
+      "sha256": "87a40bf45adea2b62f1b5875a2a306850529ca3a4ae997823b92de922ca1d586"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/ownership-finding.json",
+      "bytes": 7206,
+      "sha256": "14aaee2b8096ee1f0c2f502b4942140111ba4b86ecc703617e50c27d03861a85"
+    }
+  ],
+  "preservation": "Existing source-forward-probe, controls and original verification retained byte-identical; new finding/seal verification/manifest only."
+}

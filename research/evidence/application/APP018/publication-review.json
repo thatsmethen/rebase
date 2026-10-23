@@ -1,0 +1,682 @@
+{
+  "schema_version": 1,
+  "review_id": "APP018-PRIVATE-PUBLICATION-REVIEW",
+  "reviewed_utc": "2026-10-21T01:09:53.161487+00:00",
+  "status": "passed; no publication blocker in the frozen prospective set",
+  "baseline_commit": "416b2102ab297e95eb63c9f8a9512b6d759d9ba6",
+  "scope": "Read-only union of git diff --name-only HEAD and git ls-files --others --exclude-standard. No staging, commit, push, tests, builds, target execution or GUI operation performed by this audit. Only this new report is written.",
+  "prospective_file_count": 112,
+  "strict_json_files": 36,
+  "total_prospective_bytes": 2044775,
+  "maximum_prospective_file_bytes": 241117,
+  "checks": {
+    "utf8_without_nul": true,
+    "strict_json_duplicate_and_nonfinite_rejection": true,
+    "authored_diff_whitespace": "git diff --check HEAD passed",
+    "credential_pattern_hits": 0,
+    "credential_pattern_scope": [
+      "private-key",
+      "github-token",
+      "openai-token",
+      "aws-key",
+      "credential-url",
+      "slack-token",
+      "gitlab-token",
+      "google-api-key",
+      "huggingface-token"
+    ],
+    "payload_path_hits": 0,
+    "files_over_one_MiB": 0,
+    "raw_payload_exception": "Nine independently authored14\u201316byte RIFF/RF64/BWF signature inputs in analytical-controls.json. No proprietary instruction arrays, function dumps or executable byte slices are published.",
+    "ignored_sentinels": [
+      "research/targets/derived/Cubase15-arm64",
+      "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+      "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/pass1/function-100211c80.arm64.bin",
+      "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/pass1/function-100211c80.json",
+      "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/evidence-bundle.json",
+      "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/linkage.json",
+      "research/evidence/application/APP018/final-source-snapshot/Sources/Rebase/RebaseApp.swift",
+      "research/evidence/application/APP018/final-build-snapshot/Rebase.app/Contents/MacOS/Rebase"
+    ],
+    "current_pinned_record_occurrences": 2877,
+    "unique_current_pinned_paths": 2226,
+    "current_application_snapshot_entries": 268,
+    "source_before_after_identical": true,
+    "native_manifests": [
+      {
+        "name": "builder-rate-provider",
+        "files": 376,
+        "external_references": 17
+      },
+      {
+        "name": "prepared-stream-rate",
+        "files": 303,
+        "external_references": 86
+      },
+      {
+        "name": "channel-rate-reconciliation",
+        "files": 362,
+        "external_references": 21
+      },
+      {
+        "name": "file-backend-format",
+        "files": 279,
+        "external_references": 52
+      }
+    ]
+  },
+  "acceptance": {
+    "path": "research/evidence/application/APP018/application-validation.json",
+    "bytes": 9948,
+    "sha256": "600d94e5c41e3ef07e4261da59a5366fef8ccb16ff81dfca79e7a884a6266369"
+  },
+  "claim_review": {
+    "current_release": "APP018 Rebase0.18.0/build18;280tests43suites;6boundedGUIgroups;8unchangedQApackagefiles",
+    "scope": "Supplied integral application project clock/factor1 with retained file-rate accessor; raw frames are not transparently resampled. Original CPR project rate, full channel context and whole-project fidelity remain unresolved.",
+    "hypothesis_revision": "README and next priorities explicitly retract the universal automatic-resampler assumption. Documentation, static operations and own-application tests remain separate evidence classes.",
+    "next_priority": "Recover saved PArrangement audio configuration and complete contributor/event/channel coverage before promoting ordinary native project playback.",
+    "preservation": "Historical APP015 packaged and APP016/APP017 development records are retained with their original scope. Current status keeps proprietary executions/runtime comparisons zero and full fidelity incomplete."
+  },
+  "open_blockers": [],
+  "limits": [
+    "Credential checks are bounded pattern/content inspection, not a guarantee that arbitrary unknown encodings cannot contain secrets. Values would not be printed on detection.",
+    "The static native studies and own-app validation do not establish target runtime equivalence.",
+    "Local proprietary references and evidence snapshots stay ignored; their hashes/paths in authored custody records are not redistributed payloads.",
+    "This publication report does not retrospectively validate superseded initial review or GUI observations as current; final accepted identities are checked separately."
+  ],
+  "permitted_followup_additions": [
+    "research/evidence/application/APP018/seal-integrity.json",
+    "research/evidence/application/APP018/artifact-manifest.json",
+    "research/evidence/application/APP018/final-integrity.json"
+  ],
+  "followup_rule": "Only the three listed authored seal outputs may be added after this review. Any prospective source/status or other payload change requires re-audit. Snapshot directories remain ignored.",
+  "reviewed_sources": [
+    {
+      "path": ".gitignore",
+      "bytes": 13310,
+      "sha256": "0b075f8d3d29216be3f7a6fd9b18abf267bb00efd50e66c787e5e17da4c4f668"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+      "bytes": 8770,
+      "sha256": "fae36af5825d58fcf1ed5ea0a95deba48f4ddc0b46e298be35f8496dcb92f4e9"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "bytes": 22654,
+      "sha256": "05a057537dd6a649a6a1bd5cfee2373cbc05faef738f52e839fedee7c6391e7f"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 9920,
+      "sha256": "4d34133eac2884913b702fd865fbca361be92023838369eeab26235d18103819"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRPlacedSourceEventPlan.swift",
+      "bytes": 6513,
+      "sha256": "28b24895ee19eaf0b8193ec81144ffef3256faf2ffa8e067be66b6189d9077bd"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 11393,
+      "sha256": "373ebaf4615e55b753a3ea9605e8a657da5d62a5e83742aa820fcf083cb06aec"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 9678,
+      "sha256": "b36f3a3fbad1374d90fbb0544d151a4815c9c91f926d4dd5120bd86d912630b1"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeProjectClockTests.swift",
+      "bytes": 9729,
+      "sha256": "9ad034089c6908360a005636ac3c8b8e61f65cc53f6092fac97bb4faef666c1f"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeTimelineStreamTests.swift",
+      "bytes": 16322,
+      "sha256": "3e32d68e250a5c44ca8991a5f508116785fc4efd19c29fe2ceb4ae00c4974d0b"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRPlacedSourceEventTests.swift",
+      "bytes": 28538,
+      "sha256": "f505ebdf76966929e848d4eb2e2e774062c119a3c7f601a99f566afcadc4698e"
+    },
+    {
+      "path": "Application/build-app.sh",
+      "bytes": 2947,
+      "sha256": "0f93be1849db9ce0781aaca9c73c284a62267eb89bc0c880598d6a2cdfee559b"
+    },
+    {
+      "path": "README.md",
+      "bytes": 51002,
+      "sha256": "6238f593562754951cd35a584ac6a3937d19b617163d6b76c787590c37d55e34"
+    },
+    {
+      "path": "research/coverage.json",
+      "bytes": 107969,
+      "sha256": "5d081d86c72a232c9f862d3e35fd3d245a1d8d0a7078d132b1f722066cee72ac"
+    },
+    {
+      "path": "research/evidence/application/APP018/application-validation.json",
+      "bytes": 9948,
+      "sha256": "600d94e5c41e3ef07e4261da59a5366fef8ccb16ff81dfca79e7a884a6266369"
+    },
+    {
+      "path": "research/evidence/application/APP018/capture_validation.py",
+      "bytes": 3465,
+      "sha256": "dbe98d14e927735e44cecc80c70d368a881550d4d2ec69552110220167a3bb98"
+    },
+    {
+      "path": "research/evidence/application/APP018/core-test-run.json",
+      "bytes": 1745,
+      "sha256": "69ef843b795081d5b1b9bc978993ef0912949da4e71eadcc376868fe415da8a9"
+    },
+    {
+      "path": "research/evidence/application/APP018/core-tests.json",
+      "bytes": 378,
+      "sha256": "eb04ce48f2c431948e52da0939e972906fad8f9569884761764c77fcaf9c19c0"
+    },
+    {
+      "path": "research/evidence/application/APP018/final-build-release.json",
+      "bytes": 368,
+      "sha256": "0942c9117d92a817ca5e6fe48c5872101dd0cb955f6cb000fb02aab557488ff6"
+    },
+    {
+      "path": "research/evidence/application/APP018/final-source-manifest.json",
+      "bytes": 63029,
+      "sha256": "13908596f5ff12117fb75f9f01bd5a339f391014c10bf588259a723156a421d8"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-independent-check.json",
+      "bytes": 13591,
+      "sha256": "e7810163479408e25980aa6da6024c0896653b1676cf57867ae4b8d3874bbd98"
+    },
+    {
+      "path": "research/evidence/application/APP018/gui-observations.json",
+      "bytes": 8089,
+      "sha256": "901c4395467262d699f4973915020f8f491e1ace0560755ce139eed7a908ac2f"
+    },
+    {
+      "path": "research/evidence/application/APP018/project-clock-independent-review.json",
+      "bytes": 7704,
+      "sha256": "cd99677816fe3c8e2a4b1d494c0957a51d9ca27cb99b50e94d0992188e1c76c3"
+    },
+    {
+      "path": "research/evidence/application/APP018/project-clock-native-review-initial.json",
+      "bytes": 15618,
+      "sha256": "93c787b4171dac449210b20de024a45cab12cc36c373a29bbec97d292615e66c"
+    },
+    {
+      "path": "research/evidence/application/APP018/project-clock-native-review.json",
+      "bytes": 59391,
+      "sha256": "cafb636698b97f6e1daa15da6a2602cbfa8ab6582bddaa1ab49208b08516d4dd"
+    },
+    {
+      "path": "research/evidence/application/APP018/public-backend-packaging.json",
+      "bytes": 10591,
+      "sha256": "04ce276653cd573e6addf9891f70b3ba3ae7ddecd92494f5cda34505ad96a87d"
+    },
+    {
+      "path": "research/evidence/application/APP018/record_gui.py",
+      "bytes": 5186,
+      "sha256": "73b1e7723dce74192d025ae0c254e5995c06296253c49373d6d90c2a3b627a4a"
+    },
+    {
+      "path": "research/evidence/application/APP018/recursive-integrity.json",
+      "bytes": 15716,
+      "sha256": "2e208b3e3061764f343991f1c5930eeff64e0572fa3c6033fff8bfee206e3ecb"
+    },
+    {
+      "path": "research/evidence/application/APP018/release-build.json",
+      "bytes": 834,
+      "sha256": "63f52f8ba56a2049188faed62eb3751d1b8f115f9a44a6a77047fa359e9313bf"
+    },
+    {
+      "path": "research/evidence/application/APP018/seal_application.py",
+      "bytes": 20709,
+      "sha256": "73681a16dba57ab5282015a5d1438353c0eba0b9d713a3d06046e442b2c6b8be"
+    },
+    {
+      "path": "research/evidence/application/APP018/sealer-independent-review.json",
+      "bytes": 2884,
+      "sha256": "137f2065bede9727be0207d8f80a610b0a63dc3da3f52537d5c8de816d74112c"
+    },
+    {
+      "path": "research/evidence/application/APP018/test-build.json",
+      "bytes": 378,
+      "sha256": "3efa1f54c824b10a7c64a875f096a87810d0690e5a4fb9c3df77151c1dc5eb9f"
+    },
+    {
+      "path": "research/evidence/application/APP018/test-source-after.json",
+      "bytes": 50433,
+      "sha256": "2028a1de02a01ea0813050a0e69f3d6d1d974b295850ee4fb591142bce7f2877"
+    },
+    {
+      "path": "research/evidence/application/APP018/test-source-before.json",
+      "bytes": 50433,
+      "sha256": "2028a1de02a01ea0813050a0e69f3d6d1d974b295850ee4fb591142bce7f2877"
+    },
+    {
+      "path": "research/evidence/application/APP018/update_status.py",
+      "bytes": 10525,
+      "sha256": "b4e7210b9b67cfdd5d863782218396d8251fb83dbbae05f28a5292884af0da32"
+    },
+    {
+      "path": "research/evidence/cubase-documentation/project-rate-001/finding.json",
+      "bytes": 2682,
+      "sha256": "4065e5da3bced53d7539bd2abcd7ece22cda7097bbe12cb5a5f557a6a2c7054c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/analyze_pass1.mjs",
+      "bytes": 2877,
+      "sha256": "0e7e93c69f65309fec4b6b95ce8f490a8ad551d114392a24a6e7d6978226b45e"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/analyze_pass10.mjs",
+      "bytes": 2878,
+      "sha256": "28f9f9a7a2c4bf5875ca7fd69225b592a448edd387dea35ae848774d2d662192"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/analyze_pass2.mjs",
+      "bytes": 2877,
+      "sha256": "17b69ada5c1d30aec267ae719e75b2bab5baba7e4125ef806696b1ecf7eae3c6"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/analyze_pass3.mjs",
+      "bytes": 2877,
+      "sha256": "b98ab25dd622b08900152f56d374ae8d0253188beeea5522e68b8b8152044564"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/analyze_pass4.mjs",
+      "bytes": 2877,
+      "sha256": "bf3f87ccccadc7eacff6127754749323b3554809d24248d9f69efb5fb7bb6ea2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/analyze_pass5.mjs",
+      "bytes": 2877,
+      "sha256": "e056ae4dc0f73d72ab9c4f37146f7231f290f7c4e7b2a3d9827f57d1dd752e40"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/analyze_pass6.mjs",
+      "bytes": 2877,
+      "sha256": "4a1dc8fc7e8252ee90bf509ac3ec58cdcfd8540588f53bbba3a1a722c5103888"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/analyze_pass7.mjs",
+      "bytes": 2877,
+      "sha256": "e6fe4bc46a3c342c10a72c9b68aecaf0d480b91f2f2ab42dcd41a5c5ce2263ff"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/analyze_pass8.mjs",
+      "bytes": 2877,
+      "sha256": "eefe59a2b183a671739734dee74218cc285e5ca83f87a654245e732d6440f48c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/analyze_pass9.mjs",
+      "bytes": 2877,
+      "sha256": "77047dde8bf3ee78a50a44652786c436d69e253914aa8b6ebfb60ddd8b5ff5a2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/artifact-manifest.json",
+      "bytes": 93296,
+      "sha256": "64fa01bc5de7b90c623507d4ae0eb52e5122c6f5bb2b0e24b5e4160b2ea894f3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/combine_evidence.mjs",
+      "bytes": 853,
+      "sha256": "0ad775dda37cf6e321f0dd30516c8663897f61ce95a499ca2d72c21bcb342e99"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/combine_final_evidence.mjs",
+      "bytes": 859,
+      "sha256": "3165ca595ba5831cf2043fc9d5e6a88093e4a48e708629f72497734450d7a584"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/discover_provider.py",
+      "bytes": 1051,
+      "sha256": "675a024eaffa8dbd85bd3a970fe2a70004f1526e14cbd9b6a96df1f7cd773c7f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/find_refs.py",
+      "bytes": 1412,
+      "sha256": "1ae9d35df6d99b72091dc7f59378beeab641f22640430cc45d26107c26b25b16"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/finding.json",
+      "bytes": 15602,
+      "sha256": "f6448e5a71e2110f70246febd2d66c6b7965f97ff23bc9e9075a6abf3c4bc121"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/import_evidence.mjs",
+      "bytes": 1765,
+      "sha256": "ab61b359b44978601711330915edf0e7ed04289615d2c64bf36237dcdea5e0f5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/import_final_evidence.mjs",
+      "bytes": 1789,
+      "sha256": "744e9005dfb737f87ffae1865fd2a1b8b8633b9a3b832a931e1b13aaecf79666"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/rank_provider_stores.py",
+      "bytes": 865,
+      "sha256": "e5f2ccd3ac5318383bc51e3ce9776c76898e2cdc2725fde3a14cf32bffc9acae"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/rate-controls.json",
+      "bytes": 11517,
+      "sha256": "b7fc1ff01f21c9c9d35740842e2ce69541746140bf8f072051e16219f1e07268"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/rate_controls.py",
+      "bytes": 2043,
+      "sha256": "81c09186a262860c6bf5529fbab113ec3441ed9c2e481910fd262d95413954a1"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/scan_provider_stores.py",
+      "bytes": 962,
+      "sha256": "c1650058f7a1cfbe9750410396b118020efd95f93d709c7bcc809fdf56ec717b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/scan_root_refs.py",
+      "bytes": 3730,
+      "sha256": "e7c4dd82c38bedea48472512be9df418b9671dbbef9de769dd48ad97b669bdd3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/seal_study.py",
+      "bytes": 2761,
+      "sha256": "88435aa19bac145d917954cecc7d242358b1a9d73d8f71111c28021020ffb9d8"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/verify_evidence.py",
+      "bytes": 5011,
+      "sha256": "d483cbfc5283226220ac1a2b12f543bd728cfeb247baeb0f7bb56b8c2042761a"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/write_finding.py",
+      "bytes": 8789,
+      "sha256": "265ca4d6117b0b221cb29fa9da13539c53b4add345cef358d74c510fae5bc601"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/analyze_pass1.mjs",
+      "bytes": 2883,
+      "sha256": "46317a7cdf35585e29db1fa5afba5c69ff6bf2e246c85f779eca82433d0437ee"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/analyze_pass2.mjs",
+      "bytes": 2883,
+      "sha256": "7325fc76161741a18a8efe1af6c9eb23756cfe5ea92ba578e75c547745757f64"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/analyze_pass3.mjs",
+      "bytes": 2883,
+      "sha256": "1e45dbc411f220f5b39fb6803b87822996c14a4d9a3b17be02730abbb23f0b75"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/analyze_pass4.mjs",
+      "bytes": 2883,
+      "sha256": "a6d781fd8871b7eaf82c8be6a62ebd225d89a9c7ef8dc2310a5ae8baa5d93299"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/analyze_pass5.mjs",
+      "bytes": 2883,
+      "sha256": "0a74a85b8ed7db9a29b951d129479b40b7a68d072007f62fdaa6ddb36b43a3d2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/analyze_pass6.mjs",
+      "bytes": 2883,
+      "sha256": "c0e8bc0aed5c5f8add9f05050ada3049ce7589517991d93cb6dc8707e449e012"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/artifact-manifest.json",
+      "bytes": 93355,
+      "sha256": "ebebedc2afafb3f5af440bb54e15e4cea02cf64c40a089933a16e82d90e17aa3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/bind_source.py",
+      "bytes": 2637,
+      "sha256": "73d5901c394008313a268993fb985ad0a55957302fcbc1c32fb0a0ee6e76fa16"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/combine_evidence.mjs",
+      "bytes": 853,
+      "sha256": "0ad775dda37cf6e321f0dd30516c8663897f61ce95a499ca2d72c21bcb342e99"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/derive.py",
+      "bytes": 965,
+      "sha256": "49c4e8e839c2cc69d040768d023e50be7eeba5123af7d1f2da792a615a2a2095"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/find_refs.py",
+      "bytes": 1412,
+      "sha256": "1ae9d35df6d99b72091dc7f59378beeab641f22640430cc45d26107c26b25b16"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/finding.json",
+      "bytes": 7592,
+      "sha256": "95258c04e8174d326e284dff5710a49ddd813ca099965e62f9e7dbab9be2c3a5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/import_evidence.mjs",
+      "bytes": 1771,
+      "sha256": "45d383a33da8e3df2e063713f4c9c132e18ddce60f8f27256b935ad463ea1698"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/seal_study.py",
+      "bytes": 2563,
+      "sha256": "a7d5fff0e46a94a911f2954189a6acdf0105c346a4427a002f96f98e8af9bc1d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/selector-controls.json",
+      "bytes": 5051,
+      "sha256": "2e4ec7514e4e8273437e02595d24b2aff22a8ca4f348fab9ed652bc6a95caf0b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/selector_controls.py",
+      "bytes": 1443,
+      "sha256": "1f8a6c65a49d570faacb3252beb4e60f361e72a004b7a695548fc4baf6ce8a4d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/verify_evidence.py",
+      "bytes": 3316,
+      "sha256": "146c382c89f45615a9cd376a6b77f3b362d083c2d45f6df0a9322617ab318562"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-reconciliation/write_finding.py",
+      "bytes": 6138,
+      "sha256": "74df4413c086b5a3e993b48cfc1123440404df57e56f2933c1f1490e91d2ef6f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/analytical-controls.json",
+      "bytes": 4436,
+      "sha256": "9aabecf27eb77c680b01be94dad8cbd7d7e16a3b2017a5a5c9ad237f98cbe610"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/analytical_controls.py",
+      "bytes": 3096,
+      "sha256": "c1460778d0f2a75092a15725e272d169a89cc04098c920d4afb059f5da6f681d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/analyze_followup.mjs",
+      "bytes": 2901,
+      "sha256": "0f8a09654889079d06139c4765b7e9ecb90b8bacdf1901d4d1c9b3586ba53bc7"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/analyze_pass.mjs",
+      "bytes": 2892,
+      "sha256": "2e9ed1b9a6d4d286cd158251604eb72a086cf96efaa530835498100f5a1976a0"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/artifact-manifest.json",
+      "bytes": 77757,
+      "sha256": "55bdc6dd4822a39e4fd73f3b852d2d34ec8721b2a702730c823c9368ee72e0d1"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/combine_evidence.mjs",
+      "bytes": 1337,
+      "sha256": "c42344baebbebf8166d2318e26520e461fad792800bfe1dacb5e41edc4c62f73"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/derive_pass.py",
+      "bytes": 599,
+      "sha256": "007f8d5e020f67cfa29cdb6fac7075477e17db327203faac26412009fbea6a6f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/find_refs.py",
+      "bytes": 1412,
+      "sha256": "1ae9d35df6d99b72091dc7f59378beeab641f22640430cc45d26107c26b25b16"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/finding.json",
+      "bytes": 28743,
+      "sha256": "3a240eed17d150a0d798731abc873e195559fd97c636580e2a836ec1b8b58f44"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/import_evidence.mjs",
+      "bytes": 1770,
+      "sha256": "a45251be465d9052c050002315401854f3c757f1a112b41ffe1702ce3349304f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/linkage.py",
+      "bytes": 2273,
+      "sha256": "46affb37acd3a3c8fa73032745c68546c1990afc7a670b1d883ced5076dc6def"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/scan_refs.py",
+      "bytes": 1761,
+      "sha256": "1267604049de686a0a0775f1543f4c665b0b314982c3c7df2a5e503385700942"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/seal.py",
+      "bytes": 1804,
+      "sha256": "1f68f3d6ac22e67e801798633b1f69742cb0e9a609be4a2cfc091384e90b5cf2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/verify_evidence.py",
+      "bytes": 5438,
+      "sha256": "5bc78098da863acdd0e1e510c67de5d71f723781d66b193176cc209acd3c666d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/file-backend-format/write_finding.py",
+      "bytes": 10527,
+      "sha256": "e072c41ddbf793f3595006b8bf08398172d0e42c2382595116a6e5679907eab0"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/analytical-controls.json",
+      "bytes": 3940,
+      "sha256": "32486a76e2214ad62ad1d3f3d184f9e47bbc3d7bb565ab383f45dcb4f5e8b849"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/analytical_controls.py",
+      "bytes": 2906,
+      "sha256": "1e67d710aab2eea311808055af77b6a78be207c9abdc2139a43be69404115d95"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/analyze_pass.mjs",
+      "bytes": 2897,
+      "sha256": "e231ba541cf684bfef20070b178cf5ceff1ca8e5b187eb2e81cdc0a6b6dfd3ed"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/artifact-manifest.json",
+      "bytes": 91809,
+      "sha256": "8de873442af33b9f768d48b7cea8d31c4f2dc1b1c7528bf93e47ce547f9628d1"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/combine_evidence.mjs",
+      "bytes": 1337,
+      "sha256": "c42344baebbebf8166d2318e26520e461fad792800bfe1dacb5e41edc4c62f73"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/derive.py",
+      "bytes": 496,
+      "sha256": "dadbc12c017a0faee7fe27552e0283577da99cf62478e26c3d810395df802c65"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/finding.json",
+      "bytes": 27688,
+      "sha256": "510aa3182cd3179b2b2e6c8d1dcd76cb40dfe36625e224281c0ff93ff39df9be"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/import_evidence.mjs",
+      "bytes": 1768,
+      "sha256": "c5b4c732e55a9804014e74d31efcfe34e9794a7898dd13a342b5f83ac13e88fb"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/linkage.py",
+      "bytes": 2949,
+      "sha256": "69b99eff65070bdb4f19832615e1e7ad1c714dfd93c144a59818592dd19392ea"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/seal.py",
+      "bytes": 1827,
+      "sha256": "4cafc9bf01db24f93bf29f91072be06153b1a7eda0a0c1750d09151cc52393f3"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/verify_evidence.py",
+      "bytes": 5438,
+      "sha256": "5bc78098da863acdd0e1e510c67de5d71f723781d66b193176cc209acd3c666d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/prepared-stream-rate/write_finding.py",
+      "bytes": 8599,
+      "sha256": "9fe8b32da17686fd3777f7017926663a11ca89fe96acdbb08dce0ac718e6cd09"
+    },
+    {
+      "path": "research/rea-steering.json",
+      "bytes": 241117,
+      "sha256": "7fa7fbe0f46340688f15f1a6cf15ea0341e9e4e9c0426f6a4527dc9e615d75d5"
+    },
+    {
+      "path": "research/status-history/APP018-before/README.md",
+      "bytes": 50806,
+      "sha256": "d9ff01817561d1d3947dfbc40fc0c1b035d49ba8ce41f354b249ba4e7c33d88d"
+    },
+    {
+      "path": "research/status-history/APP018-before/coverage.json",
+      "bytes": 101585,
+      "sha256": "d29b47adf6888ef417d625977ab12679e397f789d2c82a8361199befad90c5fc"
+    },
+    {
+      "path": "research/status-history/APP018-before/rea-steering.json",
+      "bytes": 219016,
+      "sha256": "de66e6d0b7f5a1830ea022d7ac66b69dd9c0d330dc408045a7ac24855bc4eefe"
+    },
+    {
+      "path": "research/status-history/APP018-before/study.json",
+      "bytes": 75579,
+      "sha256": "d88317c073e9013b759856931daa9ba0a7cb2d320508d6faaf8fb3e9474a30e8"
+    },
+    {
+      "path": "research/study.json",
+      "bytes": 80360,
+      "sha256": "349afc4fde3efe767e6af412e57861433a04d324754fbbfb4c312d33a0464fa3"
+    }
+  ],
+  "final_status_pins": [
+    {
+      "path": "README.md",
+      "bytes": 51002,
+      "sha256": "6238f593562754951cd35a584ac6a3937d19b617163d6b76c787590c37d55e34"
+    },
+    {
+      "path": "research/study.json",
+      "bytes": 80360,
+      "sha256": "349afc4fde3efe767e6af412e57861433a04d324754fbbfb4c312d33a0464fa3"
+    },
+    {
+      "path": "research/coverage.json",
+      "bytes": 107969,
+      "sha256": "5d081d86c72a232c9f862d3e35fd3d245a1d8d0a7078d132b1f722066cee72ac"
+    },
+    {
+      "path": "research/rea-steering.json",
+      "bytes": 241117,
+      "sha256": "7fa7fbe0f46340688f15f1a6cf15ea0341e9e4e9c0426f6a4527dc9e615d75d5"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 13310,
+      "sha256": "0b075f8d3d29216be3f7a6fd9b18abf267bb00efd50e66c787e5e17da4c4f668"
+    }
+  ]
+}

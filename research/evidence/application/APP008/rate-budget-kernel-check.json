@@ -1,0 +1,118 @@
+{
+  "id": "APP008-RATE-BUDGET-OPTIMIZED-CHECK",
+  "created_utc": "2026-10-19T14:29:37.955988+00:00",
+  "status": "passed",
+  "scope": "Self-authored optimized count kernel versus independent exact-Fraction analytical controls; not sample resampling.",
+  "compiler": "Apple clang version 17.0.0 (clang-1700.4.4.1)",
+  "commands": [
+    [
+      "clang",
+      "-O2",
+      "-std=c11",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-frounding-math",
+      "-I",
+      "/workspace/rebase/Application/Sources/RebaseTimingDSP/include",
+      "-dynamiclib",
+      "/workspace/rebase/Application/Sources/RebaseTimingDSP/cpr_rate_budget.c",
+      "-o",
+      "/workspace/rebase/research/evidence/application/APP008/rate-budget-kernel.dylib"
+    ],
+    [
+      "clang",
+      "-O2",
+      "-std=c11",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-frounding-math",
+      "-I",
+      "/workspace/rebase/Application/Sources/RebaseTimingDSP/include",
+      "-S",
+      "/workspace/rebase/Application/Sources/RebaseTimingDSP/cpr_rate_budget.c",
+      "-o",
+      "/workspace/rebase/research/evidence/application/APP008/rate-budget-kernel.arm64.s"
+    ]
+  ],
+  "budget_vectors": 240,
+  "extra_controls": 4,
+  "maximum_search_evaluations": 25,
+  "intermediate_bits_and_counts_match": true,
+  "original_source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "original_slices": [
+    {
+      "entry": "0x10030a430",
+      "original_file_offset": 3187760,
+      "original_bytes_identical": true,
+      "slice": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/function-10030a430.arm64.bin",
+        "bytes": 136,
+        "sha256": "a4dadc8787330325721f554412a368750f89fc61fe476efda01d0f7f9485a5ab"
+      }
+    },
+    {
+      "entry": "0x100330d84",
+      "original_file_offset": 3345796,
+      "original_bytes_identical": true,
+      "slice": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/function-100330d84.arm64.bin",
+        "bytes": 88,
+        "sha256": "a7e1806d38da1baac61a59b7f472e4f2ac1e5bb30a607eca29e34ffc17e56b78"
+      }
+    },
+    {
+      "entry": "0x100313bf8",
+      "original_file_offset": 3226616,
+      "original_bytes_identical": true,
+      "slice": {
+        "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/function-100313bf8.arm64.bin",
+        "bytes": 52,
+        "sha256": "9f03d0e0e5c8f93a06fec0dd55343d52339f80fb76dae3e73d23d19df3f682ac"
+      }
+    }
+  ],
+  "emitted_operations": {
+    "required": [
+      "fdiv",
+      "fmul",
+      "frintp",
+      "fcvtzs"
+    ],
+    "fused_multiply_add_absent": true,
+    "limit": "Instruction presence check, not a formal compiler proof."
+  },
+  "pins": [
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_rate_budget.c",
+      "bytes": 5789,
+      "sha256": "76cbf90501ed9512057da1f91fb725e26d07b538f444d5a911926e0587e111fb"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_rate_budget.h",
+      "bytes": 1528,
+      "sha256": "3110d27e2ab99a18d3b26722e489b6b5b492648a7ba57e9a1b0e5e938ccf170e"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/analytical-count-controls.json",
+      "bytes": 219569,
+      "sha256": "5d9e87d6e0608e14808fc1142f3273c4cae3e96f9c41a84de63060e87d948c92"
+    },
+    {
+      "path": "research/evidence/application/APP008/rate-budget-kernel.dylib",
+      "bytes": 33448,
+      "sha256": "b042b3357c788a9d2628a6c9daa4807ca637b8fa26b40b4f62c282d45687b8d3"
+    },
+    {
+      "path": "research/evidence/application/APP008/rate-budget-kernel.arm64.s",
+      "bytes": 6277,
+      "sha256": "19c81467dd278b0e174fcd4afea7b28a6ae1c6bc3e0b9e26d3b46a96698c2136"
+    },
+    {
+      "path": "research/evidence/application/APP008/check-rate-budget-kernel.py",
+      "bytes": 6622,
+      "sha256": "9bf468daf700561af8e7e56da3164d63069333f759c494456c40274538f96b5e"
+    }
+  ],
+  "target_executions": 0,
+  "sample_resampling_tests": 0
+}

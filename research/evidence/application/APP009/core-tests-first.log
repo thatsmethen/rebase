@@ -1,0 +1,19 @@
+[0/1] Planning build
+Building for debugging...
+[0/10] Write sources
+[3/10] Compiling RebaseTimingDSP cpr_timeline_selector.c
+[4/10] Write swift-version--1AB21518FC5DEDBE.txt
+[6/15] Compiling RebaseCore CPRSourceEventPlayback.swift
+[7/15] Compiling RebaseCore OfflineRenderer.swift
+[8/15] Emitting module RebaseCore
+[9/15] Compiling RebaseCore CPRSourceAudioInspection.swift
+[10/15] Compiling RebaseCore CPRTimelineSelection.swift
+/workspace/rebase/Application/Sources/RebaseCore/CPRTimelineSelection.swift:30:21: error: cannot find 'rb_cpr_timeline_select' in scope
+28 |             lengths.withUnsafeBufferPointer { length in
+29 |                 successors.withUnsafeBufferPointer { next in
+30 |                     rb_cpr_timeline_select(start.baseAddress, length.baseAddress, next.baseAddress, segments.count,
+   |                     `- error: cannot find 'rb_cpr_timeline_select' in scope
+31 |                         generation, query, cursor.current, cursor.generation, &selected, &updated)
+32 |                 }
+[11/16] Compiling RebaseCore AudioTransportEngine.swift
+error: fatalError

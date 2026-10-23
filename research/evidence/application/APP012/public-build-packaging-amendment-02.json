@@ -1,0 +1,45 @@
+{
+  "id": "APP012-PUBLIC-BUILD-PACKAGING-AMENDMENT-002",
+  "created_utc": "2026-10-20T09:40:44.690667+00:00",
+  "reason": "SwiftPM inserted an unused absolute CommandLineTools runtime rpath. The standalone bundle must not depend on development-machine paths.",
+  "prior_amendment": {
+    "path": "research/evidence/application/APP012/public-build-packaging-amendment.json",
+    "bytes": 1368,
+    "sha256": "7e205c57eee1df0b6dabbb0df087f60c6cf69da43f40e71b7a54bdc5789e8948"
+  },
+  "superseded_build_script": {
+    "path": "Application/build-app.sh",
+    "bytes": 2441,
+    "sha256": "2b9893210a0598535f9eb8b75e460e7e91f0a01013190fda9c258410d92a963d"
+  },
+  "current_build_script": {
+    "path": "Application/build-app.sh",
+    "bytes": 2947,
+    "sha256": "4bd6b0795b4aed5d023aaa4832e85d53675e1ef7bac4223c5de26ebe9cd792b7"
+  },
+  "change": "After removing the public-library build prefix, inspect LC_RPATH and remove all non-system absolute rpaths before signing. Keep system paths and relative loader/Frameworks paths.",
+  "final_rpaths": [
+    "/usr/lib/swift",
+    "@loader_path",
+    "@executable_path/../Frameworks"
+  ],
+  "final_executable": {
+    "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 4878128,
+    "sha256": "3cb6b102a31314d7bd05d38c72f5bb7dcc54c9c6af19863e44029609ca154d87"
+  },
+  "final_public_library": {
+    "path": "Application/dist/Rebase.app/Contents/Frameworks/libsoxr.0.dylib",
+    "bytes": 188000,
+    "sha256": "c614df97b2c3f3881fa694efc73a6d5152fe0288ac9396adb6bd7c8c8e5f895a"
+  },
+  "packaging_check": {
+    "path": "research/evidence/application/APP012/packaged-build-check.json",
+    "bytes": 10892,
+    "sha256": "dd4d5dc40d3981b72d0a192cc58138d2239d7318fd587d61703ad575f3846f8a"
+  },
+  "sealed_public_study_unchanged": true,
+  "runtime_source_changes": false,
+  "test_rerun_required": false,
+  "limits": "Packaging and signature checks, not a new GUI execution or vendor-library comparison."
+}

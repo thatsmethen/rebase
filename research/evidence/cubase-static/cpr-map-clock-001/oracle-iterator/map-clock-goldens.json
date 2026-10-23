@@ -1,0 +1,2556 @@
+{
+  "scope": "Independent exact-rational analytical outputs; no target runtime or candidate execution",
+  "model": "Every operation nearest/ties-even IEEE; explicit fused operations; integer rational floor; serialized f32 periods promoted exactly",
+  "preconditions": "1/2 selected kind0 records, unchanged serialized anchors; finite inputs, nonnegative coordinates, fresh filter-null iterator. Lifecycle/cache/list ownership is separately pending. Synthetic unequal anchors are arithmetic controls, not approved imports.",
+  "zero": "+0/-0 forward uses first-period division and multiply, no quantizer. Inverse follows nonnegative jump path; origin +A addition yields +0 for either signed input zero.",
+  "quantizer_discriminator_scope": "The internal quantizer split/FMA discriminator occurs above the existing app tick bound. It validates the instruction-level oracle, not permission to expand the application domain. Half-step and neighbor vectors within the bound are retained without claiming they distinguish fused/split evaluation.",
+  "first_fma_discriminator_scope": "The first-FMA controls retain raw-tick differences even when the subsequent quantizer erases that difference. Each row states whether its final result also differs; no stronger end-to-end discrimination is implied.",
+  "maps": {
+    "piano-origin": [
+      {
+        "period_f32_bits": "0x3ee540f5",
+        "seconds_f64_bits": "0x0000000000000000",
+        "ticks_f64_bits": "0x0000000000000000",
+        "kind": 0
+      }
+    ],
+    "piano-period-next": [
+      {
+        "period_f32_bits": "0x3ee540f6",
+        "seconds_f64_bits": "0x0000000000000000",
+        "ticks_f64_bits": "0x0000000000000000",
+        "kind": 0
+      }
+    ],
+    "half-origin": [
+      {
+        "period_f32_bits": "0x3f000000",
+        "seconds_f64_bits": "0x0000000000000000",
+        "ticks_f64_bits": "0x0000000000000000",
+        "kind": 0
+      }
+    ],
+    "lofi-two-jump": [
+      {
+        "period_f32_bits": "0x3f400000",
+        "seconds_f64_bits": "0x0000000000000000",
+        "ticks_f64_bits": "0x0000000000000000",
+        "kind": 0
+      },
+      {
+        "period_f32_bits": "0x3f000000",
+        "seconds_f64_bits": "0x4082c00000000000",
+        "ticks_f64_bits": "0x4117700000000000",
+        "kind": 0
+      }
+    ],
+    "stereo-two-jump": [
+      {
+        "period_f32_bits": "0x3f000000",
+        "seconds_f64_bits": "0x0000000000000000",
+        "ticks_f64_bits": "0x0000000000000000",
+        "kind": 0
+      },
+      {
+        "period_f32_bits": "0x3f000000",
+        "seconds_f64_bits": "0x4082c00000000000",
+        "ticks_f64_bits": "0x4121940000000000",
+        "kind": 0
+      }
+    ],
+    "synthetic-unequal-anchor": [
+      {
+        "period_f32_bits": "0x3ee540f5",
+        "seconds_f64_bits": "0x0000000000000000",
+        "ticks_f64_bits": "0x0000000000000000",
+        "kind": 0
+      },
+      {
+        "period_f32_bits": "0x3f400001",
+        "seconds_f64_bits": "0x4082c00000000000",
+        "ticks_f64_bits": "0x4123a10200000000",
+        "kind": 0
+      }
+    ]
+  },
+  "vectors": [
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173add8..af58: zero branch; first tempo period; no quantization"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "zero_quotient": "0x0000000000000000",
+        "result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x8000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173add8..af58: zero branch; first tempo period; no quantization"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "zero_quotient": "0x8000000000000000",
+        "result": "0x8000000000000000"
+      },
+      "result_f64_bits": "0x8000000000000000",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ff0000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3ff0000000000000",
+        "quotient": "0x4001ddddd4a2b3ca",
+        "raw_tick": "0x4090bffff758888d",
+        "quantizer_fma": "0x41305b80778c755a",
+        "quantizer_floor": "0x41305b8000000000",
+        "result": "0x4090c00000000000",
+        "split_raw_tick": "0x4090bffff758888d",
+        "split_raw_result": "0x4090c00000000000",
+        "split_quantizer_result": "0x4090c00000000000"
+      },
+      "result_f64_bits": "0x4090c00000000000",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ef7c6f8c751f177",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3ef7c6f8c751f177",
+        "quotient": "0x3f0a8d1e48529797",
+        "raw_tick": "0x3f98e44c63cd6e1e",
+        "quantizer_fma": "0x4038cef299769d89",
+        "quantizer_floor": "0x4038000000000000",
+        "result": "0x3f989374bc6a7efa",
+        "split_raw_tick": "0x3f98e44c63cd6e1e",
+        "split_raw_result": "0x3f989374bc6a7efa",
+        "split_quantizer_result": "0x3f989374bc6a7efa"
+      },
+      "result_f64_bits": "0x3f989374bc6a7efa",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x40cd100000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x40cd100000000000",
+        "quotient": "0x40e039fff79dc449",
+        "raw_tick": "0x416e6cbff047d009",
+        "quantizer_fma": "0x420db63370aa2129",
+        "quantizer_floor": "0x420db63370a80000",
+        "result": "0x416e6cbff049ba5e",
+        "split_raw_tick": "0x416e6cbff047d009",
+        "split_raw_result": "0x416e6cbff049ba5e",
+        "split_quantizer_result": "0x416e6cbff049ba5e"
+      },
+      "result_f64_bits": "0x416e6cbff049ba5e",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082bfffffffffff",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x4082bfffffffffff",
+        "quotient": "0x4094effff52eaaaf",
+        "raw_tick": "0x4123a0fff5dbc004",
+        "quantizer_fma": "0x41c32b39f6589984",
+        "quantizer_floor": "0x41c32b39f6000000",
+        "result": "0x4123a0fff5c28f5c",
+        "split_raw_tick": "0x4123a0fff5dbc004",
+        "split_raw_result": "0x4123a0fff5c28f5c",
+        "split_quantizer_result": "0x4123a0fff5c28f5c"
+      },
+      "result_f64_bits": "0x4123a0fff5c28f5c",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082c00000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x4082c00000000000",
+        "quotient": "0x4094effff52eaab0",
+        "raw_tick": "0x4123a0fff5dbc005",
+        "quantizer_fma": "0x41c32b39f6589985",
+        "quantizer_floor": "0x41c32b39f6000000",
+        "result": "0x4123a0fff5c28f5c",
+        "split_raw_tick": "0x4123a0fff5dbc005",
+        "split_raw_result": "0x4123a0fff5c28f5c",
+        "split_quantizer_result": "0x4123a0fff5c28f5c"
+      },
+      "result_f64_bits": "0x4123a0fff5c28f5c",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082c00000000001",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x4082c00000000001",
+        "quotient": "0x4094effff52eaab1",
+        "raw_tick": "0x4123a0fff5dbc006",
+        "quantizer_fma": "0x41c32b39f6589986",
+        "quantizer_floor": "0x41c32b39f6000000",
+        "result": "0x4123a0fff5c28f5c",
+        "split_raw_tick": "0x4123a0fff5dbc006",
+        "split_raw_result": "0x4123a0fff5c28f5c",
+        "split_quantizer_result": "0x4123a0fff5c28f5c"
+      },
+      "result_f64_bits": "0x4123a0fff5c28f5c",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3e9f4cffba184d8c",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3e9f4cffba184d8c",
+        "quotient": "0x3eb179ec9cbd821d",
+        "raw_tick": "0x3f40624dd2f1a9fb",
+        "quantizer_fma": "0x3fefffffffffffff",
+        "quantizer_floor": "0x0000000000000000",
+        "result": "0x0000000000000000",
+        "split_raw_tick": "0x3f40624dd2f1a9fb",
+        "split_raw_result": "0x0000000000000000",
+        "split_quantizer_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3e9f4cffba184d8d",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3e9f4cffba184d8d",
+        "quotient": "0x3eb179ec9cbd821e",
+        "raw_tick": "0x3f40624dd2f1a9fc",
+        "quantizer_fma": "0x3ff0000000000000",
+        "quantizer_floor": "0x3ff0000000000000",
+        "result": "0x3f50624dd2f1a9fc",
+        "split_raw_tick": "0x3f40624dd2f1a9fc",
+        "split_raw_result": "0x3f50624dd2f1a9fc",
+        "split_quantizer_result": "0x3f50624dd2f1a9fc"
+      },
+      "result_f64_bits": "0x3f50624dd2f1a9fc",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3e9f4cffba184d8e",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3e9f4cffba184d8e",
+        "quotient": "0x3eb179ec9cbd821e",
+        "raw_tick": "0x3f40624dd2f1a9fc",
+        "quantizer_fma": "0x3ff0000000000000",
+        "quantizer_floor": "0x3ff0000000000000",
+        "result": "0x3f50624dd2f1a9fc",
+        "split_raw_tick": "0x3f40624dd2f1a9fc",
+        "split_raw_result": "0x3f50624dd2f1a9fc",
+        "split_quantizer_result": "0x3f50624dd2f1a9fc"
+      },
+      "result_f64_bits": "0x3f50624dd2f1a9fc",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x0000000000000000",
+        "product": "0x0000000000000000",
+        "scaled": "0x0000000000000000",
+        "result": "0x0000000000000000",
+        "reordered_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x8000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x8000000000000000",
+        "product": "0x8000000000000000",
+        "scaled": "0x8000000000000000",
+        "result": "0x0000000000000000",
+        "reordered_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ff0000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3ff0000000000000",
+        "product": "0x3fdca81ea0000000",
+        "scaled": "0x3f4e9131bbbbbbbc",
+        "result": "0x3f4e9131bbbbbbbc",
+        "reordered_result": "0x3f4e9131bbbbbbbc"
+      },
+      "result_f64_bits": "0x3f4e9131bbbbbbbc",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ef7c6f8c751f177",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3ef7c6f8c751f177",
+        "product": "0x3ee54b0509ea383d",
+        "scaled": "0x3e56b66bc64f2aec",
+        "result": "0x3e56b66bc64f2aec",
+        "reordered_result": "0x3e56b66bc64f2aec"
+      },
+      "result_f64_bits": "0x3e56b66bc64f2aec",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x40cd100000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x40cd100000000000",
+        "product": "0x40ba06afd0500000",
+        "scaled": "0x402bc2ddab000000",
+        "result": "0x402bc2ddab000000",
+        "reordered_result": "0x402bc2ddab000000"
+      },
+      "result_f64_bits": "0x402bc2ddab000000",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3e9f4cffba184d8c",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3e9f4cffba184d8c",
+        "product": "0x3e8c07d1f617008b",
+        "scaled": "0x3dfde6354ac333c7",
+        "result": "0x3dfde6354ac333c7",
+        "reordered_result": "0x3dfde6354ac333c8"
+      },
+      "result_f64_bits": "0x3dfde6354ac333c7",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3e9f4cffba184d8d",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3e9f4cffba184d8d",
+        "product": "0x3e8c07d1f617008c",
+        "scaled": "0x3dfde6354ac333c9",
+        "result": "0x3dfde6354ac333c9",
+        "reordered_result": "0x3dfde6354ac333c8"
+      },
+      "result_f64_bits": "0x3dfde6354ac333c9",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3e9f4cffba184d8e",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3e9f4cffba184d8e",
+        "product": "0x3e8c07d1f617008d",
+        "scaled": "0x3dfde6354ac333ca",
+        "result": "0x3dfde6354ac333ca",
+        "reordered_result": "0x3dfde6354ac333c9"
+      },
+      "result_f64_bits": "0x3dfde6354ac333ca",
+      "map": "piano-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173add8..af58: zero branch; first tempo period; no quantization"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "zero_quotient": "0x0000000000000000",
+        "result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x8000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173add8..af58: zero branch; first tempo period; no quantization"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "zero_quotient": "0x8000000000000000",
+        "result": "0x8000000000000000"
+      },
+      "result_f64_bits": "0x8000000000000000",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ff0000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x3ff0000000000000",
+        "quotient": "0x4001ddddc0af37f0",
+        "raw_tick": "0x4090bfffe4a44471",
+        "quantizer_fma": "0x41305b8065486ad6",
+        "quantizer_floor": "0x41305b8000000000",
+        "result": "0x4090c00000000000",
+        "split_raw_tick": "0x4090bfffe4a44471",
+        "split_raw_result": "0x4090c00000000000",
+        "split_quantizer_result": "0x4090c00000000000"
+      },
+      "result_f64_bits": "0x4090c00000000000",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ef7c6f8c751f177",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x3ef7c6f8c751f177",
+        "quotient": "0x3f0a8d1e2aac7a3b",
+        "raw_tick": "0x3f98e44c4801b297",
+        "quantizer_fma": "0x4038cef27e51a867",
+        "quantizer_floor": "0x4038000000000000",
+        "result": "0x3f989374bc6a7efa",
+        "split_raw_tick": "0x3f98e44c4801b297",
+        "split_raw_result": "0x3f989374bc6a7efa",
+        "split_quantizer_result": "0x3f989374bc6a7efa"
+      },
+      "result_f64_bits": "0x3f989374bc6a7efa",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x40cd100000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x40cd100000000000",
+        "quotient": "0x40e039ffe57f224d",
+        "raw_tick": "0x416e6cbfce4e6050",
+        "quantizer_fma": "0x420db6334f7c8a0e",
+        "quantizer_floor": "0x420db6334f780000",
+        "result": "0x416e6cbfce4dd2f2",
+        "split_raw_tick": "0x416e6cbfce4e6050",
+        "split_raw_result": "0x416e6cbfce4dd2f2",
+        "split_quantizer_result": "0x416e6cbfce4dd2f2"
+      },
+      "result_f64_bits": "0x416e6cbfce4dd2f2",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082bfffffffffff",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x4082bfffffffffff",
+        "quotient": "0x4094efffddcd558c",
+        "raw_tick": "0x4123a0ffdff08033",
+        "quantizer_fma": "0x41c32b39e0f0dd32",
+        "quantizer_floor": "0x41c32b39e0800000",
+        "result": "0x4123a0ffdfbe76c9",
+        "split_raw_tick": "0x4123a0ffdff08033",
+        "split_raw_result": "0x4123a0ffdfbe76c9",
+        "split_quantizer_result": "0x4123a0ffdfbe76c9"
+      },
+      "result_f64_bits": "0x4123a0ffdfbe76c9",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082c00000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x4082c00000000000",
+        "quotient": "0x4094efffddcd558d",
+        "raw_tick": "0x4123a0ffdff08034",
+        "quantizer_fma": "0x41c32b39e0f0dd33",
+        "quantizer_floor": "0x41c32b39e0800000",
+        "result": "0x4123a0ffdfbe76c9",
+        "split_raw_tick": "0x4123a0ffdff08034",
+        "split_raw_result": "0x4123a0ffdfbe76c9",
+        "split_quantizer_result": "0x4123a0ffdfbe76c9"
+      },
+      "result_f64_bits": "0x4123a0ffdfbe76c9",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082c00000000001",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x4082c00000000001",
+        "quotient": "0x4094efffddcd558e",
+        "raw_tick": "0x4123a0ffdff08035",
+        "quantizer_fma": "0x41c32b39e0f0dd34",
+        "quantizer_floor": "0x41c32b39e0800000",
+        "result": "0x4123a0ffdfbe76c9",
+        "split_raw_tick": "0x4123a0ffdff08035",
+        "split_raw_result": "0x4123a0ffdfbe76c9",
+        "split_quantizer_result": "0x4123a0ffdfbe76c9"
+      },
+      "result_f64_bits": "0x4123a0ffdfbe76c9",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3e9f4cffdd0c26c6",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x3e9f4cffdd0c26c6",
+        "quotient": "0x3eb179ec9cbd821d",
+        "raw_tick": "0x3f40624dd2f1a9fb",
+        "quantizer_fma": "0x3fefffffffffffff",
+        "quantizer_floor": "0x0000000000000000",
+        "result": "0x0000000000000000",
+        "split_raw_tick": "0x3f40624dd2f1a9fb",
+        "split_raw_result": "0x0000000000000000",
+        "split_quantizer_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3e9f4cffdd0c26c7",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x3e9f4cffdd0c26c7",
+        "quotient": "0x3eb179ec9cbd821e",
+        "raw_tick": "0x3f40624dd2f1a9fc",
+        "quantizer_fma": "0x3ff0000000000000",
+        "quantizer_floor": "0x3ff0000000000000",
+        "result": "0x3f50624dd2f1a9fc",
+        "split_raw_tick": "0x3f40624dd2f1a9fc",
+        "split_raw_result": "0x3f50624dd2f1a9fc",
+        "split_quantizer_result": "0x3f50624dd2f1a9fc"
+      },
+      "result_f64_bits": "0x3f50624dd2f1a9fc",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3e9f4cffdd0c26c8",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x3e9f4cffdd0c26c8",
+        "quotient": "0x3eb179ec9cbd821f",
+        "raw_tick": "0x3f40624dd2f1a9fd",
+        "quantizer_fma": "0x3ff0000000000001",
+        "quantizer_floor": "0x3ff0000000000000",
+        "result": "0x3f50624dd2f1a9fc",
+        "split_raw_tick": "0x3f40624dd2f1a9fd",
+        "split_raw_result": "0x3f50624dd2f1a9fc",
+        "split_quantizer_result": "0x3f50624dd2f1a9fc"
+      },
+      "result_f64_bits": "0x3f50624dd2f1a9fc",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x0000000000000000",
+        "product": "0x0000000000000000",
+        "scaled": "0x0000000000000000",
+        "result": "0x0000000000000000",
+        "reordered_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x8000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x8000000000000000",
+        "product": "0x8000000000000000",
+        "scaled": "0x8000000000000000",
+        "result": "0x0000000000000000",
+        "reordered_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ff0000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x3ff0000000000000",
+        "product": "0x3fdca81ec0000000",
+        "scaled": "0x3f4e9131ddddddde",
+        "result": "0x3f4e9131ddddddde",
+        "reordered_result": "0x3f4e9131ddddddde"
+      },
+      "result_f64_bits": "0x3f4e9131ddddddde",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ef7c6f8c751f177",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x3ef7c6f8c751f177",
+        "product": "0x3ee54b0521b13105",
+        "scaled": "0x3e56b66bdfabf005",
+        "result": "0x3e56b66bdfabf005",
+        "reordered_result": "0x3e56b66bdfabf005"
+      },
+      "result_f64_bits": "0x3e56b66bdfabf005",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x40cd100000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x40cd100000000000",
+        "product": "0x40ba06afed600000",
+        "scaled": "0x402bc2ddca000000",
+        "result": "0x402bc2ddca000000",
+        "reordered_result": "0x402bc2ddca000000"
+      },
+      "result_f64_bits": "0x402bc2ddca000000",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3e9f4cffdd0c26c6",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x3e9f4cffdd0c26c6",
+        "product": "0x3e8c07d234b10022",
+        "scaled": "0x3dfde6358d8999be",
+        "result": "0x3dfde6358d8999be",
+        "reordered_result": "0x3dfde6358d8999be"
+      },
+      "result_f64_bits": "0x3dfde6358d8999be",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3e9f4cffdd0c26c7",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x3e9f4cffdd0c26c7",
+        "product": "0x3e8c07d234b10023",
+        "scaled": "0x3dfde6358d8999bf",
+        "result": "0x3dfde6358d8999bf",
+        "reordered_result": "0x3dfde6358d8999c0"
+      },
+      "result_f64_bits": "0x3dfde6358d8999bf",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3e9f4cffdd0c26c8",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ec0000000",
+        "delta": "0x3e9f4cffdd0c26c8",
+        "product": "0x3e8c07d234b10024",
+        "scaled": "0x3dfde6358d8999c0",
+        "result": "0x3dfde6358d8999c0",
+        "reordered_result": "0x3dfde6358d8999c0"
+      },
+      "result_f64_bits": "0x3dfde6358d8999c0",
+      "map": "piano-period-next"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173add8..af58: zero branch; first tempo period; no quantization"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "zero_quotient": "0x0000000000000000",
+        "result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "half-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x8000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173add8..af58: zero branch; first tempo period; no quantization"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "zero_quotient": "0x8000000000000000",
+        "result": "0x8000000000000000"
+      },
+      "result_f64_bits": "0x8000000000000000",
+      "map": "half-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ff0000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ff0000000000000",
+        "quotient": "0x4000000000000000",
+        "raw_tick": "0x408e000000000000",
+        "quantizer_fma": "0x412d4c0100000000",
+        "quantizer_floor": "0x412d4c0000000000",
+        "result": "0x408e000000000000",
+        "split_raw_tick": "0x408e000000000000",
+        "split_raw_result": "0x408e000000000000",
+        "split_quantizer_result": "0x408e000000000000"
+      },
+      "result_f64_bits": "0x408e000000000000",
+      "map": "half-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ef7c6f8c751f177",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ef7c6f8c751f177",
+        "quotient": "0x3f07c6f8c751f177",
+        "raw_tick": "0x3f964a893adcd260",
+        "quantizer_fma": "0x403644ca037ba572",
+        "quantizer_floor": "0x4036000000000000",
+        "result": "0x3f96872b020c49ba",
+        "split_raw_tick": "0x3f964a893adcd260",
+        "split_raw_result": "0x3f96872b020c49ba",
+        "split_quantizer_result": "0x3f96872b020c49ba"
+      },
+      "result_f64_bits": "0x3f96872b020c49ba",
+      "map": "half-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x40cd100000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x40cd100000000000",
+        "quotient": "0x40dd100000000000",
+        "raw_tick": "0x416b3f0000000000",
+        "quantizer_fma": "0x420a9b8600040000",
+        "quantizer_floor": "0x420a9b8600000000",
+        "result": "0x416b3f0000000000",
+        "split_raw_tick": "0x416b3f0000000000",
+        "split_raw_result": "0x416b3f0000000000",
+        "split_quantizer_result": "0x416b3f0000000000"
+      },
+      "result_f64_bits": "0x416b3f0000000000",
+      "map": "half-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082bfffffffffff",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x4082bfffffffffff",
+        "quotient": "0x4092bfffffffffff",
+        "raw_tick": "0x412193ffffffffff",
+        "quantizer_fma": "0x41c12a88003fffff",
+        "quantizer_floor": "0x41c12a8800000000",
+        "result": "0x4121940000000000",
+        "split_raw_tick": "0x412193ffffffffff",
+        "split_raw_result": "0x4121940000000000",
+        "split_quantizer_result": "0x4121940000000000"
+      },
+      "result_f64_bits": "0x4121940000000000",
+      "map": "half-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082c00000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x4082c00000000000",
+        "quotient": "0x4092c00000000000",
+        "raw_tick": "0x4121940000000000",
+        "quantizer_fma": "0x41c12a8800400000",
+        "quantizer_floor": "0x41c12a8800000000",
+        "result": "0x4121940000000000",
+        "split_raw_tick": "0x4121940000000000",
+        "split_raw_result": "0x4121940000000000",
+        "split_quantizer_result": "0x4121940000000000"
+      },
+      "result_f64_bits": "0x4121940000000000",
+      "map": "half-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082c00000000001",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x4082c00000000001",
+        "quotient": "0x4092c00000000001",
+        "raw_tick": "0x4121940000000001",
+        "quantizer_fma": "0x41c12a8800400001",
+        "quantizer_floor": "0x41c12a8800000000",
+        "result": "0x4121940000000000",
+        "split_raw_tick": "0x4121940000000001",
+        "split_raw_result": "0x4121940000000000",
+        "split_quantizer_result": "0x4121940000000000"
+      },
+      "result_f64_bits": "0x4121940000000000",
+      "map": "half-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ea179ec9cbd821d",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ea179ec9cbd821d",
+        "quotient": "0x3eb179ec9cbd821d",
+        "raw_tick": "0x3f40624dd2f1a9fb",
+        "quantizer_fma": "0x3fefffffffffffff",
+        "quantizer_floor": "0x0000000000000000",
+        "result": "0x0000000000000000",
+        "split_raw_tick": "0x3f40624dd2f1a9fb",
+        "split_raw_result": "0x0000000000000000",
+        "split_quantizer_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "half-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ea179ec9cbd821e",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ea179ec9cbd821e",
+        "quotient": "0x3eb179ec9cbd821e",
+        "raw_tick": "0x3f40624dd2f1a9fc",
+        "quantizer_fma": "0x3ff0000000000000",
+        "quantizer_floor": "0x3ff0000000000000",
+        "result": "0x3f50624dd2f1a9fc",
+        "split_raw_tick": "0x3f40624dd2f1a9fc",
+        "split_raw_result": "0x3f50624dd2f1a9fc",
+        "split_quantizer_result": "0x3f50624dd2f1a9fc"
+      },
+      "result_f64_bits": "0x3f50624dd2f1a9fc",
+      "map": "half-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ea179ec9cbd821f",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ea179ec9cbd821f",
+        "quotient": "0x3eb179ec9cbd821f",
+        "raw_tick": "0x3f40624dd2f1a9fd",
+        "quantizer_fma": "0x3ff0000000000001",
+        "quantizer_floor": "0x3ff0000000000000",
+        "result": "0x3f50624dd2f1a9fc",
+        "split_raw_tick": "0x3f40624dd2f1a9fd",
+        "split_raw_result": "0x3f50624dd2f1a9fc",
+        "split_quantizer_result": "0x3f50624dd2f1a9fc"
+      },
+      "result_f64_bits": "0x3f50624dd2f1a9fc",
+      "map": "half-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x0000000000000000",
+        "product": "0x0000000000000000",
+        "scaled": "0x0000000000000000",
+        "result": "0x0000000000000000",
+        "reordered_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "half-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x8000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x8000000000000000",
+        "product": "0x8000000000000000",
+        "scaled": "0x8000000000000000",
+        "result": "0x0000000000000000",
+        "reordered_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "half-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ff0000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ff0000000000000",
+        "product": "0x3fe0000000000000",
+        "scaled": "0x3f51111111111111",
+        "result": "0x3f51111111111111",
+        "reordered_result": "0x3f51111111111111"
+      },
+      "result_f64_bits": "0x3f51111111111111",
+      "map": "half-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ef7c6f8c751f177",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ef7c6f8c751f177",
+        "product": "0x3ee7c6f8c751f177",
+        "scaled": "0x3e595cc518dff07f",
+        "result": "0x3e595cc518dff07f",
+        "reordered_result": "0x3e595cc518dff07f"
+      },
+      "result_f64_bits": "0x3e595cc518dff07f",
+      "map": "half-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x40cd100000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x40cd100000000000",
+        "product": "0x40bd100000000000",
+        "scaled": "0x402f000000000000",
+        "result": "0x402f000000000000",
+        "reordered_result": "0x402f000000000000"
+      },
+      "result_f64_bits": "0x402f000000000000",
+      "map": "half-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ea179ec9cbd821d",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ea179ec9cbd821d",
+        "product": "0x3e9179ec9cbd821d",
+        "scaled": "0x3e02a42f961f79b9",
+        "result": "0x3e02a42f961f79b9",
+        "reordered_result": "0x3e02a42f961f79b9"
+      },
+      "result_f64_bits": "0x3e02a42f961f79b9",
+      "map": "half-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ea179ec9cbd821e",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ea179ec9cbd821e",
+        "product": "0x3e9179ec9cbd821e",
+        "scaled": "0x3e02a42f961f79ba",
+        "result": "0x3e02a42f961f79ba",
+        "reordered_result": "0x3e02a42f961f79ba"
+      },
+      "result_f64_bits": "0x3e02a42f961f79ba",
+      "map": "half-origin"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ea179ec9cbd821f",
+      "selected_index": 0,
+      "trace": [
+        "1016c3f94: index=count-1=0"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ea179ec9cbd821f",
+        "product": "0x3e9179ec9cbd821f",
+        "scaled": "0x3e02a42f961f79bb",
+        "result": "0x3e02a42f961f79bb",
+        "reordered_result": "0x3e02a42f961f79bb"
+      },
+      "result_f64_bits": "0x3e02a42f961f79bb",
+      "map": "half-origin"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173add8..af58: zero branch; first tempo period; no quantization"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000000000000",
+        "zero_quotient": "0x0000000000000000",
+        "result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x8000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173add8..af58: zero branch; first tempo period; no quantization"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000000000000",
+        "zero_quotient": "0x8000000000000000",
+        "result": "0x8000000000000000"
+      },
+      "result_f64_bits": "0x8000000000000000",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ff0000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000000000000",
+        "delta": "0x3ff0000000000000",
+        "quotient": "0x3ff5555555555555",
+        "raw_tick": "0x4084000000000000",
+        "quantizer_fma": "0x4123880100000000",
+        "quantizer_floor": "0x4123880000000000",
+        "result": "0x4084000000000000",
+        "split_raw_tick": "0x4084000000000000",
+        "split_raw_result": "0x4084000000000000",
+        "split_quantizer_result": "0x4084000000000000"
+      },
+      "result_f64_bits": "0x4084000000000000",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ef7c6f8c751f177",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000000000000",
+        "delta": "0x3ef7c6f8c751f177",
+        "quotient": "0x3effb3f65f17ec9f",
+        "raw_tick": "0x3f8db8b6f9266dd5",
+        "quantizer_fma": "0x402e0662af4f8742",
+        "quantizer_floor": "0x402e000000000000",
+        "result": "0x3f8eb851eb851eb8",
+        "split_raw_tick": "0x3f8db8b6f9266dd5",
+        "split_raw_result": "0x3f8eb851eb851eb8",
+        "split_quantizer_result": "0x3f8eb851eb851eb8"
+      },
+      "result_f64_bits": "0x3f8eb851eb851eb8",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x40cd100000000000",
+      "selected_index": 1,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x40cbe40000000000",
+        "quotient": "0x40dbe40000000000",
+        "raw_tick": "0x416ae14000000000",
+        "quantizer_fma": "0x420a3ff880040000",
+        "quantizer_floor": "0x420a3ff880000000",
+        "result": "0x416ae14000000000",
+        "split_raw_tick": "0x416ae14000000000",
+        "split_raw_result": "0x416ae14000000000",
+        "split_quantizer_result": "0x416ae14000000000"
+      },
+      "result_f64_bits": "0x416ae14000000000",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082bfffffffffff",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000000000000",
+        "delta": "0x4082bfffffffffff",
+        "quotient": "0x4088ffffffffffff",
+        "raw_tick": "0x41176fffffffffff",
+        "quantizer_fma": "0x41b6e360007fffff",
+        "quantizer_floor": "0x41b6e36000000000",
+        "result": "0x4117700000000000",
+        "split_raw_tick": "0x41176fffffffffff",
+        "split_raw_result": "0x4117700000000000",
+        "split_quantizer_result": "0x4117700000000000"
+      },
+      "result_f64_bits": "0x4117700000000000",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082c00000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000000000000",
+        "delta": "0x4082c00000000000",
+        "quotient": "0x4089000000000000",
+        "raw_tick": "0x4117700000000000",
+        "quantizer_fma": "0x41b6e36000800000",
+        "quantizer_floor": "0x41b6e36000000000",
+        "result": "0x4117700000000000",
+        "split_raw_tick": "0x4117700000000000",
+        "split_raw_result": "0x4117700000000000",
+        "split_quantizer_result": "0x4117700000000000"
+      },
+      "result_f64_bits": "0x4117700000000000",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082c00000000001",
+      "selected_index": 1,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3d40000000000000",
+        "quotient": "0x3d50000000000000",
+        "raw_tick": "0x4117700000000002",
+        "quantizer_fma": "0x41b6e36000800002",
+        "quantizer_floor": "0x41b6e36000000000",
+        "result": "0x4117700000000000",
+        "split_raw_tick": "0x4117700000000002",
+        "split_raw_result": "0x4117700000000000",
+        "split_quantizer_result": "0x4117700000000000"
+      },
+      "result_f64_bits": "0x4117700000000000",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c148c: current.Start==query; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000000000000",
+        "delta": "0x0000000000000000",
+        "product": "0x0000000000000000",
+        "scaled": "0x0000000000000000",
+        "result": "0x0000000000000000",
+        "reordered_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x8000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c148c: current.Start==query; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000000000000",
+        "delta": "0x8000000000000000",
+        "product": "0x8000000000000000",
+        "scaled": "0x8000000000000000",
+        "result": "0x0000000000000000",
+        "reordered_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ff0000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000000000000",
+        "delta": "0x3ff0000000000000",
+        "product": "0x3fe8000000000000",
+        "scaled": "0x3f5999999999999a",
+        "result": "0x3f5999999999999a",
+        "reordered_result": "0x3f5999999999999a"
+      },
+      "result_f64_bits": "0x3f5999999999999a",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ef7c6f8c751f177",
+      "selected_index": 0,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000000000000",
+        "delta": "0x3ef7c6f8c751f177",
+        "product": "0x3ef1d53a957d7519",
+        "scaled": "0x3e630593d2a7f45f",
+        "result": "0x3e630593d2a7f45f",
+        "reordered_result": "0x3e630593d2a7f45f"
+      },
+      "result_f64_bits": "0x3e630593d2a7f45f",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x40cd100000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000000000000",
+        "delta": "0x40cd100000000000",
+        "product": "0x40c5cc0000000000",
+        "scaled": "0x4037400000000000",
+        "result": "0x4037400000000000",
+        "reordered_result": "0x4037400000000000"
+      },
+      "result_f64_bits": "0x4037400000000000",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x41176fffffffffff",
+      "selected_index": 0,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000000000000",
+        "delta": "0x41176fffffffffff",
+        "product": "0x411193ffffffffff",
+        "scaled": "0x4082bfffffffffff",
+        "result": "0x4082bfffffffffff",
+        "reordered_result": "0x4082bfffffffffff"
+      },
+      "result_f64_bits": "0x4082bfffffffffff",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x4117700000000000",
+      "selected_index": 1,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c1578: current.Start==query; return current index"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x0000000000000000",
+        "product": "0x0000000000000000",
+        "scaled": "0x0000000000000000",
+        "result": "0x4082c00000000000",
+        "reordered_result": "0x4082c00000000000"
+      },
+      "result_f64_bits": "0x4082c00000000000",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x4117700000000001",
+      "selected_index": 1,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15dc..15f4: last resets index=count-1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3dd0000000000000",
+        "product": "0x3dc0000000000000",
+        "scaled": "0x3d31111111111111",
+        "result": "0x4082c00000000001",
+        "reordered_result": "0x4082c00000000001"
+      },
+      "result_f64_bits": "0x4082c00000000001",
+      "map": "lofi-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173add8..af58: zero branch; first tempo period; no quantization"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "zero_quotient": "0x0000000000000000",
+        "result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x8000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173add8..af58: zero branch; first tempo period; no quantization"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "zero_quotient": "0x8000000000000000",
+        "result": "0x8000000000000000"
+      },
+      "result_f64_bits": "0x8000000000000000",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ff0000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ff0000000000000",
+        "quotient": "0x4000000000000000",
+        "raw_tick": "0x408e000000000000",
+        "quantizer_fma": "0x412d4c0100000000",
+        "quantizer_floor": "0x412d4c0000000000",
+        "result": "0x408e000000000000",
+        "split_raw_tick": "0x408e000000000000",
+        "split_raw_result": "0x408e000000000000",
+        "split_quantizer_result": "0x408e000000000000"
+      },
+      "result_f64_bits": "0x408e000000000000",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ef7c6f8c751f177",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ef7c6f8c751f177",
+        "quotient": "0x3f07c6f8c751f177",
+        "raw_tick": "0x3f964a893adcd260",
+        "quantizer_fma": "0x403644ca037ba572",
+        "quantizer_floor": "0x4036000000000000",
+        "result": "0x3f96872b020c49ba",
+        "split_raw_tick": "0x3f964a893adcd260",
+        "split_raw_result": "0x3f96872b020c49ba",
+        "split_quantizer_result": "0x3f96872b020c49ba"
+      },
+      "result_f64_bits": "0x3f96872b020c49ba",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x40cd100000000000",
+      "selected_index": 1,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x40cbe40000000000",
+        "quotient": "0x40dbe40000000000",
+        "raw_tick": "0x416b3f0000000000",
+        "quantizer_fma": "0x420a9b8600040000",
+        "quantizer_floor": "0x420a9b8600000000",
+        "result": "0x416b3f0000000000",
+        "split_raw_tick": "0x416b3f0000000000",
+        "split_raw_result": "0x416b3f0000000000",
+        "split_quantizer_result": "0x416b3f0000000000"
+      },
+      "result_f64_bits": "0x416b3f0000000000",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082bfffffffffff",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x4082bfffffffffff",
+        "quotient": "0x4092bfffffffffff",
+        "raw_tick": "0x412193ffffffffff",
+        "quantizer_fma": "0x41c12a88003fffff",
+        "quantizer_floor": "0x41c12a8800000000",
+        "result": "0x4121940000000000",
+        "split_raw_tick": "0x412193ffffffffff",
+        "split_raw_result": "0x4121940000000000",
+        "split_quantizer_result": "0x4121940000000000"
+      },
+      "result_f64_bits": "0x4121940000000000",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082c00000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x4082c00000000000",
+        "quotient": "0x4092c00000000000",
+        "raw_tick": "0x4121940000000000",
+        "quantizer_fma": "0x41c12a8800400000",
+        "quantizer_floor": "0x41c12a8800000000",
+        "result": "0x4121940000000000",
+        "split_raw_tick": "0x4121940000000000",
+        "split_raw_result": "0x4121940000000000",
+        "split_quantizer_result": "0x4121940000000000"
+      },
+      "result_f64_bits": "0x4121940000000000",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082c00000000001",
+      "selected_index": 1,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3d40000000000000",
+        "quotient": "0x3d50000000000000",
+        "raw_tick": "0x4121940000000001",
+        "quantizer_fma": "0x41c12a8800400001",
+        "quantizer_floor": "0x41c12a8800000000",
+        "result": "0x4121940000000000",
+        "split_raw_tick": "0x4121940000000001",
+        "split_raw_result": "0x4121940000000000",
+        "split_quantizer_result": "0x4121940000000000"
+      },
+      "result_f64_bits": "0x4121940000000000",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c148c: current.Start==query; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x0000000000000000",
+        "product": "0x0000000000000000",
+        "scaled": "0x0000000000000000",
+        "result": "0x0000000000000000",
+        "reordered_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x8000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c148c: current.Start==query; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x8000000000000000",
+        "product": "0x8000000000000000",
+        "scaled": "0x8000000000000000",
+        "result": "0x0000000000000000",
+        "reordered_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ff0000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ff0000000000000",
+        "product": "0x3fe0000000000000",
+        "scaled": "0x3f51111111111111",
+        "result": "0x3f51111111111111",
+        "reordered_result": "0x3f51111111111111"
+      },
+      "result_f64_bits": "0x3f51111111111111",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ef7c6f8c751f177",
+      "selected_index": 0,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3ef7c6f8c751f177",
+        "product": "0x3ee7c6f8c751f177",
+        "scaled": "0x3e595cc518dff07f",
+        "result": "0x3e595cc518dff07f",
+        "reordered_result": "0x3e595cc518dff07f"
+      },
+      "result_f64_bits": "0x3e595cc518dff07f",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x40cd100000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x40cd100000000000",
+        "product": "0x40bd100000000000",
+        "scaled": "0x402f000000000000",
+        "result": "0x402f000000000000",
+        "reordered_result": "0x402f000000000000"
+      },
+      "result_f64_bits": "0x402f000000000000",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x412193ffffffffff",
+      "selected_index": 0,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x412193ffffffffff",
+        "product": "0x411193ffffffffff",
+        "scaled": "0x4082bfffffffffff",
+        "result": "0x4082bfffffffffff",
+        "reordered_result": "0x4082bfffffffffff"
+      },
+      "result_f64_bits": "0x4082bfffffffffff",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x4121940000000000",
+      "selected_index": 1,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c1578: current.Start==query; return current index"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x0000000000000000",
+        "product": "0x0000000000000000",
+        "scaled": "0x0000000000000000",
+        "result": "0x4082c00000000000",
+        "reordered_result": "0x4082c00000000000"
+      },
+      "result_f64_bits": "0x4082c00000000000",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x4121940000000001",
+      "selected_index": 1,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15dc..15f4: last resets index=count-1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe0000000000000",
+        "delta": "0x3de0000000000000",
+        "product": "0x3dd0000000000000",
+        "scaled": "0x3d41111111111111",
+        "result": "0x4082c00000000001",
+        "reordered_result": "0x4082c00000000001"
+      },
+      "result_f64_bits": "0x4082c00000000001",
+      "map": "stereo-two-jump"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173add8..af58: zero branch; first tempo period; no quantization"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "zero_quotient": "0x0000000000000000",
+        "result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x8000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173add8..af58: zero branch; first tempo period; no quantization"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "zero_quotient": "0x8000000000000000",
+        "result": "0x8000000000000000"
+      },
+      "result_f64_bits": "0x8000000000000000",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ff0000000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3ff0000000000000",
+        "quotient": "0x4001ddddd4a2b3ca",
+        "raw_tick": "0x4090bffff758888d",
+        "quantizer_fma": "0x41305b80778c755a",
+        "quantizer_floor": "0x41305b8000000000",
+        "result": "0x4090c00000000000",
+        "split_raw_tick": "0x4090bffff758888d",
+        "split_raw_result": "0x4090c00000000000",
+        "split_quantizer_result": "0x4090c00000000000"
+      },
+      "result_f64_bits": "0x4090c00000000000",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x3ef7c6f8c751f177",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3ef7c6f8c751f177",
+        "quotient": "0x3f0a8d1e48529797",
+        "raw_tick": "0x3f98e44c63cd6e1e",
+        "quantizer_fma": "0x4038cef299769d89",
+        "quantizer_floor": "0x4038000000000000",
+        "result": "0x3f989374bc6a7efa",
+        "split_raw_tick": "0x3f98e44c63cd6e1e",
+        "split_raw_result": "0x3f989374bc6a7efa",
+        "split_quantizer_result": "0x3f989374bc6a7efa"
+      },
+      "result_f64_bits": "0x3f989374bc6a7efa",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x40cd100000000000",
+      "selected_index": 1,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000020000000",
+        "delta": "0x40cbe40000000000",
+        "quotient": "0x40d297ffe7355576",
+        "raw_tick": "0x4162a89008c2001f",
+        "quantizer_fma": "0x4202389ca891741e",
+        "quantizer_floor": "0x4202389ca8900000",
+        "result": "0x4162a89008c49ba6",
+        "split_raw_tick": "0x4162a89008c2001f",
+        "split_raw_result": "0x4162a89008c49ba6",
+        "split_quantizer_result": "0x4162a89008c49ba6"
+      },
+      "result_f64_bits": "0x4162a89008c49ba6",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082bfffffffffff",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x4082bfffffffffff",
+        "quotient": "0x4094effff52eaaaf",
+        "raw_tick": "0x4123a0fff5dbc004",
+        "quantizer_fma": "0x41c32b39f6589984",
+        "quantizer_floor": "0x41c32b39f6000000",
+        "result": "0x4123a0fff5c28f5c",
+        "split_raw_tick": "0x4123a0fff5dbc004",
+        "split_raw_result": "0x4123a0fff5c28f5c",
+        "split_quantizer_result": "0x4123a0fff5c28f5c"
+      },
+      "result_f64_bits": "0x4123a0fff5c28f5c",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082c00000000000",
+      "selected_index": 0,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x4082c00000000000",
+        "quotient": "0x4094effff52eaab0",
+        "raw_tick": "0x4123a0fff5dbc005",
+        "quantizer_fma": "0x41c32b39f6589985",
+        "quantizer_floor": "0x41c32b39f6000000",
+        "result": "0x4123a0fff5c28f5c",
+        "split_raw_tick": "0x4123a0fff5dbc005",
+        "split_raw_result": "0x4123a0fff5c28f5c",
+        "split_quantizer_result": "0x4123a0fff5c28f5c"
+      },
+      "result_f64_bits": "0x4123a0fff5c28f5c",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082c00000000001",
+      "selected_index": 1,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000020000000",
+        "delta": "0x3d40000000000000",
+        "quotient": "0x3d45555538e38e5f",
+        "raw_tick": "0x4123a10200000001",
+        "quantizer_fma": "0x41c32b3bf4400001",
+        "quantizer_floor": "0x41c32b3bf4000000",
+        "result": "0x4123a10200000000",
+        "split_raw_tick": "0x4123a10200000001",
+        "split_raw_result": "0x4123a10200000000",
+        "split_quantizer_result": "0x4123a10200000000"
+      },
+      "result_f64_bits": "0x4123a10200000000",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c148c: current.Start==query; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x0000000000000000",
+        "product": "0x0000000000000000",
+        "scaled": "0x0000000000000000",
+        "result": "0x0000000000000000",
+        "reordered_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x8000000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c148c: current.Start==query; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x8000000000000000",
+        "product": "0x8000000000000000",
+        "scaled": "0x8000000000000000",
+        "result": "0x0000000000000000",
+        "reordered_result": "0x0000000000000000"
+      },
+      "result_f64_bits": "0x0000000000000000",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ff0000000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3ff0000000000000",
+        "product": "0x3fdca81ea0000000",
+        "scaled": "0x3f4e9131bbbbbbbc",
+        "result": "0x3f4e9131bbbbbbbc",
+        "reordered_result": "0x3f4e9131bbbbbbbc"
+      },
+      "result_f64_bits": "0x3f4e9131bbbbbbbc",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x3ef7c6f8c751f177",
+      "selected_index": 0,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x3ef7c6f8c751f177",
+        "product": "0x3ee54b0509ea383d",
+        "scaled": "0x3e56b66bc64f2aec",
+        "result": "0x3e56b66bc64f2aec",
+        "reordered_result": "0x3e56b66bc64f2aec"
+      },
+      "result_f64_bits": "0x3e56b66bc64f2aec",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x40cd100000000000",
+      "selected_index": 0,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x40cd100000000000",
+        "product": "0x40ba06afd0500000",
+        "scaled": "0x402bc2ddab000000",
+        "result": "0x402bc2ddab000000",
+        "reordered_result": "0x402bc2ddab000000"
+      },
+      "result_f64_bits": "0x402bc2ddab000000",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x4123a101ffffffff",
+      "selected_index": 0,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fdca81ea0000000",
+        "delta": "0x4123a101ffffffff",
+        "product": "0x41119401d396e9ff",
+        "scaled": "0x4082c001f2c31bbb",
+        "result": "0x4082c001f2c31bbb",
+        "reordered_result": "0x4082c001f2c31bbb"
+      },
+      "result_f64_bits": "0x4082c001f2c31bbb",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x4123a10200000000",
+      "selected_index": 1,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c1578: current.Start==query; return current index"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000020000000",
+        "delta": "0x0000000000000000",
+        "product": "0x0000000000000000",
+        "scaled": "0x0000000000000000",
+        "result": "0x4082c00000000000",
+        "reordered_result": "0x4082c00000000000"
+      },
+      "result_f64_bits": "0x4082c00000000000",
+      "map": "synthetic-unequal-anchor"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "input_f64_bits": "0x4123a10200000001",
+      "selected_index": 1,
+      "trace": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15dc..15f4: last resets index=count-1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000020000000",
+        "delta": "0x3de0000000000000",
+        "product": "0x3dd8000020000000",
+        "scaled": "0x3d499999bbbbbbbc",
+        "result": "0x4082c00000000002",
+        "reordered_result": "0x4082c00000000002"
+      },
+      "result_f64_bits": "0x4082c00000000002",
+      "map": "synthetic-unequal-anchor"
+    }
+  ],
+  "quantizer_vectors": [
+    {
+      "raw_tick_f64_bits": "0x3f40624dd2f1a9fb",
+      "fma_bits": "0x3fefffffffffffff",
+      "floor_bits": "0x0000000000000000",
+      "result_bits": "0x0000000000000000",
+      "split_multiply_add_result_bits": "0x0000000000000000",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3f40624dd2f1a9fc",
+      "fma_bits": "0x3ff0000000000000",
+      "floor_bits": "0x3ff0000000000000",
+      "result_bits": "0x3f50624dd2f1a9fc",
+      "split_multiply_add_result_bits": "0x3f50624dd2f1a9fc",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3f40624dd2f1a9fd",
+      "fma_bits": "0x3ff0000000000001",
+      "floor_bits": "0x3ff0000000000000",
+      "result_bits": "0x3f50624dd2f1a9fc",
+      "split_multiply_add_result_bits": "0x3f50624dd2f1a9fc",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3f589374bc6a7ef9",
+      "fma_bits": "0x3fffffffffffffff",
+      "floor_bits": "0x3ff0000000000000",
+      "result_bits": "0x3f50624dd2f1a9fc",
+      "split_multiply_add_result_bits": "0x3f50624dd2f1a9fc",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3f589374bc6a7efa",
+      "fma_bits": "0x4000000000000000",
+      "floor_bits": "0x4000000000000000",
+      "result_bits": "0x3f60624dd2f1a9fc",
+      "split_multiply_add_result_bits": "0x3f60624dd2f1a9fc",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3f589374bc6a7efb",
+      "fma_bits": "0x4000000000000001",
+      "floor_bits": "0x4000000000000000",
+      "result_bits": "0x3f60624dd2f1a9fc",
+      "split_multiply_add_result_bits": "0x3f60624dd2f1a9fc",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3f647ae147ae147a",
+      "fma_bits": "0x4007ffffffffffff",
+      "floor_bits": "0x4000000000000000",
+      "result_bits": "0x3f60624dd2f1a9fc",
+      "split_multiply_add_result_bits": "0x3f60624dd2f1a9fc",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3f647ae147ae147b",
+      "fma_bits": "0x4008000000000000",
+      "floor_bits": "0x4008000000000000",
+      "result_bits": "0x3f689374bc6a7efa",
+      "split_multiply_add_result_bits": "0x3f689374bc6a7efa",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3f647ae147ae147c",
+      "fma_bits": "0x4008000000000001",
+      "floor_bits": "0x4008000000000000",
+      "result_bits": "0x3f689374bc6a7efa",
+      "split_multiply_add_result_bits": "0x3f689374bc6a7efa",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3f91eb851eb851eb",
+      "fma_bits": "0x4031ffffffffffff",
+      "floor_bits": "0x4031000000000000",
+      "result_bits": "0x3f916872b020c49c",
+      "split_multiply_add_result_bits": "0x3f916872b020c49c",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3f91eb851eb851ec",
+      "fma_bits": "0x4032000000000000",
+      "floor_bits": "0x4032000000000000",
+      "result_bits": "0x3f926e978d4fdf3b",
+      "split_multiply_add_result_bits": "0x3f926e978d4fdf3b",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3f91eb851eb851ed",
+      "fma_bits": "0x4032000000000001",
+      "floor_bits": "0x4032000000000000",
+      "result_bits": "0x3f926e978d4fdf3b",
+      "split_multiply_add_result_bits": "0x3f926e978d4fdf3b",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3feffbe76c8b4395",
+      "fma_bits": "0x408f400000000000",
+      "floor_bits": "0x408f400000000000",
+      "result_bits": "0x3ff0000000000000",
+      "split_multiply_add_result_bits": "0x3ff0000000000000",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3feffbe76c8b4396",
+      "fma_bits": "0x408f400000000000",
+      "floor_bits": "0x408f400000000000",
+      "result_bits": "0x3ff0000000000000",
+      "split_multiply_add_result_bits": "0x3ff0000000000000",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3feffbe76c8b4397",
+      "fma_bits": "0x408f400000000001",
+      "floor_bits": "0x408f400000000000",
+      "result_bits": "0x3ff0000000000000",
+      "split_multiply_add_result_bits": "0x3ff0000000000000",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3ff0020c49ba5e34",
+      "fma_bits": "0x408f47fffffffffe",
+      "floor_bits": "0x408f400000000000",
+      "result_bits": "0x3ff0000000000000",
+      "split_multiply_add_result_bits": "0x3ff0000000000000",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3ff0020c49ba5e35",
+      "fma_bits": "0x408f480000000000",
+      "floor_bits": "0x408f480000000000",
+      "result_bits": "0x3ff004189374bc6a",
+      "split_multiply_add_result_bits": "0x3ff004189374bc6a",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x3ff0020c49ba5e36",
+      "fma_bits": "0x408f480000000001",
+      "floor_bits": "0x408f480000000000",
+      "result_bits": "0x3ff004189374bc6a",
+      "split_multiply_add_result_bits": "0x3ff004189374bc6a",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x408f4003126e978c",
+      "fma_bits": "0x412e8483ffffffff",
+      "floor_bits": "0x412e848200000000",
+      "result_bits": "0x408f40020c49ba5e",
+      "split_multiply_add_result_bits": "0x408f40020c49ba5e",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x408f4003126e978d",
+      "fma_bits": "0x412e848400000000",
+      "floor_bits": "0x412e848400000000",
+      "result_bits": "0x408f4004189374bc",
+      "split_multiply_add_result_bits": "0x408f4004189374bc",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x408f4003126e978e",
+      "fma_bits": "0x412e848400000001",
+      "floor_bits": "0x412e848400000000",
+      "result_bits": "0x408f4004189374bc",
+      "split_multiply_add_result_bits": "0x408f4004189374bc",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x4150624dd30a3d70",
+      "fma_bits": "0x41f00000001fffff",
+      "floor_bits": "0x41f0000000100000",
+      "result_bits": "0x4150624dd3020c4a",
+      "split_multiply_add_result_bits": "0x4150624dd3020c4a",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x4150624dd30a3d71",
+      "fma_bits": "0x41f0000000200000",
+      "floor_bits": "0x41f0000000200000",
+      "result_bits": "0x4150624dd3126e98",
+      "split_multiply_add_result_bits": "0x4150624dd3126e98",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x4150624dd30a3d72",
+      "fma_bits": "0x41f0000000200001",
+      "floor_bits": "0x41f0000000200000",
+      "result_bits": "0x4150624dd3126e98",
+      "split_multiply_add_result_bits": "0x4150624dd3126e98",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x41d0624dd2f1e353",
+      "fma_bits": "0x4270000000003fff",
+      "floor_bits": "0x4270000000003000",
+      "result_bits": "0x41d0624dd2f1db23",
+      "split_multiply_add_result_bits": "0x41d0624dd2f1db23",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x41d0624dd2f1e354",
+      "fma_bits": "0x4270000000004000",
+      "floor_bits": "0x4270000000004000",
+      "result_bits": "0x41d0624dd2f1eb85",
+      "split_multiply_add_result_bits": "0x41d0624dd2f1eb85",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x41d0624dd2f1e355",
+      "fma_bits": "0x4270000000004001",
+      "floor_bits": "0x4270000000004000",
+      "result_bits": "0x41d0624dd2f1eb85",
+      "split_multiply_add_result_bits": "0x41d0624dd2f1eb85",
+      "within_existing_app_tick_bound": true
+    },
+    {
+      "raw_tick_f64_bits": "0x4290624dd2f1a9fe",
+      "fma_bits": "0x4330000000000003",
+      "floor_bits": "0x4330000000000003",
+      "result_bits": "0x4290624dd2f1a9ff",
+      "split_multiply_add_result_bits": "0x4290624dd2f1a9fe",
+      "within_existing_app_tick_bound": false
+    },
+    {
+      "raw_tick_f64_bits": "0x4290624dd2f1a9ff",
+      "fma_bits": "0x4330000000000004",
+      "floor_bits": "0x4330000000000004",
+      "result_bits": "0x4290624dd2f1aa00",
+      "split_multiply_add_result_bits": "0x4290624dd2f1aa00",
+      "within_existing_app_tick_bound": false
+    },
+    {
+      "raw_tick_f64_bits": "0x4290624dd2f1aa00",
+      "fma_bits": "0x4330000000000004",
+      "floor_bits": "0x4330000000000004",
+      "result_bits": "0x4290624dd2f1aa00",
+      "split_multiply_add_result_bits": "0x4290624dd2f1aa00",
+      "within_existing_app_tick_bound": false
+    }
+  ],
+  "first_fma_discriminators": [
+    {
+      "points": [
+        {
+          "period_f32_bits": "0x3ee540f5",
+          "seconds_f64_bits": "0x0000000000000000",
+          "ticks_f64_bits": "0x0000000000000000",
+          "kind": 0
+        },
+        {
+          "period_f32_bits": "0x3f400001",
+          "seconds_f64_bits": "0x4082c00000000000",
+          "ticks_f64_bits": "0x4123a10200000000",
+          "kind": 0
+        }
+      ],
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082cb6d209c1dc9",
+      "selected_index": 1,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000020000000",
+        "delta": "0x3ff6da41383b9200",
+        "quotient": "0x3ffe7856cd044eef",
+        "raw_tick": "0x4123a82634580d03",
+        "quantizer_fma": "0x41c332354f5dfcb5",
+        "quantizer_floor": "0x41c332354f000000",
+        "result": "0x4123a82634395810",
+        "split_raw_tick": "0x4123a82634580d02",
+        "split_raw_result": "0x4123a82634395810",
+        "split_quantizer_result": "0x4123a82634395810"
+      },
+      "result_f64_bits": "0x4123a82634395810",
+      "final_result_also_differs": false
+    },
+    {
+      "points": [
+        {
+          "period_f32_bits": "0x3ee540f5",
+          "seconds_f64_bits": "0x0000000000000000",
+          "ticks_f64_bits": "0x0000000000000000",
+          "kind": 0
+        },
+        {
+          "period_f32_bits": "0x3f400001",
+          "seconds_f64_bits": "0x4082c00000000000",
+          "ticks_f64_bits": "0x4123a10200000000",
+          "kind": 0
+        }
+      ],
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082cc8270772434",
+      "selected_index": 1,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000020000000",
+        "delta": "0x3ff904e0ee486800",
+        "quotient": "0x4000adeb33486111",
+        "raw_tick": "0x4123a8d3864009ed",
+        "quantizer_fma": "0x41c332de915a89b1",
+        "quantizer_floor": "0x41c332de91000000",
+        "result": "0x4123a8d38624dd2f",
+        "split_raw_tick": "0x4123a8d3864009ee",
+        "split_raw_result": "0x4123a8d38624dd2f",
+        "split_quantizer_result": "0x4123a8d38624dd2f"
+      },
+      "result_f64_bits": "0x4123a8d38624dd2f",
+      "final_result_also_differs": false
+    },
+    {
+      "points": [
+        {
+          "period_f32_bits": "0x3ee540f5",
+          "seconds_f64_bits": "0x0000000000000000",
+          "ticks_f64_bits": "0x0000000000000000",
+          "kind": 0
+        },
+        {
+          "period_f32_bits": "0x3f400001",
+          "seconds_f64_bits": "0x4082c00000000000",
+          "ticks_f64_bits": "0x4123a10200000000",
+          "kind": 0
+        }
+      ],
+      "direction": "seconds_to_ticks",
+      "input_f64_bits": "0x4082ccffbe444d08",
+      "selected_index": 1,
+      "trace": [
+        "10173b064: count1=index0; count2 seconds<=last.A=index0, otherwise1"
+      ],
+      "stages_f64_bits": {
+        "promoted_period": "0x3fe8000020000000",
+        "delta": "0x3ff9ff7c889a1000",
+        "quotient": "0x400154fd994ab889",
+        "raw_tick": "0x4123a921d6dfdb07",
+        "quantizer_fma": "0x41c3332b0c169be5",
+        "quantizer_floor": "0x41c3332b0c000000",
+        "result": "0x4123a921d70a3d71",
+        "split_raw_tick": "0x4123a921d6dfdb06",
+        "split_raw_result": "0x4123a921d70a3d71",
+        "split_quantizer_result": "0x4123a921d70a3d71"
+      },
+      "result_f64_bits": "0x4123a921d70a3d71",
+      "final_result_also_differs": false
+    }
+  ],
+  "inverse_selector_traces": [
+    {
+      "input_tick_bits": "0x0000000000000000",
+      "selected_index": 0,
+      "caller_next_returns": 0,
+      "caller_current_after_next": 1,
+      "native_path": [
+        "1016c148c: current.Start==query; return"
+      ]
+    },
+    {
+      "input_tick_bits": "0x41176fffffffffff",
+      "selected_index": 0,
+      "caller_next_returns": 0,
+      "caller_current_after_next": 1,
+      "native_path": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15f8: previous tail decrements index; return"
+      ]
+    },
+    {
+      "input_tick_bits": "0x4117700000000000",
+      "selected_index": 1,
+      "caller_next_returns": 1,
+      "caller_current_after_next": null,
+      "native_path": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c1578: current.Start==query; return current index"
+      ]
+    },
+    {
+      "input_tick_bits": "0x4117700000000001",
+      "selected_index": 1,
+      "caller_next_returns": 1,
+      "caller_current_after_next": null,
+      "native_path": [
+        "1016c14d8: current.Start<=query; forward branch",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15b0: next returns old item, increments index",
+        "1016c15dc..15f4: last resets index=count-1"
+      ]
+    }
+  ],
+  "counts": {
+    "map_vectors": 105,
+    "quantizer_vectors": 30,
+    "quantizer_split_discriminators": 1,
+    "first_fma_discriminators": 3,
+    "first_fma_final_discriminators": 0
+  },
+  "source_script_sha256": "05b23d625aa1da2491c7e5a1158555a14d8148533ba23882ce7983648a880343"
+}

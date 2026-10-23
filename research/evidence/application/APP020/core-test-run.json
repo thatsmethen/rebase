@@ -1,0 +1,48 @@
+{
+  "command": [
+    "sh",
+    "Application/test-app.sh",
+    "--skip-build"
+  ],
+  "started_utc": "2026-10-23T03:08:36.758690+00:00",
+  "elapsed_seconds": 52.62135916703846,
+  "exit_code": 0,
+  "log": {
+    "path": "research/evidence/application/APP020/core-tests.log",
+    "bytes": 58584,
+    "sha256": "85a96913d11f1ba8dc360ac3bb51d7302f52e7f4dff9eea074bf1952957844f4"
+  },
+  "tests": 301,
+  "suites": 47,
+  "source_unchanged": true,
+  "binaries_unchanged": true,
+  "fixed_binaries": [
+    {
+      "observed_original_path": "Application/.build-tests/arm64-apple-macosx/debug/Rebase",
+      "snapshot": {
+        "path": "research/evidence/application/APP020/test-build-snapshot/Rebase",
+        "bytes": 8351568,
+        "sha256": "7f9fcda2076d16ebd9b7d2a6fdb3416d7c762e1312f5e19065669c2cb308e078"
+      }
+    },
+    {
+      "observed_original_path": "Application/.build-tests/arm64-apple-macosx/debug/RebasePackageTests.xctest/Contents/MacOS/RebasePackageTests",
+      "snapshot": {
+        "path": "research/evidence/application/APP020/test-build-snapshot/RebasePackageTests",
+        "bytes": 17739632,
+        "sha256": "9e4559a23fd2ba34e64110d2deee58dbb345199ac09871f9f43913401b3ccc9e"
+      }
+    }
+  ],
+  "before": {
+    "path": "research/evidence/application/APP020/test-source-before.json",
+    "bytes": 52209,
+    "sha256": "4f7a6ce884e987d3524c0a7397d88e06c272b458d24c39db58df5bf2f57bd965"
+  },
+  "after": {
+    "path": "research/evidence/application/APP020/test-source-after.json",
+    "bytes": 52209,
+    "sha256": "4f7a6ce884e987d3524c0a7397d88e06c272b458d24c39db58df5bf2f57bd965"
+  },
+  "scope": "Own implementation tests on pre/post-identical debug binaries after a separate build/list phase. No Cubase runtime comparison."
+}

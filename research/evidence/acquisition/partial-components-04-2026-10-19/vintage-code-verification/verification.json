@@ -1,0 +1,77 @@
+{
+  "scope": "Check complete universal Mach-O code pages and embedded CMS binding.\n\nThis checks embedded hashes and CMS signature math, not bundle resources,\ncertificate trust/revocation, notarization, runtime behavior, or the full DMG.\n",
+  "path": "/workspace/rebase/research/targets/downloads/partial-components-04/components/Cubase 15.app/Contents/VST3/vintage-plugins.vst3/Contents/MacOS/vintage-plugins",
+  "file_sha256": "6d8613ea8cf3b6175c336cbd4dcac13877378ae6a1bd7a61d4248d9d20040845",
+  "verifier_sha256": "7dba120c59359f03c2d13f8277dde9e2c0c9d4f5e7128214cdcb014efd60219a",
+  "format_source": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/main/osfmk/kern/cs_blobs.h",
+  "architectures": [
+    {
+      "architecture": "x86_64",
+      "slice_offset": 16384,
+      "slice_bytes": 3913104,
+      "slice_sha256": "02401553e2d9a236e7736d1cd79b9455a8e65475ff5803b4f276046d19e77ce1",
+      "code_bytes_hashed": 3864384,
+      "page_size": 4096,
+      "code_pages": 944,
+      "mismatched_pages": [],
+      "code_page_hashes_all_match": true,
+      "cms_signature_math_valid": true,
+      "codedirectory_sha256": "7f1f6ec466ce1a405c36e5154d3255e0f72ba4f4f1068a1921d22707e9ac1006",
+      "cms_sha256": "5a4eebddf2844ebd7e6748cd9d9e35a9030c7da42c8d00aeb8592d78193e1c84",
+      "cms_check": {
+        "argv": [
+          "openssl",
+          "cms",
+          "-verify",
+          "-inform",
+          "DER",
+          "-in",
+          "research/evidence/acquisition/partial-components-04-2026-10-19/vintage-code-verification/x86_64.cms.der",
+          "-content",
+          "research/evidence/acquisition/partial-components-04-2026-10-19/vintage-code-verification/x86_64.codedirectory.bin",
+          "-noverify",
+          "-binary",
+          "-out",
+          "/dev/null"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "Verification successful\n"
+      }
+    },
+    {
+      "architecture": "arm64",
+      "slice_offset": 3932160,
+      "slice_bytes": 3665488,
+      "slice_sha256": "3b7140d6728bfeb165875b6009b5a7f45a0b4b88651b30ea30cdf951c44f1057",
+      "code_bytes_hashed": 3618688,
+      "page_size": 4096,
+      "code_pages": 884,
+      "mismatched_pages": [],
+      "code_page_hashes_all_match": true,
+      "cms_signature_math_valid": true,
+      "codedirectory_sha256": "b0e67688ff574a41bf71ba2df7a95d3d89a4226b0f5b6d5b39dbe9c4a58cadf2",
+      "cms_sha256": "a1195f5562e4f107991cb7ca6290f9b0d4f1b63545068c3e6d6acdab8e6472c6",
+      "cms_check": {
+        "argv": [
+          "openssl",
+          "cms",
+          "-verify",
+          "-inform",
+          "DER",
+          "-in",
+          "research/evidence/acquisition/partial-components-04-2026-10-19/vintage-code-verification/arm64.cms.der",
+          "-content",
+          "research/evidence/acquisition/partial-components-04-2026-10-19/vintage-code-verification/arm64.codedirectory.bin",
+          "-noverify",
+          "-binary",
+          "-out",
+          "/dev/null"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "Verification successful\n"
+      }
+    }
+  ]
+}

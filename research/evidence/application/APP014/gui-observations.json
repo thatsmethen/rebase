@@ -1,0 +1,218 @@
+{
+  "id": "APP014-GUI",
+  "created_utc": "2026-10-20T11:04:11.321868+00:00",
+  "groups_passed": 4,
+  "executable": {
+    "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 4940176,
+    "sha256": "a9193c2273f121bc7343deebdea1090bb53753039fe80f3fcc6db54c55687705"
+  },
+  "groups": [
+    {
+      "name": "native_admission_and_meter",
+      "files": [
+        "gui-open.txt",
+        "gui-inspect.txt",
+        "gui-native-admitted.txt",
+        "gui-native-playing.txt",
+        "gui-native-progress.txt"
+      ],
+      "observations": "The preserved unresolved LoFi event admits the explicit original-rate native timeline reader. The inspector states general CPR placement/project processing remain unresolved. Captured playback advances from0.640 to21.406 seconds with engine peaks0.062499/0.031250, persistent event-only scope and44.1kHz reader label; project rate remains48kHz."
+    },
+    {
+      "name": "transport_lifecycle",
+      "files": [
+        "gui-native-pause.txt",
+        "gui-native.png",
+        "gui-native-seek.txt",
+        "gui-native-resume.txt",
+        "gui-native-end.txt",
+        "gui-native-restart.txt",
+        "gui-native-stop.txt",
+        "gui-native-live-return.txt",
+        "gui-native-exit.txt"
+      ],
+      "observations": "Pause at21.548 clears engine peaks; the screenshot shows this paused state and visible event-only banner. Seek shows16.000, resume advances16.479, natural completion shows24.000 with zero peaks. Restart advances0.477, Stop returns0.000, live Return advances0.292, and explicit exit restores project Play with zero peaks."
+    },
+    {
+      "name": "media_custody",
+      "files": [
+        "gui-media-tamper.json",
+        "gui-native-tamper-rejected.txt",
+        "gui-after-rejection.txt",
+        "gui-media-restored.json",
+        "gui-native-restored-admitted.txt",
+        "gui-native-restored-playing.txt"
+      ],
+      "observations": "The independently reconstructed one-byte media mutation matches the recorded tampered hash and causes explicit refusal before using this source event; audition is cleared. Restoring the exact baseline hash permits fresh native-reader admission and playback at0.609. All five package files remain byte-identical to the pre-GUI baseline."
+    },
+    {
+      "name": "project_barriers_and_regressions",
+      "files": [
+        "gui-project-play-blocked.txt",
+        "gui-project-export-blocked.txt",
+        "gui-original-admitted.txt",
+        "gui-original-playing.txt",
+        "gui-original-exit.txt",
+        "gui-mode1-admitted.txt",
+        "gui-mode1-playing.txt",
+        "gui-mode1-exit.txt"
+      ],
+      "observations": "Ordinary project Play and Export still reject unresolved CPR events. Fresh inspection defaults to original source rate; its playback advances1.129 at44.1kHz. Explicit mode1 plays at48kHz and advances1.935. Both exits remove audition mode and clear peaks; final retained and current read-only UI state is idle at2.154 with project Play selected."
+    }
+  ],
+  "records": [
+    {
+      "path": "research/evidence/application/APP014/gui-after-rejection.txt",
+      "bytes": 5333,
+      "sha256": "a310ec2bc30c9513ee68652b4869e04eb2a4d32ab116fbcc9a2ec2e40a692c04"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-inspect.txt",
+      "bytes": 1351,
+      "sha256": "0f3c89ed0f2280d34d535b3c36121c2c6403a0996b15ee3c4d600b0f26b36908"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-media-restored.json",
+      "bytes": 244,
+      "sha256": "bb7952f87747564ffdbfa22f181d19283c3fa6b932bf685290f8773a0578169b"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-media-tamper.json",
+      "bytes": 335,
+      "sha256": "b114903f49e9d12ee5d277f2381b68377ffa314474e1e8035b26b52d1f5feb5a"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-mode1-admitted.txt",
+      "bytes": 1561,
+      "sha256": "7168177101c760732b8114ccad6002ad5068d0ce81b715d2b0f704d0e25f13ae"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-mode1-exit.txt",
+      "bytes": 5361,
+      "sha256": "18f24387017f1063248b357d5e8e413c0b3c4128a49c004d3bdb479dad9ebd7a"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-mode1-playing.txt",
+      "bytes": 5874,
+      "sha256": "260122b78a7cd3256487ba1ff70e1ff534d94997844ddfdaa0702152de4032f8"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-admitted.txt",
+      "bytes": 1588,
+      "sha256": "4c95c4d99f9806dacf174fc673bff8632910989af1f9a2122a589462bb80f17d"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-end.txt",
+      "bytes": 5858,
+      "sha256": "ff53d49f97ca235899508fea229b6a052503173d0c00ec9a4860a08463fd6c8f"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-exit.txt",
+      "bytes": 5361,
+      "sha256": "b14d6e2baf1ae65825b0696798a2346882bb7586d903af32d8ee558c5e667e85"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-live-return.txt",
+      "bytes": 5882,
+      "sha256": "99b6aaa4e4b7da08b20743ba6f32b7d9017fc37b8f8108bfa28acc3fe50a061b"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-pause.txt",
+      "bytes": 5861,
+      "sha256": "2dfc5e80df0f13868b6f1256b5c4d90f9cff6b5ab4151aacc2ac3153c5ab2ff8"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-playing.txt",
+      "bytes": 5882,
+      "sha256": "5e01db3fa8e111d382325ebb6130abb013bbf6f49fda38b245f35d81c696eeff"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-progress.txt",
+      "bytes": 5882,
+      "sha256": "61cf5b133b28e1a3a294e917604473f5321d8d57b51b5b165f3b5e3accf9c059"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-restart.txt",
+      "bytes": 5882,
+      "sha256": "2fc7daebc68d65e6a5ad46287cd2cdb6c8f77a437e413066e2473b3243edcfca"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-restored-admitted.txt",
+      "bytes": 1588,
+      "sha256": "4c95c4d99f9806dacf174fc673bff8632910989af1f9a2122a589462bb80f17d"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-restored-playing.txt",
+      "bytes": 5882,
+      "sha256": "2a91fd83322875663f3ec71a2f669105bbfd9b51cdd8d1327d4613cc44fcffab"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-resume.txt",
+      "bytes": 5883,
+      "sha256": "640f0d54e83e05b4b3693f88ea8c1d0bf61a7b001ba2967525806a7799203777"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-seek.txt",
+      "bytes": 5860,
+      "sha256": "95c768f0f96dd971ad082bd215ac9013f8c142a1ed5eb488820f915b999234be"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-stop.txt",
+      "bytes": 5860,
+      "sha256": "9daad4d937e341a76cc472df6eb328e0ab5502fc36b378b79cad6907300ca5b4"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native-tamper-rejected.txt",
+      "bytes": 394,
+      "sha256": "4b2ec7bd2949f020b3eb9dc4f96d68554d43a716febaa1fa5551e665bc52b3c0"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-native.png",
+      "bytes": 400319,
+      "sha256": "62227454d3c3c8a8dc366134424d18b792bc11d7749f274046551e7c3a34540c"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-open.txt",
+      "bytes": 5333,
+      "sha256": "5a2a08c9d18ce2762fa8ebd4bf2e265fa44ef0c94b3087f502134ea20114a6e2"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-original-admitted.txt",
+      "bytes": 1351,
+      "sha256": "0f3c89ed0f2280d34d535b3c36121c2c6403a0996b15ee3c4d600b0f26b36908"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-original-exit.txt",
+      "bytes": 5362,
+      "sha256": "77f1a65ed534c10da3f16a43c69edc8f85ef15fcd0c2c7f544ebe4d8e66c0b10"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-original-playing.txt",
+      "bytes": 5806,
+      "sha256": "9c5c29f5b73b71810e243ce71705ea3a58039a81a666d896a08fa7612bb51811"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-package-baselines.json",
+      "bytes": 1193,
+      "sha256": "a44a495d97b8e4837f3cf0adf5c63ad6d2b88110a60b223251a1468cdd3855ec"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-project-export-blocked.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-project-play-blocked.txt",
+      "bytes": 533,
+      "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+    },
+    {
+      "path": "research/evidence/application/APP014/gui-release-build.json",
+      "bytes": 166,
+      "sha256": "74e19cb2513a2ba6d6e5df8e22d3ce32c5b7a666ef0ef81b8a8532244006a012"
+    }
+  ],
+  "package_files_unchanged": 5,
+  "scope": "Own application and synthetic PCM; engine telemetry is not DAC or Cubase output."
+}

@@ -1,0 +1,245 @@
+{
+  "id": "APP012-GUI",
+  "created_utc": "2026-10-20T09:47:16.555543+00:00",
+  "groups_passed": 8,
+  "executable": {
+    "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 4878128,
+    "sha256": "3cb6b102a31314d7bd05d38c72f5bb7dcc54c9c6af19863e44029609ca154d87"
+  },
+  "public_library": {
+    "path": "Application/dist/Rebase.app/Contents/Frameworks/libsoxr.0.dylib",
+    "bytes": 188000,
+    "sha256": "c614df97b2c3f3881fa694efc73a6d5152fe0288ac9396adb6bd7c8c8e5f895a"
+  },
+  "groups": [
+    {
+      "id": "up_admission",
+      "result": "passed",
+      "observation": "The 48 kHz QA package retains its unresolved event. Explicit public-SoXR mode2 admission describes the reconstructed wrapper and unverified reference equivalence. Playback advances with nonzero engine peaks; screenshot agrees. Independent read-only process mapping confirms the bundled public dylib is the only loaded libsoxr path.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP012/gui-up-open.txt",
+          "bytes": 5331,
+          "sha256": "8ccf0321ac72b839b8cad3fd76e6de481ee2e70fc38eb5fc62a5ad6010c517f5"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-up-admitted.txt",
+          "bytes": 1533,
+          "sha256": "bd04a47d71d9c8ad65a3ef299d3b2c3baced05574dd3f040c6df9a2a00fb5b26"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-up-playing.txt",
+          "bytes": 5865,
+          "sha256": "a34b28ce62c4104b9e4b51d75f1f292b1267bf64c5471025230043b6e59b58e4"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-up-playing.png",
+          "bytes": 404427,
+          "sha256": "72149bc8badee0d6f463fdbcc80526562b2c7bbe131f153401ad195c500d2682"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-loaded-public-library.json",
+          "bytes": 335,
+          "sha256": "de094d94fac8008a5d7f28c11fa24c22f48761bbe4bd1f670aaf1f459521f8a2"
+        }
+      ]
+    },
+    {
+      "id": "transport_lifecycle",
+      "result": "passed",
+      "observation": "Pause at 7.780 seconds clears peaks; seek displays 16.000, resume advances to 16.246, natural completion displays 24.000 with zero peaks. Restart advances from the beginning; Stop returns to 0.000 with zero peaks. Retained snapshots support these state transitions, not a DAC sample measurement.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP012/gui-up-paused.txt",
+          "bytes": 5843,
+          "sha256": "1d9e65a95ccbadfb412c45e418b4093e7422a8f5d97584cfb14ab4a67f9653a6"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-up-seek.txt",
+          "bytes": 5843,
+          "sha256": "846ac4d604f18386d73d83632dadb2f920c15de389859115e37fa7bc428052ad"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-up-resumed.txt",
+          "bytes": 5865,
+          "sha256": "c9dc7590c84acb97871361e9efd604f444475551b2cb963554f3c2d318171cd7"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-up-natural-end.txt",
+          "bytes": 5841,
+          "sha256": "651bd6480b83a0a92d2123c2ac52779c1fdea2403d420e6a957da856f9530fcd"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-up-restart.txt",
+          "bytes": 5865,
+          "sha256": "d2ba16d58449148731e61f419f7a0006a582a264fcbdb13ecd582e80a05c316c"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-up-stop.txt",
+          "bytes": 5843,
+          "sha256": "7c1d9b84552c522461aecf4b56cd9b3d7d9218bcf14da0a15143344189ded402"
+        }
+      ]
+    },
+    {
+      "id": "media_custody",
+      "result": "passed",
+      "observation": "A recorded one-byte change in disposable attached media causes an explicit rejection and clears audition mode. Exact baseline hash is restored; fresh mode2 playback succeeds. All package bytes are independently checked below.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP012/gui-media-tamper.json",
+          "bytes": 363,
+          "sha256": "faa52ee59fa3c898013d84859e58f5537d06d44d455dabb6fa56bfec4a68af86"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-up-tamper-rejected.txt",
+          "bytes": 394,
+          "sha256": "4b2ec7bd2949f020b3eb9dc4f96d68554d43a716febaa1fa5551e665bc52b3c0"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-up-after-rejection.txt",
+          "bytes": 5332,
+          "sha256": "e272f4de59a348e814e011357cef9d930c562479415c4409ae8c44ab578f47cb"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-media-restored.json",
+          "bytes": 248,
+          "sha256": "021c3af649447004b0ef534183a8a25ce24a224f382acfd4fbd313c4af689b92"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-up-restored-playing.txt",
+          "bytes": 5865,
+          "sha256": "a21ede15642fef8b783ee9c585a94da8be3ceac8cbe82db830105f77ebe1c58b"
+        }
+      ]
+    },
+    {
+      "id": "edit_exit_undo",
+      "result": "passed",
+      "observation": "Pan 0.25 exits audition, selects project Play, zeros peaks and reports Stopped. Undo restores pan0 without re-entering audition.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP012/gui-up-edit-exit.txt",
+          "bytes": 5333,
+          "sha256": "27f554ee654266e89152f362f621b192a48bb2ace75f7b00598e38edb182d5ab"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-up-undo.txt",
+          "bytes": 5319,
+          "sha256": "2227ba4637e4346dedc9c6f5c4c2e3791dacb9ee4af88d7f70f1ec0aabf90f4f"
+        }
+      ]
+    },
+    {
+      "id": "project_barriers",
+      "result": "passed",
+      "observation": "Ordinary project Play and Export both refuse unresolved CPR audio; selected source-event audition has not silently enabled project rendering.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP012/gui-project-play-blocked.txt",
+          "bytes": 533,
+          "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-project-export-blocked.txt",
+          "bytes": 533,
+          "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+        }
+      ]
+    },
+    {
+      "id": "downsample_lifecycle",
+      "result": "passed",
+      "observation": "The 32 kHz package admits explicit mode2, plays with nonzero peaks, resumes a live seek at 16.295 and ends at displayed24.000 with zero peaks. Explicit exit restores ordinary project Play and removes the audition banner.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP012/gui-down-open.txt",
+          "bytes": 5335,
+          "sha256": "54421d685d28fc3e79d8653cb540c32b9f38456941fd7d39a5be5b0477956956"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-down-admitted.txt",
+          "bytes": 1533,
+          "sha256": "bd9cf50f8bd4e746a5118b562fb5a6bbf3ff9c9e055ef4e8efc45a720a32dc20"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-down-playing.txt",
+          "bytes": 5867,
+          "sha256": "be434cef659146491164bcb160634adba270c179fba01c6ca028484ebd6f67a0"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-down-live-seek.txt",
+          "bytes": 5868,
+          "sha256": "1f5bcf0adc2a00d21a3657e05cf4aa7816d998de9501d8bb741005539e3c12e5"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-down-natural-end.txt",
+          "bytes": 5843,
+          "sha256": "8889621ab1990dc57baac32e9a21ce16e1e1964caf194a9fba3da4e980de0f24"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-down-explicit-exit.txt",
+          "bytes": 5361,
+          "sha256": "cefb3111bffc7e95ec9eec6424fa4c417112dbcdb3eb8c0bb93b8b94d0f684f7"
+        }
+      ]
+    },
+    {
+      "id": "equalrate_admission",
+      "result": "passed",
+      "observation": "At 44.1 kHz project/source rates, mode0 remains disabled with its different-rate explanation. Explicit mode2 is admitted and observed playing, then explicit exit removes mode and zeros peaks. This is not an identity-filter claim.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP012/gui-equal-open.txt",
+          "bytes": 5335,
+          "sha256": "e2091126b71f9807a5dcc78f6eb3cd2e5b883edb491d455a77d366565734178a"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-equal-mode0-blocked.txt",
+          "bytes": 1541,
+          "sha256": "7122b225f18dc8d2a6464ae27581179f8737dd4a1efcb564fe479f2001e606e2"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-equal-mode2-admitted.txt",
+          "bytes": 1533,
+          "sha256": "ea7f05515dc1acd68485499a60f5ad05c040cd64453c5d0b45ffe5cdff8850eb"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-equal-mode2-playing.txt",
+          "bytes": 5867,
+          "sha256": "16cdd8c4a9f3a2a786a76bb9952ba97a2b1ca3fa8f519c91c41ce85a5bd2be95"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-equal-mode2-exit.txt",
+          "bytes": 5361,
+          "sha256": "f085c5f6e85b44df6dda1c96a88894827d44cab46af6a9f628322c13dd24b56b"
+        }
+      ]
+    },
+    {
+      "id": "originalrate_regression",
+      "result": "passed",
+      "observation": "Original source rate is selected and admitted. The engine plays at44.1 kHz without a SoXR caption; explicit exit restores project mode with zero peaks.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP012/gui-original-admitted.txt",
+          "bytes": 1351,
+          "sha256": "0f3c89ed0f2280d34d535b3c36121c2c6403a0996b15ee3c4d600b0f26b36908"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-original-playing.txt",
+          "bytes": 5808,
+          "sha256": "608ebffebf86fbe14a260811d2879db4e1bce2e8d25ef707b6371d85340f7276"
+        },
+        {
+          "path": "research/evidence/application/APP012/gui-original-exit.txt",
+          "bytes": 5362,
+          "sha256": "ddabb816e48b0b6114a4fa677cbb0e3c0beee2fdaf8aab97a10fd83c12974633"
+        }
+      ]
+    }
+  ],
+  "package_files_unchanged": 15,
+  "scope": "Own application with synthetic PCM; engine telemetry is not DAC or Cubase output."
+}

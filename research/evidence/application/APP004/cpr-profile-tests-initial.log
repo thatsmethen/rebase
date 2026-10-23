@@ -1,0 +1,40 @@
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--1AB21518FC5DEDBE.txt
+[4/11] Compiling RebaseCore CPRProject.swift
+[5/11] Compiling RebaseCore CPRRecoveryV1.swift
+[6/11] Emitting module RebaseCore
+[7/30] Compiling RebaseCoreTests TestSupport.swift
+[8/30] Compiling RebaseCoreTests AutomationTests.swift
+[9/30] Compiling RebaseCoreTests AmbisonicConverterTests.swift
+[10/30] Compiling RebaseCoreTests ProjectStoreTests.swift
+[11/30] Compiling RebaseCoreTests ProjectBehaviorTests.swift
+[12/30] Compiling RebaseCoreTests InvalidClipIntervalTests.swift
+[13/30] Compiling RebaseCoreTests OfflineRendererTests.swift
+[14/30] Compiling RebaseCoreTests MusicalTimeTests.swift
+[15/30] Compiling RebaseCoreTests DAWProjectTests.swift
+[16/30] Compiling RebaseCoreTests AudioValidityTests.swift
+[17/30] Emitting module RebaseCoreTests
+[18/30] Compiling RebaseCoreTests CPRProjectTests.swift
+macro expansion #require:2:3: error: call can throw, but it is not marked with 'try' and the error is not handled
+`- /workspace/rebase/Application/Tests/RebaseCoreTests/CPRProjectTests.swift:243:92: note: expanded code originates here
+241 |                 let bytes = try JSONSerialization.data(withJSONObject: object, options: [.sortedKeys])
+242 |                 try bytes.write(to: reportURL)
+243 |                 let historical = try #require(CPRProject.compatibilityReport(from: output))
+    |                                      `- note: in expansion of macro 'require' here
+    +--- macro expansion #require --------------------------------------
+    |1 | Testing.__checkFunctionCall(CPRProject.self,calling: {
+    |2 |   $0.compatibilityReport(from: $1)
+    |  |   `- error: call can throw, but it is not marked with 'try' and the error is not handled
+    |3 | },output,expression: .__fromFunctionCall(.__fromSyntaxNode("CPRProject"),"compatibilityReport",("from",.__fromSyntaxNode("output"))),comments: [],isRequired: true,sourceLocation: Testing.SourceLocation.__here()).__required()
+    +-------------------------------------------------------------------
+244 |                 #expect(historical.schemaVersion == schema && historical.interpretationProfile == profile)
+245 |                 #expect(historical.recoveredProject == imported.project)
+[19/30] Compiling Rebase StudioSession.swift
+[20/30] Compiling Rebase RebaseApp.swift
+[21/30] Compiling Rebase ProjectEditors.swift
+[22/30] Compiling Rebase MixerView.swift
+[23/30] Emitting module Rebase
+[24/30] Compiling Rebase AmbisonicExport.swift
+error: fatalError

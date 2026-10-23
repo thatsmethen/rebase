@@ -1,0 +1,88 @@
+{
+  "id": "APP006",
+  "created_utc": "2026-10-19T13:57:26.362249+00:00",
+  "version": "0.6.0",
+  "build": 6,
+  "status": "bounded_source_event_slice_implemented_and_checked",
+  "autonomous_goal_status": "active",
+  "interpretation_profile": "cpr-static-subset-v4",
+  "serialization_schema": 2,
+  "executable": {
+    "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 4290960,
+    "sha256": "1dae0a89d53ec02bedc34a240b10f8e5c99255154611ac7bc2f70c31709928da"
+  },
+  "test_methods_passed": 124,
+  "test_suites": 18,
+  "test_log": {
+    "path": "research/evidence/application/APP006/core-tests-final.log",
+    "bytes": 24225,
+    "sha256": "c8a53b0fc329e807dfd92258b7e0355d62b58dd1d00406e16d4460433a87f629"
+  },
+  "gui_groups_passed": 10,
+  "gui_record": {
+    "path": "research/evidence/application/APP006/gui-observations.json",
+    "bytes": 6125,
+    "sha256": "b4372e67177cb992d0fa1b38691caabd397cad39a5ed9325f10cf0c3622ac0eb"
+  },
+  "independent_review": {
+    "path": "research/evidence/application/APP006/v4-integration-review.json",
+    "bytes": 6689,
+    "sha256": "5ec39e5d569e80145e30ecb3dd278092819c57189b621e4953c4c6e2914505e7"
+  },
+  "package_audit": {
+    "path": "research/evidence/application/APP006/gui-packages-independent-check.json",
+    "bytes": 10005,
+    "sha256": "f3cc3cf2b03b756573551910d4a0474ab8d5bd8259a872d529d9142a30b5d69b"
+  },
+  "historical_audit": {
+    "path": "research/evidence/application/APP006/historical-integrity.json",
+    "bytes": 61732,
+    "sha256": "d08b816b7dc3f98fe7b9afa1bd47f76111db014723c11a4995d67757ca959bad"
+  },
+  "static_findings": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/finding.json",
+      "bytes": 39071,
+      "sha256": "af7178337889b779e4d37e2ac55e9eb41087c3fced9b54a0ec15e63e4204cd82"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/cluster/finding.json",
+      "bytes": 13948,
+      "sha256": "12131650ca7510f4fe85d55ed0e2e8e6e96a1fa827ca57abeb345388553ecc6f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/finding.json",
+      "bytes": 28600,
+      "sha256": "12ce949821b80d579cb69ba0cca51bd20e5adcfad99f7ae26d36c3cb15c4a2f9"
+    }
+  ],
+  "implemented": [
+    "Versioned source-event import with exact archive object identities and completed-object caches.",
+    "LoFi saved source placement0/24s/0 under direct zero-origin type10 contract; Classic retained unplaced.",
+    "Source media/segment fields, unresolved timeline and inspector, removal/Undo/Redo, save/reopen/Save As.",
+    "Source-replay proof for retained events on original imported tracks; tampering rejected before save or on load.",
+    "Unresolved-event playback/render/exchange barriers; frozen V1/V2/V3 semantics preserved."
+  ],
+  "retained_corrections": [
+    {
+      "record": "v4-tests-initial.log",
+      "cause": "Direct Swift test invocation lacked Testing module setup; repository test-app.sh succeeds. No target execution."
+    },
+    {
+      "record": "core-tests-round1.log",
+      "cause": "Six assertions in historical signature controls assumed current project/facts/objects equal V2. Corrected to assert frozen V2/V3 equality and exact old subset plus V4 unresolved event."
+    },
+    {
+      "record": "initial-build-identity.json",
+      "cause": "Initial import report retained obsolete V1 time-unit wording; V4 report text corrected before final build and fresh GUI packages. Initial package is retained as development evidence, not a final-profile compatibility fixture."
+    }
+  ],
+  "limits": [
+    "Cubase/proprietary runtime executions and measured reference comparisons remain0.",
+    "Source projections do not establish hosted runtime rate/provider state or rendered sound parity.",
+    "No automatic relink-to-playback promotion, general nonzero coordinates, nested event placement, or musical audio duration conversion.",
+    "CPR writing/roundtrip, MIDI editing, recording, plugin hosting, PDC, complete mixer/routing, time stretching and full interface fidelity remain open."
+  ],
+  "next": "Integrate independently verified segment/read intervals and bounded default-state rendering semantics under a new frozen profile; then actual-media resolution and explicit supported playable promotion. Full-fidelity goal stays active."
+}

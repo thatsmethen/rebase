@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "finding_id": "TRACK-OVERLAPS-001",
+  "status": "bounded static chronological plain-track overlap contract",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "target_executed": false,
+  "native_runtime_comparisons": 0,
+  "provider": "Pinned rea-agents 6.7.0 with isolated Ghidra arm64 raw imports; original-image instructions authoritative",
+  "claims": [
+    {
+      "id": "TRACK-OVERLAP-1",
+      "claim": "Saved event priority is a signed 32-bit value; larger priority wins overlaps, with later admitted collector ordinal winning ties.",
+      "details": [
+        "MAudioEvent reader stores serialized priority at +80; virtual getter +1a8 reads the same word. The normalizer uses signed comparisons for priority and ordinal.",
+        "Collector ordinal belongs to admitted traversal order. It matches relative counted order only when every supported plain child passes the explicit fresh filter and collection window.",
+        "Default filtering, collection clipping and the admitted plain segment builder do not reinterpret priority. Other hosted paths and callbacks remain outside the contract."
+      ],
+      "support": [
+        {
+          "entry": "0x1000ee164",
+          "directory": "research/evidence/cubase-static/cpr-objects-001/audio-native",
+          "evidence_ids": [
+            "ev_a0aec2785fb3d041bd20c334518d846094a893e0cb9eeb8f9d88bb92a57f84cb",
+            "ev_ed13a871b1e6eb449ed2895394e2d933ea94e35380690722b338b2451e851571"
+          ]
+        },
+        {
+          "entry": "0x1000ea130",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass1",
+          "evidence_ids": [
+            "ev_af6a88b76129d5d8fa9ebe5a5cbd284b54cdb648878f2de2cadebbc5f04cd24c",
+            "ev_6e7070c0e0599d2462200470ce19659f361a39871df7e88286d1cfb42ed45dee"
+          ]
+        },
+        {
+          "entry": "0x10020e354",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/pass1",
+          "evidence_ids": [
+            "ev_c067a564a2c37ceeb4bb214fa94928931e741ca1d848964221064e78f3e086c9",
+            "ev_1dc686d79821882b097e61f55f3e744bf5c0352610b302c50c9db556b3df7b16"
+          ]
+        },
+        {
+          "entry": "0x10020e7c8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/pass1",
+          "evidence_ids": [
+            "ev_036634d39535cbf26572f7477b4b66fc94f4c0eaf2189b82be1728f8c57f281d",
+            "ev_ac946ebc2cb281f877d05345f2423abbadbf10726b9c484ecec6e4cdbcfc1b50"
+          ]
+        },
+        {
+          "entry": "0x10020f2e8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/pass1",
+          "evidence_ids": [
+            "ev_cdf1e86cddc7273c25dbff44bba20ebf30c14ebb847d848fd13d385a70f1050f",
+            "ev_71fe611794f270ea59ed13655819d80dec4884feb34de29783ff9f664a0599dc"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRACK-OVERLAP-2",
+      "claim": "Overlap resolution trims, removes and splits ranges while preserving original event, context and ordinal identities.",
+      "details": [
+        "A stronger current range removes a following range or moves its surviving tail to currentEnd. A stronger following range can retain an earlier prefix and clone the current tail after followingEnd.",
+        "Tail reinsertion scans backward by start and inserts after equal starts. The current-wins branch continues from the saved successor of the removed node, not from the current list head.",
+        "Initial serialized order is not repaired by sorting. This contract accepts chronological finite positive input only."
+      ],
+      "support": [
+        {
+          "entry": "0x10020e7c8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/pass1",
+          "evidence_ids": [
+            "ev_036634d39535cbf26572f7477b4b66fc94f4c0eaf2189b82be1728f8c57f281d",
+            "ev_ac946ebc2cb281f877d05345f2423abbadbf10726b9c484ecec6e4cdbcfc1b50"
+          ]
+        },
+        {
+          "entry": "0x1002136ec",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass1",
+          "evidence_ids": [
+            "ev_35067ec4ef1bc2e94bcc5bd78b705c304483fffbd5801c0fae4a27c0cc70ddd7",
+            "ev_b0d6b2ba6b059c8a320bd751384501989825655b7e11b1c3321058f6ee750fc6"
+          ]
+        },
+        {
+          "entry": "0x103101840",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-overlaps/pass1",
+          "evidence_ids": [
+            "ev_c57f9db5c15a35891fda1d08c0f7d268e3dad96b2344884930e9b472cb177e19",
+            "ev_c97d62bfa3e6a177b9fadf92f3b7cc6af5c947338856b1a89001935d2d74716f"
+          ]
+        },
+        {
+          "entry": "0x1031022a0",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-overlaps/pass1",
+          "evidence_ids": [
+            "ev_207e8418e493fd12530fb734594e95cb664b6efcbdb2d71bfea3d9b497ad5665",
+            "ev_f0d975ed1be8cb139d14486f6822eed8a959919ea6633ce2fabc2eedfa365d56"
+          ]
+        },
+        {
+          "entry": "0x103101e50",
+          "directory": "research/evidence/cubase-static/cpr-signature-001/pass12",
+          "evidence_ids": [
+            "ev_01529c7e539b1b74fb26e60ccba3f292479ad5c5e7a75d31111692c14df61b50",
+            "ev_5c36d23f340526536c50e58804c2a30647e55c4820148ffdfdd55c5ccbedad60"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRACK-OVERLAP-3",
+      "claim": "The exact binary64 epsilon and publication watermark govern which short overlaps and remainders survive.",
+      "details": [
+        "Epsilon bits are 3f1a36e2eb1c432d. The overlap branch requires currentEnd >= nextStart and abs(rounded64(currentEnd-nextStart)) >= epsilon; equality enters the branch.",
+        "A surviving cloned or trimmed tail requires an end distance at least epsilon. An earlier prefix additionally requires currentStart < nextStart. Sub-epsilon overlap bypasses priority resolution.",
+        "Publication clamps start to the prior published-end watermark, advances that watermark to the larger end and retains only a positive resulting duration. A small standalone event is not discarded solely because its duration is below epsilon."
+      ],
+      "support": [
+        {
+          "entry": "0x10020e7c8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/pass1",
+          "evidence_ids": [
+            "ev_036634d39535cbf26572f7477b4b66fc94f4c0eaf2189b82be1728f8c57f281d",
+            "ev_ac946ebc2cb281f877d05345f2423abbadbf10726b9c484ecec6e4cdbcfc1b50"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRACK-OVERLAP-4",
+      "claim": "Each surviving fragment is freshly projected from its original event coordinates before builder and reader quantization.",
+      "details": [
+        "Use original contextOffset + (fragmentStart - originalEventStart), preserving the separate binary64 operations and original event/context identity.",
+        "Intersect the original canonical interval with the normalized fragment, then call the existing native builder projection. Never trim an already rounded range or accumulate offsets through earlier fragments.",
+        "Builder-snapped-empty fragments produce no segment. Every original contributor and media binding must still be accounted for, including fully covered events and a fully covered selected anchor.",
+        "Nil neighbor links, absent explicit fades, effective automatic-fade flags0 and the other existing plain-source gates are required. This finding does not recover crossfades, mixer routing, automation or rate-selection policy."
+      ],
+      "support": [
+        {
+          "entry": "0x10020f2e8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/pass1",
+          "evidence_ids": [
+            "ev_cdf1e86cddc7273c25dbff44bba20ebf30c14ebb847d848fd13d385a70f1050f",
+            "ev_71fe611794f270ea59ed13655819d80dec4884feb34de29783ff9f664a0599dc"
+          ]
+        },
+        {
+          "entry": "0x1002136ec",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/pass1",
+          "evidence_ids": [
+            "ev_35067ec4ef1bc2e94bcc5bd78b705c304483fffbd5801c0fae4a27c0cc70ddd7",
+            "ev_b0d6b2ba6b059c8a320bd751384501989825655b7e11b1c3321058f6ee750fc6"
+          ]
+        },
+        {
+          "entry": "0x1000ea704",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/pass2",
+          "evidence_ids": [
+            "ev_16733bf92796c0c78cf983f01d3da1498992a2b55c6ef65d28e4b46a0ac383ca",
+            "ev_13da423d739a496c503a7124bd9bd25b4c3ff8dc5360054b2511c5c8a1fd2dd8"
+          ]
+        },
+        {
+          "entry": "0x1000ea694",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/pass2",
+          "evidence_ids": [
+            "ev_091f77aac682038a6624118a91ef6899c6c3cfb5c6ca50ad76558e50943be7b7",
+            "ev_faa7d12de9ee17bbb69b967789d0e4492c2e67ec4c92ba64e9a03c1b9bbd6e10"
+          ]
+        },
+        {
+          "entry": "0x100212f3c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/pass2",
+          "evidence_ids": [
+            "ev_d9a1b1db39758b703d6b255bf1f815f23adba5114044feef1ff0f70f6d64a7af",
+            "ev_43d2bad8969dea571e712443310914799f53af04448028e81ada6f9c04bda2e5"
+          ]
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/track-overlaps/verification.json",
+    "bytes": 36979,
+    "sha256": "5235920ab2263ad3d0e426591398c45397e4ccbc1d5dbd98459baa1189d7c3a7"
+  },
+  "analytical_controls": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/track-overlaps/branch-controls.json",
+    "bytes": 30278,
+    "sha256": "5cbf4db26969512b4ad5a02d4b6bfbf0fa85706e4c9c167ad50ca595eac700cb"
+  },
+  "analytical_model": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/track-overlaps/normalizer_model.py",
+    "bytes": 4929,
+    "sha256": "a25b097ff451def31a418204465c805114155e252049ac9be1667cf3e4279916"
+  },
+  "control_summary": {
+    "threshold_pair_cases": 12155,
+    "pair_stream_sha256": "e33d04bc91c99a2c6ddacf1cae815a7da59538b1d86927c0168eb8f987dfbdb3",
+    "maximum_priority_envelope_cases": 20000,
+    "envelope_stream_sha256": "b85ad2fba963d961b9742ce5b739ee1af9facecd1cd6ab7dad4185f98ff7a5a1",
+    "bound_4096_events_passed": true,
+    "actions_covered": [
+      "clamp",
+      "clone-current-tail",
+      "discard-current-prefix",
+      "discard-following",
+      "publish",
+      "trim-following-tail"
+    ]
+  },
+  "prior_findings": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/track-contributors/finding.json",
+      "bytes": 29024,
+      "sha256": "d77daf2de0721ed483e554e0f3f1004cbb6127361072c1c32767c38fa3c1bff5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-builder/finding.json",
+      "bytes": 12941,
+      "sha256": "e0797ab18bf763c94243e4f4dfff2bced4f0fb608d9cde681913b7509220ad9d"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/finding.json",
+      "bytes": 19331,
+      "sha256": "aa9e0ef239dfb7e3516bf198c77d45881a73e3fc6b0a2d51b5994f8fa1fcf1bd"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/finding.json",
+      "bytes": 14814,
+      "sha256": "1d4576dc2679e05206e4aecedf4c1bb695c5beb1a49ceafb689e098d1666cbda"
+    }
+  ],
+  "limits": [
+    "Static instruction translation and independent numerical controls are not native runtime equivalence.",
+    "Fresh root mode0, nil external predicate and fresh flags/attributes are explicit reconstruction conditions, not observed hosted restoration.",
+    "Chronological finite nonnegative positive ranges, at most4096 inputs, within86400 seconds; arbitrary initial source order is unresolved.",
+    "The analytical model has a defensive four-million comparison limit. Its4096 chain control does not establish acceptance of every4096-event input; worst cases can exceed that work bound.",
+    "Object lifetimes, allocations, callback replacement, dynamic getters, external state and device behavior are not modeled.",
+    "Reference code remains unexecuted. App acceptance, release packaging and GUI checks are separate deliverables.",
+    "Private original-image readbacks are evidence references, not a redistribution or publication license."
+  ]
+}

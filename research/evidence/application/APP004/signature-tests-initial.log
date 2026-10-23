@@ -1,0 +1,40 @@
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[2/7] Write swift-version--1AB21518FC5DEDBE.txt
+[4/9] Emitting module RebaseCore
+[5/9] Compiling RebaseCore CPRSignatureRecovery.swift
+[5/10] Write Objects.LinkFileList
+[6/12] Linking Rebase
+[7/12] Applying Rebase
+[9/12] Compiling RebaseCoreTests CPRSignatureRecoveryTests.swift
+[10/12] Emitting module RebaseCoreTests
+[10/12] Write Objects.LinkFileList
+[11/12] Linking RebasePackageTests
+Build complete! (8.19s)
+􀟈  Test run started.
+􀄵  Testing Library Version: 1400
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite CPRSignatureRecoveryTests started.
+􀟈  Test contradictoryCompactAndTypedStateIsNotPromotedAcrossUnknownCompatibility() started.
+􀟈  Test noTypedContainerOrWrongClassCannotBecomeCompactRecovery() started.
+􀟈  Test explicitOriginAndExactIntegerTypesAreRequired() started.
+􀟈  Test missingRootRoleCannotPromoteAnUnrelatedSignature() started.
+􀟈  Test nullAlternateVariationIsAcceptedButOtherStatesAreExplicitlyGated() started.
+􀟈  Test matchingRepresentationsRecoverAndNamedBarIgnoresPosition() started.
+􀟈  Test unknownOrCompoundSignatureExtrasAreNotSilentlyRecovered() started.
+􀟈  Test allTenPinnedFactorySignaturesRecoverWithoutExecutingTheSource() started.
+􀟈  Test duplicateKeysAndMalformedExtentsAreNeverDefaults() started.
+􁁛  Test contradictoryCompactAndTypedStateIsNotPromotedAcrossUnknownCompatibility() passed after 0.002 seconds.
+􁁛  Test noTypedContainerOrWrongClassCannotBecomeCompactRecovery() passed after 0.002 seconds.
+􁁛  Test matchingRepresentationsRecoverAndNamedBarIgnoresPosition() passed after 0.002 seconds.
+􁁛  Test missingRootRoleCannotPromoteAnUnrelatedSignature() passed after 0.002 seconds.
+􁁛  Test unknownOrCompoundSignatureExtrasAreNotSilentlyRecovered() passed after 0.003 seconds.
+􁁛  Test duplicateKeysAndMalformedExtentsAreNeverDefaults() passed after 0.003 seconds.
+􁁛  Test explicitOriginAndExactIntegerTypesAreRequired() passed after 0.004 seconds.
+􁁛  Test nullAlternateVariationIsAcceptedButOtherStatesAreExplicitlyGated() passed after 0.004 seconds.
+􀢄  Test allTenPinnedFactorySignaturesRecoverWithoutExecutingTheSource() recorded an issue at CPRSignatureRecoveryTests.swift:151:33: Expectation failed: (recovered → CPRSignatureRecoveryResult(signature: nil, facts: [], unsupported: [RebaseCore.CPRUnsupportedItem(category: "Signature state", detail: "The root track list has no supported tempo/signature interface pair.", objectCount: Optional(1))], objects: [RebaseCore.CPRObjectRecord(className: "PArrangement", version: 4, declarationOffset: 270, objectOffset: 231, identityOffset: 293, payloadOffset: 297, payloadByteCount: 1155022, payloadSHA256: "b62ed8a835fd8cfdba3d112e54589eda60274d70361f8d37df47f4ad596e137a"), RebaseCore.CPRObjectRecord(className: "MRoot", version: 6, declarationOffset: 376, objectOffset: 297, identityOffset: 392, payloadOffset: 396, payloadByteCount: 1154698, payloadSHA256: "b5746c086558d358612b5e1b7615f3ad612d360aed2057398aa7de3e3cc3bf04"), RebaseCore.CPRObjectRecord(className: "MTrackList", version: 0, declarationOffset: 462, objectOffset: 422, identityOffset: 483, payloadOffset: 487, payloadByteCount: 1103215, payloadSHA256: "ebfea13fc07bf4b8ef9224ea0ab0e4b932f5c9eefff9d4141740b51d13984d58")])).signature → nil → nil
+􀄵  No supported signature in Classic House.cpr: [RebaseCore.CPRUnsupportedItem(category: "Signature state", detail: "The root track list has no supported tempo/signature interface pair.", objectCount: Optional(1))]
+􀢄  Test allTenPinnedFactorySignaturesRecoverWithoutExecutingTheSource() failed after 0.005 seconds with 1 issue.
+􀢄  Suite CPRSignatureRecoveryTests failed after 0.006 seconds with 1 issue.
+􀢄  Test run with 9 tests in 1 suite failed after 0.006 seconds with 1 issue.

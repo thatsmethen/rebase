@@ -1,0 +1,232 @@
+{
+  "id": "APP010-GUI",
+  "created_utc": "2026-10-20T08:02:08.927104+00:00",
+  "groups_passed": 8,
+  "executable": {
+    "path": "Application/dist/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 4849984,
+    "sha256": "d88fc0761b23ef0cb91c15b9cf67abf3e92c9e23a24a04563fc3ea6c15a0dc33"
+  },
+  "groups": [
+    {
+      "id": "open_inspect_choice",
+      "result": "passed",
+      "observation": "Unresolved attached event remains labeled; original and explicit converted rate choices and scope limits are visible.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP010/gui-open.ax.txt",
+          "bytes": 5325,
+          "sha256": "761738e719ac729a685b02eb0ad408d9046d2f8b21513f020f68f690df3f1321"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-inspection-source.ax.txt",
+          "bytes": 1351,
+          "sha256": "0f3c89ed0f2280d34d535b3c36121c2c6403a0996b15ee3c4d600b0f26b36908"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-inspection-converted.ax.txt",
+          "bytes": 1618,
+          "sha256": "ba8bc69d09abf87350413ea6c182850548d882e0b6159ff810b7b45730a662a2"
+        }
+      ]
+    },
+    {
+      "id": "converted_transport",
+      "result": "passed",
+      "observation": "Converted48k playback has nonzero output peaks; pause zeroes peaks; seek16s/resume observed; natural end displays23.999s and stopped output.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP010/gui-converted-playing.ax.txt",
+          "bytes": 5867,
+          "sha256": "d2b21966070cbdc5c22a55bb8d252a5cf1139c5d20bbb49372252e446f55af71"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-converted-paused.ax.txt",
+          "bytes": 5846,
+          "sha256": "55c5d7e05ccf3f1e963fe80b942c27b12e17f0dd091aad06da5f371c28339f25"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-converted-paused-seek.ax.txt",
+          "bytes": 5845,
+          "sha256": "bea31c51a7d838ab21035df6d6e46e8cee81f539785f64f6579b406ea86b7ed1"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-converted-resumed.ax.txt",
+          "bytes": 5868,
+          "sha256": "9c6376834c682a5e7404310e650a23258250d71615cffc2d31d2a96a7493798f"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-converted-first-end.ax.txt",
+          "bytes": 5843,
+          "sha256": "6b8d702e680d1c95f3f62423fec40fe0c0a06b51aa9ce0058f66759e9b0dfc21"
+        }
+      ]
+    },
+    {
+      "id": "restart_return_stop_end",
+      "result": "passed",
+      "observation": "Restart/return show subsecond progress; stop resets0; at/past-end display23.999s with zero peaks.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP010/gui-converted-restart.ax.txt",
+          "bytes": 5867,
+          "sha256": "fe82e8dbbfc46e91cce5e3e3f3197d9f5cfbdf979d12c15822b6f71c3c3a5a49"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-converted-return-to-start.ax.txt",
+          "bytes": 5867,
+          "sha256": "538f97b28030f0195f66ed222991fea3f658b45673c442ce86f923635598d46b"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-converted-stop.ax.txt",
+          "bytes": 5845,
+          "sha256": "19e93bb6f3af7120060f7d37cac0e904b34c861cb64c8403f0df00d730e6e282"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-converted-seek-end.ax.txt",
+          "bytes": 5843,
+          "sha256": "ae556bfd0ea18ae2356e6055c55685a0f3a715bc35c156c2e4a8b24d59deec85"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-converted-seek-past-end.ax.txt",
+          "bytes": 5594,
+          "sha256": "1ce7037655477b445904d2f3f945f95d6f397ccc256caecaab5e1aca241b6913"
+        }
+      ]
+    },
+    {
+      "id": "media_tamper_and_restore",
+      "result": "passed",
+      "observation": "Changed same-size media rejects and clears audition; byte-exact restored media supports fresh converted playback.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP010/gui-changed-media-rejected.ax.txt",
+          "bytes": 394,
+          "sha256": "4b2ec7bd2949f020b3eb9dc4f96d68554d43a716febaa1fa5551e665bc52b3c0"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-rejected-mode-cleared.ax.txt",
+          "bytes": 5080,
+          "sha256": "4a96a4c38bb109dbed2af19dfb2a9df21818884a290fa1f93b68cbfff7500372"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-restored-media-playing.ax.txt",
+          "bytes": 5618,
+          "sha256": "0272b1caf35175928da17b9bd8b1cc7e865d80b85c172a1afdea9e9780f24136"
+        }
+      ]
+    },
+    {
+      "id": "edit_exit_undo",
+      "result": "passed",
+      "observation": "MuteOn edit exits to project mode and zero peaks; Undo restoresMuteOff while remaining in project mode.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP010/gui-edit-exits-audition.ax.txt",
+          "bytes": 5087,
+          "sha256": "1c9e0ed9c29fa97f4e17bb5299d7f591bc268337a4fef62167fe366747482285"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-undo-stays-project-mode.ax.txt",
+          "bytes": 5067,
+          "sha256": "82fe014b881616f398e5bccc87f3e12c36ef36ff9da421a5379e24b427bc0ba6"
+        }
+      ]
+    },
+    {
+      "id": "whole_project_barriers",
+      "result": "passed",
+      "observation": "Normal project Play and Export both refuse unresolved source events.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP010/gui-project-play-refused.ax.txt",
+          "bytes": 533,
+          "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-project-export-refused.ax.txt",
+          "bytes": 533,
+          "sha256": "c562e00a6d52585bd379985db0c33d8b77fc803f4e1950e2df9fd03a10f80d7d"
+        }
+      ]
+    },
+    {
+      "id": "source_rate_regression_and_exits",
+      "result": "passed",
+      "observation": "Original-rate44100 audition and explicit original/converted exits retain correct mode, scope and stopped output.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP010/gui-source-rate-regression.ax.txt",
+          "bytes": 5554,
+          "sha256": "102ea3e4c2bc34c386e6c348e56ae5a0f7ca8c064ae842b1fbf015a20ad1b608"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-explicit-exit.ax.txt",
+          "bytes": 5108,
+          "sha256": "f5bb72b3a834aa53ecb448bc2df46d3ed6de0cc30a9e93f5a759a7888970a5b3"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-converted-before-exit.ax.txt",
+          "bytes": 5618,
+          "sha256": "63e89e46fe50688e7a3c85b36dbe9aa2720e1c7836fae2ef91078cc6568389c7"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-converted-explicit-exit.ax.txt",
+          "bytes": 5108,
+          "sha256": "0803e23d370fb04469a57c07846ad8752f19ee810c35b6484914b69dd4041dae"
+        }
+      ]
+    },
+    {
+      "id": "equal_rate_negative_control",
+      "result": "passed",
+      "observation": "44100 project rate disables mode0 equal-rate playback; choosing original rate enables playback and explicit exit works.",
+      "records": [
+        {
+          "path": "research/evidence/application/APP010/gui-equal-rate-open.ax.txt",
+          "bytes": 5076,
+          "sha256": "7aac86614723620a618eed1745693e1e8b850ca4f380f0a3697d93328027cc5e"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-equal-rate-blocked.ax.txt",
+          "bytes": 1730,
+          "sha256": "3dd45d48acc9f57174393c610de9345c639382f6f2b7847484f186afcf43b571"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-equal-rate-source-enabled.ax.txt",
+          "bytes": 1351,
+          "sha256": "0f3c89ed0f2280d34d535b3c36121c2c6403a0996b15ee3c4d600b0f26b36908"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-equal-rate-source-playing.ax.txt",
+          "bytes": 5554,
+          "sha256": "97c879381d82298a9d8b3a8f0c63c7029410305a9c2d2185077267567c73f6fe"
+        },
+        {
+          "path": "research/evidence/application/APP010/gui-equal-rate-exit.ax.txt",
+          "bytes": 5107,
+          "sha256": "37938b255d7d6c5198526db84b09ea01ffdb615ba4f90fb739523d8f4369cb15"
+        }
+      ]
+    }
+  ],
+  "screenshot": {
+    "path": "research/evidence/application/APP010/gui-converted-playing.png",
+    "bytes": 404051,
+    "sha256": "89509dc0e83254c91df64b9c95df900d190b3cf6c6ea817f41a7b09ce912cfab"
+  },
+  "package_files_unchanged": 10,
+  "scope": "Final application binary and self-authored synthetic PCM, observed through native UI. Mixer peaks are engine telemetry, not DAC captures or Cubase runtime comparisons.",
+  "converted_fixture": {
+    "source_rate": 44100,
+    "output_rate": 48000,
+    "input_frames": 1058400,
+    "output_frames": 1151999,
+    "displayed_end_seconds": "23.999",
+    "added_tail_frames": 0
+  },
+  "setup_observations": [
+    "A snapshot after quitting returned procNotFound; the application was subsequently relaunched.",
+    "The first pause attempt occurred after the24-second event had already ended. Restart/pause/resume and completion were then explicitly exercised."
+  ]
+}

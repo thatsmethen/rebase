@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "finding_id": "CPR-AUDIO-CLUSTER-001",
+  "created_utc": "2026-10-19T13:38:25.761796+00:00",
+  "status": "Bounded static source-record and consumer findings; playable source mapping remains gated",
+  "scope": "Original Cubase 15 arm64 bytes and ten retained factory CPR structural fixtures. No Cubase execution, media decoding, project playback, relinking or runtime conformance.",
+  "source": {
+    "path": "research/targets/derived/Cubase15-arm64",
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "evidence": {
+    "fixture-byte-correlations.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/cluster/fixture-byte-correlations.json",
+      "sha256": "a3f0ab101a69087da003d67ae83af03e18de7a04d36a84959012f59a686ad0ed"
+    },
+    "reader-rate-candidates.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/cluster/reader-rate-candidates.json",
+      "sha256": "46ef9e47c59a43426d455e93d6b6156bfccb71da51b1e914d77677c4116c632c"
+    },
+    "embedded-list-and-frame-slots.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/cluster/embedded-list-and-frame-slots.json",
+      "sha256": "3bbf98c266d4072306ec43d3bd2f2d02f7c01bf6adc580f28261de1b9eb808d8"
+    },
+    "bound-literal-bytes.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/cluster/bound-literal-bytes.json",
+      "sha256": "ddb426a65172e4afb04b241bb2c6bfe3a1a54b55bb746b11fddee9fa308668c7"
+    },
+    "additional-source-bindings.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/cluster/additional-source-bindings.json",
+      "sha256": "94dcd7056dfe9fccac38dbed4aed25b9ca96dde68d1f06a9dbb114a5a5376f25"
+    },
+    "verification-final.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/cluster/verification-final.json",
+      "sha256": "a94f0f77993a166fa929e78c1ca491ab8bb0470dae68c09e16618f7a6ff8d293"
+    },
+    "cluster-evidence-bundle.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/cluster/cluster-evidence-bundle.json",
+      "sha256": "f3f1250c33921a52ae73a3333e5d63803199d6493d5dc1fb22a7629ac23a840f"
+    },
+    "evidence-import.json": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/cluster/evidence-import.json",
+      "sha256": "da115025e727022ea492aa23a9e17982fef705d981324c295e0a785321e0d916"
+    }
+  },
+  "verification": {
+    "native_functions": 35,
+    "native_bytes": 7164,
+    "native_words": 1791,
+    "rea_functions": 20,
+    "rea_addresses": 888
+  },
+  "fixtures": [
+    {
+      "fixture": "research/evidence/cubase-static/cpr-objects-001/fixtures/classic-house-v09.json",
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Classic House.cpr",
+      "source_sha256": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892",
+      "cluster_body": [
+        211575,
+        211699
+      ],
+      "file_body": [
+        211609,
+        211635
+      ],
+      "segment_body": [
+        211671,
+        211699
+      ],
+      "file_identity": 211605,
+      "segment_stream_token": 211374,
+      "stored_offset_length_start": [
+        0,
+        677376,
+        0
+      ],
+      "declared_file_frames": 677376,
+      "declared_rate": 44100.0,
+      "file_path_token": {
+        "offset": 211627,
+        "kind": "object_reference",
+        "relative_target": 210087,
+        "target_known": true,
+        "target_class": "FNPath",
+        "target_body_offset": 210322,
+        "end": 211631
+      },
+      "additional_file_path": {
+        "offset": 211631,
+        "kind": "null",
+        "relative_target": 0,
+        "target_known": false,
+        "target_class": null,
+        "target_body_offset": null,
+        "end": 211635
+      }
+    },
+    {
+      "fixture": "research/evidence/cubase-static/cpr-objects-001/fixtures/lofi-hip-hop-v09.json",
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/LoFi Hip Hop.cpr",
+      "source_sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
+      "cluster_body": [
+        206210,
+        206334
+      ],
+      "file_body": [
+        206244,
+        206270
+      ],
+      "segment_body": [
+        206306,
+        206334
+      ],
+      "file_identity": 206240,
+      "segment_stream_token": 206009,
+      "stored_offset_length_start": [
+        0,
+        1058400,
+        0
+      ],
+      "declared_file_frames": 1058400,
+      "declared_rate": 44100.0,
+      "file_path_token": {
+        "offset": 206262,
+        "kind": "object_reference",
+        "relative_target": 204970,
+        "target_known": true,
+        "target_class": "FNPath",
+        "target_body_offset": 205205,
+        "end": 206266
+      },
+      "additional_file_path": {
+        "offset": 206266,
+        "kind": "null",
+        "relative_target": 0,
+        "target_known": false,
+        "target_class": null,
+        "target_body_offset": null,
+        "end": 206270
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "CLUSTER-1",
+      "claim": "The two observed v0 AudioCluster records structurally contain FPath reference, first object vector, then second object vector, with exact body consumption. First vector is one AudioFile v1 with flags2; second is one AClusterSegment v0 with flags1.",
+      "instructions": [
+        "10036c9bc: cluster reader calls103104730(self+48),103104730(self+20), then reads FPath, then1030f91c4(self+20),1030f91c4(self+48)",
+        "1030f91c4: u16 flags, i32 count, repeated archive+28 CmObject; nonnull objects appended via container+e8; restores flags"
+      ],
+      "limits": [
+        "Eight other retained structural fixtures contain no AudioCluster in their visited trees; this is not a byte-scan claim about every object anywhere in those files.",
+        "The parser may deliberately reject native-supported subclasses or versions."
+      ]
+    },
+    {
+      "id": "CLUSTER-2",
+      "claim": "The actual embedded list receiver is now bound. A default AudioCluster constructor installs104e31300 at self+20 and self+48. Its +e8 slot is103103ed0, which appends16-byte nodes {next,object} and stores head at receiver+18, tail+20, count+0c.",
+      "instructions": [
+        "1003690fc..14c: primary vtable104466150; embedded vtable104e31300; initial head/tail0; flags2/1",
+        "104e313e8 original bytes d03e100301000000\u2192103103ed0",
+        "103103ed0..f44: null object rejected; allocate16; store {0,object}; append; invoke ownership helper1030f9c44; increment count",
+        "103104730: clears count/head/tail then walks nodes; ownership helper1030f9c20 and deallocation",
+        "103104208: returns node+8 and advances iterator pointer to node+0"
+      ],
+      "limits": [
+        "Ownership helper side effects are not reconstructed. The field layout is derived from this receiver and its exact vtable, not inferred from an unrelated tempo container."
+      ]
+    },
+    {
+      "id": "CLUSTER-3",
+      "claim": "The28-byte segment body is one archive object reference followed by three8-byte fields. Reader requests AudioStream; in both fixtures the positive object reference resolves to the exact AudioFile already in the first vector.",
+      "instructions": [
+        "10036da54: archive+28(type AudioStream,1)\u2192self+10; then10221dc34 toself+18,+20,+28",
+        "10221dc34: read exactly8; endian-reverse when stream+8 word nonzero; zero destination on short read",
+        "10036d9dc: archive+20(self+10,1), then10221dbec for+18,+20,+28",
+        "10036daf0/10036db6c: matching named writer/reader bind Stream,+18 Offset,+20 Length,+28 Start"
+      ],
+      "limits": [
+        "Primitive bytes do not independently establish unsigned numeric semantics. Later consumer uses signed comparison/subtraction; importer should impose its own finite nonnegative bounded domain instead of reproducing wraparound.",
+        "Start coordinate interpretation and source-sample seek/read use remain untraced."
+      ]
+    },
+    {
+      "id": "CLUSTER-4",
+      "claim": "Cluster+148 sums each segment Length (+20). A separate cluster+d0 method can compare Offset+Length to the referenced stream+148 value and shorten a sole segment. AudioFile+148 reads the named MediaFrameCount property after lazy preparation.",
+      "instructions": [
+        "104466298\u219210036aff4: iterate second list with103104208; ADD each segment+20",
+        "100369c70..c90: Stream=segment+10; load Offset/Length pair; Stream+148; compare Offset+Length using signed b.le",
+        "100369c94..cbc: only if segment count==1, recompute stream+148 minus Offset; reject negative; store resulting Length",
+        "1044622c0\u219210033cd70: call10033a054, query MediaFrameCount at10388f36c; integer flag/status determine result"
+      ],
+      "limits": [
+        "The described mutation is a reachable conditional path inside the method, not proof that a particular project-load lifecycle invokes it. Earlier file virtual+d0 checks can prevent reaching it.",
+        "This comparison connects Offset/Length to the stream frame-count integer domain in this consumer; it does not establish event seconds, Start semantics, resampling or final sample-read boundaries.",
+        "Saved Length is not proven invariant under relinking or backend state changes."
+      ]
+    },
+    {
+      "id": "CLUSTER-5",
+      "claim": "AudioCluster+140 follows the first-file list head, then node+8, and tail-dispatches that AudioFile+140. Missing head/object returns Float32 44100. AudioFile+140 queries AudioSampleRate after a lazy-state helper; serialized sample rate is not an unconditional runtime authority.",
+      "instructions": [
+        "104466290\u219210036af9c: self+38\u2192node+8\u2192object+140; fallbackbits0x472c4400",
+        "1044622b8\u219210033cb0c: call10033a054; bag=self+48; query AudioSampleRate10388f00f; lookup failure\u219244100; success with floating flag\u2192FCVT float32 from double, otherwise0",
+        "10033a054: flags bit2 returns false, bit0 returns true; otherwise under global lock examines backend self+38, may call backend+e0, set flag0/2 and call10033a338",
+        "10033a338: reads sample/frame metadata and may recompute FrameSize; retained body does not itself assign AudioSampleRate, but backend+e0 remains unresolved",
+        "10033eec4: parses serialized f32 at10033ef54..60; calls backend-selection100339108; eager global104f85211 can call10033a054; copies serialized rate promoted to double into bag only along flags bit2/bit4 or eager-global branch10033efc0..10033f090",
+        "100339108: releases previous backend and selects a new backend via registry/path-dependent callbacks; callbacks not resolved here"
+      ],
+      "limits": [
+        "Both fixtures declare44100 and getter fallback is also44100; their numerical agreement cannot discriminate saved metadata from fallback/backend state.",
+        "No rate normalization/resampling occurs in the small cluster getter itself. Other paths may adapt rate; not analyzed.",
+        "LoFi scalar1/44100 equals the reciprocal of declared44100, but this does not close the post-read/runtime rate branch required by its PAudioClip datum getter."
+      ]
+    }
+  ],
+  "next_gates": [
+    {
+      "priority": 1,
+      "edge": "Bind backend selection and AudioFile+0xd0/+0xe0 state used by cluster validity and lazy sample-rate preparation.",
+      "known_callers": [
+        "100339108",
+        "10033a054",
+        "100369b64"
+      ],
+      "minimum_discriminator": "Missing media versus valid same-rate media versus changed-rate/frame-count media. Preserve serialized metadata, reported bag values, and active backend identity separately. No target execution in this study."
+    },
+    {
+      "priority": 2,
+      "edge": "Bind the consumer of segment Start and the actual stream seek/read request that uses Offset and Length.",
+      "known_inputs": [
+        "10036da54",
+        "10036daf0",
+        "10036aff4",
+        "100369b64"
+      ],
+      "minimum_discriminator": "Independently authored structural fixture controls with distinct Offset,Start and non-full Length; do not infer axis from the factory zeros. Find concrete data-flow consumer before deriving sourceOffset seconds."
+    },
+    {
+      "priority": 3,
+      "edge": "Bind whether the relevant project-load/copy/read lifecycle invokes the Length-shortening method before audible data access.",
+      "known_target": "AudioCluster primary+d0\u2192100369b64",
+      "minimum_discriminator": "One versus two segments, same stream versus second stream, exact end versus end+1, and negative/overflow raw fields rejected by candidate policy."
+    }
+  ],
+  "negative_controls": [
+    "The same44100 in stored metadata and fallback is explicitly non-discriminating.",
+    "A segment Stream outside the cluster file list is unsupported by the proposed bounded parser, even though archive mechanics can represent it.",
+    "Distinct File FNPath and descriptor FNPath must remain distinct relationships; no nearest-name or filesystem search substitutes.",
+    "Raw REA slices omit global data, imports, type information and exception context. Native original-image instructions and separately pinned literals/vtable bytes are authoritative.",
+    "Metadata intervals are not proof of bodies. Ghidra may omit exception tails or report external branches as bad instruction; verification retains those differences.",
+    "C-like pseudocode is not compilable or bit-faithful recovered source."
+  ],
+  "exploratory_correction": "reader-rate-candidates.json mechanically sampled AClusterSegment+140 beyond its primary vtable. That sample is discarded; see additional-source-bindings.json. No finding depends on it.",
+  "target_execution_count": 0,
+  "reference_runtime_conformance_count": 0
+}

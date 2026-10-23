@@ -48,6 +48,20 @@ public struct CPRAudioSourcePlacement: Codable, Equatable {
     public let offset: Double
 }
 
+extension CPRAudioSourcePlacement {
+    private enum CodingKeys: String, CodingKey { case contract, position, duration, offset }
+
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        contract = CPRContractMigration.normalize(try values.decode(String.self, forKey: .contract),
+            to: Self.contractName,
+            legacySHA256: "1672c42ed7a1b8992fe2193ef7393f78bc3c1afa7e0440b57439cd554fbdbd83")
+        position = try values.decode(Double.self, forKey: .position)
+        duration = try values.decode(Double.self, forKey: .duration)
+        offset = try values.decode(Double.self, forKey: .offset)
+    }
+}
+
 /// Original path text is metadata only. It is never resolved or opened as a
 /// local media path; imported media must separately pass project containment.
 public struct CPRAudioFileReference: Codable, Equatable {

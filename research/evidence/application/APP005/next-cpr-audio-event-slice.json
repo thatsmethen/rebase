@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "reviewer": "fidelity_protocol",
+  "scope": "Read-only recommendation grounded in current app source and retained static evidence; no target execution, new native import, or application change.",
+  "recommendation": "Bound the MAudioEvent placement and source interval contract, then support explicit unresolved timeline events and verified single-segment local-media relinking.",
+  "why_this_slice": "The app already has counted audio track identities, source paths and native timing clocks, but CPRRecoveryV1 discards the event prefix and creates only empty audio tracks. More tempo variants would not recover the existing audio arrangement.",
+  "current_facts": [
+    "MAudioEvent v6 reader consumes a 26-byte MEvent prefix; three serialized f64 values flow through setters to instance+0x60/+0x68/+0x70. Native named fields identify Start/Length/Offset, but the owning datum and coordinate conversion must still be followed for each field.",
+    "PAudioClip v4 points to AudioCluster v0, whose two counted vectors contain AudioFile v1 and AClusterSegment v0. Both observed audio chains have one file and one 28-byte segment.",
+    "AudioFile metadata is independently bound to frame count, sample size, frame size, channels and sample rate. The actual external audio is absent; path/metadata equality is not content verification."
+  ],
+  "contrasting_pinned_sources": [
+    {
+      "name": "LoFi Hip Hop",
+      "sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
+      "event_body": 197765,
+      "raw_f64": [
+        0,
+        1058400,
+        0
+      ],
+      "clip_datum": {
+        "type": 10,
+        "scalar": 2.2675736961451248e-05
+      },
+      "file_frames": 1058400,
+      "rate": 44100,
+      "segment_body": 206306,
+      "segment_bytes": 28,
+      "role": "Discriminates sample-scaled clip datum from shared musical timing. Equality of length and file frames is a hypothesis cue, not unit proof."
+    },
+    {
+      "name": "Classic House",
+      "sha256": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892",
+      "event_body": 207293,
+      "raw_f64": [
+        0,
+        14880,
+        0
+      ],
+      "clip_datum": {
+        "type": 0,
+        "tempo_reference_relative_to_ARCH": 523,
+        "signature_reference_relative_to_ARCH": 796
+      },
+      "file_frames": 677376,
+      "rate": 44100,
+      "segment_body": 211671,
+      "segment_bytes": 28,
+      "role": "Contrasts a clip carrying musical interfaces with a source-frame descriptor. Do not assume file duration equals event duration or silently time-stretch."
+    }
+  ],
+  "finite_native_questions": [
+    {
+      "question": "Which datum governs Start, Length and Offset, and does Length convert as a delta at Start or as an independent coordinate?",
+      "reuse": [
+        "MEvent reader0x1017017a0",
+        "MAudioEvent reader0x1000ee164",
+        "setters0x1000e9d20/30/40 and getters0x1000e9d28/38/48",
+        "generic datum converter0x101c22dc0",
+        "MDataNode reader/interface promotion0x101c23184"
+      ],
+      "next": "Follow exact original vtable/receiver linkage from the audio-event placement/playback consumers into these datum conversions. Bind the event flag/mode that selects musical or scalar timing; a parsed prefix alone is insufficient."
+    },
+    {
+      "question": "How does the 28-byte AClusterSegment select a file and source-frame interval?",
+      "reuse": [
+        "AudioCluster reader0x10036c9bc",
+        "AudioFile reader0x10033eec4",
+        "PAudioClip reader0x1000faff8",
+        "PMediaDescriptor reader0x1017aab94"
+      ],
+      "next": "Bind AClusterSegment concrete class factory/read slots and the consuming sample-range mapper; establish index/reference identity, offset direction, length units and channel selection. Start with one file/one segment; reject transformed or composite cases."
+    },
+    {
+      "question": "Which remaining MAudioEvent/clip tails can modify range, gain, fades, mute, looping or warp?",
+      "reuse": [
+        "MAudioEvent reader0x1000ee164",
+        "PAudioClip reader0x1000faff8",
+        "MAudioEvent auxiliary attribute access0x1000e9e08/0x1000e9f24"
+      ],
+      "next": "Consume the selected version bodies exactly, identify a finite explicit allowlist/default state and retain every other field in the original. Reject playback conversion when an unbound tail can affect sound or interval."
+    }
+  ],
+  "implementation_after_proof": {
+    "profile": "Introduce a new interpretation profile; preserve V1/V2/V3 baseline reports and existing Project.json independently.",
+    "unresolved_event": "Use a distinct unresolved native event record with source SHA, event/clip/cluster/file/segment identities, raw field bits, bounded converted coordinates and exact missing-source descriptor. Do not create a normal playable Clip with a guessed mediaPath or pretend a missing source is silence.",
+    "relink": "An explicit user file selection may resolve the source. Verify actual media properties, requested interval bounds and file hash; copy into package custody. A selected substitute remains labeled a substitute unless its identity is proven.",
+    "playback_gate": "Only promote a supported event to Clip after event timebase, interval conversion, single-segment frame mapping and relevant audible tail state are all established. Unsupported warps, multiple segments, ambiguous paths and unknown attributes remain unresolved.",
+    "first_useful_result": "Reopen an imported project with real recovered event placements and visible missing-media state; after verified relinking of a supported source, play/export those events while retaining original CPR and interpretation proof."
+  },
+  "recommended_tests": [
+    "Pinned LoFi and Classic bytes: exact object identity links, field bits and full body consumption; changing a referenced file identity must not resolve to a nearby filename.",
+    "Self-authored nonzero Start, Length and Offset controls, including an event crossing the two-point tempo boundary; distinguish converting endpoints from converting length at zero. Expected values derive from independently traced operation order.",
+    "Single-segment controls with nonzero source offset, one-frame extent, exact end-of-source, out-of-range interval, swapped file index, missing reference, second segment and trailing bytes.",
+    "Unsupported timebase/flags/warp/gain/fade states withhold playable clips; source and report persist unchanged.",
+    "Missing media import/save/reopen keeps unresolved events visible without fabricating audio. Relink mismatched rate/channels/frame count or truncated media must fail atomically.",
+    "For a self-authored supported event and independently generated PCM fixture, compare exported placement/trim samples with a narrow oracle. This tests our app integration; it does not constitute Cubase runtime parity.",
+    "Historical APP003/APP004/APP005 source/report/current-project replay remains unchanged after the new profile."
+  ],
+  "decision_boundary": "Do not start general media-container lookup, VSTsound unpacking, ramps, plugin restoration or CPR writing to compensate for an unproven event interval. Close the finite timing/segment bindings first.",
+  "references": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV1.swift",
+      "sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV3.swift",
+      "sha256": "66d68787d337781075e7d691709d363bb2862c7f381c9a0c8c6ed888c376b949"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "sha256": "c3a6974a3d1b736ae2e3b3b03f4a9e5a74268fb66e779655c21189f85d4bf167"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/audio-native/finding.json",
+      "sha256": "17174e3a46837cf8bb473c163c91eab34486286ff400626429a072936ddd0b94"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/audio-native/event-field-bindings.json",
+      "sha256": "5c801870b84d86ac938aba67418298ea55917278ee4ad20359ef7c2a4f3efdd2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/finding-v1.json",
+      "sha256": "2169213ddb52e087005c8683b38f4c3d29720f337187ff187e9b0c47be0d478e"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-timing-001/event-vtable-slots.json",
+      "sha256": "e698366f4f928b491627748c58b3e773674a7ed7de254c255d6909b31ce26904"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/fixtures/classic-house-v09.json",
+      "sha256": "bc9c6c1ffca9045a5e97a02902ec6f91632a94074add4aff7d6c909a5f8d86f8"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/fixtures/lofi-hip-hop-v09.json",
+      "sha256": "ea77d245a183b6c8fb81e4db35677c9ee835e15c3fb5fac53fdd4792f56412c0"
+    }
+  ]
+}

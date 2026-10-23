@@ -1,0 +1,271 @@
+{
+  "created_utc": "2026-10-19T06:30:57.255925+00:00",
+  "status": "Five bounded raw arm64 function slices analyzed and byte-verified; not whole-image analysis or runtime conformance",
+  "source": "/workspace/rebase/research/targets/derived/Cubase15-arm64",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "source_bytes": 85691328,
+  "method": {
+    "range_basis": "Exact LC_FUNCTION_STARTS entry to next declared entry; metadata interval is not a proved function body",
+    "provider": "REA / Ghidra 12.1.4",
+    "profile": "ghidra-default",
+    "architecture": "arm64",
+    "language": "AARCH64:LE:64:v8A",
+    "heap_setting": "GHIDRA_HEADLESS_MAXMEM=2G",
+    "entry_mapping": "Offset zero of each exact derivative maps to its original linked function entry",
+    "target_execution": false,
+    "modified_instructions": false,
+    "fake_imports_or_data": false
+  },
+  "verification": {
+    "file": "verification.json",
+    "sha256": "1883451dc3391194e81813d37438f19b65f92cd667b764ae273326508562597f",
+    "bytes": 928,
+    "native_interval_instructions": 232,
+    "rea_body_instructions": 227,
+    "source_and_loaded_bytes_equal": true,
+    "mnemonic_alias": "0x100d7c108 word54000122: Ghidra b.cs, LLVM b.hs, both carry-set / unsigned-higher-or-same",
+    "remaining_semantic_checks": "Byte/mnemonic agreement does not certify recovered types, FP edge semantics or external call behavior."
+  },
+  "functions": [
+    {
+      "entry": "0x1007dd650",
+      "next_declared_function_start": "0x1007dd724",
+      "source_file_offset": 8246864,
+      "length": 212,
+      "raw_file": "function-1007dd650.arm64.bin",
+      "raw_sha256": "f1a61c1e5ace66c3a715a7cecc32f21fb345d5b76d12d95ae4cd4d90c87e8dbf",
+      "original_segment": "__TEXT",
+      "original_native_disassembly": "native-1007dd650.txt",
+      "native_command": [
+        "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+        "-d",
+        "--start-address=0x1007dd650",
+        "--stop-address=0x1007dd724",
+        "/workspace/rebase/research/targets/derived/Cubase15-arm64"
+      ],
+      "native_stdout_sha256": "e99bf917fbdd324b076ce34cdb8ed24a015c61a6b50b0d38f2ab0a7828c919b7",
+      "boundary": "LC_FUNCTION_STARTS interval, not proof of exact function body; exception tails may be disconnected",
+      "rea_body_instruction_count": 53,
+      "native_interval_instruction_count": 53,
+      "analyze_function_evidence_id": "ev_f4ebbe9dab8e8e8b142aed80f115e6a6b09cc7c698a0f70aa3cd47ac9ff23a56",
+      "profile_digest": "8568f14c6de0004945f13605000fc68ff2714aef10b9685e09c9503869260de3",
+      "dossier": "function-1007dd650.json",
+      "pseudocode": "pseudocode-1007dd650.txt",
+      "bundle": "bundle-1007dd650.json",
+      "snapshot": "snapshot-1007dd650.json",
+      "result": "All 53 instructions decoded; complete local control flow through RET. No decompiler warning.",
+      "bounded_observations": [
+        "x0 is saved then adjusted by -0x10 at 0x1007dd668; subsequent object offsets use this adjusted pointer.",
+        "Virtual calls through slots 0x198/0x1a0 feed subtraction and division at 0x1007dd6a0/6a4. At 6ac/6b8 FMIN and FCSEL bound the result; NaN/FPCR semantics are not established by the C-like pseudocode.",
+        "The byte at adjusted object+0x58 controls optional 1-t at 0x1007dd6bc..6c8. Adjusted object+0x50 is loaded into d1 before BL 0x1038817dc at 6d0.",
+        "Virtual slots 0x1b0 and 0x1a8 feed the final FMADD at 0x1007dd710. Raw analysis does not resolve their targets or side effects."
+      ],
+      "original_image_correlation": "Separately retained main-reference-candidates/interpolator-import-candidate.json maps 0x1038817dc to _pow through the Mach-O indirect symbol table; the raw image itself supplies no import name.",
+      "limits": [
+        "Decompiler undefined1[16] return is an inferred q0 artifact; original source/API return declaration remains unproven.",
+        "Calling class and actual audio use are not established by this slice."
+      ]
+    },
+    {
+      "entry": "0x1007dd454",
+      "next_declared_function_start": "0x1007dd578",
+      "source_file_offset": 8246356,
+      "length": 292,
+      "raw_file": "function-1007dd454.arm64.bin",
+      "raw_sha256": "3a91560a1f5e1b1e0e5bdc8619faf731545728bab6f8cce2ff3ed9066271cee2",
+      "original_segment": "__TEXT",
+      "original_native_disassembly": "native-1007dd454.txt",
+      "native_command": [
+        "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+        "-d",
+        "--start-address=0x1007dd454",
+        "--stop-address=0x1007dd578",
+        "/workspace/rebase/research/targets/derived/Cubase15-arm64"
+      ],
+      "native_stdout_sha256": "40c155b88ecb6ae8c6d32125c27ccfd061c8484accc05a1a7412cdeca62291ef",
+      "boundary": "LC_FUNCTION_STARTS interval, not proof of exact function body; exception tails may be disconnected",
+      "rea_body_instruction_count": 73,
+      "native_interval_instruction_count": 73,
+      "analyze_function_evidence_id": "ev_0ece9a4bf822a4c8f9bc1cd0f910fa813bc2de6d9f7dbf3be107ac122aa11aca",
+      "profile_digest": "41a98f3584189001415a10693aa8b24223f7cdb702618292fc7ce6fe006685f1",
+      "dossier": "function-1007dd454.json",
+      "pseudocode": "pseudocode-1007dd454.txt",
+      "bundle": "bundle-1007dd454.json",
+      "snapshot": "snapshot-1007dd454.json",
+      "result": "All 73 instructions decoded; pseudocode contains halt_baddata where a tail branch leaves the mapped image.",
+      "bounded_observations": [
+        "A virtual slot 0x178 result is compared with 3 at 0x1007dd478; the unequal path returns at 0x1007dd574.",
+        "The equal path conditionally sets object+0x58 to 1; it does not clear that byte on the opposite comparison in this slice.",
+        "Two BL instructions at 0x1007dd528/540 call unmapped 0x1038814ac; their floating results feed FDIV at 544 and a store to object+0x50 at 548.",
+        "Instruction 0x1007dd560 is word 17fff238, B 0x1007d9e40 after register restoration. It is valid native code; the target lies outside this raw image."
+      ],
+      "limits": [
+        "No name or mathematical identity is assigned to external 0x1038814ac in this dossier.",
+        "Tail callee behavior, getter side effects and complete initialization contract remain unresolved."
+      ]
+    },
+    {
+      "entry": "0x1007dd780",
+      "next_declared_function_start": "0x1007dd85c",
+      "source_file_offset": 8247168,
+      "length": 220,
+      "raw_file": "function-1007dd780.arm64.bin",
+      "raw_sha256": "3fa502702c77ff4278ff188dd8fab3e9011fcbc685355ad8385b2f4ac705f989",
+      "original_segment": "__TEXT",
+      "original_native_disassembly": "native-1007dd780.txt",
+      "native_command": [
+        "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+        "-d",
+        "--start-address=0x1007dd780",
+        "--stop-address=0x1007dd85c",
+        "/workspace/rebase/research/targets/derived/Cubase15-arm64"
+      ],
+      "native_stdout_sha256": "1fba9ee8ddcf2c5b9fd9eecc202ec62f0ef4b9928e2a248b823b4ccae878a178",
+      "boundary": "LC_FUNCTION_STARTS interval, not proof of exact function body; exception tails may be disconnected",
+      "rea_body_instruction_count": 55,
+      "native_interval_instruction_count": 55,
+      "analyze_function_evidence_id": "ev_1ad2e740b9a9a43f0793bbae9704aea1baacaaed37e7ce203fd8e49ac02cc2c7",
+      "profile_digest": "aab7b4e61cc7cd7ea359f9494e649ec64356892722eb1cddc15e179a97b0b6cd",
+      "dossier": "function-1007dd780.json",
+      "pseudocode": "pseudocode-1007dd780.txt",
+      "bundle": "bundle-1007dd780.json",
+      "snapshot": "snapshot-1007dd780.json",
+      "result": "All 55 instructions decoded; pseudocode has an unmapped-tail halt_baddata warning and an inferred-overlapping-globals warning.",
+      "bounded_observations": [
+        "A virtual slot 0x178 result is compared with 3 at 0x1007dd7a0.",
+        "The initialization branch materializes exact bits 0x3fe6a09e667f3bcd at 0x1007dd840..84c and stores them to original address 0x10503fd68 at 850. Its guard and helper state are outside this raw image.",
+        "FMADD at 0x1007dd7fc combines the loaded global constant with results from virtual slots 0x1b0/0x1a8; the result is stored through object+0x38 to pointed-object+0x38 at 800.",
+        "Instruction 0x1007dd814 is word 17ffff10, B 0x1007dd454 after register restoration. That target has a separate retained slice; it is not mapped into this one."
+      ],
+      "limits": [
+        "The global names DAT_10503fd68/70 are generated address labels; their runtime contents are not captured.",
+        "The raw decompiler halt does not imply an invalid target instruction or runtime halt."
+      ]
+    },
+    {
+      "entry": "0x100d7c0cc",
+      "next_declared_function_start": "0x100d7c18c",
+      "source_file_offset": 14139596,
+      "length": 192,
+      "raw_file": "function-100d7c0cc.arm64.bin",
+      "raw_sha256": "98159e6717c5789087929877e462e12b8f13edcfe718e201edb6914f35c7dc9f",
+      "original_segment": "__TEXT",
+      "original_native_disassembly": "native-100d7c0cc.txt",
+      "native_command": [
+        "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+        "-d",
+        "--start-address=0x100d7c0cc",
+        "--stop-address=0x100d7c18c",
+        "/workspace/rebase/research/targets/derived/Cubase15-arm64"
+      ],
+      "native_stdout_sha256": "e05630b8eec131a9ab1cff9b2c87a35c1f0019318b00929b7ec31c8fc7ffafbf",
+      "boundary": "LC_FUNCTION_STARTS interval, not proof of exact function body; exception tails may be disconnected",
+      "rea_body_instruction_count": 43,
+      "native_interval_instruction_count": 48,
+      "analyze_function_evidence_id": "ev_b2e7de954c21ea2e8b3ff46c07716c0126da0febc200c0c30f2f6bf63d75d2a6",
+      "profile_digest": "b5114d50c616fcb0dd7d5f7f504acdbecff53be28db51161f07bc5fa31d0ad23",
+      "dossier": "function-100d7c0cc.json",
+      "pseudocode": "pseudocode-100d7c0cc.txt",
+      "bundle": "bundle-100d7c0cc.json",
+      "snapshot": "snapshot-100d7c0cc.json",
+      "result": "43 of 48 interval instructions form the Ghidra body; 5 instructions after the normal RET are omitted.",
+      "bounded_observations": [
+        "FMADD at 0x100d7c0e8 calculates 4*d0+0.5, followed by signed FCVTZS W20 at 0ec. The later unsigned comparison at 104/108 selects table indexing only for W20<4.",
+        "The valid index loads an 8-byte pointer from original address 0x104585ae0 at 114. Neither table bytes nor strings are loaded into this raw image.",
+        "Normal RET is at 0x100d7c174. Interval addresses 178,17c,180,184,188 are retained unchanged but absent from the REA body; they call cleanup helper 0x1022256cc and then 0x1038806a8."
+      ],
+      "original_image_correlation": "Separately retained main-reference-candidates/panlaw-label-table.json documents the original-image label pointers and UTF-16 text. Those labels are not evidence from the raw slice.",
+      "limits": [
+        "The trailing sequence is consistent with exception cleanup; missing unwind/LSDA context prevents proving its association here.",
+        "Pseudocode uint conversion must not replace the native signed FCVTZS semantics. NaN/out-of-range behavior is outside this bounded observation.",
+        "Names/labels and quantization do not establish an audio gain law."
+      ]
+    },
+    {
+      "entry": "0x100d7c18c",
+      "next_declared_function_start": "0x100d7c198",
+      "source_file_offset": 14139788,
+      "length": 12,
+      "raw_file": "function-100d7c18c.arm64.bin",
+      "raw_sha256": "8bab0417c90a0a056451dcfdaebd70438cfa9dcd89874114ca9df1794c9d3d11",
+      "original_segment": "__TEXT",
+      "original_native_disassembly": "native-100d7c18c.txt",
+      "native_command": [
+        "/Library/Developer/CommandLineTools/usr/bin/llvm-objdump",
+        "-d",
+        "--start-address=0x100d7c18c",
+        "--stop-address=0x100d7c198",
+        "/workspace/rebase/research/targets/derived/Cubase15-arm64"
+      ],
+      "native_stdout_sha256": "a9359d82227fd51853f9fa8ce9ba66a24b19e35d3c75e72754d630a15d0687e0",
+      "boundary": "LC_FUNCTION_STARTS interval, not proof of exact function body; exception tails may be disconnected",
+      "rea_body_instruction_count": 3,
+      "native_interval_instruction_count": 3,
+      "analyze_function_evidence_id": "ev_dbf3a582bfb17780ae227a9cc4d7156e6573f424751336aedad2923300c08fb9",
+      "profile_digest": "160a214d754fa32650963f5db983dc0e7e40ba69cda8c0ca15cf78a0d74504d6",
+      "dossier": "function-100d7c18c.json",
+      "pseudocode": "pseudocode-100d7c18c.txt",
+      "bundle": "bundle-100d7c18c.json",
+      "snapshot": "snapshot-100d7c18c.json",
+      "result": "All 3 instructions decoded; no decompiler warning.",
+      "bounded_observations": [
+        "FMOV D1, 0.25; FMUL D0,D0,D1; RET at 0x100d7c18c..194."
+      ],
+      "limits": [
+        "The numerical operation is explicit; the input/output parameter meaning and calling use are unresolved.",
+        "Decompiler undefined1[16] return is an inferred register artifact."
+      ]
+    }
+  ],
+  "original_image_correlations": [
+    {
+      "path": "research/evidence/cubase-static/main-reference-candidates/handoff.json",
+      "sha256": "e5b669787ebf6142393e1b70dd5a97690bd3a4035ff9460df222e6d5007aaf02",
+      "source": "separate original-image evidence; not mapped in the raw REA image"
+    },
+    {
+      "path": "research/evidence/cubase-static/main-reference-candidates/interpolator-import-candidate.json",
+      "sha256": "bc0e974572a435c667fe57d5de30fa15ac6c4f2032aa9c935c544661a446dbbf",
+      "source": "separate original-image evidence; not mapped in the raw REA image"
+    },
+    {
+      "path": "research/evidence/cubase-static/main-reference-candidates/panlaw-label-table.json",
+      "sha256": "00347edd908a4a8659e42ddcc718e1df88736d8800c908c104297d367fc3562f",
+      "source": "separate original-image evidence; not mapped in the raw REA image"
+    },
+    {
+      "path": "research/evidence/cubase-static/main-reference-candidates/vtable-method-candidates.json",
+      "sha256": "1c9bbf3673e3b5fd9317782179962f54f5fa968f5b0897e73685cff564de09d6",
+      "source": "separate original-image evidence; not mapped in the raw REA image"
+    }
+  ],
+  "context_losses": [
+    "No Mach-O headers, imports, global data, typeinfo, vtables, relocations, unwind metadata or neighboring functions are mapped in each raw image.",
+    "Original linked entry addresses are preserved, so PC-relative references still calculate original addresses, but their external bytes are unavailable.",
+    "No fake imports, data patches, additional functions or modified instructions are introduced.",
+    "Raw analysis output must be correlated with separately retained original-image evidence; this is not whole-image decompilation.",
+    "Calls to outside addresses retain their numeric targets, but callee summaries, import signatures, global initialized values, virtual targets and host lifecycle are unavailable.",
+    "The default compiler specification infers signatures and register-sized return artifacts; these are not source declarations.",
+    "C-like arithmetic rendering may omit FMA rounding distinctions, instruction-specific NaN handling and signed-conversion details; native instructions govern bounded interpretation.",
+    "The pan-law display candidates and MEqualPowerInterpolator association are separate leads. No call path connecting these helpers to actual audio processing has been established.",
+    "Retained pseudocode is decompiler-generated, not original source, not guaranteed compilable, and not a bit-faithful numerical reconstruction. In particular, 0x1007dd710 is an explicit native FMADD even though pseudocode renders separate multiplication and addition; its clamp must not be extrapolated to nonfinite inputs from C-like comparisons."
+  ],
+  "session_lifecycle": {
+    "all_five_close_binary_snapshots_saved": true,
+    "mcp_client_closed": true,
+    "client_process_exit_code": 0,
+    "root_whole_image_session_touched": false,
+    "evidence_records_per_slice": 2
+  },
+  "commands": [
+    "python3 research/evidence/cubase-static/main-function-slices/derive_slices.py",
+    "node research/evidence/cubase-static/main-function-slices/analyze_slices.mjs",
+    "python3 research/evidence/cubase-static/main-function-slices/verify_slices.py"
+  ],
+  "independent_review": {
+    "status": "Completed; no actionable context-gap error reported",
+    "path": "research/evidence/cubase-static/main-function-slices-review/review.json",
+    "scope": "Independent original Mach-O mapping/LC_FUNCTION_STARTS, exact bytes/word addresses, tail branch encodings and missing-context review; no runtime validation",
+    "review_sha256_at_link_time": "ec0e19a39b047c4574e623e67b8701df9d0fc0e35645105d99b173bd58bddf3a"
+  }
+}

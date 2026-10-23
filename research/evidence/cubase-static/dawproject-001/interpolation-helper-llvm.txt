@@ -1,0 +1,51 @@
+
+research/evidence/cubase-static/dawproject-001/DAWproject.arm64.macho:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+000000000001c868 <_CreatePackageManager>:
+   6c1e0: d10203ff     	sub	sp, sp, #0x80
+   6c1e4: a9064ff4     	stp	x20, x19, [sp, #0x60]
+   6c1e8: a9077bfd     	stp	x29, x30, [sp, #0x70]
+   6c1ec: 9101c3fd     	add	x29, sp, #0x70
+   6c1f0: aa0003f3     	mov	x19, x0
+   6c1f4: b4000460     	cbz	x0, 0x6c280 <_CreatePackageManager+0x4fa18>
+   6c1f8: d00007a1     	adrp	x1, 0x162000 <dyld_stub_binder+0x162000>
+   6c1fc: 9110b421     	add	x1, x1, #0x42d
+   6c200: 910063e0     	add	x0, sp, #0x18
+   6c204: 12800002     	mov	w2, #-0x1               ; =-1
+   6c208: 52800023     	mov	w3, #0x1                ; =1
+   6c20c: 97fe5e42     	bl	0x3b14 <__text+0x2a00>
+   6c210: d00007a1     	adrp	x1, 0x162000 <dyld_stub_binder+0x162000>
+   6c214: 9101f821     	add	x1, x1, #0x7e
+   6c218: 910003e0     	mov	x0, sp
+   6c21c: 12800002     	mov	w2, #-0x1               ; =-1
+   6c220: 52800023     	mov	w3, #0x1                ; =1
+   6c224: 97fe5e3c     	bl	0x3b14 <__text+0x2a00>
+   6c228: 9100c3e8     	add	x8, sp, #0x30
+   6c22c: 910063e1     	add	x1, sp, #0x18
+   6c230: 910003e2     	mov	x2, sp
+   6c234: aa1303e0     	mov	x0, x19
+   6c238: 97ffaa56     	bl	0x56b90 <_CreatePackageManager+0x3a328>
+   6c23c: d00007a1     	adrp	x1, 0x162000 <dyld_stub_binder+0x162000>
+   6c240: 9101f821     	add	x1, x1, #0x7e
+   6c244: d100a3a0     	sub	x0, x29, #0x28
+   6c248: 12800002     	mov	w2, #-0x1               ; =-1
+   6c24c: 97fe5959     	bl	0x27b0 <__text+0x169c>
+   6c250: 9100c3e0     	add	x0, sp, #0x30
+   6c254: d100a3a1     	sub	x1, x29, #0x28
+   6c258: 52800002     	mov	w2, #0x0                ; =0
+   6c25c: 97fe614c     	bl	0x478c <__text+0x3678>
+   6c260: 7100001f     	cmp	w0, #0x0
+   6c264: 1a9f17f3     	cset	w19, eq
+   6c268: 9100c3e0     	add	x0, sp, #0x30
+   6c26c: 97fe5db4     	bl	0x393c <__text+0x2828>
+   6c270: 910003e0     	mov	x0, sp
+   6c274: 97fe5db2     	bl	0x393c <__text+0x2828>
+   6c278: 910063e0     	add	x0, sp, #0x18
+   6c27c: 97fe5db0     	bl	0x393c <__text+0x2828>
+   6c280: aa1303e0     	mov	x0, x19
+   6c284: a9477bfd     	ldp	x29, x30, [sp, #0x70]
+   6c288: a9464ff4     	ldp	x20, x19, [sp, #0x60]
+   6c28c: 910203ff     	add	sp, sp, #0x80
+   6c290: d65f03c0     	ret

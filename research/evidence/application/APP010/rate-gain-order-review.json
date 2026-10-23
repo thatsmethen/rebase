@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "scope": "Independent read-only review of source preparation and post-conversion event gain; excludes device/ring transport and whole-host equivalence.",
+  "files": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "sha256": "e85d40e2d5f79fd95a822d0b789c1805786e251556028e130f466cece125610e",
+      "bytes": 8144
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "sha256": "6b5c61430771e57b9a983c0752c95de6221bf8cd41762bcb5133195a2d02e54f",
+      "bytes": 6991
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "sha256": "f49dfcfc03988fdd8b97eb355adedea5df23df9e9ad102282dce549b637ba5f9",
+      "bytes": 6887
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_event_pcm.c",
+      "sha256": "4180d6062120ba0de5c284d886f5170fb0cd79d65edfbdc936b8b7b286130939",
+      "bytes": 2813
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_event_pcm.h",
+      "sha256": "75f6da9eb338c2dbcf15d45a5f3f366c10a66ebf6e9634f63a8e39c3d30e77f7",
+      "bytes": 783
+    }
+  ],
+  "result": "No actionable discrepancy found in the reviewed composition.",
+  "checked": [
+    "nativeMode0ProjectRate requests prepare(applyEventGain:false), so packed24 source conversion uses exact unity gain; original sourceRate path retains default gain application.",
+    "CPRRateConvertedStream runs mode0 on ungained interleaved source, then rb_cpr_event_gain_f32 applies one separate Float32 multiplication per emitted sample. Unity preserves sample storage without rewriting.",
+    "The gain helper validates the full block and its products before in-place writes; invalid/nonfinite/nonzero-subnormal output rejects without partial sample changes. Round-to-nearest and no-flushing environment is checked.",
+    "Converted count is the actual recurrence count; caller does not append a nominal-duration endpoint. Persistent phase/history survives 8192-source-frame blocks and zero-output blocks.",
+    "Seek resets and prerolls from immutable source; it retains the partial converted block suffix rather than restarting the native phase at the requested source position. This is application policy, not a recovered Cubase live-seek claim."
+  ],
+  "limits": [
+    "Read-only review, no independent rerun of Swift/device tests.",
+    "Source admission, attached-media custody, event barrier and source-zero coordinate are dependencies of the earlier sealed profiles.",
+    "Block gain failure can occur after the cursor converter state advances. The current method throws and the playback error path must stop/discard that cursor; this review does not authorize retrying it.",
+    "No claim that the whole offline action, native default backend or Cubase live device path was reproduced."
+  ],
+  "native_evidence": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-samples/finding.json",
+    "sha256": "45501887e870d544f0a185fddbfe97488681338a2757ca24221bc426b49f8a89"
+  },
+  "target_execution": false
+}

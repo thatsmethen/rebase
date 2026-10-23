@@ -1,0 +1,100 @@
+{
+  "id": "APP003-CPR-INTEGRATION-REVIEW",
+  "created_utc": "2026-10-19T10:37:24.819229+00:00",
+  "method": "Read-only source review of app import preview, session replacement, save/reopen/report lifecycle and relevant core transaction/tests. No app automation, no new tests run, no proprietary target execution in this review.",
+  "source_pins": [
+    {
+      "path": "Application/Sources/Rebase/CPRImportReview.swift",
+      "sha256": "61789fecd70c892bd742553a41d98bc4807d643e7168fb53db3ca3886461c242"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "sha256": "30292eb33dc58d671dde8f934a17a0b4419b635429290933ed06da1fe53d6e33"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "sha256": "5903a93a8b6ba18128893e751db869883591ccea2bfaaf4ce585d7177dee3f36"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "sha256": "75b82b2d3e0afadff279284d6f2872685fb2a3146ead0d7a08709eefe089e940"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "sha256": "8e07ab0ff73d120f88efcc8f509cf7b2ebbbbe5c8f9bccd89caacc6d906ab048"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectTests.swift",
+      "sha256": "a043bfe9d53fbcd3f0e95c1c26f34c676ed8a6ef62f584acca59b0cee3ed51cd"
+    }
+  ],
+  "status": "No blocking integration defect identified in reviewed source. The low-priority row wording observation was resolved by the parent.",
+  "findings": [
+    {
+      "id": "CPR-UI-CLARITY-001",
+      "severity": "low",
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "line": 444,
+      "observation": "Rows with an importedTrackID are labeled Audio \u00b7 restored even though the imported Track only has its name/identity and default settings, with no recovered audio clips.",
+      "impact": "The report elsewhere explicitly says track skeletons and lists all omitted event/mixer/timebase state, so this is not a hidden loss. The individual row is less precise than those qualifications.",
+      "recommendation": "Use Audio \u00b7 skeleton restored or similarly explicit wording for imported audio rows.",
+      "blocking": false,
+      "resolution": {
+        "status": "resolved",
+        "verified_utc": "2026-10-19T10:37:34.214244+00:00",
+        "current_text": "Audio \u00b7 empty track restored",
+        "method": "Read-only verification of the exact updated row expression; GUI validation remains parent-owned."
+      }
+    }
+  ],
+  "checks": [
+    {
+      "area": "Inspection and cancellation",
+      "assessment": "inspectCPRProject only assigns the preview. Cancellation clears it. Active project, root, media, undo state and playback are not replaced by inspection. Confirmed import first runs existing unsaved-change handling."
+    },
+    {
+      "area": "Source changed after preview",
+      "assessment": "performCPRImport passes the preview SHA into importProject. Core rereads and requires matching digest before staging; it does not import a different source silently."
+    },
+    {
+      "area": "Atomic import and existing destinations",
+      "assessment": "Core requires a new destination, writes source/report/project into sibling staging, validates loaded project and preserved source hash, then moves the whole staging directory. The session replaces active state only after successful return; failed imports retain the old project."
+    },
+    {
+      "area": "Selection, playback and history",
+      "assessment": "Successful import stops old transport, resets playhead via stop(), clears undo/redo/waveforms, and sets selection from the new project before rebuilding waveforms. Scheduled playback refresh is cancelled by stop(). Nothing claims restored playback clips."
+    },
+    {
+      "area": "Save and Save As",
+      "assessment": "Normal Save writes Project.json and leaves Compatibility untouched. Save As copies every nonmanifest child, including Compatibility and Media, into a new destination before saving the current manifest; errors remove only the newly created destination. The in-memory compatibility baseline remains appropriate after subsequent edits and renaming."
+    },
+    {
+      "area": "Reopen and historical report",
+      "assessment": "load validates the project and compatibility report before replacing session state. compatibilityReport checks regular unredirected files, exact source digest/sections, supported schema and fresh full interpretation equality. The historical sheet explicitly describes its import baseline and warns Rebase edits may differ."
+    },
+    {
+      "area": "Unsupported content and defaults",
+      "assessment": "Only confirmed audio track names become editable empty tracks. Non-audio classes remain reported as not restored. Preview lists event/media/MIDI/plugins/mixer/routing/automation/coordinates/signature/layout omissions, default48k/4-4/mixer/timebase, and missing-media dependencies. Track skeletons cannot be mistaken for imported audio clips in the actual timeline, whose count remains zero. The row-level wording observation is retained above."
+    }
+  ],
+  "remaining_validation": [
+    "Parent-owned native GUI validation must exercise preview cancellation, unsaved-project replacement choices, import, edit/save, Save As, reopen, and report display. This source review is not evidence those UI actions ran.",
+    "Runtime Cubase import/playback compatibility, media resolution, clip placement, event timing units and source mix fidelity remain unestablished."
+  ],
+  "code_mutated": false,
+  "reference_runtime_comparisons": 0,
+  "final_ui_source_pins": [
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "sha256": "30292eb33dc58d671dde8f934a17a0b4419b635429290933ed06da1fe53d6e33"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRImportReview.swift",
+      "sha256": "61789fecd70c892bd742553a41d98bc4807d643e7168fb53db3ca3886461c242"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "sha256": "5903a93a8b6ba18128893e751db869883591ccea2bfaaf4ce585d7177dee3f36"
+    }
+  ]
+}

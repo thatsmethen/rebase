@@ -1,0 +1,63 @@
+{
+  "tests": {
+    "path": "research/evidence/application/APP014/core-tests-first.log",
+    "bytes": 54152,
+    "sha256": "43e6b818af702142aa021070cfdc76fd1a4c54c1d58e0789927fb094b0eef1ec",
+    "passed": 248,
+    "suites": 38
+  },
+  "build_log": {
+    "path": "research/evidence/application/APP014/build-release.log",
+    "bytes": 6441,
+    "sha256": "3505b78eca0efa886e3f7555037c7ed4fe1204542b609aa8ae22a395b4c2fd19"
+  },
+  "executable_sha256": "a9193c2273f121bc7343deebdea1090bb53753039fe80f3fcc6db54c55687705",
+  "native_studies": [
+    {
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader",
+      "finding_sha256": "111ec14e07fb9a88b26a558c75a0c99eb3c8b1d2674394a889556c26cb6f7a75",
+      "manifest_sha256": "4d9208c4ebec79ec1cf749049c3531b973361cc66f7e1a007640ff17e462f4ca",
+      "files": 196
+    },
+    {
+      "directory": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider",
+      "finding_sha256": "96edf3d32313581e95b804581e44af8ce4888e01148e384f6c4f12a6411ac539",
+      "manifest_sha256": "5de1983978d6b5661ad27ca013fa7717085e3586c82b9b1b57f6c2358f90d3a8",
+      "files": 264
+    }
+  ],
+  "reviews": [
+    "research/evidence/application/APP014/timeline-reader-independent-review.json",
+    "research/evidence/application/APP014/timeline-stream-independent-review.json"
+  ],
+  "controls": [
+    "research/evidence/application/APP014/timeline-reader-oracle.py",
+    "research/evidence/application/APP014/timeline-reader-oracle.json",
+    "research/evidence/application/APP014/timeline-instruction-verification.json",
+    "research/evidence/application/APP014/sealer-negative-controls-final.py",
+    "research/evidence/application/APP014/sealer-negative-controls-final.json"
+  ],
+  "implemented": [
+    "An explicit native timeline-reader source-rate audition uses the ordinary channel reader value contract rather than the audition FIFO: narrowed reciprocal, fused coordinate quantization, exact prefix/read/source-seek spans, direct stereo PCM and separate Float32 event gain.",
+    "The reader supports bounded ordered nonoverlapping constructed descriptors with absolute cursor, gaps, offsets, adjacent boundaries and transactional cursor updates. Rebase supplies worker queue/block scheduling and immutable memory reads. These broader constructed descriptors are tested synthetically; real CPR admission remains the prior verified zero-origin event.",
+    "Native provider registration now binds MAudioTrack selector to VSTAudioChannel and concrete PAudioSegment getters. Separate mapped-partition arithmetic and full-read/error/retry decisions are implemented and independently tested. Native mapping expansion and actual I/O failure simulation are not claimed as app behaviors."
+  ],
+  "limits": [
+    "Full Cubase implementation remains incomplete; no Cubase/proprietary component was executed and runtime comparisons remain zero.",
+    "Real imported CPR playback remains explicit single-event audition under the verified zero-origin direct stereo PCM24 source contract, with fresh source proof and attached-media hashes. General nonzero source construction, channel inventory, fades, overlaps, warp, pitch, routing, automation, plugins and full-project playback remain gated.",
+    "The ordinary-reader mode supplies original source rate as its explicit reconstruction context. It does not claim the native hosted builder/global rate equals the file rate. Event Start uses the containing track datum; Length and Offset use the clip datum. General source-unit projection is not inferred from the reader.",
+    "Equal-rate direct reads have no resampler history. Mode0/1/2 converted audition remains separate. Rebase AVAudioEngine/worker scheduling, block sizes, completion timing and device output are application behavior, not Cubase host or DAC equivalence.",
+    "The native read retry/error operation is tested as a pure decision; the immutable memory backend provides exact full reads. Synthetic gap/offset/multiple-descriptor tests do not establish authentic CPR placement or full channel playback.",
+    "GUI review reads retained accessibility/screenshot evidence rather than replaying the interface. Meter telemetry is own-engine output, not reference audio."
+  ],
+  "retained_corrections": [
+    "The first focused test compilation failed because one Swift Testing #require needed an inner try. The test-only correction and initial log remain retained; production sources compiled. The second focused run and complete 248-test run passed.",
+    "Initial and final sealer negative-control records are retained separately. The final sealer additionally verifies native manifest external references during both acceptance and sealing.",
+    "APP013 and all earlier source/build/evidence snapshots remain preserved. Historical ASan unavailability and native raw-import limits remain explicit; this milestone does not reclassify those results."
+  ],
+  "next": [
+    "Close nonzero CPR start/length/source-offset construction through the containing-track and own-clip datums, source-rate frame snapping and no-fade builder range intersection; add a new source projection without mutating frozen recovery profiles.",
+    "Recover ordinary mapping/loop partition expansion and accessor seek/rate lifecycle, then compose source-backed multi-event channel reads with a positive inventory that rejects omitted audible state.",
+    "Continue native editing, MIDI, mixing, plugin, routing and persistence coverage; full fidelity remains an active objective."
+  ]
+}

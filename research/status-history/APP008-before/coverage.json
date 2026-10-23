@@ -1,0 +1,439 @@
+{
+  "schema_version": 1,
+  "inventory_status": "initial research decomposition; not an exhaustive count of Cubase features",
+  "denominator_status": "not established",
+  "domains": [
+    {
+      "id": "project-media",
+      "scope": "Create, save, reopen, relocate, media references and missing files",
+      "starting_documentation": "S12",
+      "static_mapping": "Partial: RIFF/NUND container, bounded32-bit archive declarations/class/object identities, counted track hierarchy, active fixed-tempo flag/value, and linked AudioClip/Cluster/File/FNPath descriptors verified against original instructions and ten shipped templates. Unknown state retained. Shared counted-track tempo/signature pairs, fixed-clock arithmetic and branch-invariant origin meter are separately bounded by the new timing/signature evidence. One/two-point canonical source jump maps now bound through exact allowed metadata, default local lifecycle and native iterator/cache arithmetic; hosted registry/observer context remains unverified. MAudioEvent Start/Length/Offset ownership, zero-origin type10 projection, concrete cluster list/segment field binding and bounded event state now have verified original-byte traces; actual playback remains a separate gate. Concrete segment interval/seek/read, conditional restored-state stream selection and differing-rate request-count arithmetic now have original-byte traces. Final event PCM remains unverified.",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "Independent project/media bundle. Frozen CPR profiles V1/V2/V3/V4 retain their source interpretations. V4 preserves exact unresolved audio objects and LoFi zero-origin24-second source placement; Classic remains unplaced. User-selected PCM attachments are separate edits, copied and bound to source SHA/AudioFile identity with an actual-media SHA. Exact frame count/rate/channels/bit-depth/frame-size, decoded finite samples and every linked segment bound are validated before acceptance and on save/load. Attachment supports one file and one segment per linked event, mono/stereo PCM, up to256MiB and16million frames. Undo/Redo, replacement, removal/pruning and Save As retain custody. Playback/render/exchange still refuse unresolved native processing. Matching format does not establish original-media identity. General coordinates, event rendering, backend/rate state and output parity remain open.",
+      "static_evidence": [
+        "research/evidence/cubase-static/cpr-container-001/finding.json",
+        "research/evidence/cubase-static/cpr-objects-001/native/finding.json",
+        "research/evidence/cubase-static/cpr-objects-001/audio-native/finding.json",
+        "research/evidence/cubase-static/cpr-objects-001/fixtures/structural-contract-v2.json",
+        "research/evidence/cubase-static/cpr-objects-001/fixtures/native-corroboration-v1.json",
+        "research/evidence/cubase-static/cpr-audio-timing-001/finding-v1.json",
+        "research/evidence/cubase-static/cpr-signature-001/correction-v2.json",
+        "research/evidence/cubase-static/cpr-map-clock-001/finding.json",
+        "research/evidence/cubase-static/cpr-audio-events-001/timebase/finding.json",
+        "research/evidence/cubase-static/cpr-audio-events-001/cluster/finding.json",
+        "research/evidence/cubase-static/cpr-audio-events-001/audible-state/finding.json",
+        "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/finding.json",
+        "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/finding.json",
+        "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/finding.json"
+      ]
+    },
+    {
+      "id": "import-export",
+      "scope": "Audio and project interchange, channel layouts, sample formats and metadata",
+      "starting_documentation": "S08",
+      "static_mapping": "partial: native DAWproject parser/writer boundary values, unit enums and explicit interpolation emission traced. Host-side parameter conversion, tempo-time representation and runtime exchange remain unresolved.",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "Mono/stereo audio import and stereo float32 WAV export. Strict DAWproject 1.0 audio subset with transactional import/export and referenced-media extraction. Unsupported routing/devices, musical anchors, ramps, missing interpolation and unrepresented automation reject. An active native clock requires explicit Use Rebase Timing conversion before exchange; it is never silently serialized as generic BPM math. Local roundtrips/XSD checks are not Cubase runtime interoperability. Frozen CPR profiles V1/V2/V3/V4 retain their source interpretations. V4 preserves exact unresolved audio objects and LoFi zero-origin24-second source placement; Classic remains unplaced. User-selected PCM attachments are separate edits, copied and bound to source SHA/AudioFile identity with an actual-media SHA. Exact frame count/rate/channels/bit-depth/frame-size, decoded finite samples and every linked segment bound are validated before acceptance and on save/load. Attachment supports one file and one segment per linked event, mono/stereo PCM, up to256MiB and16million frames. Undo/Redo, replacement, removal/pruning and Save As retain custody. Playback/render/exchange still refuse unresolved native processing. Matching format does not establish original-media identity. General coordinates, event rendering, backend/rate state and output parity remain open.",
+      "static_evidence": [
+        "research/evidence/cubase-static/dawproject-001/native-finding.json",
+        "research/evidence/cubase-static/cpr-container-001/finding.json",
+        "research/evidence/cubase-static/cpr-objects-001/native/finding.json",
+        "research/evidence/cubase-static/cpr-objects-001/audio-native/finding.json"
+      ]
+    },
+    {
+      "id": "transport",
+      "scope": "Start/stop/seek, locators, loop, punch and synchronization",
+      "starting_documentation": "S04",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "Playback, pause/stop/seek and musical-position display use the selected application tempo map or supported retained native fixed clock. Loop/punch/sync and target transport equivalence remain unimplemented or unverified. Supported CPR jump clocks now preserve direct source periods and native quantization; no runtime reference measurement."
+    },
+    {
+      "id": "tempo-timebase",
+      "scope": "Tempo maps, meter, sample positions, musical and linear time bases",
+      "starting_documentation": "S10",
+      "static_mapping": "Partial: native fixed-mode value and exact Float32-period/binary64 clock operations verified with 480 native ticks per quarter; counted track interface pairs bind the supported shared clock. Compact and typed origin signatures are recoverable only when they agree under simple-state/variation gates. A native compatibility branch can discard typed signature data; its context remains unresolved. Variable-map and audio-event/AudioCluster bindings remain under investigation; no target runtime output or FPCR observed. APP005 additionally binds supported one/two-point serialized map periods/anchors, exact knot selection and canonical recurrence; arbitrary hosted context remains open.",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "General application jump tempo/signature maps, anchors and snapping remain application policies. CPR fixed-v1 and jump-map-v1 clocks separately retain recovered native arithmetic with480ticks perquarter, bounded finite normal-or-zero domain and nearest rounding. Map records preserve direct binary32 periods; one/two kind0 records require positive-zero origin and exact canonical cached anchors. Default local lifecycle is bounded; replaceable host providers/observers remain unverified. More points, ramps and broader signature/display/stretch/swing semantics remain unresolved.",
+      "static_evidence": [
+        "research/evidence/cubase-static/musical-time-001/finding.json",
+        "research/evidence/cubase-static/dawproject-001/native-finding.json",
+        "research/evidence/cubase-static/cpr-objects-001/native/finding.json",
+        "research/evidence/cubase-static/cpr-audio-timing-001/finding-v1.json",
+        "research/evidence/cubase-static/cpr-signature-001/correction-v2.json",
+        "research/evidence/cubase-static/cpr-audio-timing-001/reviewer-fixed-clock-vectors.json",
+        "research/evidence/cubase-static/cpr-map-clock-001/finding.json"
+      ]
+    },
+    {
+      "id": "audio-editing",
+      "scope": "Split, trim, slip, move, snapping, fades, overlap and comping",
+      "starting_documentation": "S04",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "Waveform display, move/end trim/split/delete, absolute and grid-relative snap; musical anchors retained through movement/split. Fades, slip, comping and target parity remain unestablished. Unresolved source audio events can be inspected/removed with Undo/Redo; their unverified editing/playback semantics are not converted to ordinary clips. Explicit recovered-event media attachment/replacement and Undo/Redo are implemented; imported native events remain unresolved for rendering."
+    },
+    {
+      "id": "history",
+      "scope": "Undo/redo transaction scope, separate editor histories and persistence",
+      "starting_documentation": "S11",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "Whole-project snapshot undo/redo includes tempo/signature maps, track time bases and automation; editor changes validate before Apply, Cancel uses local drafts. Persisted/separate editor histories remain incomplete. V1 compatibility baselines remain immutable and separately replayed; v2 timing conversion retains musical anchors. APP004 observes conversion Cancel, Apply, Undo and Redo in the native application; anchor retiming is independently covered by core tests."
+    },
+    {
+      "id": "mixer-routing",
+      "scope": "Channels, groups, sends, folders, routing changes, mute and solo",
+      "starting_documentation": "S03",
+      "static_mapping": "partial: named insert-routing string/reference candidates and native DAWproject channel parameter boundaries; complete native audio routing or insert order remains unresolved.",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "Track gain/pan/mute/solo and read automation feed stereo output; no groups/sends/plugin routing or live multichannel insert.",
+      "static_evidence": [
+        "research/evidence/cubase-static/automation-001/finding.json",
+        "research/evidence/cubase-static/dawproject-001/native-finding.json"
+      ]
+    },
+    {
+      "id": "gain-pan",
+      "scope": "Pre-gain, faders, pan laws, balance and channel order",
+      "starting_documentation": "S17",
+      "static_mapping": "partial: exact native interpolation/parameter-display helpers and class-related references; connection to an audio gain/pan processing path is unproven; native DAWproject Volume/Pan unit/value boundaries are retained but host parameter conversion is untraced",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "static_evidence": [
+        "research/evidence/cubase-static/main-reference-review/finding.json",
+        "research/evidence/cubase-static/main-reference-candidates/handoff.json",
+        "research/evidence/cubase-static/dawproject-001/native-finding.json"
+      ],
+      "application_implementation": "Explicit independent mono equal-power pan/stereo balance, gain in dB, and sample-applied gain/pan read automation; native Cubase matching remains unverified."
+    },
+    {
+      "id": "automation",
+      "scope": "Read/write, point interpolation, precision, touch/latch and history",
+      "starting_documentation": "S16",
+      "static_mapping": "partial: exact MAutomationRecorder state/flag transitions and named read/write property lookup, with mode registrations; Touch/AutoLatch/Overwrite event meanings and writer state machine unresolved. Native DAWproject tempo interpolation fallback/emission traced, not host DSP curve behavior.",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "Editable gainDB/pan read lanes with endpoint hold, read-off manual fallback and left-point outgoing linear/step interpolation at absolute sample time. dB interpolation precedes amplitude conversion. No automation recording/write modes; no native equivalence claim.",
+      "static_evidence": [
+        "research/evidence/cubase-static/automation-001/finding.json",
+        "research/evidence/cubase-static/dawproject-001/native-finding.json"
+      ]
+    },
+    {
+      "id": "delay-compensation",
+      "scope": "Plugin delay, routing compensation, monitoring and offline rendering",
+      "starting_documentation": "S04",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "not implemented in current application"
+    },
+    {
+      "id": "audio-rendering",
+      "scope": "Realtime/offline output, determinism, rounding, dither, normalization and tails",
+      "starting_documentation": "S08",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "Deterministic offline mix and playback share prepared buffers with sample-applied automation; stereo float32 WAV export. APP002 GUI-export samples match an independent synthetic formula over 648000 stereo frames; no target output comparison."
+    },
+    {
+      "id": "midi-editing",
+      "scope": "Notes, controllers, event ordering, quantization, expression and logical transforms",
+      "starting_documentation": "S04",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "not implemented in current application"
+    },
+    {
+      "id": "midi-chase",
+      "scope": "Seek state, program changes, controllers, active notes and reset behavior",
+      "starting_documentation": "S13",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "not implemented in current application"
+    },
+    {
+      "id": "midi-interchange",
+      "scope": "SMF type, PPQ, tempo, tracks, inspector transforms and event ordering",
+      "starting_documentation": "S14",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "not implemented in current application"
+    },
+    {
+      "id": "plugin-hosting",
+      "scope": "VST lifecycle, processing, parameter/state persistence, scanning and failure handling",
+      "starting_documentation": "S07",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "not implemented in current application"
+    },
+    {
+      "id": "bundled-processing",
+      "scope": "Each bundled effect and instrument version, presets, parameter and DSP behavior",
+      "starting_documentation": "S04",
+      "static_mapping": "partial: independently reviewed AmbiConverter 4/9/16-channel float32/float64 operators, parameter consumer, zero-frame, bypass, silence and corresponding-buffer alias branches; 535 plug-in control representations. Meter publication, wider lifecycle and other DSP remain unresolved.",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "static_evidence": [
+        "research/evidence/cubase-static/ambisonic/first-order-finding.json",
+        "research/evidence/cubase-static/ambisonic-review/review.json",
+        "research/evidence/acquisition/partial-components-02-03-2026-10-19/vst-representations/index.json",
+        "research/evidence/cubase-static/ambisonic/higher-order-finding.json",
+        "research/evidence/cubase-static/ambisonic-higher-order-review/review.json",
+        "research/evidence/cubase-static/ambisonic/state-contract-finding.json",
+        "research/evidence/cubase-static/ambisonic-state-review/review.json"
+      ],
+      "static_derived_candidate": "candidate/ambiconverter_processor",
+      "application_implementation": "Restricted reviewed 4/9/16-channel float32/float64 C processor integrated through standalone Ambisonic file conversion, with direct IEEE-float WAV output. No live mixer insert, complete plugin lifecycle, or target runtime parity.",
+      "previous_static_derived_candidate": "candidate/ambiconverter_first_order"
+    },
+    {
+      "id": "content-dependencies",
+      "scope": "Libraries, sample references and separately distributed content identity",
+      "starting_documentation": "S02",
+      "static_mapping": "partial: complete installer and app acquisition verified; 2200 regular files hashed, eight symlinks and 538 directories recorded; outer seal declares 2204 paths. Separately distributed content and runtime resolution remain unresolved.",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "static_evidence": [
+        "research/evidence/cubase-static/bundle-manifest/findings.json",
+        "research/evidence/acquisition/full-reference-2026-10-19/summary.json"
+      ],
+      "application_implementation": "not implemented in current application"
+    },
+    {
+      "id": "time-pitch",
+      "scope": "Stretch, warp, pitch editing, algorithms, modes and boundary artifacts",
+      "starting_documentation": "S04",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "not implemented in current application"
+    },
+    {
+      "id": "score-chord-arrangement",
+      "scope": "Score, chord, arranger and structural editing workflows",
+      "starting_documentation": "S04",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "not implemented in current application"
+    },
+    {
+      "id": "record-monitor",
+      "scope": "Audio/MIDI recording, latency, punch, takes, monitoring and device changes",
+      "starting_documentation": "S16",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "not implemented in current application"
+    },
+    {
+      "id": "macos-interface",
+      "scope": "Menus, shortcuts, focus, windows, accessibility, scaling and interaction state",
+      "starting_documentation": "S15",
+      "static_mapping": "partial: image-generator factory initialization and graphics-library dependency only",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "static_evidence": [
+        "research/evidence/cubase-static/graphics/findings.json"
+      ],
+      "application_implementation": "Native timeline, inspector, mixer and menus plus editable tempo/signature and automation sheets, track time-base selector, snapping and exchange/conversion commands. Cubase visual/interaction parity remains unverified. Native CPR review/import sheet and persistent partial-import report badge; cancel/error preserve current project. Native-clock editing exposes explicit Use Rebase Timing conversion; APP004 verifies native import/reopen, explicit conversion, Cancel/Apply/Undo/Redo, Save As, conflicting-signature review and export gating; these checks cover Rebase only. APP005 checks protected multi-point timing, explicit conversion/cancel, saved native and converted reopen, altered-anchor rejection and accurate conversion/Undo/Redo status; these are Rebase implementation checks."
+    },
+    {
+      "id": "remote-control",
+      "scope": "MIDI remote mappings, control surfaces and external synchronization",
+      "starting_documentation": "S04",
+      "static_mapping": "partial: exact recovered plug-in controller layouts; three sealed MIDI Remote source files and one example CC-to-selected-track/send binding declaration. API stub bodies do not establish native host behavior; no runtime binding or scaling established.",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "static_evidence": [
+        "research/evidence/acquisition/partial-components-02-03-2026-10-19/static-control-contract.json",
+        "research/evidence/cubase-static/midi-remote/finding.json",
+        "research/evidence/cubase-static/midi-remote/review.json"
+      ],
+      "application_implementation": "not implemented in current application"
+    },
+    {
+      "id": "video-spatial",
+      "scope": "Video synchronization, channel configurations and spatial workflows if present",
+      "starting_documentation": "S04",
+      "static_mapping": "partial: Renderer controller XML declarations and signed HRIR data resource; runtime integration unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "static_evidence": [
+        "research/evidence/acquisition/partial-components-04-2026-10-19/static-data-contracts.json"
+      ],
+      "application_implementation": "Standalone 4/9/16-channel Ambisonic file conversion only; no video synchronization, live spatial buses or renderer workflow."
+    },
+    {
+      "id": "resource-recovery",
+      "scope": "CPU/memory scaling, overload, cancellation, crash recovery and partial save states",
+      "starting_documentation": "S04",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "not implemented in current application"
+    },
+    {
+      "id": "compound-workflows",
+      "scope": "Reserved scenarios combining editing, state restoration, routing, automation and rendering",
+      "starting_documentation": "S04",
+      "static_mapping": "unresolved",
+      "reference_measurements": 0,
+      "candidate_conformance_cases": 0,
+      "acceptance": "unestablished",
+      "application_implementation": "Independent application workflow checks combine tempo/anchor editing, automation, save/reopen, WAV export and supported DAWproject exchange; these are not reserved target conformance scenarios."
+    }
+  ],
+  "application_iteration": {
+    "id": "APP007",
+    "version": "0.7.0",
+    "validation_record": "research/evidence/application/APP007/application-validation.json",
+    "gui_validation_status": "Ten native GUI groups passed: frozen V4 open, rejection/attachment/replacement, Undo/Redo, removal, save/reopen, Save As, playback/mixdown barriers and changed-PCM rejection.",
+    "release_verification_status": "0.7.0 build7 release built and strictly code-signature verified; final source/test/bundle snapshots retained.",
+    "swift_test_methods_passed": 138,
+    "test_suites": 20,
+    "test_log": "research/evidence/application/APP007/core-tests-final.log",
+    "test_log_sha256": "fb612c5d30f4089958ff2b84f5be8bb8c11acab7727ff414643ba921dca8becd",
+    "implementation_evidence": [
+      "research/evidence/application/APP007/application-validation.json",
+      "research/evidence/application/APP007/artifact-manifest.json",
+      "research/evidence/application/APP007/media-attachment-review.json",
+      "research/evidence/application/APP007/gui-observations.json",
+      "research/evidence/application/APP007/gui-packages-independent-check.json",
+      "research/evidence/application/APP007/historical-integrity.json",
+      "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/finding.json",
+      "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/finding.json",
+      "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/finding.json"
+    ],
+    "scope": "138 implementation tests in20 suites, ten bounded native Rebase GUI groups, two independently audited valid GUI packages and an intentional changed-media negative package. No Cubase execution or reference audio-conformance measurements.",
+    "build_executable_sha256": "3f757ea25ca70468b2de4e07ba62396b77d10e79ea74472e9049835f4e2d627f"
+  },
+  "previous_application_iterations": [
+    {
+      "id": "APP003",
+      "validation_record": "research/evidence/application/APP003/application-validation.json",
+      "swift_test_methods_passed": 68,
+      "test_log": "research/evidence/application/APP003/core-tests-final.log",
+      "scope": "Independent application and static reference-byte checks; zero Cubase runtime or candidate conformance cases."
+    },
+    {
+      "id": "APP004",
+      "version": "0.4.0",
+      "validation_record": "research/evidence/application/APP004/application-validation.json",
+      "gui_validation_status": "12 bounded native Rebase GUI groups passed;three saved packages and converted export independently verified.",
+      "release_verification_status": "Release build and strict local codesign passed.",
+      "swift_test_methods_passed": 92,
+      "test_suites": 13,
+      "test_log": "research/evidence/application/APP004/core-tests-final.log",
+      "test_log_sha256": "171ac07a178f78a1b3b5756f7696f248ff93526f25264411d2e4fea7ce1c5bbb",
+      "implementation_evidence": [
+        "research/evidence/application/APP004/cpr-profile-integration.json",
+        "research/evidence/application/APP004/cpr-profile-second-review.json",
+        "research/evidence/application/APP004/native-fixed-clock-integration.json",
+        "research/evidence/application/APP004/native-fixed-clock-integration-correction-v2.json",
+        "research/evidence/application/APP004/native-clock-optimized-comparison.json",
+        "research/evidence/application/APP004/signature-integration.json",
+        "research/evidence/application/APP004/cpr-signature-native-review.json",
+        "research/evidence/application/APP004/cpr-v2-integration-review.json",
+        "research/evidence/application/APP004/application-validation.json",
+        "research/evidence/application/APP004/gui-observations.json",
+        "research/evidence/application/APP004/classic-native-independent-check.json",
+        "research/evidence/application/APP004/concordant-native-independent-check.json",
+        "research/evidence/application/APP004/converted-copy-independent-check.json",
+        "research/evidence/application/APP004/converted-exchange-independent-check.json"
+      ],
+      "scope": "Independent application/static-contract/analytical/native Rebase UI checks;zero Cubase runtime or reference conformance cases. HistoricalAPP003 files retained unchanged.",
+      "build_executable_sha256": "b88568b4015d79898e071a0d09476d25e05e435a36b2371caf3bec877b7db39f"
+    },
+    {
+      "id": "APP005",
+      "version": "0.5.0",
+      "validation_record": "research/evidence/application/APP005/application-validation.json",
+      "gui_validation_status": "Ten bounded Rebase GUI groups passed after recorded corrections; native/converted packages and exported ZIP/XML independently verified.",
+      "release_verification_status": "0.5.0 build5 release built; strict local codesign passed; final source and executable snapshots retained.",
+      "swift_test_methods_passed": 108,
+      "test_suites": 16,
+      "test_log": "research/evidence/application/APP005/core-tests-final.log",
+      "test_log_sha256": "3c06f7eb932f4be3cd128cc39ff92ad9bcb1db931510c05833ddf3a39dca3e4a",
+      "implementation_evidence": [
+        "research/evidence/application/APP005/application-validation.json",
+        "research/evidence/application/APP005/artifact-manifest.json",
+        "research/evidence/application/APP005/map-bridge-source-review-addendum.json",
+        "research/evidence/application/APP005/map-tests-preservation-review.json",
+        "research/evidence/application/APP005/gui-observations.json",
+        "research/evidence/application/APP005/native-map-independent-check.json",
+        "research/evidence/application/APP005/converted-copy-independent-check.json",
+        "research/evidence/application/APP005/converted-exchange-independent-check.json",
+        "research/evidence/application/APP005/final-integrity-addendum.json",
+        "research/evidence/application/APP005/next-cpr-audio-event-slice.json",
+        "research/evidence/cubase-static/cpr-map-clock-001/finding.json"
+      ],
+      "scope": "108 implementation tests in16 suites,105 analytical map vectors plus internal/rejection/fixedregression controls, ten bounded native Rebase GUI groups and independent source/package/export checks. No Cubase execution, measured reference conformance or whole-host clock equivalence.",
+      "build_executable_sha256": "7f67d5350605213f49cdfbcebe6976ecacafafc9236ce47de655fa8e3fde8130"
+    },
+    {
+      "id": "APP006",
+      "version": "0.6.0",
+      "validation_record": "research/evidence/application/APP006/application-validation.json",
+      "gui_validation_status": "Ten bounded Rebase GUI groups passed; three saved packages independently inspected, with exact source proof and Save As identity verified.",
+      "release_verification_status": "0.6.0 build6 release built; strict local codesign passed; final source and application bundle snapshots retained.",
+      "swift_test_methods_passed": 124,
+      "test_suites": 18,
+      "test_log": "research/evidence/application/APP006/core-tests-final.log",
+      "test_log_sha256": "c8a53b0fc329e807dfd92258b7e0355d62b58dd1d00406e16d4460433a87f629",
+      "implementation_evidence": [
+        "research/evidence/application/APP006/application-validation.json",
+        "research/evidence/application/APP006/artifact-manifest.json",
+        "research/evidence/application/APP006/v4-integration-review.json",
+        "research/evidence/application/APP006/gui-observations.json",
+        "research/evidence/application/APP006/gui-packages-independent-check.json",
+        "research/evidence/application/APP006/historical-integrity.json",
+        "research/evidence/cubase-static/cpr-audio-events-001/timebase/finding.json",
+        "research/evidence/cubase-static/cpr-audio-events-001/cluster/finding.json",
+        "research/evidence/cubase-static/cpr-audio-events-001/audible-state/finding.json"
+      ],
+      "scope": "124 implementation tests in18 suites, ten bounded Rebase native GUI groups, three independently checked GUI packages and historical byte custody. No Cubase execution or measured reference conformance.",
+      "build_executable_sha256": "1dae0a89d53ec02bedc34a240b10f8e5c99255154611ac7bc2f70c31709928da"
+    }
+  ]
+}

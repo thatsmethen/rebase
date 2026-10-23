@@ -1,0 +1,54 @@
+{
+  "id": "APP003-INDEPENDENT-CPR-PACKAGE-CHECK",
+  "created_utc": "2026-10-19T10:41:52.055897+00:00",
+  "status": "passed",
+  "method": "Read-only independent Python comparison against preexisting structurally decoded v09 fixture and exact original bytes. GUI action provenance is parent-owned; this check only verifies resulting persisted files.",
+  "verifier_sha256": "f8fc2d8482b723cef0b8a9224d82ebe32711287c17f02f2645085f9cc68c8efd",
+  "input_pins": [
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/fixtures/classic-house-v09.json",
+      "bytes": 182471,
+      "sha256": "bc9c6c1ffca9045a5e97a02902ec6f91632a94074add4aff7d6c909a5f8d86f8"
+    },
+    {
+      "path": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Classic House.cpr",
+      "bytes": 1197444,
+      "sha256": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892"
+    },
+    {
+      "path": "research/evidence/application/APP003/Classic House Recovery.rebaseproj/Compatibility/CPR/Original.cpr",
+      "bytes": 1197444,
+      "sha256": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892"
+    },
+    {
+      "path": "research/evidence/application/APP003/Classic House Recovery.rebaseproj/Compatibility/CPR/ImportReport.json",
+      "bytes": 43556,
+      "sha256": "d861662e75cd4fabb2b9248dd150dceac95c760501470f1baa7dae0eed5ce272"
+    },
+    {
+      "path": "research/evidence/application/APP003/Classic House Recovery.rebaseproj/Project.json",
+      "bytes": 783,
+      "sha256": "c6fe832e355c90a27bc3594a9e1bf453cbb626af1a260a01aa94f0dd0bcf9ce7"
+    }
+  ],
+  "checks": {
+    "preserved_original_byte_identical": true,
+    "reported_native_object_ranges_verified": 115,
+    "container_sections_verified": 7,
+    "ordered_track_name_class_offset_matches": 8,
+    "imported_audio_track_names": [
+      "Bongos"
+    ],
+    "recovered_audio_clips": 0,
+    "defaults_explicit": true,
+    "tempo_mode_in_source": "fixed",
+    "project_tempo_bpm": 126.5,
+    "unresolved_media_descriptors_checked": 1,
+    "project_differences_from_import_baseline": []
+  },
+  "limits": [
+    "No reference target execution or runtime comparison.",
+    "Only names/empty audio tracks and supported fixed BPM are recovered; metadata tags do not establish active time maps, track state or media playback.",
+    "Saved file hashes describe this checkpoint; later edits may change Project.json."
+  ]
+}

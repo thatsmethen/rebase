@@ -1,0 +1,151 @@
+{
+  "id": "APP016-ACCESSOR-OWNERSHIP-FINAL-ADDENDUM-001",
+  "created_utc": "2026-10-20T23:57:33.958760+00:00",
+  "review_type": "Narrow final-test source review and current custody revalidation; no test rerun",
+  "result": "No actionable defect found in the corrected rejection-storage test or unchanged reviewed production integration.",
+  "original_review": {
+    "path": "research/evidence/application/APP016/accessor-ownership-integration-review.json",
+    "bytes": 10278,
+    "sha256": "043a7ea7815eccab5516b2418be86a4c47873e2762a582455dc583c79443e0db"
+  },
+  "stale_pin_explanation": {
+    "cause": "The original review pinned the earlier test file before the rejection control was corrected to use stable allocated C-struct storage. The sealer correctly rejected that historical test pin against the final file.",
+    "historical_test_path": "Application/Tests/RebaseCoreTests/CPRNativeAudioAccessorTests.swift",
+    "historical_byte_count": 13395,
+    "historical_digest": "5e4b7de691bb6d8c814aa80a427f8c02e0f449a4b84091be899a85bfc7530491",
+    "current_test": {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeAudioAccessorTests.swift",
+      "bytes": 13713,
+      "sha256": "732bbe5def2c32bc892bf08a3fe971cacbc9f05ec720535dcbd206d37041ef13"
+    },
+    "claim_boundary": "The original review does not cover the final test revision. This addendum newly reviews that final revision, preserves the original report unchanged, and revalidates its other pinned inputs."
+  },
+  "final_test_review": {
+    "location": "CPRNativeAudioAccessorTests.ExactFloat32SeekMappingMatchesFractionVectorsAndRejectsBeforeWrites, lines71-93",
+    "change": "Replaces a Swift by-value RBAccessorSeek plus withUnsafeBytes snapshots with one allocated RBAccessorSeek storage block, initializes every stride byte to0xa5, passes the same pointer to rejection calls and compares the same storage bytes afterward.",
+    "reason": "Swift value copies need not preserve unspecified C struct padding. The final control observes the actual caller-owned storage, including deterministic padding, so it tests whether rejected calls write any output byte without comparing unrelated value-copy padding.",
+    "assessment": "The invalid-rate, invalid-frame, nil-output and unsupported-rounding cases remain. The valid oracle assertions and all other tests are unchanged. Allocated storage is bounded and deallocated by defer; no application or C arithmetic behavior changed.",
+    "exact_change_check": "Reversing only the stable-storage substitution in memory reconstructed13395 bytes with SHA2565e4b7de691bb6d8c814aa80a427f8c02e0f449a4b84091be899a85bfc7530491, exactly the historical pin. No reconstructed file was written."
+  },
+  "unchanged_inputs": {
+    "production_and_evidence_pins_unchanged": 13,
+    "production_sources_match_original_review": true,
+    "all_current_Application_pins_match_full_suite_before_and_after": true,
+    "original_review_file_unchanged": true
+  },
+  "retained_test_evidence": {
+    "tests": 265,
+    "suites": 41,
+    "exit_code": 0,
+    "before_after_source_identical": true,
+    "method": "Read and hash-verified existing core-test-run, final log, and before/after inventories; this reviewer did not rerun tests.",
+    "scope": "Own application tests and linked debug executable; no new packaged GUI release or Cubase runtime comparison."
+  },
+  "actionable_findings": [],
+  "source_and_evidence": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeAudioAccessor.swift",
+      "bytes": 8645,
+      "sha256": "94a667f15708382e438c3ab6237675c18f7d430cc43d45b37c4e44b296bca33c"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 9761,
+      "sha256": "7083dfbb5f2c4af394f95416a1ac9cbcc9413c19e935d32f64e08c86915d0fe1"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 9395,
+      "sha256": "3896d4274da33007ac2fd193ab61938b3f2221b07bed82728031e4887f704a9e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8748,
+      "sha256": "447e435835317ff3a0fb66dfeb855fa24b79d42106694d0ce9acebc9bbfab9d7"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_seek.c",
+      "bytes": 2274,
+      "sha256": "355b2818498bf35bc756ab671fbb4aa64cadd6dc823f54ed386bfb5bf997581e"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_seek.h",
+      "bytes": 803,
+      "sha256": "b68cb079ce507d9775560c08ba3bd384fec873ac5e2d0812a907013fe3745db4"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_format.c",
+      "bytes": 1859,
+      "sha256": "93867452e419fc03bdbe8a5576e8fc6f70e81ddb284930472e2cbb01e9e668e5"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_format.h",
+      "bytes": 751,
+      "sha256": "657a8ac70785c7a4d8ed39c25bc03048b2a14d701329d14218be9cb16d2519ad"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeAudioAccessorTests.swift",
+      "bytes": 13713,
+      "sha256": "732bbe5def2c32bc892bf08a3fe971cacbc9f05ec720535dcbd206d37041ef13"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/finding.json",
+      "bytes": 33246,
+      "sha256": "889f90405c4d5607958f92f35b38e99a1b821f3708d038eda0ee53819eea657b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-rate-ownership/artifact-manifest.json",
+      "bytes": 83621,
+      "sha256": "5d7d93282408b2b3b703ec9d6d8df5694d15ee1953cb3126c42b66a94ccaa0a8"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/finding.json",
+      "bytes": 31753,
+      "sha256": "d76301f9ef7e25345c0e22fdded03aecff7e41f5ffbd0729985a0018518a1ea2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/finding.json",
+      "bytes": 5405,
+      "sha256": "26640a81ed61597bd809ffbf21febd81264f688bbb51433b049cb02de778245e"
+    },
+    {
+      "path": "research/evidence/application/APP016/rate-ownership-independent-review.json",
+      "bytes": 2597,
+      "sha256": "e628d5527812fd91265f3af8fa48e76bdcce10476c71b3dc46c14fdea5e58b91"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-ownership-integration-review.json",
+      "bytes": 10278,
+      "sha256": "043a7ea7815eccab5516b2418be86a4c47873e2762a582455dc583c79443e0db"
+    },
+    {
+      "path": "research/evidence/application/APP016/core-test-run.json",
+      "bytes": 945,
+      "sha256": "65c728bae4764073b379cb1adec3dc5e52a76638684c61b2b5cc0cd9599cf105"
+    },
+    {
+      "path": "research/evidence/application/APP016/core-tests-first.log",
+      "bytes": 57633,
+      "sha256": "84d3b8148889b010f6533bc7163a4bb0f5efb1069d2eb83169be7628148ae0de"
+    },
+    {
+      "path": "research/evidence/application/APP016/test-source-before.json",
+      "bytes": 50028,
+      "sha256": "b91a97ee09b7d4fb26c519a01052b7de297be2648de9bf1d99ba1e813bdfd194"
+    },
+    {
+      "path": "research/evidence/application/APP016/test-source-after.json",
+      "bytes": 50028,
+      "sha256": "b91a97ee09b7d4fb26c519a01052b7de297be2648de9bf1d99ba1e813bdfd194"
+    }
+  ],
+  "tests_run_by_this_addendum": 0,
+  "proprietary_target_executions": 0,
+  "limits": [
+    "This addendum verifies existing265-test/41-suite evidence and current source custody without rerunning tests. It does not establish a new packaged release or native UI/device observation.",
+    "The supplied-state differing-rate accessor is a development foundation. General project-rate placement remains gated; builder rate, reader coordinate period, current backend format and selected reader-owner rate are distinct native state.",
+    "Fixed-rate immutable stereo memory excludes transient source/backend errors, dynamic format/rate changes, unsupported terminal continuation and arbitrary provider mutation. The application policies are stricter than native behaviors in those branches.",
+    "Rebase worker queue, block sizes, cancellation and AVAudioEngine scheduling remain application policies. No Cubase process, vendor library, target audio comparison or DAC capture was executed.",
+    "APP015 remains the prior accepted release checkpoint until APP016 receives its separate final acceptance."
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "REBASE-AUTOMATION-INTEGRATION-REVIEW",
+  "created_utc": "2026-10-19T08:40:40.266404+00:00",
+  "reviewer": "target_intake",
+  "scope": "Independent source review of root automation integration and exchange implementation custody. No UI or hardware verification; no Cubase runtime conformance claim.",
+  "status": "No actionable integration defect identified in validated domain.",
+  "checks": [
+    "Project validates lane identities and at most one lane per gainDB/pan parameter before preparation.",
+    "Offline preparation queries automation at (rounded clip startFrame+frame)/project sampleRate, matching actual scheduled sample coordinates.",
+    "Outgoing interpolation uses left point, exact knot selects new point, endpoint holding/read-disabled fallback matches Automation.swift.",
+    "Gain evaluates in dB before conversion to amplitude; pan evaluates before mono equal-power or stereo balance conversion. Prepared buffers are shared by playback and offline render.",
+    "Automation editor uses local lane copies; Cancel only dismisses. Apply validates then uses candidate Project and remember/changed path. Full project undo/redo retains lane data.",
+    "Tempo/signature editing validates candidate and updates musical anchors before applying; sample lengths are not stretched."
+  ],
+  "limits": [
+    "Source review only for editor interaction; actual GUI apply/cancel/undo remains root-owned verification.",
+    "No independent claim about AVAudioEngine final mixer arithmetic or DAC output.",
+    "DAWproject self-roundtrip and XSD tests are application/format checks, not successful import by Cubase.",
+    "DAWproject importer requires explicit RealPoint interpolation because pinned format documentation says omitted hold while reviewed Cubase boundary appears omitted linear."
+  ],
+  "files": {
+    "Application/Sources/RebaseCore/Project.swift": "d28ced71b7777974c4975c4ac424155288105a9b399a872a3ef199174f3cc8ba",
+    "Application/Sources/RebaseCore/OfflineRenderer.swift": "80bd5c60836aed724cf0d3a948691236c5de23f70c7ecd70e47b3120103a5791",
+    "Application/Sources/Rebase/StudioSession.swift": "d677745b771da74957c6688a287efbc4aea29365e80bfb776c9bc35e5aa1ff58",
+    "Application/Sources/Rebase/ProjectEditors.swift": "c0feecf1624b0365aa09e1e8982a26a774b3f12fd77c7bf7de0afcbb332a4921",
+    "Application/Sources/RebaseCore/Automation.swift": "b3cf8cdafcb4d799520ad9bfa969a3e1fd04e776405051b446e242bc8738170b",
+    "Application/Tests/RebaseCoreTests/AutomationTests.swift": "8c772f1723ec1f45e4be512c2984f550c46acc1f47cc800d1fe7207ab2540d36",
+    "Application/Sources/RebaseCore/DAWProject.swift": "3cadef1232be4e6c13325d8cb308af7fb8913420d2a0ace0d85bda55a6cf1c51",
+    "Application/Tests/RebaseCoreTests/DAWProjectTests.swift": "b8b81e477a5747e07982f0e5d9f82f2c316496b49c17e17541ccac5f84f0b99d"
+  },
+  "targeted_test": {
+    "owner": "root",
+    "command": "Application/test-app.sh --skip-build --filter DAWProjectTests|ProjectBehaviorTests",
+    "passed": 10,
+    "log": "research/evidence/application/APP002/exchange-timing-tests-initial.log",
+    "log_sha256": "8d44bd00301b88bb9f2ba7baed3304c18a760d3d45f8c103440f7d8f177ee2db"
+  },
+  "references": [
+    "research/evidence/cubase-static/automation-001/finding.json",
+    "research/references/dawproject/Project.xsd",
+    "https://raw.githubusercontent.com/bitwig/dawproject/ee4dcdde75940f30e14e55401a26955a58b8322b/src/main/java/com/bitwig/dawproject/timeline/RealPoint.java"
+  ]
+}

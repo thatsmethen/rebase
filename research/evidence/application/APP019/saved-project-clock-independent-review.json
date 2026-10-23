@@ -1,0 +1,532 @@
+{
+  "schema_version": 1,
+  "review_id": "APP019-SAVED-PROJECT-CLOCK-INDEPENDENT-REVIEW",
+  "reviewed_utc": "2026-10-21T02:17:04.380639+00:00",
+  "baseline_commit": "5a2a67eb7684c7c9287a39831cadc6e9df67c8ab",
+  "status": "passed scoped independent source and native-instruction review; no actionable discrepancy found",
+  "target_executed": false,
+  "reviewer_reran_swift_tests": false,
+  "cubase_runtime_comparisons": 0,
+  "scope": "V5 setup decoding, ownership, strict rate admission, V1-V4 replay, saved-clock event wiring, tests and source UI; excludes final GUI acceptance and hosted device equivalence.",
+  "checks": [
+    {
+      "subject": "Typed ownership",
+      "result": "pass",
+      "detail": "PArrangement v4 is followed to its immediate typed MRoot v6 and direct PArrangeSetup v8 definition. No scan into the opaque root is used. Positive setup references into that region, null/wrong classes and unsupported versions are explicitly rejected. makeSavedProjectClock also requires setup.root == source.root."
+    },
+    {
+      "subject": "Forward schema",
+      "result": "pass",
+      "detail": "The supported v8 sequence agrees with original reader/writer instructions: two embedded value+datum carriers, two u32 fields, raw f32 base, legacy format, third datum, four u32 fields, raw f64 factor, additional scalar fields, inline FFileType discriminator and three bounded variable strings, NUL format token and final u32. Seven PArrangement strings and exact payload/suffix consumption prevent fixed-offset or ignored-tail decoding. Only explicit scalar tags1/10 are admitted."
+    },
+    {
+      "subject": "Fallback domain",
+      "result": "pass",
+      "detail": "Original FCMP/FCCMP/B.LE preserves finite10000...1024000 and replaces out-of-range finite base with44100; unordered input is not a safe finite validator. The app deliberately requires finite integral10000...192000 and exact positive-one factor bits. It neither promotes fallback44100 to saved evidence nor admits fractional/nonfinite/out-of-policy values. Unsupported raw bits remain distinct from application defaults."
+    },
+    {
+      "subject": "Saved versus hosted rate",
+      "result": "pass",
+      "detail": "Original typed installation and adjusted getter bind saved setup to widened f32 base multiplied by f64 factor; exact factor1 produces the accepted base. Config file-format reconciliation100965f54 has no direct base/factor write in the inspected body. External callbacks/device configuration/later mutation remain boundaries. This is saved configuration, not an effective Cubase device or engine clock measurement."
+    },
+    {
+      "subject": "Profile custody",
+      "result": "pass",
+      "detail": "V5 delegates unchanged V4, merges exact source descriptors, records optional setup bits and changes supported project sample rate/default wording plus a new explicit fact. Conflicting identity and malformed extents fail. Unsupported setup preserves a labeled application default/diagnostic. V1-V4 implementations are byte-identical to baseline; old dispatch remains, missing optional audioSetup decodes nil, and compatibilityReport replays and compares the entire declared-profile report."
+    },
+    {
+      "subject": "Fresh playback proof",
+      "result": "pass",
+      "detail": "Saved-clock preparation uses verifiedCPRSourceEvent with source/report replay and retained-event ownership, parses original setup bytes again, checks exact root ownership and freshly resolves source tempo. Rebase sample-rate/tempo edits cannot replace that rate. Attached media is freshly hash/format verified. supportedSampleRate is a domain validator, not standalone authentication of an arbitrary decoded struct; production callers first obtain the struct from read(container)."
+    },
+    {
+      "subject": "Timeline boundaries",
+      "result": "pass",
+      "detail": "The distinct saved-clock contract feeds the existing bounded builder/reader. Direct-track/zero-ancestor/type10/auto-fade/stereoPCM24/media-capacity gates remain. Raw frames are unconverted; complete requested windows must fit media. Only the selected event is auditioned. Full-project barriers remain; no converter or default silently replaces rejected saved setup."
+    },
+    {
+      "subject": "UI source read",
+      "result": "pass",
+      "detail": "Picker and explanation distinguish current Rebase versus saved CPR clock, show raw saved base/factor and saved range, disable inadmissible preparation and disclose different-rate speed/pitch and unobserved live device state. Play prepares/verifies again. This review has not operated the GUI."
+    },
+    {
+      "subject": "Test oracle read",
+      "result": "pass",
+      "detail": "Reviewed five setup tests and two added saved-clock placement tests: ten pinned shipped sources; variable schema/decoys; rate/factor rejection; actual V4 replay; explicit32000/48000/88200 expected frame coordinates with independently generated marker PCM across257/4096 blocks and boundary seeks; application edits, tampering, source/package preservation and full-project barriers. Historical comparisons use frozen decoders rather than relabeling current reports. Existing conversion fixture explicitly sets48000 to preserve its original differing-rate test purpose."
+    }
+  ],
+  "original_byte_verification": {
+    "method": "Reviewer independently parsed original Mach-O LC_SEGMENT_64 mappings and source SHA; compared16 complete raw derivatives and REA initialized-memory readbacks to mapped source bytes; compared every retained little-endian LLVM word for18 intervals. Also checked original MRoot/PArrangeSetup literals and adjusted vtable10450d6f0 slot0=1009573dc.",
+    "fresh_raw_intervals": 16,
+    "reused_original_intervals": 2,
+    "total_intervals": 18,
+    "total_bytes": 4684,
+    "native_instruction_words": 1171,
+    "rows": [
+      {
+        "entry": "0x100966640",
+        "bytes": 1044,
+        "native_words": 261,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass1/native-100966640.txt"
+      },
+      {
+        "entry": "0x100966a54",
+        "bytes": 400,
+        "native_words": 100,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass1/native-100966a54.txt"
+      },
+      {
+        "entry": "0x100956f80",
+        "bytes": 88,
+        "native_words": 22,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass1/native-100956f80.txt"
+      },
+      {
+        "entry": "0x100965f54",
+        "bytes": 848,
+        "native_words": 212,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-100965f54.txt"
+      },
+      {
+        "entry": "0x101c25998",
+        "bytes": 64,
+        "native_words": 16,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-101c25998.txt"
+      },
+      {
+        "entry": "0x101c259d8",
+        "bytes": 64,
+        "native_words": 16,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-101c259d8.txt"
+      },
+      {
+        "entry": "0x1031983e0",
+        "bytes": 4,
+        "native_words": 1,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-1031983e0.txt"
+      },
+      {
+        "entry": "0x1031695b8",
+        "bytes": 216,
+        "native_words": 54,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-1031695b8.txt"
+      },
+      {
+        "entry": "0x10171e9fc",
+        "bytes": 96,
+        "native_words": 24,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-10171e9fc.txt"
+      },
+      {
+        "entry": "0x10310a240",
+        "bytes": 8,
+        "native_words": 2,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-10310a240.txt"
+      },
+      {
+        "entry": "0x10319b1dc",
+        "bytes": 444,
+        "native_words": 111,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass3/native-10319b1dc.txt"
+      },
+      {
+        "entry": "0x103109ff0",
+        "bytes": 420,
+        "native_words": 105,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass3/native-103109ff0.txt"
+      },
+      {
+        "entry": "0x10319b8b8",
+        "bytes": 88,
+        "native_words": 22,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/native-10319b8b8.txt"
+      },
+      {
+        "entry": "0x10319b860",
+        "bytes": 88,
+        "native_words": 22,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/native-10319b860.txt"
+      },
+      {
+        "entry": "0x10221e70c",
+        "bytes": 196,
+        "native_words": 49,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/native-10221e70c.txt"
+      },
+      {
+        "entry": "0x10221e6c4",
+        "bytes": 72,
+        "native_words": 18,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/native-10221e6c4.txt"
+      },
+      {
+        "entry": "0x100959278",
+        "bytes": 500,
+        "native_words": 125,
+        "native_path": "research/evidence/cubase-static/cpr-objects-001/audio-native/native-100959278.txt"
+      },
+      {
+        "entry": "0x1009573dc",
+        "bytes": 44,
+        "native_words": 11,
+        "native_path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass7/native-1009573dc.txt"
+      }
+    ],
+    "limits": "Semantics reviewed for relevant typed readers/writers/helpers and rate getter. Byte equality alone does not prove external callbacks, unsupported versions or runtime paths."
+  },
+  "historical_implementations_unchanged": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV1.swift",
+      "bytes": 19302,
+      "sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV2.swift",
+      "bytes": 6252,
+      "sha256": "6183ca0ea72f992cf00d1fd4aab5a9c0a014e764988d6ae7bacf89e83386a836"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV3.swift",
+      "bytes": 12082,
+      "sha256": "66d68787d337781075e7d691709d363bb2862c7f381c9a0c8c6ed888c376b949"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV4.swift",
+      "bytes": 10093,
+      "sha256": "311ef0ad0f120d7406b0e8469312f2e9d0083f348f52ea6704a4aa57e226f3ad"
+    }
+  ],
+  "root_run_evidence": {
+    "tests": 287,
+    "suites": 44,
+    "exit_code": 0,
+    "current_source_entries_verified": 271,
+    "before_after_source_equal": true,
+    "reviewer_reran_tests": false,
+    "initial_development_failure": "Retained focused-development-01 failed four assertions in an older signature test that assumed current import48000/default facts. Final test compares actual frozen V4 for that historical contract, then asserts V5 rate44100 separately. No production repair was made for these test-only stale expectations."
+  },
+  "actionable_findings": [],
+  "limits": [
+    "No Cubase execution, runtime audio comparison or effective hosted-device clock measurement.",
+    "Fresh direct typed setup only; native fallback, nonunity factors, positive references into skipped roots and other versions are excluded.",
+    "No broadened event/mixer/automation/routing/plugin/full-project playback claim.",
+    "Final GUI/build acceptance is parent-owned."
+  ],
+  "source_and_evidence": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRProjectAudioSetup.swift",
+      "bytes": 6553,
+      "sha256": "465870ea6a48640b78eda15fd8b66cc11aaec32c62c944cb5539c77aab75bd1d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV5.swift",
+      "bytes": 2526,
+      "sha256": "95d503bbbc98fc8599bbfb232e7226078e60d351513f8bf452e87f06f6fab3b7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "bytes": 25075,
+      "sha256": "b4d8ecc082bb3ba4411051941bb8c6925d987de21a58056d07ed9186a1630282"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRPlacedSourceEventPlan.swift",
+      "bytes": 7742,
+      "sha256": "e33010e2f84c889b0a6b3cccbdb9e26f749f28ccc935e8dfd4757adc30f95f86"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 10467,
+      "sha256": "3e60260b95325749dfcd88968066ee904c161fe3e4eed0508b43af6ebf1a8376"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 12645,
+      "sha256": "625e680231e697edc356e2217cebfde9ccc6eb578e5b1ed927dfb2ee5b0cdaa0"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 13673,
+      "sha256": "e426e17e26303faa9752f049652c4c08c5365e3c97c606cec387a05b1a504d39"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8748,
+      "sha256": "447e435835317ff3a0fb66dfeb855fa24b79d42106694d0ce9acebc9bbfab9d7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 9920,
+      "sha256": "4d34133eac2884913b702fd865fbca361be92023838369eeab26235d18103819"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+      "bytes": 10163,
+      "sha256": "0ffff9f943e32f41c1c6b13167a44945cdd6a4646c8eb5ee0deb38cbb55d6fba"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectAudioSetupTests.swift",
+      "bytes": 13691,
+      "sha256": "fb59d8242ad175c71501e50684967ea463742772420278b20b696d56c5008601"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRPlacedSourceEventTests.swift",
+      "bytes": 33631,
+      "sha256": "d9be242fb4ee09794ffb02d0847fd2fbd5b9820524b2db7c151d7722f2c68ec0"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectTests.swift",
+      "bytes": 45512,
+      "sha256": "e8ba763bb55b2ed3b0ee2ddd3fcc30ee05ee6ca7bf7f30d60ba83e0631f18264"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRecoveryV3Tests.swift",
+      "bytes": 18402,
+      "sha256": "013297d3a33f1bd16753749337cd7616faf2445cef1943cbff6cce58886fbd88"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRecoveryV4Tests.swift",
+      "bytes": 19608,
+      "sha256": "00d8e4853354f3db17f2f4d6cce8837f89719d6683778d9267c4d315e70e628e"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceEventPlaybackTests.swift",
+      "bytes": 31439,
+      "sha256": "63fabb18927da11c93717af73732cc50a6636abbed5eb182684300c4cbcd38b1"
+    },
+    {
+      "path": "research/evidence/application/APP019/core-test-run.json",
+      "bytes": 1745,
+      "sha256": "2cd7b56b8c173674862c39dd203bcd54884611e5126039199c28e1dbaa01b513"
+    },
+    {
+      "path": "research/evidence/application/APP019/core-tests.log",
+      "bytes": 61824,
+      "sha256": "6a6bfb152dbea86db11e2b9ef57c9c26f8d9ffb0c6c3e1f3a6cdd2b2df4aa951"
+    },
+    {
+      "path": "research/evidence/application/APP019/test-source-before.json",
+      "bytes": 51013,
+      "sha256": "b0fb61a58867b47f9b153fe3f4b9c810eb1fae616ee9f7b541b06e667538d8e9"
+    },
+    {
+      "path": "research/evidence/application/APP019/test-source-after.json",
+      "bytes": 51013,
+      "sha256": "b0fb61a58867b47f9b153fe3f4b9c810eb1fae616ee9f7b541b06e667538d8e9"
+    },
+    {
+      "path": "research/evidence/application/APP019/focused-development-01.json",
+      "bytes": 199,
+      "sha256": "e128bfb39c03ea12f3a6f83c44764e378094301326d91bb7572c914c03a7dcf7"
+    },
+    {
+      "path": "research/evidence/application/APP019/focused-development-01.log",
+      "bytes": 25559,
+      "sha256": "9f7912dc0a5b893b6f98c48debab7587359c5ee8b2c47c6b4dbbb13c4d40ad54"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass1/derivation.json",
+      "bytes": 2971,
+      "sha256": "22f5aaf72c9b7b44b3b85f9f3adf06bdccfa59a55379d49a2d685fbd59241eeb"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass1/native-100966640.txt",
+      "bytes": 11862,
+      "sha256": "52be02401f8a2192a32a86e9bbbd4d99f06b41da7ee082f44c4da6c105d6eccc"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass1/bytes-100966640.json",
+      "bytes": 17949,
+      "sha256": "cbae75256ef7517f06c26edf2f973f30a62935d8078ffc2393dc4d22d246f7bb"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass1/native-100966a54.txt",
+      "bytes": 4687,
+      "sha256": "8fcc62a334fbf00e2a3f38ccca3240579571ff43a6c891095fe6f5e36b357c70"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass1/bytes-100966a54.json",
+      "bytes": 12787,
+      "sha256": "3fd669fa7fd9f35938768b9fb428ddc018ecceba949483638fb2dbcf0cfd330c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass1/native-100956f80.txt",
+      "bytes": 1140,
+      "sha256": "bb1265510829bfe6109e6322532b552d610ede033c9abcabf6369dc0dca50b6c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass1/bytes-100956f80.json",
+      "bytes": 10281,
+      "sha256": "cfb69555254b4391616848edf684a3ac5fa08c65f293a8b3f2669adaef4da15e"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/derivation.json",
+      "bytes": 6362,
+      "sha256": "d2cba71a0654f1bf8a3a0d318af11d9101810cd0cd150c97255dcdb2319aa16f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-100965f54.txt",
+      "bytes": 10243,
+      "sha256": "0da2a00392f07c359399037a5a03337be37a5aacb522ff6d7011222af8a19ad2"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/bytes-100965f54.json",
+      "bytes": 16371,
+      "sha256": "2cee5533e3995c5aeac5b6982b06610e06f4bf5a309f5c27a62f18f90245116c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-101c25998.txt",
+      "bytes": 890,
+      "sha256": "a85f3e27b38026a018fc5ef8391788f693b234e1ba24f5f0a2ca16c09a64a832"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/bytes-101c25998.json",
+      "bytes": 10089,
+      "sha256": "6d623edfd2197d834545fce3a4d6de721e9a27abe55ecb00bebdb710a115cf1c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-101c259d8.txt",
+      "bytes": 892,
+      "sha256": "9617da600daac2d4308ce415500f7728053e1d240445d408a39a8b80075f937a"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/bytes-101c259d8.json",
+      "bytes": 10089,
+      "sha256": "9435453149fb455ac475058f87aac55ead0f652424df3b098ce9006754789602"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-1031983e0.txt",
+      "bytes": 222,
+      "sha256": "62deb5f619fb642861abe13e3dc970176d9212d58c1cfe6b96c7137986945524"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/bytes-1031983e0.json",
+      "bytes": 9599,
+      "sha256": "bed273b858311c9a95c50e781cb3f27db500981c7c2d68c550b67a72fde72f5c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-1031695b8.txt",
+      "bytes": 2592,
+      "sha256": "9da6bdb4909a1cb965d31fb1653ae7894dd4f943d192b77f60ee84b259a9cbcd"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/bytes-1031695b8.json",
+      "bytes": 11315,
+      "sha256": "cbfab5d19e134609754021630d4bad28aa71da0dac70a5e30de59ffcbb663c64"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-10171e9fc.txt",
+      "bytes": 1227,
+      "sha256": "1ca80ff8d37b6257298259c27f976278e4d6130e2a6342e1c82066d6db3160ef"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/bytes-10171e9fc.json",
+      "bytes": 10345,
+      "sha256": "24e75bd4a3fc11dfc24e2cd7e46e7826c33cbb0d15db3b9d1c840290ff92b771"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/native-10310a240.txt",
+      "bytes": 265,
+      "sha256": "727b22458323666920efc13a21b41044da7f936f7223960e06a65bb71e6f2e1c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass2/bytes-10310a240.json",
+      "bytes": 9631,
+      "sha256": "73a30e277f1a9fa827d643044a286933708f022fdc98c016ce43f15252d38f21"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass3/derivation.json",
+      "bytes": 2125,
+      "sha256": "833a587d1ec649d192e656ab93ef40dd39479f22dfa8c2d1f37308979130b329"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass3/native-10319b1dc.txt",
+      "bytes": 5411,
+      "sha256": "62b5a4ae85ed500ad56d0a6993723da319383595e7ad81e69caa128ff945aa59"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass3/bytes-10319b1dc.json",
+      "bytes": 13139,
+      "sha256": "f575f842f6a097dfb75dc184b7a1860d879411a4fb2cf9add67d44d8c39b7e72"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass3/native-103109ff0.txt",
+      "bytes": 5059,
+      "sha256": "072a83f704adf8febfebd31247c01f5836909beaff1db38998a75b9b6e0b91ad"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass3/bytes-103109ff0.json",
+      "bytes": 12947,
+      "sha256": "5873a7285c64973aa1ea0e12321487190a46d9a1917e5cb305cd173390de78d9"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/derivation.json",
+      "bytes": 3820,
+      "sha256": "04eed605099eb127219e9357ff8e868f36fc13c0f0bbde61ccd8374116373cbf"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/native-10319b8b8.txt",
+      "bytes": 1163,
+      "sha256": "ff14f7c27f3b866eb95df0d3e1e566e735f6c4aae001523ca1dc9597bac406ef"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/bytes-10319b8b8.json",
+      "bytes": 10281,
+      "sha256": "fffe552e303505bbbaf98dc4ca67feb9744c4010c13af5330392f641ae288698"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/native-10319b860.txt",
+      "bytes": 1165,
+      "sha256": "ce6adb20ce6d74950c68f0f23343050567ad895be316b41164310632712c0d11"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/bytes-10319b860.json",
+      "bytes": 10281,
+      "sha256": "1c15d280d48bf3216c0710ffd7f4a05a0a94846b708c50f96637f296cf5495df"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/native-10221e70c.txt",
+      "bytes": 2392,
+      "sha256": "8ca41da543e496e369dfcf8cc6408a7433d55e97603c0485fdc71b8b066e64ec"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/bytes-10221e70c.json",
+      "bytes": 11155,
+      "sha256": "f5535b94f122d23f53d4fa3701d37a82081315eeacd8efe990eeda865abc0e7a"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/native-10221e6c4.txt",
+      "bytes": 953,
+      "sha256": "46baadef32caacdda0f831b74b6e0231ccaa2305be1f5e2b4ca72742d160aa86"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/pass4/bytes-10221e6c4.json",
+      "bytes": 10153,
+      "sha256": "def4cfdf369b2e114af2f6571b179c63c52979dac476525d604e3dc4aefcb66c"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-objects-001/audio-native/native-100959278.txt",
+      "bytes": 6135,
+      "sha256": "268c42bccbcf8527fa2aec865f1d71d6d8a981b69bef3e2137e63fe20915a1d7"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass7/native-1009573dc.txt",
+      "bytes": 648,
+      "sha256": "4771ce5a59520d3b6caa46b46ffffa25ae458f93fd8f3de9ef6bb3a68b0d5108"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/schema-probe.json",
+      "bytes": 108959,
+      "sha256": "3a60593bf6c893c5aee0aeade220789a220f473cf638873db9f0023616f46819"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/project-audio-setup/probe_schema.py",
+      "bytes": 7480,
+      "sha256": "57a74396cbded1779b25aa9ef5b4704184e7615bdbc09ba7ebaed533a641a5fb"
+    },
+    {
+      "path": "research/targets/derived/Cubase15-arm64",
+      "bytes": 85691328,
+      "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+    }
+  ]
+}

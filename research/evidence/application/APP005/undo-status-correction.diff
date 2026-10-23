@@ -1,0 +1,21 @@
+--- before/StudioSession.swift
++++ after/StudioSession.swift
+@@ -496,12 +496,16 @@
+     func undo() {
+         guard let previous = undoStack.popLast() else { return }
+         lastEditKey = nil
+-        redoStack.append(project); project = previous; reconcileSelection(); rebuildWaveforms(); changed()
++        redoStack.append(project); project = previous; reconcileSelection(); rebuildWaveforms()
++        status = "Undid last edit"
++        changed()
+     }
+     func redo() {
+         guard let next = redoStack.popLast() else { return }
+         lastEditKey = nil
+-        undoStack.append(project); project = next; reconcileSelection(); rebuildWaveforms(); changed()
++        undoStack.append(project); project = next; reconcileSelection(); rebuildWaveforms()
++        status = "Redid last edit"
++        changed()
+     }
+     private func changed() {
+         isDirty = true

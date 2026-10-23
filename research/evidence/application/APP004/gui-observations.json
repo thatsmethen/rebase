@@ -1,0 +1,84 @@
+{
+  "at_utc": "2026-10-19T11:24:48.995616+00:00",
+  "classification": "Observed self-authored native Rebase UI through cua_repl; static source parsing, not Cubase runtime execution.",
+  "app_executable_sha256": "b88568b4015d79898e071a0d09476d25e05e435a36b2371caf3bec877b7db39f",
+  "checks": [
+    {
+      "id": "legacy-reopen",
+      "action": "Open APP003/Classic House Recovery.rebaseproj and inspect Tempo Track, then Cancel.",
+      "observed": "Bongos track;126.5 BPM editable;4/4;no native-clock conversion banner. Original package not saved.",
+      "result": "pass"
+    },
+    {
+      "id": "factory-import",
+      "action": "Import original Classic House.cpr through Rebase;review;save APP004/Classic House Native.rebaseproj.",
+      "observed": "Review identifies shared fixed126.5BPM clock and agreeing4/4 origin;48kHz default remains explicit;one empty Bongos audio track;transport tempo disabled with conversion help.",
+      "result": "pass"
+    },
+    {
+      "id": "no-op-apply",
+      "action": "Open Tempo Track on Classic House Native;Apply without edits.",
+      "observed": "Native-clock disabled transport remains and status unchanged;no conversion occurred.",
+      "result": "pass"
+    },
+    {
+      "id": "concordant-control",
+      "action": "Import synthetic concordant7/8 source;save Concordant Signature Recovery.rebaseproj;open Tempo Track.",
+      "observed": "Review explicitly recovers7/8 origin;sheet displays7/8,126.50BPM,native timing banner;Set Tempo disabled.",
+      "result": "pass"
+    },
+    {
+      "id": "sheet-layout",
+      "action": "Observe native screenshot of Tempo and Signature Tracks sheet.",
+      "observed": "Full610point-high sheet visible;banner,Cancel,Apply,conversionbutton,tempo/signature lists and event controls readable without clipping. Screenshot is in interaction transcript;no standalone screenshot file is claimed.",
+      "result": "pass"
+    },
+    {
+      "id": "conversion-cancel",
+      "action": "Use Rebase Timing thenCancel;reopen sheet.",
+      "observed": "Nativeclocktransport remains disabled;reopened sheet has nativeclockbanner and7/8.",
+      "result": "pass"
+    },
+    {
+      "id": "conversion-apply-undo-redo",
+      "action": "Use Rebase Timing;Apply;CommandZ;CommandShiftZ.",
+      "observed": "Apply makes transport BPM editable;Undo restores disablednativeclock;Redo makes BPM editable again.",
+      "result": "pass"
+    },
+    {
+      "id": "converted-save-as",
+      "action": "SaveAs Converted Signature Copy.rebaseproj after explicitconversion.",
+      "observed": "Saved Converted Signature Copy status;independentfilecheck confirms onlyname and nativeClockremoval differ,source/report byte-identical.",
+      "result": "pass"
+    },
+    {
+      "id": "native-reopen",
+      "action": "Open Concordant Signature Recovery.rebaseproj.",
+      "observed": "Opened Synthetic Concordant7-8;nativeclock disabledtransport126.5;load validation succeeds.",
+      "result": "pass"
+    },
+    {
+      "id": "native-export-gate",
+      "action": "ExportDAWproject to unused Rejected Native Clock.dawproject.",
+      "observed": "Alert: Use Rebase Timing explicitly before exporting a recovered native clock;DAWproject cannot preserve its arithmetic contract. Project remains open;destinationabsent.",
+      "result": "pass"
+    },
+    {
+      "id": "conflicting-control",
+      "action": "Inspect Synthetic Signature Precedence.cpr via ImportCubaseProject;Cancel review.",
+      "observed": "Compact and typed signature meters disagree;native compatibilityselection unresolved. No recoveredmeterclaim;4/4 and48kHz explicitlyapplicationdefaults. Cancel returns priorConcordantnativeproject with126.5 disabledBPM.",
+      "result": "pass"
+    },
+    {
+      "id": "converted-reopen-export",
+      "action": "Open Converted Signature Copy.rebaseproj;ExportDAWproject to Converted Signature Copy.dawproject.",
+      "observed": "Reopen succeeds;BPM editable126.5;status Exported Converted Signature Copy.dawproject. Independent ZIP/XML checks retained separately.",
+      "result": "pass"
+    }
+  ],
+  "retained_interaction_errors": [
+    "Initial GoTo paste/Return sequence left old directory;setValue with observed path thenReturn succeeded. No file imported from the wrong selection.",
+    "A staleAX index after screenshot was rejected;freshAX index succeeded. No application/source change resulted."
+  ],
+  "target_runtime_comparisons": 0
+}

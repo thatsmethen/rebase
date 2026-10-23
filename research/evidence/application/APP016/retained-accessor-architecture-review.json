@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "status": "read_only_architecture_review_and_control_design",
+  "baseline_commit": "e023d903ed187fefe6ce0394d034ba54242af7f9",
+  "target_executions": 0,
+  "runtime_comparisons": 0,
+  "source_and_evidence": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "bytes": 16107,
+      "sha256": "01654e81697d79c6bb2244c004580ffee8b5d202dd64a54f14f84db4098516ce"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 9286,
+      "sha256": "844c239822372b78a81a1cc9fd55ca9cecfa1f8ecda9e6a30df8dacd1d3ab71c"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRStreamPlaybackQueue.swift",
+      "bytes": 4965,
+      "sha256": "db806fa154391729bb2605b38402f0e3aa204551fb723eeaeac0d039f2ab9eda"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "bytes": 10182,
+      "sha256": "20b2388abdf78d896d33381950869b7347fc8c6e252729ff4cb00b8e57b38f20"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 9395,
+      "sha256": "3896d4274da33007ac2fd193ab61938b3f2221b07bed82728031e4887f704a9e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8748,
+      "sha256": "447e435835317ff3a0fb66dfeb855fa24b79d42106694d0ce9acebc9bbfab9d7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRPlacedSourceEventPlan.swift",
+      "bytes": 5872,
+      "sha256": "1a2f2e41ec3da158bfb7fa4c11d8013bbf87aed9eec93d859543b84c67e6908c"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateReadBudget.swift",
+      "bytes": 4141,
+      "sha256": "cdc56ac4a12d2a386dc7b5c7864220762d7e187c7fb258d71ee9639d0a87523e"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_reader.h",
+      "bytes": 4390,
+      "sha256": "910475ed5c486c662c0f0893097cfbc4551b9be5922f5fcdb398941701373014"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/finding.json",
+      "bytes": 17257,
+      "sha256": "b3ed0ab7f758c91a65620dcc829be02e51684c7887e4561f9107d22fc0365c38"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/finding.json",
+      "bytes": 22112,
+      "sha256": "a78e11153ad11bbd925a915a4e5260af19ce28188073a78a59f26cc0fe109ada"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-reader/finding.json",
+      "bytes": 12852,
+      "sha256": "111ec14e07fb9a88b26a558c75a0c99eb3c8b1d2674394a889556c26cb6f7a75"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-selection/finding.json",
+      "bytes": 9640,
+      "sha256": "2b0d82f0b5922b0e7bd279f1a19955803b982b629b6508d941be58ebf75e376b"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass1/native-10036f89c.txt",
+      "bytes": 2417,
+      "sha256": "944bd23cddbacfeb4cf96b26cc445da931e31de2fda6e1a2fe3383e026f05d30"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-seek-state/pass1/native-10036eff0.txt",
+      "bytes": 13953,
+      "sha256": "ea9767e0f16238db9973469d822a4e2fb320a79300c3d159200b40c6de179b3f"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-100326318.txt",
+      "bytes": 25203,
+      "sha256": "4322f02c5d2f693021450a6daefb29049a6703281e3801574518f73bdb1e978a"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-converter/native-10033035c.txt",
+      "bytes": 28562,
+      "sha256": "24e152942f1a277d257020951b0094a8d91191ab51add8cd527886c094e17200"
+    }
+  ],
+  "current_boundaries": [
+    {
+      "component": "CPRRateConvertedStream",
+      "fact": "Whole-source converted audition creates fresh converter per cursor, seeks by source-zero preroll, consumes application-selected8192-input blocks, forces last positive block final, loops past zero-produced blocks, then applies separate gain/ring/callback adapter.",
+      "implication": "These explicit existing policies do not implement retained native AudioAccessor read/seek state."
+    },
+    {
+      "component": "CPRNativeTimelineStream",
+      "fact": "Direct equal-rate immutable-memory read is addressed by absolute native plans; gain follows copy. Cursor publishes only after the complete output block succeeds.",
+      "implication": "Keep this admission while introducing an independently verified accessor; do not replace requested output windows with whole-source conversion."
+    },
+    {
+      "component": "CPRSourceEventPlayback / CPRPlacedSourceEventPlan",
+      "fact": "Placed path replays preserved source clock and uses explicit source-rate context, while other conversion modes remain complete/zero-origin.",
+      "implication": "Frozen import profiles and original placement/processing gates must remain intact. Different reader/accessor/project rates need explicit binding."
+    },
+    {
+      "component": "CPRStreamPlaybackQueue / AudioTransportEngine",
+      "fact": "One serialized producer with bounded pending AV buffers; cancellation synchronizes before stopping/detaching, stale callbacks use generations. Each play currently creates a new cursor.",
+      "implication": "Reuse isolation/cancellation, but specify accessor lifetime separately from a UI play session; asynchronous callbacks must never mutate the same converter concurrently."
+    }
+  ],
+  "recommended_architecture": [
+    {
+      "layer": "Verified immutable source",
+      "recommendation": "Keep source/report/media proof plus original format descriptor and exact decoded PCM. A Float32 storage representation must not erase the original source-format dispatch or intermediate quantization requirements."
+    },
+    {
+      "layer": "Constructed segment and reader window",
+      "recommendation": "Retain separately rounded descriptor start/end/offset and reader datum period; distinguish file/source rate, accessor output rate, builder rate, timeline period and final device rate."
+    },
+    {
+      "layer": "Retained accessor",
+      "recommendation": "Own source position, first-budget flag, converter handle/history/counters, backend read position and format/configuration. Keep per-owner identity/lifetime explicit; neither per-file sharing nor per-block recreation is justified without the native cache binding."
+    },
+    {
+      "layer": "Seek",
+      "recommendation": "Map through binary32 source/output ratio, store source position, retain converter and first flag. Keep actual returned mapped position distinct from requested output position; do not round or preroll it into apparent equality."
+    },
+    {
+      "layer": "Read",
+      "recommendation": "Budget from the requested output count; preserve old first flag then clear it before budget0/read-error paths. Underlying seek must exactly match before this phase. Advance accessor source position only by successful actual source read count; return the converter-produced count."
+    },
+    {
+      "layer": "Conversion/format/gain",
+      "recommendation": "Bind the selected native format branch before choosing order. Downsample of actual PCM24 may quantize back to24 before later work; upsample may follow format/gain. Unity-only initial admission avoids unproved gain commutation."
+    },
+    {
+      "layer": "Output publication",
+      "recommendation": "Timeline success requires exactly the requested count. No automatic fill/read-until-full repair. Assemble an application block privately; if a nonrollback native/backend operation fails, stop/discard the accessor session instead of pretending converter state rolled back."
+    },
+    {
+      "layer": "Lifecycle and transport",
+      "recommendation": "A native read retry repeats read with unchanged request and without seek/reset. UI reconfiguration/revalidation can remain a declared fresh session policy until hosted seek/cache lifetime is bound. Cancellation destroys ownership only after the serial producer barrier."
+    }
+  ],
+  "concrete_native_controls": [
+    {
+      "id": "SEEK-F32",
+      "case": "Rin44100,Rout48000,requested48000",
+      "expected": "sourcePosition44099, returnedOutputPosition47998",
+      "discriminates": "Double-ratio mapping would produce44100; do not force the returned position to equal request."
+    },
+    {
+      "id": "SEEK-STATE",
+      "case": "Read a nonzero impulse/ramp block, seek forward/backward/same position, then read with the same converter. Compare against independently replayed retained state and deliberately fresh-reset history.",
+      "assert": "Seek changes position only; first flag and all filter/buffer counters are unchanged by seek itself."
+    },
+    {
+      "id": "FIRST-BUDGET",
+      "case": "Initial mode2 allowance, subsequent read, seek then another read; plus mode0/1 positive request whose native budget is0.",
+      "assert": "Allowance only under the bound first/policy/availability conjunction. Budget0 returns0 and consumes first; no invented source read or minimum count1."
+    },
+    {
+      "id": "ERROR-PHASE",
+      "case": "Backend seek mismatch/special code before budget; backend negative read after budget; converter error after backend consumption.",
+      "assert": "Trace exact calls and flags. Seek failure preserves first; post-budget read failure does not restore first. No output publication on application rejection; converter/backend mutation does not imply rollback."
+    },
+    {
+      "id": "EOF-TRUTH-TABLE",
+      "case": "Equal/unequal rate \u00d7 oldFirst true/false \u00d7 tell below/equal/above length \u00d7 actual count short/equal budget.",
+      "assert": "Unequal-rate flush is end && oldFirst && short; full EOF and later short EOF do not automatically flush. Do not equate a trimmed event end with source EOF."
+    },
+    {
+      "id": "RETRY",
+      "case": "Special-2147483645 once at exact segment start, away from start, repeated special, other negative,0,short,overlong.",
+      "assert": "Only exact-start special retries once; same buffer/request, no extra seek/reset. Exact positive requested result required."
+    },
+    {
+      "id": "PARTITION",
+      "case": "Same actual requested-window sequence reproduced by independent ledger; compare alternative4096/8192/odd sequences as discriminators, not required invariants. High-rate budgets exceeding65408 and unsafe mode1 capacity/terminal windows reject unless exact native internal split is reproduced.",
+      "assert": "Do not reuse prior full-file fixed8192 count oracle as an accessor-read oracle."
+    },
+    {
+      "id": "FORMAT",
+      "case": "Conditional PCM24 half-LSB ties, neighbors, asymmetric clamps and signed zero; nonunity gain on either side of quantization/filter.",
+      "assert": "Use APP016/accessor-pcm24-oracle-v2.json; neither PCM24 metadata nor passing Float32 kernel controls selects the actual branch."
+    },
+    {
+      "id": "CUSTODY-LIFETIME",
+      "case": "Source/report/media mutation between configurations; same media identity under two native source owners; cancel during producer work, stale completion, restart after rejection.",
+      "assert": "Proof failure cannot schedule old prepared audio. State sharing follows proven owner, not merely equal file hashes."
+    }
+  ],
+  "pending_evidence": [
+    "Concrete selected stream and accessor output-rate/format ownership (peer placed-rate-ownership study).",
+    "Converter configuration setters versus actual reset; terminal/post-final behavior (peer accessor-seek-state study).",
+    "Actual repeated-read output count/capacity invariants and necessary native split behavior.",
+    "Gain/layout/format ordering for any proposed nonunity/differing-rate application path."
+  ],
+  "limits": [
+    "This is an implementation boundary/control design, not a complete native accessor candidate or application acceptance.",
+    "No equality of file/accessor/timeline/project/device rates is inferred.",
+    "Original instructions support scoped static contracts; no proprietary runtime or export comparison was performed."
+  ]
+}

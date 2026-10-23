@@ -1,0 +1,1721 @@
+{
+  "status": "no source-level blockers within the bounded overlap admission",
+  "created_utc": "2026-10-23T04:17:50.736175+00:00",
+  "reviewer": "independent overlap semantic reviewer; author of the prior sealed independent static overlap review, not author of the application core",
+  "target_executed": false,
+  "shared_swift_build_run_by_reviewer": false,
+  "application_or_gui_executed_by_reviewer": false,
+  "native_runtime_comparisons": 0,
+  "scope": "Read-only review of APP021 application integration against sealed static overlap evidence and APP020 frozen sources. Existing overlap and partial explicit-fade research were not modified. Only this new review directory is owned by this review.",
+  "evidence_classification": {
+    "native_semantics": "Retained exact native readbacks, the sealed finding, and the prior independent semantic review. These are static evidence, not reference runtime observations.",
+    "kernel_comparisons": "Owner executed authored C against analytical models: 24 retained controls and 20000 clustered-epsilon cases, 4096-input quadratic case, 8191 nested fragments, and transactional rejections. This review verifies source pins and reads the result; it does not claim an independently repeated C run.",
+    "integration_tests": "Forward-authored importer graphs and patterned PCM media exercise application plumbing. These are not native-generated or proven native-valid projects.",
+    "ui": "Source-level review only. Native application GUI observation, release packaging, and full-suite execution are separate owner validation duties."
+  },
+  "sealed_research_and_kernel": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/track-overlaps/finding.json",
+      "bytes": 12766,
+      "sha256": "15c8365e3da4410ccfbc443f4bcef8f019c618fabd6347645be978f5de8cfe20"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/track-overlaps/artifact-manifest.json",
+      "bytes": 31819,
+      "sha256": "a0643cc0c0c1f14d626da5663765bde844b2ec2b20de15aa8f9fb8d2cf9b35dc"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/track-overlaps/independent-review-01/review.json",
+      "bytes": 36192,
+      "sha256": "17b2c5ba6db68e3d1e70bf131ebdf059bee0094416d6d02e04739fbc000dec48"
+    },
+    {
+      "path": "research/evidence/application/APP021/overlap-kernel-check/result.json",
+      "bytes": 3596,
+      "sha256": "5511483845e1207c9ae9e299731fcc75b5a32a55c851acda5b47f1385552b6d4"
+    }
+  ],
+  "review_recorder": {
+    "path": "research/evidence/application/APP021/overlap-application-independent-review/record_review.py",
+    "bytes": 13505,
+    "sha256": "9cc2e8d0b03b2d0e6a6ec8712510d1bbebf1360f4f9ddd28100dace9e79f27f7"
+  },
+  "semantic_checks": [
+    {
+      "topic": "Linked-list node identity and exact competition branches",
+      "result": "pass",
+      "detail": "C removes current before competing, preserves the exact following.next pointer before unlink/reinsertion, inserts tails after equal starts, and keeps original sourceIndex/ordinal/priority on clones. Competition uses current.end >= following.start and fabs of one separately rounded binary64 subtraction >= the exact 0x3f1a36e2eb1c432d epsilon. Equality competes. Sub-epsilon overlap bypasses priority and is resolved by publication watermark clamping. Prefix and tail tests retain their respective ordered comparisons and the same rounded-distance threshold. Publication starts from 0xc14b774000000000, clamps start and advances max-end before positive-length retention."
+    },
+    {
+      "topic": "Signed priority and original admitted contributor ordinal",
+      "result": "pass",
+      "detail": "Int32 priority comparisons are signed in Swift storage and C. Larger priority wins and equal priority uses larger original collector ordinal. Track admission requires every counted direct child to pass, making counted child order equal to admitted collector order in this restricted context. Source indices are checked against input positions; distinct nonnegative Int32 ordinals are checked without sorting. No new fragment can become a new contributor identity. The sealed native finding supports all Int32 saved priorities here; this is not an arbitrary priority-equals-one restriction."
+    },
+    {
+      "topic": "Original canonical placement and reader bounds",
+      "result": "pass",
+      "detail": "Canonical start/end/source offset are recovered once from the preserved CPR clock and scalar datum. Every normalized fragment passes those original values with its new canonical window to the native-builder reconstruction. No rounded parent or previous fragment is used as a new origin. Builder snapping and getter-end reader quantization remain separate. Valid builder-empty fragments are omitted and counted; malformed, incomplete or overlapping quantized reads reject before scheduling. Original full-event projection is metadata and may be nil; it does not impose complete unconverted source-read capacity on a fully covered interval. Original saved trim remains within source capacity for every contributor."
+    },
+    {
+      "topic": "Complete contributor and media proof including masked events",
+      "result": "pass",
+      "detail": "Track plan replays the immutable source and checks counted membership, each original object identity, root, containing node, ancestor track chain, retained source hash, clip and cluster. Unknown, nested, removed, duplicated or added contributors reject. Every entry must have an attachment; playback budgets, validates, reads, hashes and decodes every original source before constructing the stream, including completely masked events and the covered anchor. Only the audible fragments become descriptors. Prepare failure cannot install a partially checked track."
+    },
+    {
+      "topic": "Resource ownership and gain validation",
+      "result": "pass with explicit application limits",
+      "detail": "4096 original contributors and 8192 normalized descriptors are application limits. C uses a count+1 node pool, bounded output buffer, and 4*N*N+N comparison-visit guard; failures leave caller output and count unchanged. Playback counts all original source samples against 32000000 before decode. Immutable Source objects are shared by fragments of the same original contributor. Stream deduplicates with actual ObjectIdentifier rather than a caller-controlled key; distinct original sources remain conservatively counted even if their array backing happens to share. Full source/gain arithmetic checks are cached by actual Source identity plus gain bits. Ordinary callers retain the 4096-segment limit. The comparison guard is policy, not a native limit or a bound on every linked-list operation."
+    },
+    {
+      "topic": "Old single-event contract and host scheduling",
+      "result": "pass",
+      "detail": "All existing single-event placement wrappers still use requireDefault; completeMedia defaults to that policy and renderer/converter paths retain that default. Existing contract strings and full-event projection arithmetic remain. Only complete-track preparation requests normalizedTrack. Ancestor timing, stereo PCM24, whole-frame trim, zero fades, no inversion/lanes/warp and saved-root gates remain. The shared stream accessor cache continues to key lifetime to descriptor index, so selecting another fragment resets source state even when its immutable source storage is shared. StudioSession and AudioTransportEngine are unchanged relative to APP020; device scheduling remains application behavior."
+    },
+    {
+      "topic": "Metadata and UI describe the actual source audition",
+      "result": "pass after wording correction",
+      "detail": "Track metadata separates all original events from audible fragments and preserves per-original hashes, priorities and collector ordinals; covered anchors stay identifiable. Timeline source audition draws actual fragment reader ranges. Original events with no audible fragment remain selectable with a distinct nonaudible canonical outline and explanation. Inspection/banner distinguish source-event count, fragment count and snapped-empty omissions; track mode has its own accessibility label. Text describes source-derived offsets, saved clock without rate conversion, fresh default filtering, and unresolved project processing. Frozen import placement and unresolved project status remain unchanged."
+    }
+  ],
+  "resolved_review_notes": [
+    "The original UI phrase keep their original source offsets was imprecise for trimmed tails. It was changed to derive their offsets from the original event.",
+    "The banner originally exposed Source event audition mode in track mode. It now exposes Source track audition mode for a prepared source track."
+  ],
+  "blockers": [],
+  "limitations": [
+    "No Cubase process, library entrypoint or reference audio output was executed. Full Cubase fidelity is not established.",
+    "The admitted context is fresh root mode 0, a complete counted chronological direct all-passing plain track, saved supported whole project rate, accepted source clock, stereo PCM24 media, whole-frame source trim, no explicit/automatic fades, inversion, lanes, warp, mixer, routing, automation or host callbacks.",
+    "A track whose every normalized fragment snaps empty is rejected as having no audible frames; this milestone does not install an empty live source track.",
+    "Nonempty normalized fragments whose raw source reads would exceed media at the unconverted saved clock remain rejected.",
+    "Full-suite fixed-binary checks, release build and native GUI observations are separate milestone acceptance prerequisites. This review is not a replacement for them.",
+    "Earlier focused compiler failures are retained below rather than overwritten. Source syntax repairs do not constitute target-behavior measurements."
+  ],
+  "focused_owner_runs": [
+    {
+      "record": {
+        "path": "research/evidence/application/APP021/focused-tests-first.json",
+        "bytes": 545,
+        "sha256": "e1989a89c784f6e3746d1ddd58877b49fd2e99abeb955146c61820e3a4a166b4"
+      },
+      "exit_code": 1,
+      "log": {
+        "path": "research/evidence/application/APP021/focused-tests-first.log",
+        "bytes": 34093,
+        "sha256": "12e506c0642b6315bbda1f97aeda96724e9045788b500e4df2eb68e4d7b3b515"
+      }
+    },
+    {
+      "record": {
+        "path": "research/evidence/application/APP021/focused-tests-fourth.json",
+        "bytes": 547,
+        "sha256": "70a4e7e6e8f17a3594634d5d676a0be2744c3830c805bf4de694780db6ef1a7f"
+      },
+      "exit_code": 0,
+      "log": {
+        "path": "research/evidence/application/APP021/focused-tests-fourth.log",
+        "bytes": 12170,
+        "sha256": "171a4e172a176f732a28ffc8fe69500965520a9c4234e224d89fb2769bed9176"
+      }
+    },
+    {
+      "record": {
+        "path": "research/evidence/application/APP021/focused-tests-second.json",
+        "bytes": 546,
+        "sha256": "b105c2f2198ce2c08f1539ecb5290bc2410931ff9c50b572a4bfe58e1f53250b"
+      },
+      "exit_code": 1,
+      "log": {
+        "path": "research/evidence/application/APP021/focused-tests-second.log",
+        "bytes": 6904,
+        "sha256": "239aa6e762f99681238d3d2f2a390b22e8699fa4c3f154bf81d443f984b322bc"
+      }
+    },
+    {
+      "record": {
+        "path": "research/evidence/application/APP021/focused-tests-third.json",
+        "bytes": 545,
+        "sha256": "2780b39e24997234cf03c3d9ea07e15fb666fbbb739f6bfcce117a00d9eed213"
+      },
+      "exit_code": 1,
+      "log": {
+        "path": "research/evidence/application/APP021/focused-tests-third.log",
+        "bytes": 6936,
+        "sha256": "76f90886fba1481ad2c0e28da20215b64a1bac6c5d1c47b7c7f93d4adad4db7e"
+      }
+    }
+  ],
+  "source_changes_from_APP020": [
+    {
+      "before": {
+        "path": "research/evidence/application/APP020/final-source-snapshot/Sources/Rebase/CPRSourceAudioView.swift",
+        "bytes": 11220,
+        "sha256": "d557d4b71666eac2d2fba000e28fc5ad01647cf19e00771cb20f0ff1e1ff3aa5"
+      },
+      "after": {
+        "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+        "bytes": 11731,
+        "sha256": "542f4bb2bede7eace7a3c4beb0cc7800abadd6dcfb6db872cf269bc978319b14"
+      }
+    },
+    {
+      "before": {
+        "path": "research/evidence/application/APP020/final-source-snapshot/Sources/Rebase/RebaseApp.swift",
+        "bytes": 23662,
+        "sha256": "e4eb4e728511f3af412e0f545428ebc925223f75765b51f10287baf071d45d65"
+      },
+      "after": {
+        "path": "Application/Sources/Rebase/RebaseApp.swift",
+        "bytes": 24076,
+        "sha256": "fe6adcc9eaa1b7c759cef76575d02b5600de4a79a15a836cf41fce44b7c21482"
+      }
+    },
+    {
+      "before": {
+        "path": "research/evidence/application/APP020/final-source-snapshot/Sources/Rebase/TimelineView.swift",
+        "bytes": 28156,
+        "sha256": "aaeb4bbdac850226c63046ba196bf7794e6606336bfd75b66dd128164251339d"
+      },
+      "after": {
+        "path": "Application/Sources/Rebase/TimelineView.swift",
+        "bytes": 30121,
+        "sha256": "ed015187b61ffba11136d6847889b0b596ec329625f1015a0a7a46f06c6d7053"
+      }
+    },
+    {
+      "before": {
+        "path": "research/evidence/application/APP020/final-source-snapshot/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+        "bytes": 9920,
+        "sha256": "4d34133eac2884913b702fd865fbca361be92023838369eeab26235d18103819"
+      },
+      "after": {
+        "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+        "bytes": 11582,
+        "sha256": "e3418557863b20626b749f6f4a256d1804a65163b3a2272dbc806aa9b1d41a70"
+      }
+    },
+    {
+      "before": {
+        "path": "research/evidence/application/APP020/final-source-snapshot/Sources/RebaseCore/CPRPlacedSourceEventPlan.swift",
+        "bytes": 11044,
+        "sha256": "af220b38898a00238f40bb246cb42249bdb026bc037b18765077391e833ab43e"
+      },
+      "after": {
+        "path": "Application/Sources/RebaseCore/CPRPlacedSourceEventPlan.swift",
+        "bytes": 13624,
+        "sha256": "0adbd7edb6fba3076ab778edd32251dd2d8ecf98ea7c01b0de41efcf0bf515a5"
+      }
+    },
+    {
+      "before": {
+        "path": "research/evidence/application/APP020/final-source-snapshot/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+        "bytes": 13207,
+        "sha256": "0cf41ba17e410ad8cfd2a7283bda4424fa8929a6ea2a9b40f92093819a7f5adc"
+      },
+      "after": {
+        "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+        "bytes": 14230,
+        "sha256": "06451175c7c5d9266d6b5537272419aa2795361e03998f7e95825a27deda78d2"
+      }
+    },
+    {
+      "before": {
+        "path": "research/evidence/application/APP020/final-source-snapshot/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+        "bytes": 11848,
+        "sha256": "ad970bb38fc8029383b75daa72b9eb690ea46f4c8dd520f65bb42e2f3b04116a"
+      },
+      "after": {
+        "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+        "bytes": 11841,
+        "sha256": "06670defc8954a4c429fabd5e65049a593a851cdf674a4fc6bd65077297689ae"
+      }
+    },
+    {
+      "before": {
+        "path": "research/evidence/application/APP020/final-source-snapshot/Sources/RebaseCore/CPRSourceTrackPlan.swift",
+        "bytes": 6716,
+        "sha256": "8f291390fb0de9d5e5b4756cff6bd978a7f09158e79580ee6d2d361a553d2fb5"
+      },
+      "after": {
+        "path": "Application/Sources/RebaseCore/CPRSourceTrackPlan.swift",
+        "bytes": 8162,
+        "sha256": "5b448a8e815f1710e03da498f8fb63237794fb8f77510ea6405ea4deeb66e665"
+      }
+    },
+    {
+      "before": {
+        "path": "research/evidence/application/APP020/final-source-snapshot/Sources/RebaseCore/CPRSourceTrackPlayback.swift",
+        "bytes": 3186,
+        "sha256": "4ffb5727790bd16fa94741aa5aad63bf559195625e4e9dfdc4e2083e041f54c0"
+      },
+      "after": {
+        "path": "Application/Sources/RebaseCore/CPRSourceTrackPlayback.swift",
+        "bytes": 4460,
+        "sha256": "50fafb8d17143489e5542ffdff0b4a02816b2df4ac690daa1b0fb9c01d4dcc5f"
+      }
+    },
+    {
+      "before": {
+        "path": "research/evidence/application/APP020/final-source-snapshot/Sources/RebaseTimingDSP/include/module.modulemap",
+        "bytes": 668,
+        "sha256": "bbba43e4beaefc2a42469fbaa711c13ee9239135e438a0df7d5576282c3613c9"
+      },
+      "after": {
+        "path": "Application/Sources/RebaseTimingDSP/include/module.modulemap",
+        "bytes": 701,
+        "sha256": "deddf4e808d088850f5c69dfaffeca69078846733db557f71de7ffa381f6d986"
+      }
+    },
+    {
+      "before": {
+        "path": "research/evidence/application/APP020/final-source-snapshot/Tests/RebaseCoreTests/CPRSourceTrackPlaybackTests.swift",
+        "bytes": 12427,
+        "sha256": "d4eeaac0cbe57cc490578ca797be18168276bc0929daa158c9380617614fd1da"
+      },
+      "after": {
+        "path": "Application/Tests/RebaseCoreTests/CPRSourceTrackPlaybackTests.swift",
+        "bytes": 12402,
+        "sha256": "1967031bec45a49c0953d81775dd171e4c0847c198937d85c228aba7148715f5"
+      }
+    },
+    {
+      "before": {
+        "path": "research/evidence/application/APP020/final-source-snapshot/build-app.sh",
+        "bytes": 2947,
+        "sha256": "ab9e40c5b87a3b5bcfd791930bf4d902361d62c32f5418f9cf29b586623f697b"
+      },
+      "after": {
+        "path": "Application/build-app.sh",
+        "bytes": 2947,
+        "sha256": "0636d34009e0cba0c52ecb9d2cbc700dba64423a3dce06c0246e5b818e31142f"
+      }
+    }
+  ],
+  "source_additions_from_APP020": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRTrackOverlapNormalizer.swift",
+      "bytes": 2010,
+      "sha256": "fb0e91552fcc11645734f8105042b099d887b3843d882565af5e776e57aa645a"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_track_overlap.c",
+      "bytes": 6593,
+      "sha256": "9d012c451b189eb12c91693da6d3e21c0093a5529bd8e0f1b04c74f221ad893c"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_track_overlap.h",
+      "bytes": 1575,
+      "sha256": "e4a4224896e37306c54866e73526e716895abebf7dcf1b3a073542a713a4f01a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceFragmentProjectionTests.swift",
+      "bytes": 6130,
+      "sha256": "bc8e8eb43782cbfad808605ea49de6fd9ab5814d964fc1ad3697f525493fda9f"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceTrackOverlapPlaybackTests.swift",
+      "bytes": 14684,
+      "sha256": "f95ddc1f25f076b7574fa9198ef0209909907faa35c90f3826439208bc59cc81"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRTrackOverlapNormalizerTests.swift",
+      "bytes": 7035,
+      "sha256": "22c0db7a24d64e6d604250ca60f364567570c0e7d2c4e404bd95783c33659438"
+    }
+  ],
+  "source_missing_from_APP020": [],
+  "source_before": [
+    {
+      "path": "Application/Package.resolved",
+      "bytes": 397,
+      "sha256": "1a98ca9308ca05618cdb7c709b01085f862a8d4eaec30514dba132dc5c386d28"
+    },
+    {
+      "path": "Application/Package.swift",
+      "bytes": 1868,
+      "sha256": "95831a7c96a4a59f60c97045a07e392ded69271a2c8fa1f53db97d10db843458"
+    },
+    {
+      "path": "Application/Sources/Rebase/AmbisonicExport.swift",
+      "bytes": 2026,
+      "sha256": "954e244ccce2fb9735c3a18ba5f09ae80bccf32b680a33330325b99ff2ea4827"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRImportReview.swift",
+      "bytes": 5553,
+      "sha256": "61789fecd70c892bd742553a41d98bc4807d643e7168fb53db3ca3886461c242"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+      "bytes": 11731,
+      "sha256": "542f4bb2bede7eace7a3c4beb0cc7800abadd6dcfb6db872cf269bc978319b14"
+    },
+    {
+      "path": "Application/Sources/Rebase/MixerView.swift",
+      "bytes": 12095,
+      "sha256": "b4650e994ae5fb7fe3c68932b1de66ddf0dafd2c0a6e40ec7749dcc269589df0"
+    },
+    {
+      "path": "Application/Sources/Rebase/ProjectEditors.swift",
+      "bytes": 14100,
+      "sha256": "8d58dfb6f3bbf2ae73b2890e06ac3210d2eae48020cead20db225e41bd8e4c79"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "bytes": 24076,
+      "sha256": "fe6adcc9eaa1b7c759cef76575d02b5600de4a79a15a836cf41fce44b7c21482"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 38996,
+      "sha256": "0f028211270b03149e439b05908adf7f698d6582a72722d34c56f65c9fecd1f4"
+    },
+    {
+      "path": "Application/Sources/Rebase/TimelineView.swift",
+      "bytes": 30121,
+      "sha256": "ed015187b61ffba11136d6847889b0b596ec329625f1015a0a7a46f06c6d7053"
+    },
+    {
+      "path": "Application/Sources/RebaseAmbiDSP/ambi_processor.c",
+      "bytes": 11103,
+      "sha256": "63908b7352e8e3e72baf545348ab0cd8d54c81a6ebaedfab5528141afe76d726"
+    },
+    {
+      "path": "Application/Sources/RebaseAmbiDSP/include/ambi_processor.h",
+      "bytes": 3531,
+      "sha256": "d132434743a64bb48de6d63d0d1c73d74813eac51e5ccb3b21a4661498ea4062"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AmbisonicConverter.swift",
+      "bytes": 14393,
+      "sha256": "6caf356e617015012e0b9845bab58bbd812c6fc510e19e48db74107e030138dc"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "bytes": 10183,
+      "sha256": "71546c1169e2ddfeb563052159021ae19e7248ef37460ebe10b29b80955d8bd0"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Automation.swift",
+      "bytes": 4085,
+      "sha256": "b3cf8cdafcb4d799520ad9bfa969a3e1fd04e776405051b446e242bc8738170b"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioEventArchive.swift",
+      "bytes": 20165,
+      "sha256": "4dd8369fe4cc35c969da0909cc4ec835dc7c5c951197eb0fec9ae23bec7b7421"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioMediaAttachment.swift",
+      "bytes": 5034,
+      "sha256": "32ae14bc2db468a1ccb3ba9f15e090ff94c01ab79add0d5d9e1504cadb9f6e92"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAutoFadeArchive.swift",
+      "bytes": 15962,
+      "sha256": "b2cfa53d6e66461e792c31b80c0821a118fa6dbecf77b58843c97ebe5b83fae4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRClockRoles.swift",
+      "bytes": 5895,
+      "sha256": "b73cb45c6663be109e91ba7eecf63dca8c54dcfacdea47adbf7a9b41aba6366d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRLiveCallbackAdapter.swift",
+      "bytes": 1312,
+      "sha256": "f9c4ac8cfa03fa3aeb5fcd23c112a254916a6bf480899c60c3925f357b3120a3"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRLiveStereoTransfer.swift",
+      "bytes": 2297,
+      "sha256": "484361ae02a1d116e2d05da7d1811cb36ef8503aa3a872f522da0ca8469e3a00"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeAudioAccessor.swift",
+      "bytes": 10508,
+      "sha256": "0045544a4ddff95bf1badaa42b5dca58de43c994c389527182d2121a91fb27da"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 11582,
+      "sha256": "e3418557863b20626b749f6f4a256d1804a65163b3a2272dbc806aa9b1d41a70"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRPlacedSourceEventPlan.swift",
+      "bytes": 13624,
+      "sha256": "0adbd7edb6fba3076ab778edd32251dd2d8ecf98ea7c01b0de41efcf0bf515a5"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "bytes": 25075,
+      "sha256": "b4d8ecc082bb3ba4411051941bb8c6925d987de21a58056d07ed9186a1630282"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRProjectAudioSetup.swift",
+      "bytes": 6553,
+      "sha256": "465870ea6a48640b78eda15fd8b66cc11aaec32c62c944cb5539c77aab75bd1d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "bytes": 16107,
+      "sha256": "01654e81697d79c6bb2244c004580ffee8b5d202dd64a54f14f84db4098516ce"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateReadBudget.swift",
+      "bytes": 4141,
+      "sha256": "cdc56ac4a12d2a386dc7b5c7864220762d7e187c7fb258d71ee9639d0a87523e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV1.swift",
+      "bytes": 19302,
+      "sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV2.swift",
+      "bytes": 6252,
+      "sha256": "6183ca0ea72f992cf00d1fd4aab5a9c0a014e764988d6ae7bacf89e83386a836"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV3.swift",
+      "bytes": 12082,
+      "sha256": "66d68787d337781075e7d691709d363bb2862c7f381c9a0c8c6ed888c376b949"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV4.swift",
+      "bytes": 10093,
+      "sha256": "311ef0ad0f120d7406b0e8469312f2e9d0083f348f52ea6704a4aa57e226f3ad"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV5.swift",
+      "bytes": 2526,
+      "sha256": "95d503bbbc98fc8599bbfb232e7226078e60d351513f8bf452e87f06f6fab3b7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSegmentReadPlan.swift",
+      "bytes": 5048,
+      "sha256": "af56297a268184c07c58657beef5e7d67eb794b622614536992f65714752cae0"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSignatureRecovery.swift",
+      "bytes": 12412,
+      "sha256": "46a1f0a1c3893d1483e02aed4dd441e4c1cfca26252964a632f464ccf0a937ee"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 14230,
+      "sha256": "06451175c7c5d9266d6b5537272419aa2795361e03998f7e95825a27deda78d2"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 11841,
+      "sha256": "06670defc8954a4c429fabd5e65049a593a851cdf674a4fc6bd65077297689ae"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8748,
+      "sha256": "447e435835317ff3a0fb66dfeb855fa24b79d42106694d0ce9acebc9bbfab9d7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceTrackPlan.swift",
+      "bytes": 8162,
+      "sha256": "5b448a8e815f1710e03da498f8fb63237794fb8f77510ea6405ea4deeb66e665"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceTrackPlayback.swift",
+      "bytes": 4460,
+      "sha256": "50fafb8d17143489e5542ffdff0b4a02816b2df4ac690daa1b0fb9c01d4dcc5f"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRStreamPlaybackQueue.swift",
+      "bytes": 4965,
+      "sha256": "db806fa154391729bb2605b38402f0e3aa204551fb723eeaeac0d039f2ab9eda"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRTimelineSelection.swift",
+      "bytes": 1730,
+      "sha256": "b08ace23f823c5bf28b54bea8fa32e531234569378574ab6257b7caf9b735e30"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRTrackContributorArchive.swift",
+      "bytes": 10198,
+      "sha256": "25e9cc29d0fb1d36ad0170f203f20680c900636c69dbe6cdcb50b6ab15be0875"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRTrackOverlapNormalizer.swift",
+      "bytes": 2010,
+      "sha256": "fb0e91552fcc11645734f8105042b099d887b3843d882565af5e776e57aa645a"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/DAWProject.swift",
+      "bytes": 41274,
+      "sha256": "6a5e44ee6abbdeb80c09b6bcfbba10154f47c4dd6c623e758f48c9cdda40c82a"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/MusicalTime.swift",
+      "bytes": 13097,
+      "sha256": "65147c496c370a025fbacc296b9910b850632230ff593d9ff4009fbceb7aaa45"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/NativeTempoClock.swift",
+      "bytes": 9531,
+      "sha256": "944e6e5afa20b38959fef0458dc580df4a095df8f64b01d47024a47ff8718979"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/OfflineRenderer.swift",
+      "bytes": 13919,
+      "sha256": "b579e6d9f84e64c9efdb7164a7f701169f5ecd5ed2fb7606a634c5725e89c6bc"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "bytes": 13611,
+      "sha256": "5c7837be4d55f371591fcee99cb6663aaf4f346832a21180d46568193ad3fd1d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 13673,
+      "sha256": "e426e17e26303faa9752f049652c4c08c5365e3c97c606cec387a05b1a504d39"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/UnresolvedCPRAudioEvent.swift",
+      "bytes": 3139,
+      "sha256": "9986f9e3c05cf3c0b949ef8b7ddad7ad0c49d1b17aa38f85d6644896fff26e34"
+    },
+    {
+      "path": "Application/Sources/RebaseDSP/ambi_first_order.c",
+      "bytes": 5231,
+      "sha256": "b2af5f8622fa3c336f0c6c6abbb59ddf79151107bfe8e31a23c09dd2a9a1d240"
+    },
+    {
+      "path": "Application/Sources/RebaseDSP/include/ambi_first_order.h",
+      "bytes": 1123,
+      "sha256": "b1103f9cc0450db33aa1331297306e2619998d069cada1e4a919573df8dd0135"
+    },
+    {
+      "path": "Application/Sources/RebaseSoXR/include/rebase_soxr.h",
+      "bytes": 1200,
+      "sha256": "81cce53e899e4360b831702a3be0365ac99f772bef9e5e721a10b079db3af658"
+    },
+    {
+      "path": "Application/Sources/RebaseSoXR/rebase_soxr.c",
+      "bytes": 2538,
+      "sha256": "6b2f8a18be586f58d7e43647874c781dd956c828ae88c366aba56b2a99beb0fe"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_format.c",
+      "bytes": 2665,
+      "sha256": "2ffadf89dba582bb7b17dedb732655ed83a2e403ebd351b313d5f2d0d65c6b92"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_seek.c",
+      "bytes": 2274,
+      "sha256": "355b2818498bf35bc756ab671fbb4aa64cadd6dc823f54ed386bfb5bf997581e"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_event_pcm.c",
+      "bytes": 2813,
+      "sha256": "4180d6062120ba0de5c284d886f5170fb0cd79d65edfbdc936b8b7b286130939"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_live_stereo_ring.c",
+      "bytes": 6008,
+      "sha256": "d9ac1d96873fe79ed313ed80fc7b53498b6764cac0ebd356626a407002ac389a"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_rate_budget.c",
+      "bytes": 5789,
+      "sha256": "76cbf90501ed9512057da1f91fb725e26d07b538f444d5a911926e0587e111fb"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_builder.c",
+      "bytes": 4119,
+      "sha256": "f744ebced17794fcb62f3a36e0d10c8bb1c735aa769612ffb652e546b28464df"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_reader.c",
+      "bytes": 8196,
+      "sha256": "6697ca1b9ce8725324362b2da54ac6432b1d64c8dcbb48adfc3464322dba4e0b"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_selector.c",
+      "bytes": 1907,
+      "sha256": "fc4c02d437de57103592dd08cd1579567a1ba45bafe329943e1d1971db94f919"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_track_overlap.c",
+      "bytes": 6593,
+      "sha256": "9d012c451b189eb12c91693da6d3e21c0093a5529bd8e0f1b04c74f221ad893c"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_format.h",
+      "bytes": 1239,
+      "sha256": "bc4c2facbd574bc81359c4ef40b859cc98a8c0b3a5c944692f8b463147e390bd"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_seek.h",
+      "bytes": 803,
+      "sha256": "b68cb079ce507d9775560c08ba3bd384fec873ac5e2d0812a907013fe3745db4"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_event_pcm.h",
+      "bytes": 783,
+      "sha256": "75f6da9eb338c2dbcf15d45a5f3f366c10a66ebf6e9634f63a8e39c3d30e77f7"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_live_stereo_ring.h",
+      "bytes": 2813,
+      "sha256": "a2a7091e77813800edcde35f58b570dce9a7fae2b27cede3c89515eeaefcba4a"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_rate_budget.h",
+      "bytes": 1528,
+      "sha256": "3110d27e2ab99a18d3b26722e489b6b5b492648a7ba57e9a1b0e5e938ccf170e"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_builder.h",
+      "bytes": 2942,
+      "sha256": "4ce5d6eeb4229a706b86fd6a98a4a7be3731e6f459242a60a5fbe86b45d7c488"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_reader.h",
+      "bytes": 4390,
+      "sha256": "910475ed5c486c662c0f0893097cfbc4551b9be5922f5fcdb398941701373014"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_selector.h",
+      "bytes": 1078,
+      "sha256": "e18da95522c4a9d73b1393ce48b6110e7a00bec1f5a935b952d758c22eca2af7"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_track_overlap.h",
+      "bytes": 1575,
+      "sha256": "e4a4224896e37306c54866e73526e716895abebf7dcf1b3a073542a713a4f01a"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/module.modulemap",
+      "bytes": 701,
+      "sha256": "deddf4e808d088850f5c69dfaffeca69078846733db557f71de7ffa381f6d986"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_callback_adapter.h",
+      "bytes": 3863,
+      "sha256": "15c3d1a6f7ac1310d4c0c1ade8b86c0e593f8bfab0c0a8eeb8a55b93140ad02f"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0.h",
+      "bytes": 1958,
+      "sha256": "9c3c7185a93dd54beff48dec9618c8abd69f68f01084adad30d4c4436a4cc19f"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0_down.h",
+      "bytes": 2587,
+      "sha256": "852af4ccba424e561634949674d2fd9788715fb2ac68e9bf4e5d8082e3adea3c"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode1.h",
+      "bytes": 3681,
+      "sha256": "25cdbb819f84bddf8a6d756a16954f2ee439309668efdbe72fb8d394dcdf0bb4"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode2.h",
+      "bytes": 3919,
+      "sha256": "e125e7965509e74ed5e0c5302bae35f2dd5e642f6f92ccb60388954ada2bb9e7"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_tempo.h",
+      "bytes": 1878,
+      "sha256": "1f3da5deac941e7a1cc6a0f5c9a5d7d4da4fda3cc1c5928eb5a5d627cd623b70"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_callback_adapter.c",
+      "bytes": 7718,
+      "sha256": "5571b47c55c7b9f8360ac7bf7daced681e93b98f1348ff2585f2b75b7330d74b"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0.c",
+      "bytes": 5859,
+      "sha256": "9cf22cb496e5eac010c0e027286927bdf68ef4181c195d30c30b0df2304bd7fa"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0_down.c",
+      "bytes": 10145,
+      "sha256": "e85877ab7c33c8ef9c6bf16124125504a545e3a057e4d3ec6838729bd0df676f"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode1.c",
+      "bytes": 13301,
+      "sha256": "9dd346c5f1a3f27d188e3475a8db6d92ddfbeb92da10c02af4b45b2741d66a80"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode2.c",
+      "bytes": 12402,
+      "sha256": "31d246b317726458bc46c747d37a8e2ae1d582b70a55d7b69d99b2c728016380"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_tempo.c",
+      "bytes": 7951,
+      "sha256": "5bd8632d38cad4c4b240ffcad58ec4ceb304ab23bb93483657028e085655aefb"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/AmbisonicConverterTests.swift",
+      "bytes": 16561,
+      "sha256": "1295abfb8acae18d13e9262de837dfbc237b23325fd6e778905050a2fb99ba2c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/AudioValidityTests.swift",
+      "bytes": 4710,
+      "sha256": "1b0fef9ad5daa646f32b932496e7acc13232e4be8acf3fad5cd539fa67de66a6"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/AutomationTests.swift",
+      "bytes": 3458,
+      "sha256": "8c772f1723ec1f45e4be512c2984f550c46acc1f47cc800d1fe7207ab2540d36"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRAudioEventArchiveTests.swift",
+      "bytes": 16589,
+      "sha256": "2a5d90074132c4b888bc7d8b54c9799927d6385c110cda247e3a95609120db22"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRAudioMediaAttachmentTests.swift",
+      "bytes": 22919,
+      "sha256": "d6ab421a6d247c31828317f58153cb220623632f22b402ab592cc55d52ab3fff"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRAutoFadeArchiveTests.swift",
+      "bytes": 17339,
+      "sha256": "b96bb89b7c9f85f1d7de90e348387c24a6848648ba7f1d6b0bb995fe1720e0b0"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRLiveCallbackAdapterTests.swift",
+      "bytes": 2603,
+      "sha256": "2ebc43674ad46c15b05523d459c10e08b0a9f368dcdaa5216d2c5b45a5cd8297"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRLiveStereoRingTests.swift",
+      "bytes": 9244,
+      "sha256": "198f65e6bb966038be8e8a4c503ee9d5e604e610ee34bdc5dbc376e99c719f04"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRMode1StreamTests.swift",
+      "bytes": 6737,
+      "sha256": "7ed542e413ea8030df48f3551ed8e722be4969ba0f371b4071884091a139e9c2"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRMode2StreamTests.swift",
+      "bytes": 6679,
+      "sha256": "39dd2f7e56416c2d60ee6f3a645862896e190a9b87909c8d8249571899f729a3"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeAccessorGainTests.swift",
+      "bytes": 13073,
+      "sha256": "fbec217ca2d0304fdf333175c9df13d2cb6012f8a9c1656a82c6f30ed4eb9fb3"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeAudioAccessorTests.swift",
+      "bytes": 13713,
+      "sha256": "732bbe5def2c32bc892bf08a3fe971cacbc9f05ec720535dcbd206d37041ef13"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeProjectClockTests.swift",
+      "bytes": 9729,
+      "sha256": "9ad034089c6908360a005636ac3c8b8e61f65cc53f6092fac97bb4faef666c1f"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeTimelineStreamTests.swift",
+      "bytes": 16322,
+      "sha256": "3e32d68e250a5c44ca8991a5f508116785fc4efd19c29fe2ceb4ae00c4974d0b"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRPlacedSourceContextTests.swift",
+      "bytes": 6115,
+      "sha256": "69242a5321e1bdaa5d07a1d4a7eb905f1078964543631d68b0c1de3ae0f80f23"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRPlacedSourceEventTests.swift",
+      "bytes": 33631,
+      "sha256": "d9be242fb4ee09794ffb02d0847fd2fbd5b9820524b2db7c151d7722f2c68ec0"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectAudioSetupTests.swift",
+      "bytes": 13691,
+      "sha256": "fb59d8242ad175c71501e50684967ea463742772420278b20b696d56c5008601"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectTests.swift",
+      "bytes": 45512,
+      "sha256": "e8ba763bb55b2ed3b0ee2ddd3fcc30ee05ee6ca7bf7f30d60ba83e0631f18264"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRateConvertedStreamTests.swift",
+      "bytes": 7693,
+      "sha256": "8a3cb0b932e12d770d8a29eda610c87a82cf3438d7788a2c967df66079f9fdb3"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRateReadBudgetTests.swift",
+      "bytes": 11180,
+      "sha256": "fac825d568adecf5e80b9607ded9ab0e5f0a92b6093ac7d964ff561707233b64"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRecoveryV3Tests.swift",
+      "bytes": 18402,
+      "sha256": "013297d3a33f1bd16753749337cd7616faf2445cef1943cbff6cce58886fbd88"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRecoveryV4Tests.swift",
+      "bytes": 19608,
+      "sha256": "00d8e4853354f3db17f2f4d6cce8837f89719d6683778d9267c4d315e70e628e"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSegmentReadPlanTests.swift",
+      "bytes": 10014,
+      "sha256": "3b78f2abdc0f531b08776a70f7deb3b163395a37ced25d65704003ba1f7071af"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSignatureRecoveryTests.swift",
+      "bytes": 11870,
+      "sha256": "e2e6f676418c53ed760de242e5204ce2e1dc01c9d293349ee759c36aa5680a98"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceEventPlaybackTests.swift",
+      "bytes": 31439,
+      "sha256": "63fabb18927da11c93717af73732cc50a6636abbed5eb182684300c4cbcd38b1"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceEventRendererTests.swift",
+      "bytes": 11881,
+      "sha256": "5f1dc23fe71cff8679d44ef6340f15e16bf9d4c146eb9273512083420885d837"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceFragmentProjectionTests.swift",
+      "bytes": 6130,
+      "sha256": "bc8e8eb43782cbfad808605ea49de6fd9ab5814d964fc1ad3697f525493fda9f"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceTrackOverlapPlaybackTests.swift",
+      "bytes": 14684,
+      "sha256": "f95ddc1f25f076b7574fa9198ef0209909907faa35c90f3826439208bc59cc81"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceTrackPlaybackTests.swift",
+      "bytes": 12402,
+      "sha256": "1967031bec45a49c0953d81775dd171e4c0847c198937d85c228aba7148715f5"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRStreamPlaybackQueueTests.swift",
+      "bytes": 15384,
+      "sha256": "5401c4cbae7ad971ce2aa922ddc99182b0e06caeafee2d754d34d7206406f12c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRTimelineSelectionTests.swift",
+      "bytes": 6161,
+      "sha256": "d5f06a3ac0a35a9e5466547c0ce2138c84b276ca69f13e81ccae7daf3211586c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRTrackContributorArchiveTests.swift",
+      "bytes": 17990,
+      "sha256": "5ce65b280190dc43ff055444b2aaa6e789213fb075acd3d9f796d09fc2b1de2c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRTrackOverlapNormalizerTests.swift",
+      "bytes": 7035,
+      "sha256": "22c0db7a24d64e6d604250ca60f364567570c0e7d2c4e404bd95783c33659438"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/DAWProjectTests.swift",
+      "bytes": 15358,
+      "sha256": "1cf2c7b1666e78330556e4738938dae655493cafe7e4b9ef6550ec1fdd99696d"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/InvalidClipIntervalTests.swift",
+      "bytes": 3332,
+      "sha256": "7ddee37b29c522c0f326cf72babd5b17c874d5fbd8eaa8959f029c00650dbc7c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/MusicalTimeTests.swift",
+      "bytes": 9123,
+      "sha256": "006062768dce1661baa344f6b7c7ea667d8222814d2d6761b189f1ede3da3cb0"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeCallbackAdapterTests.swift",
+      "bytes": 9249,
+      "sha256": "46fbe3a28fd2f8c29cc63412c33b7b67dcbfa318689cddf95640a848361e7575"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeMapClockTests.swift",
+      "bytes": 7283,
+      "sha256": "2bce9dbcc7911d894d40ac7d0af3a0fd7f335e2bd4fe9b9bec30d3e203c932fb"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeMapKernelTests.swift",
+      "bytes": 4639,
+      "sha256": "1a6fd199bdf3130726cdfaa1b617c663c510e73fc4367df175f0420ba616d5f4"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode0DownTests.swift",
+      "bytes": 17351,
+      "sha256": "1d8da2cc6a8484b84583eceacbdb80f80a9255e5f449ad56f9641854f84dc310"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode0Tests.swift",
+      "bytes": 17213,
+      "sha256": "c44b27a216a0d379bc861660b47bf5cea7a910c4d036a459c8e9505642ecddcf"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode1Tests.swift",
+      "bytes": 12583,
+      "sha256": "ff5ee7fecd27064129b432cebb2978a4d336a031e400819785b6f1b51df456e8"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode2Tests.swift",
+      "bytes": 19713,
+      "sha256": "eb32b61fb22b286a577b18f87ede54453dd448c8870c5e11a4a5148a6ce06041"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeTempoClockTests.swift",
+      "bytes": 9662,
+      "sha256": "a5f112f10cf2392ef5ce07dddad4a33c27e790272a6286b7e6b1c5b274044bc2"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeTimelineBuilderTests.swift",
+      "bytes": 4487,
+      "sha256": "a3cf88e6a70a2ec80ac96d866a3e4dbda53b0f6c255b4cae0aca7de784a99a4a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeTimelineReaderTests.swift",
+      "bytes": 9346,
+      "sha256": "a6407c569598b3c72ad7510f4b3cff232e589474745d80000ed5955aff4063a8"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/OfflineRendererTests.swift",
+      "bytes": 6491,
+      "sha256": "0494f4934bb71716c3cab05f85590461b7f103d6ccdd98249b4668f158a9e2dc"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/ProjectBehaviorTests.swift",
+      "bytes": 4854,
+      "sha256": "ca239f0e4700ac5d23c09da497140b768a2c0fb24eea82837f3a0643f3321016"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/ProjectStoreTests.swift",
+      "bytes": 3992,
+      "sha256": "9d74c77db57d88454db3680cb5dec769dff8bc6fe767c4de9f5e808ba1a9dca3"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/RecoveredDSPTests.swift",
+      "bytes": 5254,
+      "sha256": "fab23af6773bb0f2f7ff75aa79b21ab0233d4b9d3ff0cbec55676cfcf7918c3a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/TestSupport.swift",
+      "bytes": 4144,
+      "sha256": "65b3aaf7db8d59c07f1c0fff15d5fc45a5afbbc126b01985ce82a74c28807e1e"
+    },
+    {
+      "path": "Application/build-app.sh",
+      "bytes": 2947,
+      "sha256": "0636d34009e0cba0c52ecb9d2cbc700dba64423a3dce06c0246e5b818e31142f"
+    },
+    {
+      "path": "Application/test-app.sh",
+      "bytes": 653,
+      "sha256": "ee23ef379333d361990125d781289d8b588434b81ffff2bbe815aed5f4b907c6"
+    }
+  ],
+  "source_after": [
+    {
+      "path": "Application/Package.resolved",
+      "bytes": 397,
+      "sha256": "1a98ca9308ca05618cdb7c709b01085f862a8d4eaec30514dba132dc5c386d28"
+    },
+    {
+      "path": "Application/Package.swift",
+      "bytes": 1868,
+      "sha256": "95831a7c96a4a59f60c97045a07e392ded69271a2c8fa1f53db97d10db843458"
+    },
+    {
+      "path": "Application/Sources/Rebase/AmbisonicExport.swift",
+      "bytes": 2026,
+      "sha256": "954e244ccce2fb9735c3a18ba5f09ae80bccf32b680a33330325b99ff2ea4827"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRImportReview.swift",
+      "bytes": 5553,
+      "sha256": "61789fecd70c892bd742553a41d98bc4807d643e7168fb53db3ca3886461c242"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+      "bytes": 11731,
+      "sha256": "542f4bb2bede7eace7a3c4beb0cc7800abadd6dcfb6db872cf269bc978319b14"
+    },
+    {
+      "path": "Application/Sources/Rebase/MixerView.swift",
+      "bytes": 12095,
+      "sha256": "b4650e994ae5fb7fe3c68932b1de66ddf0dafd2c0a6e40ec7749dcc269589df0"
+    },
+    {
+      "path": "Application/Sources/Rebase/ProjectEditors.swift",
+      "bytes": 14100,
+      "sha256": "8d58dfb6f3bbf2ae73b2890e06ac3210d2eae48020cead20db225e41bd8e4c79"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "bytes": 24076,
+      "sha256": "fe6adcc9eaa1b7c759cef76575d02b5600de4a79a15a836cf41fce44b7c21482"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 38996,
+      "sha256": "0f028211270b03149e439b05908adf7f698d6582a72722d34c56f65c9fecd1f4"
+    },
+    {
+      "path": "Application/Sources/Rebase/TimelineView.swift",
+      "bytes": 30121,
+      "sha256": "ed015187b61ffba11136d6847889b0b596ec329625f1015a0a7a46f06c6d7053"
+    },
+    {
+      "path": "Application/Sources/RebaseAmbiDSP/ambi_processor.c",
+      "bytes": 11103,
+      "sha256": "63908b7352e8e3e72baf545348ab0cd8d54c81a6ebaedfab5528141afe76d726"
+    },
+    {
+      "path": "Application/Sources/RebaseAmbiDSP/include/ambi_processor.h",
+      "bytes": 3531,
+      "sha256": "d132434743a64bb48de6d63d0d1c73d74813eac51e5ccb3b21a4661498ea4062"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AmbisonicConverter.swift",
+      "bytes": 14393,
+      "sha256": "6caf356e617015012e0b9845bab58bbd812c6fc510e19e48db74107e030138dc"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "bytes": 10183,
+      "sha256": "71546c1169e2ddfeb563052159021ae19e7248ef37460ebe10b29b80955d8bd0"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Automation.swift",
+      "bytes": 4085,
+      "sha256": "b3cf8cdafcb4d799520ad9bfa969a3e1fd04e776405051b446e242bc8738170b"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioEventArchive.swift",
+      "bytes": 20165,
+      "sha256": "4dd8369fe4cc35c969da0909cc4ec835dc7c5c951197eb0fec9ae23bec7b7421"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAudioMediaAttachment.swift",
+      "bytes": 5034,
+      "sha256": "32ae14bc2db468a1ccb3ba9f15e090ff94c01ab79add0d5d9e1504cadb9f6e92"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRAutoFadeArchive.swift",
+      "bytes": 15962,
+      "sha256": "b2cfa53d6e66461e792c31b80c0821a118fa6dbecf77b58843c97ebe5b83fae4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRClockRoles.swift",
+      "bytes": 5895,
+      "sha256": "b73cb45c6663be109e91ba7eecf63dca8c54dcfacdea47adbf7a9b41aba6366d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRLiveCallbackAdapter.swift",
+      "bytes": 1312,
+      "sha256": "f9c4ac8cfa03fa3aeb5fcd23c112a254916a6bf480899c60c3925f357b3120a3"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRLiveStereoTransfer.swift",
+      "bytes": 2297,
+      "sha256": "484361ae02a1d116e2d05da7d1811cb36ef8503aa3a872f522da0ca8469e3a00"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeAudioAccessor.swift",
+      "bytes": 10508,
+      "sha256": "0045544a4ddff95bf1badaa42b5dca58de43c994c389527182d2121a91fb27da"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeTimelineStream.swift",
+      "bytes": 11582,
+      "sha256": "e3418557863b20626b749f6f4a256d1804a65163b3a2272dbc806aa9b1d41a70"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRPlacedSourceEventPlan.swift",
+      "bytes": 13624,
+      "sha256": "0adbd7edb6fba3076ab778edd32251dd2d8ecf98ea7c01b0de41efcf0bf515a5"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRProject.swift",
+      "bytes": 25075,
+      "sha256": "b4d8ecc082bb3ba4411051941bb8c6925d987de21a58056d07ed9186a1630282"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRProjectAudioSetup.swift",
+      "bytes": 6553,
+      "sha256": "465870ea6a48640b78eda15fd8b66cc11aaec32c62c944cb5539c77aab75bd1d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "bytes": 16107,
+      "sha256": "01654e81697d79c6bb2244c004580ffee8b5d202dd64a54f14f84db4098516ce"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateReadBudget.swift",
+      "bytes": 4141,
+      "sha256": "cdc56ac4a12d2a386dc7b5c7864220762d7e187c7fb258d71ee9639d0a87523e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV1.swift",
+      "bytes": 19302,
+      "sha256": "362776c80b64214edcc9c1cc66b8741bd68b4466767836a1ba8763ffbd866fc4"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV2.swift",
+      "bytes": 6252,
+      "sha256": "6183ca0ea72f992cf00d1fd4aab5a9c0a014e764988d6ae7bacf89e83386a836"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV3.swift",
+      "bytes": 12082,
+      "sha256": "66d68787d337781075e7d691709d363bb2862c7f381c9a0c8c6ed888c376b949"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV4.swift",
+      "bytes": 10093,
+      "sha256": "311ef0ad0f120d7406b0e8469312f2e9d0083f348f52ea6704a4aa57e226f3ad"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRecoveryV5.swift",
+      "bytes": 2526,
+      "sha256": "95d503bbbc98fc8599bbfb232e7226078e60d351513f8bf452e87f06f6fab3b7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSegmentReadPlan.swift",
+      "bytes": 5048,
+      "sha256": "af56297a268184c07c58657beef5e7d67eb794b622614536992f65714752cae0"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSignatureRecovery.swift",
+      "bytes": 12412,
+      "sha256": "46a1f0a1c3893d1483e02aed4dd441e4c1cfca26252964a632f464ccf0a937ee"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 14230,
+      "sha256": "06451175c7c5d9266d6b5537272419aa2795361e03998f7e95825a27deda78d2"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventPlayback.swift",
+      "bytes": 11841,
+      "sha256": "06670defc8954a4c429fabd5e65049a593a851cdf674a4fc6bd65077297689ae"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 8748,
+      "sha256": "447e435835317ff3a0fb66dfeb855fa24b79d42106694d0ce9acebc9bbfab9d7"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceTrackPlan.swift",
+      "bytes": 8162,
+      "sha256": "5b448a8e815f1710e03da498f8fb63237794fb8f77510ea6405ea4deeb66e665"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceTrackPlayback.swift",
+      "bytes": 4460,
+      "sha256": "50fafb8d17143489e5542ffdff0b4a02816b2df4ac690daa1b0fb9c01d4dcc5f"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRStreamPlaybackQueue.swift",
+      "bytes": 4965,
+      "sha256": "db806fa154391729bb2605b38402f0e3aa204551fb723eeaeac0d039f2ab9eda"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRTimelineSelection.swift",
+      "bytes": 1730,
+      "sha256": "b08ace23f823c5bf28b54bea8fa32e531234569378574ab6257b7caf9b735e30"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRTrackContributorArchive.swift",
+      "bytes": 10198,
+      "sha256": "25e9cc29d0fb1d36ad0170f203f20680c900636c69dbe6cdcb50b6ab15be0875"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRTrackOverlapNormalizer.swift",
+      "bytes": 2010,
+      "sha256": "fb0e91552fcc11645734f8105042b099d887b3843d882565af5e776e57aa645a"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/DAWProject.swift",
+      "bytes": 41274,
+      "sha256": "6a5e44ee6abbdeb80c09b6bcfbba10154f47c4dd6c623e758f48c9cdda40c82a"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/MusicalTime.swift",
+      "bytes": 13097,
+      "sha256": "65147c496c370a025fbacc296b9910b850632230ff593d9ff4009fbceb7aaa45"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/NativeTempoClock.swift",
+      "bytes": 9531,
+      "sha256": "944e6e5afa20b38959fef0458dc580df4a095df8f64b01d47024a47ff8718979"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/OfflineRenderer.swift",
+      "bytes": 13919,
+      "sha256": "b579e6d9f84e64c9efdb7164a7f701169f5ecd5ed2fb7606a634c5725e89c6bc"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/Project.swift",
+      "bytes": 13611,
+      "sha256": "5c7837be4d55f371591fcee99cb6663aaf4f346832a21180d46568193ad3fd1d"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 13673,
+      "sha256": "e426e17e26303faa9752f049652c4c08c5365e3c97c606cec387a05b1a504d39"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/UnresolvedCPRAudioEvent.swift",
+      "bytes": 3139,
+      "sha256": "9986f9e3c05cf3c0b949ef8b7ddad7ad0c49d1b17aa38f85d6644896fff26e34"
+    },
+    {
+      "path": "Application/Sources/RebaseDSP/ambi_first_order.c",
+      "bytes": 5231,
+      "sha256": "b2af5f8622fa3c336f0c6c6abbb59ddf79151107bfe8e31a23c09dd2a9a1d240"
+    },
+    {
+      "path": "Application/Sources/RebaseDSP/include/ambi_first_order.h",
+      "bytes": 1123,
+      "sha256": "b1103f9cc0450db33aa1331297306e2619998d069cada1e4a919573df8dd0135"
+    },
+    {
+      "path": "Application/Sources/RebaseSoXR/include/rebase_soxr.h",
+      "bytes": 1200,
+      "sha256": "81cce53e899e4360b831702a3be0365ac99f772bef9e5e721a10b079db3af658"
+    },
+    {
+      "path": "Application/Sources/RebaseSoXR/rebase_soxr.c",
+      "bytes": 2538,
+      "sha256": "6b2f8a18be586f58d7e43647874c781dd956c828ae88c366aba56b2a99beb0fe"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_format.c",
+      "bytes": 2665,
+      "sha256": "2ffadf89dba582bb7b17dedb732655ed83a2e403ebd351b313d5f2d0d65c6b92"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_seek.c",
+      "bytes": 2274,
+      "sha256": "355b2818498bf35bc756ab671fbb4aa64cadd6dc823f54ed386bfb5bf997581e"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_event_pcm.c",
+      "bytes": 2813,
+      "sha256": "4180d6062120ba0de5c284d886f5170fb0cd79d65edfbdc936b8b7b286130939"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_live_stereo_ring.c",
+      "bytes": 6008,
+      "sha256": "d9ac1d96873fe79ed313ed80fc7b53498b6764cac0ebd356626a407002ac389a"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_rate_budget.c",
+      "bytes": 5789,
+      "sha256": "76cbf90501ed9512057da1f91fb725e26d07b538f444d5a911926e0587e111fb"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_builder.c",
+      "bytes": 4119,
+      "sha256": "f744ebced17794fcb62f3a36e0d10c8bb1c735aa769612ffb652e546b28464df"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_reader.c",
+      "bytes": 8196,
+      "sha256": "6697ca1b9ce8725324362b2da54ac6432b1d64c8dcbb48adfc3464322dba4e0b"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_selector.c",
+      "bytes": 1907,
+      "sha256": "fc4c02d437de57103592dd08cd1579567a1ba45bafe329943e1d1971db94f919"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_track_overlap.c",
+      "bytes": 6593,
+      "sha256": "9d012c451b189eb12c91693da6d3e21c0093a5529bd8e0f1b04c74f221ad893c"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_format.h",
+      "bytes": 1239,
+      "sha256": "bc4c2facbd574bc81359c4ef40b859cc98a8c0b3a5c944692f8b463147e390bd"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_seek.h",
+      "bytes": 803,
+      "sha256": "b68cb079ce507d9775560c08ba3bd384fec873ac5e2d0812a907013fe3745db4"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_event_pcm.h",
+      "bytes": 783,
+      "sha256": "75f6da9eb338c2dbcf15d45a5f3f366c10a66ebf6e9634f63a8e39c3d30e77f7"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_live_stereo_ring.h",
+      "bytes": 2813,
+      "sha256": "a2a7091e77813800edcde35f58b570dce9a7fae2b27cede3c89515eeaefcba4a"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_rate_budget.h",
+      "bytes": 1528,
+      "sha256": "3110d27e2ab99a18d3b26722e489b6b5b492648a7ba57e9a1b0e5e938ccf170e"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_builder.h",
+      "bytes": 2942,
+      "sha256": "4ce5d6eeb4229a706b86fd6a98a4a7be3731e6f459242a60a5fbe86b45d7c488"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_reader.h",
+      "bytes": 4390,
+      "sha256": "910475ed5c486c662c0f0893097cfbc4551b9be5922f5fcdb398941701373014"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_selector.h",
+      "bytes": 1078,
+      "sha256": "e18da95522c4a9d73b1393ce48b6110e7a00bec1f5a935b952d758c22eca2af7"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_track_overlap.h",
+      "bytes": 1575,
+      "sha256": "e4a4224896e37306c54866e73526e716895abebf7dcf1b3a073542a713a4f01a"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/module.modulemap",
+      "bytes": 701,
+      "sha256": "deddf4e808d088850f5c69dfaffeca69078846733db557f71de7ffa381f6d986"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_callback_adapter.h",
+      "bytes": 3863,
+      "sha256": "15c3d1a6f7ac1310d4c0c1ade8b86c0e593f8bfab0c0a8eeb8a55b93140ad02f"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0.h",
+      "bytes": 1958,
+      "sha256": "9c3c7185a93dd54beff48dec9618c8abd69f68f01084adad30d4c4436a4cc19f"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0_down.h",
+      "bytes": 2587,
+      "sha256": "852af4ccba424e561634949674d2fd9788715fb2ac68e9bf4e5d8082e3adea3c"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode1.h",
+      "bytes": 3681,
+      "sha256": "25cdbb819f84bddf8a6d756a16954f2ee439309668efdbe72fb8d394dcdf0bb4"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode2.h",
+      "bytes": 3919,
+      "sha256": "e125e7965509e74ed5e0c5302bae35f2dd5e642f6f92ccb60388954ada2bb9e7"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/native_tempo.h",
+      "bytes": 1878,
+      "sha256": "1f3da5deac941e7a1cc6a0f5c9a5d7d4da4fda3cc1c5928eb5a5d627cd623b70"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_callback_adapter.c",
+      "bytes": 7718,
+      "sha256": "5571b47c55c7b9f8360ac7bf7daced681e93b98f1348ff2585f2b75b7330d74b"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0.c",
+      "bytes": 5859,
+      "sha256": "9cf22cb496e5eac010c0e027286927bdf68ef4181c195d30c30b0df2304bd7fa"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0_down.c",
+      "bytes": 10145,
+      "sha256": "e85877ab7c33c8ef9c6bf16124125504a545e3a057e4d3ec6838729bd0df676f"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode1.c",
+      "bytes": 13301,
+      "sha256": "9dd346c5f1a3f27d188e3475a8db6d92ddfbeb92da10c02af4b45b2741d66a80"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode2.c",
+      "bytes": 12402,
+      "sha256": "31d246b317726458bc46c747d37a8e2ae1d582b70a55d7b69d99b2c728016380"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/native_tempo.c",
+      "bytes": 7951,
+      "sha256": "5bd8632d38cad4c4b240ffcad58ec4ceb304ab23bb93483657028e085655aefb"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/AmbisonicConverterTests.swift",
+      "bytes": 16561,
+      "sha256": "1295abfb8acae18d13e9262de837dfbc237b23325fd6e778905050a2fb99ba2c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/AudioValidityTests.swift",
+      "bytes": 4710,
+      "sha256": "1b0fef9ad5daa646f32b932496e7acc13232e4be8acf3fad5cd539fa67de66a6"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/AutomationTests.swift",
+      "bytes": 3458,
+      "sha256": "8c772f1723ec1f45e4be512c2984f550c46acc1f47cc800d1fe7207ab2540d36"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRAudioEventArchiveTests.swift",
+      "bytes": 16589,
+      "sha256": "2a5d90074132c4b888bc7d8b54c9799927d6385c110cda247e3a95609120db22"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRAudioMediaAttachmentTests.swift",
+      "bytes": 22919,
+      "sha256": "d6ab421a6d247c31828317f58153cb220623632f22b402ab592cc55d52ab3fff"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRAutoFadeArchiveTests.swift",
+      "bytes": 17339,
+      "sha256": "b96bb89b7c9f85f1d7de90e348387c24a6848648ba7f1d6b0bb995fe1720e0b0"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRLiveCallbackAdapterTests.swift",
+      "bytes": 2603,
+      "sha256": "2ebc43674ad46c15b05523d459c10e08b0a9f368dcdaa5216d2c5b45a5cd8297"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRLiveStereoRingTests.swift",
+      "bytes": 9244,
+      "sha256": "198f65e6bb966038be8e8a4c503ee9d5e604e610ee34bdc5dbc376e99c719f04"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRMode1StreamTests.swift",
+      "bytes": 6737,
+      "sha256": "7ed542e413ea8030df48f3551ed8e722be4969ba0f371b4071884091a139e9c2"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRMode2StreamTests.swift",
+      "bytes": 6679,
+      "sha256": "39dd2f7e56416c2d60ee6f3a645862896e190a9b87909c8d8249571899f729a3"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeAccessorGainTests.swift",
+      "bytes": 13073,
+      "sha256": "fbec217ca2d0304fdf333175c9df13d2cb6012f8a9c1656a82c6f30ed4eb9fb3"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeAudioAccessorTests.swift",
+      "bytes": 13713,
+      "sha256": "732bbe5def2c32bc892bf08a3fe971cacbc9f05ec720535dcbd206d37041ef13"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeProjectClockTests.swift",
+      "bytes": 9729,
+      "sha256": "9ad034089c6908360a005636ac3c8b8e61f65cc53f6092fac97bb4faef666c1f"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRNativeTimelineStreamTests.swift",
+      "bytes": 16322,
+      "sha256": "3e32d68e250a5c44ca8991a5f508116785fc4efd19c29fe2ceb4ae00c4974d0b"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRPlacedSourceContextTests.swift",
+      "bytes": 6115,
+      "sha256": "69242a5321e1bdaa5d07a1d4a7eb905f1078964543631d68b0c1de3ae0f80f23"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRPlacedSourceEventTests.swift",
+      "bytes": 33631,
+      "sha256": "d9be242fb4ee09794ffb02d0847fd2fbd5b9820524b2db7c151d7722f2c68ec0"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectAudioSetupTests.swift",
+      "bytes": 13691,
+      "sha256": "fb59d8242ad175c71501e50684967ea463742772420278b20b696d56c5008601"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRProjectTests.swift",
+      "bytes": 45512,
+      "sha256": "e8ba763bb55b2ed3b0ee2ddd3fcc30ee05ee6ca7bf7f30d60ba83e0631f18264"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRateConvertedStreamTests.swift",
+      "bytes": 7693,
+      "sha256": "8a3cb0b932e12d770d8a29eda610c87a82cf3438d7788a2c967df66079f9fdb3"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRateReadBudgetTests.swift",
+      "bytes": 11180,
+      "sha256": "fac825d568adecf5e80b9607ded9ab0e5f0a92b6093ac7d964ff561707233b64"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRecoveryV3Tests.swift",
+      "bytes": 18402,
+      "sha256": "013297d3a33f1bd16753749337cd7616faf2445cef1943cbff6cce58886fbd88"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRRecoveryV4Tests.swift",
+      "bytes": 19608,
+      "sha256": "00d8e4853354f3db17f2f4d6cce8837f89719d6683778d9267c4d315e70e628e"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSegmentReadPlanTests.swift",
+      "bytes": 10014,
+      "sha256": "3b78f2abdc0f531b08776a70f7deb3b163395a37ced25d65704003ba1f7071af"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSignatureRecoveryTests.swift",
+      "bytes": 11870,
+      "sha256": "e2e6f676418c53ed760de242e5204ce2e1dc01c9d293349ee759c36aa5680a98"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceEventPlaybackTests.swift",
+      "bytes": 31439,
+      "sha256": "63fabb18927da11c93717af73732cc50a6636abbed5eb182684300c4cbcd38b1"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceEventRendererTests.swift",
+      "bytes": 11881,
+      "sha256": "5f1dc23fe71cff8679d44ef6340f15e16bf9d4c146eb9273512083420885d837"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceFragmentProjectionTests.swift",
+      "bytes": 6130,
+      "sha256": "bc8e8eb43782cbfad808605ea49de6fd9ab5814d964fc1ad3697f525493fda9f"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceTrackOverlapPlaybackTests.swift",
+      "bytes": 14684,
+      "sha256": "f95ddc1f25f076b7574fa9198ef0209909907faa35c90f3826439208bc59cc81"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRSourceTrackPlaybackTests.swift",
+      "bytes": 12402,
+      "sha256": "1967031bec45a49c0953d81775dd171e4c0847c198937d85c228aba7148715f5"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRStreamPlaybackQueueTests.swift",
+      "bytes": 15384,
+      "sha256": "5401c4cbae7ad971ce2aa922ddc99182b0e06caeafee2d754d34d7206406f12c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRTimelineSelectionTests.swift",
+      "bytes": 6161,
+      "sha256": "d5f06a3ac0a35a9e5466547c0ce2138c84b276ca69f13e81ccae7daf3211586c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRTrackContributorArchiveTests.swift",
+      "bytes": 17990,
+      "sha256": "5ce65b280190dc43ff055444b2aaa6e789213fb075acd3d9f796d09fc2b1de2c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/CPRTrackOverlapNormalizerTests.swift",
+      "bytes": 7035,
+      "sha256": "22c0db7a24d64e6d604250ca60f364567570c0e7d2c4e404bd95783c33659438"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/DAWProjectTests.swift",
+      "bytes": 15358,
+      "sha256": "1cf2c7b1666e78330556e4738938dae655493cafe7e4b9ef6550ec1fdd99696d"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/InvalidClipIntervalTests.swift",
+      "bytes": 3332,
+      "sha256": "7ddee37b29c522c0f326cf72babd5b17c874d5fbd8eaa8959f029c00650dbc7c"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/MusicalTimeTests.swift",
+      "bytes": 9123,
+      "sha256": "006062768dce1661baa344f6b7c7ea667d8222814d2d6761b189f1ede3da3cb0"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeCallbackAdapterTests.swift",
+      "bytes": 9249,
+      "sha256": "46fbe3a28fd2f8c29cc63412c33b7b67dcbfa318689cddf95640a848361e7575"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeMapClockTests.swift",
+      "bytes": 7283,
+      "sha256": "2bce9dbcc7911d894d40ac7d0af3a0fd7f335e2bd4fe9b9bec30d3e203c932fb"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeMapKernelTests.swift",
+      "bytes": 4639,
+      "sha256": "1a6fd199bdf3130726cdfaa1b617c663c510e73fc4367df175f0420ba616d5f4"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode0DownTests.swift",
+      "bytes": 17351,
+      "sha256": "1d8da2cc6a8484b84583eceacbdb80f80a9255e5f449ad56f9641854f84dc310"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode0Tests.swift",
+      "bytes": 17213,
+      "sha256": "c44b27a216a0d379bc861660b47bf5cea7a910c4d036a459c8e9505642ecddcf"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode1Tests.swift",
+      "bytes": 12583,
+      "sha256": "ff5ee7fecd27064129b432cebb2978a4d336a031e400819785b6f1b51df456e8"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode2Tests.swift",
+      "bytes": 19713,
+      "sha256": "eb32b61fb22b286a577b18f87ede54453dd448c8870c5e11a4a5148a6ce06041"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeTempoClockTests.swift",
+      "bytes": 9662,
+      "sha256": "a5f112f10cf2392ef5ce07dddad4a33c27e790272a6286b7e6b1c5b274044bc2"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeTimelineBuilderTests.swift",
+      "bytes": 4487,
+      "sha256": "a3cf88e6a70a2ec80ac96d866a3e4dbda53b0f6c255b4cae0aca7de784a99a4a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeTimelineReaderTests.swift",
+      "bytes": 9346,
+      "sha256": "a6407c569598b3c72ad7510f4b3cff232e589474745d80000ed5955aff4063a8"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/OfflineRendererTests.swift",
+      "bytes": 6491,
+      "sha256": "0494f4934bb71716c3cab05f85590461b7f103d6ccdd98249b4668f158a9e2dc"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/ProjectBehaviorTests.swift",
+      "bytes": 4854,
+      "sha256": "ca239f0e4700ac5d23c09da497140b768a2c0fb24eea82837f3a0643f3321016"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/ProjectStoreTests.swift",
+      "bytes": 3992,
+      "sha256": "9d74c77db57d88454db3680cb5dec769dff8bc6fe767c4de9f5e808ba1a9dca3"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/RecoveredDSPTests.swift",
+      "bytes": 5254,
+      "sha256": "fab23af6773bb0f2f7ff75aa79b21ab0233d4b9d3ff0cbec55676cfcf7918c3a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/TestSupport.swift",
+      "bytes": 4144,
+      "sha256": "65b3aaf7db8d59c07f1c0fff15d5fc45a5afbbc126b01985ce82a74c28807e1e"
+    },
+    {
+      "path": "Application/build-app.sh",
+      "bytes": 2947,
+      "sha256": "0636d34009e0cba0c52ecb9d2cbc700dba64423a3dce06c0246e5b818e31142f"
+    },
+    {
+      "path": "Application/test-app.sh",
+      "bytes": 653,
+      "sha256": "ee23ef379333d361990125d781289d8b588434b81ffff2bbe815aed5f4b907c6"
+    }
+  ],
+  "source_unchanged_during_recording": true
+}

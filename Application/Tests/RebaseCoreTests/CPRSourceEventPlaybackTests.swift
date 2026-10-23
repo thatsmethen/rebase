@@ -10,8 +10,7 @@ import RebaseTimingDSP
 struct CPRSourceEventPlaybackTests {
     private let frameCount = 1_058_400
     private let rate = 44_100.0
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let workspace = PrivateResearchFixtures.root
 
     private struct Fixture {
         let temporary: URL
@@ -31,7 +30,7 @@ struct CPRSourceEventPlaybackTests {
         let temporary = FileManager.default.temporaryDirectory.appendingPathComponent("SourcePlayback-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: temporary, withIntermediateDirectories: true)
         do {
-            let original = workspace.appendingPathComponent("research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro/LoFi Hip Hop.cpr")
+            let original = workspace.appendingPathComponent("templates/LoFi Hip Hop.cpr")
             let package = temporary.appendingPathComponent("Source.rebaseproj")
             let imported = try CPRProject.importProject(from: original, to: package, allowPartial: true)
             let event = try #require(imported.project.unresolvedAudioEvents.first)
@@ -113,7 +112,8 @@ struct CPRSourceEventPlaybackTests {
         do { try body(); return false } catch { return true }
     }
 
-    @Test func SourceRateAndExactPCMBypassProjectMixerWithoutPromotingTheEvent() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func SourceRateAndExactPCMBypassProjectMixerWithoutPromotingTheEvent() throws {
         let f = try fixture(); defer { try? FileManager.default.removeItem(at: f.temporary) }
         let before = try snapshot(f.package)
         var project = f.project
@@ -145,7 +145,8 @@ struct CPRSourceEventPlaybackTests {
         #expect(try snapshot(f.package) == before)
     }
 
-    @Test func EveryCopiedSeekSampleMatchesIndependentPCM24Oracle() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func EveryCopiedSeekSampleMatchesIndependentPCM24Oracle() throws {
         let f = try fixture(); defer { try? FileManager.default.removeItem(at: f.temporary) }
         let prepared = try CPRSourceEventPlayback.prepare(eventID: f.eventID, project: f.project, root: f.package).audio
         let expected = expectedBits(f.pcm)
@@ -197,7 +198,8 @@ struct CPRSourceEventPlaybackTests {
         }
     }
 
-    @Test func FreshPreparationRejectsChangedMediaSourceAndReportButPreservesSnapshot() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func FreshPreparationRejectsChangedMediaSourceAndReportButPreservesSnapshot() throws {
         let f = try fixture(); defer { try? FileManager.default.removeItem(at: f.temporary) }
         let before = try snapshot(f.package)
         let accepted = try CPRSourceEventPlayback.prepare(eventID: f.eventID, project: f.project, root: f.package)
@@ -219,7 +221,8 @@ struct CPRSourceEventPlaybackTests {
         #expect(try snapshot(f.package) == before)
     }
 
-    @Test func ChangedRetainedIdentityPlacementAndSelectionCannotReuseAdmission() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func ChangedRetainedIdentityPlacementAndSelectionCannotReuseAdmission() throws {
         let f = try fixture(); defer { try? FileManager.default.removeItem(at: f.temporary) }
         let before = try snapshot(f.package)
         _ = try CPRSourceEventPlayback.prepare(eventID: f.eventID, project: f.project, root: f.package)
@@ -242,7 +245,8 @@ struct CPRSourceEventPlaybackTests {
         #expect(try snapshot(f.package) == before)
     }
 
-    @Test func AVAudioEngineOfflineUnityRoutePreservesThePreparedFinalFrames() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func AVAudioEngineOfflineUnityRoutePreservesThePreparedFinalFrames() throws {
         let f = try fixture(); defer { try? FileManager.default.removeItem(at: f.temporary) }
         let prepared = try CPRSourceEventPlayback.prepare(eventID: f.eventID, project: f.project, root: f.package).audio
         let first = frameCount - 257, expected = expectedBits(f.pcm)
@@ -271,7 +275,8 @@ struct CPRSourceEventPlaybackTests {
         #expect(position == 257)
     }
 
-    @Test func NativeMode0StreamsAtProjectRateAndRetainsSourceBarriers() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func NativeMode0StreamsAtProjectRateAndRetainsSourceBarriers() throws {
         let f = try fixture(); defer { try? FileManager.default.removeItem(at: f.temporary) }
         let before = try snapshot(f.package)
         let prepared = try CPRSourceEventPlayback.prepare(eventID: f.eventID, project: f.project,
@@ -320,10 +325,11 @@ struct CPRSourceEventPlaybackTests {
         #expect(try snapshot(f.package) == before)
     }
 
-    @Test func NativeMode2MatchesIndependentFullSourceCountsAndPreservesCPRCustody() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func NativeMode2MatchesIndependentFullSourceCountsAndPreservesCPRCustody() throws {
         let f = try fixture(); defer { try? FileManager.default.removeItem(at: f.temporary) }
         let before = try snapshot(f.package)
-        let oracleURL = workspace.appendingPathComponent("research/evidence/application/APP012/mode2-wrapper-oracle.json")
+        let oracleURL = workspace.appendingPathComponent("evidence/application/APP012/mode2-wrapper-oracle.json")
         let oracleData = try Data(contentsOf: oracleURL)
         #expect(cprSHA256(oracleData) == "bae42e6878db26177403ebd9cb622afc926794a06431dc88ba79d772af205225")
         let oracle = try #require(JSONSerialization.jsonObject(with: oracleData) as? [String: Any])
@@ -377,10 +383,11 @@ struct CPRSourceEventPlaybackTests {
         #expect(try snapshot(f.package) == before)
     }
 
-    @Test func NativeMode1MatchesIndependentFullSourceCountsAndPreservesCPRCustody() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func NativeMode1MatchesIndependentFullSourceCountsAndPreservesCPRCustody() throws {
         let f = try fixture(); defer { try? FileManager.default.removeItem(at: f.temporary) }
         let before = try snapshot(f.package)
-        let oracleURL = workspace.appendingPathComponent("research/evidence/application/APP013/mode1-oracle.json")
+        let oracleURL = workspace.appendingPathComponent("evidence/application/APP013/mode1-oracle.json")
         let oracleData = try Data(contentsOf: oracleURL)
         #expect(cprSHA256(oracleData) == "d985ab0b74146b093ccae9ca98edd5e8a7d78e904a35f6966ec841f98340d8a9")
         let oracle = try #require(JSONSerialization.jsonObject(with: oracleData) as? [String: Any])
@@ -434,7 +441,8 @@ struct CPRSourceEventPlaybackTests {
         #expect(try snapshot(f.package) == before)
     }
 
-    @Test func DownsampledSourceEventMatchesIndependentBlockCountsAndPreservesProvenance() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func DownsampledSourceEventMatchesIndependentBlockCountsAndPreservesProvenance() throws {
         struct CountOracle: Decodable {
             struct Vector: Decodable {
                 struct Call: Decodable { let output_frames: Int }
@@ -444,7 +452,7 @@ struct CPRSourceEventPlaybackTests {
             let generator_sha256: String
             let vectors: [Vector]
         }
-        let evidence = workspace.appendingPathComponent("research/evidence/application/APP011/")
+        let evidence = workspace.appendingPathComponent("evidence/application/APP011/")
         let bytes = try Data(contentsOf: evidence.appendingPathComponent("native-rate-down-count-oracle.json"))
         #expect(cprSHA256(bytes) == "5398690aa9af6c45504e626439e0b12fc265bbb5c45f24bd2b9b833400ac11a7")
         let oracle = try JSONDecoder().decode(CountOracle.self, from: bytes)

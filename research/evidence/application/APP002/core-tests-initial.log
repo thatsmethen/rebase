@@ -1,0 +1,54 @@
+[0/1] Planning build
+Building for debugging...
+[0/9] Write sources
+[3/9] Write swift-version--1AB21518FC5DEDBE.txt
+[5/12] Compiling RebaseCore DAWProject.swift
+[6/12] Emitting module RebaseCore
+[7/12] Compiling RebaseCore AmbisonicConverter.swift
+[8/31] Compiling RebaseCoreTests ProjectStoreTests.swift
+[9/31] Compiling RebaseCoreTests MusicalTimeTests.swift
+[10/31] Compiling RebaseCoreTests TestSupport.swift
+[11/31] Compiling RebaseCoreTests RecoveredDSPTests.swift
+[12/31] Compiling RebaseCoreTests ProjectBehaviorTests.swift
+[13/31] Compiling RebaseCoreTests OfflineRendererTests.swift
+[14/31] Compiling RebaseCoreTests DAWProjectTests.swift
+[15/31] Compiling RebaseCoreTests InvalidClipIntervalTests.swift
+[16/31] Compiling RebaseCoreTests AutomationTests.swift
+[17/31] Emitting module RebaseCoreTests
+[18/31] Compiling RebaseCoreTests AudioValidityTests.swift
+[19/31] Compiling RebaseCoreTests AmbisonicConverterTests.swift
+[20/33] Compiling RebasePackageTests runner.swift
+[21/33] Emitting module RebasePackageTests
+[21/33] Write Objects.LinkFileList
+[22/33] Linking RebasePackageTests
+[24/33] Compiling Rebase MixerView.swift
+[25/33] Emitting module Rebase
+[26/33] Compiling Rebase AmbisonicExport.swift
+[27/33] Compiling Rebase StudioSession.swift
+[28/33] Compiling Rebase TimelineView.swift
+[29/33] Compiling Rebase RebaseApp.swift
+[30/33] Compiling Rebase ProjectEditors.swift
+/workspace/rebase/Application/Sources/Rebase/ProjectEditors.swift:136:18: error: 'onSpatialTapGesture' is inaccessible due to 'fileprivate' protection level
+134 |             AutomationGraph(lane: lane, span: span, playhead: session.playhead)
+135 |                 .frame(height: 170)
+136 |                 .onSpatialTapGesture { value in
+    |                  `- error: 'onSpatialTapGesture' is inaccessible due to 'fileprivate' protection level
+137 |                     pointTime = max(0, min(span, value.location.x / 772 * span))
+138 |                     let range = parameter.valueRange
+
+/workspace/rebase/Application/Sources/Rebase/TimelineView.swift:494:10: note: 'onSpatialTapGesture(perform:)' declared here
+492 | 
+493 | private extension View {
+494 |     func onSpatialTapGesture(perform action: @escaping (CGPoint) -> Void) -> some View {
+    |          `- note: 'onSpatialTapGesture(perform:)' declared here
+495 |         gesture(SpatialTapGesture().onEnded { action($0.location) })
+496 |     }
+
+/workspace/rebase/Application/Sources/Rebase/ProjectEditors.swift:137:56: error: value of type 'CGPoint' has no member 'location'
+135 |                 .frame(height: 170)
+136 |                 .onSpatialTapGesture { value in
+137 |                     pointTime = max(0, min(span, value.location.x / 772 * span))
+    |                                                        `- error: value of type 'CGPoint' has no member 'location'
+138 |                     let range = parameter.valueRange
+139 |                     pointValue = range.upperBound - min(1, max(0, value.location.y / 170)) * (range.upperBound - range.lowerBound)
+error: fatalError

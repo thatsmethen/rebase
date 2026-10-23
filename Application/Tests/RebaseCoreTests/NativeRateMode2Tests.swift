@@ -8,9 +8,8 @@ import Testing
 /// Independent expectations come from original instruction operations, rounded
 /// using Fraction/IEEE arithmetic. Spy output is deliberately not a resampler.
 struct NativeRateMode2Tests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-    private let evidence = "research/evidence/application/APP012/"
+    private let workspace = PrivateResearchFixtures.root
+    private let evidence = "evidence/application/APP012/"
 
     fileprivate struct BackendCall: Decodable, Equatable {
         let input_frames: Int
@@ -196,7 +195,8 @@ struct NativeRateMode2Tests {
         return Array(output.prefix(produced * channels))
     }
 
-    @Test func originalInstructionSpyVectorsMatchCountsCallsStorageAndEverySnapshot() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func originalInstructionSpyVectorsMatchCountsCallsStorageAndEverySnapshot() throws {
         let cases = try oracle().cases
         #expect(cases.count == 47)
         for vector in cases {
@@ -224,7 +224,8 @@ struct NativeRateMode2Tests {
         }
     }
 
-    @Test func fullSourceCountsAreBackendIndependentAndKeepQueryStateUnchanged() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func fullSourceCountsAreBackendIndependentAndKeepQueryStateUnchanged() throws {
         for vector in try oracle().full_source_counts {
             let spy = Spy()
             let state = try make(spy, source: vector.source, output: vector.output)
@@ -316,7 +317,8 @@ struct NativeRateMode2Tests {
         }
     }
 
-    @Test func publicSoXRSamplesMatchSeparateInstructionWrapperWithPositiveAndNullEOF() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func publicSoXRSamplesMatchSeparateInstructionWrapperWithPositiveAndNullEOF() throws {
         let data = try Data(contentsOf: workspace.appendingPathComponent(evidence + "mode2-public-oracle.json"))
         #expect(cprSHA256(data) == "12333d54cf1608abf0d4cbc0a18790c0309c22982ac3ad0619e48eb2956389ca")
         let model = try JSONDecoder().decode(Oracle.self, from: publicOracleCompatibleJSON(data))

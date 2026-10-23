@@ -1,0 +1,182 @@
+{
+  "schema": 1,
+  "id": "CPR-RATE-SELECTION-001",
+  "status": "bounded static caller/configuration contract",
+  "at_utc": "2026-10-20T08:50:23.151254+00:00",
+  "source": {
+    "path": "research/targets/derived/Cubase15-arm64",
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "target_execution": false,
+  "application_changes": false,
+  "result": "Neither of the two inspected event-stream consumers selects mode0 on its enabled policy path. Both supply policy1; first converter construction selects mode2 when the dynamic SoXR availability predicate is true, otherwise mode1. A mode2 factory null result falls back to mode1. This is not a global Cubase playback-default claim.",
+  "contracts": [
+    {
+      "id": "RS1",
+      "claim": "AudioAccessor policy argument reaches the actual converter.",
+      "evidence": [
+        "10036e34c:10036e3a4 storesw3\u2192accessor+49",
+        "10036e458 likewise storesw3\u2192+49 (retained live-consumer/pass1)",
+        "10036eff0:10036f074..090 reuses converter+20 or allocates0xb0 and passes accessor+49 to1003237d8",
+        "1003237d8 tails100323688; ctor stores policy byte at converter+a9",
+        "10036f494:10036f4c8..4d0 independently implements the same lazy converter creation"
+      ],
+      "limit": "Existing converter is reused. Configuration selection is not a per-sample availability test."
+    },
+    {
+      "id": "RS2",
+      "claim": "Two concrete consumers explicitly request enabled policy1.",
+      "evidence": [
+        "Offline segment PCM10018fb40:100190d60..68 passes flags5,policy1\u219210036e34c",
+        "AXtStreamAccessor10046e60c:10046e744..74c passes flags5,policy1\u219210036e458",
+        "AXt constructed vptr104480c28+168\u21921004705b0; this calls10036eff0 and retries once for error-2147483645",
+        "Generic accessor constructor10036e258:10036e2c0..c4 writesu16 0x0101 to+48, setting policy+49=1"
+      ],
+      "limit": "The flags5 argument is an open/read flag, not numeric Float32 format5. The live VstOpTrack callback invocation and routing from these consumers to the live ring are not established."
+    },
+    {
+      "id": "RS3",
+      "claim": "Enabled policy selects mode2/1; forced policy0 selects mode0.",
+      "evidence": [
+        "1003261a8 reads+a9 only while child+30 is absent; byte0\u2192mode0, nonzero\u2192100309fe8",
+        "100309fe8\u21921003136b4\u2192100314ca0; cset logic returns availability?2:1",
+        "10030a008 stores requestedmode+28; mode2 calls1003136b8(type,1), null returns fallbackmode1 and10030a634; mode0 uses10030c4a4"
+      ],
+      "limit": "Budget queries can call availability independently; a selected factory fallback mode must not be inferred solely from budget mode."
+    },
+    {
+      "id": "RS4",
+      "claim": "Successful Float32 mode2 initialization passes exact public SoXR configuration.",
+      "configuration": {
+        "io_spec": [
+          0,
+          0
+        ],
+        "quality_spec": [
+          6,
+          0
+        ],
+        "runtime_spec": [
+          0
+        ],
+        "create": "Rin,Rout,channels,&error,&io,&quality,&runtime"
+      },
+      "evidence": [
+        "1003136b8 maps type5 through table103933bf8 to internal0; child capacity65536 and chunkcap65408",
+        "Child vtable104461a80+30\u2192100314fe8 storesqualitybyte+9=1; ctor100314ce0 clears+a",
+        "100315000:100315050..058 uses io_spec(0,0) for internalformat0",
+        "1003150bc..0f0 selectsrecipe6 when+9!=0,+a==0 andpassesflags0",
+        "100315100..128 runtime_spec(0), thencreate with savedFloat64 rates/channels"
+      ],
+      "public_api_interpretation": "Pinned0.1.3 header: float32 interleaved enum0; recipe6 is SOXR_VHQ/SOXR_28_BITQ with linear phase and no steep flag. The branch+a!=0 would select0x46; qualitybyte0 selects4.",
+      "correction": "An early message mislabeled recipe6 HQ. Exactargument6 was correct; inspected pinnedheader identifies VHQ. No final finding depends on the mistaken label."
+    },
+    {
+      "id": "RS5",
+      "claim": "Availability is a lazy runtime predicate, not file-presence inference.",
+      "evidence": [
+        "100314ca0 checksglobal10502bcd0, calls100316414 ifuninitialized, returns10502bcd1",
+        "100316414 marksinitialized before loader attempts; tries Externals/SoXR/0.1.3/soxr thenExternals/SoXR/soxr",
+        "Availability requires loadedflag+0xc and allsix resolved pointers: soxr_io_spec,soxr_create,soxr_delete,soxr_runtime_spec,soxr_quality_spec,soxr_process"
+      ],
+      "limit": "No target library was loaded, no resolver executed, and no availability outcome observed."
+    },
+    {
+      "id": "RS6",
+      "claim": "Native source and destination address ordering is not established by the read caller.",
+      "evidence": [
+        "10036eff0 preservescalleroutput inx20; sourcebuffer is separate temp holder sp+18 sized by100368a4c at10036f128..130",
+        "10036f394..39c passes calleroutput asx1 and temporarysourceasx2 to100330cd4",
+        "For matchedFloat32/channels/byteorder/gain1 andrateonlyconversion,10033035c:100330978..990\u2192100326318;100326738..74c forwardssource/destination to10030a534 unchanged",
+        "Other conversion combinations use distinct converter scratch holders+48/+58/+68/+78 or format scratch+88/+98"
+      ],
+      "limit": "No allocator address-order guarantee follows from allocation sequence. A reconstruction that puts output after input in one arena selects an explicit bounded arrangement; it does not prove native host placement for address-sensitive downsample tails."
+    }
+  ],
+  "bundled_component": {
+    "path": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Externals/SoXR/soxr.dylib",
+    "bytes": 436016,
+    "sha256": "59eeb6dc4889c9f93deacea801f4d2db2a5795c67b99a831cd4c71616a53cff0",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "version_binding": "arm64 _soxr_version0x196f8 isADR/NOP/RET returningliteral0x1fbc3 libsoxr-0.1.3; staticdecode only",
+    "load_command": "LC_ID_DYLIB currentversion0.1.2, separately retained from sourceversionstring; not a claim of source release0.1.2",
+    "unproved": [
+      "Unmodified upstream source identity",
+      "Exact compiler flags/FP contraction",
+      "SIMD and FFT backend build configuration",
+      "Runtime environment/thread overrides",
+      "Successful loading in hosted Cubase"
+    ]
+  },
+  "public_source": {
+    "primary_project": "https://sourceforge.net/projects/soxr/",
+    "release": "https://sourceforge.net/projects/soxr/files/soxr-0.1.3-Source.tar.xz/",
+    "pinned_source": "https://github.com/chirlu/soxr/tree/945b592b70470e29f917f4de89b4281fbbd540c0",
+    "tag": "0.1.3",
+    "commit": "945b592b70470e29f917f4de89b4281fbbd540c0",
+    "local": "public-reference/intake.json",
+    "license": "LGPL2.1 library; retain full LICENCE and separately licensed FFT notices with any independent build",
+    "scope": "Five fetched reference files only, not full build tree. Public API meanings do not prove binary-build equivalence."
+  },
+  "followup": "mode2-wrapper-handoff.json specifies native wrapper state and EOF boundaries for a future independently built public-source backend.",
+  "validation": {
+    "new_capture": "verification.json",
+    "reused_original_bytes": "contract-verification.json",
+    "analytical_controls": "16 backend branch cases +9 quality cases; these are decoded-branch controls, not target outputs",
+    "REA": "11 new bounded dossiers,22 canonical records imported successfully; all independent sessions closed",
+    "limitations": [
+      "Raw slices omit globals,imports,RTTI,unwind and neighboringcode; original native instructions and pinned tables control cross-function interpretation.",
+      "No target execution, no target samples, no runtime backend choice, no global default or full live-routing assertion."
+    ]
+  },
+  "pins": [
+    {
+      "path": "verification.json",
+      "sha256": "be441abcbd9c267d617d00a8de4fa3e62a18500966c1c2f212bbb4f7fa0cb696"
+    },
+    {
+      "path": "contract-verification.json",
+      "sha256": "0cf8ccd4bb5225f435a771281ae6457791d92fe7eac756016e3175a67aece306"
+    },
+    {
+      "path": "receiver-tables.json",
+      "sha256": "764008ce565a06496c2123a115d79d996241ae0ba2ecff23c63ed33ee65c01d7"
+    },
+    {
+      "path": "bundled-soxr-identity.json",
+      "sha256": "81214ccbc7b3bff31bfeeba734f920440c82adfdace3bc180650d2ed5bddd3c4"
+    },
+    {
+      "path": "bundled-soxr-version-binding.json",
+      "sha256": "a337b2626160280c416304a843b95b2f25bc022d34d6a700bfd09e0fa345cc13"
+    },
+    {
+      "path": "public-reference/intake.json",
+      "sha256": "4a3d239b67b6d0df1acde5dd1f41cb4f598f6ccfe1bb7fd5a032f7fe72072bdb"
+    },
+    {
+      "path": "evidence-bundle.json",
+      "sha256": "6289d260e405870a714b00e3076315f1f1cdb94b5885d6462d0becfbd479ab69"
+    },
+    {
+      "path": "evidence-import.json",
+      "sha256": "08977db81de7c507ebba2e93d1a5e91cdce7452c707ab938c93d4fc2793c2ea4"
+    },
+    {
+      "path": "mode2-wrapper-handoff.json",
+      "sha256": "771763571385a37fa9b6c3baa5c536ec42beb0ed774e897703b0af2f5dd32a04"
+    },
+    {
+      "path": "independent-selection-review.json",
+      "sha256": "5ff7987d089ed692f3e02c83c9bb8e2bc9ffdc28e131e2041cef786fc9d02b86"
+    }
+  ],
+  "independent_review": {
+    "path": "independent-selection-review.json",
+    "scope": "Original instruction review of selection/factory/quality branches; conditional on separately bound vtable/import and constructor state; not public-source or runtime audit",
+    "result": "No disagreement in inspected branch logic"
+  }
+}

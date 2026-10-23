@@ -38,9 +38,8 @@ struct NativeTimelineReaderTests {
         let reads: [Read]
     }
     private func oracle() throws -> Oracle {
-        let folder = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-            .appendingPathComponent("research/evidence/application/APP014")
+        let folder = PrivateResearchFixtures.root
+            .appendingPathComponent("evidence/application/APP014")
         let data = try Data(contentsOf: folder.appendingPathComponent("timeline-reader-oracle.json"))
         #expect(cprSHA256(data) == "0df450ef24e5124574b720c7eeb020cd9136f3267f037ad8808426faa34641cf")
         let decoded = try JSONDecoder().decode(Oracle.self, from: data)
@@ -54,7 +53,8 @@ struct NativeTimelineReaderTests {
         return withUnsafeBytes(of: &copy) { Data($0) }
     }
 
-    @Test func NarrowedReciprocalFusedQuantizationMatchesIndependentRounding() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func NarrowedReciprocalFusedQuantizationMatchesIndependentRounding() throws {
         let data = try oracle()
         #expect(data.quantizers.count == 254)
         #expect(data.quantizers.filter(\.fma_discriminator).count == 19)
@@ -74,7 +74,8 @@ struct NativeTimelineReaderTests {
         #expect(rb_cpr_timeline_quantize(1, -1, &minusOne) == RB_TIMELINE_OK && minusOne == 0)
     }
 
-    @Test func MappedPartitionsRoundLengthSeparatelyAndRespectSilenceBit() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func MappedPartitionsRoundLengthSeparatelyAndRespectSilenceBit() throws {
         let data = try oracle()
         #expect(data.partitions.count == 560)
         #expect(data.partitions.filter(\.separate_endpoint_difference).count == 176)
@@ -89,7 +90,8 @@ struct NativeTimelineReaderTests {
         }
     }
 
-    @Test func IntegerWindowsCoverGapsInclusiveSelectionAndHalfOpenReads() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func IntegerWindowsCoverGapsInclusiveSelectionAndHalfOpenReads() throws {
         let data = try oracle()
         #expect(data.windows.count == 110)
         for (index, row) in data.windows.enumerated() {
@@ -117,7 +119,8 @@ struct NativeTimelineReaderTests {
         }
     }
 
-    @Test func RetryRequiresExactStartAndOccursOnlyOnceWithoutReinterpretingErrors() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func RetryRequiresExactStartAndOccursOnlyOnceWithoutReinterpretingErrors() throws {
         let data = try oracle()
         #expect(data.reads.count == 126)
         for row in data.reads {

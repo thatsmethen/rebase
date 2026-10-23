@@ -1,0 +1,127 @@
+{
+  "id": "APP011",
+  "created_utc": "2026-10-20T09:06:07.978067+00:00",
+  "version": "0.11.0",
+  "build": 11,
+  "status": "explicit_mode0_downsample_source_audition_integrated_and_checked",
+  "full_fidelity_objective": "incomplete",
+  "cubase_runtime_comparisons": 0,
+  "target_executions": 0,
+  "executable": {
+    "path": "research/evidence/application/APP011/final-build-snapshot/Rebase.app/Contents/MacOS/Rebase",
+    "bytes": 4853280,
+    "sha256": "48f957c4c3df0224f0322b9abfc88535a94fcad03a80d57a4abcb6ad4938b995"
+  },
+  "source_manifest": {
+    "path": "research/evidence/application/APP011/final-source-manifest.json",
+    "bytes": 20903,
+    "sha256": "a0abfae579b4575788053c524fae8be65d119c376ce894daa740789feaafaf47"
+  },
+  "tests": {
+    "passed": 200,
+    "suites": 29,
+    "log": {
+      "path": "research/evidence/application/APP011/core-tests-first.log",
+      "bytes": 39111,
+      "sha256": "74c2a05b6c7d6a2413b04f71818cb5a683d8676dbc9c157653cdc7ea548220d9"
+    },
+    "scope": "Application regression suite, rational/IEEE downsample sample/state controls, large partition/count controls, source-event seek suffix and provenance barriers. No target execution."
+  },
+  "build_log": {
+    "path": "research/evidence/application/APP011/build-release.log",
+    "bytes": 426,
+    "sha256": "0d26bd98bc869503eac9c9826fb010d0b2ec7bc82fb23cc5f2c8a19c3be8fbd4"
+  },
+  "gui": {
+    "path": "research/evidence/application/APP011/gui-observations.json",
+    "bytes": 9761,
+    "sha256": "881c561253314b0e12a48f0eba01b555dc6f0fffbf0eafc19cb68cabca4446e3"
+  },
+  "independent_reviews": [
+    {
+      "path": "research/evidence/application/APP011/rate-down-independent-review.json",
+      "bytes": 10605,
+      "sha256": "03bfd9df1cf6e94aba6544052fffca58c323004d3765a76e4783244af5542f96"
+    },
+    {
+      "path": "research/evidence/application/APP011/rate-down-stream-review.json",
+      "bytes": 3436,
+      "sha256": "11124a11b31b3d1c42151f242871abf01c04962eae6e27a0754dbbb8f988cfea"
+    },
+    {
+      "path": "research/evidence/application/APP011/gui-independent-check.json",
+      "bytes": 13862,
+      "sha256": "a9e09e4479dfbbd665be3688baeb02a8a9feb01e0ccdea6947e217895643f79c"
+    }
+  ],
+  "independent_oracles": [
+    {
+      "path": "research/evidence/application/APP011/native-rate-down-oracle.py",
+      "bytes": 13297,
+      "sha256": "cc071510f036d4a8005ac8da52b1a496b7d20a1fcdc4dd0729bb03a230276468"
+    },
+    {
+      "path": "research/evidence/application/APP011/native-rate-down-oracle.json",
+      "bytes": 676820,
+      "sha256": "3938e9ce6332f9ce4155377f9f5c6d3a9c45afe173b61d11b08ef2c7923c204a"
+    },
+    {
+      "path": "research/evidence/application/APP011/native-rate-down-count-oracle.py",
+      "bytes": 5347,
+      "sha256": "c5653227fe084369009f27acf01a41c01df7d1489310437f3801ffba210639e0"
+    },
+    {
+      "path": "research/evidence/application/APP011/native-rate-down-count-oracle.json",
+      "bytes": 54574,
+      "sha256": "5398690aa9af6c45504e626439e0b12fc265bbb5c45f24bd2b9b833400ac11a7"
+    },
+    {
+      "path": "research/evidence/application/APP011/downsample-instruction-verification.json",
+      "bytes": 1186,
+      "sha256": "428683b58d7fc074594d9299462843ce9ce7b986deb8d43c263f9f6e9fc0a19e"
+    }
+  ],
+  "static_findings": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-downsample/finding.json",
+      "bytes": 15737,
+      "sha256": "c3b4f2e05b0f7a7095e9f412d6087de65c3a095f1302d4608a59d61278e8aec6"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/rate-selection/finding.json",
+      "bytes": 9640,
+      "sha256": "2b0d82f0b5922b0e7bd279f1a19955803b982b629b6508d941be58ebf75e376b"
+    }
+  ],
+  "native_integrity": {
+    "path": "research/evidence/application/APP011/native-final-integrity.json",
+    "bytes": 667,
+    "sha256": "c9fa0c4c6c43c9cca7647823b79b587ee0376ec2b9bc9cebf2c21a2cd90d8327"
+  },
+  "historical_integrity": {
+    "path": "research/evidence/application/APP011/historical-final-integrity.json",
+    "bytes": 295,
+    "sha256": "a63ea81d5b1e2d7532c584d4be57cf168b4c462992405de0a55c2fb7ede63b71"
+  },
+  "implemented": [
+    "Explicit project-rate audition now supports both previously accepted mode0 upsampling and the bounded mono/stereo Float32 downsampling recurrence.",
+    "Downsample processing and count prediction share the same partition sequence. An input-then-output arena explicitly chooses ABOVE pointer order, and partitions avoid an unsupported singleton pending call.",
+    "Zero-output blocks advance source/state; actual aggregate emitted count controls duration. No padding or flush invents an extra ending frame.",
+    "Conversion precedes separate Float32 event gain; seek rebuilds and prerolls the same blocks and retains the crossing suffix. Fresh preparation checks provenance.",
+    "The existing stereo transfer and four-buffer AVAudioEngine queue carry the selected source event. Original-rate audition and full-project barriers remain explicit."
+  ],
+  "limits": [
+    "One admitted zero-origin source event; MIDI, plugins, routing, automation, mixer/PDC, general CPR event playback and CPR writing remain incomplete.",
+    "Mode0 is an explicit reconstruction option. Neither inspected enabled native event-stream consumer selects it: those choose availability-selected mode2/1, with successful Float32 mode2 configured as SoXR recipe6/flags0 (VHQ).",
+    "Native pointer ordering affects the slow downsample branch. ABOVE arena placement and singleton-avoidance partitions are application policies; native host allocation order and arbitrary block equivalence are not established.",
+    "The ring-to-AVAudioEngine adapter, source-resident PCM, main-actor refill and preroll seek are application policies, not a recovered native engine callback graph.",
+    "Bundled SoXR version identity is static. Public-source build equivalence, actual library availability, mode2 sample wrapping and live callback invocation remain open.",
+    "No DAC capture, device-rate equivalence, Cubase runtime comparison or full fidelity claim follows from static instructions, analytical controls or application GUI checks."
+  ],
+  "retained_corrections": [
+    "Generated Swift umbrella-module caches omitted the added C header; only the generated PCM caches were removed before successful test and release builds.",
+    "Earlier oracle/test failures and prototypes remain retained; accepted oracle controls preserve the address-sensitive branch and distinguish singleton bounds.",
+    "An early research message called quality recipe6 HQ; pinned0.1.3 headers identify VHQ. Exact native argument6 and the final sealed finding use the corrected meaning."
+  ],
+  "next": "Build pinned public SoXR0.1.3 with complete license custody, reconstruct native mode2 buffering/carry/EOF under explicit successful-call bounds, and trace the remaining live engine callback edge before expanding playback claims."
+}

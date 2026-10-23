@@ -4,8 +4,7 @@ import Testing
 
 /// Analytical interval controls, not backend reads or Reference playback tests.
 struct CPRSegmentReadPlanTests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let workspace = PrivateResearchFixtures.root
     private func segment(start: UInt64 = 100, offset: UInt64 = 7, length: UInt64 = 123) -> CPRAudioSegmentReference {
         let object = CPRObjectRecord(className: "AClusterSegment", version: 0, declarationOffset: 0,
             objectOffset: 0, identityOffset: 0, payloadOffset: 4, payloadByteCount: 28,
@@ -27,8 +26,9 @@ struct CPRSegmentReadPlanTests {
         let intervals: [Interval]
     }
 
-    @Test func allSixPinnedAnalyticalIntervalsMatchIncludingNonzeroStartAndOffset() throws {
-        let path = workspace.appendingPathComponent("research/evidence/cpr-static/cpr-audio-events-001/segment-consumer/interval-and-rate-vectors.json")
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func allSixPinnedAnalyticalIntervalsMatchIncludingNonzeroStartAndOffset() throws {
+        let path = workspace.appendingPathComponent("evidence/cpr-static/cpr-audio-events-001/segment-consumer/interval-and-rate-vectors.json")
         let bytes = try Data(contentsOf: path)
         #expect(cprSHA256(bytes) == "83fd06bd41ee507e3d4735c69b52988dbf89687c41e46e94850b73b445117bcb")
         let vectors = try JSONDecoder().decode(Vectors.self, from: bytes).intervals
@@ -130,8 +130,9 @@ struct CPRSegmentReadPlanTests {
         #expect(exact.nextClusterPosition == start + 140 && exact.silenceFrameCount == 17)
     }
 
-    @Test func pinnedFactorySegmentsProjectOnlyTheirSourceFramesWithoutChangingEvents() throws {
-        let folder = workspace.appendingPathComponent("research/targets/full-reference/expanded/Reference 15.app.pkg/Payload/Reference 15.app/Contents/Project Templates/Reference Pro")
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func pinnedFactorySegmentsProjectOnlyTheirSourceFramesWithoutChangingEvents() throws {
+        let folder = workspace.appendingPathComponent("templates")
         for (name, expectedSHA, frames) in [
             ("LoFi Hip Hop", "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495", Int64(1_058_400)),
             ("Classic House", "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892", Int64(677_376))

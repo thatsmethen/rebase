@@ -1,0 +1,35 @@
+
+/workspace/rebase/research/targets/derived/Cubase15-arm64:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+0000000100003ecc <__text>:
+1031314bc: a9be4ff4    	stp	x20, x19, [sp, #-0x20]!
+1031314c0: a9017bfd    	stp	x29, x30, [sp, #0x10]
+1031314c4: 910043fd    	add	x29, sp, #0x10
+1031314c8: aa0003f3    	mov	x19, x0
+1031314cc: a8817c01    	stp	x1, xzr, [x0], #0x10
+1031314d0: aa0203e1    	mov	x1, x2
+1031314d4: 12800002    	mov	w2, #-0x1               ; =-1
+1031314d8: 52800023    	mov	w3, #0x1                ; =1
+1031314dc: 97c3bae3    	bl	0x102220068 <__text+0x221c19c>
+1031314e0: aa1303e0    	mov	x0, x19
+1031314e4: a9417bfd    	ldp	x29, x30, [sp, #0x10]
+1031314e8: a8c24ff4    	ldp	x20, x19, [sp], #0x20
+1031314ec: d65f03c0    	ret
+1031314f0: 14000002    	b	0x1031314f8 <__text+0x312d62c>
+1031314f4: 140000c6    	b	0x10313180c <__text+0x312d940>
+1031314f8: a9bb67fa    	stp	x26, x25, [sp, #-0x50]!
+1031314fc: a9015ff8    	stp	x24, x23, [sp, #0x10]
+103131500: a90257f6    	stp	x22, x21, [sp, #0x20]
+103131504: a9034ff4    	stp	x20, x19, [sp, #0x30]
+103131508: a9047bfd    	stp	x29, x30, [sp, #0x40]
+10313150c: 910103fd    	add	x29, sp, #0x40
+103131510: aa0003f4    	mov	x20, x0
+103131514: 9000e828    	adrp	x8, 0x104e35000 <dyld_stub_binder+0x104e35000>
+103131518: 9127a108    	add	x8, x8, #0x9e8
+10313151c: 91020109    	add	x9, x8, #0x80
+103131520: a9002408    	stp	x8, x9, [x0]
+103131524: 6f00e400    	movi.2d	v0, #0000000000000000
+103131528: aa0003f3    	mov	x19, x0
+10313152c: 3c810e60    	str	q0, [x19, #0x10]!

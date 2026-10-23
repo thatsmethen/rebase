@@ -1,0 +1,296 @@
+{
+  "target_executed": false,
+  "original_sources_unchanged": true,
+  "count": 20,
+  "controls": [
+    {
+      "fixture": "LoFi Hip Hop",
+      "name": "project_flags_nonzero",
+      "changed_offset": 1291035,
+      "original_bytes": "0000",
+      "changed_bytes": "0001",
+      "mutated_sha256": "798b4f624eb505319723b58c813682a2c362835ed739c70435d9d20607752a9d",
+      "expected": "nonzero_flags",
+      "outcome": {
+        "rejected": false,
+        "effective_flags": 1,
+        "zero_flag_bypass": false,
+        "opaque_track_word": 46
+      },
+      "passed": true
+    },
+    {
+      "fixture": "LoFi Hip Hop",
+      "name": "project_duration_nonfinite",
+      "changed_offset": 1291037,
+      "original_bytes": "3f847ae147ae147b",
+      "changed_bytes": "7ff8000000000000",
+      "mutated_sha256": "3232a64a601972125c4659fd6319e8e372798a20eda0a163f6439a71ad45ecb2",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "nonfinite auto-fade duration"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "LoFi Hip Hop",
+      "name": "setting_unknown_version",
+      "changed_offset": 1291029,
+      "original_bytes": "0000",
+      "changed_bytes": "0001",
+      "mutated_sha256": "6b028d6fe1e96c696a5067831f7758fd6c4a231172b85addffd607df34fead61",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "unverified MAutoFadeSetting class/version"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "LoFi Hip Hop",
+      "name": "negative_root_attribute_count",
+      "changed_offset": 1238410,
+      "original_bytes": "00000017",
+      "changed_bytes": "ffffffff",
+      "mutated_sha256": "0b53884016c7ed76fe004ef37eeae932ccce4ae2bf3ac119dc754bb4bd55c020",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "invalid numeric attribute count"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "LoFi Hip Hop",
+      "name": "unsupported_root_attribute_type",
+      "changed_offset": 1238418,
+      "original_bytes": "0022",
+      "changed_bytes": "0100",
+      "mutated_sha256": "5623e7306143cd9697e3af5df4520be5bcdfdfb0c52ff73cc2b317a93b33bb65",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "unsupported numeric attribute type 100"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "LoFi Hip Hop",
+      "name": "local_setting_wrong_class",
+      "changed_offset": 243938,
+      "original_bytes": "00000000",
+      "changed_bytes": "000328e3",
+      "mutated_sha256": "12dae7b6b29e5da3d3fe94690df6bf7a6ebef8e5e67106ef65183e3fcc29e851",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "unverified MAutoFadeSetting class/version"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "LoFi Hip Hop",
+      "name": "local_setting_unknown_reference",
+      "changed_offset": 243938,
+      "original_bytes": "00000000",
+      "changed_bytes": "7fffffff",
+      "mutated_sha256": "f8d37ce8adb4deca1230e9b206881bfe9dddfa5edcb08959e74d5fcc62f9dea9",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "unresolved object identity"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "LoFi Hip Hop",
+      "name": "loudness_wrong_class",
+      "changed_offset": 1291443,
+      "original_bytes": "00000000",
+      "changed_bytes": "000328e3",
+      "mutated_sha256": "cbaf86e3629956fe02881dfaf9817c6556053addd6a77c33f24237f714337a49",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "unverified MLoudnessTrackEvent class/version"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "LoFi Hip Hop",
+      "name": "negative_keyed_event_count",
+      "changed_offset": 1291399,
+      "original_bytes": "0007",
+      "changed_bytes": "ffff",
+      "mutated_sha256": "f29813d98dcd16aa454384f77008aa6cc42db9bc8544d567fa312cb7742ba980",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "invalid root event table"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "LoFi Hip Hop",
+      "name": "track_word_remains_opaque",
+      "changed_offset": 243762,
+      "original_bytes": "0000002e",
+      "changed_bytes": "0000002f",
+      "mutated_sha256": "4013ed2317329a2b826d7d5ae2937dfc52802a01f063c6842be53e8a5ce1340b",
+      "expected": "raw_word",
+      "outcome": {
+        "rejected": false,
+        "effective_flags": 0,
+        "zero_flag_bypass": true,
+        "opaque_track_word": 47
+      },
+      "passed": true
+    },
+    {
+      "fixture": "Classic House",
+      "name": "project_flags_nonzero",
+      "changed_offset": 1154676,
+      "original_bytes": "0000",
+      "changed_bytes": "0001",
+      "mutated_sha256": "99beae4b7aeee8803bc8458020ebc5d1c4e62ba5ed807f45c7495fdabb9e1836",
+      "expected": "nonzero_flags",
+      "outcome": {
+        "rejected": false,
+        "effective_flags": 1,
+        "zero_flag_bypass": false,
+        "opaque_track_word": 46
+      },
+      "passed": true
+    },
+    {
+      "fixture": "Classic House",
+      "name": "project_duration_nonfinite",
+      "changed_offset": 1154678,
+      "original_bytes": "3f847ae147ae147b",
+      "changed_bytes": "7ff8000000000000",
+      "mutated_sha256": "7942877f5b8ad765b60bdc7b2ff10c52c4770cedae132b1a0778dc92fcbf1a61",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "nonfinite auto-fade duration"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "Classic House",
+      "name": "setting_unknown_version",
+      "changed_offset": 1154670,
+      "original_bytes": "0000",
+      "changed_bytes": "0001",
+      "mutated_sha256": "e536c487a1a30d9bae2939c77ff52976d00f7b5edbdda0cc6dae2f3669e772af",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "unverified MAutoFadeSetting class/version"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "Classic House",
+      "name": "negative_root_attribute_count",
+      "changed_offset": 1103702,
+      "original_bytes": "00000017",
+      "changed_bytes": "ffffffff",
+      "mutated_sha256": "0449b4218f88f2598ac4f0f740a85270134c7395ceb5f16ada8abbc7fb0b2ee4",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "invalid numeric attribute count"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "Classic House",
+      "name": "unsupported_root_attribute_type",
+      "changed_offset": 1103710,
+      "original_bytes": "0022",
+      "changed_bytes": "0100",
+      "mutated_sha256": "8c787fe60a73b182421ec45a374d088cc5b7c40842b14d073daa74246fb299af",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "unsupported numeric attribute type 100"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "Classic House",
+      "name": "local_setting_wrong_class",
+      "changed_offset": 258258,
+      "original_bytes": "00000000",
+      "changed_bytes": "00033de1",
+      "mutated_sha256": "2fc86c81b33924987ead8ceed9c8915378690630a70ebc1e64470ac7dca0f3f6",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "unverified MAutoFadeSetting class/version"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "Classic House",
+      "name": "local_setting_unknown_reference",
+      "changed_offset": 258258,
+      "original_bytes": "00000000",
+      "changed_bytes": "7fffffff",
+      "mutated_sha256": "2fdffe9799ec7b378cfc530a0cdc0f59d04d5d95015ad85b2bdd83a818d6039d",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "unresolved object identity"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "Classic House",
+      "name": "loudness_wrong_class",
+      "changed_offset": 1155090,
+      "original_bytes": "00000000",
+      "changed_bytes": "00033de1",
+      "mutated_sha256": "dc727f5bc15e0426c59e9d76c82b7db8e41556f8cc33979fe17821edada15822",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "unverified MLoudnessTrackEvent class/version"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "Classic House",
+      "name": "negative_keyed_event_count",
+      "changed_offset": 1155040,
+      "original_bytes": "0008",
+      "changed_bytes": "ffff",
+      "mutated_sha256": "54d289b6d5606f3265ceb4a56ae323b41d216f44bf687e908c8881ede8b15738",
+      "expected": "reject",
+      "outcome": {
+        "rejected": true,
+        "reason": "invalid root event table"
+      },
+      "passed": true
+    },
+    {
+      "fixture": "Classic House",
+      "name": "track_word_remains_opaque",
+      "changed_offset": 258082,
+      "original_bytes": "0000002e",
+      "changed_bytes": "0000002f",
+      "mutated_sha256": "9e1658fa6c7c3fed84884bc6588770d964bb4804c70c62f23425293d682cb4df",
+      "expected": "raw_word",
+      "outcome": {
+        "rejected": false,
+        "effective_flags": 0,
+        "zero_flag_bypass": true,
+        "opaque_track_word": 47
+      },
+      "passed": true
+    }
+  ],
+  "limits": "These are parser and zero-flag classification controls, not measured audio tests."
+}

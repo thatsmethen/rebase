@@ -8,8 +8,7 @@ import Testing
 /// These controls do not establish an actual selected Reference backend.
 @Suite(.serialized)
 struct CPRNativeAccessorGainTests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    private let workspace = PrivateResearchFixtures.root
     private struct Equal: Decodable {
         let integer: Int
         let gain_bits, decoded_bits, scalar_bits, vector_bits, separate_bits: String
@@ -39,13 +38,13 @@ struct CPRNativeAccessorGainTests {
     private struct Streams: Decodable { let scenarios: [Scenario] }
     private func stages() throws -> Stages {
         let data = try Data(contentsOf: workspace.appendingPathComponent(
-            "research/evidence/application/APP017/gain-order-stage-oracle.json"))
+            "evidence/application/APP017/gain-order-stage-oracle.json"))
         try #require(cprSHA256(data) == "e28870caa88a1eda66d8cc77eaf804ea513695e3fc3694ee77d719f2d1799cc1")
         return try JSONDecoder().decode(Stages.self, from: data)
     }
     private func streams() throws -> Streams {
         let data = try Data(contentsOf: workspace.appendingPathComponent(
-            "research/evidence/application/APP017/accessor-gain-oracle.json"))
+            "evidence/application/APP017/accessor-gain-oracle.json"))
         try #require(cprSHA256(data) == "2a78917ad3318b904f66bda1a8205305d420d4c7d088ffb2ac8d6562e2d6aaaa")
         return try JSONDecoder().decode(Streams.self, from: data)
     }
@@ -65,7 +64,8 @@ struct CPRNativeAccessorGainTests {
             mode2BudgetAvailable: false, gain: gain)
     }
 
-    @Test func EqualRatePCM24ScalarSIMDAndFloat32ProjectionAgreeWithinBound() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func EqualRatePCM24ScalarSIMDAndFloat32ProjectionAgreeWithinBound() throws {
         let rows = try stages().equal_rate_vectors
         #expect(rows.count == 3168)
         for (gainHex, group) in Dictionary(grouping: rows, by: \.gain_bits) {
@@ -95,7 +95,8 @@ struct CPRNativeAccessorGainTests {
             [lower.bitPattern | 0x80000000, lower.bitPattern])
     }
 
-    @Test func DownsamplePackedRoundtripPrecedesDestinationGainAndDoesNotClipGain() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func DownsamplePackedRoundtripPrecedesDestinationGainAndDoesNotClipGain() throws {
         var wrongOrder = 0, missingRoundtrip = 0
         for row in try stages().downsample_stage_vectors {
             var sample = [value(row.filter_output_bits)]
@@ -111,7 +112,8 @@ struct CPRNativeAccessorGainTests {
         #expect(over == [1.5, -1.5])
     }
 
-    @Test func MutableGainReadsMatchIndependentFilterHistoryAndFormatOrder() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func MutableGainReadsMatchIndependentFilterHistoryAndFormatOrder() throws {
         var checked = 0, upwardZeroHasTail = 0
         for row in try streams().scenarios {
             let input = row.input_f32_bits.map(value)

@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "finding_id": "CPR-EVENT-RENDERING-001-FINALIZATION",
+  "status": "sealed conditional event-local static reconstruction contract; runtime unvalidated",
+  "scope": "Finalization appendix to the unchanged original draft. Automatic-fade source, fallback ownership and packed24 conversion gates are separately sealed. No complete action or timeline equivalence.",
+  "native_source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "target_execution": false,
+  "cubase_runtime_comparisons": 0,
+  "conclusion": "The retained native instructions support an independently implemented event-local Float32 reader for the explicitly admitted saved-source state. Source-backed project flags0 now have a bound normal root fallback; the already selected segment consumer supplies finite frame bounds and one Float32 event-gain multiply. This is a composition of bounded static contracts, not an observation of Cubase rendering the source.",
+  "finalization_changes": [
+    "ER2 pending source-role gate is resolved by the separate auto-fade source and ownership findings, without changing the original draft bytes.",
+    "Packed signed24 to Float32 at exact converter gain1 is supplied by the separate PCM24 finding; arbitrary system decoder equivalence is not assumed.",
+    "The earlier independent consumer lead described AudioAccessor constructor argument5 as a sample format. It is constructor flags; explicit output format5 comes from format configuration/setter. The PCM24 finding documents the correction. Unity event gain alone never selects Float32.",
+    "No new proprietary execution, native function capture, application changes, or runtime acceptance is introduced by this finalization."
+  ],
+  "conditional_contract": [
+    {
+      "stage": "Source admission",
+      "facts": "A structurally reached supported MAudioEvent/PAudioClip and one verified AudioCluster segment, known source bounds/rate/layout and actual matching attached media. The first admitted timing subset is typed10 with the bound zero source coordinate; no string-name attribution.",
+      "dependencies": [
+        "source_state",
+        "source_placement",
+        "segment_read"
+      ]
+    },
+    {
+      "stage": "Fresh selected stream",
+      "facts": "Use the explicit renderer-selection predicates: unmuted event, finite positive event volume, empty numeric event attrs/volume curve, no inversion/fades/neighbors, TransposeLock1, no Warpscale/Bypass/Pitch/replacement content. Restrict counted clip children to the supported plain26-byte MHitPointEvent v3 source subset; reject arbitrary children or serialized NoteEvent/MicroPitchChangeFactors. Packed no-pitch state remains an explicit fresh reconstruction/call-time assumption, not an implication of absent serialized names. No external pitch context or later state mutation is admitted.",
+      "dependencies": [
+        "source_state",
+        "stream_selector"
+      ]
+    },
+    {
+      "stage": "Automatic fades",
+      "facts": "Both pinned LoFi and Classic source trees contain null local track setting and nonnull project MAutoFadeSetting v0 flags0. The sealed ownership finding identifies that same MRoot as the normal fallback receiver. The builder therefore takes its effective-flags0 automatic-fade bypass. Four serialized interpolator bodies remain opaque and unused on this branch. Classic still fails other admission predicates, notably Warpscale; this gate does not make Classic renderable.",
+      "dependencies": [
+        "automatic_fade_source",
+        "fallback_ownership"
+      ]
+    },
+    {
+      "stage": "Segment bounds",
+      "facts": "Normal remainder builds concrete PAudioSegment with stream+38, start+50, nonnegative end-minus-start length+58, source offset+60 and Float32 gain+68. Datum conversion and sign-selected \u00b10.5 then FCVTZS occur in construction. For the nonnegative converted source offset/length at the inner reader, seek=FCVTZS(offsetFrames+0.5) and count=FCVTZS(lengthFrames+0.5). Require representable positive count and a complete source interval.",
+      "dependencies": [
+        "original_draft",
+        "native_linkage"
+      ]
+    },
+    {
+      "stage": "Conditional inner PCM consumer",
+      "facts": "Conditioned on an already selected PAudioSegment/AudioStream clone,10018fb40 inner path seeks, requests min(remaining,10000), and consumes returnedFrames. Nonunity gain applies exactly one Float32 FMUL per returned frame\u00d7channel element (vector groups then scalar tail); unity skips arithmetic. No mix, clipping, ramp or FMA occurs in this loop. Under successful full reads/writes emitted source indices are [seek,seek+count), with no extra endpoint sample. Short reads, errors, cancellation and general output-writer encoding are excluded.",
+      "dependencies": [
+        "original_draft",
+        "independent_consumer_review"
+      ]
+    },
+    {
+      "stage": "Explicit Float32 and packed24",
+      "facts": "Declare native little-endian Float32 output format5 even at unity event gain. For the separate admitted packed signed24 conversion, require equal finite positive source/output rate, same positive channel count and supported interleaved layout, exact converter gain1, safe signed sample/byte counts and adequate disjoint buffers. Decode signed p then x=Float32(p/8388608), exactly representable. Event gain is a separate subsequent operation, never folded into converter gain.",
+      "dependencies": [
+        "pcm24_to_float32",
+        "native_linkage"
+      ]
+    },
+    {
+      "stage": "Arithmetic domain",
+      "facts": "For the admitted positive finite-normal event gain and nearest-even FP mode, y=x when gain equals1, otherwise y=RN32(x*g). Require normal-or-zero finite products; reject nonfinite/overflow/underflow/subnormal domains in a conservative reconstruction. Native loop itself has no corresponding safety clamp or finite guard. No generic sample-rate conversion is substituted.",
+      "dependencies": [
+        "pcm24_to_float32"
+      ]
+    }
+  ],
+  "whole_action_boundary": {
+    "entry": "0x10018fb40",
+    "mutation": "The containing offline action temporarily writes event numeric attribute0x74616462 (tadB) while constructing segments, then restores it.",
+    "restriction": "The whole action must not be composed with the earlier empty-attribute source selector as though it preserved that state. Only the already-selected inner consumer is used here; its caller role, output setup and general backend mutation remain separate."
+  },
+  "timeline_boundary": "The separate MAudioTrack producer uses builderflags0x80 and an inclusive-end selection predicate. That relation does not identify the offline consumer as live timeline playback and does not establish mixer/automation/plugin/PDC/transport or live exact-end behavior.",
+  "lofi_analytical_projection": {
+    "rate": 44100,
+    "seconds": 24,
+    "source_offset_frames": 0,
+    "frames": 1058400,
+    "full_10000_frame_chunks": 105,
+    "tail_frames": 8400,
+    "classification": "Arithmetic projection under the explicit matching-rate source subset, not measured Cubase output or a claim that bundled VSTsound audio was decoded."
+  },
+  "unresolved": [
+    "Actual Cubase PCM comparisons remain0; runtime equivalence has not been demonstrated.",
+    "Host edits, extension callbacks, selected-stream replacement and arbitrary live state can invalidate source assumptions.",
+    "General fades, nonzero automatic-fade modes, overlapping/linked events, loops, pitch/warp layers, rate conversion and multitrack mixing are excluded.",
+    "Serialized interpolators, mixer/track automation and plugin state remain outside this contract.",
+    "No universal bit-faithfulness outside the stated arithmetic, representation and successful-I/O domain."
+  ],
+  "references": {
+    "original_draft": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/finding.json",
+      "bytes": 42305,
+      "sha256": "7a493eaca5021ef876a557ec4159c82df5aa51554f13995f57f14e0670140623"
+    },
+    "source_state": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/audible-state/finding.json",
+      "bytes": 28600,
+      "sha256": "12ce949821b80d579cb69ba0cca51bd20e5adcfad99f7ae26d36c3cb15c4a2f9"
+    },
+    "stream_selector": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/renderer-selection/finding.json",
+      "bytes": 33370,
+      "sha256": "f3ec20b3e9b3412a30a4451a920f1c68bbd95b41906dda4a432139a5f8f23da4"
+    },
+    "source_placement": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timebase/finding.json",
+      "bytes": 39071,
+      "sha256": "af7178337889b779e4d37e2ac55e9eb41087c3fced9b54a0ec15e63e4204cd82"
+    },
+    "segment_read": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/segment-consumer/finding.json",
+      "bytes": 17257,
+      "sha256": "b3ed0ab7f758c91a65620dcc829be02e51684c7887e4561f9107d22fc0365c38"
+    },
+    "automatic_fade_source": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/autofade-source/finding.json",
+      "bytes": 13349,
+      "sha256": "421a3e5bf51f892b2b68a37e69c8171440ee39d114385d9934bd05a6cc7ca08c"
+    },
+    "fallback_ownership": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/ownership-finding.json",
+      "bytes": 7206,
+      "sha256": "14aaee2b8096ee1f0c2f502b4942140111ba4b86ecc703617e50c27d03861a85"
+    },
+    "pcm24_to_float32": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/pcm24-float32/finding.json",
+      "bytes": 10785,
+      "sha256": "698f1f9fac7d3947f513ad25dbed67e5d6425eb31dfd91c99832b77aa7b231f3"
+    },
+    "independent_consumer_review": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/consumer-lead-review.json",
+      "bytes": 7263,
+      "sha256": "c09ed3a6d7898bb7662326a6c2fc46b88e2ea6ad0d9b89201df108a7a5b42932"
+    },
+    "native_linkage": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/final-linkage.json",
+      "bytes": 20822,
+      "sha256": "d7679ccaddd0d4dd2592b32713331f066d2b769dea40d407df777ba02370cad5"
+    },
+    "native_verification": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/verification.json",
+      "bytes": 31925,
+      "sha256": "a391441a4fc2ea1f2e5e41b2ee3bbcddcbc284541484f029e127a21a1a6f7de1"
+    }
+  },
+  "verification": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/finalization-verification.json",
+    "bytes": 1529,
+    "sha256": "90eb5176fcd6ba2e13f0bc6e524f474c70dd60580841c5c5ce82fc511a0df0e1"
+  },
+  "preservation": "Earlier finding, native dossiers, ownership/autofade/PCM24 seals and manifests remain byte-identical. This appendix supersedes only the pending-finalization status and adds explicit composition limits."
+}

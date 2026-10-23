@@ -1,0 +1,106 @@
+
+/workspace/rebase/research/targets/derived/Cubase15-arm64:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+0000000100003ecc <__text>:
+10198066c: a9be4ff4    	stp	x20, x19, [sp, #-0x20]!
+101980670: a9017bfd    	stp	x29, x30, [sp, #0x10]
+101980674: 910043fd    	add	x29, sp, #0x10
+101980678: aa0003f3    	mov	x19, x0
+10198067c: 52800028    	mov	w8, #0x1                ; =1
+101980680: 39013808    	strb	w8, [x0, #0x4e]
+101980684: 94000006    	bl	0x10198069c <__text+0x197c7d0>
+101980688: 39013a7f    	strb	wzr, [x19, #0x4e]
+10198068c: 52800020    	mov	w0, #0x1                ; =1
+101980690: a9417bfd    	ldp	x29, x30, [sp, #0x10]
+101980694: a8c24ff4    	ldp	x20, x19, [sp], #0x20
+101980698: d65f03c0    	ret
+10198069c: a9bb67fa    	stp	x26, x25, [sp, #-0x50]!
+1019806a0: a9015ff8    	stp	x24, x23, [sp, #0x10]
+1019806a4: a90257f6    	stp	x22, x21, [sp, #0x20]
+1019806a8: a9034ff4    	stp	x20, x19, [sp, #0x30]
+1019806ac: a9047bfd    	stp	x29, x30, [sp, #0x40]
+1019806b0: 910103fd    	add	x29, sp, #0x40
+1019806b4: aa0403f4    	mov	x20, x4
+1019806b8: aa0303f6    	mov	x22, x3
+1019806bc: aa0003f3    	mov	x19, x0
+1019806c0: cb010057    	sub	x23, x2, x1
+1019806c4: 39413008    	ldrb	w8, [x0, #0x4c]
+1019806c8: 340002c8    	cbz	w8, 0x101980720 <__text+0x197c854>
+1019806cc: 93407ef5    	sxtw	x21, w23
+1019806d0: 710006df    	cmp	w22, #0x1
+1019806d4: 5400012b    	b.lt	0x1019806f8 <__text+0x197c82c>
+1019806d8: d3607ee8    	lsl	x8, x23, #32
+1019806dc: 935efd17    	asr	x23, x8, #30
+1019806e0: 92403ed6    	and	x22, x22, #0xffff
+1019806e4: f8408680    	ldr	x0, [x20], #0x8
+1019806e8: aa1703e1    	mov	x1, x23
+1019806ec: 947c0247    	bl	0x103881008 <dyld_stub_binder+0x103881008>
+1019806f0: f10006d6    	subs	x22, x22, #0x1
+1019806f4: 54ffff81    	b.ne	0x1019806e4 <__text+0x197c818>
+1019806f8: f9403e68    	ldr	x8, [x19, #0x78]
+1019806fc: 8b150108    	add	x8, x8, x21
+101980700: f9003e68    	str	x8, [x19, #0x78]
+101980704: 52800020    	mov	w0, #0x1                ; =1
+101980708: a9447bfd    	ldp	x29, x30, [sp, #0x40]
+10198070c: a9434ff4    	ldp	x20, x19, [sp, #0x30]
+101980710: a94257f6    	ldp	x22, x21, [sp, #0x20]
+101980714: a9415ff8    	ldp	x24, x23, [sp, #0x10]
+101980718: a8c567fa    	ldp	x26, x25, [sp], #0x50
+10198071c: d65f03c0    	ret
+101980720: 39413668    	ldrb	w8, [x19, #0x4d]
+101980724: 34fffd48    	cbz	w8, 0x1019806cc <__text+0x197c800>
+101980728: f9404a68    	ldr	x8, [x19, #0x90]
+10198072c: b940110a    	ldr	w10, [x8, #0x10]
+101980730: 2942a508    	ldp	w8, w9, [x8, #0x14]
+101980734: 4b08012b    	sub	w11, w9, w8
+101980738: 0b0a012c    	add	w12, w9, w10
+10198073c: 4b08018c    	sub	w12, w12, w8
+101980740: 6b08013f    	cmp	w9, w8
+101980744: 1a8ca168    	csel	w8, w11, w12, ge
+101980748: 1a880148    	csel	w8, w10, w8, eq
+10198074c: 4b080155    	sub	w21, w10, w8
+101980750: 6b1702bf    	cmp	w21, w23
+101980754: 540002ca    	b.ge	0x1019807ac <__text+0x197c8e0>
+101980758: 710006df    	cmp	w22, #0x1
+10198075c: 5400014b    	b.lt	0x101980784 <__text+0x197c8b8>
+101980760: 937e7ef7    	sbfiz	x23, x23, #2, #32
+101980764: aa1603e8    	mov	x8, x22
+101980768: 92403ed8    	and	x24, x22, #0xffff
+10198076c: aa1403f9    	mov	x25, x20
+101980770: f8408720    	ldr	x0, [x25], #0x8
+101980774: aa1703e1    	mov	x1, x23
+101980778: 947c0224    	bl	0x103881008 <dyld_stub_binder+0x103881008>
+10198077c: f1000718    	subs	x24, x24, #0x1
+101980780: 54ffff81    	b.ne	0x101980770 <__text+0x197c8a4>
+101980784: 39414268    	ldrb	w8, [x19, #0x50]
+101980788: 7100011f    	cmp	w8, #0x0
+10198078c: 7a401aa4    	ccmp	w21, #0x0, #0x4, ne
+101980790: 54fffbad    	b.le	0x101980704 <__text+0x197c838>
+101980794: aa1303e0    	mov	x0, x19
+101980798: aa1603e1    	mov	x1, x22
+10198079c: aa1403e2    	mov	x2, x20
+1019807a0: aa1503e3    	mov	x3, x21
+1019807a4: 9400013d    	bl	0x101980c98 <__text+0x197cdcc>
+1019807a8: 17ffffd4    	b	0x1019806f8 <__text+0x197c82c>
+1019807ac: aa1303e0    	mov	x0, x19
+1019807b0: aa1603e1    	mov	x1, x22
+1019807b4: aa1403e2    	mov	x2, x20
+1019807b8: aa1703e3    	mov	x3, x23
+1019807bc: 94000137    	bl	0x101980c98 <__text+0x197cdcc>
+1019807c0: 93407ef5    	sxtw	x21, w23
+1019807c4: 17ffffcd    	b	0x1019806f8 <__text+0x197c82c>
+1019807c8: a9be4ff4    	stp	x20, x19, [sp, #-0x20]!
+1019807cc: a9017bfd    	stp	x29, x30, [sp, #0x10]
+1019807d0: 910043fd    	add	x29, sp, #0x10
+1019807d4: aa0003f3    	mov	x19, x0
+1019807d8: d100e000    	sub	x0, x0, #0x38
+1019807dc: 52800028    	mov	w8, #0x1                ; =1
+1019807e0: 39005a68    	strb	w8, [x19, #0x16]
+1019807e4: 97ffffae    	bl	0x10198069c <__text+0x197c7d0>
+1019807e8: 39005a7f    	strb	wzr, [x19, #0x16]
+1019807ec: 52800020    	mov	w0, #0x1                ; =1
+1019807f0: a9417bfd    	ldp	x29, x30, [sp, #0x10]
+1019807f4: a8c24ff4    	ldp	x20, x19, [sp], #0x20
+1019807f8: d65f03c0    	ret

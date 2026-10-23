@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "scope": "Own public-only probe relocated with just bundled dylib; not final application execution",
+  "command": [
+    "clang",
+    "-arch",
+    "arm64",
+    "-mmacosx-version-min=14.0",
+    "-O3",
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "-frounding-math",
+    "-I",
+    "Application/Sources/RebaseSoXR/include",
+    "-I",
+    "Application/Sources/RebaseTimingDSP/include",
+    "-I",
+    "Application/ThirdParty/soxr-0.1.3/src",
+    "/workspace/rebase/research/evidence/application/APP012/soxr-public-build/bridge-controls.c",
+    "Application/Sources/RebaseSoXR/rebase_soxr.c",
+    "-L",
+    "/workspace/rebase/Application/.build-soxr/install/lib",
+    "-lsoxr",
+    "-Wl,-rpath,@executable_path/../Frameworks",
+    "-o",
+    "/workspace/rebase/research/evidence/application/APP012/soxr-public-build/relocation/Probe.app/Contents/MacOS/Probe"
+  ],
+  "result": {
+    "status": "passed",
+    "version": "libsoxr-0.1.3",
+    "engine": "cr64",
+    "comparisons": 8,
+    "all_consumed_produced_and_sample_bits_match": true,
+    "output_totals": [
+      8916,
+      8916,
+      7526,
+      7526,
+      2972,
+      2972,
+      8192,
+      8192
+    ],
+    "scope": "Our bridge versus direct calls to same public library; no native wrapper or vendor equivalence"
+  },
+  "loaded_library": "/workspace/rebase/research/evidence/application/APP012/soxr-public-build/relocation/Probe.app/Contents/Frameworks/libsoxr.0.dylib",
+  "library_sha256": "c614df97b2c3f3881fa694efc73a6d5152fe0288ac9396adb6bd7c8c8e5f895a",
+  "external_dependencies": "/workspace/rebase/research/evidence/application/APP012/soxr-public-build/relocation/Probe.app/Contents/MacOS/Probe:\n\t@rpath/libsoxr.0.dylib (compatibility version 0.0.0, current version 0.1.2)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)\n"
+}

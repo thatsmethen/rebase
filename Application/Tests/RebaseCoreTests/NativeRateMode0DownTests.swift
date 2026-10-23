@@ -7,9 +7,8 @@ import Testing
 /// Expectations are generated independently from original ARM64 instructions
 /// using Fraction arithmetic, never from this candidate or Reference execution.
 struct NativeRateMode0DownTests {
-    private let workspace = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-    private let evidence = "research/evidence/application/APP011/"
+    private let workspace = PrivateResearchFixtures.root
+    private let evidence = "evidence/application/APP011/"
     private struct State: Decodable {
         let step_f64_bits, phase_f64_bits: String
         let history_f64_bits: [String]
@@ -148,7 +147,8 @@ struct NativeRateMode0DownTests {
         return output
     }
 
-    @Test func originalInstructionVectorsMatchEverySampleStateAndIgnoredFlush() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func originalInstructionVectorsMatchEverySampleStateAndIgnoredFlush() throws {
         let controls = try oracle()
         #expect(controls.vectors.count == 105)
         for vector in controls.vectors {
@@ -160,7 +160,8 @@ struct NativeRateMode0DownTests {
         }
     }
 
-    @Test func fusedOperationAndDifferentMonoStereoCarryAreDiscriminated() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func fusedOperationAndDifferentMonoStereoCarryAreDiscriminated() throws {
         let controls = try oracle()
         #expect(controls.arithmetic_discriminators.count == 6)
         for difference in controls.arithmetic_discriminators {
@@ -175,7 +176,8 @@ struct NativeRateMode0DownTests {
         #expect(try execute(stereo).map(\.bitPattern) == [0, 0])
     }
 
-    @Test func partitionPolicyAndReachableSingletonFailureMatchIndependentDigests() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func partitionPolicyAndReachableSingletonFailureMatchIndependentDigests() throws {
         let controls = try oracle().large_partition_vectors
         #expect(controls.count == 18)
         for vector in controls {
@@ -204,7 +206,8 @@ struct NativeRateMode0DownTests {
         #expect(fixed.output_frames == 15_051 && safe.output_frames == 15_052)
     }
 
-    @Test func liveCursorPlanarBuffersAndPrerollMatchIndependentPartitionOracle() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func liveCursorPlanarBuffersAndPrerollMatchIndependentPartitionOracle() throws {
         for vector in try oracle().large_partition_vectors where vector.name.hasSuffix("avoid-singleton") {
             let stream = try CPRRateConvertedStream(source: vector.input,
                 sourceRate: Double(vector.sourceRate), outputRate: Double(vector.outputRate), gain: 1)
@@ -224,7 +227,8 @@ struct NativeRateMode0DownTests {
         }
     }
 
-    @Test func equalRateIsNotCopyAndZeroInputNeverFlushes() throws {
+    @Test(.enabled(if: PrivateResearchFixtures.isConfigured, PrivateResearchFixtures.reason))
+    func equalRateIsNotCopyAndZeroInputNeverFlushes() throws {
         let vector = try #require(try oracle().vectors.first { $0.name == "48000-48000-c2-above-35" })
         let result = try execute(vector)
         #expect(result.count == 33 * 2)

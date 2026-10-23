@@ -1,0 +1,74 @@
+{
+  "recorded_at": "2026-10-19T06:38:00.047347+00:00",
+  "source_arm64_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "whole_image_provider_analysis": "not completed",
+  "attempts": [
+    {
+      "profile": "Ghidra default",
+      "outcome": "1200000ms startup timeout; diagnostics retained"
+    },
+    {
+      "profile": "disable Decompiler Switch Analysis",
+      "outcome": "interrupted after thread sampling showed global constant propagation still active"
+    },
+    {
+      "profile": "disable Decompiler Switch Analysis and Basic Constant Reference Analyzer",
+      "outcome": "interrupted after thread sampling showed Call-Fixup Installer work"
+    },
+    {
+      "profile": "also disable Call-Fixup Installer",
+      "outcome": "first admission transient Java probe timeout; JDK21 executable then verified directly; second admission succeeded but analysis exceeded 900000 ms with Objective-C analyzer exceptions in diagnostics"
+    }
+  ],
+  "successful_method": {
+    "scope": "Five exact unchanged code intervals admitted as raw ARM64 with their original linked entry addresses",
+    "default_ghidra_profile": true,
+    "heap": "2G",
+    "source_and_readback_bytes": 928,
+    "native_instruction_words": 232,
+    "rea_instruction_addresses": 227,
+    "limitations": [
+      "Original Mach-O import/global/exception context is not loaded in the raw derivatives.",
+      "Two tail branches enter unmapped original-image targets; apparent halt_baddata is not a claim about original instructions.",
+      "A 20-byte post-return region is retained but omitted from one recovered body.",
+      "Pseudocode loses or abstracts ABI, signed conversion, fused arithmetic and exceptional-value details; native instructions govern."
+    ],
+    "separate_corroboration": "Original-image native instruction, import, class/vtable and data evidence retained separately."
+  },
+  "not_a_performance_benchmark": "Different scopes, profiles and host load; no general timing comparison or coverage percentage asserted.",
+  "no_target_execution": true,
+  "evidence_files": [
+    {
+      "path": "research/evidence/cubase-static/main-session/0005-response.json",
+      "sha256": "7826552fb3e3f1c0a8aaf759360dab4bb671b9186579fa935a1e9c84ad20a13e"
+    },
+    {
+      "path": "research/evidence/cubase-static/main-session-bounded-02/interruption-record.json",
+      "sha256": "70268296b1059e98e7d80f278019d93a83f215ba6924d9eda37b2ab9aa09fe1a"
+    },
+    {
+      "path": "research/evidence/cubase-static/main-session-focused/interruption-record.json",
+      "sha256": "effd2e619716a02e4b9907030c99395387902382d010628b1f44ac63281d58d6"
+    },
+    {
+      "path": "research/evidence/cubase-static/main-session-direct-functions/0003-response.json",
+      "sha256": "58a11322da255076285e5696304310815479c39395a4222b64c2dfdc7362d01e"
+    },
+    {
+      "path": "research/evidence/cubase-static/main-session-direct-functions-02/0004-response.json",
+      "sha256": "9b913ac337ae496d2d91632c6b78a35495208b73e537f79af9c37e9af98d2643"
+    },
+    {
+      "path": "research/evidence/cubase-static/main-reference-review/finding.json",
+      "sha256": "cfafc5713323c0aa5ec7dc86e983a242274d62f67447e6640a7d8c0aa196fc83"
+    },
+    {
+      "path": "research/evidence/cubase-static/main-function-slices/raw-slice-analysis.json",
+      "sha256": "417ab81ea9c9a827bf8dd39080c3e099b7b936d3cc0d365d59330d389d85fdb1"
+    },
+    {
+      "path": "research/evidence/cubase-static/main-function-slices-review/review.json",
+      "sha256": "aeaba0d50f1939ee8718bb529a4637a24767b4897da14f09884efb97c3149470"
+    }
+  ]
+}

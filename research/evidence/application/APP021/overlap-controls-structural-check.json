@@ -1,0 +1,295 @@
+{
+  "status": "passed bounded structural and integer PCM checks",
+  "target_executed": false,
+  "native_validity_established": false,
+  "application_executed": false,
+  "controls": [
+    {
+      "name": "equal-crossing",
+      "events": [
+        {
+          "ordinal": 0,
+          "event_identity": 742,
+          "priority": 1,
+          "ticks": 1440.0,
+          "frames": 176400,
+          "source_frame": 88200
+        },
+        {
+          "ordinal": 1,
+          "event_identity": 1327,
+          "priority": 1,
+          "ticks": 4320.0,
+          "frames": 220500,
+          "source_frame": 396900
+        }
+      ],
+      "distinct_source_files": 2,
+      "saved_rate": 44100,
+      "references_checked": 9
+    },
+    {
+      "name": "nested-tail",
+      "events": [
+        {
+          "ordinal": 0,
+          "event_identity": 742,
+          "priority": 1,
+          "ticks": 960,
+          "frames": 441000,
+          "source_frame": 88200
+        },
+        {
+          "ordinal": 1,
+          "event_identity": 1325,
+          "priority": 2,
+          "ticks": 2880,
+          "frames": 88200,
+          "source_frame": 529200
+        }
+      ],
+      "distinct_source_files": 2,
+      "saved_rate": 44100,
+      "references_checked": 9
+    },
+    {
+      "name": "covered-anchor",
+      "events": [
+        {
+          "ordinal": 0,
+          "event_identity": 742,
+          "priority": 1,
+          "ticks": 960,
+          "frames": 88200,
+          "source_frame": 88200
+        },
+        {
+          "ordinal": 1,
+          "event_identity": 1327,
+          "priority": 1,
+          "ticks": 960,
+          "frames": 176400,
+          "source_frame": 396900
+        }
+      ],
+      "distinct_source_files": 2,
+      "saved_rate": 44100,
+      "references_checked": 9
+    },
+    {
+      "name": "same-start-ties",
+      "events": [
+        {
+          "ordinal": 0,
+          "event_identity": 742,
+          "priority": 1,
+          "ticks": 960,
+          "frames": 88200,
+          "source_frame": 88200
+        },
+        {
+          "ordinal": 1,
+          "event_identity": 1325,
+          "priority": 1,
+          "ticks": 960,
+          "frames": 132300,
+          "source_frame": 264600
+        },
+        {
+          "ordinal": 2,
+          "event_identity": 1909,
+          "priority": 1,
+          "ticks": 960,
+          "frames": 176400,
+          "source_frame": 396900
+        }
+      ],
+      "distinct_source_files": 3,
+      "saved_rate": 44100,
+      "references_checked": 11
+    },
+    {
+      "name": "signed-earlier-wins",
+      "events": [
+        {
+          "ordinal": 0,
+          "event_identity": 742,
+          "priority": 2147483647,
+          "ticks": 960,
+          "frames": 264600,
+          "source_frame": 88200
+        },
+        {
+          "ordinal": 1,
+          "event_identity": 1328,
+          "priority": -2147483648,
+          "ticks": 2880,
+          "frames": 264600,
+          "source_frame": 396900
+        }
+      ],
+      "distinct_source_files": 2,
+      "saved_rate": 44100,
+      "references_checked": 9
+    },
+    {
+      "name": "signed-later-wins",
+      "events": [
+        {
+          "ordinal": 0,
+          "event_identity": 742,
+          "priority": -2147483648,
+          "ticks": 960,
+          "frames": 264600,
+          "source_frame": 88200
+        },
+        {
+          "ordinal": 1,
+          "event_identity": 1328,
+          "priority": 2147483647,
+          "ticks": 2880,
+          "frames": 264600,
+          "source_frame": 396900
+        }
+      ],
+      "distinct_source_files": 2,
+      "saved_rate": 44100,
+      "references_checked": 9
+    },
+    {
+      "name": "repeated-splits",
+      "events": [
+        {
+          "ordinal": 0,
+          "event_identity": 742,
+          "priority": 0,
+          "ticks": 960,
+          "frames": 529200,
+          "source_frame": 44100
+        },
+        {
+          "ordinal": 1,
+          "event_identity": 1325,
+          "priority": 1,
+          "ticks": 2880,
+          "frames": 44100,
+          "source_frame": 176400
+        },
+        {
+          "ordinal": 2,
+          "event_identity": 1911,
+          "priority": 2,
+          "ticks": 5760,
+          "frames": 88200,
+          "source_frame": 396900
+        },
+        {
+          "ordinal": 3,
+          "event_identity": 2497,
+          "priority": 3,
+          "ticks": 9600,
+          "frames": 44100,
+          "source_frame": 661500
+        }
+      ],
+      "distinct_source_files": 4,
+      "saved_rate": 44100,
+      "references_checked": 13
+    },
+    {
+      "name": "saved32k-original-offset",
+      "events": [
+        {
+          "ordinal": 0,
+          "event_identity": 742,
+          "priority": 1,
+          "ticks": 1,
+          "frames": 44100,
+          "source_frame": 1
+        },
+        {
+          "ordinal": 1,
+          "event_identity": 1346,
+          "priority": 1,
+          "ticks": 2,
+          "frames": 6,
+          "source_frame": 44100
+        }
+      ],
+      "distinct_source_files": 2,
+      "saved_rate": 32000,
+      "references_checked": 9
+    },
+    {
+      "name": "covered-capacity",
+      "events": [
+        {
+          "ordinal": 0,
+          "event_identity": 742,
+          "priority": 1,
+          "ticks": 960,
+          "frames": 88200,
+          "source_frame": 1014300
+        },
+        {
+          "ordinal": 1,
+          "event_identity": 1335,
+          "priority": 1,
+          "ticks": 960,
+          "frames": 176400,
+          "source_frame": 396900
+        }
+      ],
+      "distinct_source_files": 2,
+      "saved_rate": 44100,
+      "references_checked": 9
+    },
+    {
+      "name": "reversed-starts",
+      "events": [
+        {
+          "ordinal": 0,
+          "event_identity": 742,
+          "priority": 1,
+          "ticks": 2880,
+          "frames": 176400,
+          "source_frame": 88200
+        },
+        {
+          "ordinal": 1,
+          "event_identity": 1331,
+          "priority": 1,
+          "ticks": 960,
+          "frames": 264600,
+          "source_frame": 396900
+        }
+      ],
+      "distinct_source_files": 2,
+      "saved_rate": 44100,
+      "references_checked": 9
+    }
+  ],
+  "sample_values_checked": 8467200,
+  "source_and_evidence": [
+    {
+      "path": "research/evidence/application/APP021/verify_overlap_controls.py",
+      "bytes": 5583,
+      "sha256": "cae34ab8f3634f69c04081a0075e412c90fa6ef1dbb4220ff6acb1c7cb3b718e"
+    },
+    {
+      "path": "scripts/cpr_probe.py",
+      "bytes": 25831,
+      "sha256": "502a5d53c1a6135e40c0c220c99f4f509f30ccaa30cbe5a63ec5ab4b752ec63b"
+    },
+    {
+      "path": "research/evidence/application/APP021/overlap-controls-01/manifest.json",
+      "bytes": 114553,
+      "sha256": "841d49ccc25bf179672bf57dd85bba930357cedfeaf40c94d8a6ef6536c6eb66"
+    }
+  ],
+  "limitations": [
+    "The existing probe checks envelope/reference/prefix structure; ancillary native object bodies remain unproved.",
+    "The generator and this check share reviewer authorship. Parser implementation and integer sample recomputation are separate; independent reviewer acceptance is still required.",
+    "Native overlap semantics and Swift sample composition require their separate static review and integration tests."
+  ]
+}

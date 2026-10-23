@@ -1,0 +1,4103 @@
+{
+  "id": "CPR-OBJECT-FIXTURES-001",
+  "created_utc": "2026-10-19T10:26:34.294237+00:00",
+  "status": "All ten Pro template metadata roots and entered arrangement node lists decode structurally; playback and general CPR import are not established.",
+  "source_scope": "Read-only exact native extracted shipped Pro templates; no target execution or source modification.",
+  "probe_source_sha256": "592b3c37ac96fee17655591e8124a627ef8f620966c4c81d9ce2f6d5efda922b",
+  "contracts": [
+    {
+      "kind": "native-corroborated framing",
+      "rule": "32-bit tokens at the entered CPR paths: -2 registers a class declaration and continues; -1 declares a class, then payload length; other negative values are class references after clearing the sign bit. Class declaration offsets are ARCH-relative. Positive tokens reference object identity at its payload-length field; zero is null. Probe only resolves previously entered object identities and backward missing-class references to explicit -1 declarations."
+    },
+    {
+      "kind": "native-corroborated node layout",
+      "rule": "MDataNode begins a length string and signed32 datum type. Normal branch type0/17 consumes two archive objects/references; observed types1/10 consume a double. MListNode then reads signed32 child count and objects; MTrackList inserts an unsigned16 before that count. All entered MListNode/MTrackList payloads end exactly across ten templates."
+    },
+    {
+      "kind": "bounded observed metadata layout",
+      "rule": "Metadata root StMedia::PAttributes version0 body contains one PAttr attribute of type2/subtype201 with counted subtype20 StMedia::PStringIDMediaAttribute objects; each has class string, opaque64-bit identity and counted attributes. Field type1 reads signed64,4 reads double,8 reads a length string,2 a bounded compound. All ten roots consume exactly. Attribute IDs are unique and Type/value field tags agree."
+    },
+    {
+      "kind": "native-corroborated tempo record widths",
+      "rule": "MTempoTrackEvent version3 starts signed32 count followed by22-byte records float32/double/double/signed16. Then float32 and serialized unsigned16 Boolean. Reciprocal-tempo arithmetic is traced natively, but timeline units, mode selection and compatibility branch behavior are not established by this fixture report."
+    },
+    {
+      "kind": "observed media relationship",
+      "rule": "Two direct MAudioEvent objects lead through their26-byte prefix to PAudioClip v4. Its counted node prefix leads to an FNPath v0 object. The latter sequentially reads filename,4opaque bytes,3strings,6opaque bytes,directory string and ends exactly. Path construction/locator resolution remains outside this report."
+    }
+  ],
+  "records": [
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Classic House.cpr",
+      "source_sha256": "28db9a9e6aca3357e0758c4b985c4bbdfb4e1d9268502d53238f0ceb2733e892",
+      "source_bytes": 1197444,
+      "probe_output": "research/evidence/cubase-static/cpr-objects-001/fixtures/classic-house-v06.json",
+      "probe_output_sha256": "e0e2b270bbd15780378c0829fab4bcb1ab08b293667c9336bb3f1e77bfbdd3ad",
+      "nodes": [
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 487,
+            "byte_length": 0,
+            "text": "",
+            "suffix": ""
+          },
+          "count": 7,
+          "count_offset": 505,
+          "parsed_end": 1103702,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 592,
+            "byte_length": 25,
+            "text": "Input/Output Channels",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 635,
+          "parsed_end": 2105,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 705,
+            "byte_length": 14,
+            "text": "Stereo Out",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1386,
+          "parsed_end": 1390,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2335,
+            "byte_length": 9,
+            "text": "Drums",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 5,
+          "count_offset": 2360,
+          "parsed_end": 2999,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 207237,
+            "byte_length": 10,
+            "text": "Bongos",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 207263,
+          "parsed_end": 211847,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "PAudioClip",
+          "name": {
+            "offset": 207371,
+            "byte_length": 46,
+            "text": "Tech_House_Percussion_Loop_21_125bpm_BODTH",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 84,
+          "count_offset": 207433,
+          "parsed_end": 210314,
+          "opaque_tail_bytes": 1391
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 258329,
+            "byte_length": 9,
+            "text": "Riser",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 258354,
+          "parsed_end": 258850,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 343373,
+            "byte_length": 23,
+            "text": "Classic House Stabs",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 343412,
+          "parsed_end": 343416,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 632538,
+            "byte_length": 8,
+            "text": "Bass",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 632562,
+          "parsed_end": 632566,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 751078,
+            "byte_length": 15,
+            "text": "Vocal Chops",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 751109,
+          "parsed_end": 751113,
+          "opaque_tail_bytes": 0
+        }
+      ],
+      "named_metadata": [
+        {
+          "id": "AudioSampleFormat",
+          "id_offset": 1195965,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 1196026,
+            "type_offset": 1196035,
+            "type_code": 1,
+            "value_offset": 1196037,
+            "value": 1,
+            "end": 1196045
+          }
+        },
+        {
+          "id": "AudioSampleRate",
+          "id_offset": 1196105,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 1196164,
+            "type_offset": 1196174,
+            "type_code": 4,
+            "value_offset": 1196176,
+            "value": 44100.0,
+            "end": 1196184
+          }
+        },
+        {
+          "id": "AudioSampleSize",
+          "id_offset": 1196244,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 1196303,
+            "type_offset": 1196312,
+            "type_code": 1,
+            "value_offset": 1196314,
+            "value": 24,
+            "end": 1196322
+          }
+        },
+        {
+          "id": "MediaAuthor",
+          "id_offset": 1196382,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 1196437,
+            "type_offset": 1196448,
+            "type_code": 8,
+            "value_offset": 1196450,
+            "value": {
+              "offset": 1196450,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 1196454
+          }
+        },
+        {
+          "id": "MediaContentSummary",
+          "id_offset": 1196514,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 1196577,
+            "type_offset": 1196588,
+            "type_code": 8,
+            "value_offset": 1196590,
+            "value": {
+              "offset": 1196590,
+              "byte_length": 72,
+              "text": "Classic House template with drums, percussion, bass, and house stabs",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 1196666
+          }
+        },
+        {
+          "id": "MediaProjectName",
+          "id_offset": 1196726,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 1196786,
+            "type_offset": 1196797,
+            "type_code": 8,
+            "value_offset": 1196799,
+            "value": {
+              "offset": 1196799,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 1196803
+          }
+        },
+        {
+          "id": "MediaTemplateCategory",
+          "id_offset": 1196863,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 1196928,
+            "type_offset": 1196939,
+            "type_code": 8,
+            "value_offset": 1196941,
+            "value": {
+              "offset": 1196941,
+              "byte_length": 14,
+              "text": "Production",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 1196959
+          }
+        },
+        {
+          "id": "MediaType",
+          "id_offset": 1197019,
+          "flags": 2,
+          "value": {
+            "name": "String",
+            "offset": 1197072,
+            "type_offset": 1197083,
+            "type_code": 8,
+            "value_offset": 1197085,
+            "value": {
+              "offset": 1197085,
+              "byte_length": 7,
+              "text": "Prj",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 1197096
+          }
+        },
+        {
+          "id": "MusicalSignature",
+          "id_offset": 1197156,
+          "flags": 2,
+          "value": {
+            "name": "Object",
+            "offset": 1197216,
+            "type_offset": 1197227,
+            "type_code": 2,
+            "value_offset": 1197229,
+            "value": {
+              "offset": 1197229,
+              "subtype": 20,
+              "class": "CmRational",
+              "identity_offset": 1197246,
+              "opaque_identity": "0x00006000033d5920",
+              "attributes": [
+                {
+                  "name": "Numerator",
+                  "offset": 1197258,
+                  "type_offset": 1197272,
+                  "type_code": 1,
+                  "value_offset": 1197274,
+                  "value": 4,
+                  "end": 1197282
+                },
+                {
+                  "name": "Denominator",
+                  "offset": 1197282,
+                  "type_offset": 1197298,
+                  "type_code": 1,
+                  "value_offset": 1197300,
+                  "value": 4,
+                  "end": 1197308
+                }
+              ],
+              "end": 1197308
+            },
+            "end": 1197308
+          }
+        },
+        {
+          "id": "MusicalTempo",
+          "id_offset": 1197368,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 1197424,
+            "type_offset": 1197434,
+            "type_code": 4,
+            "value_offset": 1197436,
+            "value": 126.5,
+            "end": 1197444
+          }
+        }
+      ],
+      "tempo_prefixes": [
+        {
+          "count": 2,
+          "record_stride": 22,
+          "records": [
+            {
+              "offset": 762,
+              "reciprocal_tempo_f32": 0.5,
+              "unbound_time_a_f64": 0.0,
+              "unbound_time_b_f64": 0.0,
+              "unbound_flag_i16": 0
+            },
+            {
+              "offset": 784,
+              "reciprocal_tempo_f32": 0.5,
+              "unbound_time_a_f64": 632.4999846058591,
+              "unbound_time_b_f64": 607199.9852216247,
+              "unbound_flag_i16": 0
+            }
+          ],
+          "extra_float_offset": 806,
+          "extra_float": 126.5,
+          "mode_u16": 1,
+          "opaque_attribute_tail_offset": 812,
+          "limit": "Native reader confirms field widths; timing fields, mode and compatibility branch semantics not yet bound."
+        }
+      ],
+      "direct_audio_media": [
+        {
+          "filename": {
+            "offset": 210322,
+            "byte_length": 50,
+            "text": "Tech_House_Percussion_Loop_21_125bpm_BODTH.wav",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "unbound_fourcc_hex": "57415645",
+          "unbound_extension_description_strings": [
+            {
+              "offset": 210380,
+              "byte_length": 7,
+              "text": "wav",
+              "suffix": "nul_then_utf8_bom"
+            },
+            {
+              "offset": 210391,
+              "byte_length": 7,
+              "text": "wav",
+              "suffix": "nul_then_utf8_bom"
+            },
+            {
+              "offset": 210402,
+              "byte_length": 13,
+              "text": "Wave File",
+              "suffix": "nul_then_utf8_bom"
+            }
+          ],
+          "unbound_discriminator_offset": 210419,
+          "unbound_six_byte_prefix_hex": "000000020000",
+          "directory": {
+            "offset": 210425,
+            "byte_length": 99,
+            "text": "vstsound://A7F7DB52AF1D437F86C67714A904A9C9/Audio Files/Dancefloor Tech House/Loops/Percussion/",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "consumed_exactly": true,
+          "limit": "Observed typed string layout; native path construction and resolution semantics pending."
+        }
+      ],
+      "object_reference_count": 14,
+      "unresolved_object_references": [],
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/LoFi Hip Hop.cpr",
+      "source_sha256": "2795af70cbc6651fbd6aa4cfbcb546d606d25d5970722a6c553384f3d196e495",
+      "source_bytes": 1333360,
+      "probe_output": "research/evidence/cubase-static/cpr-objects-001/fixtures/lofi-hip-hop-v06.json",
+      "probe_output_sha256": "cc77eee04b5d132682fdfbe75beb2920bba0a9e2284320ff5842edcb999bfe17",
+      "nodes": [
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 487,
+            "byte_length": 0,
+            "text": "",
+            "suffix": ""
+          },
+          "count": 6,
+          "count_offset": 505,
+          "parsed_end": 1238410,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 592,
+            "byte_length": 25,
+            "text": "Input/Output Channels",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 635,
+          "parsed_end": 2105,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 705,
+            "byte_length": 14,
+            "text": "Stereo Out",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1386,
+          "parsed_end": 1390,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2335,
+            "byte_length": 8,
+            "text": "Beat",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 2359,
+          "parsed_end": 2506,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 197702,
+            "byte_length": 17,
+            "text": "Vinyl Crackle",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 197735,
+          "parsed_end": 206473,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "PAudioClip",
+          "name": {
+            "offset": 197843,
+            "byte_length": 37,
+            "text": "Lofi_Ambience_16_Vinyl_Crackle_LD",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 214,
+          "count_offset": 197896,
+          "parsed_end": 205197,
+          "opaque_tail_bytes": 1143
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 243984,
+            "byte_length": 19,
+            "text": "Dusty Bar Piano",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 244019,
+          "parsed_end": 244023,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 931709,
+            "byte_length": 8,
+            "text": "Bass",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 931733,
+          "parsed_end": 931737,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1120245,
+            "byte_length": 19,
+            "text": "Sax Sample Chop",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1120280,
+          "parsed_end": 1120284,
+          "opaque_tail_bytes": 0
+        }
+      ],
+      "named_metadata": [
+        {
+          "id": "AudioSampleFormat",
+          "id_offset": 1331882,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 1331943,
+            "type_offset": 1331952,
+            "type_code": 1,
+            "value_offset": 1331954,
+            "value": 1,
+            "end": 1331962
+          }
+        },
+        {
+          "id": "AudioSampleRate",
+          "id_offset": 1332022,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 1332081,
+            "type_offset": 1332091,
+            "type_code": 4,
+            "value_offset": 1332093,
+            "value": 44100.0,
+            "end": 1332101
+          }
+        },
+        {
+          "id": "AudioSampleSize",
+          "id_offset": 1332161,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 1332220,
+            "type_offset": 1332229,
+            "type_code": 1,
+            "value_offset": 1332231,
+            "value": 24,
+            "end": 1332239
+          }
+        },
+        {
+          "id": "MediaAuthor",
+          "id_offset": 1332299,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 1332354,
+            "type_offset": 1332365,
+            "type_code": 8,
+            "value_offset": 1332367,
+            "value": {
+              "offset": 1332367,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 1332371
+          }
+        },
+        {
+          "id": "MediaContentSummary",
+          "id_offset": 1332431,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 1332494,
+            "type_offset": 1332505,
+            "type_code": 8,
+            "value_offset": 1332507,
+            "value": {
+              "offset": 1332507,
+              "byte_length": 71,
+              "text": "Requires HALion Sonic with Sonic Collection and Drum Machine Vol 01",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 1332582
+          }
+        },
+        {
+          "id": "MediaProjectName",
+          "id_offset": 1332642,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 1332702,
+            "type_offset": 1332713,
+            "type_code": 8,
+            "value_offset": 1332715,
+            "value": {
+              "offset": 1332715,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 1332719
+          }
+        },
+        {
+          "id": "MediaTemplateCategory",
+          "id_offset": 1332779,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 1332844,
+            "type_offset": 1332855,
+            "type_code": 8,
+            "value_offset": 1332857,
+            "value": {
+              "offset": 1332857,
+              "byte_length": 14,
+              "text": "Production",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 1332875
+          }
+        },
+        {
+          "id": "MediaType",
+          "id_offset": 1332935,
+          "flags": 2,
+          "value": {
+            "name": "String",
+            "offset": 1332988,
+            "type_offset": 1332999,
+            "type_code": 8,
+            "value_offset": 1333001,
+            "value": {
+              "offset": 1333001,
+              "byte_length": 7,
+              "text": "Prj",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 1333012
+          }
+        },
+        {
+          "id": "MusicalSignature",
+          "id_offset": 1333072,
+          "flags": 2,
+          "value": {
+            "name": "Object",
+            "offset": 1333132,
+            "type_offset": 1333143,
+            "type_code": 2,
+            "value_offset": 1333145,
+            "value": {
+              "offset": 1333145,
+              "subtype": 20,
+              "class": "CmRational",
+              "identity_offset": 1333162,
+              "opaque_identity": "0x00006000046216e0",
+              "attributes": [
+                {
+                  "name": "Numerator",
+                  "offset": 1333174,
+                  "type_offset": 1333188,
+                  "type_code": 1,
+                  "value_offset": 1333190,
+                  "value": 4,
+                  "end": 1333198
+                },
+                {
+                  "name": "Denominator",
+                  "offset": 1333198,
+                  "type_offset": 1333214,
+                  "type_code": 1,
+                  "value_offset": 1333216,
+                  "value": 4,
+                  "end": 1333224
+                }
+              ],
+              "end": 1333224
+            },
+            "end": 1333224
+          }
+        },
+        {
+          "id": "MusicalTempo",
+          "id_offset": 1333284,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 1333340,
+            "type_offset": 1333350,
+            "type_code": 4,
+            "value_offset": 1333352,
+            "value": 80.0,
+            "end": 1333360
+          }
+        }
+      ],
+      "tempo_prefixes": [
+        {
+          "count": 2,
+          "record_stride": 22,
+          "records": [
+            {
+              "offset": 762,
+              "reciprocal_tempo_f32": 0.75,
+              "unbound_time_a_f64": 0.0,
+              "unbound_time_b_f64": 0.0,
+              "unbound_flag_i16": 0
+            },
+            {
+              "offset": 784,
+              "reciprocal_tempo_f32": 0.5,
+              "unbound_time_a_f64": 600.0,
+              "unbound_time_b_f64": 384000.0,
+              "unbound_flag_i16": 0
+            }
+          ],
+          "extra_float_offset": 806,
+          "extra_float": 120.0,
+          "mode_u16": 0,
+          "opaque_attribute_tail_offset": 812,
+          "limit": "Native reader confirms field widths; timing fields, mode and compatibility branch semantics not yet bound."
+        }
+      ],
+      "direct_audio_media": [
+        {
+          "filename": {
+            "offset": 205205,
+            "byte_length": 41,
+            "text": "Lofi_Ambience_16_Vinyl_Crackle_LD.wav",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "unbound_fourcc_hex": "57415645",
+          "unbound_extension_description_strings": [
+            {
+              "offset": 205254,
+              "byte_length": 7,
+              "text": "wav",
+              "suffix": "nul_then_utf8_bom"
+            },
+            {
+              "offset": 205265,
+              "byte_length": 7,
+              "text": "wav",
+              "suffix": "nul_then_utf8_bom"
+            },
+            {
+              "offset": 205276,
+              "byte_length": 13,
+              "text": "Wave File",
+              "suffix": "nul_then_utf8_bom"
+            }
+          ],
+          "unbound_discriminator_offset": 205293,
+          "unbound_six_byte_prefix_hex": "000000020000",
+          "directory": {
+            "offset": 205299,
+            "byte_length": 91,
+            "text": "vstsound://22213503E5604C33B62B6889698D4D14/Audio Files/LoFi Dreams/One Shots/Ambience/",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "consumed_exactly": true,
+          "limit": "Observed typed string layout; native path construction and resolution semantics pending."
+        }
+      ],
+      "object_reference_count": 10,
+      "unresolved_object_references": [],
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Neo Soul.cpr",
+      "source_sha256": "8006c3f62d481369b05dc2c876941adb4f11cac4b906b0aecea92425c2664ba5",
+      "source_bytes": 2255508,
+      "probe_output": "research/evidence/cubase-static/cpr-objects-001/fixtures/neo-soul-v06.json",
+      "probe_output_sha256": "142fb2e9ac79ac1c3bb6e15eec2b5acb20205f7f8a39397da152d41616c4c664",
+      "nodes": [
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 487,
+            "byte_length": 0,
+            "text": "",
+            "suffix": ""
+          },
+          "count": 10,
+          "count_offset": 505,
+          "parsed_end": 2161290,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 592,
+            "byte_length": 25,
+            "text": "Input/Output Channels",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 635,
+          "parsed_end": 2105,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 705,
+            "byte_length": 14,
+            "text": "Stereo Out",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1386,
+          "parsed_end": 1390,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 2255,
+            "byte_length": 10,
+            "text": "Effect",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 2283,
+          "parsed_end": 60687,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2329,
+            "byte_length": 10,
+            "text": "Reverb",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 2355,
+          "parsed_end": 2359,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 60917,
+            "byte_length": 16,
+            "text": "Drum Machine",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 8,
+          "count_offset": 60949,
+          "parsed_end": 61957,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 242836,
+            "byte_length": 14,
+            "text": "Percussion",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 8,
+          "count_offset": 242866,
+          "parsed_end": 243854,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 417028,
+            "byte_length": 9,
+            "text": "Piano",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 417053,
+          "parsed_end": 417057,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1086362,
+            "byte_length": 9,
+            "text": "Organ",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1086387,
+          "parsed_end": 1086391,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1238301,
+            "byte_length": 9,
+            "text": "Flute",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1238326,
+          "parsed_end": 1238330,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1532050,
+            "byte_length": 8,
+            "text": "Bass",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1532074,
+          "parsed_end": 1532078,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1686759,
+            "byte_length": 11,
+            "text": "E Piano",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1686786,
+          "parsed_end": 1686790,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1941365,
+            "byte_length": 10,
+            "text": "Guitar",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1941391,
+          "parsed_end": 1941395,
+          "opaque_tail_bytes": 0
+        }
+      ],
+      "named_metadata": [
+        {
+          "id": "AudioSampleFormat",
+          "id_offset": 2254043,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 2254104,
+            "type_offset": 2254113,
+            "type_code": 1,
+            "value_offset": 2254115,
+            "value": 1,
+            "end": 2254123
+          }
+        },
+        {
+          "id": "AudioSampleRate",
+          "id_offset": 2254183,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 2254242,
+            "type_offset": 2254252,
+            "type_code": 4,
+            "value_offset": 2254254,
+            "value": 44100.0,
+            "end": 2254262
+          }
+        },
+        {
+          "id": "AudioSampleSize",
+          "id_offset": 2254322,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 2254381,
+            "type_offset": 2254390,
+            "type_code": 1,
+            "value_offset": 2254392,
+            "value": 24,
+            "end": 2254400
+          }
+        },
+        {
+          "id": "MediaAuthor",
+          "id_offset": 2254460,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 2254515,
+            "type_offset": 2254526,
+            "type_code": 8,
+            "value_offset": 2254528,
+            "value": {
+              "offset": 2254528,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 2254532
+          }
+        },
+        {
+          "id": "MediaContentSummary",
+          "id_offset": 2254592,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 2254655,
+            "type_offset": 2254666,
+            "type_code": 8,
+            "value_offset": 2254668,
+            "value": {
+              "offset": 2254668,
+              "byte_length": 58,
+              "text": "RnB Template with Drums, Piano, Bass, Guitar, and more",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 2254730
+          }
+        },
+        {
+          "id": "MediaProjectName",
+          "id_offset": 2254790,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 2254850,
+            "type_offset": 2254861,
+            "type_code": 8,
+            "value_offset": 2254863,
+            "value": {
+              "offset": 2254863,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 2254867
+          }
+        },
+        {
+          "id": "MediaTemplateCategory",
+          "id_offset": 2254927,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 2254992,
+            "type_offset": 2255003,
+            "type_code": 8,
+            "value_offset": 2255005,
+            "value": {
+              "offset": 2255005,
+              "byte_length": 14,
+              "text": "Production",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 2255023
+          }
+        },
+        {
+          "id": "MediaType",
+          "id_offset": 2255083,
+          "flags": 2,
+          "value": {
+            "name": "String",
+            "offset": 2255136,
+            "type_offset": 2255147,
+            "type_code": 8,
+            "value_offset": 2255149,
+            "value": {
+              "offset": 2255149,
+              "byte_length": 7,
+              "text": "Prj",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 2255160
+          }
+        },
+        {
+          "id": "MusicalSignature",
+          "id_offset": 2255220,
+          "flags": 2,
+          "value": {
+            "name": "Object",
+            "offset": 2255280,
+            "type_offset": 2255291,
+            "type_code": 2,
+            "value_offset": 2255293,
+            "value": {
+              "offset": 2255293,
+              "subtype": 20,
+              "class": "CmRational",
+              "identity_offset": 2255310,
+              "opaque_identity": "0x0000600005ecaa00",
+              "attributes": [
+                {
+                  "name": "Numerator",
+                  "offset": 2255322,
+                  "type_offset": 2255336,
+                  "type_code": 1,
+                  "value_offset": 2255338,
+                  "value": 4,
+                  "end": 2255346
+                },
+                {
+                  "name": "Denominator",
+                  "offset": 2255346,
+                  "type_offset": 2255362,
+                  "type_code": 1,
+                  "value_offset": 2255364,
+                  "value": 4,
+                  "end": 2255372
+                }
+              ],
+              "end": 2255372
+            },
+            "end": 2255372
+          }
+        },
+        {
+          "id": "MusicalTempo",
+          "id_offset": 2255432,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 2255488,
+            "type_offset": 2255498,
+            "type_code": 4,
+            "value_offset": 2255500,
+            "value": 70.0,
+            "end": 2255508
+          }
+        }
+      ],
+      "tempo_prefixes": [
+        {
+          "count": 2,
+          "record_stride": 22,
+          "records": [
+            {
+              "offset": 762,
+              "reciprocal_tempo_f32": 0.5,
+              "unbound_time_a_f64": 0.0,
+              "unbound_time_b_f64": 0.0,
+              "unbound_flag_i16": 0
+            },
+            {
+              "offset": 784,
+              "reciprocal_tempo_f32": 0.5,
+              "unbound_time_a_f64": 349.9999965230624,
+              "unbound_time_b_f64": 335999.9966621399,
+              "unbound_flag_i16": 0
+            }
+          ],
+          "extra_float_offset": 806,
+          "extra_float": 70.0,
+          "mode_u16": 1,
+          "opaque_attribute_tail_offset": 812,
+          "limit": "Native reader confirms field widths; timing fields, mode and compatibility branch semantics not yet bound."
+        }
+      ],
+      "direct_audio_media": [],
+      "object_reference_count": 18,
+      "unresolved_object_references": [],
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Piano Page Layout.cpr",
+      "source_sha256": "78c6672fc2e1f26325bcc6da83aa2d89db738854a4e2febb5462433e33832e78",
+      "source_bytes": 114792,
+      "probe_output": "research/evidence/cubase-static/cpr-objects-001/fixtures/piano-page-layout-v06.json",
+      "probe_output_sha256": "acd958e8897d07950e4306e0c7be485cd9c17ed5546ed1f07dcca1529d697416",
+      "nodes": [
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 487,
+            "byte_length": 9,
+            "text": "Untitled",
+            "suffix": "nul"
+          },
+          "count": 2,
+          "count_offset": 514,
+          "parsed_end": 10287,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 601,
+            "byte_length": 16,
+            "text": "Input/Output",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 635,
+          "parsed_end": 1939,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 705,
+            "byte_length": 14,
+            "text": "Stereo Out",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1728,
+          "parsed_end": 1732,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2111,
+            "byte_length": 6,
+            "text": "Piano",
+            "suffix": "nul"
+          },
+          "count": 1,
+          "count_offset": 2133,
+          "parsed_end": 2291,
+          "opaque_tail_bytes": 0
+        }
+      ],
+      "named_metadata": [
+        {
+          "id": "AudioSampleFormat",
+          "id_offset": 112900,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 112961,
+            "type_offset": 112970,
+            "type_code": 1,
+            "value_offset": 112972,
+            "value": 1,
+            "end": 112980
+          }
+        },
+        {
+          "id": "AudioSampleRate",
+          "id_offset": 113040,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 113099,
+            "type_offset": 113109,
+            "type_code": 4,
+            "value_offset": 113111,
+            "value": 44100.0,
+            "end": 113119
+          }
+        },
+        {
+          "id": "AudioSampleSize",
+          "id_offset": 113179,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 113238,
+            "type_offset": 113247,
+            "type_code": 1,
+            "value_offset": 113249,
+            "value": 24,
+            "end": 113257
+          }
+        },
+        {
+          "id": "MediaApplicationType",
+          "id_offset": 113317,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 113381,
+            "type_offset": 113392,
+            "type_code": 8,
+            "value_offset": 113394,
+            "value": {
+              "offset": 113394,
+              "byte_length": 9,
+              "text": "Music",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 113407
+          }
+        },
+        {
+          "id": "MediaAuthor",
+          "id_offset": 113467,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 113522,
+            "type_offset": 113533,
+            "type_code": 8,
+            "value_offset": 113535,
+            "value": {
+              "offset": 113535,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 113539
+          }
+        },
+        {
+          "id": "MediaComment",
+          "id_offset": 113599,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 113655,
+            "type_offset": 113666,
+            "type_code": 8,
+            "value_offset": 113668,
+            "value": {
+              "offset": 113668,
+              "byte_length": 11,
+              "text": "Comment",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 113683
+          }
+        },
+        {
+          "id": "MediaContentSummary",
+          "id_offset": 113743,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 113806,
+            "type_offset": 113817,
+            "type_code": 8,
+            "value_offset": 113819,
+            "value": {
+              "offset": 113819,
+              "byte_length": 33,
+              "text": "Empty Page Layout for Scoring",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 113856
+          }
+        },
+        {
+          "id": "MediaProjectName",
+          "id_offset": 113916,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 113976,
+            "type_offset": 113987,
+            "type_code": 8,
+            "value_offset": 113989,
+            "value": {
+              "offset": 113989,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 113993
+          }
+        },
+        {
+          "id": "MediaSubApplicationType",
+          "id_offset": 114053,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 114120,
+            "type_offset": 114131,
+            "type_code": 8,
+            "value_offset": 114133,
+            "value": {
+              "offset": 114133,
+              "byte_length": 17,
+              "text": "Music|Scoring",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 114154
+          }
+        },
+        {
+          "id": "MediaTemplateCategory",
+          "id_offset": 114214,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 114279,
+            "type_offset": 114290,
+            "type_code": 8,
+            "value_offset": 114292,
+            "value": {
+              "offset": 114292,
+              "byte_length": 11,
+              "text": "Scoring",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 114307
+          }
+        },
+        {
+          "id": "MediaType",
+          "id_offset": 114367,
+          "flags": 2,
+          "value": {
+            "name": "String",
+            "offset": 114420,
+            "type_offset": 114431,
+            "type_code": 8,
+            "value_offset": 114433,
+            "value": {
+              "offset": 114433,
+              "byte_length": 7,
+              "text": "Prj",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 114444
+          }
+        },
+        {
+          "id": "MusicalSignature",
+          "id_offset": 114504,
+          "flags": 2,
+          "value": {
+            "name": "Object",
+            "offset": 114564,
+            "type_offset": 114575,
+            "type_code": 2,
+            "value_offset": 114577,
+            "value": {
+              "offset": 114577,
+              "subtype": 20,
+              "class": "CmRational",
+              "identity_offset": 114594,
+              "opaque_identity": "0x0000600005d24510",
+              "attributes": [
+                {
+                  "name": "Numerator",
+                  "offset": 114606,
+                  "type_offset": 114620,
+                  "type_code": 1,
+                  "value_offset": 114622,
+                  "value": 4,
+                  "end": 114630
+                },
+                {
+                  "name": "Denominator",
+                  "offset": 114630,
+                  "type_offset": 114646,
+                  "type_code": 1,
+                  "value_offset": 114648,
+                  "value": 4,
+                  "end": 114656
+                }
+              ],
+              "end": 114656
+            },
+            "end": 114656
+          }
+        },
+        {
+          "id": "MusicalTempo",
+          "id_offset": 114716,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 114772,
+            "type_offset": 114782,
+            "type_code": 4,
+            "value_offset": 114784,
+            "value": 134.0,
+            "end": 114792
+          }
+        }
+      ],
+      "tempo_prefixes": [
+        {
+          "count": 1,
+          "record_stride": 22,
+          "records": [
+            {
+              "offset": 762,
+              "reciprocal_tempo_f32": 0.447761207818985,
+              "unbound_time_a_f64": 0.0,
+              "unbound_time_b_f64": 0.0,
+              "unbound_flag_i16": 0
+            }
+          ],
+          "extra_float_offset": 784,
+          "extra_float": 135.0,
+          "mode_u16": 0,
+          "opaque_attribute_tail_offset": 790,
+          "limit": "Native reader confirms field widths; timing fields, mode and compatibility branch semantics not yet bound."
+        }
+      ],
+      "direct_audio_media": [],
+      "object_reference_count": 2,
+      "unresolved_object_references": [],
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Rhythm Section Page Layout.cpr",
+      "source_sha256": "a3c8bf93a82822a52f997c10011de7952c0114676d214eb6696eba5efb8028b2",
+      "source_bytes": 139800,
+      "probe_output": "research/evidence/cubase-static/cpr-objects-001/fixtures/rhythm-section-page-layout-v06.json",
+      "probe_output_sha256": "cedcd4aed8f44e9056f55e5c8b329f60c6bfd5061b2b0babeea9b90c61de6891",
+      "nodes": [
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 487,
+            "byte_length": 9,
+            "text": "Untitled",
+            "suffix": "nul"
+          },
+          "count": 5,
+          "count_offset": 514,
+          "parsed_end": 31554,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 601,
+            "byte_length": 16,
+            "text": "Input/Output",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 635,
+          "parsed_end": 1939,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 705,
+            "byte_length": 14,
+            "text": "Stereo Out",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1728,
+          "parsed_end": 1732,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2111,
+            "byte_length": 7,
+            "text": "Guitar",
+            "suffix": "nul"
+          },
+          "count": 1,
+          "count_offset": 2134,
+          "parsed_end": 2293,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 9672,
+            "byte_length": 9,
+            "text": "Piano",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 9697,
+          "parsed_end": 9798,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 17258,
+            "byte_length": 8,
+            "text": "Bass",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 17282,
+          "parsed_end": 17382,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 24175,
+            "byte_length": 9,
+            "text": "Drums",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 24200,
+          "parsed_end": 24301,
+          "opaque_tail_bytes": 0
+        }
+      ],
+      "named_metadata": [
+        {
+          "id": "AudioSampleFormat",
+          "id_offset": 137908,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 137969,
+            "type_offset": 137978,
+            "type_code": 1,
+            "value_offset": 137980,
+            "value": 1,
+            "end": 137988
+          }
+        },
+        {
+          "id": "AudioSampleRate",
+          "id_offset": 138048,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 138107,
+            "type_offset": 138117,
+            "type_code": 4,
+            "value_offset": 138119,
+            "value": 44100.0,
+            "end": 138127
+          }
+        },
+        {
+          "id": "AudioSampleSize",
+          "id_offset": 138187,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 138246,
+            "type_offset": 138255,
+            "type_code": 1,
+            "value_offset": 138257,
+            "value": 24,
+            "end": 138265
+          }
+        },
+        {
+          "id": "MediaApplicationType",
+          "id_offset": 138325,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 138389,
+            "type_offset": 138400,
+            "type_code": 8,
+            "value_offset": 138402,
+            "value": {
+              "offset": 138402,
+              "byte_length": 9,
+              "text": "Music",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 138415
+          }
+        },
+        {
+          "id": "MediaAuthor",
+          "id_offset": 138475,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 138530,
+            "type_offset": 138541,
+            "type_code": 8,
+            "value_offset": 138543,
+            "value": {
+              "offset": 138543,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 138547
+          }
+        },
+        {
+          "id": "MediaComment",
+          "id_offset": 138607,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 138663,
+            "type_offset": 138674,
+            "type_code": 8,
+            "value_offset": 138676,
+            "value": {
+              "offset": 138676,
+              "byte_length": 11,
+              "text": "Comment",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 138691
+          }
+        },
+        {
+          "id": "MediaContentSummary",
+          "id_offset": 138751,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 138814,
+            "type_offset": 138825,
+            "type_code": 8,
+            "value_offset": 138827,
+            "value": {
+              "offset": 138827,
+              "byte_length": 33,
+              "text": "Empty Page Layout for Scoring",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 138864
+          }
+        },
+        {
+          "id": "MediaProjectName",
+          "id_offset": 138924,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 138984,
+            "type_offset": 138995,
+            "type_code": 8,
+            "value_offset": 138997,
+            "value": {
+              "offset": 138997,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 139001
+          }
+        },
+        {
+          "id": "MediaSubApplicationType",
+          "id_offset": 139061,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 139128,
+            "type_offset": 139139,
+            "type_code": 8,
+            "value_offset": 139141,
+            "value": {
+              "offset": 139141,
+              "byte_length": 17,
+              "text": "Music|Scoring",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 139162
+          }
+        },
+        {
+          "id": "MediaTemplateCategory",
+          "id_offset": 139222,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 139287,
+            "type_offset": 139298,
+            "type_code": 8,
+            "value_offset": 139300,
+            "value": {
+              "offset": 139300,
+              "byte_length": 11,
+              "text": "Scoring",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 139315
+          }
+        },
+        {
+          "id": "MediaType",
+          "id_offset": 139375,
+          "flags": 2,
+          "value": {
+            "name": "String",
+            "offset": 139428,
+            "type_offset": 139439,
+            "type_code": 8,
+            "value_offset": 139441,
+            "value": {
+              "offset": 139441,
+              "byte_length": 7,
+              "text": "Prj",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 139452
+          }
+        },
+        {
+          "id": "MusicalSignature",
+          "id_offset": 139512,
+          "flags": 2,
+          "value": {
+            "name": "Object",
+            "offset": 139572,
+            "type_offset": 139583,
+            "type_code": 2,
+            "value_offset": 139585,
+            "value": {
+              "offset": 139585,
+              "subtype": 20,
+              "class": "CmRational",
+              "identity_offset": 139602,
+              "opaque_identity": "0x0000600005ddf1e0",
+              "attributes": [
+                {
+                  "name": "Numerator",
+                  "offset": 139614,
+                  "type_offset": 139628,
+                  "type_code": 1,
+                  "value_offset": 139630,
+                  "value": 4,
+                  "end": 139638
+                },
+                {
+                  "name": "Denominator",
+                  "offset": 139638,
+                  "type_offset": 139654,
+                  "type_code": 1,
+                  "value_offset": 139656,
+                  "value": 4,
+                  "end": 139664
+                }
+              ],
+              "end": 139664
+            },
+            "end": 139664
+          }
+        },
+        {
+          "id": "MusicalTempo",
+          "id_offset": 139724,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 139780,
+            "type_offset": 139790,
+            "type_code": 4,
+            "value_offset": 139792,
+            "value": 134.0,
+            "end": 139800
+          }
+        }
+      ],
+      "tempo_prefixes": [
+        {
+          "count": 1,
+          "record_stride": 22,
+          "records": [
+            {
+              "offset": 762,
+              "reciprocal_tempo_f32": 0.447761207818985,
+              "unbound_time_a_f64": 0.0,
+              "unbound_time_b_f64": 0.0,
+              "unbound_flag_i16": 0
+            }
+          ],
+          "extra_float_offset": 784,
+          "extra_float": 135.0,
+          "mode_u16": 0,
+          "opaque_attribute_tail_offset": 790,
+          "limit": "Native reader confirms field widths; timing fields, mode and compatibility branch semantics not yet bound."
+        }
+      ],
+      "direct_audio_media": [],
+      "object_reference_count": 8,
+      "unresolved_object_references": [],
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Songwriter.cpr",
+      "source_sha256": "30da2e0944817f0a798aa1365007ff58f4c5fac7ce600f153c0c180862c04d00",
+      "source_bytes": 2288204,
+      "probe_output": "research/evidence/cubase-static/cpr-objects-001/fixtures/songwriter-v06.json",
+      "probe_output_sha256": "3294b3ec599d9a9e4dc5b82d88b4c9d80aac5f84ad24f8bc20e8cb90dc2d90bf",
+      "nodes": [
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 487,
+            "byte_length": 0,
+            "text": "",
+            "suffix": ""
+          },
+          "count": 8,
+          "count_offset": 505,
+          "parsed_end": 2188704,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 592,
+            "byte_length": 25,
+            "text": "Input/Output Channels",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 635,
+          "parsed_end": 2105,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 705,
+            "byte_length": 14,
+            "text": "Stereo Out",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1386,
+          "parsed_end": 1390,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 2255,
+            "byte_length": 10,
+            "text": "Effect",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 2283,
+          "parsed_end": 46871,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2329,
+            "byte_length": 10,
+            "text": "Reverb",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 2355,
+          "parsed_end": 2359,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 47075,
+            "byte_length": 9,
+            "text": "Drums",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 47100,
+          "parsed_end": 58462,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 840124,
+            "byte_length": 14,
+            "text": "Percussion",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 2,
+          "count_offset": 840154,
+          "parsed_end": 852098,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1010203,
+            "byte_length": 9,
+            "text": "Piano",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1010228,
+          "parsed_end": 1010232,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1679801,
+            "byte_length": 18,
+            "text": "Electric Piano",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1679835,
+          "parsed_end": 1679839,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1833851,
+            "byte_length": 8,
+            "text": "Bass",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1833875,
+          "parsed_end": 1833879,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2110795,
+            "byte_length": 9,
+            "text": "Vocal",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 2110820,
+          "parsed_end": 2110824,
+          "opaque_tail_bytes": 0
+        }
+      ],
+      "named_metadata": [
+        {
+          "id": "AudioSampleFormat",
+          "id_offset": 2286749,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 2286810,
+            "type_offset": 2286819,
+            "type_code": 1,
+            "value_offset": 2286821,
+            "value": 1,
+            "end": 2286829
+          }
+        },
+        {
+          "id": "AudioSampleRate",
+          "id_offset": 2286889,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 2286948,
+            "type_offset": 2286958,
+            "type_code": 4,
+            "value_offset": 2286960,
+            "value": 44100.0,
+            "end": 2286968
+          }
+        },
+        {
+          "id": "AudioSampleSize",
+          "id_offset": 2287028,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 2287087,
+            "type_offset": 2287096,
+            "type_code": 1,
+            "value_offset": 2287098,
+            "value": 24,
+            "end": 2287106
+          }
+        },
+        {
+          "id": "MediaAuthor",
+          "id_offset": 2287166,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 2287221,
+            "type_offset": 2287232,
+            "type_code": 8,
+            "value_offset": 2287234,
+            "value": {
+              "offset": 2287234,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 2287238
+          }
+        },
+        {
+          "id": "MediaContentSummary",
+          "id_offset": 2287298,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 2287361,
+            "type_offset": 2287372,
+            "type_code": 8,
+            "value_offset": 2287374,
+            "value": {
+              "offset": 2287374,
+              "byte_length": 48,
+              "text": "Easy Songwriting with Piano, Bass, and Drums",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 2287426
+          }
+        },
+        {
+          "id": "MediaProjectName",
+          "id_offset": 2287486,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 2287546,
+            "type_offset": 2287557,
+            "type_code": 8,
+            "value_offset": 2287559,
+            "value": {
+              "offset": 2287559,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 2287563
+          }
+        },
+        {
+          "id": "MediaTemplateCategory",
+          "id_offset": 2287623,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 2287688,
+            "type_offset": 2287699,
+            "type_code": 8,
+            "value_offset": 2287701,
+            "value": {
+              "offset": 2287701,
+              "byte_length": 14,
+              "text": "Production",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 2287719
+          }
+        },
+        {
+          "id": "MediaType",
+          "id_offset": 2287779,
+          "flags": 2,
+          "value": {
+            "name": "String",
+            "offset": 2287832,
+            "type_offset": 2287843,
+            "type_code": 8,
+            "value_offset": 2287845,
+            "value": {
+              "offset": 2287845,
+              "byte_length": 7,
+              "text": "Prj",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 2287856
+          }
+        },
+        {
+          "id": "MusicalSignature",
+          "id_offset": 2287916,
+          "flags": 2,
+          "value": {
+            "name": "Object",
+            "offset": 2287976,
+            "type_offset": 2287987,
+            "type_code": 2,
+            "value_offset": 2287989,
+            "value": {
+              "offset": 2287989,
+              "subtype": 20,
+              "class": "CmRational",
+              "identity_offset": 2288006,
+              "opaque_identity": "0x000060000261db30",
+              "attributes": [
+                {
+                  "name": "Numerator",
+                  "offset": 2288018,
+                  "type_offset": 2288032,
+                  "type_code": 1,
+                  "value_offset": 2288034,
+                  "value": 4,
+                  "end": 2288042
+                },
+                {
+                  "name": "Denominator",
+                  "offset": 2288042,
+                  "type_offset": 2288058,
+                  "type_code": 1,
+                  "value_offset": 2288060,
+                  "value": 4,
+                  "end": 2288068
+                }
+              ],
+              "end": 2288068
+            },
+            "end": 2288068
+          }
+        },
+        {
+          "id": "MusicalTempo",
+          "id_offset": 2288128,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 2288184,
+            "type_offset": 2288194,
+            "type_code": 4,
+            "value_offset": 2288196,
+            "value": 92.0,
+            "end": 2288204
+          }
+        }
+      ],
+      "tempo_prefixes": [
+        {
+          "count": 2,
+          "record_stride": 22,
+          "records": [
+            {
+              "offset": 762,
+              "reciprocal_tempo_f32": 0.5,
+              "unbound_time_a_f64": 0.0,
+              "unbound_time_b_f64": 0.0,
+              "unbound_flag_i16": 0
+            },
+            {
+              "offset": 784,
+              "reciprocal_tempo_f32": 0.5,
+              "unbound_time_a_f64": 459.9999835491186,
+              "unbound_time_b_f64": 441599.98420715384,
+              "unbound_flag_i16": 0
+            }
+          ],
+          "extra_float_offset": 806,
+          "extra_float": 92.0,
+          "mode_u16": 1,
+          "opaque_attribute_tail_offset": 812,
+          "limit": "Native reader confirms field widths; timing fields, mode and compatibility branch semantics not yet bound."
+        }
+      ],
+      "direct_audio_media": [],
+      "object_reference_count": 14,
+      "unresolved_object_references": [],
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Stereo Mastering.cpr",
+      "source_sha256": "6cde8a5ce37e5f112c79f684ad8c1fc3e308979feba9f046db42bf62ecce3022",
+      "source_bytes": 291662,
+      "probe_output": "research/evidence/cubase-static/cpr-objects-001/fixtures/stereo-mastering-v06.json",
+      "probe_output_sha256": "714598bb7c91c77050a4212893444449b9bcfc2e43032de8da5713b7f15062d3",
+      "nodes": [
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 487,
+            "byte_length": 0,
+            "text": "",
+            "suffix": ""
+          },
+          "count": 3,
+          "count_offset": 505,
+          "parsed_end": 205170,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 592,
+            "byte_length": 25,
+            "text": "Input/Output Channels",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 635,
+          "parsed_end": 2105,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 705,
+            "byte_length": 14,
+            "text": "Stereo Out",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1386,
+          "parsed_end": 1390,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2278,
+            "byte_length": 17,
+            "text": "Stereo Master",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 2311,
+          "parsed_end": 2315,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 168100,
+            "byte_length": 19,
+            "text": "Reference Track",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 168135,
+          "parsed_end": 168139,
+          "opaque_tail_bytes": 0
+        }
+      ],
+      "named_metadata": [
+        {
+          "id": "AudioSampleFormat",
+          "id_offset": 290190,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 290251,
+            "type_offset": 290260,
+            "type_code": 1,
+            "value_offset": 290262,
+            "value": 1,
+            "end": 290270
+          }
+        },
+        {
+          "id": "AudioSampleRate",
+          "id_offset": 290330,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 290389,
+            "type_offset": 290399,
+            "type_code": 4,
+            "value_offset": 290401,
+            "value": 44100.0,
+            "end": 290409
+          }
+        },
+        {
+          "id": "AudioSampleSize",
+          "id_offset": 290469,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 290528,
+            "type_offset": 290537,
+            "type_code": 1,
+            "value_offset": 290539,
+            "value": 24,
+            "end": 290547
+          }
+        },
+        {
+          "id": "MediaAuthor",
+          "id_offset": 290607,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 290662,
+            "type_offset": 290673,
+            "type_code": 8,
+            "value_offset": 290675,
+            "value": {
+              "offset": 290675,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 290679
+          }
+        },
+        {
+          "id": "MediaContentSummary",
+          "id_offset": 290739,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 290802,
+            "type_offset": 290813,
+            "type_code": 8,
+            "value_offset": 290815,
+            "value": {
+              "offset": 290815,
+              "byte_length": 66,
+              "text": "Stereo Master Template with all purpose mastering effect chain",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 290885
+          }
+        },
+        {
+          "id": "MediaProjectName",
+          "id_offset": 290945,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 291005,
+            "type_offset": 291016,
+            "type_code": 8,
+            "value_offset": 291018,
+            "value": {
+              "offset": 291018,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 291022
+          }
+        },
+        {
+          "id": "MediaTemplateCategory",
+          "id_offset": 291082,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 291147,
+            "type_offset": 291158,
+            "type_code": 8,
+            "value_offset": 291160,
+            "value": {
+              "offset": 291160,
+              "byte_length": 13,
+              "text": "Mastering",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 291177
+          }
+        },
+        {
+          "id": "MediaType",
+          "id_offset": 291237,
+          "flags": 2,
+          "value": {
+            "name": "String",
+            "offset": 291290,
+            "type_offset": 291301,
+            "type_code": 8,
+            "value_offset": 291303,
+            "value": {
+              "offset": 291303,
+              "byte_length": 7,
+              "text": "Prj",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 291314
+          }
+        },
+        {
+          "id": "MusicalSignature",
+          "id_offset": 291374,
+          "flags": 2,
+          "value": {
+            "name": "Object",
+            "offset": 291434,
+            "type_offset": 291445,
+            "type_code": 2,
+            "value_offset": 291447,
+            "value": {
+              "offset": 291447,
+              "subtype": 20,
+              "class": "CmRational",
+              "identity_offset": 291464,
+              "opaque_identity": "0x0000600005c885d0",
+              "attributes": [
+                {
+                  "name": "Numerator",
+                  "offset": 291476,
+                  "type_offset": 291490,
+                  "type_code": 1,
+                  "value_offset": 291492,
+                  "value": 4,
+                  "end": 291500
+                },
+                {
+                  "name": "Denominator",
+                  "offset": 291500,
+                  "type_offset": 291516,
+                  "type_code": 1,
+                  "value_offset": 291518,
+                  "value": 4,
+                  "end": 291526
+                }
+              ],
+              "end": 291526
+            },
+            "end": 291526
+          }
+        },
+        {
+          "id": "MusicalTempo",
+          "id_offset": 291586,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 291642,
+            "type_offset": 291652,
+            "type_code": 4,
+            "value_offset": 291654,
+            "value": 120.0,
+            "end": 291662
+          }
+        }
+      ],
+      "tempo_prefixes": [
+        {
+          "count": 2,
+          "record_stride": 22,
+          "records": [
+            {
+              "offset": 762,
+              "reciprocal_tempo_f32": 0.5,
+              "unbound_time_a_f64": 0.0,
+              "unbound_time_b_f64": 0.0,
+              "unbound_flag_i16": 0
+            },
+            {
+              "offset": 784,
+              "reciprocal_tempo_f32": 0.5,
+              "unbound_time_a_f64": 600.0,
+              "unbound_time_b_f64": 576000.0,
+              "unbound_flag_i16": 0
+            }
+          ],
+          "extra_float_offset": 806,
+          "extra_float": 120.0,
+          "mode_u16": 0,
+          "opaque_attribute_tail_offset": 812,
+          "limit": "Native reader confirms field widths; timing fields, mode and compatibility branch semantics not yet bound."
+        }
+      ],
+      "direct_audio_media": [],
+      "object_reference_count": 4,
+      "unresolved_object_references": [],
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/String Quartet Page Layout.cpr",
+      "source_sha256": "6bca3537c026f5878c8e65ac642f63e35f5f2b611c4b55e624c6a1fdd6dfec49",
+      "source_bytes": 145092,
+      "probe_output": "research/evidence/cubase-static/cpr-objects-001/fixtures/string-quartet-page-layout-v06.json",
+      "probe_output_sha256": "754810b19c890f42b20afa7fb2b94206626d3fdf63c4541b2b89963902f61103",
+      "nodes": [
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 487,
+            "byte_length": 9,
+            "text": "Untitled",
+            "suffix": "nul"
+          },
+          "count": 5,
+          "count_offset": 514,
+          "parsed_end": 30374,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 601,
+            "byte_length": 16,
+            "text": "Input/Output",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 635,
+          "parsed_end": 1939,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 705,
+            "byte_length": 14,
+            "text": "Stereo Out",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1728,
+          "parsed_end": 1732,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2111,
+            "byte_length": 14,
+            "text": "1. Violine",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 2141,
+          "parsed_end": 2304,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 9707,
+            "byte_length": 14,
+            "text": "2. Violine",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 9737,
+          "parsed_end": 9843,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 16565,
+            "byte_length": 9,
+            "text": "Viola",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 16590,
+          "parsed_end": 16691,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 23400,
+            "byte_length": 15,
+            "text": "Violoncello",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 23431,
+          "parsed_end": 23538,
+          "opaque_tail_bytes": 0
+        }
+      ],
+      "named_metadata": [
+        {
+          "id": "AudioSampleFormat",
+          "id_offset": 143200,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 143261,
+            "type_offset": 143270,
+            "type_code": 1,
+            "value_offset": 143272,
+            "value": 1,
+            "end": 143280
+          }
+        },
+        {
+          "id": "AudioSampleRate",
+          "id_offset": 143340,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 143399,
+            "type_offset": 143409,
+            "type_code": 4,
+            "value_offset": 143411,
+            "value": 44100.0,
+            "end": 143419
+          }
+        },
+        {
+          "id": "AudioSampleSize",
+          "id_offset": 143479,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 143538,
+            "type_offset": 143547,
+            "type_code": 1,
+            "value_offset": 143549,
+            "value": 24,
+            "end": 143557
+          }
+        },
+        {
+          "id": "MediaApplicationType",
+          "id_offset": 143617,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 143681,
+            "type_offset": 143692,
+            "type_code": 8,
+            "value_offset": 143694,
+            "value": {
+              "offset": 143694,
+              "byte_length": 9,
+              "text": "Music",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 143707
+          }
+        },
+        {
+          "id": "MediaAuthor",
+          "id_offset": 143767,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 143822,
+            "type_offset": 143833,
+            "type_code": 8,
+            "value_offset": 143835,
+            "value": {
+              "offset": 143835,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 143839
+          }
+        },
+        {
+          "id": "MediaComment",
+          "id_offset": 143899,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 143955,
+            "type_offset": 143966,
+            "type_code": 8,
+            "value_offset": 143968,
+            "value": {
+              "offset": 143968,
+              "byte_length": 11,
+              "text": "Comment",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 143983
+          }
+        },
+        {
+          "id": "MediaContentSummary",
+          "id_offset": 144043,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 144106,
+            "type_offset": 144117,
+            "type_code": 8,
+            "value_offset": 144119,
+            "value": {
+              "offset": 144119,
+              "byte_length": 33,
+              "text": "Empty Page Layout for Scoring",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 144156
+          }
+        },
+        {
+          "id": "MediaProjectName",
+          "id_offset": 144216,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 144276,
+            "type_offset": 144287,
+            "type_code": 8,
+            "value_offset": 144289,
+            "value": {
+              "offset": 144289,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 144293
+          }
+        },
+        {
+          "id": "MediaSubApplicationType",
+          "id_offset": 144353,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 144420,
+            "type_offset": 144431,
+            "type_code": 8,
+            "value_offset": 144433,
+            "value": {
+              "offset": 144433,
+              "byte_length": 17,
+              "text": "Music|Scoring",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 144454
+          }
+        },
+        {
+          "id": "MediaTemplateCategory",
+          "id_offset": 144514,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 144579,
+            "type_offset": 144590,
+            "type_code": 8,
+            "value_offset": 144592,
+            "value": {
+              "offset": 144592,
+              "byte_length": 11,
+              "text": "Scoring",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 144607
+          }
+        },
+        {
+          "id": "MediaType",
+          "id_offset": 144667,
+          "flags": 2,
+          "value": {
+            "name": "String",
+            "offset": 144720,
+            "type_offset": 144731,
+            "type_code": 8,
+            "value_offset": 144733,
+            "value": {
+              "offset": 144733,
+              "byte_length": 7,
+              "text": "Prj",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 144744
+          }
+        },
+        {
+          "id": "MusicalSignature",
+          "id_offset": 144804,
+          "flags": 2,
+          "value": {
+            "name": "Object",
+            "offset": 144864,
+            "type_offset": 144875,
+            "type_code": 2,
+            "value_offset": 144877,
+            "value": {
+              "offset": 144877,
+              "subtype": 20,
+              "class": "CmRational",
+              "identity_offset": 144894,
+              "opaque_identity": "0x00006000042ce880",
+              "attributes": [
+                {
+                  "name": "Numerator",
+                  "offset": 144906,
+                  "type_offset": 144920,
+                  "type_code": 1,
+                  "value_offset": 144922,
+                  "value": 4,
+                  "end": 144930
+                },
+                {
+                  "name": "Denominator",
+                  "offset": 144930,
+                  "type_offset": 144946,
+                  "type_code": 1,
+                  "value_offset": 144948,
+                  "value": 4,
+                  "end": 144956
+                }
+              ],
+              "end": 144956
+            },
+            "end": 144956
+          }
+        },
+        {
+          "id": "MusicalTempo",
+          "id_offset": 145016,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 145072,
+            "type_offset": 145082,
+            "type_code": 4,
+            "value_offset": 145084,
+            "value": 134.0,
+            "end": 145092
+          }
+        }
+      ],
+      "tempo_prefixes": [
+        {
+          "count": 1,
+          "record_stride": 22,
+          "records": [
+            {
+              "offset": 762,
+              "reciprocal_tempo_f32": 0.447761207818985,
+              "unbound_time_a_f64": 0.0,
+              "unbound_time_b_f64": 0.0,
+              "unbound_flag_i16": 0
+            }
+          ],
+          "extra_float_offset": 784,
+          "extra_float": 135.0,
+          "mode_u16": 0,
+          "opaque_attribute_tail_offset": 790,
+          "limit": "Native reader confirms field widths; timing fields, mode and compatibility branch semantics not yet bound."
+        }
+      ],
+      "direct_audio_media": [],
+      "object_reference_count": 8,
+      "unresolved_object_references": [],
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Symphonic Orchestra.cpr",
+      "source_sha256": "46420bf0906650dfd02a97fc9edfee69e4d41a0e453629438699fc36082e48c7",
+      "source_bytes": 6055141,
+      "probe_output": "research/evidence/cubase-static/cpr-objects-001/fixtures/symphonic-orchestra-v06.json",
+      "probe_output_sha256": "ca467049542cc90da4598dbbc58988e8bec942b3640646ab85ac7f7b3d8437e8",
+      "nodes": [
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 487,
+            "byte_length": 0,
+            "text": "",
+            "suffix": ""
+          },
+          "count": 9,
+          "count_offset": 505,
+          "parsed_end": 5731729,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 1810,
+            "byte_length": 10,
+            "text": "Effect",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 1838,
+          "parsed_end": 60326,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1908,
+            "byte_length": 13,
+            "text": "REVerence",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1937,
+          "parsed_end": 1941,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 60476,
+            "byte_length": 9,
+            "text": "Group",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 4,
+          "count_offset": 60503,
+          "parsed_end": 209644,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 60549,
+            "byte_length": 11,
+            "text": "Strings",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 60576,
+          "parsed_end": 60580,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 97863,
+            "byte_length": 13,
+            "text": "Woodwinds",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 97892,
+          "parsed_end": 97896,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 135140,
+            "byte_length": 9,
+            "text": "Brass",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 135165,
+          "parsed_end": 135169,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 172403,
+            "byte_length": 14,
+            "text": "Percussion",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 172433,
+          "parsed_end": 172437,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 209794,
+            "byte_length": 16,
+            "text": "Input/Output",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 209828,
+          "parsed_end": 210467,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 209874,
+            "byte_length": 14,
+            "text": "Stereo Out",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 209904,
+          "parsed_end": 209908,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 210617,
+            "byte_length": 11,
+            "text": "Strings",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 6,
+          "count_offset": 210646,
+          "parsed_end": 1494839,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 210746,
+            "byte_length": 21,
+            "text": "Violins 1 (G2-D6)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 210783,
+          "parsed_end": 210787,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 434919,
+            "byte_length": 21,
+            "text": "Violins 2 (G2-D6)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 434956,
+          "parsed_end": 434960,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 660161,
+            "byte_length": 17,
+            "text": "Viola (C2-D5)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 660194,
+          "parsed_end": 660198,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 879672,
+            "byte_length": 17,
+            "text": "Celli (C1-G4)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 879705,
+          "parsed_end": 879709,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1116950,
+            "byte_length": 18,
+            "text": "Basses (C0-C3)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1116984,
+          "parsed_end": 1116988,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1334664,
+            "byte_length": 16,
+            "text": "Harp (C0-G6)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1334696,
+          "parsed_end": 1334700,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 1494975,
+            "byte_length": 13,
+            "text": "Woodwinds",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 10,
+          "count_offset": 1495006,
+          "parsed_end": 3522817,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1495052,
+            "byte_length": 19,
+            "text": "Piccolo (D4-C7)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1495087,
+          "parsed_end": 1495091,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1692051,
+            "byte_length": 19,
+            "text": "Flute 1 (C3-C6)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1692086,
+          "parsed_end": 1692090,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 1892463,
+            "byte_length": 19,
+            "text": "Flute 2 (C3-C6)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1892498,
+          "parsed_end": 1892502,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2093712,
+            "byte_length": 18,
+            "text": "Oboe 1 (B2-F5)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 2093746,
+          "parsed_end": 2093750,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2288087,
+            "byte_length": 18,
+            "text": "Oboe 2 (B2-F5)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 2288121,
+          "parsed_end": 2288125,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2482299,
+            "byte_length": 22,
+            "text": "Clarinet 1 (D2-F5)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 2482337,
+          "parsed_end": 2482341,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2691494,
+            "byte_length": 22,
+            "text": "Clarinet 2 (D2-F5)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 2691532,
+          "parsed_end": 2691536,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2896492,
+            "byte_length": 25,
+            "text": "Bass Clarinet (B0-A3)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 2896533,
+          "parsed_end": 2896537,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 3105436,
+            "byte_length": 21,
+            "text": "Bassoon 1 (B0-C4)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 3105473,
+          "parsed_end": 3105477,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 3312048,
+            "byte_length": 21,
+            "text": "Bassoon 2 (B0-C4)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 3312085,
+          "parsed_end": 3312089,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 3522953,
+            "byte_length": 9,
+            "text": "Brass",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 6,
+          "count_offset": 3522980,
+          "parsed_end": 4733057,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 3523026,
+            "byte_length": 20,
+            "text": "Trumpets (G2-C5)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 3523062,
+          "parsed_end": 3523066,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 3720315,
+            "byte_length": 21,
+            "text": "Trombones (B0-A3)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 3720352,
+          "parsed_end": 3720356,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 3923564,
+            "byte_length": 16,
+            "text": "Horn (B0-D4)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 3923596,
+          "parsed_end": 3923600,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 4125641,
+            "byte_length": 17,
+            "text": "Horns (B0-D4)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 4125674,
+          "parsed_end": 4125678,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 4328370,
+            "byte_length": 21,
+            "text": "Euphonium (B0-A3)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 4328407,
+          "parsed_end": 4328411,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 4532607,
+            "byte_length": 16,
+            "text": "Tuba (E0-D3)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 4532639,
+          "parsed_end": 4532643,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 4733193,
+            "byte_length": 14,
+            "text": "Percussion",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 6,
+          "count_offset": 4733225,
+          "parsed_end": 5731635,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 4733271,
+            "byte_length": 26,
+            "text": "Percussion Map (B0-C6)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 4733313,
+          "parsed_end": 4733317,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 4936214,
+            "byte_length": 19,
+            "text": "Timpani (C1-B4)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 4936249,
+          "parsed_end": 4936253,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 5103971,
+            "byte_length": 19,
+            "text": "Celesta (C2-C7)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 5104006,
+          "parsed_end": 5104010,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 5263033,
+            "byte_length": 24,
+            "text": "Glockenspiel (F4-F7)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 5263073,
+          "parsed_end": 5263077,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 5420619,
+            "byte_length": 21,
+            "text": "Xylophone (F3-C7)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 5420656,
+          "parsed_end": 5420660,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 5579422,
+            "byte_length": 25,
+            "text": "Tubular Bells (F3-F5)",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 5579463,
+          "parsed_end": 5579467,
+          "opaque_tail_bytes": 0
+        }
+      ],
+      "named_metadata": [
+        {
+          "id": "AudioSampleFormat",
+          "id_offset": 6053531,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 6053592,
+            "type_offset": 6053601,
+            "type_code": 1,
+            "value_offset": 6053603,
+            "value": 1,
+            "end": 6053611
+          }
+        },
+        {
+          "id": "AudioSampleRate",
+          "id_offset": 6053671,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 6053730,
+            "type_offset": 6053740,
+            "type_code": 4,
+            "value_offset": 6053742,
+            "value": 44100.0,
+            "end": 6053750
+          }
+        },
+        {
+          "id": "AudioSampleSize",
+          "id_offset": 6053810,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 6053869,
+            "type_offset": 6053878,
+            "type_code": 1,
+            "value_offset": 6053880,
+            "value": 24,
+            "end": 6053888
+          }
+        },
+        {
+          "id": "MediaApplicationType",
+          "id_offset": 6053948,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 6054012,
+            "type_offset": 6054023,
+            "type_code": 8,
+            "value_offset": 6054025,
+            "value": {
+              "offset": 6054025,
+              "byte_length": 9,
+              "text": "Music",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 6054038
+          }
+        },
+        {
+          "id": "MediaAuthor",
+          "id_offset": 6054098,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 6054153,
+            "type_offset": 6054164,
+            "type_code": 8,
+            "value_offset": 6054166,
+            "value": {
+              "offset": 6054166,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 6054170
+          }
+        },
+        {
+          "id": "MediaContentSummary",
+          "id_offset": 6054230,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 6054293,
+            "type_offset": 6054304,
+            "type_code": 8,
+            "value_offset": 6054306,
+            "value": {
+              "offset": 6054306,
+              "byte_length": 53,
+              "text": "Orchestral Production Template for Iconica Sketch",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 6054363
+          }
+        },
+        {
+          "id": "MediaProjectName",
+          "id_offset": 6054423,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 6054483,
+            "type_offset": 6054494,
+            "type_code": 8,
+            "value_offset": 6054496,
+            "value": {
+              "offset": 6054496,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 6054500
+          }
+        },
+        {
+          "id": "MediaTemplateCategory",
+          "id_offset": 6054560,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 6054625,
+            "type_offset": 6054636,
+            "type_code": 8,
+            "value_offset": 6054638,
+            "value": {
+              "offset": 6054638,
+              "byte_length": 14,
+              "text": "Production",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 6054656
+          }
+        },
+        {
+          "id": "MediaType",
+          "id_offset": 6054716,
+          "flags": 2,
+          "value": {
+            "name": "String",
+            "offset": 6054769,
+            "type_offset": 6054780,
+            "type_code": 8,
+            "value_offset": 6054782,
+            "value": {
+              "offset": 6054782,
+              "byte_length": 7,
+              "text": "Prj",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 6054793
+          }
+        },
+        {
+          "id": "MusicalSignature",
+          "id_offset": 6054853,
+          "flags": 2,
+          "value": {
+            "name": "Object",
+            "offset": 6054913,
+            "type_offset": 6054924,
+            "type_code": 2,
+            "value_offset": 6054926,
+            "value": {
+              "offset": 6054926,
+              "subtype": 20,
+              "class": "CmRational",
+              "identity_offset": 6054943,
+              "opaque_identity": "0x00006000062a55f0",
+              "attributes": [
+                {
+                  "name": "Numerator",
+                  "offset": 6054955,
+                  "type_offset": 6054969,
+                  "type_code": 1,
+                  "value_offset": 6054971,
+                  "value": 4,
+                  "end": 6054979
+                },
+                {
+                  "name": "Denominator",
+                  "offset": 6054979,
+                  "type_offset": 6054995,
+                  "type_code": 1,
+                  "value_offset": 6054997,
+                  "value": 4,
+                  "end": 6055005
+                }
+              ],
+              "end": 6055005
+            },
+            "end": 6055005
+          }
+        },
+        {
+          "id": "MusicalTempo",
+          "id_offset": 6055065,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 6055121,
+            "type_offset": 6055131,
+            "type_code": 4,
+            "value_offset": 6055133,
+            "value": 120.0,
+            "end": 6055141
+          }
+        }
+      ],
+      "tempo_prefixes": [],
+      "direct_audio_media": [],
+      "object_reference_count": 70,
+      "unresolved_object_references": [
+        {
+          "offset": 592,
+          "kind": "object_reference",
+          "relative_target": 1280573441,
+          "target_known": false,
+          "end": 596
+        },
+        {
+          "offset": 1387,
+          "kind": "object_reference",
+          "relative_target": 1123024896,
+          "target_known": false,
+          "end": 1391
+        }
+      ],
+      "decode_errors": []
+    },
+    {
+      "source": "research/targets/full-reference/expanded/Cubase 15.app.pkg/Payload/Cubase 15.app/Contents/Project Templates/Cubase Pro/Trap.cpr",
+      "source_sha256": "ac6df94a7879ba265fc93405faf6c6b8563125f1b92d45099a1246fc2f4f0862",
+      "source_bytes": 576437,
+      "probe_output": "research/evidence/cubase-static/cpr-objects-001/fixtures/trap-v06.json",
+      "probe_output_sha256": "c131b81be4e96ec7d79fd19bca0e3acba255b1cdb1fe1ce59c498c904ecf9b6d",
+      "nodes": [
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 487,
+            "byte_length": 0,
+            "text": "",
+            "suffix": ""
+          },
+          "count": 4,
+          "count_offset": 505,
+          "parsed_end": 484882,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MTrackList",
+          "name": {
+            "offset": 592,
+            "byte_length": 25,
+            "text": "Input/Output Channels",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 1,
+          "count_offset": 635,
+          "parsed_end": 2105,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 705,
+            "byte_length": 14,
+            "text": "Stereo Out",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 1386,
+          "parsed_end": 1390,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 2335,
+            "byte_length": 9,
+            "text": "Drums",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 4,
+          "count_offset": 2360,
+          "parsed_end": 2876,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 202431,
+            "byte_length": 12,
+            "text": "Sub Bass",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 202459,
+          "parsed_end": 202463,
+          "opaque_tail_bytes": 0
+        },
+        {
+          "class": "MListNode",
+          "name": {
+            "offset": 382982,
+            "byte_length": 15,
+            "text": "Synthesizer",
+            "suffix": "nul_then_utf8_bom"
+          },
+          "count": 0,
+          "count_offset": 383013,
+          "parsed_end": 383017,
+          "opaque_tail_bytes": 0
+        }
+      ],
+      "named_metadata": [
+        {
+          "id": "AudioSampleFormat",
+          "id_offset": 574983,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 575044,
+            "type_offset": 575053,
+            "type_code": 1,
+            "value_offset": 575055,
+            "value": 1,
+            "end": 575063
+          }
+        },
+        {
+          "id": "AudioSampleRate",
+          "id_offset": 575123,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 575182,
+            "type_offset": 575192,
+            "type_code": 4,
+            "value_offset": 575194,
+            "value": 44100.0,
+            "end": 575202
+          }
+        },
+        {
+          "id": "AudioSampleSize",
+          "id_offset": 575262,
+          "flags": 2,
+          "value": {
+            "name": "Long",
+            "offset": 575321,
+            "type_offset": 575330,
+            "type_code": 1,
+            "value_offset": 575332,
+            "value": 24,
+            "end": 575340
+          }
+        },
+        {
+          "id": "MediaAuthor",
+          "id_offset": 575400,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 575455,
+            "type_offset": 575466,
+            "type_code": 8,
+            "value_offset": 575468,
+            "value": {
+              "offset": 575468,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 575472
+          }
+        },
+        {
+          "id": "MediaContentSummary",
+          "id_offset": 575532,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 575595,
+            "type_offset": 575606,
+            "type_code": 8,
+            "value_offset": 575608,
+            "value": {
+              "offset": 575608,
+              "byte_length": 47,
+              "text": "Trap Template with Beat, Sub bass and synth",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 575659
+          }
+        },
+        {
+          "id": "MediaProjectName",
+          "id_offset": 575719,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 575779,
+            "type_offset": 575790,
+            "type_code": 8,
+            "value_offset": 575792,
+            "value": {
+              "offset": 575792,
+              "byte_length": 0,
+              "text": "",
+              "suffix": ""
+            },
+            "end": 575796
+          }
+        },
+        {
+          "id": "MediaTemplateCategory",
+          "id_offset": 575856,
+          "flags": 0,
+          "value": {
+            "name": "String",
+            "offset": 575921,
+            "type_offset": 575932,
+            "type_code": 8,
+            "value_offset": 575934,
+            "value": {
+              "offset": 575934,
+              "byte_length": 14,
+              "text": "Production",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 575952
+          }
+        },
+        {
+          "id": "MediaType",
+          "id_offset": 576012,
+          "flags": 2,
+          "value": {
+            "name": "String",
+            "offset": 576065,
+            "type_offset": 576076,
+            "type_code": 8,
+            "value_offset": 576078,
+            "value": {
+              "offset": 576078,
+              "byte_length": 7,
+              "text": "Prj",
+              "suffix": "nul_then_utf8_bom"
+            },
+            "end": 576089
+          }
+        },
+        {
+          "id": "MusicalSignature",
+          "id_offset": 576149,
+          "flags": 2,
+          "value": {
+            "name": "Object",
+            "offset": 576209,
+            "type_offset": 576220,
+            "type_code": 2,
+            "value_offset": 576222,
+            "value": {
+              "offset": 576222,
+              "subtype": 20,
+              "class": "CmRational",
+              "identity_offset": 576239,
+              "opaque_identity": "0x0000600005cf0780",
+              "attributes": [
+                {
+                  "name": "Numerator",
+                  "offset": 576251,
+                  "type_offset": 576265,
+                  "type_code": 1,
+                  "value_offset": 576267,
+                  "value": 4,
+                  "end": 576275
+                },
+                {
+                  "name": "Denominator",
+                  "offset": 576275,
+                  "type_offset": 576291,
+                  "type_code": 1,
+                  "value_offset": 576293,
+                  "value": 4,
+                  "end": 576301
+                }
+              ],
+              "end": 576301
+            },
+            "end": 576301
+          }
+        },
+        {
+          "id": "MusicalTempo",
+          "id_offset": 576361,
+          "flags": 2,
+          "value": {
+            "name": "Float",
+            "offset": 576417,
+            "type_offset": 576427,
+            "type_code": 4,
+            "value_offset": 576429,
+            "value": 65.0,
+            "end": 576437
+          }
+        }
+      ],
+      "tempo_prefixes": [
+        {
+          "count": 2,
+          "record_stride": 22,
+          "records": [
+            {
+              "offset": 762,
+              "reciprocal_tempo_f32": 0.5,
+              "unbound_time_a_f64": 0.0,
+              "unbound_time_b_f64": 0.0,
+              "unbound_flag_i16": 0
+            },
+            {
+              "offset": 784,
+              "reciprocal_tempo_f32": 0.5,
+              "unbound_time_a_f64": 324.99999838570756,
+              "unbound_time_b_f64": 311999.99845027924,
+              "unbound_flag_i16": 0
+            }
+          ],
+          "extra_float_offset": 806,
+          "extra_float": 65.0,
+          "mode_u16": 1,
+          "opaque_attribute_tail_offset": 812,
+          "limit": "Native reader confirms field widths; timing fields, mode and compatibility branch semantics not yet bound."
+        }
+      ],
+      "direct_audio_media": [],
+      "object_reference_count": 6,
+      "unresolved_object_references": [],
+      "decode_errors": []
+    }
+  ],
+  "disconfirming_observations": [
+    "Classic House metadata MusicalTempo is126.5, while its first tempo event reciprocal is.5 (the native reciprocal rule yields120). Do not substitute metadata for actual timing state.",
+    "Piano metadata project name is empty and arrangement-list name is Untitled; its template filename is not an authoritative internal project title.",
+    "Audio filenames are vstsound dependencies, not embedded PCM or directly resolved local paths.",
+    "OPAQUE track tails contain mixer/device/plugin/automation state. Knowing track names and event counts does not establish playable recovered projects."
+  ],
+  "pending": [
+    "Native time-unit and mode consumers; signature event prefix semantics.",
+    "Complete PMediaDescriptor/PAudioClip/AudioCluster/AudioFile dependency framing and native path reader.",
+    "Mixer gain/pan/mute/solo, instrument/plugin state and unsupported-object handling.",
+    "Broader version,64-bit archive mode and global compatibility-state branches."
+  ]
+}

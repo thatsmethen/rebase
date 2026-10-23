@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "scope": "Conditional format candidate only; no app integration, resampling or target execution.",
+  "reviewed_sources": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/candidate/cpr_accessor_format.c",
+      "bytes": 1859,
+      "sha256": "93867452e419fc03bdbe8a5576e8fc6f70e81ddb284930472e2cbb01e9e668e5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/candidate/cpr_accessor_format.h",
+      "bytes": 751,
+      "sha256": "657a8ac70785c7a4d8ed39c25bc03048b2a14d701329d14218be9cb16d2519ad"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "research/evidence/application/APP016/accessor-pcm24-oracle-v2.json",
+      "bytes": 402077,
+      "sha256": "c9031fc3ba4f72298fcd7ebcef631e1912ef61b6e83395a1b110f85e1e4163d6"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-pcm24-oracle.py",
+      "bytes": 8456,
+      "sha256": "87c7d19a69113a6a4f9f21233058d8810eb04c51ccc705599b7cb46c6338584f"
+    },
+    {
+      "path": "research/evidence/application/APP016/check-accessor-pcm24.py",
+      "bytes": 7899,
+      "sha256": "d360dd0f8d206b902991030360244a37bd78e049229285cce3b372a8bcf8b7f2"
+    },
+    {
+      "path": "research/evidence/application/APP016/accessor-pcm24-controls/controls.c",
+      "bytes": 21940,
+      "sha256": "eb3bc27f7faf4752ac59bc9d33aecdd6f539426e1047f4d7e1e12ce20c2eff66"
+    }
+  ],
+  "results": [
+    {
+      "configuration": "optimized",
+      "result": {
+        "passed": true,
+        "vectors": 681,
+        "accepted": 606,
+        "rejected": 75,
+        "assertions": 3124,
+        "fp_environment_rejections": 7,
+        "unsupported_fpcr_bits": 0
+      },
+      "executable": {
+        "path": "research/evidence/application/APP016/accessor-pcm24-controls/optimized",
+        "bytes": 34120,
+        "sha256": "d175968de630153405fd202da23c14d885f5a27af4cf432fb91c999582de26a1"
+      },
+      "build_log": {
+        "path": "research/evidence/application/APP016/accessor-pcm24-controls/optimized-build.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "run_log": {
+        "path": "research/evidence/application/APP016/accessor-pcm24-controls/optimized-run.log",
+        "bytes": 133,
+        "sha256": "973adfe81bb09d3618e6f5a05255b76c298d58adc5c25d4ae08106f83b3d2c83"
+      }
+    },
+    {
+      "configuration": "ubsan",
+      "result": {
+        "passed": true,
+        "vectors": 681,
+        "accepted": 606,
+        "rejected": 75,
+        "assertions": 3124,
+        "fp_environment_rejections": 7,
+        "unsupported_fpcr_bits": 0
+      },
+      "executable": {
+        "path": "research/evidence/application/APP016/accessor-pcm24-controls/ubsan",
+        "bytes": 51160,
+        "sha256": "4a9ae69f9c3214014714c2ae2f85caa2bbd0cf656f507088f653c59323675d32"
+      },
+      "build_log": {
+        "path": "research/evidence/application/APP016/accessor-pcm24-controls/ubsan-build.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "run_log": {
+        "path": "research/evidence/application/APP016/accessor-pcm24-controls/ubsan-run.log",
+        "bytes": 133,
+        "sha256": "973adfe81bb09d3618e6f5a05255b76c298d58adc5c25d4ae08106f83b3d2c83"
+      }
+    }
+  ],
+  "commands": [
+    [
+      "clang",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-frounding-math",
+      "-I",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/candidate",
+      "/workspace/rebase/research/evidence/application/APP016/accessor-pcm24-controls/controls.c",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/candidate/cpr_accessor_format.c",
+      "-o",
+      "/workspace/rebase/research/evidence/application/APP016/accessor-pcm24-controls/optimized"
+    ],
+    [
+      "clang",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-frounding-math",
+      "-I",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/candidate",
+      "/workspace/rebase/research/evidence/application/APP016/accessor-pcm24-controls/controls.c",
+      "/workspace/rebase/research/evidence/cubase-static/cpr-audio-events-001/accessor-format-order/candidate/cpr_accessor_format.c",
+      "-fsanitize=undefined",
+      "-fno-sanitize-recover=all",
+      "-o",
+      "/workspace/rebase/research/evidence/application/APP016/accessor-pcm24-controls/ubsan"
+    ]
+  ],
+  "oracle_metadata_correction": {
+    "previous": {
+      "path": "research/evidence/application/APP016/accessor-pcm24-oracle.json",
+      "bytes": 402077,
+      "sha256": "ad0688297300324010b755240a885265e04c4bc7755d69e69bfac13afe681302"
+    },
+    "previous_generator": {
+      "path": "research/evidence/application/APP016/accessor-pcm24-oracle-generator-v1.py",
+      "bytes": 8426,
+      "sha256": "61f5405710335892ae106862f481c006583ffd261091176cb80ae9b077529ab0"
+    },
+    "detail": "Only scaled intermediate negative-zero metadata corrected; all final expected outputs and admission decisions unchanged.",
+    "changes": [
+      [
+        "80000000",
+        "00000000",
+        "80000000"
+      ]
+    ]
+  },
+  "limits": [
+    "Input format selection, rate conversion, gain/layout order, native backend availability, accessor lifetime and complete playback remain separate.",
+    "Defensive domain/transactionality rules are application policy, not native ABI side-effect reproduction.",
+    "UBSan success is a bounded authored test result, not proof of all memory safety."
+  ]
+}

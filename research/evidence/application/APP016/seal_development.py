@@ -1,0 +1,115 @@
+"""Seal a tested development milestone; do not promote a packaged GUI release."""
+from pathlib import Path
+from datetime import datetime,timezone
+import argparse,importlib.util,json,shutil
+HERE=Path(__file__).resolve().parent
+ROOT=HERE.parents[3]
+spec=importlib.util.spec_from_file_location('prior_custody',HERE.parent/'APP015/seal_application.py')
+c=importlib.util.module_from_spec(spec);spec.loader.exec_module(c)
+# Extend only this loaded instance; historical APP015 code remains immutable.
+c.REVIEW_PIN_KEYS += ('input_pins',)
+NATIVE={
+    'placed-rate-ownership':('889f90405c4d5607958f92f35b38e99a1b821f3708d038eda0ee53819eea657b','5d7d93282408b2b3b703ec9d6d8df5694d15ee1953cb3126c42b66a94ccaa0a8',332),
+    'accessor-seek-state':('d76301f9ef7e25345c0e22fdded03aecff7e41f5ffbd0729985a0018518a1ea2','09f04a50114fbaf475904be4fe0d767d7763e047a10ce2a7d41945a984d34f8e',292),
+    'accessor-format-order':('26640a81ed61597bd809ffbf21febd81264f688bbb51433b049cb02de778245e','f212b8f03f547073779c49edec7d61c746e4a0cba2c9ea9f46957e8e18d252df',78),
+}
+REVIEWS=['accessor-state-independent-review.json','accessor-ownership-final-addendum.json',
+         'accessor-format-independent-review.json','rate-ownership-independent-review.json']
+
+def write(name,value):
+    with (HERE/name).open('x') as f:json.dump(value,f,indent=2);f.write('\n')
+    return c.record(HERE/name)
+def source_matches_test():
+    rows=json.loads((HERE/'test-source-before.json').read_text())['files']
+    current=[c.record(p) for p in c.application_source_entries()]
+    assert current==rows
+    assert json.loads((HERE/'test-source-after.json').read_text())['files']==rows
+    return len(rows)
+def native_integrity():
+    roots=[(HERE.parent/'APP015/artifact-manifest.json',ROOT,512)]
+    studies=[]
+    for name,(finding,manifest,count) in NATIVE.items():
+        d=ROOT/'research/evidence/cubase-static/cpr-audio-events-001'/name
+        fr=c.record(d/'finding.json');mr=c.pinned(d/'artifact-manifest.json',manifest)
+        if finding:assert fr['sha256']==finding
+        studies.append(dict(name=name,finding=fr,manifest=mr))
+        roots.append((d/'artifact-manifest.json',ROOT,count))
+    return studies,c.recursive_integrity(roots)
+def reviews():
+    result=[]
+    for name in REVIEWS:
+        d=json.loads((HERE/name).read_text())
+        pins=c.check_review_pins(d)
+        assert pins > 0, name
+        result.append(dict(record=c.record(HERE/name),pins_verified=pins))
+    return result
+def record():
+    for name in ['final-source-snapshot','test-build-snapshot','development-validation.json',
+                 'final-source-manifest.json','record-native-integrity.json']:
+        assert not (HERE/name).exists(),name
+    source_count=source_matches_test()
+    test=json.loads((HERE/'core-test-run.json').read_text())
+    assert test['exit_code']==0 and test['source_unchanged'] and test['tests']==265 and test['suites']==41
+    c.check_pinned_records(test)
+    reviewed=reviews();studies,integrity=native_integrity()
+    native_record=write('record-native-integrity.json',integrity)
+    snap=HERE/'final-source-snapshot';snap.mkdir()
+    for name in c.SOURCE_DIRECTORIES:
+        shutil.copytree(ROOT/'Application'/name,snap/name,symlinks=True)
+    for name in c.SOURCE_FILES:shutil.copy2(ROOT/'Application'/name,snap/name)
+    assert c.check_source_inventory(snap)==source_count
+    source_manifest=write('final-source-manifest.json',dict(files=[c.record(p) for p in c.entries(snap)]))
+    debug=ROOT/'Application/.build-tests/arm64-apple-macosx/debug/Rebase'
+    before=c.record(debug)
+    build=HERE/'test-build-snapshot';build.mkdir()
+    shutil.copyfile(debug,build/'Rebase')
+    assert c.record(debug)==before and c.record(build/'Rebase')['sha256']==before['sha256']
+    # The existing bundle is still the accepted APP015 executable. Retain its
+    # immutable prior snapshot as evidence, not a mutable dist/ manifest pin.
+    previous=HERE.parent/'APP015/final-build-snapshot/Rebase.app/Contents/MacOS/Rebase'
+    old=c.pinned(previous,'65d0704e0897752c235d48e66ce96443f9f4b0a6c9366916efa5be2796d2fd41')
+    assert c.record(ROOT/'Application/dist/Rebase.app/Contents/MacOS/Rebase')['sha256']==old['sha256']
+    validation=dict(id='APP016-DEVELOPMENT',created_utc=datetime.now(timezone.utc).isoformat(),
+        status='tested_development_milestone',source_files=source_count,
+        tests=c.record(HERE/'core-test-run.json'),source_snapshot=source_manifest,
+        compiled_debug_executable=c.record(build/'Rebase'),
+        latest_packaged_GUI_checkpoint=dict(version='0.15.0',validation=c.record(HERE.parent/'APP015/application-validation.json'),executable=old),
+        native_studies=studies,native_integrity=native_record,independent_reviews=reviewed,
+        implementation=['Fixed supplied-rate stereo accessor with native Float32 seek mapping, first-read budgeting and retained mode1/mode2 history.',
+                        'Conditional PCM24 intermediate roundtrip for source-format downsampling; accessor gain unity.',
+                        'Actual source-frame advancement and actual converted output count; short reads never padded or accumulated to conceal mismatch.',
+                        'Equal-rate native timeline uses the active descriptor accessor lease, retained across blocks and released when selection changes.'],
+        limitations=['No new packaged GUI release or new GUI observation in APP016. The test build links the application executable; APP015 remains the last accepted bundle.',
+                     'Differing-rate placed timeline playback remains gated. Direct one-file selected stream inherits its reader owner rate; project-rate ownership must be recovered upstream/downstream.',
+                     'Actual backend/source-format selection, nonunity conversion gain, dynamic rate changes, transient I/O and postterminal continuation are separate boundaries.',
+                     'The immutable memory backend does not reproduce file I/O timing or failures. Mode2 expected samples share the pinned public SoXR backend; its wrapper model is independent.',
+                     'Proprietary target executions and Cubase runtime comparisons remain zero; full product fidelity is incomplete.'])
+    print(json.dumps(write('development-validation.json',validation)))
+def seal():
+    for name in ['final-status-snapshot','seal-integrity.json','artifact-manifest.json','final-integrity.json']:
+        assert not (HERE/name).exists(),name
+    source_matches_test();c.check_source_inventory(HERE/'final-source-snapshot');reviews()
+    validation=json.loads((HERE/'development-validation.json').read_text())
+    assert c.check_pinned_records(validation) > 0
+    c.verify(HERE/'final-source-manifest.json')
+    studies,integrity=native_integrity()
+    write('seal-integrity.json',integrity)
+    # Publication review is written after all substantive findings/status.
+    publication=json.loads((HERE/'publication-review.json').read_text())
+    assert c.check_review_pins(publication) > 0
+    snapshot=HERE/'final-status-snapshot';snapshot.mkdir()
+    for p in ['README.md','research/study.json','research/coverage.json','research/rea-steering.json']:
+        shutil.copyfile(ROOT/p,snapshot/Path(p).name)
+    paths=c.entries(HERE)
+    assert not any(p.name=='artifact-manifest.json' for p in paths)
+    manifest=write('artifact-manifest.json',dict(id='APP016-DEVELOPMENT-MANIFEST',
+        scope='Immutable local development evidence. Includes private logs/snapshots by identity; no assertion all entries are published.',files=[c.record(p) for p in paths]))
+    result=c.verify(HERE/'artifact-manifest.json')
+    print(json.dumps(write('final-integrity.json',dict(manifest=manifest,verified=result['files_checked'],sealed=True,
+        validation=c.record(HERE/'development-validation.json'),scope='Development source/test custody, not a new GUI release.'))))
+def verify():
+    print(json.dumps(c.verify(HERE/'artifact-manifest.json')))
+if __name__=='__main__':
+    p=argparse.ArgumentParser();g=p.add_mutually_exclusive_group(required=True)
+    g.add_argument('--record',action='store_true');g.add_argument('--seal',action='store_true');g.add_argument('--verify',action='store_true')
+    a=p.parse_args();record() if a.record else seal() if a.seal else verify()

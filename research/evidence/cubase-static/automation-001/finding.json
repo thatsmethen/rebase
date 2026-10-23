@@ -1,0 +1,103 @@
+{
+  "id": "CUBASE-AUTOMATION-001",
+  "created_utc": "2026-10-19T08:27:18.786533+00:00",
+  "status": "bounded static recorder-state finding; named automation mode transitions unresolved",
+  "scope": "No target execution. REA raw slices correlated with immutable Mach-O bytes. Rebase curve model is separately defined, not a reconstruction of these recorder functions.",
+  "source": {
+    "path": "research/targets/derived/Cubase15-arm64",
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "type_binding": {
+    "name": "Steinberg::MAutomationRecorder",
+    "rtti_string": "0x1039386d6",
+    "typeinfo": "0x10446b288",
+    "primary_vtable": "0x10446ae80",
+    "copy_initializer": "0x1003a4068",
+    "note": "Copy initializer installs these vtables; it does not establish default state values or public method names."
+  },
+  "contracts": [
+    {
+      "entry": "0x1003a0a60",
+      "primary_vtable_slot": "0xf0",
+      "preconditions": "Valid recorder object and external virtual-call targets.",
+      "rule": "flags at +0x154 become (flags & ~0x80000) | 1; external call chain result in D0 is stored as binary64 at +0xd0; +0xd8,+0xe0,+0xe8 are zeroed; flag0x2000 set. If byte+0x158 nonzero, virtual+0x60 called with integer1. ReturnW0=1.",
+      "native_addresses": [
+        "0x1003a0a70",
+        "0x1003a0a9c",
+        "0x1003a0aa0",
+        "0x1003a0aa4",
+        "0x1003a0aac"
+      ],
+      "uncertainty": "External result semantic/time units and callback effects unresolved; decompiler integer-looking result is an ABI artifact, native STR D0 authoritative."
+    },
+    {
+      "entry": "0x1003a0b60",
+      "primary_vtable_slot": "0x100",
+      "preconditions": "Valid recorder object; external helper0x101c23e68 returns a stable finite D0 scalar v; stored+0xd0 finite, subtraction finite.",
+      "rule": "Store v to +0xe8 and+0xe0. If flag0x2000 absent, OR flag0x1000. Otherwise calculate abs(stored+0xd0-v), OR flag0x1000 iff result>0.5, preserve its prior value otherwise, and clear0x2000. ReturnW0=1.",
+      "native_addresses": [
+        "0x1003a0b80",
+        "0x1003a0b84",
+        "0x1003a0b90",
+        "0x1003a0bac",
+        "0x1003a0bc4",
+        "0x1003a0bcc",
+        "0x1003a0bd0"
+      ],
+      "uncertainty": "No unit or Touch/Latch identity proved. Rule deliberately finite-only; native FCSEL LT and CSEL GT are authoritative for other inputs."
+    },
+    {
+      "entry": "0x10039fba4",
+      "primary_vtable_slot": "0xd0",
+      "rule": "Argument node equal to global object10500eb58 selects string key writeAll via104412378, otherwise writeEnable via104412448; calls node virtual+0x248. Missing property, nonzero property virtual+0xf0, missing node interface+0x1f0(id0xfd9), or zero interface virtual+0x260 returns0. Otherwise global object returns1; nonglobal walks node/parent virtual+0xf8 while class check PDeviceNode succeeds and returns bit3 of observed+0x1f0 field.",
+      "uncertainty": "Named properties are grounded by exact string-pointer bytes. Getter meaning/normalization and node hierarchy semantics remain unresolved; do not interpret this as the full read/write state machine."
+    }
+  ],
+  "supporting_observations": {
+    "packaged_presets": "8 automation presets; Read and Write binary preset payloads have equal length and differ only at byte102 (0x51 vs0x52). No binary schema claim.",
+    "factory_projects": "38 .cpr files inventoried with digest/size/first32 bytes only.",
+    "mode_names": "TouchFader/AutoLatch/XOver paired with auto: command strings in registration calls at100b48c4c..100b48cb4. Registration is not writer behavior.",
+    "controller": "PAutomationModeController explicitly maps automationReturnTime and automationTrimMode strings in1003e1ccc; no return-time math or Touch release path established.",
+    "routing": "InsertRoutingCell/hasInsertRouting/insertRouting direct reference candidates retained; no complete audio insert order or routing contract recovered."
+  },
+  "verification": {
+    "native_words": 3305,
+    "rea_addresses": 530,
+    "readback_bytes": 13220,
+    "all_source_and_readback_exact": true,
+    "all_native_mnemonics_match": true,
+    "both_mcp_sessions_closed": true
+  },
+  "limits": [
+    "LC_FUNCTION_STARTS intervals are not proven function bodies. Controller copy initializer interval contains2797 native words but REA body only62 words; no claims about omitted interval code.",
+    "Raw imports omit other functions, initialized global data, imports, vtables and unwind metadata. Original-image table evidence supplied separately.",
+    "1003a19d4 has decompiler bad-data warnings at an external context boundary; it is excluded from concrete state claims.",
+    "Pseudocode is analysis output, not compilable or bit-faithful C. No Cubase live host observations, audio application, timing units or mode transition proof.",
+    "Candidate scanner includes clobber-unchecked nonadjacent pairs. Only explicit original-image adjacent references cited above are used. automationMode selected string is a suffix inside track:automationMode, not the separate standalone occurrence."
+  ],
+  "prospective_disconfirming_cases": [
+    "Trace concrete callers/ABI of primary slots0xf0 and0x100 and helper101c23e68 to bind event and scalar units.",
+    "Inspect store flag0x1000 before and after exact0.5 and neighboring finite differences; exact0.5 must not newly set it in the flag0x2000 branch.",
+    "Independently bind mode IDs to Touch/AutoLatch/XOver through the recorder consumers before implementing a target-derived writer.",
+    "Instrument actual host read/write, release, stop/restart and preroll cases before any runtime conformance statement."
+  ],
+  "application": {
+    "files": [
+      "Application/Sources/RebaseCore/Automation.swift",
+      "Application/Tests/RebaseCoreTests/AutomationTests.swift"
+    ],
+    "semantics": "Explicit Rebase dB-linear and pan-linear/step lanes, left-point outgoing interpolation, read gate/manual fallback, endpoint hold, strict validation; no recorder writer implemented.",
+    "validation": "27 tests in6 suites passed; four new analytic automation methods; test-app.sh ignores supplied filter and ran full suite.",
+    "log": "automation-tests.log"
+  },
+  "evidence": {
+    "derivation.json": "6fd7ce2f42dfebddd797d1174716270a494562d587512107fcb5deb569790035",
+    "derivation-pass2.json": "fecb7eb971a615bd14298ed1aa3077832c4431eca981b6594b85e6af9c2f3c54",
+    "verification.json": "1b70f0db427dbe7b253c7f48d3518bcee27ea1d93d7060876c496b02ae1d9239",
+    "verification-pass2.json": "cec0c77d57e7975cd32bd09ff67eab7d3268917642cb80c31a6138cc42f3c559",
+    "native-data-provenance.json": "c1252899d3d53fd4f646ee8cc9e972f2073d8896ea2fb6de5d04bf7293e3ff4f",
+    "packaged-metadata.json": "a835bf585d904da02c4e55086d11bc4f7c797818998ba7dc6cb084285d095b91",
+    "factory-cpr-inventory.json": "d9061a798ddf33972153d8f408ceed5f059eaf8e3f7859094d31dd7e8d0850ee",
+    "automation-tests.log": "7275c834dd4a5fe54b0097c499e03ecdad8ff146d52275390844a22555cacadc"
+  }
+}

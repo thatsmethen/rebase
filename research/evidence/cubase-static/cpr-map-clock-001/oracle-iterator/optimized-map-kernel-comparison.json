@@ -1,0 +1,1270 @@
+{
+  "scope": "Self-authored optimized C map primitives versus independent rational native-instruction oracle; no target execution",
+  "passed": true,
+  "map_vectors": 105,
+  "raw_fma_vectors": 3,
+  "quantizer_vectors": 30,
+  "rejection_checks": 68,
+  "fixed_regression_vectors": 36,
+  "fixed_oracle_sha256": "bc9d7eef520a3c82e1941ff3e37b48d07dc9dc09a21642db058062cc97221a02",
+  "instruction_checks": {
+    "_rb_native_fixed_period": {
+      "address": "0x0000000000000408",
+      "arithmetic": [
+        {
+          "address": "0x4a4",
+          "word": "1e201820",
+          "mnemonic": "fdiv",
+          "operands": "s0, s1, s0"
+        }
+      ]
+    },
+    "_rb_native_fixed_seconds": {
+      "address": "0x00000000000004c4",
+      "arithmetic": [
+        {
+          "address": "0x5a8",
+          "word": "1e201820",
+          "mnemonic": "fdiv",
+          "operands": "s0, s1, s0"
+        },
+        {
+          "address": "0x5c0",
+          "word": "1e680800",
+          "mnemonic": "fmul",
+          "operands": "d0, d0, d8"
+        },
+        {
+          "address": "0x5d4",
+          "word": "1e611800",
+          "mnemonic": "fdiv",
+          "operands": "d0, d0, d1"
+        }
+      ]
+    },
+    "_rb_native_fixed_ticks": {
+      "address": "0x0000000000000698",
+      "arithmetic": [
+        {
+          "address": "0x77c",
+          "word": "1e201820",
+          "mnemonic": "fdiv",
+          "operands": "s0, s1, s0"
+        },
+        {
+          "address": "0x794",
+          "word": "1e601900",
+          "mnemonic": "fdiv",
+          "operands": "d0, d8, d0"
+        },
+        {
+          "address": "0x7a8",
+          "word": "1e610800",
+          "mnemonic": "fmul",
+          "operands": "d0, d0, d1"
+        }
+      ]
+    },
+    "_rb_native_map_validate": {
+      "address": "0x000000000000086c",
+      "arithmetic": [
+        {
+          "address": "0x89c",
+          "word": "1e613800",
+          "mnemonic": "fsub",
+          "operands": "d0, d0, d1"
+        },
+        {
+          "address": "0x8b0",
+          "word": "1e610800",
+          "mnemonic": "fmul",
+          "operands": "d0, d0, d1"
+        },
+        {
+          "address": "0x8c4",
+          "word": "1e611800",
+          "mnemonic": "fdiv",
+          "operands": "d0, d0, d1"
+        },
+        {
+          "address": "0x8d4",
+          "word": "1e612800",
+          "mnemonic": "fadd",
+          "operands": "d0, d0, d1"
+        }
+      ]
+    },
+    "_rb_native_map_seconds": {
+      "address": "0x0000000000000c80",
+      "arithmetic": [
+        {
+          "address": "0xd54",
+          "word": "1e623902",
+          "mnemonic": "fsub",
+          "operands": "d2, d8, d2"
+        },
+        {
+          "address": "0xd64",
+          "word": "1e600840",
+          "mnemonic": "fmul",
+          "operands": "d0, d2, d0"
+        },
+        {
+          "address": "0xd78",
+          "word": "1e621800",
+          "mnemonic": "fdiv",
+          "operands": "d0, d0, d2"
+        },
+        {
+          "address": "0xd84",
+          "word": "1e602820",
+          "mnemonic": "fadd",
+          "operands": "d0, d1, d0"
+        }
+      ]
+    },
+    "_rb_native_map_ticks": {
+      "address": "0x0000000000000ef0",
+      "arithmetic": [
+        {
+          "address": "0xfb0",
+          "word": "1e611800",
+          "mnemonic": "fdiv",
+          "operands": "d0, d0, d1"
+        },
+        {
+          "address": "0xfc4",
+          "word": "1e610800",
+          "mnemonic": "fmul",
+          "operands": "d0, d0, d1"
+        },
+        {
+          "address": "0x1018",
+          "word": "1e623800",
+          "mnemonic": "fsub",
+          "operands": "d0, d0, d2"
+        },
+        {
+          "address": "0x1028",
+          "word": "1e611800",
+          "mnemonic": "fdiv",
+          "operands": "d0, d0, d1"
+        },
+        {
+          "address": "0x103c",
+          "word": "1f410c00",
+          "mnemonic": "fmadd",
+          "operands": "d0, d0, d1, d3"
+        },
+        {
+          "address": "0x1138",
+          "word": "1f410800",
+          "mnemonic": "fmadd",
+          "operands": "d0, d0, d1, d2"
+        },
+        {
+          "address": "0x1144",
+          "word": "1e654000",
+          "mnemonic": "frintm",
+          "operands": "d0, d0"
+        },
+        {
+          "address": "0x1150",
+          "word": "1e611800",
+          "mnemonic": "fdiv",
+          "operands": "d0, d0, d1"
+        }
+      ]
+    }
+  },
+  "instruction_checks_passed": true,
+  "compiler": "Apple clang version 17.0.0 (clang-1700.4.4.1)\nTarget: arm64-apple-darwin27.0.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+  "arguments": [
+    "xcrun",
+    "clang",
+    "-std=c11",
+    "-O3",
+    "-dynamiclib",
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "-frounding-math",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I",
+    "/workspace/rebase/Application/Sources/RebaseTimingDSP/include",
+    "/tmp/rebase-cache/T/rebase-map-kernel-5i2r4jhn/harness.c",
+    "-o",
+    "/tmp/rebase-cache/T/rebase-map-kernel-5i2r4jhn/map-kernel.dylib"
+  ],
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "source_sha256": "5bd8632d38cad4c4b240ffcad58ec4ceb304ab23bb93483657028e085655aefb",
+  "header_sha256": "1f3da5deac941e7a1cc6a0f5c9a5d7d4da4fda3cc1c5928eb5a5d627cd623b70",
+  "unchanged_fixed_prefix_sha256": "00d86967975e90f88ade6d1f4223db6a7db5543729f8c39fbc9556a53967d3f3",
+  "oracle_sha256": "98b3922f598f57e51e961252a61a6503c67cead5b8d17605024e2bedc202795c",
+  "test_script_sha256": "ff70b3b79518eece7af003542771e6df4edfea6212a7e66f1d9a82fe874be301",
+  "optimized_disassembly_sha256": "d5561a7b26eba9cb07732c73f6851e365b254f082158054cb6fc60d2c27e3051",
+  "temporary_library_sha256": "2003fdf1f70126fdcef1cee1ef53d8055ea393e4b2cdd766f10f3c4824179f28",
+  "temporary_library_retained": false,
+  "results": [
+    {
+      "map": "piano-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x0000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x8000000000000000",
+      "expected": "0x8000000000000000",
+      "actual": "0x8000000000000000",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ff0000000000000",
+      "expected": "0x4090c00000000000",
+      "actual": "0x4090c00000000000",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ef7c6f8c751f177",
+      "expected": "0x3f989374bc6a7efa",
+      "actual": "0x3f989374bc6a7efa",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x40cd100000000000",
+      "expected": "0x416e6cbff049ba5e",
+      "actual": "0x416e6cbff049ba5e",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082bfffffffffff",
+      "expected": "0x4123a0fff5c28f5c",
+      "actual": "0x4123a0fff5c28f5c",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082c00000000000",
+      "expected": "0x4123a0fff5c28f5c",
+      "actual": "0x4123a0fff5c28f5c",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082c00000000001",
+      "expected": "0x4123a0fff5c28f5c",
+      "actual": "0x4123a0fff5c28f5c",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x3e9f4cffba184d8c",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x3e9f4cffba184d8d",
+      "expected": "0x3f50624dd2f1a9fc",
+      "actual": "0x3f50624dd2f1a9fc",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x3e9f4cffba184d8e",
+      "expected": "0x3f50624dd2f1a9fc",
+      "actual": "0x3f50624dd2f1a9fc",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x0000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x8000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ff0000000000000",
+      "expected": "0x3f4e9131bbbbbbbc",
+      "actual": "0x3f4e9131bbbbbbbc",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ef7c6f8c751f177",
+      "expected": "0x3e56b66bc64f2aec",
+      "actual": "0x3e56b66bc64f2aec",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x40cd100000000000",
+      "expected": "0x402bc2ddab000000",
+      "actual": "0x402bc2ddab000000",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x3e9f4cffba184d8c",
+      "expected": "0x3dfde6354ac333c7",
+      "actual": "0x3dfde6354ac333c7",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x3e9f4cffba184d8d",
+      "expected": "0x3dfde6354ac333c9",
+      "actual": "0x3dfde6354ac333c9",
+      "status": 0
+    },
+    {
+      "map": "piano-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x3e9f4cffba184d8e",
+      "expected": "0x3dfde6354ac333ca",
+      "actual": "0x3dfde6354ac333ca",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "seconds_to_ticks",
+      "input": "0x0000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "seconds_to_ticks",
+      "input": "0x8000000000000000",
+      "expected": "0x8000000000000000",
+      "actual": "0x8000000000000000",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ff0000000000000",
+      "expected": "0x4090c00000000000",
+      "actual": "0x4090c00000000000",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ef7c6f8c751f177",
+      "expected": "0x3f989374bc6a7efa",
+      "actual": "0x3f989374bc6a7efa",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "seconds_to_ticks",
+      "input": "0x40cd100000000000",
+      "expected": "0x416e6cbfce4dd2f2",
+      "actual": "0x416e6cbfce4dd2f2",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082bfffffffffff",
+      "expected": "0x4123a0ffdfbe76c9",
+      "actual": "0x4123a0ffdfbe76c9",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082c00000000000",
+      "expected": "0x4123a0ffdfbe76c9",
+      "actual": "0x4123a0ffdfbe76c9",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082c00000000001",
+      "expected": "0x4123a0ffdfbe76c9",
+      "actual": "0x4123a0ffdfbe76c9",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "seconds_to_ticks",
+      "input": "0x3e9f4cffdd0c26c6",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "seconds_to_ticks",
+      "input": "0x3e9f4cffdd0c26c7",
+      "expected": "0x3f50624dd2f1a9fc",
+      "actual": "0x3f50624dd2f1a9fc",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "seconds_to_ticks",
+      "input": "0x3e9f4cffdd0c26c8",
+      "expected": "0x3f50624dd2f1a9fc",
+      "actual": "0x3f50624dd2f1a9fc",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "ticks_to_seconds",
+      "input": "0x0000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "ticks_to_seconds",
+      "input": "0x8000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ff0000000000000",
+      "expected": "0x3f4e9131ddddddde",
+      "actual": "0x3f4e9131ddddddde",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ef7c6f8c751f177",
+      "expected": "0x3e56b66bdfabf005",
+      "actual": "0x3e56b66bdfabf005",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "ticks_to_seconds",
+      "input": "0x40cd100000000000",
+      "expected": "0x402bc2ddca000000",
+      "actual": "0x402bc2ddca000000",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "ticks_to_seconds",
+      "input": "0x3e9f4cffdd0c26c6",
+      "expected": "0x3dfde6358d8999be",
+      "actual": "0x3dfde6358d8999be",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "ticks_to_seconds",
+      "input": "0x3e9f4cffdd0c26c7",
+      "expected": "0x3dfde6358d8999bf",
+      "actual": "0x3dfde6358d8999bf",
+      "status": 0
+    },
+    {
+      "map": "piano-period-next",
+      "direction": "ticks_to_seconds",
+      "input": "0x3e9f4cffdd0c26c8",
+      "expected": "0x3dfde6358d8999c0",
+      "actual": "0x3dfde6358d8999c0",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x0000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x8000000000000000",
+      "expected": "0x8000000000000000",
+      "actual": "0x8000000000000000",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ff0000000000000",
+      "expected": "0x408e000000000000",
+      "actual": "0x408e000000000000",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ef7c6f8c751f177",
+      "expected": "0x3f96872b020c49ba",
+      "actual": "0x3f96872b020c49ba",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x40cd100000000000",
+      "expected": "0x416b3f0000000000",
+      "actual": "0x416b3f0000000000",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082bfffffffffff",
+      "expected": "0x4121940000000000",
+      "actual": "0x4121940000000000",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082c00000000000",
+      "expected": "0x4121940000000000",
+      "actual": "0x4121940000000000",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082c00000000001",
+      "expected": "0x4121940000000000",
+      "actual": "0x4121940000000000",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ea179ec9cbd821d",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ea179ec9cbd821e",
+      "expected": "0x3f50624dd2f1a9fc",
+      "actual": "0x3f50624dd2f1a9fc",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ea179ec9cbd821f",
+      "expected": "0x3f50624dd2f1a9fc",
+      "actual": "0x3f50624dd2f1a9fc",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x0000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x8000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ff0000000000000",
+      "expected": "0x3f51111111111111",
+      "actual": "0x3f51111111111111",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ef7c6f8c751f177",
+      "expected": "0x3e595cc518dff07f",
+      "actual": "0x3e595cc518dff07f",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x40cd100000000000",
+      "expected": "0x402f000000000000",
+      "actual": "0x402f000000000000",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ea179ec9cbd821d",
+      "expected": "0x3e02a42f961f79b9",
+      "actual": "0x3e02a42f961f79b9",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ea179ec9cbd821e",
+      "expected": "0x3e02a42f961f79ba",
+      "actual": "0x3e02a42f961f79ba",
+      "status": 0
+    },
+    {
+      "map": "half-origin",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ea179ec9cbd821f",
+      "expected": "0x3e02a42f961f79bb",
+      "actual": "0x3e02a42f961f79bb",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x0000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x8000000000000000",
+      "expected": "0x8000000000000000",
+      "actual": "0x8000000000000000",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ff0000000000000",
+      "expected": "0x4084000000000000",
+      "actual": "0x4084000000000000",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ef7c6f8c751f177",
+      "expected": "0x3f8eb851eb851eb8",
+      "actual": "0x3f8eb851eb851eb8",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x40cd100000000000",
+      "expected": "0x416ae14000000000",
+      "actual": "0x416ae14000000000",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082bfffffffffff",
+      "expected": "0x4117700000000000",
+      "actual": "0x4117700000000000",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082c00000000000",
+      "expected": "0x4117700000000000",
+      "actual": "0x4117700000000000",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082c00000000001",
+      "expected": "0x4117700000000000",
+      "actual": "0x4117700000000000",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x0000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x8000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ff0000000000000",
+      "expected": "0x3f5999999999999a",
+      "actual": "0x3f5999999999999a",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ef7c6f8c751f177",
+      "expected": "0x3e630593d2a7f45f",
+      "actual": "0x3e630593d2a7f45f",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x40cd100000000000",
+      "expected": "0x4037400000000000",
+      "actual": "0x4037400000000000",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x41176fffffffffff",
+      "expected": "0x4082bfffffffffff",
+      "actual": "0x4082bfffffffffff",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x4117700000000000",
+      "expected": "0x4082c00000000000",
+      "actual": "0x4082c00000000000",
+      "status": 0
+    },
+    {
+      "map": "lofi-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x4117700000000001",
+      "expected": "0x4082c00000000001",
+      "actual": "0x4082c00000000001",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x0000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x8000000000000000",
+      "expected": "0x8000000000000000",
+      "actual": "0x8000000000000000",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ff0000000000000",
+      "expected": "0x408e000000000000",
+      "actual": "0x408e000000000000",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ef7c6f8c751f177",
+      "expected": "0x3f96872b020c49ba",
+      "actual": "0x3f96872b020c49ba",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x40cd100000000000",
+      "expected": "0x416b3f0000000000",
+      "actual": "0x416b3f0000000000",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082bfffffffffff",
+      "expected": "0x4121940000000000",
+      "actual": "0x4121940000000000",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082c00000000000",
+      "expected": "0x4121940000000000",
+      "actual": "0x4121940000000000",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082c00000000001",
+      "expected": "0x4121940000000000",
+      "actual": "0x4121940000000000",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x0000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x8000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ff0000000000000",
+      "expected": "0x3f51111111111111",
+      "actual": "0x3f51111111111111",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ef7c6f8c751f177",
+      "expected": "0x3e595cc518dff07f",
+      "actual": "0x3e595cc518dff07f",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x40cd100000000000",
+      "expected": "0x402f000000000000",
+      "actual": "0x402f000000000000",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x412193ffffffffff",
+      "expected": "0x4082bfffffffffff",
+      "actual": "0x4082bfffffffffff",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x4121940000000000",
+      "expected": "0x4082c00000000000",
+      "actual": "0x4082c00000000000",
+      "status": 0
+    },
+    {
+      "map": "stereo-two-jump",
+      "direction": "ticks_to_seconds",
+      "input": "0x4121940000000001",
+      "expected": "0x4082c00000000001",
+      "actual": "0x4082c00000000001",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "seconds_to_ticks",
+      "input": "0x0000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "seconds_to_ticks",
+      "input": "0x8000000000000000",
+      "expected": "0x8000000000000000",
+      "actual": "0x8000000000000000",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ff0000000000000",
+      "expected": "0x4090c00000000000",
+      "actual": "0x4090c00000000000",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "seconds_to_ticks",
+      "input": "0x3ef7c6f8c751f177",
+      "expected": "0x3f989374bc6a7efa",
+      "actual": "0x3f989374bc6a7efa",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "seconds_to_ticks",
+      "input": "0x40cd100000000000",
+      "expected": "0x4162a89008c49ba6",
+      "actual": "0x4162a89008c49ba6",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082bfffffffffff",
+      "expected": "0x4123a0fff5c28f5c",
+      "actual": "0x4123a0fff5c28f5c",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082c00000000000",
+      "expected": "0x4123a0fff5c28f5c",
+      "actual": "0x4123a0fff5c28f5c",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "seconds_to_ticks",
+      "input": "0x4082c00000000001",
+      "expected": "0x4123a10200000000",
+      "actual": "0x4123a10200000000",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "ticks_to_seconds",
+      "input": "0x0000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "ticks_to_seconds",
+      "input": "0x8000000000000000",
+      "expected": "0x0000000000000000",
+      "actual": "0x0000000000000000",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ff0000000000000",
+      "expected": "0x3f4e9131bbbbbbbc",
+      "actual": "0x3f4e9131bbbbbbbc",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "ticks_to_seconds",
+      "input": "0x3ef7c6f8c751f177",
+      "expected": "0x3e56b66bc64f2aec",
+      "actual": "0x3e56b66bc64f2aec",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "ticks_to_seconds",
+      "input": "0x40cd100000000000",
+      "expected": "0x402bc2ddab000000",
+      "actual": "0x402bc2ddab000000",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "ticks_to_seconds",
+      "input": "0x4123a101ffffffff",
+      "expected": "0x4082c001f2c31bbb",
+      "actual": "0x4082c001f2c31bbb",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "ticks_to_seconds",
+      "input": "0x4123a10200000000",
+      "expected": "0x4082c00000000000",
+      "actual": "0x4082c00000000000",
+      "status": 0
+    },
+    {
+      "map": "synthetic-unequal-anchor",
+      "direction": "ticks_to_seconds",
+      "input": "0x4123a10200000001",
+      "expected": "0x4082c00000000002",
+      "actual": "0x4082c00000000002",
+      "status": 0
+    }
+  ],
+  "fixed_results": [
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42820000",
+      "input": "0x3ff0000000000000",
+      "actual": "0x3f5f81f822222222"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42820000",
+      "input": "0x40cd100000000000",
+      "actual": "0x403c9d89db000000"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42820000",
+      "input": "0x40fe240c9fbe76c9",
+      "actual": "0x406dad57452cc4c3"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42820000",
+      "input": "0x3ff0000000000000",
+      "actual": "0x40803ffffea55555"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42820000",
+      "input": "0x3ef7c6f8c751f177",
+      "actual": "0x3f882614a86c0cda"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42820000",
+      "input": "0x4082c00000000000",
+      "actual": "0x41130afffe69c000"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x428c0000",
+      "input": "0x3ff0000000000000",
+      "actual": "0x3f5d41d422222222"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x428c0000",
+      "input": "0x40cd100000000000",
+      "actual": "0x403a924929000000"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x428c0000",
+      "input": "0x40fe240c9fbe76c9",
+      "actual": "0x406b8eac79632cb3"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x428c0000",
+      "input": "0x3ff0000000000000",
+      "actual": "0x40817ffffd155556"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x428c0000",
+      "input": "0x3ef7c6f8c751f177",
+      "actual": "0x3f8a01a015ac056c"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x428c0000",
+      "input": "0x4082c00000000000",
+      "actual": "0x411481fffc950000"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42b80000",
+      "input": "0x3ff0000000000000",
+      "actual": "0x3f5642c866666666"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42b80000",
+      "input": "0x40cd100000000000",
+      "actual": "0x403437a701000000"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42b80000",
+      "input": "0x40fe240c9fbe76c9",
+      "actual": "0x4064f7afc99eac7e"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42b80000",
+      "input": "0x3ff0000000000000",
+      "actual": "0x4086fffff233333c"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42b80000",
+      "input": "0x3ef7c6f8c751f177",
+      "actual": "0x3f911702c501e3e4"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42b80000",
+      "input": "0x4082c00000000000",
+      "actual": "0x411af3ffefd40009"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42fd0000",
+      "input": "0x3ff0000000000000",
+      "actual": "0x3f503091bbbbbbbc"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42fd0000",
+      "input": "0x40cd100000000000",
+      "actual": "0x402d6838b6000000"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42fd0000",
+      "input": "0x40fe240c9fbe76c9",
+      "actual": "0x405e7f8b4df71461"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42fd0000",
+      "input": "0x3ff0000000000000",
+      "actual": "0x408f9ffff3162228"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42fd0000",
+      "input": "0x3ef7c6f8c751f177",
+      "actual": "0x3f977fa3d36398be"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42fd0000",
+      "input": "0x4082c00000000000",
+      "actual": "0x412287bff86ef803"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42f00000",
+      "input": "0x3ff0000000000000",
+      "actual": "0x3f51111111111111"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42f00000",
+      "input": "0x40cd100000000000",
+      "actual": "0x402f000000000000"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42f00000",
+      "input": "0x40fe240c9fbe76c9",
+      "actual": "0x40601339eecbfb16"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42f00000",
+      "input": "0x3ff0000000000000",
+      "actual": "0x408e000000000000"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42f00000",
+      "input": "0x3ef7c6f8c751f177",
+      "actual": "0x3f964a893adcd260"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42f00000",
+      "input": "0x4082c00000000000",
+      "actual": "0x4121940000000000"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42fd0001",
+      "input": "0x3ff0000000000001",
+      "actual": "0x3f503091aaaaaaac"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42fd0001",
+      "input": "0x407e000000000001",
+      "actual": "0x3fde5b1120000001"
+    },
+    {
+      "direction": "ticks_to_seconds",
+      "bpm": "0x42fd0001",
+      "input": "0x40f23456789abcde",
+      "actual": "0x40526b9938827715"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42fd0001",
+      "input": "0x3ff0000000000001",
+      "actual": "0x408fa000146caaba"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42fd0001",
+      "input": "0x407e000000000001",
+      "actual": "0x411da6001325e00d"
+    },
+    {
+      "direction": "seconds_to_ticks",
+      "bpm": "0x42fd0001",
+      "input": "0x40f23456789abcde",
+      "actual": "0x4191fdb980cf7475"
+    }
+  ],
+  "limits": "Public primitives preserve detached anchors; importer must additionally call canonical validator and prove provenance/lifecycle. Test-only private math wrappers include out-of-public-domain quantizer controls and are absent from the app."
+}

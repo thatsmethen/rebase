@@ -1,0 +1,78 @@
+{
+  "id": "ACCESSOR-SEEK-STATE-WORKING-CONTRACT",
+  "created_utc": "2026-10-20T23:40:01.534393+00:00",
+  "status": "bounded_static_handoff_pending_candidate_and_peer_review",
+  "target_execution_count": 0,
+  "fields": {
+    "accessor+18": "i64 current source frame",
+    "accessor+20": "nullable persistent format/rate converter",
+    "accessor+28": "underlying reader, whose+8 is source stream",
+    "accessor+30": "Float32 requested output rate",
+    "accessor+34": "Float32 gain",
+    "accessor+49": "constructor policy byte, propagated to converter+a9",
+    "accessor+4a": "first converted-read budget byte, initialized1",
+    "converter+0/14": "Float32 source/output rates refreshed before budget",
+    "converter+30": "nullable persistent rate wrapper; distinct from accessor+30 rate"
+  },
+  "seek": {
+    "entry": "0x10036f89c",
+    "preconditions": "nonnull reader and stream; output rate !=0; claimed arithmetic subset finite positive rates and conversion in range",
+    "equal": "when Float32 stream rate equals output rate: sourceCursor=request; return request",
+    "unequal": [
+      "r=RN32(sourceRate/outputRate)",
+      "p=RN64(Double(request)*Double(r))",
+      "sourceCursor=trunc_i64(p)",
+      "return trunc_i64(RN64(Double(sourceCursor)/Double(r)))"
+    ],
+    "state_effect": "Only accessor+18 is assigned. No converter replacement, ratio setter, first-byte rearm, history reset or preroll occurs in this function. Source rate virtual getter is called twice on unequal branch; the fixed-rate contract requires stable getter results."
+  },
+  "read_order": [
+    "Positive i32 request and nonnull reader required; otherwise return INT32_MIN before budget.",
+    "Call underlying reader+20 seek(accessor.sourceCursor). If its returned i64 differs: return -2147483645 only for that exact transient code, otherwise INT32_MIN. First-byte and converter untouched on this path.",
+    "Call accessor+188 needs-conversion. Concrete10036fb74 compares rate, bit depth, frame bytes, kind, layout, channels, extra format and gain1. No mismatch: reader+10 reads requested count directly; positive result advances sourceCursor by that count, else no cursor advance. Does not consume first byte.",
+    "Conversion: reuse accessor+20; lazily allocate0xb0/1003237d8(policy+49) only if absent. Refresh source format through100323904(stream+10), destination through100323b24(accessor+10), copy gain to converter+28.",
+    "Compute budget100330d84(request, firstByte); save oldFirst and clear accessor+4a immediately. Budget<1 returns0 without source read/conversion, keeping consumed first status.",
+    "Allocate source-format storage for budget; underlying reader+10 reads budget. Negative source result returns unchanged numeric error; no accessor cursor advance, but firstByte remains0.",
+    "For nonnegative source result, rate mismatch computes terminal=(reader.tell>=source.length)&&oldFirst&&(budget>sourceRead). Equal rates force terminalfalse.",
+    "Pass actual source count by reference to100330cd4(destination, sourceStorage, &count, terminal). Success: advance sourceCursor by original actual SOURCE count if nonzero, return rewritten count. Failure: return INT32_MIN; accessor cursor unchanged, first remains0, and underlying source may already have advanced. No transactional rollback of backend/source state is established."
+  ],
+  "budget": {
+    "entries": [
+      "0x100330d84",
+      "0x10030a430",
+      "0x100313bf8"
+    ],
+    "selection": "Policy+a9 zero selects0; otherwise100309fe8 chooses current availability-conditioned2/1 on EVERY budget call, not the retained child identity.",
+    "equal": "return request directly, ignoring first allowance",
+    "unequal": "if chosen mode2 and first and backend available: P=ceil(RN64(outputRate/sourceRate))*2048, elseP0. t=request+P; k=ceil_i32(RN64(RN64(sourceRate/outputRate)*Double(t))). While trunc_i32(RN64(RN64(outputRate/sourceRate)*Double(k)))>t decrement k. Returnk. Rates widen from binary32 before binary64 divisions; this is distinct from seek's binary32 ratio.",
+    "limits": "Positive finite rates, checked Int32 arithmetic/FCVT range and stable availability assumed; changing policy may disagree with a previously created fallback child."
+  },
+  "conversion_lifecycle": {
+    "entry": "0x1003261a8",
+    "existing_wrapper": "Refresh only checks stored Double source/output rates. Calls10030a1dc if either differs. Channel/format changes are not a fresh-allocation check in this function.",
+    "ratio_setter": "10030a1dc updates rates, computes RN64(output/source) in[0.01,100] or0 outside. Calls child+10 only when ratio nonzero and differs from previous ratio; same ratio retains child state.",
+    "then": "Check child+28 through10030a3bc. Only if false invoke child+20 through10030a3a4.",
+    "mode0": "child+10 stores input/output step only. Ready+28 readsbyte+25. Thus changed step can retain history/phase; not a fresh reset.",
+    "mode1": "child+10 stores output/input ratio only. Ready+28 tests coefficient pointer+20. An already ready child does not regenerate coefficients/step/history merely because ratio field changes.",
+    "mode2": "child+10\u2192100313adc calls child rate setter, replaces wrapper delay/discard from child+40, stores ratio, marks+4c1. Ready+28 thenfalse; initialization+20\u2192100313b74 clears4c and restarts child resources. This is mode-specific, not universal."
+  },
+  "after_terminal": {
+    "mode1": "10030af58 and10030b8a8 have no finished guard. Terminal call appends64 repeated last/zero input, updates phase/history and real/generated counters; return-only trimming does not reduce generated counter. Later nonterminal call continues these states. Full continuation controls still required before application admission.",
+    "mode2": "1003141bc has no finished flag and retains cumulative/padding/child buffers. Its terminal tail may call SoXR withNULL input. Subsequent positive input behavior then depends on external backend lifecycle/errors; no safe continuation claim is made.",
+    "application_boundary": "Current candidate finished flags are defensive policy. Retained accessor seek after terminal is unsupported until separately reconstructed and controlled; do not silently reset or preroll and call it native."
+  },
+  "concrete_stream_boundary": {
+    "AudioFile_factory": "AudioFile+f8\u219210033a4f8 is a reader factory, not sample read. Lazy10033a054 may call self+38 backend+e0; factory calls backend+d0 to obtain reader. Actual backend identity/read method remains a boundary.",
+    "cluster_reader": "Concrete table104466378 binds+10\u219210036d22c,+20\u219210036d848,+28\u219210036d87c. Seek normally updates reader+10; a write-mode/multiple-entry guard may reject requested change. Reader count/mapping semantics remain covered by prior one-segment finding.",
+    "metadata": "File metadata getters can invoke lazy setup and query the prepared property bag; serialized PCM24/rate alone does not prove a live backend format.",
+    "current_format_properties": "AudioFile+150\u219210033d024 calls lazy setup, then queries AudioSampleFormat; status0 returns flagged integer value (noninteger0), nonzero status defaults1. +158\u219210033d308 queries AudioSampleSize similarly; nonzero status invokes10036e084 integer(frameBytes/channels)*8 whenchannels>=1,else0. +168\u219210033d530 maps these through10012c64c and returns descriptor+18 ID. No filename-extension shortcut.",
+    "backend_selection": "100339108 releases old backend, clears file+38, iterates global10502c0f8 registry entries by type match or probe callback, calls selected creator+18, and can consult filesystem service104fe1b90 fallback. Registry contents/creator callback and resulting backend read ABI are not bound here."
+  },
+  "retry_scope": "Accessor itself does not retry. Ordinary101d3eb24 retries -2147483645 only under its separately proven saved-read-begin==quantized-segment-start condition; do not generalize to all errors or all positions.",
+  "nonclaims": [
+    "No target execution or proprietary PCM comparison.",
+    "No arbitrary host callback/concurrency invariance.",
+    "No automatic backend selection or actual file parser conformance.",
+    "No replacement of the app's explicit old converter preroll with a claim of retained native seek."
+  ]
+}

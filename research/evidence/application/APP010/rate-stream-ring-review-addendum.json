@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-20T07:35:13.612423+00:00",
+  "supersedes": null,
+  "extends": {
+    "path": "research/evidence/application/APP010/rate-stream-independent-review.json",
+    "bytes": 8398,
+    "sha256": "1b1318a6acb0620ea86e54ce01cb8d8311e6feb9c5fc48d943bbb62f495cce25"
+  },
+  "scope": "Independent read-only wrapper/ring arithmetic challenge plus exact-rational high-ratio sample control. Original producer instructions inspected; full live-consumer byte/REA closure remains the separate native finding. No target code execution.",
+  "reviewed_files": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRLiveStereoTransfer.swift",
+      "bytes": 2297,
+      "sha256": "484361ae02a1d116e2d05da7d1811cb36ef8503aa3a872f522da0ca8469e3a00"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRRateConvertedStream.swift",
+      "bytes": 6887,
+      "sha256": "f49dfcfc03988fdd8b97eb355adedea5df23df9e9ad102282dce549b637ba5f9"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/AudioTransportEngine.swift",
+      "bytes": 10727,
+      "sha256": "3cdac99694256430b8fe4aaf5e67962a803c0a471ded0048ab68cd37eda0a47c"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_live_stereo_ring.c",
+      "bytes": 6008,
+      "sha256": "d9ac1d96873fe79ed313ed80fc7b53498b6764cac0ebd356626a407002ac389a"
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_live_stereo_ring.h",
+      "bytes": 2813,
+      "sha256": "a2a7091e77813800edcde35f58b570dce9a7fae2b27cede3c89515eeaefcba4a"
+    },
+    {
+      "path": "Application/Tests/RebaseCoreTests/NativeRateMode0Tests.swift",
+      "bytes": 17213,
+      "sha256": "c44b27a216a0d379bc861660b47bf5cea7a910c4d036a459c8e9505642ecddcf"
+    },
+    {
+      "path": "research/evidence/application/APP010/native-rate-mode0-ring-oracle.py",
+      "bytes": 2917,
+      "sha256": "05c7b7b072ffb7e51e55e17f7b13d4e74c5978b9cdb54c1977a77f9eda7bd899"
+    },
+    {
+      "path": "research/evidence/application/APP010/native-rate-mode0-ring-oracle.json",
+      "bytes": 2352,
+      "sha256": "166c38dc41dd59b3a702f509d4d8dd8e1008b23324a944a2e718247bb49b57da"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/live-consumer/pass5/native-100384ac4.txt",
+      "bytes": 6654,
+      "sha256": "f7f8b6184f9827f83b03c34bc0d3cddae1c7fb63810d302792fd52b17abb25ba"
+    }
+  ],
+  "findings": [
+    "CPRLiveStereoTransfer splits each converted block into <=8192 output-frame writes, immediately drains each into the appropriate planar buffer offsets, and preserves the same ring state across calls on one cursor.",
+    "This resolves the oversized-block concern: 8192 source frames at 8000\u2192192000 can emit196585 output frames, exceeding the whole32768-frame ring. Converter block size and ring transfer size are separate.",
+    "Native producer checks free space before each frame against half-capacity; original100384b40..bac/bf8..c00 makes the whole-request bound free\u221216384+1 appropriate. The copied stereo path100384c44..c80 uses separate four-byte channel stores without mono gain.",
+    "C write preflight preserves state/storage on WOULD_BLOCK. Consume bounds end\u2212start before narrowing and rejects signed overflow. Normal underrun, stopped and draining branches retain distinct read/timeline effects; the Swift adapter only invokes the sufficient-data branch.",
+    "The wrapper uses two independently allocated32768-float arrays and creates one transfer per cursor. Each output buffer is newly allocated and is not scheduled until all converter/gain/ring operations succeed.",
+    "No actionable defect found in the reviewed bounded adapter. This is a serialized value-operation integration, not the native thread/polling/callback graph or a full live scheduler."
+  ],
+  "independent_high_ratio_control": {
+    "input_frames": 8195,
+    "source_rate": 8000,
+    "output_rate": 192000,
+    "channels": 2,
+    "output_frames": 196657,
+    "output_samples": 393314,
+    "converter_block_frames": [
+      196585,
+      72
+    ],
+    "expected_interleaved_f32le_sha256": "cc2889f2d22ee0540c12ff47794d891d9fd012494ca140236c5360ff0dcc6d89",
+    "method": "Pinned integer/Fraction helper rounds each native arithmetic operation independently. Candidate code is not used to generate sample bits. Compact retained digest/checkpoints avoid a large generated PCM artifact."
+  },
+  "validation_status": "Ninth owned test added after the190-test interim full run. Final coordinated suite pending; no passing claim for this new test yet.",
+  "remaining_limits": [
+    "Main-actor preparation/preroll/refill can underrun under stalls; no hard-real-time guarantee.",
+    "Immutable whole source remains resident; output queue is bounded.",
+    "AVAudioEngine device delivery, reset/preroll seeking, queue depth and chunk sizes are application choices.",
+    "Explicit mode0 upsampling only; no automatic backend selection, downsampling, SoXR or complete native host conformance."
+  ],
+  "target_execution_count": 0,
+  "cubase_runtime_comparison_count": 0
+}

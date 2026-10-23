@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "review_id": "APP008-SOURCE-RENDER-UI-FINAL-REVIEW-001",
+  "created_utc": "2026-10-20T00:17:27.761925+00:00",
+  "reviewer": "fidelity_protocol",
+  "status": "UI-SR-1 corrected in source; no remaining actionable defect found in the narrow queue/dismissal/completion flow. Native GUI acceptance remains incomplete.",
+  "scope": "Read-only re-review of StudioSession pending request state and lines 321 through 352, plus the existing RebaseApp onDismiss connection. This addendum closes the stale-context finding from the prior UI review without replacing or modifying that historical record.",
+  "prior_reviews_preserved": [
+    {
+      "path": "research/evidence/application/APP008/source-render-independent-review.json",
+      "bytes": 10988,
+      "sha256": "9ebb56527f8812d5cbcf44ab13f05df64479123ba6a201277d547b054c880ea9"
+    },
+    {
+      "path": "research/evidence/application/APP008/source-render-ui-review.json",
+      "bytes": 6674,
+      "sha256": "8661b5dd3053e73b53f2d79726f1653d94b68a06236aaa16935a1eb577b86f84"
+    }
+  ],
+  "reviewed_sources": [
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "bytes": 33420,
+      "sha256": "6d8f432397eaba2ece6022bd11e7b4abc9d5b7d7b0edc8c5e37ba8ba02ba0934"
+    },
+    {
+      "path": "Application/Sources/Rebase/RebaseApp.swift",
+      "bytes": 18821,
+      "sha256": "a7802372cec6447320428fdb5d10549e4c6ffb008aff77a5fe4e389c0c3b73f6"
+    },
+    {
+      "path": "Application/Sources/Rebase/CPRSourceAudioView.swift",
+      "bytes": 3140,
+      "sha256": "4acdea59a69c8b7c5af6984272eb673992b63a171f6a9ffcc28152d3d9b9f109"
+    }
+  ],
+  "closed_finding": {
+    "id": "UI-SR-1",
+    "status": "fixed_and_source_rechecked",
+    "previous_risk": "An event UUID alone could identify an event in a different import of the same CPR, and mutable current project/root were read after native-panel completion.",
+    "current_behavior": [
+      "The queued request captures eventID, a Project value snapshot and the project root URL when rendering is requested.",
+      "The queued request is cleared before presentation, preserving consume-once behavior across repeated dismissal callbacks and cancellation.",
+      "Before showing the panel, current Project equality and root URL equality must match the captured request, and its event must exist in the captured Project.",
+      "The native panel is opened asynchronously through begin completion after the SwiftUI sheet onDismiss callback; there is no runModal invocation in this path.",
+      "The completion captures self weakly. Cancellation, missing destination or session deallocation returns without rendering.",
+      "On OK, current Project/root are compared again with the request. A changed context produces an error and returns before core rendering.",
+      "The renderer receives the captured Project and root, not a newly selected mutable current project. Its existing preserved-source replay and actual-media snapshot/hash checks still apply."
+    ],
+    "limits": "This is a source-level state-flow review. AppKit presentation, focus, repeated-open/cancel behavior and the previously disabled native dialog have not been observed working by this reviewer."
+  },
+  "unchanged_core_sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceAudioInspection.swift",
+      "bytes": 6987,
+      "sha256": "284faa13042067f64c8871fa1e1970d1d41ea1f384bd70150877a10268026e1e",
+      "matches_prior_review": true
+    },
+    {
+      "path": "Application/Sources/RebaseCore/CPRSourceEventRenderer.swift",
+      "bytes": 6981,
+      "sha256": "6ce793eebc2a5943bffda12dcb38cfa5ceb6febb77276b5cf10da1604c34e199",
+      "matches_prior_review": true
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "bytes": 13673,
+      "sha256": "e426e17e26303faa9752f049652c4c08c5365e3c97c606cec387a05b1a504d39",
+      "matches_prior_review": true
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/cpr_event_pcm.c",
+      "bytes": 1644,
+      "sha256": "1de71e140a6cf22e9abf48158c2935324deb91c1a7f6f986523d9b9fea7b3c33",
+      "matches_prior_review": true
+    },
+    {
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_event_pcm.h",
+      "bytes": 550,
+      "sha256": "b7638d7d5d7b1f9885c38b5be50de1f958df906e4913a2a9f56bcaca6d2af19b",
+      "matches_prior_review": true
+    }
+  ],
+  "validation": {
+    "existing_parent_core_log": {
+      "path": "research/evidence/application/APP008/core-tests-source-render-final.log",
+      "bytes": 35428,
+      "sha256": "85a8489bee7e7dad9acd6416e5ec56ef1e896a760e14592aa9b20a6704c97f80"
+    },
+    "observed_log_result": "158 tests in 23 suites passed",
+    "core_log_scope": "The core log is unchanged and is not evidence of native dialog behavior. No new reviewer test process was started.",
+    "current_release_build": "Parent reports a build in progress; this review does not claim that build succeeded.",
+    "gui_acceptance": "Incomplete. Parent reports native dialog automation timing out even for the older Open dialog; no observed fix is claimed.",
+    "reviewer_test_runs": 0,
+    "reviewer_gui_operations": 0,
+    "target_executions": 0,
+    "cubase_runtime_comparisons": 0,
+    "application_writes": 0,
+    "only_write": "research/evidence/application/APP008/source-render-ui-final-review.json"
+  },
+  "remaining_scope_limits": [
+    "The prior inspection-readiness caveat remains: existence of an attachment row does not itself validate current attached-file/hash/PCM24 RIFF readiness. Rendering still checks those conditions before publication.",
+    "The operation remains an explicitly scoped fresh-source event reconstruction. The UI handoff does not restore whole-track/mixer/automation processing or establish hosted Cubase runtime equivalence.",
+    "This addendum addresses UI-SR-1 and the asynchronous callback wiring only; it does not rewrite earlier native evidence or broaden the accepted source/render domain."
+  ]
+}

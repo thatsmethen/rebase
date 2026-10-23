@@ -1,0 +1,58 @@
+[0/1] Planning build
+Building for debugging...
+[0/10] Write sources
+[3/10] Compiling RebaseTimingDSP native_tempo.c
+[4/10] Write swift-version--1AB21518FC5DEDBE.txt
+[6/26] Compiling RebaseCore ProjectStore.swift
+[7/26] Compiling RebaseCore OfflineRenderer.swift
+[8/26] Compiling RebaseCore Project.swift
+[9/26] Compiling RebaseCore MusicalTime.swift
+[10/26] Compiling RebaseCore CPRProject.swift
+[11/26] Compiling RebaseCore CPRRecoveryV1.swift
+[12/26] Compiling RebaseCore CPRSignatureRecovery.swift
+[13/26] Compiling RebaseCore NativeTempoClock.swift
+[14/26] Compiling RebaseCore Automation.swift
+[15/26] Compiling RebaseCore CPRRecoveryV3.swift
+[16/26] Compiling RebaseCore CPRClockRoles.swift
+[17/26] Compiling RebaseCore AmbisonicConverter.swift
+[18/26] Compiling RebaseCore DAWProject.swift
+[19/26] Emitting module RebaseCore
+[20/26] Compiling RebaseCore AudioTransportEngine.swift
+[21/26] Compiling RebaseCore CPRRecoveryV2.swift
+[22/51] Compiling RebaseCoreTests RecoveredDSPTests.swift
+[23/51] Compiling RebaseCoreTests ProjectStoreTests.swift
+[24/52] Compiling RebaseCoreTests OfflineRendererTests.swift
+[25/52] Compiling RebaseCoreTests ProjectBehaviorTests.swift
+[26/52] Compiling RebaseCoreTests TestSupport.swift
+[27/52] Compiling RebaseCoreTests NativeMapClockTests.swift
+[28/52] Compiling RebaseCoreTests MusicalTimeTests.swift
+[29/52] Compiling RebaseCoreTests NativeTempoClockTests.swift
+[30/52] Compiling RebaseCoreTests NativeMapKernelTests.swift
+/workspace/rebase/Application/Tests/RebaseCoreTests/NativeMapKernelTests.swift:50:29: error: expected named member of numeric literal
+48 |         let valid = [origin, rb_native_jump_point(period_bits: 0x3f000000, seconds: 600, ticks: 384000)]
+49 |         #expect(valid.withUnsafeBufferPointer { rb_native_map_validate($0.baseAddress, 2) } == 0)
+50 |         for seconds in [600.0.nextDown, 600.0.nextUp] {
+   |                             `- error: expected named member of numeric literal
+51 |             let points = [origin, rb_native_jump_point(period_bits: 0x3f000000, seconds: seconds, ticks: 384000)]
+52 |             #expect(points.withUnsafeBufferPointer { rb_native_map_validate($0.baseAddress, 2) } != 0)
+[31/52] Compiling Rebase RebaseApp.swift
+[32/52] Compiling Rebase ProjectEditors.swift
+[33/52] Compiling Rebase MixerView.swift
+[34/52] Compiling Rebase StudioSession.swift
+[35/52] Compiling Rebase AmbisonicExport.swift
+[36/52] Compiling Rebase CPRImportReview.swift
+[37/52] Emitting module Rebase
+[38/52] Compiling Rebase TimelineView.swift
+[38/52] Write Objects.LinkFileList
+[39/52] Linking Rebase
+[40/52] Applying Rebase
+[42/52] Compiling RebaseCoreTests InvalidClipIntervalTests.swift
+[43/52] Compiling RebaseCoreTests DAWProjectTests.swift
+[44/52] Compiling RebaseCoreTests CPRRecoveryV3Tests.swift
+[45/52] Compiling RebaseCoreTests CPRProjectTests.swift
+[46/52] Compiling RebaseCoreTests AutomationTests.swift
+[47/52] Compiling RebaseCoreTests AmbisonicConverterTests.swift
+[48/52] Compiling RebaseCoreTests AudioValidityTests.swift
+[49/52] Compiling RebaseCoreTests CPRSignatureRecoveryTests.swift
+[50/52] Emitting module RebaseCoreTests
+error: fatalError

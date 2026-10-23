@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-19T13:38:25.761796+00:00",
+  "scope": "Read-only source review of cluster/file/FNPath decoding order and stored-value claims; no application execution or promotion",
+  "source": {
+    "path": "Application/Sources/RebaseCore/CPRAudioEventArchive.swift",
+    "sha256": "1da442f550d40872579ea18aba1ec86d7159bbc22b798d3f531108bff6d31b47"
+  },
+  "finding": {
+    "path": "research/evidence/cubase-static/cpr-audio-events-001/cluster/finding.json",
+    "sha256": "12131650ca7510f4fe85d55ed0e2e8e6e96a1fa827ca57abeb345388553ecc6f"
+  },
+  "result": "No actionable ordering or provenance error found in the reviewed cluster/file/path subset.",
+  "checks": [
+    "Cluster reader consumes optional path, u16 file-list flags, bounded count+AudioFile records, then u16 segment-list flags/count+segments, and requires exact body end.",
+    "AudioFile v1 sequence matches native/fixtures:8-byte frameCount, three signed16 fields,4-byte sampleRate bits,FPath object, version1 additional FPath object; exact body consumption.",
+    "Segment requests concrete AudioFile v1 and then requires its descriptor occur in this cluster files. Native asks AudioStream; this is an explicit stricter subset, not generic native class support.",
+    "Segment stores three rawUInt64 fields without converting units, inventing playback clips or resolving media. Renaming to storedOffset/storedLength/storedStart is now evidence-backed; unsigned semantics and source seek units remain separately gated.",
+    "FNPath v0 consumed string,u32,three strings,i32,u16,string matches retained exact observed fixture layout and preserves descriptor path separately from AudioFile path. The last6bytes are still raw-field interpretation, not verified filesystem behavior.",
+    "List words and metadata are retained values, not treated as proof of playable/inaudible state. No automated source-path lookup follows arbitrary directories."
+  ],
+  "limits": [
+    "Review does not audit all event/attribute tail semantics; peer owns those native paths.",
+    "Source record decoding is not audio recovery acceptance. Actual rate and frame count can come from backend/lifecycle state.",
+    "No new test run was requested or performed; validation is independent source/byte comparison."
+  ]
+}

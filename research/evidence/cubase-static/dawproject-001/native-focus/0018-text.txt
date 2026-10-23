@@ -1,0 +1,65 @@
+
+long * FUN_0006d124(undefined8 param_1,undefined8 param_2,undefined8 param_3,long param_4,
+                   undefined8 param_5)
+
+{
+  undefined8 uVar1;
+  undefined8 uVar2;
+  long *plVar3;
+  undefined8 uVar4;
+  undefined8 uVar5;
+  undefined8 uVar6;
+  undefined1 auStack_e0 [24];
+  undefined1 auStack_c8 [24];
+  undefined1 auStack_b0 [24];
+  undefined1 auStack_98 [24];
+  undefined1 auStack_80 [8];
+  long local_78;
+  uint local_70;
+  undefined1 auStack_68 [24];
+  
+  plVar3 = (long *)0x0;
+  if (param_4 != 0) {
+    FUN_0006879c(auStack_68,param_4);
+    FUN_00003b14(auStack_80,"value",0xffffffff,1);
+    uVar4 = FUN_00068854(param_1,param_4,auStack_80);
+    FUN_0000393c(auStack_80);
+    FUN_00003b14(auStack_80,"min",0xffffffff,1);
+    uVar5 = FUN_00068854(param_2,param_4,auStack_80);
+    FUN_0000393c(auStack_80);
+    FUN_00003b14(auStack_80,"max",0xffffffff,1);
+    uVar6 = FUN_00068854(param_3,param_4,auStack_80);
+    FUN_0000393c(auStack_80);
+    FUN_00008aa4(auStack_80,param_5,0xffffffff);
+    if ((local_78 == 0) || ((local_70 & 0x3fffffff) == 0)) {
+      FUN_00003b14(auStack_b0,"name",0xffffffff,1);
+      FUN_00008aa4(auStack_c8,param_5,0xffffffff);
+      FUN_00056b90(auStack_98,param_4,auStack_b0,auStack_c8);
+      FUN_000094cc(auStack_80,auStack_98);
+      FUN_0000393c(auStack_98);
+      FUN_0000393c(auStack_c8);
+      FUN_0000393c(auStack_b0);
+    }
+    FUN_00003b14(auStack_98,"parameterID",0xffffffff,1);
+    uVar1 = FUN_00068910(param_4,auStack_98,0);
+    FUN_0000393c(auStack_98);
+    FUN_00003b14(auStack_b0,"unit",0xffffffff,1);
+    FUN_00003b14(auStack_e0,"normalized",0xffffffff,1);
+    FUN_00056b90(auStack_98,param_4,auStack_b0,auStack_e0);
+    FUN_0000393c(auStack_e0);
+    FUN_0000393c(auStack_b0);
+    uVar2 = FUN_0005a058(auStack_98);
+    plVar3 = (long *)__Znwm(0xe8);
+    FUN_00059e98(plVar3,uVar2,auStack_68);
+    FUN_000561b0(plVar3,auStack_80);
+    (**(code **)(*plVar3 + 0xd8))(uVar5,plVar3);
+    (**(code **)(*plVar3 + 0xe0))(uVar6,plVar3);
+    (**(code **)(*plVar3 + 0xd0))(uVar4,plVar3);
+    (**(code **)(*plVar3 + 0xe8))(plVar3,uVar1);
+    FUN_0000393c(auStack_98);
+    FUN_0000393c(auStack_80);
+    FUN_0000393c(auStack_68);
+  }
+  return plVar3;
+}
+

@@ -1,0 +1,115 @@
+{
+  "review_id": "AMBI-DSP-003-INDEPENDENT-REVIEW",
+  "status": "Independent review supports the bounded static operator; target runtime unvalidated",
+  "reviewed_finding": "../ambisonic/higher-order-finding.json",
+  "review_input_digests": "table-checks.json",
+  "method": {
+    "target_executed": false,
+    "new_ghidra_import": false,
+    "candidate_created_or_expanded": false,
+    "independence": "Separately read the retained REA caller, parameter consumer, bus arrangement, activation, remap, gain and copy functions; checked argument/index direction at instruction level; independently parsed source Mach-O segments and decoded source tables; matched native disassembly words against source; independently computed exact coefficient products and nearest-even float conversions using integer/rational arithmetic.",
+    "evidence_tool": "Retained REA 6.7.0 / Ghidra 12.1.4 evidence and bounded llvm-objdump text; source bytes and metadata checked with the review's own Python script.",
+    "provider_profile_digest": "3fc72c9b4b78498fb992b938f8f3389dc670244a293c1d40abf5e1d10162ed3b"
+  },
+  "target": {
+    "component": "vstambiconverter.vst3",
+    "component_version": "1.5.10.152",
+    "architecture": "arm64",
+    "original_universal_sha256": "e803dd1390ee7989306b15c0fccca52e5d3097ae7a489dc6834f82b50ba485c5",
+    "exact_arm64_slice_sha256": "e8341c6b31ac6b65cf7e8c18bdfbaa18ac24b20160b4287dc385b202eb29b883",
+    "table_address": "0x18d15c",
+    "table_length": 388,
+    "table_sha256": "c49accecf95f469477a7f57bcc31e6e35ff5d51ee1ff63479b9268bb5a3fc874"
+  },
+  "disposition": {
+    "actionable_contract_error_found": false,
+    "static_contract_supported": true,
+    "higher_order_inverse_operator_assumption_supported": false,
+    "observed_product_defect": false,
+    "reason": "The reviewed instruction path applies a destination-indexed diagonal gain after a source-indexed scatter permutation. Its two maps are inverses, but the full gain/permutation operators are not mutual inverses on all higher-order indices. This is a conditional static arithmetic consequence, without observed host routing or plugin sample outputs."
+  },
+  "exact_bounded_contract": {
+    "preconditions": [
+      "Fresh or valid stable configuration with N equal to 9 or 16, active precision object, matching channel arrays, positive frame count no greater than valid allocated capacity, and initialized map/gain pointers established by the traced path.",
+      "Normal non-bypass processing and input silenceFlags exactly zero.",
+      "Disjoint channel regions, or conventional matching-channel in-place buffers with distinct channels and valid scratch. Arbitrary cross-channel/partial overlap is excluded.",
+      "Ordinary finite samples and finite normal products; floating-point environment and imported Accelerate implementation remain unobserved."
+    ],
+    "operation": "Let M be the selected map prefix and G the selected destination-gain prefix. Copy input[i][n] to output[M[i]][n] for all i, then scale every output[j][n] by G[j] in sample precision. Equivalently y[j][n] = mul_precision(x[inverse(M)[j]][n], convert_precision(G[j])).",
+    "exact_tables": "table-checks.json independently records all 16 source map entries and binary64 gain bits, plus exact-rational nearest-even binary32 reference bits. The first N entries are used.",
+    "precision_order": "Float loads G[j] as binary64, performs FCVT S,D, then passes its binary32 stack value to vDSP_vsmul. Double passes the stored binary64 value to vDSP_vsmulD. No gain-before-remap or source-gain indexing occurs in the reviewed wrappers.",
+    "selection": "Successful ID2 last-point read chooses A for finite p<0.5 and B for finite p>=0.5. Neither N nor the normalized parameter value offsets the selected table base. Returned sample offset is ignored. Absent queue or failed getPoint leaves current tables unchanged; count-1 is requested without a positive point-count guard.",
+    "initialization": "The inspected fresh activation installs pair A and current N, choosing double when setup precision field equals 1, otherwise float. This is not a universal persisted-state or UI default."
+  },
+  "independent_callflow_challenges": [
+    {
+      "hypothesis": "The caller swaps input and output buffers.",
+      "verdict": "Contradicted on the inspected call path.",
+      "anchors": ["0x153de4", "0x153df4", "0x153df8", "0x153dfc", "0x153f6c", "0x153f70", "0x153f78"],
+      "reason": "ProcessData.inputs+0x18 supplies x23; outputs+0x20 supplies x22. The call passes x1=x23 and x2=x22, matching retained public ABI declarations."
+    },
+    {
+      "hypothesis": "The map is a gather lookup or copy helper uses reversed arguments.",
+      "verdict": "Contradicted in both precisions and both scratch/direct paths.",
+      "anchors": ["0x154f1c", "0x154f24", "0x154f28", "0x154f30", "0x154c58", "0x154c60", "0x154c64", "0x154c6c", "0x16a108", "0x16a10c", "0x16a1b8", "0x16a1bc"],
+      "reason": "Remap supplies input[i] as copy x0 and output[map[i]] as copy x1. Copy loads from x0 and stores into x1. Scratch only stages input[i] before the same scatter."
+    },
+    {
+      "hypothesis": "Gain is source-indexed or precedes the permutation.",
+      "verdict": "Contradicted in both precision wrappers.",
+      "anchors": ["0x154d64", "0x154d6c", "0x154d8c", "0x154d94", "0x154d98", "0x154db4", "0x154aa4", "0x154aac", "0x154acc", "0x154ad4", "0x154af0"],
+      "reason": "The wrapper saves incoming x2 as output array, invokes remap, and then loads output[j] and gain[j] using the same index. Unit-stride multiply is in place."
+    },
+    {
+      "hypothesis": "Direction selection or N-specific dispatch conjugates or offsets coefficients.",
+      "verdict": "Contradicted in the inspected initialization, direction-update and normal-dispatch paths.",
+      "anchors": ["0x152124", "0x152140", "0x152218", "0x15222c", "0x15223c", "0x15224c", "0x154128", "0x154130"],
+      "reason": "The consumer stores exact fixed pairs 18d15c/18d1e0 or 18d19c/18d260. Normal process uses slot 0x58 independently of N; source-byte vtable entries bind float154d4c and double154a8c. Other uninspected lifecycle writers are outside the claim."
+    },
+    {
+      "hypothesis": "The configuration/cleanup path transforms the coefficient pointers.",
+      "verdict": "No such writes in the inspected bodies under valid storage and ordinary imported allocator semantics.",
+      "anchors": ["0x154694", "0x1547b0", "0x154864", "0x154984"],
+      "reason": "Float map/gain fields are +0x18/+0x20; float configuration and cleanup affect scratch/meter fields from +0x28. Double map/gain fields are +0x20/+0x28; corresponding writes start at +0x30. Count and frame capacity determine allocation sizes, not coefficient base offsets. Arbitrary malformed state, allocator failure and live N transitions are not proven safe."
+    }
+  ],
+  "bus_selection_review": {
+    "status": "Agrees with the draft's bounded description",
+    "observations": [
+      "Requested input/output bus counts must each be 1; the higher-order branch checks mask popcounts 9/9 or 16/16.",
+      "No equality check between the actual requested input/output mask bits occurs on this branch. Only the existing input arrangement is compared with the requested input mask.",
+      "If existing input mask matches, reconstruction is skipped. Otherwise both input and output creation calls receive the requested input mask. The requested output mask contributes its count but is not the rebuilt output-mask argument.",
+      "Successful branch stores N at processor+0x154; common tail copies N into float+0x14 or double+0x18 and supplies it to configuration. Failed requests and lifecycle transitions are not covered by a successful stable-N contract."
+    ],
+    "anchors": ["0x152848", "0x152850", "0x1528a8", "0x1528c4", "0x152904", "0x152910", "0x152af0", "0x152b18", "0x152b48", "0x152c28", "0x152c44"],
+    "limitation": "Bus mask handling does not establish the host's physical, spherical-harmonic or audible channel interpretation."
+  },
+  "nonidentity_counterexample": {
+    "claim_class": "Conditional static arithmetic implication, not target runtime observation",
+    "N": 9,
+    "initial_source": 4,
+    "A_destination": 6,
+    "A_gain_destination_index": 6,
+    "A_gain_binary64_bits": "0x3febb67ae8584caa",
+    "B_destination": 4,
+    "B_gain_destination_index": 4,
+    "B_gain_binary64_bits": "0x3ff0000000000000",
+    "exact_stored_coefficient_product": "3900231685776981/4503599627370496",
+    "decimal_for_display_only": 0.8660254037844386,
+    "why_discriminating": "After A then B the index returns to 4, but the coefficient product differs from 1 by about 13.4 percent. This is not a one-ULP issue. First-order probes cannot expose this higher-order index/gain interaction.",
+    "sample_rounding_caution": "The exact rational product omits two runtime sample multiplications and any intervening host state/routing. No measured sample result or product defect is asserted.",
+    "full_composition_checks": "table-checks.json contains independently verified products in both orders for N9 and N16; all 50 author composition rows match."
+  },
+  "remaining_unknowns": [
+    "Actual instantiated plugin behavior, host channel order, parameter normalization and lifecycle/state restoration.",
+    "Accelerate implementation and runtime FPCR, including coefficient narrowing mode, exceptional values, subnormal/overflow behavior and exact sample arithmetic.",
+    "Allocation success, scratch capacity, malformed or changing channel counts, arbitrary overlap and concurrent state mutation.",
+    "Spatial standards conformance, UI correctness, audio quality, plugin fidelity and overall Cubase equivalence."
+  ],
+  "next_discriminating_evidence": [
+    "If target execution is separately authorized later, capture individual basis impulses for both directions and precisions with N9 and N16, checking buffer destination and literal gain independently.",
+    "Prioritize N9 source4/source8 and N16 source10/source13; these distinguish gain-index interpretations far more strongly than first-order or W-only probes.",
+    "Record actual host arrangement masks, output ordering, current parameter/state and floating-point environment alongside sample observations."
+  ],
+  "preservation": "This review writes only ambisonic-higher-order-review. Existing first-order candidate, first-order review and main-executable review artifacts were not modified."
+}

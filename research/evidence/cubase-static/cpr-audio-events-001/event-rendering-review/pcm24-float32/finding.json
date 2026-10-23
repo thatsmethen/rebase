@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "finding_id": "CPR-EVENT-PCM24-FLOAT32-001",
+  "created_utc": "2026-10-20T00:03:04.442954+00:00",
+  "status": "static_bound_conditional_unit_conversion_and_post_gain; runtime_unvalidated",
+  "scope": "Packed signed24 to Float32 for the already selected event-local stream, equal rate/channel/layout and unit converter gain. Independent reconstruction contract, not Cubase playback or a complete event selector.",
+  "source": {
+    "path": "research/targets/derived/Cubase15-arm64",
+    "bytes": 85691328,
+    "sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb"
+  },
+  "exact_rule": {
+    "decode": "For each packed24 triplet, p is the signed two-complement integer in[-8388608,8388607]. LE p=signextend24(b0|(b1<<8)|(b2<<16)); BE p=signextend24(b2|(b1<<8)|(b0<<16)).",
+    "convert": "With exact converter gain1, x=Float32(p/8388608), exactly representable for every signed24 value. No division by8388607, clipping, dither or channel reorder occurs in these kernels.",
+    "endpoints": {
+      "negative_full_scale": "-8388608 -> bf800000 (-1)",
+      "positive_full_scale": "8388607 -> 3f7ffffe (1-2^-23)",
+      "zero": "0 -> 00000000 (+0)"
+    },
+    "post_event_gain": "The separate bounded consumer 0x10018fb40 loads segment Float32 gain at +0x68. If gain compares equal to 1 it skips multiplication; otherwise each returned Float32 sample is multiplied once by gain using FMUL (vector 0x100190ebc..ec8, scalar 0x100190ee8). Before the output writer y=RN32(x*g) under nearest-even arithmetic, with finite normal-or-zero operands and no underflow/overflow. The IEEE product sign applies to exact zero, including zero gain. This loop contains no clipping, mixing, gain ramp, FMA, or finite-value guard.",
+    "precision_boundary": "Unit conversion is exact. Nonunity event multiplication can round; finite gain alone does not guarantee a finite normal output. The conditional equation permits either sign of finite normal gain and signed zero; the retained numerical gain controls exercise six positive values. A candidate must separately reject overflow/nonfinite results and define denormal/FP rounding behavior for any bit-equivalence claim. Arbitrary converter gain is not promoted to the unit-conversion theorem."
+  },
+  "kernels": [
+    {
+      "entry": "0x1003312c4",
+      "source_byte_order": "little",
+      "selection": "capability AND bit0x80 clear",
+      "scale_bits": "34000000",
+      "operation": "Signed24 reconstructed directly; SCVTF Float32 exact; multiply by precomputed Float32(converterGain*2^-23). Scalar100331328..348; vector16/8 then scalar remainder."
+    },
+    {
+      "entry": "0x1003320f0",
+      "source_byte_order": "big",
+      "selection": "capability AND bit0x80 clear",
+      "scale_bits": "34000000",
+      "operation": "Same direct signed24 rule with high byte first; scalar100332150..170; vector16/8 then scalar remainder."
+    },
+    {
+      "entry": "0x1037d88d4",
+      "source_byte_order": "little",
+      "selection": "capability AND bit0x80 set",
+      "scale_bits": "30000000",
+      "operation": "Assemble signed32(p<<8); SCVTF exact; multiply by precomputed Float32(converterGain*2^-31). Vector16/8/4 then scalar1..3. All lane/table origins checked against source bytes."
+    },
+    {
+      "entry": "0x1037d8f94",
+      "source_byte_order": "big",
+      "selection": "capability AND bit0x80 set",
+      "scale_bits": "30000000",
+      "operation": "Same left-aligned rule with high byte first; vector16/8/4 then scalar1..3."
+    }
+  ],
+  "dispatch_and_state": [
+    "AudioAccessor10036eff0 configures source via100323904 and destination via100323b24; destination buffer isx1 and sourcebufferx2 of100330cd4. Fast dispatcher10032ddd0 swaps these into kernel(source,destination,samplecount).",
+    "Converter constructor100323688 (1003237d8 tail) initializes fast flag+a8=1.100330cd4 tries10032ddd0 first when that flag remainsnonzero; success returnswithoutgenericfallback.",
+    "Admitted10032ddd0 path requires equal Float32rates, destinationbits32/kind2/byteorder0, sourcebits24/kind1, equalpositivechannels, equal layoutcode not2. It passes framecount*channels as signed32 samplecount and gain+28 as Float32.",
+    "Sourcebyteorder+8=0 chooses table103934718 index2 ->10032e4fc ->LE kernels. Nonzero chooses103934708 index2 ->10032e214 ->BE kernels. Runtime capability words10502c0e0/e4 are ANDed then bit0x80 selects generic/specialized. Both unit-gain results established, no capability value inferred.",
+    "Accessor initialization10036e858 stores exactgain1 at+34; read10036eff0 copies current+34 to converter+28. Unit-gain condition must remain true for the declared conversion. The eventgain+68 is applied later by consumer, not silently combined with convertergain.",
+    "Format5 is float32 from separately pinned event-rendering descriptors. Explicit Float32output is mandatory: unityeventgain does not itself change outputformat.10036e34c argumentx2=5 is constructorflags, NOT sampleformatselector; this corrects the numerical-format wording in prior consumer-lead-review.json. Actual formatsetter is10036ee80."
+  ],
+  "accepted_domain": [
+    "Exact selected packed signed24 buffer; file parsing, RIFF custody, source identity and segment/event eligibility established separately. No AVAudioFile conversion equivalence assumed.",
+    "Same finite positive source/outputrate, samepositivechannelcount and same supported interleaved layout, destinationnativeLEfloat32. Framecount\u00d7channels positive and <=INT32_MAX-16, byteproducts/addresses representable, adequate disjoint input/output buffers; no alias behavior inferred.",
+    "Convertergain exact1 and stable objectfields duringcall. Arbitrary convertergain, differentrate, channelmatrix/layoutchange, genericfallback and callbacks outside path excluded.",
+    "For later event gain, finite normal gain or signed zero, with finite normal or exact-zero products and a declared FP mode; subnormal input/output and underflow are outside this contract. Full source reads and writes, no cancellation, no added fades, loops, warp, overlap or track-mixer processing. Unity preserves conversion bits."
+  ],
+  "evidence": {
+    "verification": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/pcm24-float32/verification-final.json",
+      "bytes": 3803,
+      "sha256": "08e9a6954238b31c34c6a44364f00d6230a60566edd3488502738dcec67b7839"
+    },
+    "dispatch": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/pcm24-float32/dispatch-binding.json",
+      "bytes": 4070,
+      "sha256": "acb735ded5f2b212ebfbe4049767969fc5c3df3b0e9bbab48fbde6e6aa0dba8d"
+    },
+    "tables": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/pcm24-float32/table-bytes.json",
+      "bytes": 872,
+      "sha256": "e9d75f1d0523817aa642657478fc7dbcb8023eb357b7921d69a25591fd91213d"
+    },
+    "controls": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/pcm24-float32/analytical-controls.json",
+      "bytes": 38050,
+      "sha256": "21da567ea08e5af755168004e4121bab8501c302e9370a4b27edabd19206546f"
+    },
+    "oracle_script": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/pcm24-float32/analytical_controls.py",
+      "bytes": 5570,
+      "sha256": "102d499b9fcc536d51f5eedc7844a41cbfb394051bbf32f8000d0f71317229bd"
+    },
+    "rea_bundle": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/pcm24-float32/pcm24-evidence-bundle.json",
+      "bytes": 7125590,
+      "sha256": "69bc8c984fde1da3e9dc6ea8d64b8a4d902bc14b596e6bfd00bbae02e6beb6eb"
+    },
+    "rea_import": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/pcm24-float32/evidence-import.json",
+      "bytes": 363,
+      "sha256": "50ae9611a9025a20ce0278d73c99fa1fb74c6305be9a765a8571ce0cba73e09f"
+    }
+  },
+  "prior_context": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/finding.json",
+      "bytes": 42305,
+      "sha256": "7a493eaca5021ef876a557ec4159c82df5aa51554f13995f57f14e0670140623"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering/final-linkage.json",
+      "bytes": 20822,
+      "sha256": "d7679ccaddd0d4dd2592b32713331f066d2b769dea40d407df777ba02370cad5"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/event-rendering-review/consumer-lead-review.json",
+      "bytes": 7263,
+      "sha256": "c09ed3a6d7898bb7662326a6c2fc46b88e2ea6ad0d9b89201df108a7a5b42932"
+    }
+  ],
+  "analytical_validation": {
+    "scalar_vectors": 31,
+    "post_gain_vectors": 186,
+    "symbolic_vector_byte_origin_checks": 6,
+    "generic_lane_groups": 4,
+    "classification": "Exact rational and symbolic derivation from retained instructions/tables, not target output or execution.",
+    "universal_unit_proof": "Every signed24 p has atmost24 significant bits; p*256 has the same significance and fits signed32. Both integer-toFloat32 conversions are exact. Power-of-two scaling gives exact normal-or-zero p/2^23; capability branch and vector chunking therefore agree for every signed24 value at unitgain."
+  },
+  "independent_review": {
+    "reviewer": "/root/cubase_evidence",
+    "scope": "Original little-endian scalar100331328..348 and specialized1037d89d8..9f8 plus scaleinstructions.",
+    "result": "Agrees with signextension, scale2^-23/2^-31 and exact unitgain theorem. Didnot independently verify vector tables, full dispatcher or lifecycle; those remain author checks above."
+  },
+  "disconfirming_controls": [
+    "Positivefullscale/8388607 wouldwrongly yield1.0.",
+    "Wrong signedness changes signset values.",
+    "Bytepattern010203 distinguishes endian interpretation.",
+    "Leftshift8 with2^-23scale gives256xerror.",
+    "Remainder lengths1,4,8,16 byte-origin paths distinguish shuffle/reordering errors.",
+    "Nonunityeventgain is a separate Float32rounding step, not presumed convertergain."
+  ],
+  "limits": [
+    "No proprietary code executed; actual Cubase audio comparisons0.",
+    "The observed consumer is an offline action with progress/cancel/output setup; its ordinarytimeline callerrole remainsunbound. This is not complete Cubase playback or projectrender fidelity.",
+    "Selected stream cloning/backend, sourceevent selection, automaticfades and formatwriter are separate contracts; no unproved whole-host immutability demanded or implied.",
+    "No production source change or candidate PCM execution in this finding."
+  ],
+  "target_execution_count": 0,
+  "cubase_runtime_comparisons": 0,
+  "application_changes": 0
+}

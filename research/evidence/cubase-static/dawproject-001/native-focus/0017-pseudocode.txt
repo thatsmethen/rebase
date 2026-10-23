@@ -1,0 +1,55 @@
+
+undefined4 FUN_0005a058(undefined8 param_1)
+
+{
+  int iVar1;
+  ulong uVar2;
+  undefined4 uVar3;
+  undefined1 auStack_38 [24];
+  
+  FUN_000027b0(auStack_38,"linear",0xffffffff);
+  iVar1 = FUN_0000478c(param_1,auStack_38,0);
+  if (iVar1 == 0) {
+    return 1;
+  }
+  FUN_000027b0(auStack_38,"normalized",0xffffffff);
+  iVar1 = FUN_0000478c(param_1,auStack_38,0);
+  if (iVar1 == 0) {
+    return 2;
+  }
+  FUN_000027b0(auStack_38,"percent",0xffffffff);
+  iVar1 = FUN_0000478c(param_1,auStack_38,0);
+  if (iVar1 == 0) {
+    return 3;
+  }
+  FUN_000027b0(auStack_38,"decibel",0xffffffff);
+  iVar1 = FUN_0000478c(param_1,auStack_38,0);
+  if (iVar1 == 0) {
+    return 4;
+  }
+  FUN_000027b0(auStack_38,"hertz",0xffffffff);
+  iVar1 = FUN_0000478c(param_1,auStack_38,0);
+  if (iVar1 == 0) {
+    return 5;
+  }
+  FUN_000027b0(auStack_38,"semitones",0xffffffff);
+  iVar1 = FUN_0000478c(param_1,auStack_38,0);
+  if (iVar1 == 0) {
+    return 6;
+  }
+  uVar2 = FUN_00028344(param_1,"seconds");
+  if ((uVar2 & 1) != 0) {
+    return 7;
+  }
+  uVar2 = FUN_00028344(param_1,"beats");
+  if ((uVar2 & 1) != 0) {
+    return 8;
+  }
+  iVar1 = FUN_00028344(param_1,"bpm");
+  uVar3 = 9;
+  if (iVar1 == 0) {
+    uVar3 = 0;
+  }
+  return uVar3;
+}
+

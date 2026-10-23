@@ -1,0 +1,281 @@
+{
+  "schema_version": 1,
+  "finding_id": "CPR-BUILDER-RATE-PROVIDER-001",
+  "status": "sealed bounded static finding; effective host equality and saved project-rate restoration remain unestablished",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "source_version": "Cubase Pro15.0.30.287 arm64 immutable derived image",
+  "target_executed": false,
+  "native_runtime_comparisons": 0,
+  "provider": "REA6.7.0/Ghidra12.1.4 default arm64 raw-slice analysis plus independent original LLVM instruction/typed-cell checks",
+  "claims": [
+    {
+      "id": "BRP1",
+      "kind": "original typed object layout and instructions",
+      "fact": "The captured PArrangement constructor installs its adjusted +0x40 interface as fresh MRoot+0x128; the root is stored at arrangement+0x108 and configuration at arrangement+0x110.",
+      "details": [
+        "Constructor1009563c0 writes primary vtable10450d540 and adjusted+40 vtable10450d6f0; both RTTI pointers resolve10450d868 whose name is N9Steinberg12PArrangementE.",
+        "Base constructor1033a765c returns its original receiver on its normal return at1033a76d0, closing the adjusted-pointer relationship.",
+        "1009565e0..5f8 allocates root, calls10171bcd8\u219210171b7f8 and stores adjusted interfaces+40/+48 into root+128/+130. The +130 role is not promoted here.",
+        "The regular and empty root constructors clear the provider field before external installation; copy constructor and later replacement lifecycles are not assumed identical."
+      ],
+      "evidence": [
+        {
+          "entry": "0x1009563c0",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass6",
+          "evidence_ids": [
+            "ev_c8c8a5dc6b8648d94f6ff0fa069baf7683948d6e88e2cae244db93c09e3bd70b",
+            "ev_61f9c705150753bf92d268cda409e9c1adb9396e0d489f0337295d6c6cb80e11"
+          ]
+        },
+        {
+          "entry": "0x1033a765c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass10",
+          "evidence_ids": [
+            "ev_b06f6e6fa6d9b63ca4de976d4dc11c9e77a632e350a86b3ff74fbd0d7231e9c3",
+            "ev_600092b678c1262f9e821563d17243015874c5fdc28679e625f2c7cb1b1267a2"
+          ]
+        },
+        {
+          "entry": "0x10171bcd8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass7",
+          "evidence_ids": [
+            "ev_baf8795a6ba2dd052361c08a29d3f7f1e744fbc513627df6b4b79f307a72d9d1",
+            "ev_910ea25c696838d03446969fd63d302ba5e04409c3b9c6806377192207cabe68"
+          ]
+        },
+        {
+          "entry": "0x10171b7f8",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass2",
+          "evidence_ids": [
+            "ev_8481795287727a2143ccfd1a19afbb374190d1605d8bb80c11a2af3cefc924eb",
+            "ev_2ac6ebb3e8de1c6748fe17785458af0a966bb7e092bc5e447ae075ad128d77a5"
+          ]
+        },
+        {
+          "entry": "0x10171bcdc",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass2",
+          "evidence_ids": [
+            "ev_41de87dbc9fda881da7c2f24d524e960b7e36f472538dc10919e615b5aa05432",
+            "ev_9ab43ac4164bec09f80c67cd6ccdf25fff35e9145f350d6ae6f93919fa88e198"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BRP2",
+      "kind": "complete bounded getter",
+      "fact": "For this concrete provider, the builder root getter returns one binary64 multiplication of a widened stored binary32 base rate and a stored binary64 factor.",
+      "equation": "R_builder = RN64(Double(config.f32_at_0xac) * config.f64_at_0xb0)",
+      "details": [
+        "10171c5a0 loads root+128 and tail-dispatches virtual slot0; absent provider returns exact44100.",
+        "10450d6f0 slot0 is1009573dc. Its adjusted receiver+0xd0 resolves arrangement+0x110. The instruction order is LDR S0, FCVT D0,S0, LDR D1, FMUL D0,D1,D0. Absent configuration returns exact44100.",
+        "No rate/factor finite, positive, integral or supported-range check exists in these getters. A safe application domain is a separate policy.",
+        "No source stream or audio-file rate is read by this getter."
+      ],
+      "evidence": [
+        {
+          "entry": "0x10171c5a0",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider/pass7",
+          "evidence_ids": [
+            "ev_a1b7987f5745dfe9a59b0f5c4ef02a2f151544b732159094393e8fcf5a228b04",
+            "ev_74434ee00e4acfdc8b5d90e9d626a828c49e162397afaf513bde2e7257269f0f"
+          ]
+        },
+        {
+          "entry": "0x1009573dc",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass7",
+          "evidence_ids": [
+            "ev_990a242c2b7793fa0edeca95b615a178a91079160b63e6a30335d0548856312c",
+            "ev_dfde814f692700e55493862dc93f2df0bc3c8420a546747332dd8cec718387d7"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BRP3",
+      "kind": "complete bounded base getter",
+      "fact": "The adjacent root base-rate operation omits the factor and returns Float32.",
+      "details": [
+        "10450d6f0 slot8\u219210095742c widens config+ac to Double, or returns44100 when config is absent.",
+        "Root10171c5c4 calls provider+8 then FCVT S0,D0; absence returns44100f. For the concrete nonnil configuration this is exactly its stored Float32 base.",
+        "This differs from10171c5a0 whenever factor changes the product."
+      ],
+      "evidence": [
+        {
+          "entry": "0x10171c5c4",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/pass15",
+          "evidence_ids": [
+            "ev_05ccf7f93cd87f9f79f80046bbd45c6653645b972f833b8dfc141dbf786c10e3",
+            "ev_0466d184913dfa7b7896d0fc57aaf79f9147d2085bf47aef414dcfc634189dd4"
+          ]
+        },
+        {
+          "entry": "0x10095742c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass7",
+          "evidence_ids": [
+            "ev_cde71f60828ea48aafb10d8a79e9b3b1f61f25585e2bd8a9d60b84c673b51cf1",
+            "ev_cb4d947a8532a208acf508f594fc8b88c55fb025b0bf784dfd6d4b5081e6d116"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BRP4",
+      "kind": "constructor stores and conditional external calls",
+      "fact": "The configuration begins with base44100f/factor1, then can be changed through optional configuration and PAudioDevice registry paths; these are not a saved-CPR rate decode or whole-host invariant.",
+      "details": [
+        "100966450 tailbranches100965b50. At100965bd4..be0 immediate64bits472c440000000000 store at+0xa8, placing Float32 bits472c4400 at+0xac; adjacent factor bits3ff0000000000000 store at+0xb0.",
+        "When its bool argument and configuration-section lookup are nonzero,100965c6c..cc0 queries registry key PAudioDevice and conditionally stores narrowed virtual+0x510 return at+ac and virtual+0x508 Double at+b0.",
+        "The optional configuration path also calls100965f54 and1009662a4 with the configuration receiver. Their complete effects are not closed; initial defaults must not be described as all-path final values.",
+        "PArrangement100956524..590 separately queries the same exact PAudioDevice key under two outer predicates. It passes current widened base to virtual+4f0; only when returned bit0 is zero does it store narrowed+4f8 result at+ac and +4e8 result at+b0.",
+        "The registry-returned receiver implementation is not identified by these call sites alone; the VstDeck table has similar slots but that does not prove this lookup returns VstDeck. Registry replacement and callback mutation remain host boundaries."
+      ],
+      "evidence": [
+        {
+          "entry": "0x100966450",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass8",
+          "evidence_ids": [
+            "ev_d15a093c0fca3a3be185ec9758a5e3b423708092cd5d0848991fe888f399fa6d",
+            "ev_253ba40a2e0217ba2d5680bf95ab3805291301a6b68c2d8653b2ec7f2253911d"
+          ]
+        },
+        {
+          "entry": "0x100965b50",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass9",
+          "evidence_ids": [
+            "ev_3826aba376d4f95a9523dd2b4b8ff033236bba660d4643a002fb3b0f15952266",
+            "ev_961d7d0b3439018319dd67cf88e7bd6e0bfbc6c15f5774eb7c044878aaf6cca3"
+          ]
+        },
+        {
+          "entry": "0x1009563c0",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass6",
+          "evidence_ids": [
+            "ev_c8c8a5dc6b8648d94f6ff0fa069baf7683948d6e88e2cae244db93c09e3bd70b",
+            "ev_61f9c705150753bf92d268cda409e9c1adb9396e0d489f0337295d6c6cb80e11"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BRP5",
+      "kind": "conditional relation to earlier recovered reader/engine arithmetic",
+      "fact": "The concrete arrangement getter closes builder-rate ownership but does not by itself equate builder, timeline-global, engine, or source rates.",
+      "details": [
+        "Earlier channel-rate-context binds reader multiplier to Double(Float32(RN64(1/global_period))) and engine rate to the signed32-truncated VstDeck base\u00d7factor product.",
+        "If arrangement stored base/factor and VstDeck base/factor yield the same positive product, the differing operation sequences still matter: fractional products can differ after Float32 narrowing or engine truncation.",
+        "For explicitly supplied integral base8k..192k and factor1, analytical controls confirm builder, conditional reader and conditional engine arithmetic agree in all184001 cases. This tests arithmetic under shared-state assumptions, not actual native host state equality.",
+        "The source stream may remain at an independent rate; no automatic resampling/conformance is proved or required by this local getter contract."
+      ],
+      "evidence": [
+        {
+          "entry": "0x1009573dc",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass7",
+          "evidence_ids": [
+            "ev_990a242c2b7793fa0edeca95b615a178a91079160b63e6a30335d0548856312c",
+            "ev_dfde814f692700e55493862dc93f2df0bc3c8420a546747332dd8cec718387d7"
+          ]
+        },
+        {
+          "entry": "0x10095742c",
+          "directory": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/pass7",
+          "evidence_ids": [
+            "ev_cde71f60828ea48aafb10d8a79e9b3b1f61f25585e2bd8a9d60b84c673b51cf1",
+            "ev_cb4d947a8532a208acf508f594fc8b88c55fb025b0bf784dfd6d4b5081e6d116"
+          ]
+        }
+      ]
+    }
+  ],
+  "application_contract": {
+    "allowed": "An application may explicitly supply a finite positive integral8k..192k project-clock context and factor1 to the previously recovered builder/reader arithmetic, while preserving separate saved clip datum and source-file rate.",
+    "not_claimed": [
+      "Recovered CPR project sample rate",
+      "Native active device selection",
+      "Equality with the currently initialized VstDeck or physical engine",
+      "Transparent pitch-preserving file conversion",
+      "Complete hosted timeline playback or runtime equivalence"
+    ],
+    "bounds": "8k..192k and factor1 are application admission policy, not native checks discovered in these getters."
+  },
+  "remaining_edges": [
+    {
+      "question": "Does the active PAudioDevice registry object equal the VstDeck instance supplying global period?",
+      "next": "Bind registration/replacement and concrete returned receiver at100956534 and100965c8c; do not infer from matching virtual-slot numbers."
+    },
+    {
+      "question": "How are saved arrangement rate/factor restored and applied?",
+      "next": "PArrangement reader100959278 and config helpers100965f54/1009662a4 are next candidates, not resolved by constructor defaults."
+    },
+    {
+      "question": "Which values reach the actual engine at playback?",
+      "next": "Use prior101ed701c engine-update binding only with concrete active owner/context identity; callbacks and registry replacement can change state."
+    }
+  ],
+  "custody": {
+    "verification": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/verification.json",
+      "bytes": 61164,
+      "sha256": "e5bc95c50f3e06ddd816aeb1f1be0a3487421319d5fe445e2637e05cad7a99e3"
+    },
+    "new_captures": 35,
+    "reused_captures": 2,
+    "bytes_verified": 13492,
+    "original_native_words": 3373,
+    "rea_instruction_addresses": 2910,
+    "closed_raw_sessions": 9,
+    "discovery_only_intervals": 1,
+    "canonical_import_records": 74,
+    "initial_import_records": 72,
+    "discovery_only": "Pass4 and whole-image scans are retained candidate discovery, not promoted function semantics."
+  },
+  "canonical_import": {
+    "all_sessions_closed": true,
+    "raw_sessions": 9,
+    "import_sessions": 2,
+    "first_import": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/evidence-import.json",
+      "bytes": 367,
+      "sha256": "1437493070d75410582de5ecdf85ad77bf383efcb4d8b2e6673959f6cc457d4b"
+    },
+    "final_import": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/evidence-import-final.json",
+      "bytes": 367,
+      "sha256": "216e86aef49c3101bb343be99f9a3dbd06738c6444f74fc7175b5cd2f5c5a2aa"
+    },
+    "note": "Initial successful72-record bundle is preserved separately; final adds the2 records closing the base constructor receiver return."
+  },
+  "validation": {
+    "analytical_controls": {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/builder-rate-provider/rate-controls.json",
+      "bytes": 11517,
+      "sha256": "b7fc1ff01f21c9c9d35740842e2ce69541746140bf8f072051e16219f1e07268"
+    },
+    "target_runtime": false,
+    "scope": "24 stored-value discriminator rows plus exhaustive184001 integral factor1 arithmetic controls; no target code or reconstructed audio run."
+  },
+  "prior_findings": [
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/timeline-provider/finding.json",
+      "bytes": 15413,
+      "sha256": "96edf3d32313581e95b804581e44af8ce4888e01148e384f6c4f12a6411ac539"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/placed-event-context/finding.json",
+      "bytes": 19331,
+      "sha256": "aa9e0ef239dfb7e3516bf198c77d45881a73e3fc6b0a2d51b5994f8fa1fcf1bd"
+    },
+    {
+      "path": "research/evidence/cubase-static/cpr-audio-events-001/channel-rate-context/finding.json",
+      "bytes": 19214,
+      "sha256": "456e462f8dbc13075ca3074ccd929654e0b856a8d61d236f05adc513e2286be6"
+    }
+  ],
+  "limitations": [
+    "Raw decompilation is generated non-source, neither guaranteed compilable nor a runtime ABI model; unmapped tails require original instructions.",
+    "A complete normal getter is not proof that every constructor/observer leaves its fields unchanged.",
+    "No claim covers arbitrary config values, NaN/Infinity behavior, rounding-mode changes, object destruction or concurrent mutation.",
+    "Discovery output and all target bytes remain local research inputs; paths do not imply redistribution."
+  ],
+  "review_status": "Ready for independent review; no external review hash embedded to avoid a circular seal"
+}

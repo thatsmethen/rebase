@@ -1,0 +1,583 @@
+{
+  "id": "APP002-GUI-EXCHANGE-INDEPENDENT-COMPARISON",
+  "at_utc": "2026-10-19T08:59:27.091432+00:00",
+  "status": "pass",
+  "target_executed": false,
+  "native_Cubase_runtime_comparison": false,
+  "scope": "Independent read-only comparison of supplied GUI-produced Rebase export/import/render artifacts. This auditor did not operate the GUI. No Rebase model/serializer/renderer code imported or executed.",
+  "audio": {
+    "schema": "rebase.audio-probe.v1",
+    "scope": "Numerical sample-comparison evidence only; no input provenance, protocol conformance or Cubase equivalence conclusion is inferred.",
+    "status": "pass",
+    "reference": {
+      "path": "/workspace/rebase/research/evidence/application/APP002/Timing and Automation.wav",
+      "file_sha256": "ef243be35fa68b52e2c7d45b461a1fe2cac643f95898da1b46a650fa94ebbe02",
+      "data_sha256": "281aa94566d7804980fcdfd77ae6145a289efde5aa2490f9ac4ecc71b4714397",
+      "format_tag": 3,
+      "encoding": "ieee_float",
+      "bits_per_sample": 32,
+      "sample_rate_hz": 48000,
+      "channels": 2,
+      "channel_mask": null,
+      "frames": 648000,
+      "duration_seconds": 13.5,
+      "chunks": [
+        {
+          "id_hex": "4a554e4b",
+          "size_bytes": 28
+        },
+        {
+          "id_hex": "666d7420",
+          "size_bytes": 16
+        },
+        {
+          "id_hex": "464c4c52",
+          "size_bytes": 4008
+        },
+        {
+          "id_hex": "64617461",
+          "size_bytes": 5184000
+        }
+      ]
+    },
+    "candidate": {
+      "path": "/workspace/rebase/research/evidence/application/APP002/Exchange Roundtrip.wav",
+      "file_sha256": "ef243be35fa68b52e2c7d45b461a1fe2cac643f95898da1b46a650fa94ebbe02",
+      "data_sha256": "281aa94566d7804980fcdfd77ae6145a289efde5aa2490f9ac4ecc71b4714397",
+      "format_tag": 3,
+      "encoding": "ieee_float",
+      "bits_per_sample": 32,
+      "sample_rate_hz": 48000,
+      "channels": 2,
+      "channel_mask": null,
+      "frames": 648000,
+      "duration_seconds": 13.5,
+      "chunks": [
+        {
+          "id_hex": "4a554e4b",
+          "size_bytes": 28
+        },
+        {
+          "id_hex": "666d7420",
+          "size_bytes": 16
+        },
+        {
+          "id_hex": "464c4c52",
+          "size_bytes": 4008
+        },
+        {
+          "id_hex": "64617461",
+          "size_bytes": 5184000
+        }
+      ]
+    },
+    "tolerances": {
+      "units": "full_scale_normalized_sample_amplitude",
+      "peak_absolute": 0.0,
+      "rms": 0.0,
+      "rule": "Both limits must hold separately for every channel; shape must match."
+    },
+    "transformations_applied": [],
+    "file_bytes_equal": true,
+    "audio_payload_bytes_equal": true,
+    "decoded_samples_equal": true,
+    "structural_mismatches": [],
+    "channel_layout_check": "at_least_one_unspecified; compared_in_stored_channel_order",
+    "per_channel": [
+      {
+        "samples_different": 0,
+        "first_different_frame": null,
+        "first_different_seconds": null,
+        "peak_absolute_residual": 0.0,
+        "peak_residual_frame": null,
+        "peak_residual_seconds": null,
+        "rms_residual": 0.0,
+        "reference_peak_absolute": 0.4375303089618683,
+        "candidate_peak_absolute": 0.4375303089618683,
+        "channel_index": 0,
+        "within_tolerance": true
+      },
+      {
+        "samples_different": 0,
+        "first_different_frame": null,
+        "first_different_seconds": null,
+        "peak_absolute_residual": 0.0,
+        "peak_residual_frame": null,
+        "peak_residual_seconds": null,
+        "rms_residual": 0.0,
+        "reference_peak_absolute": 0.4628036320209503,
+        "candidate_peak_absolute": 0.4628036320209503,
+        "channel_index": 1,
+        "within_tolerance": true
+      }
+    ]
+  },
+  "supported_project_semantics": {
+    "status": "pass",
+    "differences": [],
+    "normalization": "Remove only object id fields; substitute complete media-file SHA256 for mediaPath. Preserve every other manifest key, scalar, list order, track/clip name, map event, curve/interpolation, automation read state, position/duration/source offset and timebase.",
+    "canonical_source": {
+      "name": "Exchange Check",
+      "sampleRate": 48000,
+      "signatureMap": {
+        "events": [
+          {
+            "beat": 0,
+            "denominator": 4,
+            "numerator": 4
+          },
+          {
+            "beat": 8,
+            "denominator": 4,
+            "numerator": 3
+          },
+          {
+            "beat": 20,
+            "denominator": 4,
+            "numerator": 4
+          }
+        ]
+      },
+      "tempo": 120,
+      "tempoMap": {
+        "events": [
+          {
+            "beat": 0,
+            "bpm": 120,
+            "curve": "jump"
+          },
+          {
+            "beat": 8,
+            "bpm": 90,
+            "curve": "jump"
+          }
+        ]
+      },
+      "tracks": [
+        {
+          "automation": [
+            {
+              "isReadEnabled": true,
+              "parameter": "gainDB",
+              "points": [
+                {
+                  "interpolation": "linear",
+                  "time": 0,
+                  "value": -12
+                },
+                {
+                  "interpolation": "step",
+                  "time": 4,
+                  "value": 0
+                },
+                {
+                  "interpolation": "linear",
+                  "time": 8,
+                  "value": -6
+                }
+              ]
+            }
+          ],
+          "clips": [
+            {
+              "duration": 12,
+              "mediaSHA256": "8fceb6cd8e474bc18d39f72dac2131737994c02fb4b3d8aa9b41ba4c5b578ad9",
+              "name": "Pulse",
+              "position": 0,
+              "sourceOffset": 0,
+              "timeBase": "seconds"
+            }
+          ],
+          "gainDB": 0,
+          "isMuted": false,
+          "isSolo": false,
+          "name": "Pulse",
+          "pan": 0,
+          "timeBase": "seconds"
+        },
+        {
+          "automation": [
+            {
+              "isReadEnabled": true,
+              "parameter": "pan",
+              "points": [
+                {
+                  "interpolation": "linear",
+                  "time": 0,
+                  "value": -0.75
+                },
+                {
+                  "interpolation": "linear",
+                  "time": 6,
+                  "value": 0.75
+                }
+              ]
+            }
+          ],
+          "clips": [
+            {
+              "duration": 12,
+              "mediaSHA256": "785fbf196cac9cfac2bcfcf5b6c327425373db28584bd9e34c136c252eebd047",
+              "name": "Low Orbit",
+              "position": 0,
+              "sourceOffset": 0,
+              "timeBase": "seconds"
+            }
+          ],
+          "gainDB": 0,
+          "isMuted": false,
+          "isSolo": false,
+          "name": "Low Orbit",
+          "pan": 0,
+          "timeBase": "seconds"
+        },
+        {
+          "automation": [],
+          "clips": [
+            {
+              "duration": 12,
+              "mediaSHA256": "9e8e234918695063082bd7ce5ec6e2d76decb89e8ee2164687a26826a3e413c1",
+              "name": "Glass Keys",
+              "position": 1.5,
+              "sourceOffset": 0,
+              "timeBase": "seconds"
+            }
+          ],
+          "gainDB": -3,
+          "isMuted": false,
+          "isSolo": false,
+          "name": "Glass Keys",
+          "pan": 0,
+          "timeBase": "seconds"
+        }
+      ]
+    },
+    "canonical_roundtrip": {
+      "name": "Exchange Check",
+      "sampleRate": 48000,
+      "signatureMap": {
+        "events": [
+          {
+            "beat": 0,
+            "denominator": 4,
+            "numerator": 4
+          },
+          {
+            "beat": 8,
+            "denominator": 4,
+            "numerator": 3
+          },
+          {
+            "beat": 20,
+            "denominator": 4,
+            "numerator": 4
+          }
+        ]
+      },
+      "tempo": 120,
+      "tempoMap": {
+        "events": [
+          {
+            "beat": 0,
+            "bpm": 120,
+            "curve": "jump"
+          },
+          {
+            "beat": 8,
+            "bpm": 90,
+            "curve": "jump"
+          }
+        ]
+      },
+      "tracks": [
+        {
+          "automation": [
+            {
+              "isReadEnabled": true,
+              "parameter": "gainDB",
+              "points": [
+                {
+                  "interpolation": "linear",
+                  "time": 0,
+                  "value": -12
+                },
+                {
+                  "interpolation": "step",
+                  "time": 4,
+                  "value": 0
+                },
+                {
+                  "interpolation": "linear",
+                  "time": 8,
+                  "value": -6
+                }
+              ]
+            }
+          ],
+          "clips": [
+            {
+              "duration": 12,
+              "mediaSHA256": "8fceb6cd8e474bc18d39f72dac2131737994c02fb4b3d8aa9b41ba4c5b578ad9",
+              "name": "Pulse",
+              "position": 0,
+              "sourceOffset": 0,
+              "timeBase": "seconds"
+            }
+          ],
+          "gainDB": 0,
+          "isMuted": false,
+          "isSolo": false,
+          "name": "Pulse",
+          "pan": 0,
+          "timeBase": "seconds"
+        },
+        {
+          "automation": [
+            {
+              "isReadEnabled": true,
+              "parameter": "pan",
+              "points": [
+                {
+                  "interpolation": "linear",
+                  "time": 0,
+                  "value": -0.75
+                },
+                {
+                  "interpolation": "linear",
+                  "time": 6,
+                  "value": 0.75
+                }
+              ]
+            }
+          ],
+          "clips": [
+            {
+              "duration": 12,
+              "mediaSHA256": "785fbf196cac9cfac2bcfcf5b6c327425373db28584bd9e34c136c252eebd047",
+              "name": "Low Orbit",
+              "position": 0,
+              "sourceOffset": 0,
+              "timeBase": "seconds"
+            }
+          ],
+          "gainDB": 0,
+          "isMuted": false,
+          "isSolo": false,
+          "name": "Low Orbit",
+          "pan": 0,
+          "timeBase": "seconds"
+        },
+        {
+          "automation": [],
+          "clips": [
+            {
+              "duration": 12,
+              "mediaSHA256": "9e8e234918695063082bd7ce5ec6e2d76decb89e8ee2164687a26826a3e413c1",
+              "name": "Glass Keys",
+              "position": 1.5,
+              "sourceOffset": 0,
+              "timeBase": "seconds"
+            }
+          ],
+          "gainDB": -3,
+          "isMuted": false,
+          "isSolo": false,
+          "name": "Glass Keys",
+          "pan": 0,
+          "timeBase": "seconds"
+        }
+      ]
+    },
+    "source_canonical_sha256": "3794c1097aa13459a9001c6561a636d1e0591708ee55f409713953fc6a6f2a93",
+    "roundtrip_canonical_sha256": "3794c1097aa13459a9001c6561a636d1e0591708ee55f409713953fc6a6f2a93"
+  },
+  "xml_independent_projection": {
+    "status": "pass",
+    "differences": [],
+    "checks": "Separately parse exported XML: structure/lanes by track IDs, embedded audio hashes, seconds clips, dB volume, normalized pan converted to signed range, hold/linear point curves, beat-based jump tempo/signature maps. Compare these represented values to source manifest.",
+    "scope_notes": [
+      "All source clips/tracks are seconds-based after the GUI change. Musical anchoring is not preserved or tested by this exchange.",
+      "Arrangement comment Rebase.sampleRate is an application-specific convention; XSD acceptance does not make it interoperable sample-rate semantics.",
+      "Present gain/pan automation lanes are enabled in this source; no disabled-lane exchange claim."
+    ]
+  },
+  "schema_validation": {
+    "status": "pass",
+    "schema": {
+      "path": "research/references/dawproject/Project.xsd",
+      "bytes": 27904,
+      "sha256": "58e2fd9864772850aac3eab1f3de8693857dc5384df6d29fbc320ae1de2347cc"
+    },
+    "pinned_review": "research/evidence/cubase-static/dawproject-001/application-review.json",
+    "project_xml_sha256": "4a83c29288ab31f4da677f2860c5759217c83d369378c7c30f2b6f5f7c38c5cc",
+    "command": [
+      "/usr/bin/xmllint",
+      "--nonet",
+      "--noout",
+      "--schema",
+      "/workspace/rebase/research/references/dawproject/Project.xsd",
+      "-"
+    ],
+    "stdin": "project.xml exact bytes read from archive",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "- validates\n"
+  },
+  "archive": {
+    "crc_check": "pass",
+    "members": [
+      {
+        "name": "project.xml",
+        "bytes": 2994,
+        "sha256": "4a83c29288ab31f4da677f2860c5759217c83d369378c7c30f2b6f5f7c38c5cc",
+        "crc32": "995d182c"
+      },
+      {
+        "name": "metadata.xml",
+        "bytes": 88,
+        "sha256": "023e0c55d92eb1e16c6dcc7d0f62053deacc518e39c315105bbc7cdb25f4b6f5",
+        "crc32": "a094530c"
+      },
+      {
+        "name": "audio/0278DBB7-A972-4AAB-BFD1-3E8FB80368B3.wav",
+        "bytes": 2304044,
+        "sha256": "785fbf196cac9cfac2bcfcf5b6c327425373db28584bd9e34c136c252eebd047",
+        "crc32": "b0d30f14"
+      },
+      {
+        "name": "audio/C63495E7-54E3-4C60-908A-0572E29FEED0.wav",
+        "bytes": 2304044,
+        "sha256": "8fceb6cd8e474bc18d39f72dac2131737994c02fb4b3d8aa9b41ba4c5b578ad9",
+        "crc32": "31395e88"
+      },
+      {
+        "name": "audio/F4A91603-04D0-48C4-B360-7A9EC2F2A1DC.wav",
+        "bytes": 2304044,
+        "sha256": "9e8e234918695063082bd7ce5ec6e2d76decb89e8ee2164687a26826a3e413c1",
+        "crc32": "d20a73d4"
+      }
+    ]
+  },
+  "media_files": [
+    {
+      "package": "Exchange Check.rebaseproj",
+      "declared_path": "Media/Pulse.wav",
+      "path": "research/evidence/application/APP002/Exchange Check.rebaseproj/Media/Pulse.wav",
+      "bytes": 2304044,
+      "sha256": "8fceb6cd8e474bc18d39f72dac2131737994c02fb4b3d8aa9b41ba4c5b578ad9"
+    },
+    {
+      "package": "Exchange Check.rebaseproj",
+      "declared_path": "Media/Low Orbit.wav",
+      "path": "research/evidence/application/APP002/Exchange Check.rebaseproj/Media/Low Orbit.wav",
+      "bytes": 2304044,
+      "sha256": "785fbf196cac9cfac2bcfcf5b6c327425373db28584bd9e34c136c252eebd047"
+    },
+    {
+      "package": "Exchange Check.rebaseproj",
+      "declared_path": "Media/Glass Keys.wav",
+      "path": "research/evidence/application/APP002/Exchange Check.rebaseproj/Media/Glass Keys.wav",
+      "bytes": 2304044,
+      "sha256": "9e8e234918695063082bd7ce5ec6e2d76decb89e8ee2164687a26826a3e413c1"
+    },
+    {
+      "package": "Exchange Roundtrip.rebaseproj",
+      "declared_path": "Media/E6DDD1A7-1BA4-49ED-A991-22EFB618ABE2.wav",
+      "path": "research/evidence/application/APP002/Exchange Roundtrip.rebaseproj/Media/E6DDD1A7-1BA4-49ED-A991-22EFB618ABE2.wav",
+      "bytes": 2304044,
+      "sha256": "8fceb6cd8e474bc18d39f72dac2131737994c02fb4b3d8aa9b41ba4c5b578ad9"
+    },
+    {
+      "package": "Exchange Roundtrip.rebaseproj",
+      "declared_path": "Media/D6190477-7EB4-44C0-9D45-4B3D3724D651.wav",
+      "path": "research/evidence/application/APP002/Exchange Roundtrip.rebaseproj/Media/D6190477-7EB4-44C0-9D45-4B3D3724D651.wav",
+      "bytes": 2304044,
+      "sha256": "785fbf196cac9cfac2bcfcf5b6c327425373db28584bd9e34c136c252eebd047"
+    },
+    {
+      "package": "Exchange Roundtrip.rebaseproj",
+      "declared_path": "Media/956917A7-9058-4A29-9D55-0C75AE2CF61A.wav",
+      "path": "research/evidence/application/APP002/Exchange Roundtrip.rebaseproj/Media/956917A7-9058-4A29-9D55-0C75AE2CF61A.wav",
+      "bytes": 2304044,
+      "sha256": "9e8e234918695063082bd7ce5ec6e2d76decb89e8ee2164687a26826a3e413c1"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "research/evidence/application/APP002/Exchange Check.rebaseproj/Project.json",
+      "bytes": 3838,
+      "sha256": "d2faa21a6a55161c52df41e1ddb79dd0f6237a418b8e32def41de30d6c2886cf"
+    },
+    {
+      "path": "research/evidence/application/APP002/Exchange Check.rebaseproj/Media/Pulse.wav",
+      "bytes": 2304044,
+      "sha256": "8fceb6cd8e474bc18d39f72dac2131737994c02fb4b3d8aa9b41ba4c5b578ad9"
+    },
+    {
+      "path": "research/evidence/application/APP002/Exchange Check.rebaseproj/Media/Low Orbit.wav",
+      "bytes": 2304044,
+      "sha256": "785fbf196cac9cfac2bcfcf5b6c327425373db28584bd9e34c136c252eebd047"
+    },
+    {
+      "path": "research/evidence/application/APP002/Exchange Check.rebaseproj/Media/Glass Keys.wav",
+      "bytes": 2304044,
+      "sha256": "9e8e234918695063082bd7ce5ec6e2d76decb89e8ee2164687a26826a3e413c1"
+    },
+    {
+      "path": "research/evidence/application/APP002/Exchange Roundtrip.rebaseproj/Project.json",
+      "bytes": 3922,
+      "sha256": "1250eedbd7064851030bdb4f0f2512fd34c650e523d0b2a6b7176a132016417a"
+    },
+    {
+      "path": "research/evidence/application/APP002/Exchange Roundtrip.rebaseproj/Media/E6DDD1A7-1BA4-49ED-A991-22EFB618ABE2.wav",
+      "bytes": 2304044,
+      "sha256": "8fceb6cd8e474bc18d39f72dac2131737994c02fb4b3d8aa9b41ba4c5b578ad9"
+    },
+    {
+      "path": "research/evidence/application/APP002/Exchange Roundtrip.rebaseproj/Media/D6190477-7EB4-44C0-9D45-4B3D3724D651.wav",
+      "bytes": 2304044,
+      "sha256": "785fbf196cac9cfac2bcfcf5b6c327425373db28584bd9e34c136c252eebd047"
+    },
+    {
+      "path": "research/evidence/application/APP002/Exchange Roundtrip.rebaseproj/Media/956917A7-9058-4A29-9D55-0C75AE2CF61A.wav",
+      "bytes": 2304044,
+      "sha256": "9e8e234918695063082bd7ce5ec6e2d76decb89e8ee2164687a26826a3e413c1"
+    },
+    {
+      "path": "research/evidence/application/APP002/Timing and Automation.wav",
+      "bytes": 5188096,
+      "sha256": "ef243be35fa68b52e2c7d45b461a1fe2cac643f95898da1b46a650fa94ebbe02"
+    },
+    {
+      "path": "research/evidence/application/APP002/Exchange Roundtrip.wav",
+      "bytes": 5188096,
+      "sha256": "ef243be35fa68b52e2c7d45b461a1fe2cac643f95898da1b46a650fa94ebbe02"
+    },
+    {
+      "path": "research/evidence/application/APP002/Exchange Check.dawproject",
+      "bytes": 6913743,
+      "sha256": "fe4cd96ccb1eb00405c202ca323335de41f20ff91753fa8a64e9d6cbf76c198a"
+    },
+    {
+      "path": "research/references/dawproject/Project.xsd",
+      "bytes": 27904,
+      "sha256": "58e2fd9864772850aac3eab1f3de8693857dc5384df6d29fbc320ae1de2347cc"
+    }
+  ],
+  "inputs_unchanged_during_audit": true,
+  "changed_inputs": [],
+  "checker": {
+    "path": "research/evidence/application/APP002/gui-exchange-audit.py",
+    "bytes": 11778,
+    "sha256": "612f8ed806b7bde809c9fa5e38f3fbe9f3fbe88337bd5e4013e5f868eff0a057"
+  },
+  "audio_probe": {
+    "path": "scripts/audio_probe.py",
+    "bytes": 16222,
+    "sha256": "a799b98f9a7fc1e725b6da09d3eaf0edf51fa2d823381dcf24d5500819ab9acb"
+  },
+  "limitations": [
+    "Exact app roundtrip and schema validity do not establish Cubase runtime behavior or another DAW's rendering, pan law, automation interpretation or import compatibility.",
+    "Compared actual stored-channel PCM payload with zero tolerance; no alignment, gain fitting, resampling, channel reassignment or silence trimming."
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "created_utc": "2026-10-19T11:59:36.700876+00:00",
+  "source": "Application/Sources/Rebase/StudioSession.swift",
+  "before_sha256": "3994d07dd73982a9f69396b543f97b6e6c1085b75f05ddf6a81d6bf0ce6839d0",
+  "after_sha256": "395f326849a96f30358ca8c765f454993b071350c5a6aeee24b9101f1a0b9402",
+  "change": "Set success status only after a changed candidate is validated and committed. Actual native-clock removal reports Converted to Rebase Timing; other committed map changes report Updated tempo and meter.",
+  "no_op_and_atomicity": "Both existing early-return guards stay before status assignment; all throwing conversion/map replacement occurs on candidate before remember/project assignment. No status changed on no-op or thrown error. Success is set before changed(), so any scratch autosave failure can still replace it with an error.",
+  "validation": "Read-only diff inspected; no new tests per root instruction. Root owns rebuild and native UI success-text verification.",
+  "pre_edit_identity": "status-correction-before/identity.json"
+}

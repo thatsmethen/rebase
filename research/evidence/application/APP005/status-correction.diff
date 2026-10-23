@@ -1,0 +1,14 @@
+--- before/StudioSession.swift
++++ after/StudioSession.swift
+@@ -325,7 +325,10 @@
+         candidate.signatureMap = signatures
+         try candidate.replaceTempoMap(tempo)
+         guard candidate != project else { return }
+-        remember(); project = candidate; changed()
++        let convertedNativeTiming = project.tempoMap.nativeClock != nil && candidate.tempoMap.nativeClock == nil
++        remember(); project = candidate
++        status = convertedNativeTiming ? "Converted to Rebase Timing" : "Updated tempo and meter"
++        changed()
+     }
+     func applyAutomation(_ trackID: UUID, lanes: [AutomationLane]) {
+         do {

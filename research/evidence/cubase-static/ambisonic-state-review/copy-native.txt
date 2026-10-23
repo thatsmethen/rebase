@@ -1,0 +1,58 @@
+
+research/evidence/cubase-static/ambisonic/vstambiconverter.arm64.macho:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+0000000000155ea4 <_bundleExit>:
+  16a0fc: 7100105f     	cmp	w2, #0x4
+  16a100: 540000c3     	b.lo	0x16a118 <_bundleExit+0x14274>
+  16a104: 53027c48     	lsr	w8, w2, #2
+  16a108: 3cc10400     	ldr	q0, [x0], #0x10
+  16a10c: 3c810420     	str	q0, [x1], #0x10
+  16a110: 71000508     	subs	w8, w8, #0x1
+  16a114: 54ffffa1     	b.ne	0x16a108 <_bundleExit+0x14264>
+  16a118: 72000448     	ands	w8, w2, #0x3
+  16a11c: 54000160     	b.eq	0x16a148 <_bundleExit+0x142a4>
+  16a120: bd400000     	ldr	s0, [x0]
+  16a124: bd000020     	str	s0, [x1]
+  16a128: 7100051f     	cmp	w8, #0x1
+  16a12c: 540000e0     	b.eq	0x16a148 <_bundleExit+0x142a4>
+  16a130: bd400400     	ldr	s0, [x0, #0x4]
+  16a134: bd000420     	str	s0, [x1, #0x4]
+  16a138: 7100091f     	cmp	w8, #0x2
+  16a13c: 54000060     	b.eq	0x16a148 <_bundleExit+0x142a4>
+  16a140: bd400800     	ldr	s0, [x0, #0x8]
+  16a144: bd000820     	str	s0, [x1, #0x8]
+  16a148: d65f03c0     	ret
+  16a14c: 340003e2     	cbz	w2, 0x16a1c8 <_bundleExit+0x14324>
+  16a150: 7100205f     	cmp	w2, #0x8
+  16a154: 540002e3     	b.lo	0x16a1b0 <_bundleExit+0x1430c>
+  16a158: cb000028     	sub	x8, x1, x0
+  16a15c: f101011f     	cmp	x8, #0x40
+  16a160: 54000283     	b.lo	0x16a1b0 <_bundleExit+0x1430c>
+  16a164: 51000448     	sub	w8, w2, #0x1
+  16a168: 9100050a     	add	x10, x8, #0x1
+  16a16c: 927d754b     	and	x11, x10, #0x1fffffff8
+  16a170: 4b0b0042     	sub	w2, w2, w11
+  16a174: d37df169     	lsl	x9, x11, #3
+  16a178: 8b090008     	add	x8, x0, x9
+  16a17c: 8b090029     	add	x9, x1, x9
+  16a180: 9100800c     	add	x12, x0, #0x20
+  16a184: 9100802d     	add	x13, x1, #0x20
+  16a188: aa0b03ee     	mov	x14, x11
+  16a18c: ad7f0580     	ldp	q0, q1, [x12, #-0x20]
+  16a190: acc20d82     	ldp	q2, q3, [x12], #0x40
+  16a194: ad3f05a0     	stp	q0, q1, [x13, #-0x20]
+  16a198: ac820da2     	stp	q2, q3, [x13], #0x40
+  16a19c: f10021ce     	subs	x14, x14, #0x8
+  16a1a0: 54ffff61     	b.ne	0x16a18c <_bundleExit+0x142e8>
+  16a1a4: eb0b015f     	cmp	x10, x11
+  16a1a8: 54000081     	b.ne	0x16a1b8 <_bundleExit+0x14314>
+  16a1ac: 14000007     	b	0x16a1c8 <_bundleExit+0x14324>
+  16a1b0: aa0003e8     	mov	x8, x0
+  16a1b4: aa0103e9     	mov	x9, x1
+  16a1b8: fc408500     	ldr	d0, [x8], #0x8
+  16a1bc: fc008520     	str	d0, [x9], #0x8
+  16a1c0: 71000442     	subs	w2, w2, #0x1
+  16a1c4: 54ffffa1     	b.ne	0x16a1b8 <_bundleExit+0x14314>
+  16a1c8: d65f03c0     	ret

@@ -1,0 +1,52 @@
+Building for debugging...
+[0/6] Write swift-version--1AB21518FC5DEDBE.txt
+[2/8] Emitting module RebaseCore
+[3/8] Compiling RebaseCore CPRRateReadBudget.swift
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateReadBudget.swift:59:19: error: cannot find 'rb_cpr_rate_budget' in scope
+57 |             throw CPRRateReadBudgetError.invalidInput
+58 |         }
+59 |         var raw = rb_cpr_rate_budget()
+   |                   `- error: cannot find 'rb_cpr_rate_budget' in scope
+60 |         let status = rb_cpr_rate_read_budget(sourceRateBits, outputRateBits, requested,
+61 |             branch == .mode2InitialAllowance ? 1 : 0, &raw)
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateReadBudget.swift:60:22: error: cannot find 'rb_cpr_rate_read_budget' in scope
+58 |         }
+59 |         var raw = rb_cpr_rate_budget()
+60 |         let status = rb_cpr_rate_read_budget(sourceRateBits, outputRateBits, requested,
+   |                      `- error: cannot find 'rb_cpr_rate_read_budget' in scope
+61 |             branch == .mode2InitialAllowance ? 1 : 0, &raw)
+62 |         switch status {
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateReadBudget.swift:63:14: error: cannot find 'RB_CPR_RATE_BUDGET_OK' in scope
+61 |             branch == .mode2InitialAllowance ? 1 : 0, &raw)
+62 |         switch status {
+63 |         case RB_CPR_RATE_BUDGET_OK: break
+   |              `- error: cannot find 'RB_CPR_RATE_BUDGET_OK' in scope
+64 |         case RB_CPR_RATE_BUDGET_FP_ENVIRONMENT: throw CPRRateReadBudgetError.unsupportedRoundingMode
+65 |         case RB_CPR_RATE_BUDGET_RANGE: throw CPRRateReadBudgetError.arithmeticRange
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateReadBudget.swift:64:14: error: cannot find 'RB_CPR_RATE_BUDGET_FP_ENVIRONMENT' in scope
+62 |         switch status {
+63 |         case RB_CPR_RATE_BUDGET_OK: break
+64 |         case RB_CPR_RATE_BUDGET_FP_ENVIRONMENT: throw CPRRateReadBudgetError.unsupportedRoundingMode
+   |              `- error: cannot find 'RB_CPR_RATE_BUDGET_FP_ENVIRONMENT' in scope
+65 |         case RB_CPR_RATE_BUDGET_RANGE: throw CPRRateReadBudgetError.arithmeticRange
+66 |         default: throw CPRRateReadBudgetError.invalidInput
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateReadBudget.swift:65:14: error: cannot find 'RB_CPR_RATE_BUDGET_RANGE' in scope
+63 |         case RB_CPR_RATE_BUDGET_OK: break
+64 |         case RB_CPR_RATE_BUDGET_FP_ENVIRONMENT: throw CPRRateReadBudgetError.unsupportedRoundingMode
+65 |         case RB_CPR_RATE_BUDGET_RANGE: throw CPRRateReadBudgetError.arithmeticRange
+   |              `- error: cannot find 'RB_CPR_RATE_BUDGET_RANGE' in scope
+66 |         default: throw CPRRateReadBudgetError.invalidInput
+67 |         }
+
+/workspace/rebase/Application/Sources/RebaseCore/CPRRateReadBudget.swift:68:16: error: the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions
+66 |         default: throw CPRRateReadBudgetError.invalidInput
+67 |         }
+68 |         return CPRRateReadBudget(sourceFrames: Int(raw.source_frames),
+   |                `- error: the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions
+69 |             allowanceFrames: Int(raw.allowance_frames), adjustedOutputFrames: Int(raw.adjusted_output_frames),
+70 |             diagnostics: Diagnostics(initialSourceCeiling: Int(raw.initial_source_ceiling),
+error: fatalError

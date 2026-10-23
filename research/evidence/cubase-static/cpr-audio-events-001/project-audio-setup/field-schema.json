@@ -1,0 +1,167 @@
+{
+  "name": "PArrangeSetup forward body",
+  "reader": "0x100966640",
+  "writer": "0x100966a54",
+  "byte_order": "Big-endian serialized integer and IEEE scalar carriers in pinned CPR fixtures; native stream helpers conditionally reverse according to stream endianness state.",
+  "schema": [
+    {
+      "order": 1,
+      "since_version": 0,
+      "wire": "embedded datum",
+      "object_offset": "+10",
+      "meaning_or_limit": "Double coordinate then tagged datum"
+    },
+    {
+      "order": 2,
+      "since_version": 0,
+      "wire": "embedded datum",
+      "object_offset": "+40",
+      "meaning_or_limit": "Double coordinate then tagged datum"
+    },
+    {
+      "order": 3,
+      "since_version": 0,
+      "wire": "i32",
+      "object_offset": "+70",
+      "meaning_or_limit": null
+    },
+    {
+      "order": 4,
+      "since_version": 0,
+      "wire": "i32",
+      "object_offset": "+74",
+      "meaning_or_limit": null
+    },
+    {
+      "order": 5,
+      "since_version": 0,
+      "wire": "Float32",
+      "object_offset": "+ac",
+      "meaning_or_limit": "base rate"
+    },
+    {
+      "order": 6,
+      "since_version": 0,
+      "wire": "i32",
+      "object_offset": "+c8",
+      "meaning_or_limit": "legacy input mapped through10012c7d4"
+    },
+    {
+      "order": 7,
+      "since_version": 1,
+      "wire": "embedded datum",
+      "object_offset": "+78",
+      "meaning_or_limit": "Double coordinate then tagged datum"
+    },
+    {
+      "order": 8,
+      "since_version": 1,
+      "wire": "i32",
+      "object_offset": "+cc",
+      "meaning_or_limit": null
+    },
+    {
+      "order": 9,
+      "since_version": 1,
+      "wire": "i32",
+      "object_offset": "+160",
+      "meaning_or_limit": null
+    },
+    {
+      "order": 10,
+      "since_version": 1,
+      "wire": "i32",
+      "object_offset": "+a8",
+      "meaning_or_limit": null
+    },
+    {
+      "order": 11,
+      "since_version": 1,
+      "wire": "i32",
+      "object_offset": null,
+      "meaning_or_limit": "discarded"
+    },
+    {
+      "order": 12,
+      "since_version": 2,
+      "wire": "Float64",
+      "object_offset": "+b0",
+      "meaning_or_limit": "rate factor"
+    },
+    {
+      "order": 13,
+      "since_version": 3,
+      "wire": "Float64",
+      "object_offset": "+c0",
+      "meaning_or_limit": null
+    },
+    {
+      "order": 14,
+      "since_version": 4,
+      "wire": "i32",
+      "object_offset": "+158",
+      "meaning_or_limit": null
+    },
+    {
+      "order": 15,
+      "since_version": 5,
+      "wire": "i16",
+      "object_offset": "+ba",
+      "meaning_or_limit": null
+    },
+    {
+      "order": 16,
+      "since_version": 5,
+      "wire": "i16",
+      "object_offset": "+b8",
+      "meaning_or_limit": null
+    },
+    {
+      "order": 17,
+      "since_version": 6,
+      "wire": "inline FFileType",
+      "object_offset": "+d0",
+      "meaning_or_limit": "i32 followed by three length-prefixed strings"
+    },
+    {
+      "order": 18,
+      "since_version": 7,
+      "wire": "bounded C string",
+      "object_offset": "+c8",
+      "meaning_or_limit": "up to10 input bytes; descriptor lookup can replace legacy format"
+    },
+    {
+      "order": 19,
+      "since_version": 8,
+      "wire": "i32",
+      "object_offset": "+15c",
+      "meaning_or_limit": null
+    }
+  ],
+  "reader_legacy_defaults": {
+    "version_below2": {
+      "+b0": "Float64 +1"
+    },
+    "version_below3": {
+      "+c0": "Float64 +1"
+    },
+    "version_below4": {
+      "+158": 0
+    },
+    "version_below5": {
+      "+ba": 0,
+      "+b8": 100
+    },
+    "version_below6": {
+      "+d0": "constructed/copied empty FFileType"
+    },
+    "version_below8": {
+      "+15c": 0
+    }
+  },
+  "limits": [
+    "Native reader queries current archive class version and does not contain an explicit upper-version rejection. The bounded authored parser admits exactly v8 and consumes its full extent.",
+    "Fields not given a semantic name are retained by offset/wire kind; their feature meaning is not inferred.",
+    "The v8 writer emits all listed fields unconditionally. Earlier-version compatibility is observed only in reader branches."
+  ]
+}

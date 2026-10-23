@@ -1,0 +1,229 @@
+{
+  "finding_id": "MAIN-INTERPOLATOR-NATIVE-001",
+  "status": "bounded_static_contract_native_disassembly_no_runtime_validation",
+  "source_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "method": "Independent bounded LLVM disassembly, raw Mach-O byte ranges and indirect-symbol parsing. No Ghidra import or target execution in this review.",
+  "target_executed": false,
+  "main_claim": "For the observed concrete vtable and stable finite object state, 0x1007dd650 performs a normalized, clamped, optionally complemented power transform followed by fused output rescaling. The exponent is configurable. No connection to an executed audio pan law is established.",
+  "object_layout": {
+    "primary_base": "B",
+    "secondary_this_argument": "B+0x10; 0x1007dd668 pre-indexes x19 by -0x10 before primary virtual calls",
+    "primary_vtable": "0x1044e8478",
+    "secondary_vtable": "0x1044e8650",
+    "fields": [
+      {
+        "offset": "0x18",
+        "analyst_name": "a",
+        "type": "binary64",
+        "getter": "0x100759d14",
+        "getter_slot": "0x198",
+        "setter": "0x100759cd0",
+        "setter_slot": "0x140"
+      },
+      {
+        "offset": "0x20",
+        "analyst_name": "b",
+        "type": "binary64",
+        "getter": "0x100759d1c",
+        "getter_slot": "0x1a0",
+        "setter": "0x100759cd8",
+        "setter_slot": "0x148"
+      },
+      {
+        "offset": "0x28",
+        "analyst_name": "c",
+        "type": "binary64",
+        "getter": "0x100759d24",
+        "getter_slot": "0x1a8",
+        "setter": "0x100759ce0",
+        "setter_slot": "0x150"
+      },
+      {
+        "offset": "0x30",
+        "analyst_name": "d",
+        "type": "binary64",
+        "getter": "0x100759d2c",
+        "getter_slot": "0x1b0",
+        "setter": "0x100759ce8",
+        "setter_slot": "0x158"
+      },
+      {
+        "offset": "0x38",
+        "analyst_name": "record_begin",
+        "type": "pointer"
+      },
+      {
+        "offset": "0x40",
+        "analyst_name": "record_end",
+        "type": "pointer"
+      },
+      {
+        "offset": "0x50",
+        "analyst_name": "e",
+        "type": "binary64 exponent"
+      },
+      {
+        "offset": "0x58",
+        "analyst_name": "complement",
+        "type": "byte; any nonzero value selects complement"
+      }
+    ],
+    "naming_limit": "a,b,c,d and record-coordinate names are analyst descriptions of the arithmetic, not recovered source field names, spatial axes, or audio parameter identities."
+  },
+  "transform": {
+    "secondary_entry": "0x1007dd650",
+    "primary_twin_entry": "0x1007dd580",
+    "bounded_formula": "r=(x-a)/(b-a); q=(r<0 ? +0 : min(r,1)); t=(complement==0 ? q : 1-q); z=pow(t,e); y=fma(z,d-c,c).",
+    "preconditions": [
+      "Valid object and expected concrete vtable; the selected getters resolve to the retained leaf field loads.",
+      "No concurrent or reentrant field changes between repeated getter calls.",
+      "For the ordinary real-valued interpretation: finite inputs/endpoints/exponent, finite nonzero b-a, and finite intermediate values and library result. Positive finite e is a conservative domain for endpoints t=0 or1.",
+      "The actual floating-point environment and pow implementation are runtime dependencies; their identity and outputs were not observed."
+    ],
+    "instruction_order": [
+      "0x1007dd674: getter a1; 0x678 FSUB numerator=x-a1.",
+      "0x688: getter b1; 0x69c: getter a2; 0x6a0 FSUB denominator=b1-a2; 0x6a4 FDIV r=numerator/denominator.",
+      "0x6ac: FMIN d2,r,1.0; 0x6b0: FCMP r,+0; 0x6b4: create +0; 0x6b8: FCSEL chooses +0 on MI, otherwise d2. This is not FMINNM or an arbitrary language clamp.",
+      "0x6bc reads B+0x58; 0x6c0 computes 1-q; 0x6c8 chooses q for flag0, otherwise1-q.",
+      "0x6cc loads B+0x50 into d1; 0x6d0 calls imported _pow with base in d0 and exponent in d1.",
+      "0x6e4: getter d1; 0x6f8: getter c1; 0x6fc FSUB delta=d1-c1; 0x70c: getter c2; 0x710 FMADD d0,z,delta,c2."
+    ],
+    "fusion_limit": "FMADD computes product plus addend with one final rounding. Replacing it with separately rounded multiply and add, or algebraically rearranging the formula, is not justified.",
+    "missing_guards": "The transform has no local zero-denominator, finite-value, exponent-domain or object-validity guard. None should be invented as target behavior."
+  },
+  "configuration": {
+    "entry": "0x1007dd454",
+    "secondary_adjusting_thunk": "0x1007dd578",
+    "count_getter": "0x100759d04 returns (record_end-record_begin)>>5; 32-byte record stride is directly observed",
+    "guard": "Calls primary slot+0x178 and returns without the configuration body unless W0==3.",
+    "record_fields": {
+      "first_coordinate_2": "load double at record_begin+0x18",
+      "middle_coordinate_1": "load double at record_begin+0x30",
+      "middle_coordinate_2": "load double at record_begin+0x38",
+      "third_coordinate_2": "load double at record_begin+0x58"
+    },
+    "complement_write": "0x1007dd48c compares first_coordinate_2 with third_coordinate_2; for an ordered greater-than result the body writes byte1 at B+0x58. The less/equal/unordered branch skips that write. There is no clearing store in this body.",
+    "exponent_rule": "u=(middle_coordinate_1-a)/(b-a); v=(middle_coordinate_2-c)/(d-c); e=log(v)/log(complement==0 ? u : 1-u). Store at B+0x50 occurs at0x1007dd548.",
+    "order": "Input-coordinate normalization is computed first; output-coordinate normalization follows; _log(v) is called first, then _log(selected u), then FDIV of the two results. No clamp is applied to u or v here.",
+    "import_resolution": "Stub0x1038814ac is _log; stub0x1038817dc is _pow, independently resolved from the immutable Mach-O indirect-symbol table.",
+    "ordinary_domain": "Finite nonzero endpoint spans, 0<selected_u<1 and0<v<1 give a positive finite real exponent if library outputs remain finite. This is a sufficient analyst domain, not validation performed by the code.",
+    "unhandled_cases": "Zero endpoint spans, log arguments<=0, selected_u==1, NaNs, infinities, and floating exceptions have no local rejection branch. Their outcomes depend on instruction/library semantics and FP state.",
+    "initialization_and_mutation_limits": [
+      "0x1007dd724 initializes B+0x50 to binary zero and B+0x58 to zero after a base constructor call, then installs the observed vtables. This is one construction path, not a runtime default claim.",
+      "The endpoint setters are direct stores. They do not themselves establish that the exponent has been recomputed afterward.",
+      "The inspected configuration body only sets the complement flag. Treat its value as prior state when the comparison does not write it; do not describe it as recomputed true/false each call.",
+      "After writing exponent, the method tail-calls0x1007d9e40, which dispatches primary slot+0x58 with argument1. The observed slot resolves to0x10221bc5c; it forwards to a global object's slot+0x28 when present, otherwise this object's slot+0x68. Callback/reentrant mutation remains unresolved, so the whole call is not proved to preserve the newly written fields.",
+      "No exhaustive whole-binary write inventory was performed. Other lifecycle methods may alter these fields."
+    ]
+  },
+  "midpoint_helpers": {
+    "entries": [
+      "0x1007dd780",
+      "0x1007dd85c"
+    ],
+    "secondary_adjustment": "The second entry accepts B+0x10, subtracts0x10 for virtual calls and reads the same record pointer through secondary+0x28.",
+    "guard": "Both require the same count getter result3.",
+    "constant": {
+      "binary64_bits": "0x3fe6a09e667f3bcd",
+      "decimal": 0.7071067811865476
+    },
+    "initialization": "A C++ guard-controlled path materializes the exact constant and stores it at0x10503fd68; ___cxa_guard_acquire/release imports are independently resolved. Runtime reachability and completed initialization are assumed when using the value.",
+    "write_rule": "Compute delta=d-c, load constant k, reload c, then FMADD(delta,k,c). Store result at record_begin+0x38, then tail-call0x1007dd454.",
+    "limits": "The helpers do not force the middle input coordinate to the midpoint. Consequently they do not establish a fixed exponent0.5. Rounding in rescaling/renormalization also prevents assuming the subsequent normalized output is bit-exact k."
+  },
+  "floating_point_limits": {
+    "ordinary_fpcr_ah_zero": "FMIN propagates a NaN (DN affects its representation); FCMP unordered has N=0, so MI does not replace it with zero. Negative finite r selects +0; negative zero compares equal and remains the FMIN result, normally -0.",
+    "ah_caveat": "On implementations supporting FEAT_AFP, AH=1 makes FMIN select its second operand when either input is NaN. Here this can turn NaN into1 before optional complement. NaN preservation is therefore conditional, not universal.",
+    "runtime_unknowns": [
+      "FPCR.AH and feature availability",
+      "FPCR.DN",
+      "FPCR.RMode",
+      "FZ/FIZ and subnormal handling",
+      "enabled exception traps",
+      "loaded _pow/_log implementations"
+    ],
+    "sources": [
+      "https://documentation-service.arm.com/static/67e40f3398aa3c3b6eea6a85",
+      "https://documentation-service.arm.com/static/6245c734b059dc5ff9a8bdab",
+      "https://developer.arm.com/community/arm-community-blogs/b/architectures-and-processors-blog/posts/condition-codes-4-floating-point-comparisons-using-vfp",
+      "https://developer.arm.com/-/media/Files/pdf/graphics-and-multimedia/ARMv8_InstructionSetOverview.pdf",
+      "https://documentation-service.arm.com/static/6526c59c9e189a266cef83fa",
+      "https://documentation-service.arm.com/static/62015c6c965f7d118e3f5f4c"
+    ],
+    "verification_note": "A separate read-only worker checked official Arm indexed excerpts. These explain instruction semantics; they do not establish the target process's FP control state."
+  },
+  "panlaw_display_only": {
+    "entry": "0x100d7c0cc",
+    "index_rule": "FMADD(4,p,0.5), then FCVTZS to signed32 W20; comparison against4 is unsigned. For valid finite p in[0,1], ordinary range conversion yields indices0..4.",
+    "direct_labels": [
+      "-6dB",
+      "-3dB",
+      "0dB",
+      "-4.5dB"
+    ],
+    "other_index_path": "Unsigned index>=4 selects object0x105060570 and calls0x1031341a8.",
+    "observed_source_key": "Equal Power",
+    "key_address": "0x1041971f2",
+    "key_sha256": "5bee901f7642d73a8531e119c493ccb8501e67c49d5207f16870891e092fa871",
+    "key_provenance": "Initializer window0x100d7dee0..0x100d7def0 passes object0x105060570 and UTF16 key0x1041971f2 to0x1031314bc. Its instruction0x1031314cc stores the key pointer and zero cache.",
+    "resolution_limit": "Accessor0x1031341a8 returns an existing cached value or attempts global string resolution. Missing/empty resolution produces an empty-string pointer at0x103c77374. The actual localized displayed text is not established merely by the source key.",
+    "no_audio_claim": "This is a display/quantization path. Neither these labels nor the interpolation type name prove a connection to the audio gain calculation."
+  },
+  "query_priorities": [
+    {
+      "priority": 1,
+      "address": "0x1007dd454",
+      "reason": "Recover configuration dossier with exact field writes, imported logs, branches and callback tail; compare to native result."
+    },
+    {
+      "priority": 2,
+      "addresses": [
+        "0x1007dd780",
+        "0x1007dd85c"
+      ],
+      "reason": "Establish caller contexts for three-record helper and the record coordinates; do not assume midpoint input or exponent0.5."
+    },
+    {
+      "priority": 3,
+      "addresses": [
+        "0x1007dd580",
+        "0x1007dd650"
+      ],
+      "reason": "Query callers/interface dispatch and identify whether any actual audio path uses this generic transform."
+    },
+    {
+      "priority": 4,
+      "addresses": [
+        "0x1007d9e40",
+        "0x10221bc5c"
+      ],
+      "reason": "Resolve notification callback effects before claiming persistent post-call exponent/complement state."
+    },
+    {
+      "priority": 5,
+      "address": "0x100d7c0cc",
+      "reason": "Separate complete display contract from a still-unproven audio-law association; source key Equal Power now resolved."
+    }
+  ],
+  "evidence": [
+    "source-evidence.json",
+    "disassembly-commands.json",
+    "getters-disassembly.txt",
+    "configure-disassembly.txt",
+    "configuration-tail-disassembly.txt",
+    "configuration-notify-disassembly.txt",
+    "panlaw-fallback-initializer-window.txt",
+    "panlaw-fallback-constructor-window.txt",
+    "panlaw-fallback-accessor-disassembly.txt",
+    "panlaw-fallback-string-bytes.json",
+    "native-evidence-verification.json"
+  ],
+  "overall_limitations": [
+    "No target code, native imports, initializer, library, or plug-in was executed.",
+    "LC_FUNCTION_STARTS bounds are metadata hints, not universal exact function boundaries. Some retained windows intentionally contain adjacent thunks or methods.",
+    "Virtual dispatch resolution is conditional on the observed concrete vtable. Dynamic overrides and race/reentrant changes are excluded from the simple equation.",
+    "No reconstruction candidate is created by this review, and no Cubase pan-law equivalence is claimed."
+  ],
+  "created_at_utc": "2026-10-19T06:07:50.834311+00:00",
+  "verified_native_instruction_words": 1224
+}
