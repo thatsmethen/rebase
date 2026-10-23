@@ -1,0 +1,66 @@
+{
+  "schema": "rebase.portable-ci.v1",
+  "scope": "Authored portable component conformance; no desktop app parity or reference-runtime claim",
+  "lane": "macos-app",
+  "configuration": "Debug",
+  "platform": "Darwin",
+  "architecture": "arm64",
+  "runner_image": {
+    "ImageOS": "macos15",
+    "ImageVersion": "20260907.0337.1"
+  },
+  "commit": "9349ef427633924c87465da9b259de105eb9f24b",
+  "commands": [
+    {
+      "name": "cmake-version",
+      "argv": [
+        "cmake",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.096,
+      "log": "cmake-version.log"
+    },
+    {
+      "name": "swift-version",
+      "argv": [
+        "swift",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.484,
+      "log": "swift-version.log"
+    },
+    {
+      "name": "tests",
+      "argv": [
+        "sh",
+        "Tests/run-tests.sh",
+        "--public",
+        "-c",
+        "debug",
+        "--xunit-output",
+        "<home>/work/_temp/rebase-app-conformance/tests.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 140.198,
+      "log": "tests.log"
+    }
+  ],
+  "status": "passed",
+  "tests": {
+    "count": 351,
+    "executed": 235,
+    "skipped": 116,
+    "failures": 0,
+    "reports": [
+      {
+        "report": "tests-swift-testing.xml",
+        "count": 351,
+        "executed": 235,
+        "skipped": 116,
+        "failures": 0
+      }
+    ]
+  }
+}

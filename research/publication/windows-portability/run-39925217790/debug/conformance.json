@@ -1,0 +1,56 @@
+{
+  "schema": "rebase.portable-ci.v1",
+  "scope": "Authored portable component conformance; no desktop app parity or reference-runtime claim",
+  "lane": "swift",
+  "configuration": "Debug",
+  "platform": "Windows",
+  "architecture": "AMD64",
+  "runner_image": {
+    "ImageOS": "win25-vs2026",
+    "ImageVersion": "20261007.264.1"
+  },
+  "commit": "3ae3c653abc6638cdb82349c536aa4f4eb460a2c",
+  "commands": [
+    {
+      "name": "cmake-version",
+      "argv": [
+        "cmake",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.125,
+      "log": "cmake-version.log"
+    },
+    {
+      "name": "swift-version",
+      "argv": [
+        "swift",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.078,
+      "log": "swift-version.log"
+    },
+    {
+      "name": "tests",
+      "argv": [
+        "swift",
+        "test",
+        "--scratch-path",
+        "D:\\a\\_temp\\rebase-conformance\\build",
+        "-c",
+        "debug",
+        "--filter",
+        "RebasePortableTests",
+        "--xunit-output",
+        "D:\\a\\_temp\\rebase-conformance\\tests.xml"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 30.344,
+      "log": "tests.log"
+    }
+  ],
+  "status": "failed",
+  "error": "tests exited with status 1",
+  "application_dependency_lock_preserved": true
+}

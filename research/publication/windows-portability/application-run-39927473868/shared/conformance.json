@@ -1,0 +1,171 @@
+{
+  "schema": "rebase.portable-ci.v1",
+  "scope": "Authored portable component conformance; no desktop app parity or reference-runtime claim",
+  "lane": "swift",
+  "configuration": "Release",
+  "platform": "Windows",
+  "architecture": "AMD64",
+  "runner_image": {
+    "ImageOS": "win25-vs2026",
+    "ImageVersion": "20261007.264.1"
+  },
+  "commit": "2ef4b00e9694da8d6900298076608ecbae8fe686",
+  "commands": [
+    {
+      "name": "cmake-version",
+      "argv": [
+        "cmake",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.187,
+      "log": "cmake-version.log"
+    },
+    {
+      "name": "swift-version",
+      "argv": [
+        "swift",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.094,
+      "log": "swift-version.log"
+    },
+    {
+      "name": "tests",
+      "argv": [
+        "swift",
+        "test",
+        "--scratch-path",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\shared\\build",
+        "-c",
+        "release",
+        "--filter",
+        "RebasePortableTests",
+        "--xunit-output",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\shared\\tests.xml",
+        "--disable-dead-strip",
+        "-Xlinker",
+        "/OPT:NOREF",
+        "--verbose"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 120.64,
+      "log": "tests.log"
+    },
+    {
+      "name": "test-discovery",
+      "argv": [
+        "swift",
+        "test",
+        "list",
+        "--scratch-path",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\shared\\build",
+        "-c",
+        "release",
+        "--skip-build",
+        "--disable-dead-strip",
+        "-Xlinker",
+        "/OPT:NOREF"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.438,
+      "log": "test-discovery.log"
+    },
+    {
+      "name": "inspector-build",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\shared\\build",
+        "-c",
+        "release",
+        "--product",
+        "rebase-inspect"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 68.953,
+      "log": "inspector-build.log"
+    },
+    {
+      "name": "inspector-path",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\shared\\build",
+        "-c",
+        "release",
+        "--show-bin-path"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.328,
+      "log": "inspector-path.log"
+    },
+    {
+      "name": "example-render",
+      "argv": [
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\shared\\build\\out\\Products\\Release-windows-x86_64\\rebase-inspect.exe",
+        "render",
+        "<workspace>\\Application\\Examples\\Rebase Preview.rebaseproj",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\shared\\example-render.wav"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.485,
+      "log": "example-render.log"
+    },
+    {
+      "name": "example-overwrite-refusal",
+      "argv": [
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\shared\\build\\out\\Products\\Release-windows-x86_64\\rebase-inspect.exe",
+        "render",
+        "<workspace>\\Application\\Examples\\Rebase Preview.rebaseproj",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\shared\\example-render.wav"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.046,
+      "log": "example-overwrite-refusal.log"
+    },
+    {
+      "name": "session-build",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\shared\\build",
+        "-c",
+        "release",
+        "--product",
+        "rebase-session"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.891,
+      "log": "session-build.log"
+    },
+    {
+      "name": "session-protocol",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\check-session-protocol.py",
+        "--helper",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\shared\\build\\out\\Products\\Release-windows-x86_64\\rebase-session.exe",
+        "--example",
+        "<workspace>\\Application\\Examples\\Rebase Preview.rebaseproj",
+        "--report",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\shared\\session-protocol.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.953,
+      "log": "session-protocol.log"
+    }
+  ],
+  "status": "failed",
+  "test_link_dead_strip_disabled": true,
+  "test_linker_options": [
+    "/OPT:NOREF"
+  ],
+  "interactive_session_checks": 16,
+  "error": "Expected at least one executed passing test and no failures",
+  "application_dependency_lock_preserved": true
+}

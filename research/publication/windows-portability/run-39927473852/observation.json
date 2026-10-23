@@ -1,0 +1,202 @@
+{
+  "schema": "rebase.windows-ci-observation.v1",
+  "recorded_at_utc": "2026-10-23T09:09:16.549549+00:00",
+  "commit": "2ef4b00e9694da8d6900298076608ecbae8fe686",
+  "status": "failed",
+  "run_url": "https://github.com/thatsmethen/rebase/actions/runs/39927473852",
+  "findings": [
+    "Windows Debug executed 44 tests without skips or failures, and all 16 interactive session checks passed.",
+    "Mac portable Debug and Release each executed 45 passing tests. Mac application tests reported 351 cases: 235 executed, 116 private-fixture skips, no failures.",
+    "Windows Release still discovered zero tests with --disable-dead-strip and explicit /OPT:NOREF. The actual linker command contains /OPT:NOREF, the discovery listing is empty, and the zero-test guard rejected the run.",
+    "Release inspector and session execution still passed exact authored example WAV/PCM hash and interactive protocol checks; those results do not replace the failed Release test suite.",
+    "All four C lanes, both native audio foundation lanes and the public SoXR probe passed. Both Windows native probes reported no endpoint, exit 77, and no playback.",
+    "The final cross-lane render comparison job was skipped because its upstream Release lane failed."
+  ],
+  "boundaries": [
+    "Retained files are byte-exact downloaded, already sanitized CI artifacts, plus the GitHub workflow status response.",
+    "No proprietary reference execution or full Windows parity claim.",
+    "No audio-device playback was performed."
+  ],
+  "artifacts": [
+    {
+      "path": "debug/conformance.json",
+      "bytes": 4236,
+      "sha256": "e85a3f1652c2e09002ee9582f8892029d8b45bc67a5d0677b0ac98f6356132f9"
+    },
+    {
+      "path": "debug/tests-swift-testing.xml",
+      "bytes": 6847,
+      "sha256": "1558e3c10d38fc85ee4b5b4863cf97733f35bf8db653b052eb2ee733de0bfbb2"
+    },
+    {
+      "path": "debug/session-protocol.json",
+      "bytes": 1298,
+      "sha256": "b7e7cffddd6de8a41e6ede5fbc74fcda5b53910743dfa0a11a560727d399ac9f"
+    },
+    {
+      "path": "debug/example-render.json",
+      "bytes": 1116,
+      "sha256": "34cf43abce6bdbe18de9daf68fe0a120fea24cc2a87587ab4d45bbfda49cd43b"
+    },
+    {
+      "path": "release/conformance.json",
+      "bytes": 4676,
+      "sha256": "77606893c9ff24dbd4664f76a160e78e75cb426a9b1ae6cb2d29e721878d8315"
+    },
+    {
+      "path": "release/tests-swift-testing.xml",
+      "bytes": 183,
+      "sha256": "4e1ae8f658cb3cae2abc1c4ca2c17d524719a5f4d513645057aed70bf11dad6a"
+    },
+    {
+      "path": "release/session-protocol.json",
+      "bytes": 1298,
+      "sha256": "b7e7cffddd6de8a41e6ede5fbc74fcda5b53910743dfa0a11a560727d399ac9f"
+    },
+    {
+      "path": "release/example-render.json",
+      "bytes": 1118,
+      "sha256": "9f176a57aac6d83330129997e224da9ae9d46fff7600195fe2fb4cce7e749fca"
+    },
+    {
+      "path": "release/tests.log",
+      "bytes": 128746,
+      "sha256": "939a58db962612226a8a16540a2aeec7ddc9e782f72cb185ed709bf54e037d0b"
+    },
+    {
+      "path": "release/test-discovery.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mac-debug/conformance.json",
+      "bytes": 4250,
+      "sha256": "714d58efb5f729185a5ae2f3534f04a2f49593f1f3f83a5b0b06fb44fb776125"
+    },
+    {
+      "path": "mac-debug/tests-swift-testing.xml",
+      "bytes": 7021,
+      "sha256": "a3dded400717c178a8aba43ad1f0c82f8deb177f9ee0fde9ad62661527234416"
+    },
+    {
+      "path": "mac-debug/session-protocol.json",
+      "bytes": 1269,
+      "sha256": "9b4cedeab7327c3d661c27e548ad1cf05608527387b24e5d48aa2696242f2be9"
+    },
+    {
+      "path": "mac-debug/example-render.json",
+      "bytes": 1085,
+      "sha256": "86d6f1e26798f761cfc1dcbe184a79a3fefd39d39f96a030ee05ffdf511e2603"
+    },
+    {
+      "path": "mac-release/conformance.json",
+      "bytes": 4265,
+      "sha256": "06e7bb0f07c4f26d00564724e8f65767f66a9bbe1346a3e5851b21c7da9300bf"
+    },
+    {
+      "path": "mac-release/tests-swift-testing.xml",
+      "bytes": 7025,
+      "sha256": "3d6ed10a156bbf1322aab252a91f12807779f933ad177e191895d8ba0f1a9037"
+    },
+    {
+      "path": "mac-release/session-protocol.json",
+      "bytes": 1269,
+      "sha256": "9b4cedeab7327c3d661c27e548ad1cf05608527387b24e5d48aa2696242f2be9"
+    },
+    {
+      "path": "mac-release/example-render.json",
+      "bytes": 1087,
+      "sha256": "08042e46dc4a91d538a08a2ea47332e29450defc3dbce1493c20106bdbf7b483"
+    },
+    {
+      "path": "conformance-c-windows-2025-Debug/conformance.json",
+      "bytes": 2870,
+      "sha256": "d6d1939754d55be2c86c9de2b82ae90d4bc9e415c84af090ad2147b4329eab37"
+    },
+    {
+      "path": "conformance-c-windows-2025-Debug/kernel-conformance.json",
+      "bytes": 961,
+      "sha256": "bcd1f80edbd6377f97d0630c340b9551446df7c4f4157682b55369b8f6056064"
+    },
+    {
+      "path": "conformance-c-windows-2025-Release/conformance.json",
+      "bytes": 2874,
+      "sha256": "d2ea27a2e94d836e9808182b753eeead076d063b6d88e551667437a50c752772"
+    },
+    {
+      "path": "conformance-c-windows-2025-Release/kernel-conformance.json",
+      "bytes": 961,
+      "sha256": "bcd1f80edbd6377f97d0630c340b9551446df7c4f4157682b55369b8f6056064"
+    },
+    {
+      "path": "conformance-c-macos-15-Debug/conformance.json",
+      "bytes": 2753,
+      "sha256": "83067326690ab6202d0fccc90061c3d300cb6964761a25b3d5fc476955dd3521"
+    },
+    {
+      "path": "conformance-c-macos-15-Debug/kernel-conformance.json",
+      "bytes": 951,
+      "sha256": "9561773ff98604547e639448eacdb1b45121a70e6ae986c0a8bfb5f6a3049e8b"
+    },
+    {
+      "path": "conformance-c-macos-15-Release/conformance.json",
+      "bytes": 2758,
+      "sha256": "ad7ce5212331c5ce7719b74f416074d588c9551979f9d8499cfa69f0458441d6"
+    },
+    {
+      "path": "conformance-c-macos-15-Release/kernel-conformance.json",
+      "bytes": 951,
+      "sha256": "9561773ff98604547e639448eacdb1b45121a70e6ae986c0a8bfb5f6a3049e8b"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Debug/conformance.json",
+      "bytes": 3874,
+      "sha256": "b66a4fe45bda48abd58996ee4ebb0ccac41d881490f97b6c4996dc38dabf78b2"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Debug/lifecycle.json",
+      "bytes": 161,
+      "sha256": "4cf871633cd9cd8fba9c06d7552550837fc5ef3d79fc608370edc07228840ab7"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Debug/endpoint-probe.json",
+      "bytes": 539,
+      "sha256": "4861b7d5be2448c852ce4e272c64bb50e6a79646e65b9d917937b48248d7c38c"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Release/conformance.json",
+      "bytes": 3876,
+      "sha256": "3175e8e6eab60542d33a67e5ab348862abe3d7783f99fc4a9100b3cef68cd016"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Release/lifecycle.json",
+      "bytes": 161,
+      "sha256": "4cf871633cd9cd8fba9c06d7552550837fc5ef3d79fc608370edc07228840ab7"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Release/endpoint-probe.json",
+      "bytes": 539,
+      "sha256": "4861b7d5be2448c852ce4e272c64bb50e6a79646e65b9d917937b48248d7c38c"
+    },
+    {
+      "path": "soxr/conformance.json",
+      "bytes": 2932,
+      "sha256": "a4253472a64a70ee45adf0fde00ff8e83379b9fb682739eaaf4ab6c3a9365ac5"
+    },
+    {
+      "path": "soxr/soxr-conformance.json",
+      "bytes": 372,
+      "sha256": "c7f6a8e9428d094f1d44bbecaa7248f865e7163c1d5c44040ff994b269c8fc72"
+    },
+    {
+      "path": "mac-app/conformance.json",
+      "bytes": 1416,
+      "sha256": "f94d4b2a35992c48ad7e13afa0d8963b1093f1aec75e02dcd2aecea5c992b993"
+    },
+    {
+      "path": "workflow-run.json",
+      "bytes": 29983,
+      "sha256": "eb0943cc5cf82d5e2c5522d05beea6a2a30543e5e1c35b8e97bfaa9a05e6d44a"
+    }
+  ]
+}

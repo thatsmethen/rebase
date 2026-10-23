@@ -1,0 +1,325 @@
+Fetching https://github.com/weichsel/ZIPFoundation.git
+[1/6502] Fetching zipfoundation
+Fetched https://github.com/weichsel/ZIPFoundation.git (0.93s)
+Creating working copy for https://github.com/weichsel/ZIPFoundation.git
+Working copy of https://github.com/weichsel/ZIPFoundation.git resolved at 0.9.20
+Building for debugging...
+[Computing dependencies]
+[Pre-planning 1â€‰/â€‰212]
+[Planning deferred tasks]
+[39â€‰/â€‰78] RebaseTimingDSP
+[47â€‰/â€‰78] RebaseTimingDSP
+[51â€‰/â€‰79] RebaseTimingDSP
+error: SwiftCompile normal x86_64 failed with a nonzero exit code. Command line:     cd <workspace>
+    
+<workspace>\Application\Sources\RebaseCore\PortableSession.swift:14:24: [1;31merror: [1;39m'UUID' is ambiguous for type lookup in this context[0;0m
+
+ [0;36m12 |[0;0m     public var expectedRevision: UInt64?
+
+ [0;36m13 |[0;0m     public var path: String?
+
+ [0;36m14 |[0;0m     public var clipID: [4;39mUUID[0;0m?
+
+    [0;36m|[0;0m                        `- [1;31merror: [1;39m'UUID' is ambiguous for type lookup in this context[0;0m
+
+ [0;36m15 |[0;0m     public var trackID: UUID?
+
+ [0;36m16 |[0;0m     public var value: Double?
+
+
+
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\rpcdce.h:83:14: [1;39mnote: [1;39mfound this candidate[0;0m
+
+  [0;36m81 |[0;0m #ifndef UUID_DEFINED
+
+  [0;36m82 |[0;0m #define UUID_DEFINED
+
+  [0;36m83 |[0;0m typedef GUID UUID;
+
+     [0;36m|[0;0m              `- [1;39mnote: [1;39mfound this candidate[0;0m
+
+  [0;36m84 |[0;0m #ifndef uuid_t
+
+  [0;36m85 |[0;0m #define uuid_t UUID
+
+
+
+FoundationEssentials.UUID:2:15: [1;39mnote: [1;39mfound this candidate[0;0m
+
+ [0;36m1 |[0;0m @available(macOS 10.8, iOS 6.0, tvOS 9.0, watchOS 2.0, *)
+
+ [0;36m2 |[0;0m public struct UUID : Hashable, Equatable, CustomStringConvertible, Sendable {
+
+   [0;36m|[0;0m               `- [1;39mnote: [1;39mfound this candidate[0;0m
+
+ [0;36m3 |[0;0m     public private(set) var uuid: (UInt8 /* ... repeated 16 times ... */) { get }
+
+ [0;36m4 |[0;0m     public init()
+
+
+
+<workspace>\Application\Sources\RebaseCore\PortableSession.swift:15:25: [1;31merror: [1;39m'UUID' is ambiguous for type lookup in this context[0;0m
+
+ [0;36m13 |[0;0m     public var path: String?
+
+ [0;36m14 |[0;0m     public var clipID: UUID?
+
+ [0;36m15 |[0;0m     public var trackID: [4;39mUUID[0;0m?
+
+    [0;36m|[0;0m                         `- [1;31merror: [1;39m'UUID' is ambiguous for type lookup in this context[0;0m
+
+ [0;36m16 |[0;0m     public var value: Double?
+
+ [0;36m17 |[0;0m     public var snap: String?
+
+
+
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\rpcdce.h:83:14: [1;39mnote: [1;39mfound this candidate[0;0m
+
+  [0;36m81 |[0;0m #ifndef UUID_DEFINED
+
+  [0;36m82 |[0;0m #define UUID_DEFINED
+
+  [0;36m83 |[0;0m typedef GUID UUID;
+
+     [0;36m|[0;0m              `- [1;39mnote: [1;39mfound this candidate[0;0m
+
+  [0;36m84 |[0;0m #ifndef uuid_t
+
+  [0;36m85 |[0;0m #define uuid_t UUID
+
+
+
+FoundationEssentials.UUID:2:15: [1;39mnote: [1;39mfound this candidate[0;0m
+
+ [0;36m1 |[0;0m @available(macOS 10.8, iOS 6.0, tvOS 9.0, watchOS 2.0, *)
+
+ [0;36m2 |[0;0m public struct UUID : Hashable, Equatable, CustomStringConvertible, Sendable {
+
+   [0;36m|[0;0m               `- [1;39mnote: [1;39mfound this candidate[0;0m
+
+ [0;36m3 |[0;0m     public private(set) var uuid: (UInt8 /* ... repeated 16 times ... */) { get }
+
+ [0;36m4 |[0;0m     public init()
+
+
+
+<workspace>\Application\Sources\RebaseCore\PortableSession.swift:8:15: [1;31merror: [1;39mtype 'PortableSessionRequest' does not conform to protocol 'Decodable'[0;0m
+
+  [0;36m6 |[0;0m 
+
+  [0;36m7 |[0;0m /// Versioned local-process protocol. This is not a network service.
+
+  [0;36m8 |[0;0m public struct PortableSessionRequest: Codable {
+
+    [0;36m|[0;0m               `- [1;31merror: [1;39mtype 'PortableSessionRequest' does not conform to protocol 'Decodable'[0;0m
+
+  [0;36m9 |[0;0m     public var protocolVersion: Int
+
+ [0;36m10 |[0;0m     public var id: UInt64
+
+    [0;36m:[0;0m
+
+ [0;36m12 |[0;0m     public var expectedRevision: UInt64?
+
+ [0;36m13 |[0;0m     public var path: String?
+
+ [0;36m14 |[0;0m     public var clipID: UUID?
+
+    [0;36m|[0;0m                `- [1;39mnote: [1;39mcannot automatically synthesize 'Decodable' because 'UUID?' does not conform to 'Decodable'[0;0m
+
+ [0;36m15 |[0;0m     public var trackID: UUID?
+
+    [0;36m|[0;0m                `- [1;39mnote: [1;39mcannot automatically synthesize 'Decodable' because 'UUID?' does not conform to 'Decodable'[0;0m
+
+ [0;36m16 |[0;0m     public var value: Double?
+
+ [0;36m17 |[0;0m     public var snap: String?
+
+
+
+Swift.Decodable.init:2:1: [1;39mnote: [1;39mprotocol requires initializer 'init(from:)' with type 'Decodable'[0;0m
+
+[0;36m1 |[0;0m protocol Decodable {
+
+[0;36m2 |[0;0m init(from decoder: any Decoder) throws}
+
+  [0;36m|[0;0m `- [1;39mnote: [1;39mprotocol requires initializer 'init(from:)' with type 'Decodable'[0;0m
+
+[0;36m3 |[0;0m 
+
+
+
+<workspace>\Application\Sources\RebaseCore\PortableSession.swift:8:15: [1;31merror: [1;39mtype 'PortableSessionRequest' does not conform to protocol 'Encodable'[0;0m
+
+  [0;36m6 |[0;0m 
+
+  [0;36m7 |[0;0m /// Versioned local-process protocol. This is not a network service.
+
+  [0;36m8 |[0;0m public struct PortableSessionRequest: Codable {
+
+    [0;36m|[0;0m               `- [1;31merror: [1;39mtype 'PortableSessionRequest' does not conform to protocol 'Encodable'[0;0m
+
+  [0;36m9 |[0;0m     public var protocolVersion: Int
+
+ [0;36m10 |[0;0m     public var id: UInt64
+
+    [0;36m:[0;0m
+
+ [0;36m12 |[0;0m     public var expectedRevision: UInt64?
+
+ [0;36m13 |[0;0m     public var path: String?
+
+ [0;36m14 |[0;0m     public var clipID: UUID?
+
+    [0;36m|[0;0m                `- [1;39mnote: [1;39mcannot automatically synthesize 'Encodable' because 'UUID?' does not conform to 'Encodable'[0;0m
+
+ [0;36m15 |[0;0m     public var trackID: UUID?
+
+    [0;36m|[0;0m                `- [1;39mnote: [1;39mcannot automatically synthesize 'Encodable' because 'UUID?' does not conform to 'Encodable'[0;0m
+
+ [0;36m16 |[0;0m     public var value: Double?
+
+ [0;36m17 |[0;0m     public var snap: String?
+
+
+
+Swift.Encodable.encode:2:6: [1;39mnote: [1;39mprotocol requires function 'encode(to:)' with type 'Encodable'[0;0m
+
+[0;36m1 |[0;0m protocol Encodable {
+
+[0;36m2 |[0;0m func encode(to encoder: any Encoder) throws}
+
+  [0;36m|[0;0m      `- [1;39mnote: [1;39mprotocol requires function 'encode(to:)' with type 'Encodable'[0;0m
+
+[0;36m3 |[0;0m 
+
+
+
+<workspace>\Application\Sources\RebaseCore\PortableSession.swift:35:62: [1;31merror: [1;39m'UUID' is ambiguous for type lookup in this context[0;0m
+
+ [0;36m33 |[0;0m     public let canUndo: Bool
+
+ [0;36m34 |[0;0m     public let canRedo: Bool
+
+ [0;36m35 |[0;0m     public struct Selection: Encodable { public let trackID: [4;39mUUID[0;0m?; public let clipID: UUID? }
+
+    [0;36m|[0;0m                                                              `- [1;31merror: [1;39m'UUID' is ambiguous for type lookup in this context[0;0m
+
+ [0;36m36 |[0;0m }
+
+ [0;36m37 |[0;0m 
+
+
+
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\rpcdce.h:83:14: [1;39mnote: [1;39mfound this candidate[0;0m
+
+  [0;36m81 |[0;0m #ifndef UUID_DEFINED
+
+  [0;36m82 |[0;0m #define UUID_DEFINED
+
+  [0;36m83 |[0;0m typedef GUID UUID;
+
+     [0;36m|[0;0m              `- [1;39mnote: [1;39mfound this candidate[0;0m
+
+  [0;36m84 |[0;0m #ifndef uuid_t
+
+  [0;36m85 |[0;0m #define uuid_t UUID
+
+
+
+FoundationEssentials.UUID:2:15: [1;39mnote: [1;39mfound this candidate[0;0m
+
+ [0;36m1 |[0;0m @available(macOS 10.8, iOS 6.0, tvOS 9.0, watchOS 2.0, *)
+
+ [0;36m2 |[0;0m public struct UUID : Hashable, Equatable, CustomStringConvertible, Sendable {
+
+   [0;36m|[0;0m               `- [1;39mnote: [1;39mfound this candidate[0;0m
+
+ [0;36m3 |[0;0m     public private(set) var uuid: (UInt8 /* ... repeated 16 times ... */) { get }
+
+ [0;36m4 |[0;0m     public init()
+
+
+
+<workspace>\Application\Sources\RebaseCore\PortableSession.swift:35:88: [1;31merror: [1;39m'UUID' is ambiguous for type lookup in this context[0;0m
+
+ [0;36m33 |[0;0m     public let canUndo: Bool
+
+ [0;36m34 |[0;0m     public let canRedo: Bool
+
+ [0;36m35 |[0;0m     public struct Selection: Encodable { public let trackID: UUID?; public let clipID: [4;39mUUID[0;0m? }
+
+    [0;36m|[0;0m                                                                                        `- [1;31merror: [1;39m'UUID' is ambiguous for type lookup in this context[0;0m
+
+ [0;36m36 |[0;0m }
+
+ [0;36m37 |[0;0m 
+
+
+
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\rpcdce.h:83:14: [1;39mnote: [1;39mfound this candidate[0;0m
+
+  [0;36m81 |[0;0m #ifndef UUID_DEFINED
+
+  [0;36m82 |[0;0m #define UUID_DEFINED
+
+  [0;36m83 |[0;0m typedef GUID UUID;
+
+     [0;36m|[0;0m              `- [1;39mnote: [1;39mfound this candidate[0;0m
+
+  [0;36m84 |[0;0m #ifndef uuid_t
+
+  [0;36m85 |[0;0m #define uuid_t UUID
+
+
+
+FoundationEssentials.UUID:2:15: [1;39mnote: [1;39mfound this candidate[0;0m
+
+ [0;36m1 |[0;0m @available(macOS 10.8, iOS 6.0, tvOS 9.0, watchOS 2.0, *)
+
+ [0;36m2 |[0;0m public struct UUID : Hashable, Equatable, CustomStringConvertible, Sendable {
+
+   [0;36m|[0;0m               `- [1;39mnote: [1;39mfound this candidate[0;0m
+
+ [0;36m3 |[0;0m     public private(set) var uuid: (UInt8 /* ... repeated 16 times ... */) { get }
+
+ [0;36m4 |[0;0m     public init()
+
+
+
+<workspace>\Application\Sources\RebaseCore\PortableSession.swift:35:19: [1;31merror: [1;39mtype 'PortableSessionState.Selection' does not conform to protocol 'Encodable'[0;0m
+
+ [0;36m33 |[0;0m     public let canUndo: Bool
+
+ [0;36m34 |[0;0m     public let canRedo: Bool
+
+ [0;36m35 |[0;0m     public struct Selection: Encodable { public let trackID: UUID?; public let clipID: UUID? }
+
+    [0;36m|[0;0m                   |                                 |                          `- [1;39mnote: [1;39mcannot automatically synthesize 'Encodable' because 'UUID?' does not conform to 'Encodable'[0;0m
+
+    [0;36m|[0;0m                   |                                 `- [1;39mnote: [1;39mcannot automatically synthesize 'Encodable' because 'UUID?' does not conform to 'Encodable'[0;0m
+
+    [0;36m|[0;0m                   `- [1;31merror: [1;39mtype 'PortableSessionState.Selection' does not conform to protocol 'Encodable'[0;0m
+
+ [0;36m36 |[0;0m }
+
+ [0;36m37 |[0;0m 
+
+
+
+Swift.Encodable.encode:2:6: [1;39mnote: [1;39mprotocol requires function 'encode(to:)' with type 'Encodable'[0;0m
+
+[0;36m1 |[0;0m protocol Encodable {
+
+[0;36m2 |[0;0m func encode(to encoder: any Encoder) throws}
+
+  [0;36m|[0;0m      `- [1;39mnote: [1;39mprotocol requires function 'encode(to:)' with type 'Encodable'[0;0m
+
+[0;36m3 |[0;0m 
+
+Failed frontend command:
+<home>\AppData\Local\Programs\Swift\Toolchains\6.4.1+Asserts\usr\bin\swift-frontend.exe -frontend -emit-module -experimental-skip-non-inlinable-function-bodies-without-types <workspace>\Application\Sources\RebaseCore\Automation.swift <workspace>\Application\Sources\RebaseCore\CPRAudioEventArchive.swift <workspace>\Application\Sources\RebaseCore\CPRAudioMediaAttachmentModel.swift <workspace>\Application\Sources\RebaseCore\CPRAutoFadeArchive.swift <workspace>\Application\Sources\RebaseCore\CPRClockRoles.swift <workspace>\Application\Sources\RebaseCore\CPRContractMigration.swift <workspace>\Application\Sources\RebaseCore\CPRProject.swift <workspace>\Application\Sources\RebaseCore\CPRProjectAudioSetup.swift <workspace>\Application\Sources\RebaseCore\CPRRecoveryV1.swift <workspace>\Application\Sources\RebaseCore\CPRRecoveryV2.swift <workspace>\Application\Sources\RebaseCore\CPRRecoveryV3.swift <workspace>\Application\Sources\RebaseCore\CPRRecoveryV4.swift <workspace>\Application\Sources\RebaseCore\CPRRecoveryV5.swift <workspace>\Application\Sources\RebaseCore\CPRSegmentReadPlan.swift <workspace>\Application\Sources\RebaseCore\CPRSignatureRecovery.swift <workspace>\Application\Sources\RebaseCore\CPRTrackContributorArchive.swift <workspace>\Application\Sources\RebaseCore\MusicalTime.swift <workspace>\Application\Sources\RebaseCore\NativeTempoClock.swift <workspace>\Application\Sources\RebaseCore\PCMRendering.swift <workspace>\Application\Sources\RebaseCore\PortablePackageSnapshot.swift <workspace>\Application\Sources\RebaseCore\PortableSHA256.swift <workspace>\Application\Sources\RebaseCore\PortableSession.swift <workspace>\Application\Sources\RebaseCore\Project.swift <workspace>\Application\Sources\RebaseCore\ProjectEditing.swift <workspace>\Application\Sources\RebaseCore\ProjectFileIO.swift <workspace>\Application\Sources\RebaseCore\ProjectStore.swift <workspace>\Application\Sources\RebaseCore\ProjectStorePortableAudio.swift <workspace>\Application\Sources\RebaseCore\UnresolvedCPRAudioEvent.swift <workspace>\Application\Sources\RebaseCore\WAVPCMSource.swift -target x86_64-unknown-windows-msvc -disable-objc-interop -sdk <home>\AppData\Local\Programs\Swift\Platforms\6.4.1\Windows.platform\Developer\SDKs\Windows.sdk -I D:\a\_temp\rebase-conformance\build\out\Products\Debug-windows-x86_64 -Isystem <home>\AppData\Local\Programs\Swift\Platforms\6.4.1\Windows.platform\Developer\Library\Testing-6.4.1\usr\lib\swift\windows -Isystem <home>\AppData\Local\Programs\Swift\Platforms\6.4.1\Windows.platform\Developer\Library\Testing-6.4.1\usr\lib\swift\windows\x86_64 -Isystem <home>\AppData\Local\Programs\Swift\Platforms\6.4.1\Windows.platform\Developer\Library\XCTest-6.4.1\usr\lib\swift\windows\x86_64 -Isystem <home>\AppData\Local\Programs\Swift\Platforms\6.4.1\Windows.platform\Developer\Library\XCTest-6.4.1\usr\lib\swift\windows -module-cache-path D:\a\_temp\rebase-conformance\build\out\ModuleCache.noindex -color-diagnostics -Xcc -fcolor-diagnostics -enable-testing -g -debug-info-format=dwarf -dwarf-version=4 -static -swift-version 5 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D REBASE_PORTABLE -D Xcode -serialize-debugging-options -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path <home>\AppData\Local\Programs\Swift\Toolchains\6.4.1+Asserts\usr\lib\swift\host\plugins\testing#<home>\AppData\Local\Programs\Swift\Toolchains\6.4.1+Asserts\usr\bin\swift-plugin-server -validate-clang-modules-once -clang-build-session-file D:\a\_temp\rebase-conformance\build\out\ModuleCache.noindex\Session.modulevalidation -Xcc -working-directory -Xcc <workspace> -enable-anonymous-context-mangled-names -file-compilation-dir <workspace> -Xcc -fmodule-map-file=<workspace>\Application\Sources\RebaseTimingDSP\include\module.modulemap -Xcc -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval=86400 -Xcc -fmodules-prune-after=345600 -Xcc -I<workspace>\Application\Sources\RebaseTimingDSP\include -Xcc -ID:\a\_temp\rebase-conformance\build\out\Products\Debug-windows-x86_64\include -Xcc -ID:\a\_temp\rebase-conformance\build\out\Intermediates.noindex\Rebase.build\Debug-windows-x86_64\RebasePortable-t.build\DerivedSources-normal\x86_64 -Xcc -ID:\a\_temp\rebase-conformance\build\out\Intermediates.noindex\Rebase.build\Debug-windows-x86_64\RebasePortable-t.build\DerivedSources\x86_64 -Xcc -ID:\a\_temp\rebase-conformance\build\out\Intermediates.noindex\Rebase.build\Debug-windows-x86_64\RebasePortable-t.build\DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG=1 -no-auto-bridging-header-chaining -module-name RebasePortable -package-name application -const-gather-protocols-file D:\a\_temp\rebase-conformance\build\out\Intermediates.noindex\Rebase.build\Debug-windows-x86_64\RebasePortable-t.build\Objects-normal\x86_64\RebasePortable_const_extract_protocols.json -in-process-plugin-server-path <home>\AppData\Local\Programs\Swift\Toolchains\6.4.1+Asserts\usr\bin\SwiftInProcPluginServer.dll -plugin-path <home>\AppData\Local\Programs\Swift\Toolchains\6.4.1+Asserts\usr\bin -plugin-path <home>\AppData\Local\Programs\Swift\Toolchains\6.4.1+Asserts\usr\local\bin -emit-module-doc-path D:\a\_temp\rebase-conformance\build\out\Intermediates.noindex\Rebase.build\Debug-windows-x86_64\RebasePortable-t.build\Objects-normal\x86_64\Modules\RebasePortable.swiftdoc -emit-module-source-info-path D:\a\_temp\rebase-conformance\build\out\Intermediates.noindex\Rebase.build\Debug-windows-x86_64\RebasePortable-t.build\Objects-normal\x86_64\Modules\RebasePortable.swiftsourceinfo -emit-objc-header-path D:\a\_temp\rebase-conformance\build\out\Intermediates.noindex\Rebase.build\Debug-windows-x86_64\RebasePortable-t.build\Objects-normal\x86_64\RebasePortable-Swift.h -serialize-diagnostics-path D:\a\_temp\rebase-conformance\build\out\Intermediates.noindex\Rebase.build\Debug-windows-x86_64\RebasePortable-t.build\Objects-normal\x86_64\RebasePortable-primary-emit-module.dia -emit-dependencies-path D:\a\_temp\rebase-conformance\build\out\Intermediates.noindex\Rebase.build\Debug-windows-x86_64\RebasePortable-t.build\Objects-normal\x86_64\RebasePortable-primary-emit-module.d -parse-as-library -o D:\a\_temp\rebase-conformance\build\out\Intermediates.noindex\Rebase.build\Debug-windows-x86_64\RebasePortable-t.build\Objects-normal\x86_64\Modules\RebasePortable.swiftmodule
+[56â€‰/â€‰84] RebaseTimingDSP
+error: Build failed
+error: fatalError

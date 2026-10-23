@@ -1,0 +1,113 @@
+{
+  "schema": "rebase.windows-ci-observation.v1",
+  "recorded_at_utc": "2026-10-23T09:09:16.549549+00:00",
+  "commit": "2ef4b00e9694da8d6900298076608ecbae8fe686",
+  "status": "failed",
+  "run_url": "https://github.com/thatsmethen/rebase/actions/runs/39927473868",
+  "findings": [
+    "The native Windows self-contained WPF application built and its 24 portable host controls passed.",
+    "The staged Release helper passed all 16 interactive checks under restricted PATH, including the predeclared exact WAV and PCM hashes.",
+    "The actual visible WPF window completed all 11 smoke checks: example copy, selection, clip move, undo/redo, Save As, reopen, shared render, read-only endpoint probe and visual-tree PNG capture.",
+    "PE dependency closure inspected 417 images. Actual loaded-module validation accepted 126 WPF-process and 49 helper modules from the application folder or Windows system locations.",
+    "The native endpoint was unavailable. The probe and window scenario did not play audio.",
+    "The final mandatory shared Release gate discovered zero tests despite --disable-dead-strip and explicit /OPT:NOREF, so the overall application job failed and no downloadable ZIP was produced.",
+    "Visual inspection identified low-contrast inherited labels in this captured window. The original image is retained; later UI changes do not alter this observation."
+  ],
+  "boundaries": [
+    "Retained files are byte-exact downloaded, already sanitized CI artifacts.",
+    "The PNG is a WPF visual-tree render of the opened window, not a desktop screenshot or evidence of physical input.",
+    "File dialogs, hardware playback and full application parity remain unverified.",
+    "Passing helper/window checks do not override the failed Release suite or authorize a release artifact."
+  ],
+  "artifacts": [
+    {
+      "path": "application-build.json",
+      "bytes": 4479,
+      "sha256": "95c2e4f864bf9ad40db9b7b78993aac32fd6084a9d1b022b92fb21ded10ba068"
+    },
+    {
+      "path": "host-controls.json",
+      "bytes": 163,
+      "sha256": "efc55be50956f937a5525a908693e483b5d81674cded9d747676ee25ce2bf4a3"
+    },
+    {
+      "path": "packaged-session-protocol.json",
+      "bytes": 1298,
+      "sha256": "b7e7cffddd6de8a41e6ede5fbc74fcda5b53910743dfa0a11a560727d399ac9f"
+    },
+    {
+      "path": "pe-dependency-closure.json",
+      "bytes": 107613,
+      "sha256": "63ee13e46435de0d736ab6a1328b173d3806b7470cfec09ae71b605c66083c78"
+    },
+    {
+      "path": "wpf-smoke.json",
+      "bytes": 766,
+      "sha256": "a3fc374b5356b5d3b523a590bc8c3ef1268903477299737e36eb24f1915f9a36"
+    },
+    {
+      "path": "loaded-modules.json",
+      "bytes": 32699,
+      "sha256": "34193be9ba24adb366b1d50d8588ae7be1633cc0aa0350db719815a331827c11"
+    },
+    {
+      "path": "native-app-visual.png",
+      "bytes": 50390,
+      "sha256": "be27a0c3a50a56875c341f1f5dd893a60395776cda96d6490597af16a22fc5df"
+    },
+    {
+      "path": "packaged-window-smoke.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native/conformance.json",
+      "bytes": 4075,
+      "sha256": "235ce32fdaf550cd1f02af4b8951e9b446adf86f877a612316de713e9ee0df85"
+    },
+    {
+      "path": "native/lifecycle.json",
+      "bytes": 161,
+      "sha256": "4cf871633cd9cd8fba9c06d7552550837fc5ef3d79fc608370edc07228840ab7"
+    },
+    {
+      "path": "native/endpoint-probe.json",
+      "bytes": 539,
+      "sha256": "4861b7d5be2448c852ce4e272c64bb50e6a79646e65b9d917937b48248d7c38c"
+    },
+    {
+      "path": "shared/conformance.json",
+      "bytes": 4987,
+      "sha256": "2b4b23e3176789016f28a6eaabf308fed128b505ca101f89b06089dc584a831e"
+    },
+    {
+      "path": "shared/tests-swift-testing.xml",
+      "bytes": 184,
+      "sha256": "7f70525d3307addb154c5577388ad07d2c0bb37e60975b8b4364867a1652c7c5"
+    },
+    {
+      "path": "shared/tests.log",
+      "bytes": 137761,
+      "sha256": "97952a07679b9c081280df0da2daf494799cc5cd51f4455bcaf97eb0d4f3fa3f"
+    },
+    {
+      "path": "shared/test-discovery.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "shared/session-protocol.json",
+      "bytes": 1298,
+      "sha256": "b7e7cffddd6de8a41e6ede5fbc74fcda5b53910743dfa0a11a560727d399ac9f"
+    },
+    {
+      "path": "shared/example-render.json",
+      "bytes": 1118,
+      "sha256": "9f176a57aac6d83330129997e224da9ae9d46fff7600195fe2fb4cce7e749fca"
+    }
+  ],
+  "window_smoke_passed": true,
+  "shared_release_gate_passed": false,
+  "downloadable_zip_produced": false,
+  "playback_tested": false
+}

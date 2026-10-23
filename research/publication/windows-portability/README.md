@@ -10,4 +10,10 @@ These records concern the authored Rebase implementation running on Windows. The
 
 - [Local shared session](local-session-20261023/observation.json): 45 portable tests, 7 focused Mac store tests, and 16 interactive checks with the bundled legacy-format example. These macOS-hosted implementation checks cover exact example PCM, Save As, and reopen; they do not establish Windows runtime behavior.
 
+- [Run 39925217790](run-39925217790/observation.json) and [application run 39925217794](application-run-39925217794/observation.json): Windows compilation exposed a Foundation/WinSDK UUID ambiguity. The host compiled, but its shared helper prevented a package or window acceptance.
+
+- [Run 39926147551](run-39926147551/observation.json): Windows Debug executed 44 tests and both configurations passed the 16 session checks and exact example export. Release still discovered zero tests. [Application run 39926147513](application-run-39926147513/observation.json) reached the staged helper and found a WPF meter binding failure at startup.
+
+- [Run 39927473852](run-39927473852/observation.json) and [application run 39927473868](application-run-39927473868/observation.json): the real WPF window passed 11 example/edit/save/reopen/export checks and its loaded runtime modules resolved within the staged app or Windows. The captured image is a visual-tree render. Release still discovered zero tests with explicit `/OPT:NOREF`, so no ZIP was created. Audio-device playback remained untested.
+
 New runs receive separate records. A later passing run does not rewrite a failed observation or turn a component check into full application parity. The current feature acceptance plan is the [Windows parity ledger](../../../docs/development/windows-parity.md).
