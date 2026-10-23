@@ -93,6 +93,33 @@ def verify_release(release, v):
     require(release.get("target_commitish") == v["SOURCE_COMMIT"], "release-commit-mismatch")
 
 
+def verify_tag(prefix, v):
+    # target_commitish is ignored by GitHub when a tag already exists. A draft
+    # may have no tag yet; an existing tag must resolve to the audited commit.
+    refs = api(prefix + "/git/matching-refs/tags/" + v["RELEASE_TAG"])
+    require(isinstance(refs, list), "invalid-tag-reference-list")
+    matches = [r for r in refs if r.get("ref") == "refs/tags/" + v["RELEASE_TAG"]]
+    require(len(matches) <= 1, "duplicate-tag-reference")
+    if not matches:
+        return
+    obj = matches[0].get("object", {})
+    seen = set()
+    for _ in range(16):
+        require(isinstance(obj, dict), "invalid-tag-object")
+        sha = obj.get("sha", "")
+        require(isinstance(sha, str) and re.fullmatch(r"[0-9a-f]{40}", sha) is not None,
+                "invalid-tag-object-sha")
+        if obj.get("type") == "commit":
+            require(sha == v["SOURCE_COMMIT"], "resolved-tag-commit-mismatch")
+            return
+        require(obj.get("type") == "tag" and sha not in seen, "invalid-or-cyclic-tag-object")
+        seen.add(sha)
+        annotation = api(prefix + "/git/tags/" + sha)
+        require(isinstance(annotation, dict) and annotation.get("sha") == sha, "tag-object-mismatch")
+        obj = annotation.get("object", {})
+    raise Refused("tag-chain-too-deep")
+
+
 def matching_asset(assets, v, size):
     matches = [a for a in assets if a.get("name") == v["ASSET_NAME"]]
     require(len(matches) <= 1, "duplicate-release-asset")
@@ -146,7 +173,13 @@ def upload(v):
     require(len(matches) == 1, "expected-one-existing-release")
     release = matches[0]
     verify_release(release, v)
+    verify_tag(prefix, v)
     release_path = prefix + "/releases/" + str(release["id"])
+
+    def verify_current_release():
+        verify_release(api(release_path), v)
+        verify_tag(prefix, v)
+
     temp_root = os.environ.get("RUNNER_TEMP", "")
     require(bool(temp_root) and Path(temp_root).is_dir(), "runner-temp-unavailable")
     with tempfile.TemporaryDirectory(prefix="rebase-preview-upload-", dir=temp_root) as temp:
@@ -157,7 +190,7 @@ def upload(v):
                 "--dir", str(root / folder)], timeout=600)
         archive, size = verify_package(root / "evidence", root / "package", v)
         # Revalidate the draft immediately before the sole remote mutation.
-        verify_release(api(release_path), v)
+        verify_current_release()
         asset = matching_asset(api(release_path + "/assets?per_page=100", pages=True), v, size)
         outcome = "already-uploaded"
         if asset is None:
@@ -168,11 +201,11 @@ def upload(v):
                timeout=900, allow_failure=True)
             # A timeout can still have completed remotely; only server evidence
             # confirms success. A partial or different asset remains untouched.
-            verify_release(api(release_path), v)
+            verify_current_release()
             asset = matching_asset(api(release_path + "/assets?per_page=100", pages=True), v, size)
             require(asset is not None, "upload-not-confirmed")
             outcome = "uploaded"
-        verify_release(api(release_path), v)
+        verify_current_release()
         return {"schema": "rebase.draft-preview-upload.v1", "status": "passed", "outcome": outcome,
                 "repository": repo, "source_run_id": v["RUN_ID"], "source_commit": v["SOURCE_COMMIT"],
                 "release_tag": v["RELEASE_TAG"], "release_id": release["id"], "release_remains_draft": True,
