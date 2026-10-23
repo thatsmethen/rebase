@@ -16,13 +16,17 @@ public partial class MainWindow : Window
 {
     private readonly StudioViewModel model = new();
     private readonly DispatcherTimer timer = new() { Interval = TimeSpan.FromMilliseconds(80) };
-    private bool closeFinished, closing, updatingSourceList, updatingInspector;
+    private bool closeFinished, closing, updatingSourceList, updatingInspector, reviewingCPR;
     private readonly Dictionary<string, Slider> mixerSliders = [];
     private readonly Dictionary<string, TextBox> mixerValues = [];
     private string? mixerFocus;
     private FrameworkElement? inspectorFocus;
     private bool mixerRefreshPending;
     private string? smokeAttachPath, smokeSourceExportPath;
+    private string? smokeCPRPath;
+    private Func<string?>? smokeCPRDestination;
+    private Func<MessageBoxResult>? smokeCPRDirtyDecision;
+    private CPRReviewWindow? activeCPRReview;
     private int? darkCaptionResult;
     [DllImport("dwmapi.dll", ExactSpelling = true)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -242,7 +246,7 @@ public partial class MainWindow : Window
         return value;
     }
     private async Task Guard(Func<Task> action) { try { await action(); } catch (Exception error) { model.Report(error); } }
-    private bool? DiscardDecision() => !model.State.Dirty ? false :
+    private bool? DiscardDecision() => !model.NeedsSaveDecision ? false :
         MessageBox.Show(this, "Discard unsaved changes and open another project?", "Unsaved changes", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes ? true : null;
     private async void OpenExample(object sender, RoutedEventArgs e)
     {
@@ -261,23 +265,78 @@ public partial class MainWindow : Window
             if (discard is not null) await model.Open(dialog.FileName, asCopy: false, discardChanges: discard.Value);
         }
     }
-    private async Task<bool> SaveAs()
+    private async Task<bool> SaveAs(Window? owner = null)
     {
         if (model.Project is null) return false;
         var dialog = new SaveFileDialog { Title = "Save as a new Rebase project folder", Filter = "Rebase project folder|*.rebaseproj", DefaultExt = ".rebaseproj", AddExtension = true, OverwritePrompt = false, FileName = model.Project.Name + ".rebaseproj" };
-        if (dialog.ShowDialog(this) != true) return false;
+        if (dialog.ShowDialog(owner ?? this) != true) return false;
         if (Directory.Exists(dialog.FileName) || File.Exists(dialog.FileName)) { model.Report(new IOException("Choose a new project name; Save As does not replace existing files or folders.")); return false; }
-        await model.Save(dialog.FileName);
-        return !model.State.Dirty && !model.State.NeedsSaveAs;
+        return await model.Save(dialog.FileName) && !model.State.Dirty && !model.State.NeedsSaveAs;
     }
-    private async Task<bool> Save()
+    private async Task<bool> Save(Window? owner = null)
     {
         if (model.Project is null) return false;
-        if (model.State.NeedsSaveAs || model.State.Path is null) return await SaveAs();
-        await model.Save(); return !model.State.Dirty;
+        if (model.State.NeedsSaveAs || model.State.Path is null) return await SaveAs(owner);
+        return await model.Save() && !model.State.Dirty;
     }
     private async void SaveProject(object sender, RoutedEventArgs e) => await Guard(async () => { await Save(); });
     private async void SaveProjectAs(object sender, RoutedEventArgs e) => await Guard(async () => { await SaveAs(); });
+    private async void ImportCPRProject(object sender, RoutedEventArgs e)
+    {
+        var path = smokeCPRPath;
+        if (path is null)
+        {
+            var dialog = new OpenFileDialog { Title = "Review a CPR project before importing supported data", Filter = "CPR project|*.cpr", CheckFileExists = true };
+            if (dialog.ShowDialog(this) != true) return;
+            path = dialog.FileName;
+        }
+        await ShowCPRReview(path);
+    }
+    private async void ShowCPRImportReport(object sender, RoutedEventArgs e) => await ShowCPRReview(null);
+    private async Task ShowCPRReview(string? source)
+    {
+        if (reviewingCPR || closing) return;
+        reviewingCPR = true;
+        IsEnabled = false;
+        try
+        {
+            await model.SuspendAndDrain(); model.ResumeInput();
+            var review = source is null ? await model.ImportReport() : await model.InspectCPR(source);
+            if (review is null) return;
+            activeCPRReview = new CPRReviewWindow(model, review, ImportReviewedCPR) { Owner = this };
+            activeCPRReview.Show();
+            await activeCPRReview.Completion;
+        }
+        catch (Exception error) { model.Report(error); }
+        finally { activeCPRReview = null; reviewingCPR = false; model.ResumeInput(); IsEnabled = true; Activate(); }
+    }
+    private async Task<bool> ImportReviewedCPR(CPRReviewSnapshot review)
+    {
+        // The owner remains disabled. Drain any prior work before the dirty
+        // decision; Save may change the revision but retains this review token.
+        await model.SuspendAndDrain(); model.ResumeInput();
+        var discard = false;
+        if (model.NeedsSaveDecision)
+        {
+            var answer = smokeCPRDirtyDecision?.Invoke() ?? MessageBox.Show((Window?)activeCPRReview ?? this,
+                "Save changes to the current project before importing?\nYes: Save · No: Discard · Cancel: Keep reviewing",
+                "Unsaved changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+            if (answer == MessageBoxResult.Cancel) { model.Report(new InvalidOperationException("Import canceled; the current project and review are unchanged.")); return false; }
+            if (answer == MessageBoxResult.Yes && !await Save(activeCPRReview)) return false;
+            discard = answer == MessageBoxResult.No;
+        }
+        string? destination;
+        if (smokeCPRDestination is not null) destination = smokeCPRDestination();
+        else
+        {
+            var dialog = new SaveFileDialog { Title = "Import supported data into a new Rebase project folder", Filter = "Rebase project folder|*.rebaseproj",
+                DefaultExt = ".rebaseproj", AddExtension = true, OverwritePrompt = false, FileName = Path.GetFileNameWithoutExtension(review.SourceName) + ".rebaseproj" };
+            destination = dialog.ShowDialog((Window?)activeCPRReview ?? this) == true ? dialog.FileName : null;
+        }
+        if (destination is null) { model.Report(new InvalidOperationException("No destination selected. The review remains open; no CPR project was imported.")); return false; }
+        if (Directory.Exists(destination) || File.Exists(destination)) { model.Report(new IOException("Choose a new project name; importing does not replace existing files or folders.")); return false; }
+        return await model.ImportCPR(review, destination, discard);
+    }
     private async void ExportWav(object sender, RoutedEventArgs e)
     {
         if (model.Project is null) return;
@@ -333,6 +392,7 @@ public partial class MainWindow : Window
     {
         if (closeFinished) return;
         e.Cancel = true;
+        if (reviewingCPR) { activeCPRReview?.Activate(); return; }
         if (closing) return;
         closing = true;
         IsEnabled = false;
@@ -342,7 +402,7 @@ public partial class MainWindow : Window
             // are unsaved changes. Disabled input cannot enqueue another edit.
             await model.SuspendAndDrain();
             model.ResumeInput(); // Allows the explicit Save decision below.
-            if (model.State.Dirty)
+            if (model.NeedsSaveDecision)
             {
                 var answer = MessageBox.Show(this, "Save changes before closing?", "Unsaved changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                 if (answer == MessageBoxResult.Cancel || (answer == MessageBoxResult.Yes && !await Save())) { closing = false; IsEnabled = true; return; }

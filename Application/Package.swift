@@ -22,7 +22,7 @@ let portableSources = [
     "CPRRecoveryV2.swift", "CPRRecoveryV3.swift", "CPRRecoveryV4.swift", "CPRRecoveryV5.swift",
     "CPRSegmentReadPlan.swift", "CPRSignatureRecovery.swift", "CPRTrackContributorArchive.swift",
     "MusicalTime.swift", "MusicalRuler.swift", "NativeTempoClock.swift", "PCMRendering.swift", "PortableSHA256.swift", "Project.swift", "ProjectEditing.swift",
-    "PortablePackageSnapshot.swift", "PortableSession.swift", "ProjectFileIO.swift", "ProjectStore.swift", "ProjectStorePortableAudio.swift",
+    "PortablePackageSnapshot.swift", "PortableSession.swift", "PortableCPRReview.swift", "ProjectFileIO.swift", "ProjectStore.swift", "ProjectStorePortableAudio.swift",
     "UnresolvedCPRAudioEvent.swift", "WAVPCMSource.swift", "WaveformPeaks.swift"
 ]
 let coreDirectory = URL(fileURLWithPath: #filePath).deletingLastPathComponent()

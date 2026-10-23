@@ -6,6 +6,13 @@ The Windows host is an initial application milestone. Recording, plugins, advanc
 
 Imported project packages can expose retained source events in the inspector. Attach PCM explicitly, then audition or export a checked stereo source event. This uses a distinct event-local transport, rechecks source/media every play, resume, and seek, and does not apply project timing, track effects, mixer, or automation.
 
+File → Import CPR opens a paginated review of the recovered subset, unresolved
+content and application defaults. Import Supported Data asks about unsaved
+changes and creates a new project folder containing the exact source and import
+report. A file changed after review is rejected. File → Import Report shows the
+verified historical baseline; editing the project does not rewrite that report.
+Canceling review or destination selection does not replace the current project.
+
 Real clip waveforms come from the shared Swift source-envelope reducer. Background replies are revision/interval checked and cannot overwrite document state.
 
 The musical ruler uses shared Swift bar/beat positions, validated against the current revision, viewport extent, and zoom. A Seconds selector is also available. Track names and mute/solo controls stay fixed during horizontal scrolling. The selected track's inspector volume, pan, mute, and solo controls use the same shared edits and undo history as the lower mixer.
@@ -21,7 +28,7 @@ The app folder must include `Rebase.exe`, the self-contained .NET desktop runtim
 
 The app launches its helper by absolute path and uses the [local protocol](../SESSION-PROTOCOL.md). SafeHandle and a serialized native-operation gate prevent destruction during an audio call. Rendering runs asynchronously while the UI remains responsive. Document mutations invalidate previously prepared audio; the frontend checks the render's revision and hash before playback.
 
-Responses are bounded while reading, with a 60-second command deadline (120 seconds for renders). A failed protocol exchange stops that helper instead of risking later replies being mistaken for another request. Closing waits for queued edits before deciding whether to ask about unsaved changes. Normal shutdown sends EOF so the helper can remove its temporary example copy, with a bounded shutdown grace before termination.
+Responses are bounded while reading, with a 60-second command deadline (120 seconds for renders, CPR inspection/report and import). A failed protocol exchange stops that helper instead of risking later replies being mistaken for another request. If an import result cannot be confirmed, check its destination after reopening the app: publication may already have completed. The host never automatically retries or overwrites that destination. Closing waits for queued edits before deciding whether to ask about unsaved changes. Normal shutdown sends EOF so the helper can remove its temporary example copy, with a bounded shutdown grace before termination.
 
 ## Windows smoke run
 
@@ -46,4 +53,4 @@ DWM dark-caption opt-in follows [Microsoft's documented API](https://learn.micro
 
 For the optional authored source-event smoke, append `--smoke-source-project ABSOLUTE_PACKAGE --smoke-source-media ABSOLUTE_WAV`. Both paths are required together and stay outside the shipped app. The scenario opens a scratch copy, selects the source-event UI item, attaches media through the actual button handler with a supplied path, checks undo/redo, and exports through the actual button handler. File dialogs remain untested. It records provenance/output hashes and `native-source-visual.png`, then returns to the bundled beat, waits for all real waveform geometry, checks that all four rows fit, and captures `native-app-visual.png`. The extended scenario allows 180 seconds; the outer process timeout is 240 seconds. It never starts audio.
 
-The published [Windows preview 2](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.2), built from `8c6ec4b`, passed 55 actual-window checks, 91 host controls and 52 helper checks. Its three reviewed native captures show the corrected source selector, separate Channel/Inspector, compact toolbar, shared musical ruler, fixed track headers and bottom-aligned Channel nameplate. The shared portable importer subsequently passed six authored controls per Windows configuration at `53141c1`; its review/import interface remains to be integrated. Native pointer drag, physical keyboard interaction, file dialogs, and hardware audition need further desktop/device verification. Full feature and reference fidelity remain ongoing work.
+The published [Windows preview 2](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.2), built from `8c6ec4b`, passed 55 actual-window checks, 91 host controls and 52 helper checks. Its three reviewed native captures show the corrected source selector, separate Channel/Inspector, compact toolbar, shared musical ruler, fixed track headers and bottom-aligned Channel nameplate. The shared portable importer subsequently passed six authored controls per Windows configuration at `53141c1`; the repository now adds its review/import interface, with native Windows verification recorded separately from these prior releases. Native pointer drag, physical keyboard interaction, file dialogs, and hardware audition need further desktop/device verification. Full feature and reference fidelity remain ongoing work.

@@ -39,13 +39,13 @@ The [Windows host](../../Application/Windows/RebaseWindows/README.md) sends vers
 
 Changes to shared semantics must run the macOS and Windows conformance lanes. Record exact toolchain, architecture, configuration, test counts and observed output. Keep static reference evidence, independent numerical controls, reconstructed application behavior, and hardware observations distinct. Preserve original research seals and private fixture boundaries.
 
-Do not declare parity from a successful component build. The next compatibility integration is reviewed raw CPR import on Windows, followed by the remaining native conversion/placed/overlap audition modes, device-rate output, interchange and automation workflows. Continue shared REA behavior work through both platform lanes; the full ledger remains the acceptance target.
+Do not declare parity from a successful component build. After native verification of reviewed raw CPR import, the next compatibility integrations are the remaining native conversion/placed/overlap audition modes, device-rate output, interchange and automation workflows. Continue shared REA behavior work through both platform lanes; the full ledger remains the acceptance target.
 
-### Next: reviewed CPR import
+### Reviewed CPR import
 
 The shared parser, recovery profiles, historical report replay and `CPRProject.importProject` now compile portably. The importer uses exclusive staging and the existing Windows-aware `ProjectFileIO` publication helpers; it verifies the staged model and exact original/report bytes before publishing without replacement. [Local authored controls](../../research/publication/windows-portability/cpr-import-local-20261023/observation.json) passed through both the portable and native macOS core targets. The subsequent [native cross-platform run](../../research/publication/windows-portability/run-39951105337/observation.json) executed the six Windows and seven macOS importer cases in both configurations without failures. These cover the tested publication paths; broader Windows junction/reparse and interactive dialog behavior remain open.
 
-The Windows file picker currently accepts only an existing Rebase manifest. The next integration exposes the same inspect → review → explicitly accepted partial import journey as the Mac app through the session and interface.
+The Windows implementation now exposes inspect → review → explicitly accepted partial import through the shared session and a native review window. Local checks passed through the portable engine, normal Mac importer target, production Release helper and host controller; native Windows results for this change remain pending. The [local record](../../research/publication/windows-portability/cpr-review-local-20261024/sequence.json) separates those scopes.
 
 Bind review confirmation to the source path/name/hash and interpretation profile, reject changed input, preserve the full original and report, and never replace an existing destination. Inspection/cancellation must leave the active project/history unchanged; import must preserve dirty-project protection and only switch state after successful validated publication. Historical reports retain their original frozen interpretation.
 

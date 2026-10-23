@@ -17,6 +17,10 @@ public sealed class SessionRequest
     public string? Snap { get; set; }
     public bool? DiscardChanges { get; set; }
     public bool? AsCopy { get; set; }
+    public string? ReviewID { get; set; }
+    public string? SourceSHA256 { get; set; }
+    public bool? AllowPartial { get; set; }
+    public int? ReviewOffset { get; set; }
 }
 public sealed class SessionResponse
 {
@@ -27,6 +31,7 @@ public sealed class SessionResponse
     public RenderSnapshot? Render { get; set; }
     public WaveformSnapshot? Waveform { get; set; }
     public RulerSnapshot? Ruler { get; set; }
+    public CPRReviewSnapshot? CprReview { get; set; }
     public SessionError? Error { get; set; }
 }
 public sealed class SessionError { public string Code { get; set; } = "error"; public string Message { get; set; } = "The session request failed."; }
@@ -104,11 +109,26 @@ public static class ProtocolJson
     public static SessionResponse Decode(string text, ulong expectedID)
     {
         if (text.Length > 16 * 1024 * 1024) throw new InvalidDataException("The session response exceeds 16 MiB.");
+        using (var document = JsonDocument.Parse(text))
+        {
+            if (document.RootElement.ValueKind != JsonValueKind.Object)
+                throw new InvalidDataException("The session response must be a JSON object.");
+            var fields = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var property in document.RootElement.EnumerateObject())
+            {
+                if (!fields.Add(property.Name)) throw new InvalidDataException("The session returned duplicate response fields.");
+                if (string.Equals(property.Name, "cprReview", StringComparison.OrdinalIgnoreCase) &&
+                    property.Value.ValueKind != JsonValueKind.Null &&
+                    System.Text.Encoding.UTF8.GetByteCount(property.Value.GetRawText()) > CPRReviewSnapshot.MaximumBytes)
+                    throw new InvalidDataException("The CPR review page exceeds 128 KiB.");
+            }
+        }
         var response = JsonSerializer.Deserialize<SessionResponse>(text, Options)
             ?? throw new InvalidDataException("The session returned an empty response.");
         if (response.Protocol != 1 || response.Id != expectedID)
             throw new InvalidDataException("The session protocol or response identifier does not match.");
         if (response.Ok && response.State is null) throw new InvalidDataException("The session omitted its document state.");
+        response.CprReview?.Validate();
         return response;
     }
 }

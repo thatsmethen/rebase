@@ -245,6 +245,18 @@ def main():
                                             "expected_lock_sha256": hashlib.sha256(source_lock.read_bytes()).hexdigest()}
                 report["waveform_control"] = session_result["waveform"]
                 report["ruler_control"] = session_result["ruler"]
+                imported = session_result.get("cpr_import", {})
+                required_import_controls = (
+                    "tested", "review_read_only", "review_bounded", "cancellation_preserves_state",
+                    "superseded_review_rejected", "stale_revision_rejected", "changed_source_rejected",
+                    "explicit_partial_required", "dirty_replacement_guarded", "existing_destination_preserved",
+                    "import_published", "exact_source_and_report_preserved", "save_reopen_preserves_baseline",
+                    "historical_read_only", "tampered_report_rejected", "tampered_source_rejected")
+                if (any(imported.get(key) is not True for key in required_import_controls)
+                        or imported.get("sourceSHA256") != expected_source["sourceSHA256"]
+                        or imported.get("reportSHA256") != expected_source["reportSHA256"]):
+                    raise RuntimeError("Reviewed CPR import protocol checks did not pass")
+                report["cpr_import_control"] = imported
         sanitize_xml()
         report["tests"] = collect_test_results(test_xml_paths())
         report["status"] = "passed"

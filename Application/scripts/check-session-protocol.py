@@ -10,6 +10,7 @@ import struct
 import subprocess
 import tempfile
 import threading
+import uuid
 
 
 def wav_chunks(data):
@@ -166,6 +167,287 @@ def source_journey(args, work, revision, send, check, report):
                         "playback_tested": False}
 
 
+def cpr_import_journey(args, work, send, check, report):
+    """Exercise the actual helper with the already locked, authored archive.
+
+    Inspection and historical-report retrieval must be separate from document
+    mutation. The receipt deliberately contains no local paths or helper error
+    messages, and each gate starts false so a partial run cannot look complete.
+    """
+    gates = ("review_read_only", "review_bounded", "cancellation_preserves_state",
+             "superseded_review_rejected", "stale_revision_rejected", "changed_source_rejected",
+             "explicit_partial_required", "dirty_replacement_guarded", "existing_destination_preserved",
+             "import_published", "exact_source_and_report_preserved", "save_reopen_preserves_baseline",
+             "historical_read_only", "tampered_report_rejected", "tampered_source_rejected")
+    receipt = {"tested": False, **dict.fromkeys(gates, False)}
+    report["cpr_import"] = receipt
+    expected = json.loads(args.source_lock.read_text(encoding="utf-8"))
+    fixture_cpr = args.source_project / "Compatibility" / "CPR" / "Original.cpr"
+    fixture_report = args.source_project / "Compatibility" / "CPR" / "ImportReport.json"
+    original = fixture_cpr.read_bytes()
+    original_report = fixture_report.read_bytes()
+    baseline_report = json.loads(original_report)
+    baseline_project = baseline_report["recoveredProject"]
+    source = work / "AuthoredSource.cpr"
+    source.write_bytes(original)
+    digest = hashlib.sha256(original).hexdigest()
+    report_digest = hashlib.sha256(original_report).hexdigest()
+    receipt.update(sourceSHA256=digest, reportSHA256=report_digest,
+                   evidence_class="authored-synthetic-control", playback_tested=False)
+    check(digest == expected["sourceSHA256"] and report_digest == expected["reportSHA256"]
+          and baseline_report["sourceName"] == source.name and baseline_report["unsupported"],
+          "CPR import controls use the locked authored source and historical report")
+    current = send("state")["state"]
+
+    def bounded_review(reply, state, historical=False):
+        review = reply.get("cprReview", {})
+        review_id = review.get("reviewID")
+        valid_id = False
+        if isinstance(review_id, str):
+            try:
+                valid_id = str(uuid.UUID(review_id)).lower() == review_id.lower()
+            except ValueError:
+                pass
+        items = review.get("items")
+        total, offset, next_offset = review.get("totalItems"), review.get("offset"), review.get("nextOffset")
+        bounded = (isinstance(items, list) and len(items) <= 32
+                   and set(review) <= {"reviewID", "sourceName", "sourceSHA256", "sourceByteCount",
+                                       "interpretationProfile", "historical", "canImport", "recoveredTrackCount",
+                                       "recoveredClipCount", "unresolvedEventCount", "totalItems", "offset",
+                                       "nextOffset", "items"}
+                   and type(total) is int and total > 0 and type(offset) is int and 0 <= offset < total
+                   and all(isinstance(item, dict) and item.get("section") in
+                           ("recovered", "tracks", "unresolved", "defaults", "metadata")
+                           and isinstance(item.get("label"), str) and isinstance(item.get("detail"), str)
+                           for item in items)
+                   and len(json.dumps(review, ensure_ascii=False, separators=(",", ":")).encode("utf-8")) <= 131072
+                   and offset + len(items) <= total
+                   and ((next_offset is None and offset + len(items) == total)
+                        or (type(next_offset) is int and next_offset == offset + len(items)
+                            and offset < next_offset < total)))
+        if not (reply.get("ok") is True and reply.get("state") == state and valid_id and bounded
+                and review.get("sourceName") == source.name and review.get("sourceSHA256") == digest
+                and review.get("sourceByteCount") == len(original)
+                and review.get("interpretationProfile") == baseline_report["interpretationProfile"]
+                and review.get("historical") is historical
+                and review.get("canImport") is (not historical)
+                and review.get("recoveredTrackCount") == len(baseline_project["tracks"])
+                and review.get("recoveredClipCount") == sum(len(t["clips"]) for t in baseline_project["tracks"])
+                and review.get("unresolvedEventCount") == sum(len(t.get("unresolvedAudioEvents", []))
+                                                            for t in baseline_project["tracks"])):
+            return None
+        return review
+
+    def inspect(state):
+        reply = send("inspectCPR", state["revision"], path=str(source))
+        review = bounded_review(reply, state)
+        check(review is not None and review["offset"] == 0,
+              "CPR inspection is bounded and preserves the complete active document state")
+        return review
+
+    review = inspect(current)
+    receipt["review_read_only"] = True
+    first_review = review
+    all_items = list(review["items"])
+    page_count = 1
+    while review.get("nextOffset") is not None:
+        if page_count > first_review["totalItems"]:
+            raise RuntimeError("CPR review pagination did not terminate")
+        reply = send("cprReviewPage", current["revision"], reviewID=first_review["reviewID"],
+                     reviewOffset=review["nextOffset"])
+        next_review = bounded_review(reply, current)
+        check(next_review is not None and next_review["reviewID"] == first_review["reviewID"]
+              and next_review["offset"] == review["nextOffset"]
+              and next_review["totalItems"] == first_review["totalItems"],
+              "CPR review pagination returns the same bounded read-only review")
+        review = next_review
+        all_items.extend(review["items"])
+        page_count += 1
+    repeated = send("cprReviewPage", current["revision"], reviewID=first_review["reviewID"], reviewOffset=0)
+    check(repeated.get("ok") is True and repeated["state"] == current
+          and repeated.get("cprReview") == first_review and len(all_items) == first_review["totalItems"]
+          and {item["section"] for item in all_items} >= {"recovered", "tracks", "unresolved", "defaults"},
+          "CPR review pages are stable complete and bounded without embedding the recovered project")
+    last_offset = first_review["totalItems"] - 1
+    tail = send("cprReviewPage", current["revision"], reviewID=first_review["reviewID"], reviewOffset=last_offset)
+    tail_review = bounded_review(tail, current)
+    check(tail_review is not None and tail_review["reviewID"] == first_review["reviewID"]
+          and tail_review["offset"] == last_offset and tail_review["items"] == all_items[-1:]
+          and tail_review.get("nextOffset") is None,
+          "CPR review supports a bounded final-item page without repeating earlier rows")
+    for invalid_offset in (-1, first_review["totalItems"] + 1):
+        rejected = send("cprReviewPage", current["revision"], reviewID=first_review["reviewID"],
+                        reviewOffset=invalid_offset)
+        check(rejected.get("ok") is False and rejected["state"] == current,
+              "invalid CPR review page offset is rejected without changing the active document")
+    receipt.update(review_bounded=True, review_items_checked=len(all_items), review_pages_checked=page_count)
+    cancelled = send("cancelCPRReview", current["revision"], reviewID=first_review["reviewID"])
+    cancelled_destination = work / "CancelledImport.rebaseproj"
+    after_cancel = send("importCPR", current["revision"], reviewID=first_review["reviewID"],
+                        sourceSHA256=digest, path=str(cancelled_destination), allowPartial=True)
+    cancelled_page = send("cprReviewPage", current["revision"], reviewID=first_review["reviewID"], reviewOffset=0)
+    check(cancelled.get("ok") is True and cancelled["state"] == current
+          and after_cancel.get("ok") is False and after_cancel["state"] == current
+          and cancelled_page.get("ok") is False and cancelled_page["state"] == current
+          and not cancelled_destination.exists(),
+          "cancelling CPR review invalidates its token without publishing or changing the active document")
+    receipt["cancellation_preserves_state"] = True
+    old_review = inspect(current)
+    review = inspect(current)
+    superseded = send("importCPR", current["revision"], reviewID=old_review["reviewID"],
+                      sourceSHA256=digest, path=str(cancelled_destination), allowPartial=True)
+    check(review["reviewID"] != old_review["reviewID"] and superseded.get("ok") is False
+          and superseded["state"] == current and not cancelled_destination.exists(),
+          "a new CPR inspection invalidates the superseded review token")
+    receipt["superseded_review_rejected"] = True
+    stale = send("importCPR", current["revision"] - 1, reviewID=review["reviewID"],
+                 sourceSHA256=digest, path=str(cancelled_destination), allowPartial=True)
+    check(stale.get("ok") is False and stale["error"]["code"] == "staleRevision"
+          and stale["state"] == current and not cancelled_destination.exists(),
+          "stale CPR import revision is rejected without publishing or changing the active document")
+    receipt["stale_revision_rejected"] = True
+    changed = bytearray(original)
+    changed[-1] ^= 1
+    source.write_bytes(changed)
+    rejected = send("importCPR", current["revision"], reviewID=review["reviewID"],
+                    sourceSHA256=digest, path=str(cancelled_destination), allowPartial=True)
+    check(rejected.get("ok") is False and rejected["state"] == current
+          and not cancelled_destination.exists() and source.read_bytes() == changed,
+          "source bytes changed after CPR review are rejected and left untouched")
+    receipt["changed_source_rejected"] = True
+    source.write_bytes(original)
+    review = inspect(current)
+    wrong_hash = send("importCPR", current["revision"], reviewID=review["reviewID"],
+                      sourceSHA256="0" * 64, path=str(cancelled_destination), allowPartial=True)
+    check(wrong_hash.get("ok") is False and wrong_hash["state"] == current and not cancelled_destination.exists(),
+          "CPR import refuses a confirmation hash that does not identify its review")
+    for consent in ({}, {"allowPartial": False}):
+        review = inspect(current)
+        refused = send("importCPR", current["revision"], reviewID=review["reviewID"],
+                       sourceSHA256=digest, path=str(cancelled_destination), **consent)
+        check(refused.get("ok") is False and refused["state"] == current and not cancelled_destination.exists(),
+              "CPR import requires explicit acceptance of the partial recovery")
+    receipt["explicit_partial_required"] = True
+
+    # Check all three destination shapes. A failed request is allowed to consume
+    # its review; each independent case therefore starts with a new inspection.
+    for shape in ("file", "empty-directory", "populated-directory"):
+        destination = work / ("Existing-" + shape + ".rebaseproj")
+        if shape == "file":
+            destination.write_bytes(b"existing destination is never replaced\n")
+            before = destination.read_bytes()
+        else:
+            destination.mkdir()
+            if shape == "populated-directory":
+                (destination / "sentinel.txt").write_bytes(b"existing content is never replaced\n")
+            before = {p.name: p.read_bytes() for p in destination.iterdir()}
+        review = inspect(current)
+        refused = send("importCPR", current["revision"], reviewID=review["reviewID"],
+                       sourceSHA256=digest, path=str(destination), allowPartial=True)
+        after = destination.read_bytes() if shape == "file" else {p.name: p.read_bytes() for p in destination.iterdir()}
+        check(refused.get("ok") is False and refused["state"] == current and before == after,
+              "CPR import preserves an existing " + shape + " destination")
+    receipt["existing_destination_preserved"] = True
+
+    track = current["project"]["tracks"][0]
+    changed_gain = -7 if track["gainDB"] != -7 else -8
+    edited = send("setGain", current["revision"], trackID=track["id"], value=changed_gain)
+    check(edited.get("ok") is True and edited["state"]["dirty"],
+          "CPR replacement control starts from an actual unsaved mixer edit")
+    current = edited["state"]
+    review = inspect(current)
+    destination = work / "ImportedSource.rebaseproj"
+    guarded = send("importCPR", current["revision"], reviewID=review["reviewID"],
+                   sourceSHA256=digest, path=str(destination), allowPartial=True)
+    check(guarded.get("ok") is False and guarded["error"]["code"] == "unsavedChanges"
+          and guarded["state"] == current and not destination.exists(),
+          "CPR import preserves unsaved edits unless discard is explicitly confirmed")
+    cancelled_dirty = send("cancelCPRReview", current["revision"], reviewID=review["reviewID"])
+    check(cancelled_dirty.get("ok") is True and cancelled_dirty["state"] == current and not destination.exists(),
+          "cancelling CPR import review preserves the actual unsaved mixer edit")
+    receipt["dirty_replacement_guarded"] = True
+    review = inspect(current)
+    imported = send("importCPR", current["revision"], reviewID=review["reviewID"],
+                    sourceSHA256=digest, path=str(destination), allowPartial=True, discardChanges=True)
+    check(imported.get("ok") is True and imported["state"]["revision"] == current["revision"] + 1
+          and not imported["state"]["dirty"] and not imported["state"]["needsSaveAs"]
+          and imported["state"]["project"] == baseline_project and destination.is_dir(),
+          "confirmed CPR import publishes and activates the preserved recovered project")
+    current = imported["state"]
+    receipt["import_published"] = True
+    preserved_source = destination / "Compatibility" / "CPR" / "Original.cpr"
+    preserved_report = destination / "Compatibility" / "CPR" / "ImportReport.json"
+    check(preserved_source.read_bytes() == original and preserved_report.read_bytes() == original_report
+          and hashlib.sha256((destination / "Project.json").read_bytes()).hexdigest() == expected["manifestSHA256"]
+          and not current["project"].get("cprMediaAttachments", [])
+          and all(not t["clips"] for t in current["project"]["tracks"]),
+          "CPR import preserves exact source report and manifest bytes without inferring playable clips")
+    receipt["exact_source_and_report_preserved"] = True
+    repeated_destination = work / "RepeatedImport.rebaseproj"
+    repeated = send("importCPR", current["revision"], reviewID=review["reviewID"],
+                    sourceSHA256=digest, path=str(repeated_destination), allowPartial=True)
+    check(repeated.get("ok") is False and repeated["state"] == current and not repeated_destination.exists(),
+          "successful CPR import consumes its confirmation token")
+
+    historical = send("cprImportReport", current["revision"])
+    history_review = bounded_review(historical, current, historical=True)
+    check(history_review is not None and history_review["offset"] == 0,
+          "historical CPR report is revalidated read-only and cannot offer import")
+    history_page = send("cprReviewPage", current["revision"], reviewID=history_review["reviewID"], reviewOffset=0)
+    rejected_history = send("importCPR", current["revision"], reviewID=history_review["reviewID"],
+                            sourceSHA256=digest, path=str(repeated_destination), allowPartial=True)
+    check(history_page.get("ok") is True and history_page["state"] == current
+          and history_page.get("cprReview") == history_review and rejected_history.get("ok") is False
+          and rejected_history["state"] == current and not repeated_destination.exists()
+          and preserved_report.read_bytes() == original_report and preserved_source.read_bytes() == original,
+          "historical CPR review pages cannot be used to publish another project")
+    receipt["historical_read_only"] = True
+
+    imported_track = current["project"]["tracks"][0]
+    edited = send("setGain", current["revision"], trackID=imported_track["id"], value=-9)
+    check(edited.get("ok") is True and edited["state"]["dirty"],
+          "imported CPR project accepts an ordinary reversible mixer edit")
+    edited_project = edited["state"]["project"]
+    saved = send("save", edited["state"]["revision"])
+    reopened = send("open", saved["state"]["revision"], path=str(destination))
+    history_after_edit = send("cprImportReport", reopened["state"]["revision"])
+    check(saved.get("ok") is True and not saved["state"]["dirty"]
+          and reopened.get("ok") is True and reopened["state"]["project"] == edited_project
+          and bounded_review(history_after_edit, reopened["state"], historical=True) is not None
+          and preserved_report.read_bytes() == original_report and preserved_source.read_bytes() == original,
+          "saving and reopening an edited CPR import preserves its original historical baseline")
+    current = reopened["state"]
+    receipt["save_reopen_preserves_baseline"] = True
+
+    # Valid JSON with unchanged source identity must still be replay-checked.
+    tampered = json.loads(original_report)
+    tampered["recoveredFacts"][0] += " Authored tamper control."
+    tampered_bytes = json.dumps(tampered, indent=2).encode("utf-8")
+    preserved_report.write_bytes(tampered_bytes)
+    cached_page = send("cprReviewPage", current["revision"],
+                       reviewID=history_after_edit["cprReview"]["reviewID"], reviewOffset=0)
+    rejected_report = send("cprImportReport", current["revision"])
+    check(cached_page.get("ok") is False and cached_page["state"] == current
+          and rejected_report.get("ok") is False and rejected_report["state"] == current
+          and preserved_report.read_bytes() == tampered_bytes and preserved_source.read_bytes() == original,
+          "historical CPR report rejects semantic tampering without repairing the stored evidence")
+    receipt["tampered_report_rejected"] = True
+    preserved_report.write_bytes(original_report)
+    preserved_source.write_bytes(changed)
+    rejected_source = send("cprImportReport", current["revision"])
+    check(rejected_source.get("ok") is False and rejected_source["state"] == current
+          and preserved_source.read_bytes() == changed and preserved_report.read_bytes() == original_report,
+          "historical CPR report rejects altered preserved source bytes without repairing them")
+    receipt["tampered_source_rejected"] = True
+    preserved_source.write_bytes(original)
+    restored = send("cprImportReport", current["revision"])
+    check(bounded_review(restored, current, historical=True) is not None
+          and source.read_bytes() == original and fixture_cpr.read_bytes() == original
+          and fixture_report.read_bytes() == original_report,
+          "CPR controls leave authored fixtures unchanged and restore only their temporary tamper controls")
+    receipt["tested"] = True
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--helper", type=Path, required=True)
@@ -179,7 +461,7 @@ def main():
         parser.error("Source verification requires project, media and lock inputs together")
     lock = json.loads((Path(__file__).parent / "example-render-lock.json").read_text())
     report = {"schema": "rebase.session-protocol-check.v1", "status": "failed",
-              "scope": "Interactive authored session process, musical ruler, source waveforms and optional source-event PCM; no GUI or audio device claim",
+              "scope": "Interactive authored session process, musical ruler, source waveforms, optional source-event PCM and reviewed CPR import; no GUI or audio device claim",
               "source_journey_tested": False, "checks": []}
     original = (args.example / "Project.json").read_bytes()
     process = subprocess.Popen([str(args.helper.resolve()), "--stdio"], stdin=subprocess.PIPE,
@@ -338,6 +620,7 @@ def main():
             check((args.example / "Project.json").read_bytes() == original, "bundled example manifest remains unchanged")
             if args.source_project is not None:
                 source_journey(args, root, reopened["state"]["revision"], send, check, report)
+                cpr_import_journey(args, root, send, check, report)
             process.stdin.close()
             check(process.wait(timeout=15) == 0, "EOF cleanly terminates session")
             report["wav_sha256"] = digest

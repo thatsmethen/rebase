@@ -29,6 +29,7 @@ public partial class MainWindow
         object? musicalRulerReceipt = null;
         var faderScaleReceipt = new List<object>();
         object? channelAlignment = null;
+        object? cprReviewReceipt = null;
         RenderSnapshot? sourceReceipt = null;
         int exit = 1;
         try
@@ -61,6 +62,7 @@ public partial class MainWindow
             , timeline_scroll = timelineScrollReceipt, timeline_scroll_screenshot = "native-timeline-scroll-visual.png"
             , window_bounds = windowBounds
             , musical_ruler = musicalRulerReceipt, fader_scale = faderScaleReceipt, channel_alignment = channelAlignment
+            , cpr_review = cprReviewReceipt
         };
         try { await File.WriteAllTextAsync(artifact, JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true })); }
         catch (IOException) { return 2; }
@@ -243,6 +245,7 @@ public partial class MainWindow
             checks.Add("native-dll-endpoint-probe-completed");
             if (sourceProject is not null && sourceMedia is not null)
             {
+                await CPRImportScenario();
                 stage = "open-source-package";
                 await model.Open(sourceProject, true, false);
                 Assert(model.SourceEvents.Length > 0 && model.State.NeedsSaveAs && model.State.Path is null, "source-package-copy");
@@ -352,6 +355,107 @@ public partial class MainWindow
             checks.Add("window-visual-artifact-written"); stage = "completed";
         }
         Point Origin(FrameworkElement element) => element.TransformToAncestor(this).Transform(new Point());
+        async Task CPRImportScenario()
+        {
+            var package = Path.GetFileName(sourceProject) == "Project.json" ? Path.GetDirectoryName(sourceProject)! : sourceProject!;
+            var original = await File.ReadAllBytesAsync(Path.Combine(package, "Compatibility", "CPR", "Original.cpr"));
+            var source = Path.Combine(work, "AuthoredSource.cpr"); await File.WriteAllBytesAsync(source, original);
+            var hash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(original)).ToLowerInvariant();
+            smokeCPRPath = source;
+            string StateIdentity() => JsonSerializer.Serialize(model.State, ProtocolJson.Options);
+            async Task<CPRReviewWindow> OpenReview(bool historical = false)
+            {
+                var menu = historical ? ImportReportMenu : ImportCPRMenu;
+                ((IInvokeProvider)new MenuItemAutomationPeer(menu).GetPattern(PatternInterface.Invoke)).Invoke();
+                await Until(() => activeCPRReview is { IsVisible: true } && !model.Busy, "cpr-review-open");
+                await Dispatcher.InvokeAsync(() => activeCPRReview!.UpdateLayout(), DispatcherPriority.ApplicationIdle);
+                return activeCPRReview!;
+            }
+            async Task CloseReview(CPRReviewWindow review)
+            {
+                await Invoke(review.CloseButton);
+                await Until(() => activeCPRReview is null && !model.Busy && IsEnabled, "cpr-review-close");
+            }
+            var before = StateIdentity(); stage = "cpr-review-window-visible";
+            var review = await OpenReview();
+            Assert(review.IsVisible && !IsEnabled && review.ImportButton.IsEnabled && review.Review.SourceSHA256 == hash &&
+                review.Review.SourceName == "AuthoredSource.cpr", "cpr-review-window-visible");
+            var pagesChecked = 0; var itemsChecked = 0; var verticalScrollChecked = false;
+            do
+            {
+                pagesChecked++; itemsChecked += review.CurrentPage.Items.Length;
+                await Dispatcher.InvokeAsync(review.UpdateLayout, DispatcherPriority.ApplicationIdle);
+                if (review.ReviewScroll.ScrollableHeight > 0)
+                {
+                    var provider = (IScrollProvider)new ScrollViewerAutomationPeer(review.ReviewScroll).GetPattern(PatternInterface.Scroll);
+                    provider.SetScrollPercent(System.Windows.Automation.ScrollPatternIdentifiers.NoScroll, 100);
+                    await Dispatcher.InvokeAsync(review.UpdateLayout, DispatcherPriority.ApplicationIdle);
+                    var last = review.LastReviewItem;
+                    var bottom = last.TransformToAncestor(review.ReviewScroll).TransformBounds(new Rect(last.RenderSize));
+                    if (bottom.Bottom <= 0 || bottom.Top >= review.ReviewScroll.ActualHeight) throw new InvalidOperationException("The last review item is not reachable by scrolling.");
+                    verticalScrollChecked = true;
+                    provider.SetScrollPercent(System.Windows.Automation.ScrollPatternIdentifiers.NoScroll, 0);
+                }
+                if (review.CurrentPage.NextOffset is not { } next) break;
+                await Invoke(review.NextButton);
+                await Until(() => !review.Working && review.CurrentPage.Offset == next, "cpr-review-next-page");
+            } while (true);
+            Assert(itemsChecked == review.Review.TotalItems && !review.NextButton.IsEnabled && pagesChecked > 0, "cpr-review-all-pages-accessible");
+            while (review.PreviousButton.IsEnabled) await Invoke(review.PreviousButton);
+            await Dispatcher.InvokeAsync(review.UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var client = (FrameworkElement)review.Content;
+            var dpi = VisualTreeHelper.GetDpi(review);
+            var reviewBounds = new { outer_width = review.ActualWidth, outer_height = review.ActualHeight, client_width = client.ActualWidth,
+                client_height = client.ActualHeight, dpi_x = dpi.PixelsPerInchX, dpi_y = dpi.PixelsPerInchY };
+            var picture = new RenderTargetBitmap((int)Math.Ceiling(client.ActualWidth), (int)Math.Ceiling(client.ActualHeight), 96, 96, PixelFormats.Pbgra32);
+            picture.Render(client); var encoder = new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(picture));
+            using (var output = File.Create(Path.Combine(root, "native-cpr-review-visual.png"))) encoder.Save(output);
+            checks.Add("cpr-review-visual-artifact");
+            await CloseReview(review);
+            Assert(StateIdentity() == before && model.CPRReview is null, "cpr-review-cancel-preserves-session");
+
+            stage = "cpr-changed-source-rejected"; review = await OpenReview();
+            var changed = (byte[])original.Clone(); var marker = System.Text.Encoding.UTF8.GetBytes("Authored");
+            var markerAt = Enumerable.Range(0, original.Length - marker.Length + 1).First(i => original.AsSpan(i, marker.Length).SequenceEqual(marker));
+            changed[markerAt] = (byte)'B'; await File.WriteAllBytesAsync(source, changed);
+            var changedDestination = Path.Combine(work, "Changed.rebaseproj"); smokeCPRDestination = () => changedDestination;
+            await Invoke(review.ImportButton);
+            await Until(() => !review.Working && !model.Busy && review.ReviewMessage.Length > 0, stage);
+            Assert(review.IsVisible && StateIdentity() == before && !Directory.Exists(changedDestination) &&
+                model.Status.Contains("changed", StringComparison.OrdinalIgnoreCase), "cpr-changed-source-rejected");
+            await CloseReview(review); await File.WriteAllBytesAsync(source, original);
+
+            stage = "cpr-dirty-cancel-preserves-session";
+            var track = model.Project!.Tracks[0]; await model.Command("setGain", trackID: track.Id, value: track.GainDB + 0.5);
+            var dirty = StateIdentity(); var destinationRequested = false;
+            review = await OpenReview(); smokeCPRDirtyDecision = () => MessageBoxResult.Cancel;
+            smokeCPRDestination = () => { destinationRequested = true; return null; };
+            await Invoke(review.ImportButton); await Until(() => !review.Working && review.ReviewMessage.Length > 0, stage);
+            Assert(model.State.Dirty && StateIdentity() == dirty && review.IsVisible && !destinationRequested, "cpr-dirty-cancel-preserves-session");
+            stage = "cpr-destination-cancel-preserves-review";
+            smokeCPRDirtyDecision = () => MessageBoxResult.No;
+            await Invoke(review.ImportButton); await Until(() => !review.Working && destinationRequested, stage);
+            Assert(StateIdentity() == dirty && review.IsVisible && model.CPRReview?.ReviewID == review.Review.ReviewID, "cpr-destination-cancel-preserves-review");
+
+            stage = "cpr-import-supported-data";
+            var imported = Path.Combine(work, "Imported.rebaseproj"); smokeCPRDestination = () => imported;
+            await Invoke(review.ImportButton); await Until(() => activeCPRReview is null && !model.Busy && IsEnabled, stage);
+            Assert(!model.State.Dirty && !model.State.NeedsSaveAs && !model.State.CanUndo && model.CPRReview is null &&
+                model.State.Path == imported && model.SourceEvents.Length == 1, "cpr-import-supported-data");
+            var preserved = await File.ReadAllBytesAsync(Path.Combine(imported, "Compatibility", "CPR", "Original.cpr"));
+            Assert(preserved.SequenceEqual(original) && (await File.ReadAllBytesAsync(source)).SequenceEqual(original), "cpr-import-source-preserved");
+            stage = "cpr-historical-report-readonly"; var importedIdentity = StateIdentity();
+            var historical = await OpenReview(historical: true);
+            Assert(historical.Review.Historical && !historical.ImportButton.IsEnabled && historical.Review.SourceSHA256 == hash && StateIdentity() == importedIdentity, "cpr-historical-report-readonly");
+            await CloseReview(historical);
+            if (StateIdentity() != importedIdentity) throw new InvalidOperationException("Closing the historical report changed the project.");
+            cprReviewReceipt = new { reviewed = true, cancelled_without_changes = true, changed_source_rejected = true, dirty_guard = true,
+                destination_cancel_preserved_review = true, imported = true, historical_read_only = true, preserved_source_sha256 = hash,
+                review_screenshot = "native-cpr-review-visual.png", window_bounds = reviewBounds, pages_checked = pagesChecked, items_checked = itemsChecked,
+                vertical_scroll_checked = verticalScrollChecked, dark_caption_hresult = review.DarkCaptionResult, native_frame_visual_tested = false,
+                native_file_pickers_tested = false, physical_input_tested = false };
+            smokeCPRPath = null; smokeCPRDestination = null; smokeCPRDirtyDecision = null;
+        }
         CheckBox MixerFlag(string name) => Descendants<CheckBox>(Mixer).Single(control => System.Windows.Automation.AutomationProperties.GetName(control) == name);
         async Task Capture(string filename)
         {

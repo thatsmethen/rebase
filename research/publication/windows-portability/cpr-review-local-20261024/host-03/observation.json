@@ -1,0 +1,28 @@
+{
+  "schema": "rebase.cpr-review-followup.v1",
+  "records": [
+    {
+      "path": "crossbuild.log",
+      "bytes": 76,
+      "sha256": "3e3d208ed923abf51aa1b02e6816fe468c969bc608fd90185c40c81c31d9872a"
+    },
+    {
+      "path": "host-controls.log",
+      "bytes": 131,
+      "sha256": "f432579b4b8033f0bb0070300344c6412a744c888b59dded2aa0e3c0b751fd95"
+    },
+    {
+      "path": "receipt.json",
+      "bytes": 4155,
+      "sha256": "0d7d32e52fa3ffb25edbf2e0d5c381d7df1a535b7fa58a0986f07b9444c131a4"
+    }
+  ],
+  "observed_checks": 155,
+  "observed_failures": 0,
+  "wpf_runtime_tested": false,
+  "review_status": "Ready for native Windows verification; local cross-build and portable host controls passed. Earlier observations remain unchanged.",
+  "corrections_in_this_observation": [
+    "Retain a save/discard decision after a failed save even when the helper reports a clean model.",
+    "Reject subsequent Open/Import without explicit discard until successful save; guard Close through the same decision."
+  ]
+}

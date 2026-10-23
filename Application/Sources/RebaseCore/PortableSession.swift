@@ -15,9 +15,14 @@ public struct PortableSessionRequest: Codable {
     public var snap: String?
     public var discardChanges: Bool?
     public var asCopy: Bool?
+    public var reviewID: String?
+    public var sourceSHA256: String?
+    public var allowPartial: Bool?
+    public var reviewOffset: Int?
     enum CodingKeys: String, CodingKey {
         case protocolVersion = "protocol"
         case id, command, expectedRevision, path, clipID, trackID, value, duration, snap, discardChanges, asCopy
+        case reviewID, sourceSHA256, allowPartial, reviewOffset
     }
 }
 
@@ -41,6 +46,7 @@ public struct PortableSessionReply: Encodable {
     public let render: Render?
     public let waveform: Waveform?
     public let ruler: Ruler?
+    public let cprReview: PortableCPRReview?
     public let error: Failure?
     public struct Ruler: Encodable {
         public let revision: UInt64
@@ -71,7 +77,7 @@ public struct PortableSessionReply: Encodable {
         public let mediaSHA256: String?
     }
     public struct Failure: Encodable { public let code: String; public let message: String }
-    enum CodingKeys: String, CodingKey { case protocolVersion = "protocol"; case id, ok, state, render, waveform, ruler, error }
+    enum CodingKeys: String, CodingKey { case protocolVersion = "protocol"; case id, ok, state, render, waveform, ruler, cprReview, error }
 }
 
 /// Serialized document owner for a native host. The host sends intents; all
@@ -88,7 +94,19 @@ public final class PortableSession {
     private var revision: UInt64 = 0
     private var lastRequestID: UInt64?
     private var ownedScratch: [URL] = []
-    public init() {}
+    private struct ReviewedCPR {
+        let snapshot: PortableCPRReviewSnapshot
+        let source: URL?
+        let historicalRoot: URL?
+    }
+    private var reviewedCPR: ReviewedCPR?
+    private let importedSnapshotLoader: (URL) throws -> (project: Project, manifest: Data)
+    public init() { importedSnapshotLoader = { try ProjectStore.loadSnapshot(from: $0) } }
+    // A readback dependency permits deterministic verification of the
+    // publication-success/readback-failure boundary without filesystem races.
+    init(importedSnapshotLoader: @escaping (URL) throws -> (project: Project, manifest: Data)) {
+        self.importedSnapshotLoader = importedSnapshotLoader
+    }
     deinit { for url in ownedScratch { try? FileManager.default.removeItem(at: url) } }
 
     private var state: PortableSessionState {
@@ -119,23 +137,120 @@ public final class PortableSession {
             }
             if request.command == "waveform" {
                 let envelope = try waveform(request)
-                reply = .init(id: id, ok: true, state: state, render: nil, waveform: envelope, ruler: nil, error: nil)
+                reply = .init(id: id, ok: true, state: state, render: nil, waveform: envelope, ruler: nil, cprReview: nil, error: nil)
             } else if request.command == "ruler" {
                 let projection = try ruler(request)
-                reply = .init(id: id, ok: true, state: state, render: nil, waveform: nil, ruler: projection, error: nil)
+                reply = .init(id: id, ok: true, state: state, render: nil, waveform: nil, ruler: projection, cprReview: nil, error: nil)
+            } else if ["inspectCPR", "cprReviewPage", "cancelCPRReview", "cprImportReport"].contains(request.command) {
+                let review = try reviewCPR(request)
+                reply = .init(id: id, ok: true, state: state, render: nil, waveform: nil, ruler: nil, cprReview: review, error: nil)
             } else {
                 let render = try execute(request)
-                reply = .init(id: id, ok: true, state: state, render: render, waveform: nil, ruler: nil, error: nil)
+                reply = .init(id: id, ok: true, state: state, render: render, waveform: nil, ruler: nil, cprReview: nil, error: nil)
             }
         } catch {
-            reply = .init(id: id, ok: false, state: state, render: nil, waveform: nil, ruler: nil,
-                error: .init(code: (error as? SessionError)?.code ?? "operationFailed", message: error.localizedDescription))
+            reply = .init(id: id, ok: false, state: state, render: nil, waveform: nil, ruler: nil, cprReview: nil,
+                error: .init(code: (error as? SessionError)?.code ?? (error as? PortableCPRReviewError)?.code ?? "operationFailed", message: error.localizedDescription))
         }
         // Validated models contain only finite numbers and bounded strings.
         // The host treats an encoding failure as a failed protocol exchange.
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         return (try? encoder.encode(reply)) ?? Data("{\"protocol\":1,\"ok\":false,\"error\":{\"code\":\"encoding\",\"message\":\"Unable to encode session state.\"}}".utf8)
+    }
+
+    private func reviewCPR(_ request: PortableSessionRequest) throws -> PortableCPRReview? {
+        switch request.command {
+        case "inspectCPR":
+            reviewedCPR = nil
+            let source = try requiredURL(request.path)
+            let snapshot = try PortableCPRReviewSnapshot(report: CPRProject.inspect(from: source), historical: false)
+            let page = try snapshot.page(offset: 0)
+            reviewedCPR = .init(snapshot: snapshot, source: source, historicalRoot: nil)
+            return page
+        case "cprImportReport":
+            reviewedCPR = nil
+            guard let root, project != nil else { throw failure("noProject", "Open a project first.") }
+            try checkSourceUnchanged(root)
+            guard let report = try CPRProject.compatibilityReport(from: root) else {
+                throw failure("noCPRReport", "This project has no retained CPR import report.")
+            }
+            try checkSourceUnchanged(root)
+            let snapshot = try PortableCPRReviewSnapshot(report: report, historical: true)
+            let page = try snapshot.page(offset: 0)
+            reviewedCPR = .init(snapshot: snapshot, source: nil, historicalRoot: root)
+            return page
+        case "cprReviewPage":
+            let cached = try matchingReview(request.reviewID)
+            if let historicalRoot = cached.historicalRoot {
+                guard try CPRProject.compatibilityReport(from: historicalRoot) == cached.snapshot.report else {
+                    reviewedCPR = nil
+                    throw failure("reviewChanged", "The retained CPR report changed. Reopen its verified report.")
+                }
+            }
+            guard let offset = request.reviewOffset else { throw failure("reviewOffset", "A review page offset is required.") }
+            return try cached.snapshot.page(offset: offset)
+        case "cancelCPRReview":
+            _ = try matchingReview(request.reviewID)
+            reviewedCPR = nil
+            return nil
+        default: throw failure("command", "Unknown review command.")
+        }
+    }
+
+    private func matchingReview(_ token: String?) throws -> ReviewedCPR {
+        guard let token, let cached = reviewedCPR, token == cached.snapshot.reviewID else {
+            throw failure("reviewToken", "This CPR review is no longer current. Inspect the source again.")
+        }
+        return cached
+    }
+
+    private func importReviewedCPR(_ request: PortableSessionRequest) throws {
+        let cached = try matchingReview(request.reviewID)
+        guard !cached.snapshot.historical, let source = cached.source else {
+            throw failure("reviewReadOnly", "A historical import report cannot authorize another import. Inspect a source file first.")
+        }
+        guard request.sourceSHA256 == cached.snapshot.report.sourceSHA256,
+              source.lastPathComponent == cached.snapshot.report.sourceName,
+              cached.snapshot.report.interpretationProfile == CPRProject.currentInterpretationProfile else {
+            throw failure("reviewSource", "The source identity or interpretation does not match this CPR review. Inspect it again.")
+        }
+        guard cached.snapshot.report.canImport else {
+            throw failure("unsupportedCPR", "No editable project subset has been established for this source.")
+        }
+        guard request.allowPartial == true else {
+            throw failure("partialImportRequired", "Explicitly accept importing only the reviewed supported data.")
+        }
+        guard project == savedProject || request.discardChanges == true else {
+            throw failure("unsavedChanges", "Save or explicitly discard your changes before importing another project.")
+        }
+        let requested = try requiredURL(request.path)
+        guard requested.pathExtension.lowercased() == "rebaseproj" else {
+            throw failure("destination", "Choose a new .rebaseproj folder.")
+        }
+        let destination = try ProjectFileIO.canonicalRoot(requested.deletingLastPathComponent())
+            .appendingPathComponent(requested.lastPathComponent)
+        // Core binds its actual source read to the reviewed digest and publishes
+        // only a new, fully validated directory. No path-only approval is used.
+        let imported = try CPRProject.importProject(from: source, to: destination,
+            allowPartial: true, expectedSHA256: cached.snapshot.report.sourceSHA256)
+        reviewedCPR = nil
+        do {
+            let snapshot = try PortablePackageSnapshot.capture(in: destination)
+            let loaded = try importedSnapshotLoader(destination)
+            guard imported.report == cached.snapshot.report, loaded.project == imported.project,
+                  loaded.manifest == (try ProjectStore.encodedManifest(imported.project)),
+                  try ProjectFileIO.readManifest(in: destination) == loaded.manifest,
+                  try CPRProject.compatibilityReport(from: destination) == imported.report,
+                  try PortablePackageSnapshot.capture(in: destination) == snapshot else {
+                throw failure("importIntegrity", "The published project did not match its reviewed import.")
+            }
+            project = loaded.project; savedProject = loaded.project; root = destination
+            manifestDigest = PortableSHA256.hexDigest(loaded.manifest); isScratch = false
+            history.reset(); selection = ProjectSelection().reconciled(in: loaded.project); revision += 1
+        } catch {
+            throw failure("importPublished", "The import was published, but its final readback failed. The destination may already exist. Reopen it to inspect the result; do not overwrite it or retry the import blindly.")
+        }
     }
 
     private func ruler(_ request: PortableSessionRequest) throws -> PortableSessionReply.Ruler {
@@ -167,6 +282,7 @@ public final class PortableSession {
 
     private func execute(_ request: PortableSessionRequest) throws -> PortableSessionReply.Render? {
         if request.command == "state" { return nil }
+        if request.command == "importCPR" { try importReviewedCPR(request); return nil }
         if request.command == "open" {
             guard project == savedProject || request.discardChanges == true else {
                 throw failure("unsavedChanges", "Save or explicitly discard your changes before opening another project.")
@@ -200,6 +316,7 @@ public final class PortableSession {
             project = acceptedProject; savedProject = acceptedProject; root = destination
             manifestDigest = PortableSHA256.hexDigest(originalManifest); isScratch = request.asCopy == true
             selection = ProjectSelection().reconciled(in: acceptedProject); history.reset(); revision += 1
+            reviewedCPR = nil
             if let scratch { ownedScratch.append(scratch) }
             accepted = true
             return nil

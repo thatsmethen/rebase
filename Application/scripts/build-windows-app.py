@@ -365,6 +365,17 @@ def main():
                 or any(session.get("source", {}).get(key) != expected_source[key]
                        for key in ("sourceSHA256", "mediaSHA256", "outputSHA256", "pcmSHA256", "frames", "sampleRate", "channels"))):
             raise RuntimeError("Packaged session protocol did not pass")
+        imported = session.get("cpr_import", {})
+        required_import_controls = (
+            "tested", "review_read_only", "review_bounded", "cancellation_preserves_state",
+            "superseded_review_rejected", "stale_revision_rejected", "changed_source_rejected",
+            "explicit_partial_required", "dirty_replacement_guarded", "existing_destination_preserved",
+            "import_published", "exact_source_and_report_preserved", "save_reopen_preserves_baseline",
+            "historical_read_only", "tampered_report_rejected", "tampered_source_rejected")
+        if (any(imported.get(key) is not True for key in required_import_controls)
+                or imported.get("sourceSHA256") != expected_source["sourceSHA256"]
+                or imported.get("reportSHA256") != expected_source["reportSHA256"]):
+            raise RuntimeError("Packaged CPR import protocol checks did not pass")
         smoke_path = evidence / "wpf-smoke.json"
         run([str(stage / "Rebase.exe"), "--smoke", "--smoke-json", str(smoke_path),
              "--smoke-source-project", str(source_project), "--smoke-source-media", str(source_media)],
@@ -388,7 +399,11 @@ def main():
                            "channel-pan-shared-edit", "channel-mute-shared-edit", "fader-scale-matches-value",
                            "mixer-numeric-volume-commit", "mixer-numeric-volume-invalid-preserved", "mixer-numeric-volume-cancel",
                            "numeric-event-enter-and-undo", "numeric-event-cancel", "numeric-event-invalid-preserved",
-                           "numeric-trim-enter-and-undo", "numeric-tempo-enter-and-undo", "numeric-seek-and-cancel"}
+                           "numeric-trim-enter-and-undo", "numeric-tempo-enter-and-undo", "numeric-seek-and-cancel",
+                           "cpr-review-window-visible", "cpr-review-all-pages-accessible", "cpr-review-cancel-preserves-session",
+                           "cpr-changed-source-rejected", "cpr-dirty-cancel-preserves-session",
+                           "cpr-destination-cancel-preserves-review", "cpr-import-supported-data", "cpr-import-source-preserved",
+                           "cpr-historical-report-readonly", "cpr-review-visual-artifact"}
         if (smoke.get("source_journey_tested") is not True or not required_checks.issubset(smoke["checks"])
                 or smoke.get("source_screenshot") != "native-source-visual.png"
                 or smoke.get("source_output_sha256") != expected_source["outputSHA256"]
@@ -417,6 +432,19 @@ def main():
         require_window_visual(evidence / "native-app-visual.png", bounds)
         require_window_visual(evidence / "native-source-visual.png", bounds)
         require_window_visual(evidence / "native-timeline-scroll-visual.png", bounds)
+        cpr_review = smoke.get("cpr_review", {})
+        if (any(cpr_review.get(key) is not True for key in (
+                "reviewed", "cancelled_without_changes", "changed_source_rejected", "dirty_guard",
+                "destination_cancel_preserved_review", "imported", "historical_read_only", "vertical_scroll_checked"))
+                or cpr_review.get("preserved_source_sha256") != expected_source["sourceSHA256"]
+                or cpr_review.get("native_file_pickers_tested") is not False
+                or cpr_review.get("physical_input_tested") is not False
+                or cpr_review.get("native_frame_visual_tested") is not False
+                or cpr_review.get("review_screenshot") != "native-cpr-review-visual.png"
+                or type(cpr_review.get("pages_checked")) is not int or cpr_review["pages_checked"] < 1
+                or type(cpr_review.get("items_checked")) is not int or cpr_review["items_checked"] < 1):
+            raise RuntimeError("Reviewed CPR import window checks are incomplete")
+        require_window_visual(evidence / "native-cpr-review-visual.png", cpr_review.get("window_bounds", {}))
         # Recheck all bundled source bytes after both complete user journeys.
         example_manifest = json.loads((stage / "Examples/example.json").read_text(encoding="utf-8"))
         if any(digest(example / item["path"]) != item["sha256"] for item in example_manifest["files"]):

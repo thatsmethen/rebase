@@ -1,0 +1,123 @@
+{
+  "schema": "rebase.windows-cpr-ui-local-validation.v1",
+  "recorded_at_utc": "2026-10-23T13:27:52.508579+00:00",
+  "platform": "macOS arm64",
+  "dotnet_sdk": "10.0.100",
+  "crossbuild_passed": true,
+  "host_checks": 155,
+  "host_failures": 0,
+  "commands": [
+    {
+      "name": "crossbuild",
+      "argv": [
+        "dotnet",
+        "build",
+        "Application/Windows/RebaseWindows/RebaseWindows.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--verbosity",
+        "quiet"
+      ],
+      "exit_code": 0,
+      "log": "crossbuild.log"
+    },
+    {
+      "name": "host-controls",
+      "argv": [
+        "dotnet",
+        "run",
+        "--project",
+        "Application/Windows/RebaseWindows/Tests/RebaseWindows.Controls.csproj",
+        "-c",
+        "Release",
+        "--no-restore"
+      ],
+      "exit_code": 0,
+      "log": "host-controls.log"
+    }
+  ],
+  "sources": [
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml",
+      "bytes": 22003,
+      "sha256": "6576906fcf856e2868aa896ffd9b19b1ddb477f668b5805e0efc081f23d06438"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml.cs",
+      "bytes": 30272,
+      "sha256": "c5d8dc526684f39ec36e00bbaa67c4250ad27b2bc35d5683bd36b94f31bff19f"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/StudioViewModel.cs",
+      "bytes": 22653,
+      "sha256": "c436cfd4d803c0deb1a116224992404436c44b701eb855167d63ec15b28b118b"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/StudioViewModel.CPR.cs",
+      "bytes": 3607,
+      "sha256": "1386b97cbdb0fc1a69ecdb70d3a0b66aeab1c3d97646eb8d0863b2518ec91804"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/CPRReviewWindow.cs",
+      "bytes": 9813,
+      "sha256": "14a1e3421a6b4fd5cae6c4a871d8ce35e399f6c040ec813ae2baa2c90c464b9b"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/WindowSmoke.cs",
+      "bytes": 43451,
+      "sha256": "b9d574c6836c92e70396e2299b49b5ed6d786b22eca0216ad46a7c24e66fd28f"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/CPRReviewSnapshot.cs",
+      "bytes": 4025,
+      "sha256": "5e4decd74ba4a71a1ec6e05418c93f7836bb72f5836d7a33ac50ae97990795ca"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/SessionProtocol.cs",
+      "bytes": 5993,
+      "sha256": "22a98d8056de2e21c5a827722c4834323290b53191e8452056bba87a7e433b0a"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/SessionProcess.cs",
+      "bytes": 6117,
+      "sha256": "b84ca3b582535dcd7716f7d8ee4ca54a8e4ac08ac248d80a595fba1013f1480a"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/Program.cs",
+      "bytes": 5215,
+      "sha256": "a3cca987083e7d9ab6d7702333e11c3e4f1c679b1735c4f052462a34a854ef69"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/CPRReviewControls.cs",
+      "bytes": 14521,
+      "sha256": "bfb2e010100747ae5879a2f79b16ee5d2f64f9f3fefa51e529afa530902ebe5d"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/RebaseWindows.Controls.csproj",
+      "bytes": 1130,
+      "sha256": "dfd94b061a3feacda526cfd4b5286dcb23de175687ffec28952262f4ff6bdfe2"
+    }
+  ],
+  "boundaries": [
+    "WPF cross-compilation and portable host controls only.",
+    "No WPF window or file picker executed on this host.",
+    "Native authored fixture has one 15-item page; two-page progression and drift are covered by host controls.",
+    "Native Windows workflow and review-window screenshot remain pending.",
+    "No device playback or proprietary reference execution."
+  ],
+  "previous_receipt_sha256": "66fd892d6e1cd4b7b1c1331bf4e178e885902bba01577830e226a41b20f7d00c",
+  "correction": "Preserve the save decision after an unsuccessful clean-state save; reject replacement without explicit discard or a successful subsequent save.",
+  "logs": [
+    {
+      "path": "crossbuild.log",
+      "bytes": 76,
+      "sha256": "3e3d208ed923abf51aa1b02e6816fe468c969bc608fd90185c40c81c31d9872a"
+    },
+    {
+      "path": "host-controls.log",
+      "bytes": 131,
+      "sha256": "f432579b4b8033f0bb0070300344c6412a744c888b59dded2aa0e3c0b751fd95"
+    }
+  ]
+}

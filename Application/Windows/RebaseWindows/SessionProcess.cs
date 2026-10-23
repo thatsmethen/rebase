@@ -65,7 +65,7 @@ public sealed class SessionProcess : ISessionClient
         {
             ObjectDisposedException.ThrowIf(disposed, this);
             Start();
-            using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(request.Command is "render" or "renderSourceEvent" ? 120 : 60));
+            using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(request.Command is "render" or "renderSourceEvent" or "inspectCPR" or "cprImportReport" or "importCPR" ? 120 : 60));
             using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token, deadline.Token);
             request.Id = checked(++nextID);
             var message = JsonSerializer.Serialize(request, ProtocolJson.Options);
@@ -79,16 +79,20 @@ public sealed class SessionProcess : ISessionClient
             catch (OperationCanceledException) when (!lifetime.IsCancellationRequested)
             {
                 Terminate();
-                throw new TimeoutException("The shared session did not reply in time and was stopped. Reopen the application before continuing.");
+                throw new TimeoutException(request.Command == "importCPR" ? ImportOutcomeUnconfirmed :
+                    "The shared session did not reply in time and was stopped. Reopen the application before continuing.");
             }
             catch (Exception failure) when (failure is IOException or InvalidDataException or JsonException or DecoderFallbackException)
             {
                 // No late/unread response may be mistaken for a later request.
-                Terminate(); throw;
+                Terminate();
+                if (request.Command == "importCPR") throw new IOException(ImportOutcomeUnconfirmed, failure);
+                throw;
             }
         }
         finally { gate.Release(); }
     }
+    internal const string ImportOutcomeUnconfirmed = "The shared session stopped before the import result could be confirmed. The destination may already contain the imported project. Reopen the application and check that destination before importing again; do not overwrite it.";
     private void Terminate()
     {
         faulted = true;

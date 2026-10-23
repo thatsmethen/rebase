@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Rebase.Windows;
 
-public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
+public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
 {
     private readonly ISessionClient session;
     private readonly IAudioOutput audio;
@@ -19,7 +19,7 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
     private ulong waveformEpoch;
     private Task? rulerTask;
     private RulerRequest? desiredRuler, failedRuler;
-    private bool polling, closing;
+    private bool polling, closing, saveConfirmationRequired;
     private uint audioPhase;
     private bool accepting = true;
     private int pendingActions;
@@ -45,7 +45,8 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
     public bool IsSourceContext => sourceEventID is not null;
     public string TransportContext => sourceEventID is null ? "Project timeline" :
         "Source event: " + (SourceEvents.FirstOrDefault(e => e.Id == sourceEventID)?.Name ?? "Unavailable") + " · event-local seconds";
-    public string Title => (Project?.Name ?? "Rebase") + (State.Dirty ? " •" : "") + " — Rebase";
+    public bool NeedsSaveDecision => Project is not null && (State.Dirty || saveConfirmationRequired);
+    public string Title => (Project?.Name ?? "Rebase") + (NeedsSaveDecision ? " •" : "") + " — Rebase";
     public string Status { get => status; private set { status = value; Changed(); } }
     public bool Busy { get => busy; private set { busy = value; Changed(); } }
     public double Position { get => position; private set { position = value; Changed(); } }
@@ -59,6 +60,16 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
     public event Action? RulerChanged;
     public IReadOnlyDictionary<string, float[]> WaveformPeaks => waveforms.ToDictionary(item => item.Key, item => item.Value.Snapshot.Peaks);
     private void Changed([CallerMemberName] string? property = null) => PropertyChanged?.Invoke(this, new(property));
+    private void SetSaveConfirmationRequired(bool value)
+    {
+        saveConfirmationRequired = value;
+        Changed(nameof(NeedsSaveDecision)); Changed(nameof(Title));
+    }
+    private void RequireSaveDecision(bool discardChanges)
+    {
+        if (saveConfirmationRequired && !discardChanges)
+            throw new InvalidOperationException("The previous save was not confirmed. Save successfully or explicitly discard changes before replacing this project.");
+    }
     public void Report(Exception error) => Status = error.Message;
     private void NotifyContext() { Changed(nameof(IsSourceContext)); Changed(nameof(TransportContext)); }
     private void UseProjectContext()
@@ -84,8 +95,9 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
         {
             if (State.Revision != response.State.Revision) { await InvalidateAudio(); UseProjectContext(); }
             State = response.State;
+            if (response.Ok && request.Command is "open" or "importCPR") SetSaveConfirmationRequired(false);
             if (Ruler is not null && Ruler.Revision != State.Revision) { Ruler = null; RulerChanged?.Invoke(); }
-            if (response.Ok && request.Command is "open" or "saveAs")
+            if (response.Ok && request.Command is "open" or "saveAs" or "importCPR")
             {
                 waveformEpoch++; waveforms.Clear(); waveformFailures.Clear();
             }
@@ -96,9 +108,13 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
                 await InvalidateAudio(); UseProjectContext();
             }
             Position = Math.Min(Position, IsSourceContext ? sourceDuration : Project?.Duration ?? 0);
-            Changed(nameof(Title)); StateChanged?.Invoke();
+            Changed(nameof(NeedsSaveDecision)); Changed(nameof(Title)); StateChanged?.Invoke();
         }
-        if (!response.Ok) throw new InvalidOperationException(response.Error?.Message ?? "The shared session rejected this request.");
+        if (!response.Ok)
+        {
+            if (request.Command == "importCPR" && response.Error?.Code == "importPublished") CPRReview = null;
+            throw new InvalidOperationException(response.Error?.Message ?? "The shared session rejected this request.");
+        }
         return response;
     }
     private async Task Execute(Func<Task> work)
@@ -193,6 +209,7 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
     public object[] HelperModuleReceipt() => session.ModuleReceipt();
     public Task Open(string path, bool asCopy, bool discardChanges) => Execute(async () =>
     {
+        RequireSaveDecision(discardChanges);
         await Send(new() { Command = "open", Path = path, AsCopy = asCopy, DiscardChanges = discardChanges });
         UseProjectContext();
         Position = 0; Status = asCopy ? "Example opened as a new project. Use Save As to keep your edits." : "Opened " + Project?.Name;
@@ -202,11 +219,19 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
         await Send(new() { Command = command, ClipID = clipID, TrackID = trackID, Value = value, Snap = Snap });
         Status = command.StartsWith("select", StringComparison.Ordinal) ? "Selection updated." : "Project updated.";
     });
-    public Task Save(string? path = null) => Execute(async () =>
+    public async Task<bool> Save(string? path = null)
     {
-        await Send(new() { Command = path is null ? "save" : "saveAs", Path = path });
-        Status = "Saved " + Project?.Name;
-    });
+        var succeeded = false;
+        await Execute(async () =>
+        {
+            SetSaveConfirmationRequired(true);
+            await Send(new() { Command = path is null ? "save" : "saveAs", Path = path });
+            SetSaveConfirmationRequired(false);
+            Status = "Saved " + Project?.Name;
+            succeeded = true;
+        });
+        return succeeded;
+    }
     public Task RenderTo(string path) => Execute(async () =>
     {
         Status = "Rendering…";

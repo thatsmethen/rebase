@@ -1,0 +1,109 @@
+{
+  "schema": "rebase.windows-cpr-ui-local-validation.v1",
+  "recorded_at_utc": "2026-10-23T13:16:03.572125+00:00",
+  "platform": "macOS arm64",
+  "dotnet_sdk": "10.0.100",
+  "crossbuild_passed": true,
+  "host_checks": 139,
+  "host_failures": 0,
+  "commands": [
+    {
+      "name": "crossbuild",
+      "argv": [
+        "dotnet",
+        "build",
+        "Application/Windows/RebaseWindows/RebaseWindows.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--verbosity",
+        "quiet"
+      ],
+      "exit_code": 0,
+      "log": "crossbuild.log"
+    },
+    {
+      "name": "host-controls",
+      "argv": [
+        "dotnet",
+        "run",
+        "--project",
+        "Application/Windows/RebaseWindows/Tests/RebaseWindows.Controls.csproj",
+        "-c",
+        "Release",
+        "--no-restore"
+      ],
+      "exit_code": 0,
+      "log": "host-controls.log"
+    }
+  ],
+  "sources": [
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml",
+      "bytes": 22003,
+      "sha256": "6576906fcf856e2868aa896ffd9b19b1ddb477f668b5805e0efc081f23d06438"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml.cs",
+      "bytes": 30258,
+      "sha256": "3fc159de0a990de19b182ad1575e88e3f8b1dd074f6a4ba286de633788657b35"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/StudioViewModel.cs",
+      "bytes": 21478,
+      "sha256": "41b3538449b18c9a440eaecc75fa04810353928eb4180aa59d3efe1dee0f3ca7"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/StudioViewModel.CPR.cs",
+      "bytes": 3292,
+      "sha256": "a1ca11cf1fe52ffa3b61dbf714fe100dc116a521e5e144a7e716c9601d6b2de5"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/CPRReviewWindow.cs",
+      "bytes": 9678,
+      "sha256": "1c8978fdc3e591abc44cdc40d0e06c6f4942a8e3d0a9bfb2b9657abf686c27d1"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/WindowSmoke.cs",
+      "bytes": 43451,
+      "sha256": "b9d574c6836c92e70396e2299b49b5ed6d786b22eca0216ad46a7c24e66fd28f"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/CPRReviewSnapshot.cs",
+      "bytes": 4025,
+      "sha256": "5e4decd74ba4a71a1ec6e05418c93f7836bb72f5836d7a33ac50ae97990795ca"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/SessionProtocol.cs",
+      "bytes": 5993,
+      "sha256": "22a98d8056de2e21c5a827722c4834323290b53191e8452056bba87a7e433b0a"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/SessionProcess.cs",
+      "bytes": 6117,
+      "sha256": "b84ca3b582535dcd7716f7d8ee4ca54a8e4ac08ac248d80a595fba1013f1480a"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/Program.cs",
+      "bytes": 5215,
+      "sha256": "a3cca987083e7d9ab6d7702333e11c3e4f1c679b1735c4f052462a34a854ef69"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/CPRReviewControls.cs",
+      "bytes": 10318,
+      "sha256": "cdf93000d9fd93d2c8fb1564d20fb0e80421bee7f8dc10203226357440155e5c"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/RebaseWindows.Controls.csproj",
+      "bytes": 1130,
+      "sha256": "dfd94b061a3feacda526cfd4b5286dcb23de175687ffec28952262f4ff6bdfe2"
+    }
+  ],
+  "boundaries": [
+    "WPF cross-compilation and portable host controls only.",
+    "No WPF window or file picker executed on this host.",
+    "Native authored fixture has one 15-item page; two-page progression and drift are covered by host controls.",
+    "Native Windows workflow and review-window screenshot remain pending.",
+    "No device playback or proprietary reference execution."
+  ]
+}

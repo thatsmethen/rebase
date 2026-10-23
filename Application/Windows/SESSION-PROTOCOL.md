@@ -12,6 +12,11 @@ Every command except `state` includes the current `expectedRevision`. The helper
 | --- | --- |
 | `state` | None. |
 | `open` | `path`: package directory or its `Project.json`; `discardChanges:true` only after the user elects to discard; `asCopy:true` for the included example. |
+| `inspectCPR` | `path`: raw CPR file. Creates one reviewed snapshot without changing the active document. |
+| `cprReviewPage` | `reviewID`, `reviewOffset`: next or previously visited item offset within that snapshot. |
+| `cancelCPRReview` | `reviewID`: discard that snapshot without changing the active document. |
+| `importCPR` | `reviewID`, `sourceSHA256`, `allowPartial:true`, `path`: new `.rebaseproj` destination. `discardChanges:true` only after explicit choice. |
+| `cprImportReport` | Revalidate and review the current package's historical import report, read-only. |
 | `selectClip`, `selectTrack` | `clipID` or `trackID` UUID string. |
 | `moveClip`, `trimClip`, `splitClip` | `clipID`, finite `value` in seconds; trim uses absolute end time. Optional `snap`: `off`, `quarter`, `eighth`, `sixteenth`, `bar`. |
 | `deleteEvent` | `clipID`. |
@@ -25,11 +30,35 @@ Every command except `state` includes the current `expectedRevision`. The helper
 | `renderSourceEvent` | `clipID`: retained event; `path`: a new source-event WAV outside the package. |
 | `waveform` | `clipID`: ordinary clip. Read-only source envelope, no revision change. |
 | `ruler` | Required finite `value`: pixels per second in 4…420. Optional finite `duration`: extent in seconds in 0…86,400. Read-only musical ticks, no revision change. |
-| `attachSourceMedia` | Preserved event `clipID` and explicitly selected PCM file `path`; validates and copies matching media, records undo, and selects the event. |
-| `renderSourceEvent` | Preserved event `clipID` and a new WAV `path` outside the source package. |
-| `waveform` | Ordinary `clipID`; a read-only source-envelope request. |
 
 Quarter/eighth/sixteenth snapping is 1, 0.5, and 0.25 quarter notes. Bar snapping uses the shared signature map. The helper derives trim limits from checked media and generates split identifiers. The frontend sends proposed seconds from pointer geometry, leaving all snapping and edit rules to Swift.
+
+CPR inspection and historical report review return `cprReview` with a UUID
+`reviewID`, `sourceName`, `sourceSHA256`, `sourceByteCount`,
+`interpretationProfile`, `historical`, `canImport`, `recoveredTrackCount`,
+`recoveredClipCount`, `unresolvedEventCount`, `totalItems`, `offset`, optional
+`nextOffset`, and `items:[{section,label,detail}]`. Section keys are `recovered`,
+`tracks`, `unresolved`, `defaults`, and `metadata`. Each encoded page is at most
+128 KiB and 32 items; an individual item that cannot fit rejects the review
+instead of silently truncating it. The report is bounded to 8 MiB. The full
+report and recovered project are not duplicated into the review response.
+
+Only one review token is current. A new inspection/report supersedes the old
+token. The host validates page identity and progression, exposes every page,
+and submits the reviewed token and exact source digest on confirmation.
+Inspection, pagination and cancellation leave the active project, revision,
+selection and history unchanged. A historical report is replayed using its
+frozen interpretation and cannot be imported through its review token.
+
+Import requires explicit partial acceptance even when the supported subset is
+small. It preserves dirty-project protection and rejects a source changed since
+review. The core creates a new package with the original bytes and report,
+verifies it before publication, and refuses existing destinations. Only a
+validated published package replaces the session, resets history and advances
+the revision. If publication succeeded but a subsequent read failed, or the
+helper stopped before its reply arrived, the destination may already exist.
+The host reports that uncertainty and never automatically retries or overwrites
+it. Review does not attach media or make unresolved native events playable.
 
 `ruler` returns `ruler:{revision,duration,pixelsPerSecond,ticks:[{seconds,bar,label}]}`.
 `bar` is a Boolean marking a bar boundary, and `label` is the one-based bar
