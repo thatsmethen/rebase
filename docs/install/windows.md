@@ -4,7 +4,7 @@ This experimental x64 preview is intended for Windows 11. It includes its requir
 
 ## Open the app
 
-1. Download `Rebase-0.21.1-windows-preview.3-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.3).
+1. Download `Rebase-0.21.1-windows-preview.4-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.4).
 2. Use **Extract All** to unpack the complete archive.
 3. Open **Rebase.exe** inside the extracted `Rebase` folder. Keep the DLLs, notices and `Examples` folder beside the executable.
 4. Choose **File → Open example**. The four-track beat opens as a separate editable copy.
@@ -13,6 +13,10 @@ This experimental x64 preview is intended for Windows 11. It includes its requir
 The preview is unsigned. Its release page includes the archive's SHA-256 checksum and the exact validation record.
 
 To reopen a saved project, choose **File → Open project…**, enter its `.rebaseproj` folder, and select `Project.json`. To share a project, copy the complete project folder, including its media and compatibility data.
+
+## Adjust the workspace
+
+Choose **Compact** or **Normal** beside the ruler selector to change track height. **Left** shows or hides Channel/Inspector; **Mixer** shows or hides the lower mixer. Drag the divider above the mixer to resize it, or focus the divider and use Up/Down. Inspector sections can collapse independently. These layout changes preserve project state and selection.
 
 ## Review and import a CPR project
 
@@ -31,9 +35,9 @@ Source-event audition uses the saved source rate and a separate event-local posi
 
 ## What has been checked
 
-Preview.3 comes from commit `aaa7c3c6` and [native Windows run 39966842279](../../research/publication/windows-portability/application-run-39966842279/observation.json) on a Windows Server 2025 GitHub runner. It passed 68 actual-window checks, 155 host controls and 91 packaged-helper checks. The shared Release gate executed 90 tests with one explicit opt-in skip and no failures. The [downloaded archive audit](../../research/publication/windows-portability/application-run-39966842279/candidate-review.json) verified its file manifest, runtime dependencies and unchanged example audio.
+Preview.4 comes from commit `6289343` and [native Windows run 40021483751](../../research/publication/windows-portability/application-run-40021483751/observation.json) on a Windows Server 2025 GitHub runner. It passed 80 actual-window checks, 155 host controls and 91 packaged-helper checks. The shared Release gate executed 90 tests with one explicit opt-in skip and no failures. The [downloaded archive audit](../../research/publication/windows-portability/application-run-40021483751/candidate-review.json) verified its file manifest, runtime dependencies and unchanged example audio.
 
-[Five screenshots](../screenshots/README.md) show the actual application's client area, including CPR review at normal and minimum window sizes. They exclude the operating-system frame.
+[Seven screenshots](../screenshots/README.md) show the actual application's client area, including CPR review at normal and minimum window sizes. They exclude the operating-system frame.
 
 Physical mouse/keyboard input, native file dialogs and sound through a real audio device still require interactive Windows verification. Recording, plugins, automation editing and the remaining Mac workflows are not yet integrated. The [parity ledger](../development/windows-parity.md) records those boundaries.
 

@@ -1,0 +1,59 @@
+{
+  "schema": "rebase.windows-workspace-root-visual-review.v1",
+  "source_commit": "62893430f8394a5c1b8274d3a6273dddd4fa6653",
+  "native_run": 40021483751,
+  "recorded_at_utc": "2026-10-23T21:24:52.137099+00:00",
+  "status": "accepted-for-compact-workspace-preview",
+  "images": [
+    {
+      "name": "windows-arrangement.png",
+      "bytes": 77546,
+      "sha256": "5befe4b5fb241a0db1d36f68a51bcf580717b98c5b15d1ec5ac76119de3a31e1"
+    },
+    {
+      "name": "windows-source.png",
+      "bytes": 73230,
+      "sha256": "c215374cfbb92cccf3eb758e8119d4363347d714eb8c9357dbc3faa684f4a304"
+    },
+    {
+      "name": "windows-scrolled.png",
+      "bytes": 73000,
+      "sha256": "a9e3bada05d45877cc68ac964593ab45dae0a3404561b978758e28ec1ff6cd77"
+    },
+    {
+      "name": "windows-cpr-review.png",
+      "bytes": 64349,
+      "sha256": "e0a3943d8698f6132b752149f5fdfda7778e2d66a1925e31239943c510403ca0"
+    },
+    {
+      "name": "windows-cpr-review-error.png",
+      "bytes": 41321,
+      "sha256": "4262f6bbe96ace30489893b705f4a82f28f01251535f790ff9409f9759e39b54"
+    },
+    {
+      "name": "windows-workspace-normal.png",
+      "bytes": 79420,
+      "sha256": "9db317443eeda033af403c9a7f94a45fe87aa3538c67fabc640708078b63c3fe"
+    },
+    {
+      "name": "windows-workspace-expanded.png",
+      "bytes": 46705,
+      "sha256": "c637e3b40e87899b9e90458e84a79bc0073d7ab3b068e3359d2a325bfb195652"
+    }
+  ],
+  "observations": [
+    "All seven actual native client images inspected. Compact and normal rows, event names and waveforms are readable; selected Channel and lower mixer nameplates remain visible.",
+    "Hidden panes return their space, and measured content starts at the viewport origin. All eight recorded states have zero spurious vertical scrolling.",
+    "Source controls are expanded after the real selection transition; canonical single-track source attachment/export remains intact.",
+    "Scrolled event content moves independently of anchored track headers; both CPR review sizes retain action footers and the observed error message."
+  ],
+  "remaining_visual_work": [
+    "Top rows and event information remain taller and less complete than the Windows reference.",
+    "In the expanded capture, row-divider strokes stop at the old canvas width; the next drawing/layout pass should extend them on viewport resizing.",
+    "The ruler-corner label is absent in the scrolled capture although musical tick labels remain visible; inspect that presentation in the next pass."
+  ],
+  "boundaries": [
+    "Scoped acceptance is not exact or complete reference fidelity.",
+    "Client-area renders exclude native frames and do not establish physical input, native dialogs or device audio."
+  ]
+}

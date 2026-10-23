@@ -14,9 +14,9 @@ Windows development follows the [Windows reference interface](docs/development/w
 
 ## Release
 
-**[Download Rebase for Windows](https://github.com/thatsmethen/rebase/releases/download/v0.21.1-windows-preview.3/Rebase-0.21.1-windows-preview.3-x64.zip)**
+**[Download Rebase for Windows](https://github.com/thatsmethen/rebase/releases/download/v0.21.1-windows-preview.4/Rebase-0.21.1-windows-preview.4-x64.zip)**
 
-The **Windows x64 development preview** includes its runtimes and the example beat. Preview.3 adds reviewed CPR import with the original source and interpretation report preserved. Extract the entire archive, open `Rebase.exe`, and choose **File → Open example**. See the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.3) and [Windows installation guide](docs/install/windows.md). This unsigned preview targets Windows 11; native automated checks ran on Windows Server 2025. Audio-device output and physical input still need interactive verification.
+The **Windows x64 development preview** includes its runtimes and the example beat. Preview.4 adds compact/normal track rows, hideable left and mixer panels, a resizable mixer and collapsible Inspector sections. Reviewed CPR import preserves the original source and interpretation report. Extract the entire archive, open `Rebase.exe`, and choose **File → Open example**. See the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.4) and [Windows installation guide](docs/install/windows.md). This unsigned preview targets Windows 11; native automated checks ran on Windows Server 2025. Audio-device output and physical input still need interactive verification.
 
 **[Download Rebase for Mac](https://github.com/thatsmethen/rebase/releases/download/v0.21.1/Rebase-0.21.1-macos-arm64.zip)**
 
@@ -30,7 +30,7 @@ The Windows preview, showing the included four-track beat, real waveforms, separ
 
 ![Rebase Windows arrangement, inspector and mixer](docs/screenshots/windows-arrangement.png)
 
-[Windows source-event view](docs/screenshots/windows-source.png) · [Windows zoom and scrolling](docs/screenshots/windows-scrolled.png) · [CPR import review](docs/screenshots/windows-cpr-review.png)
+[Normal track density](docs/screenshots/windows-workspace-normal.png) · [Expanded arrangement](docs/screenshots/windows-workspace-expanded.png) · [Windows source-event view](docs/screenshots/windows-source.png) · [Windows zoom and scrolling](docs/screenshots/windows-scrolled.png) · [CPR import review](docs/screenshots/windows-cpr-review.png)
 
 The Mac app, showing the same eight-bar session of synthesized audio.
 
