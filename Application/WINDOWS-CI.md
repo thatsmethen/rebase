@@ -1,6 +1,6 @@
 # Portable component CI
 
-The workflow definition is staged in `Application/ci/portable-conformance.yml`. Activation in `.github/workflows` is pending the publishing account's GitHub `workflow` permission. No hosted Windows result has been recorded yet.
+The active workflow is `.github/workflows/portable-conformance.yml`. Read the results for the specific commit before treating a lane as verified.
 
 The `Portable component conformance` GitHub Actions workflow builds and executes authored C kernels and shared Swift model tests on Windows x64 and macOS arm64, in Debug and Release configurations. It also retains the existing public macOS application test lane and builds the public SoXR library on Windows. These checks do not provide a Windows desktop application, audio-device playback, or equivalence to a reference application's runtime.
 
@@ -18,6 +18,8 @@ python Application/scripts/run-portable-ci.py swift --configuration Release --ou
 ```
 
 On Windows, choose writable Windows paths for `--output`. The Swift runner sets `REBASE_PORTABLE_ONLY=1`, which excludes the macOS app, AVFoundation, and ZIPFoundation. Neither private research fixtures nor installed proprietary binaries are used.
+
+On a Mac with only Command Line Tools selected, the driver applies the same Swift Testing framework/plugin flags as `test-app.sh`. Full-Xcode hosted runners use their normal test invocation. The portable driver restores the application's existing `Package.resolved` after execution because the dependency-free portable package can otherwise remove it.
 
 ## Windows SoXR build
 
