@@ -39,9 +39,9 @@
         </WrapPanel>
         <WrapPanel Margin="0,8,0,0">
           <Label Content="Submitted peaks" /><TextBlock Text="L" VerticalAlignment="Center" Margin="8,0" />
-          <ProgressBar Width="150" Height="12" Minimum="0" Maximum="1" Value="{Binding PeakLeft}" AutomationProperties.Name="Left submitted peak" />
+          <ProgressBar Width="150" Height="12" Minimum="0" Maximum="1" Value="{Binding PeakLeft, Mode=OneWay}" AutomationProperties.Name="Left submitted peak" />
           <TextBlock Text="R" VerticalAlignment="Center" Margin="12,0,8,0" />
-          <ProgressBar Width="150" Height="12" Minimum="0" Maximum="1" Value="{Binding PeakRight}" AutomationProperties.Name="Right submitted peak" />
+          <ProgressBar Width="150" Height="12" Minimum="0" Maximum="1" Value="{Binding PeakRight, Mode=OneWay}" AutomationProperties.Name="Right submitted peak" />
           <TextBlock x:Name="ProjectInfo" Text="No project loaded" Foreground="#A5B1C2" VerticalAlignment="Center" Margin="22,0" />
         </WrapPanel>
       </StackPanel>

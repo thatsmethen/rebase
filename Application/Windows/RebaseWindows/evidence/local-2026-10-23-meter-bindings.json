@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "observed_at_utc": "2026-10-23T08:48:08.120928+00:00",
+  "evidence_class": "local-cross-compilation-and-portable-controls",
+  "host": "macOS arm64",
+  "dotnet_sdk": "10.0.100",
+  "build": {
+    "configuration": "Release",
+    "target": "net10.0-windows",
+    "warnings": 0,
+    "errors": 0
+  },
+  "portable_controls": {
+    "checks": 24,
+    "failures": 0
+  },
+  "windows_ui_runtime_tested": false,
+  "wasapi_playback_tested": false,
+  "source_files": [
+    {
+      "path": "App.xaml",
+      "sha256": "ec6bde1d8b67da31211d322653f409e7c2bdf22c54709ff12423c759886353f3"
+    },
+    {
+      "path": "App.xaml.cs",
+      "sha256": "b6dc901328ad808fa1dc10e563a05785bfb0c877d386b9d3fd329f96ecd126ac"
+    },
+    {
+      "path": "Assets/Rebase.ico",
+      "sha256": "01d7bdc9dbd842c7207e7feaefa259605c4113c7197b4d228b0c4acbac9b15ab"
+    },
+    {
+      "path": "GlobalUsings.cs",
+      "sha256": "9eb56b713f4bd450c169f140e74ff7b6d5e456f3742a30188b947223d01628e4"
+    },
+    {
+      "path": "MainWindow.xaml",
+      "sha256": "dd4410f44739059706667aebe2a3f50d17ae8c02deadea1e8c6b4277f1bc1ea9"
+    },
+    {
+      "path": "MainWindow.xaml.cs",
+      "sha256": "fe7d04f5d1918b217ae865fff60cdfe111e7cde44a326e901b9632a062054098"
+    },
+    {
+      "path": "NativeAudio.cs",
+      "sha256": "e38e86351266a4b739568f86b637a65913367feaabc166bec516343902e60ec8"
+    },
+    {
+      "path": "RebaseWindows.csproj",
+      "sha256": "f92eb555c0c4de6985f5750fd8d7975ddba21c369731c73673f586f38b4f7335"
+    },
+    {
+      "path": "SessionProcess.cs",
+      "sha256": "4094eee7414aad862cdc50d45ba2e99456c976c048b6d783631a907fa4645498"
+    },
+    {
+      "path": "SessionProtocol.cs",
+      "sha256": "a947d374ad732a5872e6227c19010dd9e595b4e67759d395513fecd9e25ee8c3"
+    },
+    {
+      "path": "SessionResponseReader.cs",
+      "sha256": "e25a150531b051036b5c92ea3ddd58ceb23b1a11d83c402f43983702e4a38de2"
+    },
+    {
+      "path": "SnapshotReader.cs",
+      "sha256": "4264e620c6acd35e2e0f94942130bc5678444757c696b653ef64dc583358468f"
+    },
+    {
+      "path": "StudioViewModel.cs",
+      "sha256": "0f509c65816832d727ecf6b1d739ed71e967ccafbc04ac51cbeb780e11f231bb"
+    },
+    {
+      "path": "Tests/Program.cs",
+      "sha256": "23d06e1278e5b677b6a05077a689f7bf0d9837318b85ddeaeb6d93d404571d98"
+    },
+    {
+      "path": "Tests/RebaseWindows.Controls.csproj",
+      "sha256": "6fa44b1ff8fe68c45d9be78696eda739959be806676ba54cb67763751407adce"
+    },
+    {
+      "path": "TimelineView.cs",
+      "sha256": "0f87ce7ec6b2417eb9dd5e264e2eb0567275c370ef4d362917c8906c47d895a8"
+    },
+    {
+      "path": "WindowSmoke.cs",
+      "sha256": "895b138158c0eb63376ba103bbb84b539f57a6f23d744a11ae6e15c7889c9c13"
+    },
+    {
+      "path": "app.manifest",
+      "sha256": "98186660a1c945ebcda02a878bd6b1413c3641af4b28bc9235ac49d6aa4df7df"
+    },
+    {
+      "path": "packages.lock.json",
+      "sha256": "3ea8c3864c8f23b39364f9f40beb868ce4d8ecb62c5a25188dca037417beed3b"
+    }
+  ],
+  "boundaries": [
+    "Compilation used Windows desktop reference assemblies from a macOS SDK; the WPF app was not run locally.",
+    "Portable controls cover protocol and rendered-snapshot validation, not UI actions or hardware.",
+    "Hosted Windows packaging uses separately pinned SDK 10.0.402; its actual smoke evidence must be recorded separately."
+  ],
+  "observation": "Meter bindings explicitly read values one way after the hosted Windows startup exception.",
+  "prior_evidence": {
+    "path": "local-2026-10-23.json",
+    "sha256": "fe106a2365bd761f647231775c9a3ef00e65d3d2bb3cc2c2ddc6aa0485550867"
+  },
+  "motivating_runtime_observation": {
+    "run": "https://github.com/thatsmethen/rebase/actions/runs/39926147513",
+    "result": "WPF startup failed on read-only PeakLeft binding before the smoke scenario could run."
+  }
+}

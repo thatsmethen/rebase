@@ -110,11 +110,14 @@ def main():
                 command = ["swift", "test", "--scratch-path", str(build), "-c", args.configuration.lower(),
                            "--filter", "RebasePortableTests", "--xunit-output", str(out / "tests.xml")]
                 if os.name == "nt" and args.configuration == "Release":
-                    # Diagnostic hypothesis for the observed zero-test Release
-                    # runner: retain discovery metadata without disabling -O.
+                    # Swift Build 6.4.1 emits no Windows linker argument for
+                    # DEAD_CODE_STRIPPING=NO. LINK still defaults to /OPT:REF
+                    # without /DEBUG, so explicitly retain test discovery
+                    # metadata. Keep -O and the executed-test gate unchanged.
                     # Production product builds below keep their normal link.
-                    command += ["--disable-dead-strip"]
+                    command += ["--disable-dead-strip", "-Xlinker", "/OPT:NOREF", "--verbose"]
                     report["test_link_dead_strip_disabled"] = True
+                    report["test_linker_options"] = ["/OPT:NOREF"]
                 if sys.platform == "darwin":
                     developer = run(["xcode-select", "-p"], "developer-directory").strip()
                     # Match test-app.sh only for a local Command Line Tools
@@ -136,7 +139,7 @@ def main():
             run(command, "tests")
             if args.kind == "swift" and os.name == "nt" and args.configuration == "Release":
                 run(["swift", "test", "list", "--scratch-path", str(build), "-c", "release",
-                     "--skip-build", "--disable-dead-strip"], "test-discovery")
+                     "--skip-build", "--disable-dead-strip", "-Xlinker", "/OPT:NOREF"], "test-discovery")
             if args.kind == "swift":
                 configuration = args.configuration.lower()
                 run(["swift", "build", "--scratch-path", str(build), "-c", configuration,
