@@ -1,4 +1,5 @@
 #include "cpr_accessor_seek.h"
+#include "rebase_fp_environment.h"
 #include <fenv.h>
 #include <float.h>
 #include <math.h>
@@ -9,16 +10,7 @@
 #pragma STDC FP_CONTRACT OFF
 _Static_assert(FLT_RADIX == 2 && FLT_MANT_DIG == 24 && DBL_MANT_DIG == 53,
                "IEEE binary32/binary64 required");
-static int environment_ok(void) {
-    if (fegetround() != FE_TONEAREST) return 0;
-#if defined(__aarch64__)
-    uint64_t fpcr;
-    __asm__ volatile("mrs %0, fpcr" : "=r"(fpcr));
-    return (fpcr & ((UINT64_C(1) << 24) | (UINT64_C(1) << 25) | 3)) == 0;
-#else
-    return 0;
-#endif
-}
+static int environment_ok(void) { return rb_fp_nearest_gradual(); }
 static uint64_t bits(double x) { uint64_t result; memcpy(&result,&x,8); return result; }
 static int rate_ok(float x) { return isfinite(x) && x >= 8000 && x <= 192000 && truncf(x) == x; }
 

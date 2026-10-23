@@ -8,7 +8,8 @@
    selected the 24-bit source-format resampling branch. No rate selection,
    resampling or claim about a live backend format is made by this API.
    In-place finite normal-or-zero Float32 values; scaled values must remain
-   finite. Nearest-even arm64 FP environment. count in [1,32000000].
+   finite. Qualified nearest/even host FP environment
+   (rebase_fp_environment.h); source evidence remains arm64. count in [1,32000000].
    Returns 0 on success, 1 invalid/domain, 2 FP environment. Error leaves
    the complete buffer unchanged. Output is exact signed24/2^23. */
 int rb_cpr_accessor_pcm24_roundtrip(float *samples, size_t count);

@@ -1,4 +1,5 @@
 #include "native_callback_adapter.h"
+#include "rebase_fp_environment.h"
 #include <fenv.h>
 #include <float.h>
 #include <limits.h>
@@ -14,21 +15,7 @@ _Static_assert(sizeof(float) == 4 && FLT_MANT_DIG == 24 && FLT_RADIX == 2,
 _Static_assert(sizeof(double) == 8 && DBL_MANT_DIG == 53,
                "IEEE binary64 required");
 
-static int nearest_environment(void) {
-    if (fegetround() != FE_TONEAREST) return 0;
-#if defined(__aarch64__)
-    uint64_t fpcr;
-    __asm__ volatile("mrs %0, fpcr" : "=r"(fpcr));
-    /* FZ, DN and alternate handling (AH/FIZ) affect subnormal arithmetic.
-       Reject instead of changing the caller's floating-point environment. */
-    if (fpcr & ((UINT64_C(1) << 24) | (UINT64_C(1) << 25) | 3)) return 0;
-#else
-    /* This candidate is qualified for the inspected arm64 floating-point
-       environment only; no uninspected FTZ/DAZ environment is admitted. */
-    return 0;
-#endif
-    return 1;
-}
+static int nearest_environment(void) { return rb_fp_nearest_gradual(); }
 
 static int add64(int64_t a, int64_t b, int64_t *r) {
     if ((b > 0 && a > INT64_MAX - b) ||

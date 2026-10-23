@@ -1,4 +1,5 @@
 #include "cpr_timeline_reader.h"
+#include "rebase_fp_environment.h"
 #include <fenv.h>
 #include <float.h>
 #include <limits.h>
@@ -16,17 +17,7 @@ _Static_assert(sizeof(double) == 8 && DBL_MANT_DIG == 53,
 #define RB_TIMELINE_MAX_FRAMES INT64_C(16000000)
 #define RB_TIMELINE_TRANSIENT (-INT32_C(2147483645))
 
-static int nearest_environment(void) {
-    if (fegetround() != FE_TONEAREST) return 0;
-#if defined(__aarch64__)
-    uint64_t fpcr;
-    __asm__ volatile("mrs %0, fpcr" : "=r"(fpcr));
-    if (fpcr & ((UINT64_C(1) << 24) | (UINT64_C(1) << 25) | 3)) return 0;
-    return 1;
-#else
-    return 0;
-#endif
-}
+static int nearest_environment(void) { return rb_fp_nearest_gradual(); }
 static int normal_or_zero(double x) {
     return x == 0.0 || isnormal(x);
 }

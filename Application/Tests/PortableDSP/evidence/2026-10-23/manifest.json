@@ -1,0 +1,251 @@
+{
+  "compiler": "Apple clang version 17.0.0 (clang-1700.4.4.1)",
+  "date": "2026-10-23",
+  "development_findings": [
+    "The initial smoke control incorrectly requested unsupported bypass on the legacy first-order converter; corrected the control to its documented conversion domain. No production behavior changed.",
+    "The first translated x86-64 run assumed exception-mask writes took effect. The harness now reads back this hardware control and reports unavailable modes, matching ARM feature-bit handling. Admission remains fail closed."
+  ],
+  "lanes": [
+    {
+      "cases": 5441,
+      "checks": 18358,
+      "configuration": "Debug",
+      "execution": "native",
+      "failures": 0,
+      "result": "Application/Tests/PortableDSP/evidence/2026-10-23/arm64-debug.json",
+      "sha256": "694a9bd1aee0b04b5363570a725b0dc6e38637c1de55cacc985da23278fc17af"
+    },
+    {
+      "cases": 5441,
+      "checks": 18358,
+      "configuration": "Release",
+      "execution": "native",
+      "failures": 0,
+      "result": "Application/Tests/PortableDSP/evidence/2026-10-23/arm64-release.json",
+      "sha256": "694a9bd1aee0b04b5363570a725b0dc6e38637c1de55cacc985da23278fc17af"
+    },
+    {
+      "cases": 5441,
+      "checks": 18363,
+      "configuration": "Release",
+      "execution": "Rosetta",
+      "failures": 0,
+      "result": "Application/Tests/PortableDSP/evidence/2026-10-23/x86_64-release.json",
+      "sha256": "6e3534c46e8015f97c387af5cca4d9bac96a59697e7e4d0963a7d2b747319a20"
+    }
+  ],
+  "limits": [
+    "C arithmetic portability and bounded controls only; no desktop, file codec, audio device or Windows runtime acceptance.",
+    "Rosetta x86-64 keeps the invalid-operation exception trap masked; one hardware-mode rejection test was unavailable and is explicitly counted."
+  ],
+  "schema": "rebase-portable-dsp-local-validation-v1",
+  "sources": [
+    {
+      "bytes": 2071,
+      "path": "Application/CMakeLists.txt",
+      "sha256": "be4788bd039c4785a450522df368e9e0a353d8244e72b7e74ce65ae6a000bb22"
+    },
+    {
+      "bytes": 11103,
+      "path": "Application/Sources/RebaseAmbiDSP/ambi_processor.c",
+      "sha256": "63908b7352e8e3e72baf545348ab0cd8d54c81a6ebaedfab5528141afe76d726"
+    },
+    {
+      "bytes": 3531,
+      "path": "Application/Sources/RebaseAmbiDSP/include/ambi_processor.h",
+      "sha256": "d132434743a64bb48de6d63d0d1c73d74813eac51e5ccb3b21a4661498ea4062"
+    },
+    {
+      "bytes": 5231,
+      "path": "Application/Sources/RebaseDSP/ambi_first_order.c",
+      "sha256": "b2af5f8622fa3c336f0c6c6abbb59ddf79151107bfe8e31a23c09dd2a9a1d240"
+    },
+    {
+      "bytes": 1123,
+      "path": "Application/Sources/RebaseDSP/include/ambi_first_order.h",
+      "sha256": "b1103f9cc0450db33aa1331297306e2619998d069cada1e4a919573df8dd0135"
+    },
+    {
+      "bytes": 2488,
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_format.c",
+      "sha256": "603f6e2822fbd66322e87dfaaedd034bf7f6bc33986cb8a4e4b5df8767c89cc9"
+    },
+    {
+      "bytes": 2097,
+      "path": "Application/Sources/RebaseTimingDSP/cpr_accessor_seek.c",
+      "sha256": "f5671396ff9cd7e1242344dedd740b358e3f589017601e477221ea03254f5192"
+    },
+    {
+      "bytes": 2813,
+      "path": "Application/Sources/RebaseTimingDSP/cpr_event_pcm.c",
+      "sha256": "4180d6062120ba0de5c284d886f5170fb0cd79d65edfbdc936b8b7b286130939"
+    },
+    {
+      "bytes": 6008,
+      "path": "Application/Sources/RebaseTimingDSP/cpr_live_stereo_ring.c",
+      "sha256": "d9ac1d96873fe79ed313ed80fc7b53498b6764cac0ebd356626a407002ac389a"
+    },
+    {
+      "bytes": 5789,
+      "path": "Application/Sources/RebaseTimingDSP/cpr_rate_budget.c",
+      "sha256": "76cbf90501ed9512057da1f91fb725e26d07b538f444d5a911926e0587e111fb"
+    },
+    {
+      "bytes": 3942,
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_builder.c",
+      "sha256": "7aa296b485d65b1944b2b902039b1fdca2f744a0aeea79559e714e0680e1cdb0"
+    },
+    {
+      "bytes": 8005,
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_reader.c",
+      "sha256": "4a69e73e45da97384634f7631335f66eb535f24ca228789f2b9a06555fa067e3"
+    },
+    {
+      "bytes": 1907,
+      "path": "Application/Sources/RebaseTimingDSP/cpr_timeline_selector.c",
+      "sha256": "fc4c02d437de57103592dd08cd1579567a1ba45bafe329943e1d1971db94f919"
+    },
+    {
+      "bytes": 6416,
+      "path": "Application/Sources/RebaseTimingDSP/cpr_track_overlap.c",
+      "sha256": "c386cae93723f364e60625a26d3ddf98b5d2be2cc0392c04f7e82d0a4242223f"
+    },
+    {
+      "bytes": 1308,
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_format.h",
+      "sha256": "147340cb951eb7a5ac3e0b5ec63419beb586fd8793cf7b4195bf22d6e5850bbe"
+    },
+    {
+      "bytes": 942,
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_accessor_seek.h",
+      "sha256": "b691ed42c6a9a331ebff917334ea192e2770ad0223589a27c5d4ec3bb1e00aaa"
+    },
+    {
+      "bytes": 783,
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_event_pcm.h",
+      "sha256": "75f6da9eb338c2dbcf15d45a5f3f366c10a66ebf6e9634f63a8e39c3d30e77f7"
+    },
+    {
+      "bytes": 2813,
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_live_stereo_ring.h",
+      "sha256": "a2a7091e77813800edcde35f58b570dce9a7fae2b27cede3c89515eeaefcba4a"
+    },
+    {
+      "bytes": 1528,
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_rate_budget.h",
+      "sha256": "3110d27e2ab99a18d3b26722e489b6b5b492648a7ba57e9a1b0e5e938ccf170e"
+    },
+    {
+      "bytes": 3023,
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_builder.h",
+      "sha256": "bfcd63173725321531b98cc2c668db36137ce6ea620f6cb9745861d56f1d2561"
+    },
+    {
+      "bytes": 4457,
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_reader.h",
+      "sha256": "e66d5a831e8e09b12acd759dd02ad5ebc5d7d83bbfa0175dd29ea2979a4a2d0e"
+    },
+    {
+      "bytes": 1081,
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_timeline_selector.h",
+      "sha256": "b9f2dfd7f594c327d281776e0c4128e347f260a7657d0848193821cc4ccc2712"
+    },
+    {
+      "bytes": 1642,
+      "path": "Application/Sources/RebaseTimingDSP/include/cpr_track_overlap.h",
+      "sha256": "9ce74fc733f172897cd83582fe9656722efaf699eb1bd159d3a59f42f01831c0"
+    },
+    {
+      "bytes": 3945,
+      "path": "Application/Sources/RebaseTimingDSP/include/native_callback_adapter.h",
+      "sha256": "b2f9f48df6d8fa02d989846977724f66f5113c9663c08c3da3319915c6fd5cc9"
+    },
+    {
+      "bytes": 1961,
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0.h",
+      "sha256": "b5083084d664daf6e810cb069b7c608391e4dd02139829fe6dfda16e53238a0b"
+    },
+    {
+      "bytes": 2587,
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode0_down.h",
+      "sha256": "852af4ccba424e561634949674d2fd9788715fb2ac68e9bf4e5d8082e3adea3c"
+    },
+    {
+      "bytes": 3684,
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode1.h",
+      "sha256": "4cdbcbb0c8bf260adbca02622c347d50c78fab56ac9cc3cc8e7e7a1aae54de6a"
+    },
+    {
+      "bytes": 3919,
+      "path": "Application/Sources/RebaseTimingDSP/include/native_rate_mode2.h",
+      "sha256": "e125e7965509e74ed5e0c5302bae35f2dd5e642f6f92ccb60388954ada2bb9e7"
+    },
+    {
+      "bytes": 1878,
+      "path": "Application/Sources/RebaseTimingDSP/include/native_tempo.h",
+      "sha256": "1f3da5deac941e7a1cc6a0f5c9a5d7d4da4fda3cc1c5928eb5a5d627cd623b70"
+    },
+    {
+      "bytes": 1803,
+      "path": "Application/Sources/RebaseTimingDSP/include/rebase_fp_environment.h",
+      "sha256": "40ebf1e605b38c7dbfd897fdf457329a3113b94b71165391740204011b2368d0"
+    },
+    {
+      "bytes": 7224,
+      "path": "Application/Sources/RebaseTimingDSP/native_callback_adapter.c",
+      "sha256": "30f8cfa62e13b5287557857b1a2087d240d51953359ab7b9afd9910a00ed5912"
+    },
+    {
+      "bytes": 5859,
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0.c",
+      "sha256": "9cf22cb496e5eac010c0e027286927bdf68ef4181c195d30c30b0df2304bd7fa"
+    },
+    {
+      "bytes": 10145,
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode0_down.c",
+      "sha256": "e85877ab7c33c8ef9c6bf16124125504a545e3a057e4d3ec6838729bd0df676f"
+    },
+    {
+      "bytes": 13301,
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode1.c",
+      "sha256": "9dd346c5f1a3f27d188e3475a8db6d92ddfbeb92da10c02af4b45b2741d66a80"
+    },
+    {
+      "bytes": 12402,
+      "path": "Application/Sources/RebaseTimingDSP/native_rate_mode2.c",
+      "sha256": "31d246b317726458bc46c747d37a8e2ae1d582b70a55d7b69d99b2c728016380"
+    },
+    {
+      "bytes": 7951,
+      "path": "Application/Sources/RebaseTimingDSP/native_tempo.c",
+      "sha256": "5bd8632d38cad4c4b240ffcad58ec4ceb304ab23bb93483657028e085655aefb"
+    },
+    {
+      "bytes": 21030,
+      "path": "Application/Tests/PortableDSP/conformance.c",
+      "sha256": "b15df2b33804835d7032649358e16eafa140d10618654fd8f95e9c46751eaaa9"
+    },
+    {
+      "bytes": 2386,
+      "path": "Application/Tests/PortableDSP/controls-manifest.json",
+      "sha256": "e20f374ea57722aafd7c53b73ffdf1a9e6db6cc92fdc4e6216688b213f85ded3"
+    },
+    {
+      "bytes": 671227,
+      "path": "Application/Tests/PortableDSP/controls.h",
+      "sha256": "a43290e2a2174e7c80fe220f15d68ddd3941089e5ee5567817d6ea65c81410a1"
+    },
+    {
+      "bytes": 8581,
+      "path": "Application/Tests/PortableDSP/generate_controls.py",
+      "sha256": "1bdfab3e130372544346abf2313bcc9721e92a07e12aac88ec05e5a5a7d7d6a3"
+    }
+  ],
+  "strict_flags": [
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "-frounding-math"
+  ],
+  "target_execution_count": 0,
+  "windows_execution": false
+}

@@ -14,6 +14,8 @@ typedef struct {
    state: native seek does not reset or preroll. Supplied positive integral
    binary32 rates in [8000,192000], outputFrame in [0,2^53]. Equal rates
    bypass floating-point conversion. Error leaves output unchanged.
+   Host arithmetic is qualified by rebase_fp_environment.h; the inspected
+   source remains arm64, not a Windows target equivalence claim.
    Returns 0 success, 1 invalid, 2 FP environment, 3 arithmetic range. */
 int rb_cpr_accessor_seek(uint32_t sourceRateBits, uint32_t outputRateBits,
                          int64_t outputFrame, RBAccessorSeek *output);

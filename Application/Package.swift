@@ -5,21 +5,54 @@ import Foundation
 let soxrLibraryDirectory = URL(fileURLWithPath: #filePath)
     .deletingLastPathComponent().appendingPathComponent(".build-soxr/install/lib").path
 
+#if os(Windows)
+let portableOnly = true
+#else
+let portableOnly = ProcessInfo.processInfo.environment["REBASE_PORTABLE_ONLY"] == "1"
+#endif
+
+// The portable target compiles these same semantic sources. Its intentionally
+// narrower API has no ProjectStore, device transport, or macOS framework shim.
+let portableSources = [
+    "Automation.swift", "CPRAudioEventArchive.swift", "CPRAudioMediaAttachmentModel.swift",
+    "CPRAutoFadeArchive.swift", "CPRClockRoles.swift", "CPRContractMigration.swift",
+    "CPRProject.swift", "CPRProjectAudioSetup.swift", "CPRRecoveryV1.swift",
+    "CPRRecoveryV2.swift", "CPRRecoveryV3.swift", "CPRRecoveryV4.swift", "CPRRecoveryV5.swift",
+    "CPRSegmentReadPlan.swift", "CPRSignatureRecovery.swift", "CPRTrackContributorArchive.swift",
+    "MusicalTime.swift", "NativeTempoClock.swift", "PCMRendering.swift", "PortableSHA256.swift", "Project.swift",
+    "UnresolvedCPRAudioEvent.swift", "WAVPCMSource.swift"
+]
+let coreDirectory = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+    .appendingPathComponent("Sources/RebaseCore")
+let portableExcludes = (try? FileManager.default.contentsOfDirectory(atPath: coreDirectory.path))?
+    .filter { !portableSources.contains($0) } ?? []
+let timingTarget = Target.target(name: "RebaseTimingDSP", publicHeadersPath: "include", cSettings: [
+    .unsafeFlags(["-fno-fast-math", "-ffp-contract=off", "-frounding-math"])
+])
+let portableTargets: [Target] = [
+    timingTarget,
+    .target(name: "RebasePortable", dependencies: ["RebaseTimingDSP"], path: "Sources/RebaseCore",
+            exclude: portableExcludes, sources: portableSources,
+            swiftSettings: [.define("REBASE_PORTABLE")]),
+    .executableTarget(name: "RebaseInspectCLI", dependencies: ["RebasePortable"]),
+    .testTarget(name: "RebasePortableTests", dependencies: ["RebasePortable", "RebaseTimingDSP"])
+]
+
 let package = Package(
     name: "Rebase",
     platforms: [.macOS(.v14)],
-    products: [.executable(name: "Rebase", targets: ["Rebase"])],
-    dependencies: [.package(url: "https://github.com/weichsel/ZIPFoundation.git", exact: "0.9.20")],
-    targets: [
+    products: portableOnly ? [.library(name: "RebasePortable", targets: ["RebasePortable"]),
+        .executable(name: "rebase-inspect", targets: ["RebaseInspectCLI"])] :
+        [.executable(name: "Rebase", targets: ["Rebase"])],
+    dependencies: portableOnly ? [] : [.package(url: "https://github.com/weichsel/ZIPFoundation.git", exact: "0.9.20")],
+    targets: portableOnly ? portableTargets : [
         .target(name: "RebaseDSP", publicHeadersPath: "include", cSettings: [
             .unsafeFlags(["-fno-fast-math", "-ffp-contract=off", "-frounding-math"])
         ]),
         .target(name: "RebaseAmbiDSP", publicHeadersPath: "include", cSettings: [
             .unsafeFlags(["-fno-fast-math", "-ffp-contract=off", "-frounding-math"])
         ]),
-        .target(name: "RebaseTimingDSP", publicHeadersPath: "include", cSettings: [
-            .unsafeFlags(["-fno-fast-math", "-ffp-contract=off", "-frounding-math"])
-        ]),
+        timingTarget,
         .target(name: "RebaseSoXR", dependencies: ["RebaseTimingDSP"],
                 publicHeadersPath: "include", cSettings: [
             .unsafeFlags(["-fno-fast-math", "-ffp-contract=off", "-frounding-math"])

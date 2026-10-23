@@ -1,4 +1,5 @@
 #include "cpr_track_overlap.h"
+#include "rebase_fp_environment.h"
 #include <fenv.h>
 #include <float.h>
 #include <math.h>
@@ -21,16 +22,7 @@ typedef struct {
     double watermark;
 } State;
 
-static int nearest_environment(void) {
-    if (fegetround() != FE_TONEAREST) return 0;
-#if defined(__aarch64__)
-    uint64_t fpcr;
-    __asm__ volatile("mrs %0, fpcr" : "=r"(fpcr));
-    return (fpcr & ((UINT64_C(1) << 24) | (UINT64_C(1) << 25) | 3)) == 0;
-#else
-    return 0;
-#endif
-}
+static int nearest_environment(void) { return rb_fp_nearest_gradual(); }
 static double from_bits(uint64_t bits) { double value; memcpy(&value, &bits, 8); return value; }
 static int coordinate(double value) { return (value == 0.0 || isnormal(value)) && value >= 0.0 && value <= 86400.0; }
 static int separated(double first, double second) {

@@ -18,8 +18,8 @@
 
    Defensive domain: integral rate8k..192k, finite normal-or-zero input
    coordinates within +/-86400, ordered event and window bounds. Nonzero
-   subnormal intermediate values reject. ARM64 round-to-nearest with
-   FZ/DN/AH/FIZ off. Errors leave output unchanged. No source samples or
+   subnormal intermediate values reject. Qualified nearest/even host arithmetic with gradual underflow
+   (see rebase_fp_environment.h); source evidence remains ARM64. Errors leave output unchanged. No source samples or
    target code are executed. Empty results have only the documented fields
    meaningful; unused fields are zeroed by this reconstruction. */
 enum {

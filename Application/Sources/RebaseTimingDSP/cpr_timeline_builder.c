@@ -1,4 +1,5 @@
 #include "cpr_timeline_builder.h"
+#include "rebase_fp_environment.h"
 #include <fenv.h>
 #include <float.h>
 #include <math.h>
@@ -9,16 +10,7 @@
 _Static_assert(sizeof(double) == 8 && DBL_MANT_DIG == 53 && FLT_RADIX == 2,
                "IEEE binary64 required");
 
-static int nearest_environment(void) {
-    if (fegetround() != FE_TONEAREST) return 0;
-#if defined(__aarch64__)
-    uint64_t fpcr;
-    __asm__ volatile("mrs %0, fpcr" : "=r"(fpcr));
-    return (fpcr & ((UINT64_C(1) << 24) | (UINT64_C(1) << 25) | 3)) == 0;
-#else
-    return 0;
-#endif
-}
+static int nearest_environment(void) { return rb_fp_nearest_gradual(); }
 static int normal_or_zero(double x) { return x == 0.0 || isnormal(x); }
 static int coordinate(double x) { return normal_or_zero(x) && fabs(x) <= 86400.0; }
 

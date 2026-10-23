@@ -1,5 +1,7 @@
 import Foundation
+#if !REBASE_PORTABLE
 import CryptoKit
+#endif
 
 public enum CPRProjectError: LocalizedError {
     case invalid(String)
@@ -146,6 +148,7 @@ public enum CPRProject {
         return try inspect(container: container, sourceName: source.lastPathComponent)
     }
 
+    #if !REBASE_PORTABLE
     public static func importProject(from source: URL, to destination: URL,
                                      allowPartial: Bool = false, expectedSHA256: String? = nil) throws -> CPRImportResult {
         try requireNew(destination)
@@ -184,6 +187,8 @@ public enum CPRProject {
         try manager.moveItem(at: staging, to: destination)
         return CPRImportResult(project: project, report: report, originalRelativePath: originalRelativePath)
     }
+
+    #endif
 
     /// Reads the historical import report and verifies its preserved source.
     /// The report describes the import baseline, not subsequent project edits.
@@ -298,7 +303,11 @@ public enum CPRProject {
 }
 
 func cprSHA256(_ data: Data) -> String {
-    SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
+    #if REBASE_PORTABLE
+    return PortableSHA256.hexDigest(data)
+    #else
+    return SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
+    #endif
 }
 
 struct CPRCursor {

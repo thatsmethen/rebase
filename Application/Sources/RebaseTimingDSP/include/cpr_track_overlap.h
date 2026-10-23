@@ -27,7 +27,8 @@ enum { RB_TRACK_OVERLAP_MAX_INPUTS = 4096, RB_TRACK_OVERLAP_MAX_OUTPUTS = 8192 }
 
 /* Source indices equal their input positions; ordinals are distinct and >=0.
    Inputs are finite normal-or-zero coordinates 0<=start<end<=86400. Native
-   nearest/even FP mode with FZ/DN/AH/FIZ disabled is required. Output is a
+   nearest/even value semantics require the checked host environment in
+   rebase_fp_environment.h; source evidence remains ARM64. Output is a
    positive disjoint sequence. The application work bound is 4*N*N+N comparison
    visits; exhaustion rejects the entire operation. Output/count are untouched
    on failure. No target code, media, lifecycle or fade processing runs here. */

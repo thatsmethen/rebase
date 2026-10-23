@@ -10,6 +10,8 @@ The research identifies its reference software and retains its original terminol
 
 [Contributor guide](CONTRIBUTING.md) · [Test guide](Application/Tests/README.md) · [Research guide](research/README.md)
 
+Windows development is underway using the same project and DSP sources. The [parity ledger](docs/development/windows-parity.md) tracks what is implemented and what still needs Windows runtime verification; [component builds and tests](Application/WINDOWS-CI.md) are available before the desktop app.
+
 ## Release
 
 **[Download Rebase for Mac](https://github.com/thatsmethen/rebase/releases/download/v0.21.1/Rebase-0.21.1-macos-arm64.zip)**

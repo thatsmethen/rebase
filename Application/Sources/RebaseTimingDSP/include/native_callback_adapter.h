@@ -6,8 +6,9 @@
    adapter. These are not a native scheduler, seek policy, engine lifecycle
    or device-output claim. The caller supplies established transport state.
    All failures preserve output structs and sample storage. Floating-point
-   operations are qualified for arm64 only; other architectures return
-   RB_NATIVE_CALLBACK_FP_ENVIRONMENT rather than assuming FTZ/DAZ state. */
+   operations require the explicitly checked ARM64 or x86-64 environment in
+   rebase_fp_environment.h. Unsupported environments fail closed. This host
+   portability does not establish proprietary Windows target equivalence. */
 enum {
     RB_NATIVE_CALLBACK_OK = 0,
     RB_NATIVE_CALLBACK_INVALID = 1,
@@ -67,7 +68,7 @@ int rb_native_callback_prefix(const RBCallbackWindow *window,
    The prefix range must fit capacity_frames.
    Correction arithmetic requires every affected sample finite; other
    branches are bit operations and permit arbitrary Float32 words.
-   IEEE nearest with ARM flush-to-zero/default-NaN disabled is required.
+   Qualified nearest/even gradual-underflow host arithmetic is required.
    Rebase's buffer partition and choice of prefix0 remain application
    policy; applying this helper does not recover native block partitions. */
 int rb_native_callback_postprocess_f32(float *const *planes, int32_t channels,

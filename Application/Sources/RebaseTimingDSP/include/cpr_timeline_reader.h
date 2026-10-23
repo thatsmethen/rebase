@@ -12,8 +12,9 @@
    results; obtain segment.end with separately rounded start+length when
    reconstructing PAudioSegment. This is not generic seconds*sampleRate.
 
-   Positive normal period; finite normal-or-zero coordinates; arm64 IEEE
-   nearest with FZ/DN/AH/FIZ off. Native saturation/wrap and request spans over
+   Positive normal period; finite normal-or-zero coordinates; qualified IEEE
+   nearest/even host environment (rebase_fp_environment.h). Source evidence
+   remains arm64. Native saturation/wrap and request spans over
    16,000,000 frames reject. No change to output on error. Validation is
    deliberately stricter than native; native sample writes are not transactional.
    Input/output structure storage must be disjoint. */

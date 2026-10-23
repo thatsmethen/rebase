@@ -1,4 +1,5 @@
 #include "cpr_accessor_format.h"
+#include "rebase_fp_environment.h"
 #include <fenv.h>
 #include <float.h>
 #include <math.h>
@@ -10,16 +11,7 @@
 _Static_assert(sizeof(float) == 4 && FLT_RADIX == 2 && FLT_MANT_DIG == 24,
                "IEEE binary32 required");
 
-static int nearest_environment(void) {
-    if (fegetround() != FE_TONEAREST) return 0;
-#if defined(__aarch64__)
-    uint64_t fpcr;
-    __asm__ volatile("mrs %0, fpcr" : "=r"(fpcr));
-    return (fpcr & ((UINT64_C(1) << 24) | (UINT64_C(1) << 25) | 3)) == 0;
-#else
-    return 0;
-#endif
-}
+static int nearest_environment(void) { return rb_fp_nearest_gradual(); }
 
 static int32_t packed24(float scaled) {
     /* Original comparisons precede FCVTZS, so no out-of-range integer
