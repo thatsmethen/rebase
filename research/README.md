@@ -18,7 +18,7 @@ This is the research behind Rebase: a static investigation of Cubase Pro 15.0.30
 
 **APP021 implements overlapping source-track events.** The [full test record](evidence/application/APP021/core-test-run.json) covers 322 tests in 50 suites in the original research checkout. The [release build record](evidence/application/APP021/release-build.json) records a successful build. The [independent implementation review](evidence/application/APP021/overlap-application-independent-review/review.json) and [compiled kernel checks](evidence/application/APP021/overlap-kernel-check/result.json) provide additional scoped evidence. Four GUI input packages were prepared; final APP021 GUI acceptance and milestone sealing are pending. A successful build or synthetic check does not complete that acceptance.
 
-The public application's neutral terminology, legacy contract decoding and optional external fixture configuration are subsequent publication changes. Its own validation is recorded separately in [publication validation](publication/application-validation.json). Historical source hashes describe the preserved research checkout, not these later edits.
+The public application's neutral terminology, legacy contract decoding and optional external fixture configuration are subsequent publication changes. Its earlier validation is recorded separately in [publication validation](publication/application-validation.json). The downloadable privacy-cleaned build has a separate [0.21.0 release validation](publication/release-0.21.0/validation.json), including current tests, source identities, archive hashes and a launch/About-panel smoke check. Historical source hashes describe the preserved research checkout, not these later edits.
 
 ## Follow the object and audio work
 
@@ -30,11 +30,13 @@ The public application's neutral terminology, legacy contract decoding and optio
 
 ## Reading and reproducing the evidence
 
-Original research records are copied byte for byte. They retain target names, historical local paths, failures, revisions, limitations and original hashes. The study and coverage ledgers still reflect the latest sealed APP020 milestone; this guide distinguishes the subsequent work without rewriting that history.
+The research is published as a mixture of unchanged records and explicitly identified privacy-redacted derivatives. Personal author details, local home and temporary paths, and unrelated personal links are replaced. Six raw captures containing local filesystem or process details are omitted; the authored observations and findings remain. Target names, technical identifiers, failures, revisions, limitations and third-party attribution are retained. The study and coverage ledgers still reflect the latest sealed APP020 milestone.
+
+The publication manifest records both each private original digest (`original_sha256`) and its distributed digest (`sha256`). Historical internal hashes and seals continue to identify the private original archive; they do not certify modified public copies. See the [privacy publication policy](publication/PRIVACY.md).
 
 The publication includes the authored research and its compact evidence, not the full local acquisition and build archive. Hash manifests may refer to unavailable proprietary inputs, raw native slices or provider captures. Those references identify evidence; they do not mean that the referenced bytes are distributed here. Full recursive seal verification requires the original local archive. A public checkout must not be presented as independently verifying every retained claim.
 
-Verify the 4,353 published original records with `python3 research/publication/verify_research_export.py`. This checks their sizes and SHA-256 hashes. It does not verify the 20,426 omitted local acquisition, capture, fixture and build artifacts listed in the manifest.
+Verify the 4,347 published records with `python3 research/publication/verify_research_export.py`. This checks their sizes and SHA-256 hashes. It does not verify the 20,432 omitted local acquisition, capture, fixture and build artifacts listed in the manifest.
 
 Use the self-contained test lane described in the root README. Reference-dependent application tests require the external layout in [the test guide](../Application/Tests/README.md). Research scripts may additionally require their recorded target paths and pinned REA/Ghidra tools. They are preserved research instruments rather than portable one-command reproductions.
 

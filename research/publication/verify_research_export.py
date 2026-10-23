@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify published original records, without claiming access to omitted inputs."""
+"""Verify distributed research copies, including declared privacy derivatives."""
 from pathlib import Path
 import hashlib
 import json
@@ -24,7 +24,7 @@ def main():
         size += len(data)
     if len(seen) != manifest["summary"]["included_count"] or size != manifest["summary"]["included_bytes"]:
         raise ValueError("Manifest totals do not match its entries")
-    print(json.dumps({"verified_files": len(seen), "verified_bytes": size,
+    print(json.dumps({"verified_published_files": len(seen), "verified_bytes": size,
                       "omitted_artifacts_not_verified": len(manifest["excluded"])}))
 
 

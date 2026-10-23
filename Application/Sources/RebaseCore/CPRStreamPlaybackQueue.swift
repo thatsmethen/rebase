@@ -11,7 +11,7 @@ final class CPRStreamPlaybackQueue {
     typealias Completion = (Result<Void, Error>) -> Void
 
     private enum Phase { case ready, running, terminal }
-    private let queue = DispatchQueue(label: "org.rebase.rebase.source-event-producer",
+    private let queue = DispatchQueue(label: "org.rebaseproject.source-event-producer",
                                       qos: .userInitiated)
     private let isolationKey = DispatchSpecificKey<UInt8>()
     private let depth: Int

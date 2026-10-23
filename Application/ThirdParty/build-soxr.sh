@@ -13,7 +13,7 @@ cmake -S "$THIRD_PARTY/soxr-0.1.3" -B "$BUILD_DIR/cmake" \
     -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER="$CC" \
     -DCMAKE_OSX_SYSROOT="$SDK" -DCMAKE_OSX_ARCHITECTURES=arm64 \
     -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
-    -DCMAKE_C_FLAGS="-fno-fast-math -ffp-contract=off" \
+    -DCMAKE_C_FLAGS="-fno-fast-math -ffp-contract=off -ffile-prefix-map=$APP_ROOT=/rebase/Application -fdebug-prefix-map=$APP_ROOT=/rebase/Application -fmacro-prefix-map=$APP_ROOT=/rebase/Application -fdebug-compilation-dir=/rebase/Application" \
     -DCMAKE_C_FLAGS_RELEASE="-O3 -DNDEBUG" \
     -DCMAKE_INSTALL_PREFIX="$BUILD_DIR/install" \
     -DBUILD_SHARED_LIBS=ON -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF \

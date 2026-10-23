@@ -1,10 +1,18 @@
 # Rebase
 
+<img src="Application/Assets/Rebase.png" alt="Rebase app icon" width="96">
+
 Rebase is an experimental macOS audio workstation written in Swift and C. It supports audio arrangement, basic mixing, automation, musical timing, project exchange, and bounded source-audio audition from imported project archives.
 
 The compatibility and DSP modules include implementations reconstructed through static interoperability research. This repository includes the application, research instruments, findings, analytical controls, and validation records. Start with the [research guide](research/README.md) to follow the investigation and its evidence.
 
-The research identifies its reference software and retains its original terminology. Acquired proprietary software, copied reference projects and media, raw provider captures, and generated build products are kept outside this public repository. The publication manifest identifies exactly which research files are included and which local artifacts are omitted.
+The research identifies its reference software and retains its original terminology. Acquired proprietary software, copied reference projects and media, raw provider captures, and generated build products are kept outside this public repository. The publication manifest identifies included research and omitted local artifacts. Public copies have been checked for personal information; privacy-redacted derivatives are [explicitly identified](research/publication/PRIVACY.md).
+
+[Contributor guide](CONTRIBUTING.md) · [Test guide](Application/Tests/README.md) · [Research guide](research/README.md)
+
+## Release
+
+**Rebase 0.21.0** targets **Apple Silicon (arm64), macOS 14 or later**. Download the app and checksums from the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.0), and follow the [installation guide](Application/INSTALL.md). This is an experimental build, ad hoc signed and not notarized.
 
 ## Build
 

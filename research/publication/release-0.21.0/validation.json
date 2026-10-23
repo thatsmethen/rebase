@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "version": "0.21.0",
+  "build": 21,
+  "evidence_class": "publication application tests, privacy validation, packaging and bounded GUI launch",
+  "date": "2026-10-23",
+  "reference_application_executed": false,
+  "full_application_fidelity_established": false,
+  "tests": [
+    {
+      "lane": "public",
+      "exit_code": 0,
+      "declared_tests": 332,
+      "executed_passes": 216,
+      "skipped": 116,
+      "suites": 52,
+      "log_sha256": "3155cc9fef575429498387caa1842c67098a92be527b4d507ddb14f9c566d99c"
+    },
+    {
+      "lane": "private",
+      "exit_code": 0,
+      "declared_tests": 332,
+      "executed_passes": 332,
+      "skipped": 0,
+      "suites": 52,
+      "log_sha256": "6f531075207654155183c277b1216ee52c772d41a33ebd24a217df2a89450458"
+    },
+    {
+      "lane": "instrument",
+      "exit_code": 0,
+      "declared_tests": 48,
+      "executed_passes": 47,
+      "skipped": 1,
+      "suites": null,
+      "log_sha256": "2bfffd49621448e85deee013f59d9098a0bb4132678f4916347ecaaf0406d296"
+    }
+  ],
+  "tested_source_entries": 306,
+  "tested_source_entries_sha256": "68d27fe840085b36b0d76b0b0bdfbbf51b5bf2e06909b79c4eefc655b99c345d",
+  "sources_unchanged_during_tests": true,
+  "release": {
+    "architecture": "arm64",
+    "archive": {
+      "bytes": 3371681,
+      "name": "Rebase-0.21.0-macos-arm64.zip",
+      "sha256": "85a8432120c83026c75b90547364f502ba772964a4c4ff975b5fcfdb7a35a7d5"
+    },
+    "build": "21",
+    "bundle_entries": 170,
+    "executable_sha256": "6f22e14e301d15a6c3c418c828b9a791d41bb2330aec727f6c6b46808af2bd13",
+    "icon_sha256": "6ee8c3bd7a7ba7ca6726eacb66f7c49e1b1567ecc8af70f01a16379f0c3aa7af",
+    "metadata_policy": "File bytes, Unix modes and symlink targets only; no xattrs, ACLs, AppleDouble, ZIP extra fields, ownership fields or comments",
+    "minimum_macos": "14.0",
+    "notarization_performed": false,
+    "signature_verified_after_extraction": true,
+    "source_bundle_unchanged": true,
+    "third_party_notices_sha256": "3329168fa78dc5f228727f66cb486c5616885d8d201987a5d4b4159c8264c71b",
+    "version": "0.21.0",
+    "zip_timestamps_utc": "2000-01-01T00:00:00Z"
+  },
+  "retained_validation_files": [
+    {
+      "path": "public.log",
+      "original_sha256": "3155cc9fef575429498387caa1842c67098a92be527b4d507ddb14f9c566d99c",
+      "sha256": "faefc631b34d5071ef55b48b3a2c75df6f7eac2759ff3b1cd7e2dfcfb8c55d1a",
+      "bytes": 72915,
+      "publication_transform": "privacy-redacted derivative"
+    },
+    {
+      "path": "private.log",
+      "original_sha256": "6f531075207654155183c277b1216ee52c772d41a33ebd24a217df2a89450458",
+      "sha256": "740fd7660cf92ccdc95908e72622c5678d4eff6125d45a147ec4a121c7dc3af3",
+      "bytes": 71590,
+      "publication_transform": "privacy-redacted derivative"
+    },
+    {
+      "path": "instrument-verbose.log",
+      "original_sha256": "aeb77c185f265338ef1e5a9282ff4a2dda33cb57a13f9f9f4fb10d46e889ffcd",
+      "sha256": "aeb77c185f265338ef1e5a9282ff4a2dda33cb57a13f9f9f4fb10d46e889ffcd",
+      "bytes": 6806,
+      "publication_transform": "unchanged"
+    },
+    {
+      "path": "sources-before.json",
+      "original_sha256": "b05161de515d0e5d3c7f7d0473886e0b8d41b0884ce3e742c6573fd852d23e72",
+      "sha256": "b05161de515d0e5d3c7f7d0473886e0b8d41b0884ce3e742c6573fd852d23e72",
+      "bytes": 57447,
+      "publication_transform": "unchanged"
+    },
+    {
+      "path": "release-public-validation.json",
+      "original_sha256": "4a1f195d1bd77386fcd9e060901af3e7ba8c346747de754c0473642e60351c68",
+      "sha256": "4a1f195d1bd77386fcd9e060901af3e7ba8c346747de754c0473642e60351c68",
+      "bytes": 1973,
+      "publication_transform": "unchanged"
+    },
+    {
+      "path": "release-build-inputs-public-v2.json",
+      "original_sha256": "ae01330e277de60f7aa10d2326db7eef1c10bae3c5550cffa8a196cdf8882ae1",
+      "sha256": "ae01330e277de60f7aa10d2326db7eef1c10bae3c5550cffa8a196cdf8882ae1",
+      "bytes": 51648,
+      "publication_transform": "unchanged"
+    }
+  ],
+  "gui_smoke": {
+    "binary_sha256": "6f22e14e301d15a6c3c418c828b9a791d41bb2330aec727f6c6b46808af2bd13",
+    "observed": [
+      "Launch to empty Rebase arrangement with tempo and transport controls",
+      "About panel displays the new icon and Version 0.21.0 (21)",
+      "Quit completed"
+    ],
+    "scope": "Launch and About panel only. No audio measurement or reference runtime comparison. Earlier source-audition GUI evidence remains separately scoped."
+  },
+  "privacy": {
+    "history": "All reachable commits and blobs reviewed; generic project authors and committers; six raw local filesystem/process captures omitted",
+    "research": "4347 distributed records verified; 1084 privacy derivatives and 3263 unchanged; original private archive retained",
+    "third_party": "141 vendor source, notice and license files unchanged",
+    "release": "Known private UTF-8/UTF-16 values and credentials scanned; no match. ZIP contains file bytes, modes and symlinks only, without xattrs or identifying image metadata.",
+    "limitations": "Public GitHub ownership remains visible. Previously public copies may have been downloaded or cached."
+  }
+}
