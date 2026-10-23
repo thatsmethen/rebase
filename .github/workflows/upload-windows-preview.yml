@@ -1,0 +1,61 @@
+name: Upload verified Windows preview to existing draft
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Successful Windows application workflow run ID
+        required: true
+        type: string
+      source_commit:
+        description: Exact 40-character source commit
+        required: true
+        type: string
+      expected_sha256:
+        description: Independently verified ZIP SHA-256
+        required: true
+        type: string
+      release_tag:
+        description: Existing draft prerelease tag
+        required: true
+        type: string
+      asset_name:
+        description: New ZIP asset basename
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: upload-windows-preview
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - name: Verify and upload existing draft asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_HOST: github.com
+          RUN_ID: ${{ inputs.run_id }}
+          SOURCE_COMMIT: ${{ inputs.source_commit }}
+          EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          ASSET_NAME: ${{ inputs.asset_name }}
+          UPLOAD_RECEIPT: ${{ runner.temp }}/windows-preview-upload.json
+        run: python3 .github/scripts/upload-windows-preview.py
+      - name: Retain upload receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: windows-preview-upload-receipt
+          path: ${{ runner.temp }}/windows-preview-upload.json
+          if-no-files-found: warn
+          retention-days: 14
