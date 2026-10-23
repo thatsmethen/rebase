@@ -2,7 +2,7 @@
 
 <img src="Application/Assets/Rebase.png" alt="Rebase app icon" width="96">
 
-Rebase is an experimental audio workstation with a macOS app and a Windows development preview. The apps share Swift project/audio code and C DSP implementations; Windows uses a native WPF interface. The Mac app supports audio arrangement, basic mixing, automation, musical timing, project exchange, and bounded source-audio audition from imported project archives.
+Rebase is an experimental audio workstation with a macOS app and a Windows development preview. The apps share Swift project/audio code and C DSP implementations; Windows uses a native WPF interface. Both apps support audio arrangement, basic mixing, volume/pan automation editing and musical timing. The Mac app also includes broader project exchange and source-audio audition modes.
 
 The compatibility and DSP modules include implementations reconstructed through static interoperability research. This repository includes the application, research instruments, findings, analytical controls, and validation records. Start with the [research guide](research/README.md) to follow the investigation and its evidence.
 
@@ -14,9 +14,9 @@ Windows development follows the [Windows reference interface](docs/development/w
 
 ## Release
 
-**[Download Rebase for Windows](https://github.com/thatsmethen/rebase/releases/download/v0.21.1-windows-preview.5/Rebase-0.21.1-windows-preview.5-x64.zip)**
+**[Download Rebase for Windows](https://github.com/thatsmethen/rebase/releases/download/v0.21.1-windows-preview.6/Rebase-0.21.1-windows-preview.6-x64.zip)**
 
-The **Windows x64 development preview** includes its runtimes and the example beat. Preview.5 adds compact project/event information rows, full-name tooltips and corrected arrangement dividers. It retains compact/normal track rows, adjustable panels and the mixer. Reviewed CPR import preserves the original source and interpretation report. Extract the entire archive, open `Rebase.exe`, and choose **File → Open example**. See the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.5) and [Windows installation guide](docs/install/windows.md). This unsigned preview targets Windows 11; native automated checks ran on Windows Server 2025. Audio-device output and physical input still need interactive verification.
+The **Windows x64 development preview** includes its runtimes and the example beat. Preview.6 adds a track automation editor for Volume and Pan, with real curves, point editing, Read controls and shared undo/redo. Successful edits apply immediately; closing the editor retains them. It retains compact/normal track rows, adjustable panels and the mixer. Reviewed CPR import preserves the original source and interpretation report. Extract the entire archive, open `Rebase.exe`, and choose **File → Open example**. See the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.6) and [Windows installation guide](docs/install/windows.md). This unsigned preview targets Windows 11; native automated checks ran on Windows Server 2025. Audio-device output and physical input still need interactive verification.
 
 **[Download Rebase for Mac](https://github.com/thatsmethen/rebase/releases/download/v0.21.1/Rebase-0.21.1-macos-arm64.zip)**
 
@@ -30,13 +30,13 @@ The Windows preview, showing the included four-track beat, real waveforms, separ
 
 ![Rebase Windows arrangement, inspector and mixer](docs/screenshots/windows-arrangement.png)
 
-[Normal track density](docs/screenshots/windows-workspace-normal.png) · [Expanded arrangement](docs/screenshots/windows-workspace-expanded.png) · [Windows source-event view](docs/screenshots/windows-source.png) · [Windows zoom and scrolling](docs/screenshots/windows-scrolled.png) · [CPR import review](docs/screenshots/windows-cpr-review.png)
+[Windows automation editor](docs/screenshots/windows-automation.png) · [Normal track density](docs/screenshots/windows-workspace-normal.png) · [Expanded arrangement](docs/screenshots/windows-workspace-expanded.png) · [Windows source-event view](docs/screenshots/windows-source.png) · [Windows zoom and scrolling](docs/screenshots/windows-scrolled.png) · [CPR import review](docs/screenshots/windows-cpr-review.png)
 
 The Mac app, showing the same eight-bar session of synthesized audio.
 
 ![Rebase arrangement, inspector and mixer](docs/screenshots/arrangement.jpg)
 
-[Automation editor](docs/screenshots/automation.jpg) · [App icon and version](docs/screenshots/about.jpg) · [Capture details](docs/screenshots/README.md)
+[Mac automation editor](docs/screenshots/automation.jpg) · [App icon and version](docs/screenshots/about.jpg) · [Capture details](docs/screenshots/README.md)
 
 ## Build
 

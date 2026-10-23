@@ -8,13 +8,13 @@ The [official operation manual](https://www.steinberg.help/api/khub/documents/O4
 
 The reference uses compact top tool/status/info rows, separate channel and inspector areas, a track list beside the event display, a dense lower-zone console, and transport along the bottom. Mixer strips place pan above vertical faders and channel labels at the bottom. Windows supplies the application menu inside the project window.
 
-Vendor screenshots and the PDF are study inputs outside this repository. Application controls and drawing code are independently authored. No proprietary executable was run. The manual establishes documented layout and visible states; it does not establish measured event timing, undocumented behavior, every customization, or pixel-identical runtime rendering.
+Vendor screenshots and the PDF are study inputs in ignored local storage; they are excluded from published repository content. Application controls and drawing code are independently authored. No proprietary executable was run. The manual establishes documented layout and visible states; it does not establish measured event timing, undocumented behavior, every customization, or pixel-identical runtime rendering.
 
-## Verified preview and remaining work
+## Initial accepted preview
 
 [Native run 39939758507](../../research/publication/windows-portability/application-run-39939758507/observation.json) passed 39 actual-window checks at commit `6a6f4d4077fd817574d7f2756e3f060d693f35b5`. Its three 1084 × 749 client-area images were inspected independently and accepted for the scoped development preview. The earlier [run 39936173813](../../research/publication/windows-portability/application-run-39936173813/observation.json) remains unchanged, including its observed source-selector/header and capture-bounds defects.
 
-| Journey | Current implementation and evidence | Remaining acceptance |
+| Journey | Implementation at that milestone | Acceptance still required at that milestone |
 | --- | --- | --- |
 | Open the bundled beat and select a track/clip | Native selection, move, undo/redo, Save As, reopen and render checks passed. The example opens as an editable copy. | Physical pointer/keyboard input and native file dialogs. |
 | Read and edit audio events | Shared source-domain waveforms display all 11 clips and four rows. Independent helper checks verify 17,600 peak bins. Native geometry confirms four fixed headers and a 358-pixel event scroll. | Wider zoom/resize, editing and selection journeys; additional reference tool behavior. |
@@ -23,7 +23,7 @@ Vendor screenshots and the PDF are study inputs outside this repository. Applica
 | Attach and audition a preserved source event | Shared strict PCM24 snapshot, native selection/attachment/undo/redo/export and exact provenance checks pass. Source selector and selected-event header now display correct text. | Actual audio output, other native audition modes and full imported-project behavior. |
 | Publish a Windows build | Native package passes the mandatory optimized shared-test gate, runtime dependency closure and application checks. | Interactive Windows 11 and real audio-device verification; full feature parity. |
 
-The preview follows the reference's compact top rows, neutral graphite event display, left inspector, lower channel strips and bottom transport. It is not an exact visual reconstruction. Toolbar tools remain text-heavy; the event information row, Channel/Inspector balance, mixer scales, right zone and many reference controls still differ or are absent. Those differences remain development work, not accepted equivalence.
+That preview followed the reference's compact top rows, neutral graphite event display, left inspector, lower channel strips and bottom transport. It was not an exact visual reconstruction. The subsequent Channel, workspace and top-row milestones below address portions of its toolbar, event information, panel balance and mixer-scale gaps. Right-zone and other reference workflows remain incomplete.
 
 The musical ruler is shared application display policy, not a claim about undocumented reference UI rounding. No source events become resolved merely because the ruler can display their timing.
 
@@ -43,22 +43,22 @@ Those captures showed the separate Channel/Inspector, compact controls and synch
 [Native run 39949650116](../../research/publication/windows-portability/application-run-39949650116/observation.json) subsequently passed 55 window checks. The selected Channel nameplate bottom is 686 DIP and the lower mixer is 685.5 DIP. Independent inspection of all three fresh captures confirmed the gap is corrected, with the source journey and fixed-header scrolling retained. All 13 [component jobs](../../research/publication/windows-portability/run-39949650135/observation.json) also passed. This accepts the scoped Channel/toolbar refinement; it does not establish complete reference fidelity.
 
 
-## Next visual acceptance work
+## Remaining reference fidelity
 
-The Windows reference remains the whole-window target. Inspection of the retained reference project-window image against the current arrangement shows three substantial gaps:
+The Windows reference remains the whole-window target. The accepted milestones below now provide compact/normal rows, pane visibility and a bounded lower splitter, narrower mixer strips, collapsible Inspector sections and compact event information. The next substantial gaps are:
 
-1. **Workspace density and sizing.** The current left panels have fixed widths, track rows are 68 DIP tall, and the lower mixer has a fixed height. Add bounded splitters and compact/normal track heights, while keeping the shared ruler and fixed track headers aligned. Verify selection, trim hit targets, scrolling and focus at smaller window sizes.
-2. **Mixer and Inspector density.** Reuse the working gain, pan, mute, solo and selection commands in narrower strips and collapsible Inspector sections. Verify that the track header, Inspector, selected Channel and lower mixer remain synchronized through edits and undo.
-3. **Top rows and event information.** Tighten the toolbar, status and event-info rows without losing readable fields, command access or Enter/Escape behavior. Keep the empty-selection state compact.
+1. **Inline automation.** The selected-track editor provides real Volume/Pan editing, but the reference's arrangement automation lanes and their controls are not implemented. Write/touch/latch modes need shared behavior before working controls can be shown.
+2. **Additional workspace layouts.** Channel/Inspector widths remain fixed, and the right zone is absent. Broader resize, zoom and physical-input journeys need interactive verification; the hosted wider-window request was constrained to 1100 DIP.
+3. **Reference processing and transport controls.** Routing, inserts, record/monitor state, per-channel meters, marker/arranger tracks, Control Room and cycle/locator behavior remain missing. Each needs working shared behavior and interaction checks.
 
-Routing, inserts, record/monitor state, automation read/write, per-channel meters, marker/arranger tracks, Control Room and cycle/locator behavior still need implementation. Their absence is a functional fidelity gap as well as a visual one. New surfaces require working shared behavior and interaction checks; the reviewed CPR import milestone does not satisfy these UI acceptance criteria.
+These are functional gaps as well as visual differences. Neither the reviewed CPR import nor the separate automation editor establishes exact reference fidelity.
 
 
-## Compact workspace candidate
+## Compact workspace development record
 
-The next source candidate adds Compact (44 DIP) and Normal (68 DIP) track rows, left-zone and mixer visibility controls, a bounded lower-zone splitter, narrower mixer strips with resizing faders, and expandable Event editing/source sections. These change presentation only. Selection, history and shared project state must stay unchanged through density and pane changes. Ordinary clip actions are disabled for a retained source-only selection; choosing a new retained event expands its source section.
+The workspace candidate added Compact (44 DIP) and Normal (68 DIP) track rows, left-zone and mixer visibility controls, a bounded lower-zone splitter, narrower mixer strips with resizing faders, and expandable Event editing/source sections. These change presentation only. Selection, history and shared project state must stay unchanged through density and pane changes. Ordinary clip actions are disabled for a retained source-only selection; choosing a new retained event expands its source section.
 
-The [local readiness record](../../research/publication/windows-portability/workspace-local-20261024/observation.json) records a successful WPF Release crossbuild and 57 authored receipt-gate controls. These are not Windows runtime or visual acceptance. The native scenario adds 12 checks, two additional client images, measured rows/hit areas, pane transitions, splitter/fader geometry and session-state hashes. Windows execution and independent review are pending. Preview 3 remains the published tested download until that candidate passes its own review.
+The [local readiness record](../../research/publication/windows-portability/workspace-local-20261024/observation.json) records a successful WPF Release crossbuild and 57 authored receipt-gate controls. These are not Windows runtime or visual acceptance. The native scenario adds 12 checks, two additional client images, measured rows/hit areas, pane transitions, splitter/fader geometry and session-state hashes. At that point Windows execution and independent review were pending, and preview 3 remained the tested download. The later failed runs and accepted preview below preserve that sequence.
 
 The top row heights are unchanged in this slice. Further toolbar density, panel sizing, reference control behavior and the functional gaps listed above remain open.
 
@@ -68,7 +68,7 @@ The subsequent [native run 40015599492](../../research/publication/windows-porta
 
 This run also exposes a separate application defect. The timeline used its outer size minus a fixed nine pixels instead of the actual scroll viewport, producing eight DIP of unnecessary vertical scrolling and a 4.5-DIP content offset with panels hidden. Its five retained images and incremental geometry make those defects observable. All 13 [component jobs](../../research/publication/windows-portability/run-40015599436/observation.json) passed, but the failed native candidate has no distributable ZIP and is not released.
 
-The [next correction](../../research/publication/windows-portability/workspace-local-20261024-03/summary.json) uses the measured content viewport, anchors the canvas and removes empty-row extent padding. Its source-selection scenario uses a separately identified scratch derivative with one empty track, verifies a real selection change, then restores the canonical fixture before attachment/export. The original source and report bytes are checked unchanged. The local Release crossbuild and 90 authored receipt-gate controls pass; the latter reject the observed geometry defects and invalid selection-transition evidence. These local results require a fresh Windows observation.
+The [next correction](../../research/publication/windows-portability/workspace-local-20261024-03/summary.json) uses the measured content viewport, anchors the canvas and removes empty-row extent padding. Its source-selection scenario uses a separately identified scratch derivative with one empty track, verifies a real selection change, then restores the canonical fixture before attachment/export. The original source and report bytes are checked unchanged. The local Release crossbuild and 90 authored receipt-gate controls pass; the latter reject the observed geometry defects and invalid selection-transition evidence. These local results required a fresh Windows observation, subsequently recorded in the accepted workspace preview below.
 
 
 ## Accepted compact workspace preview
@@ -79,8 +79,18 @@ The [downloaded archive audit](../../research/publication/windows-portability/ap
 
 [Preview 5](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.5), exact source `5dd3beb`, completes the next measured slice: menu/toolbar/status/event rows total 107 DIP, unavailable source-event timing is explicit, long names retain tooltips, and row dividers extend across the visible canvas. [Native run 40033023717](../../research/publication/windows-portability/application-run-40033023717/observation.json) passed 87 window checks; the independent downloaded-package audit and root review cover all nine images. Its wider-window request remained constrained to 1100 DIP, leaving wider-desktop behavior unverified. The scrolled ruler-corner label is present; the earlier root reading was [corrected without altering the source image](../../research/publication/windows-portability/application-run-40021483751/root-visual-review-correction.json). Functional reference gaps and interactive Windows/device verification remain open.
 
-## Top-row and event-information candidate
+## Top-row and event-information development record
 
 The [local candidate](../../research/publication/windows-portability/top-rows-local-20261024/summary.json) reduces the top stack from 126 to 107 DIP, retains the existing commands, and aligns event labels and fields. Project identity and the retained-source playback limitation occupy separate bounded regions. Empty/source-only selections show unavailable ordinary timing; ordinary zero-valued events still show zero. Divider strokes now follow the resized canvas width.
 
-The Release crossbuild passed with no warnings or errors. All 105 authored receipt-gate controls passed and reproduced byte exactly. Seven additional native checks cover measured text/control bounds, long-name ellipsis and full-name tooltips, empty/source timing guards, resized session preservation, divider width and ruler-corner anchoring. Two new client captures have their own bounds; a constrained requested width will not count as wider-window evidence. These are local readiness results only. Native execution and image review are pending; preview 4 remains the released build.
+The Release crossbuild passed with no warnings or errors. All 105 authored receipt-gate controls passed and reproduced byte exactly. Seven additional native checks cover measured text/control bounds, long-name ellipsis and full-name tooltips, empty/source timing guards, resized session preservation, divider width and ruler-corner anchoring. Two new client captures have their own bounds; a constrained requested width will not count as wider-window evidence. Those were local readiness results only. Native execution and image review subsequently passed in preview 5, as recorded above.
+
+## Accepted automation editor
+
+[Preview 6](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.6), exact source `32e6d37`, adds the selected-track Volume/Pan editor to the existing workspace. [Native run 40040015003](../../research/publication/windows-portability/application-run-40040015003/observation.json) passed 102 actual-window checks, 191 host controls and 169 packaged-helper checks. All 13 [component jobs](../../research/publication/windows-portability/run-40040015052/observation.json) passed, including shared edited/restored automation audio comparisons. The [independent package audit](../../research/publication/windows-portability/application-run-40040015003/candidate-review.json) and root review cover the downloaded package and all twelve client images.
+
+The editor displays the actual shared points and outgoing Linear/Hold segments, accepts numeric or curve insertion, switches between Volume and Pan, and exposes per-lane Read. With Read off, points remain visible while the manual track value is used. Revision-bound edits and stale/invalid input checks preserve the document on failure. The native journey verifies point edits, parameter changes, deletion and undo/redo; undo restores the original locked WAV. Three 664 × 521 client images show the restored five-point Volume lane, retained invalid input with guidance, and the Read-off curve/manual baseline at the minimum editor size. Required fields, list viewport and footer actions remain inside the measured client.
+
+Successful Windows edits enter shared undo history immediately and Close retains them. The Mac editor currently stages changes until Apply or Cancel. The Windows editor is a separate selected-track window, not an implementation of the reference's inline automation lanes or writing modes. Existing larger lanes are retained; the session limits growth to 4,096 points, and curves above 16,384 points explicitly report unavailable drawing while retaining list/numeric access.
+
+These checks use automation peers, injected routed keys and a programmatically invoked production curve callback. Physical input, native dialogs, operating-system frames and audible device output remain unverified. The twelve images retain the existing 1100-DIP hosted width constraint. Full Mac parity and exact Windows reference fidelity remain open.

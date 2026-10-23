@@ -10,9 +10,9 @@ Actual window captures from the arm64 release build, version 0.21.0 (21), on 202
 
 No personal documents, local filesystem dialogs or desktop content are included. Ancillary image metadata was removed without recompressing the captured image. The release executable SHA-256 is `6f22e14e301d15a6c3c418c828b9a791d41bb2330aec727f6c6b46808af2bd13`.
 
-## Windows 0.21.1 development preview 5
+## Windows 0.21.1 development preview 6
 
-Actual WPF client-area renders from the opened application at commit `5dd3beb2538024a85143af984105fe6d2daea943`, captured by [native run 40033023717](https://github.com/thatsmethen/rebase/actions/runs/40033023717). The seven main-window images are 1084 × 749 pixels. CPR review is 814 × 611; its minimum-size error state is 634 × 441. All captures use 96 DPI and exclude the operating-system frame.
+Actual WPF client-area renders from the opened application at commit `32e6d37fd4afb96f4957f5d715df8af09afa4bce`, captured by [native run 40040015003](https://github.com/thatsmethen/rebase/actions/runs/40040015003). The seven main-window images are 1084 × 749 pixels. CPR review is 814 × 611; its minimum-size error state is 634 × 441. The three minimum-size automation editor images are 664 × 521. All captures use 96 DPI and exclude the operating-system frame.
 
 - `windows-arrangement.png`: the four-track, eleven-clip example in Compact density with real waveforms, Channel/Inspector, musical ruler, mixer and transport.
 - `windows-workspace-normal.png`: the same example in Normal density; all four rows fit.
@@ -23,21 +23,27 @@ Actual WPF client-area renders from the opened application at commit `5dd3beb253
 - `windows-resize-request.png`: the same scenario after a wider-window request constrained by the hosted display.
 - `windows-cpr-review.png`: authored CPR review with preserved-source identity and complete navigation/import controls.
 - `windows-cpr-review-error.png`: minimum-size review with the observed error message and all four footer controls visible.
+- `windows-automation.png`: restored five-point Volume automation, real curve, point list and editing/footer controls at the editor's minimum size.
+- `windows-automation-invalid.png`: the invalid numeric draft remains visible with finite-value guidance; the document and points remain unchanged.
+- `windows-automation-read-off.png`: the edited Hold point and retained curve with Read off and the manual-volume reference visible.
 
-These are byte-exact copies of the [retained CI images](../../research/publication/windows-portability/application-run-40033023717/observation.json) and preview.5 assets. No editing or recompression was applied. Both CPR PNGs have minimum alpha 254 and no pixels below 254; their independently recounted distributions match the retained diagnostics.
+These are byte-exact copies of the [retained CI images](../../research/publication/windows-portability/application-run-40040015003/observation.json), selected for the preview.6 release. No editing or recompression was applied. Both CPR PNGs have minimum alpha 254 and no pixels below 254; their independently recounted distributions match the retained diagnostics.
 
-Root and independent review accepted the scoped workspace and demonstrated actions. The interface remains substantially incomplete relative to the Windows reference. The compact top-row stack and expanded row dividers are covered by this slice. Both long-name captures are 1084 × 749: the requested wider window was constrained by the hosted display, so wider-desktop geometry remains unverified. A mistaken root reading of the scrolled corner label was [explicitly corrected](../../research/publication/windows-portability/application-run-40021483751/root-visual-review-correction.json); the original image and review remain preserved.
+Root and independent review accepted the scoped workspace and demonstrated actions. The interface remains substantially incomplete relative to the Windows reference. The automation editor is a separate selected-track window; it does not establish inline-lane or writing-mode fidelity. Both long-name captures are 1084 × 749: the requested 1400-DIP window remained constrained to 1100 DIP, so wider-desktop geometry remains unverified. A mistaken earlier root reading of the scrolled corner label was [explicitly corrected](../../research/publication/windows-portability/application-run-40021483751/root-visual-review-correction.json); the original image and review remain preserved.
 
 Source/CPR inputs are authored controls excluded from the download. These images do not verify physical input, native dialogs, the operating-system frame or device audio. The native review contains one page; pagination is checked separately. Its observed error fits without scrolling. Prior preview captures remain in their immutable research records and release assets.
 
 | File | Pixels | SHA-256 |
 | --- | --- | --- |
-| windows-arrangement.png | 1084 × 749 | `e291059861ed8a5bb4839fe10b3f3bbf1c758e89ca987fab9de6ca982d6d7865` |
+| windows-arrangement.png | 1084 × 749 | `92837bc71574a1b95e4114e05f545fea9e38897ad25dcc095ea864f1c7885d7f` |
+| windows-automation-invalid.png | 664 × 521 | `5408fd5a73fcc13cfebaebd8b422a8deb3e4b7968d9ad084d2b4755fdbb6d16f` |
+| windows-automation-read-off.png | 664 × 521 | `7574078f4c9f7b99551202ec4cf43cabfc1274c9ab0c97e7b6e9bd8dfd06726d` |
+| windows-automation.png | 664 × 521 | `4be3c65f97bb63bc2ecb1467e54a952cb0eef2a28e4d63f27efb8f2d37cd200f` |
 | windows-cpr-review-error.png | 634 × 441 | `4262f6bbe96ace30489893b705f4a82f28f01251535f790ff9409f9759e39b54` |
 | windows-cpr-review.png | 814 × 611 | `e0a3943d8698f6132b752149f5fdfda7778e2d66a1925e31239943c510403ca0` |
-| windows-long-names.png | 1084 × 749 | `f80127e7a04c8e22ec98a918e7055ff9a79cbdc50f3eb7850504f876c4a3cc02` |
-| windows-resize-request.png | 1084 × 749 | `f80127e7a04c8e22ec98a918e7055ff9a79cbdc50f3eb7850504f876c4a3cc02` |
-| windows-scrolled.png | 1084 × 749 | `38cc43a487102cd0dae0d475a073dcdb04c8aa815216d7abc2b50e68016001cb` |
-| windows-source.png | 1084 × 749 | `76df2fbbd5f2c1ef3ab5cad61bc6d34963152e54733333c8d4c80ff2012e63d0` |
-| windows-workspace-expanded.png | 1084 × 749 | `0e484275d8ba289c6c8b877ee4bc017b2b33ad7bc4ec29a98c8ef607ee921c55` |
-| windows-workspace-normal.png | 1084 × 749 | `4b6351290af963424e9147762c4aea02d6a5d3c6cd2ead51304704f25a17bbca` |
+| windows-long-names.png | 1084 × 749 | `386098c635f898c16dd14c34dabd1dd37fa32c9a95f5ea6dc4e593df11e223cb` |
+| windows-resize-request.png | 1084 × 749 | `386098c635f898c16dd14c34dabd1dd37fa32c9a95f5ea6dc4e593df11e223cb` |
+| windows-scrolled.png | 1084 × 749 | `f81d162a9a99b537d973d355c3445d5739c9806be3eaad16a97938907d471f07` |
+| windows-source.png | 1084 × 749 | `8f46fd96682f1184139ae372443599eca8d585a8c67011b6ca8ac8c7a4eaaa69` |
+| windows-workspace-expanded.png | 1084 × 749 | `fe749e25219e7d03aaa5839b5d927bb199f3f3889148a67f2c261ddab4ab7b09` |
+| windows-workspace-normal.png | 1084 × 749 | `d6f02ff5491ec7cc2aac96b35544d45d44c2facfdba9c0dc8652a3134857bfd3` |

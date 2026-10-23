@@ -1,0 +1,32 @@
+{
+  "schema": "rebase.publication-privacy-review.v1",
+  "scope": "Changed release records, six documentation pages and current screenshot files only.",
+  "scanner_summary_sha256": "1d71fff1a3460de81f6c8dceb8e8156dfb97a6ca8c5f42baa6fb65e1070a19dc",
+  "scanned_file_count": 18,
+  "raw_scanner_blocker_records": 2,
+  "review_records": 0,
+  "dispositions": [
+    {
+      "path": "research/publication/windows-portability/application-run-40040015003/windows-preview-upload.json",
+      "sha256": "de121d21cd2fcc195f3a9c2464f05156a8b6374b737a8ba5aed5424e2302afa6",
+      "scanner_category": "known_private_regex_02",
+      "occurrences": 1,
+      "disposition": "Exact identifier of the intentionally public repository; no private value.",
+      "verified_against": "https://github.com/thatsmethen/rebase"
+    },
+    {
+      "path": "research/publication/windows-portability/release-v0.21.1-windows-preview.6.json",
+      "sha256": "b3880eecc54f62e7839bc17f30be3a41519cada43af5f2fcde42f2f543864740",
+      "scanner_category": "known_private_regex_02",
+      "occurrences": 1,
+      "disposition": "Exact identifier of the intentionally public repository; no private value.",
+      "verified_against": "https://github.com/thatsmethen/rebase"
+    }
+  ],
+  "unresolved_personal_or_credential_findings": 0,
+  "scanner_rules_changed": false,
+  "limitations": [
+    "Configured known-private and credential-pattern checks are not a universal disclosure or anonymity guarantee.",
+    "Raw CI/package privacy and runtime path reviews are recorded separately in the source-bound candidate audit."
+  ]
+}

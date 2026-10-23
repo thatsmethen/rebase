@@ -4,7 +4,7 @@ This experimental x64 preview is intended for Windows 11. It includes its requir
 
 ## Open the app
 
-1. Download `Rebase-0.21.1-windows-preview.5-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.5).
+1. Download `Rebase-0.21.1-windows-preview.6-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.6).
 2. Use **Extract All** to unpack the complete archive.
 3. Open **Rebase.exe** inside the extracted `Rebase` folder. Keep the DLLs, notices and `Examples` folder beside the executable.
 4. Choose **File → Open example**. The four-track beat opens as a separate editable copy.
@@ -17,6 +17,15 @@ To reopen a saved project, choose **File → Open project…**, enter its `.reba
 ## Adjust the workspace
 
 Choose **Compact** or **Normal** beside the ruler selector to change track height. **Left** shows or hides Channel/Inspector; **Mixer** shows or hides the lower mixer. Drag the divider above the mixer to resize it, or focus the divider and use Up/Down. Inspector sections can collapse independently. These layout changes preserve project state and selection.
+
+## Edit track automation
+
+1. Select a track, then choose **Project → Track automation…** or **Automation…** in its Inspector.
+2. Choose **Volume** or **Pan**. Select a point to change its time, value or outgoing **Linear/Hold** segment, then choose **Update**. **Add** or a click on the curve inserts a point; **Delete** removes the selected point. Adding at an occupied time replaces that point.
+3. Use **Read volume automation** or **Read pan automation** to enable the selected lane. Turning Read off preserves its points and uses the track's manual value.
+4. Use **Undo/Redo** for successful edits. Changes apply immediately; **Close** retains them. Save the project to keep them on disk.
+
+This editor operates on the selected track. Inline arrangement lanes and automation writing modes are not implemented yet.
 
 ## Review and import a CPR project
 
@@ -35,10 +44,10 @@ Source-event audition uses the saved source rate and a separate event-local posi
 
 ## What has been checked
 
-Preview.5 comes from commit `5dd3beb` and [native Windows run 40033023717](../../research/publication/windows-portability/application-run-40033023717/observation.json) on a Windows Server 2025 GitHub runner. It passed 87 actual-window checks, 155 host controls and 91 packaged-helper checks. The shared Release gate executed 90 tests with one explicit opt-in skip and no failures. The [downloaded archive audit](../../research/publication/windows-portability/application-run-40033023717/candidate-review.json) verified its file manifest, runtime dependencies and unchanged example audio.
+Preview.6 comes from commit `32e6d37` and [native Windows run 40040015003](../../research/publication/windows-portability/application-run-40040015003/observation.json) on a Windows Server 2025 GitHub runner. It passed 102 actual-window checks, 191 host controls and 169 packaged-helper checks. The shared Release gate executed 98 tests with one explicit opt-in skip and no failures. The [downloaded archive audit](../../research/publication/windows-portability/application-run-40040015003/candidate-review.json) verified its file manifest, runtime dependencies and unchanged example audio.
 
-[Seven screenshots](../screenshots/README.md) show the actual application's client area, including CPR review at normal and minimum window sizes. They exclude the operating-system frame.
+[Twelve screenshots](../screenshots/README.md) show the actual application's client area, including CPR review and minimum-size automation views with Read off and invalid input. They exclude the operating-system frame. A requested 1400-DIP main window remained constrained to 1100 DIP on the hosted display; larger-display behavior remains unverified.
 
-Physical mouse/keyboard input, native file dialogs and sound through a real audio device still require interactive Windows verification. Recording, plugins, automation editing and the remaining Mac workflows are not yet integrated. The [parity ledger](../development/windows-parity.md) records those boundaries.
+Physical mouse/keyboard input, native file dialogs and sound through a real audio device still require interactive Windows verification. Recording, plugins, inline automation lanes, automation writing modes and the remaining Mac workflows are not yet integrated. The [parity ledger](../development/windows-parity.md) records those boundaries.
 
 The existing [Mac release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1) remains available.
