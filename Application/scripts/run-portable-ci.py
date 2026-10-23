@@ -109,6 +109,12 @@ def main():
             if args.kind == "swift":
                 command = ["swift", "test", "--scratch-path", str(build), "-c", args.configuration.lower(),
                            "--filter", "RebasePortableTests", "--xunit-output", str(out / "tests.xml")]
+                if os.name == "nt" and args.configuration == "Release":
+                    # Diagnostic hypothesis for the observed zero-test Release
+                    # runner: retain discovery metadata without disabling -O.
+                    # Production product builds below keep their normal link.
+                    command += ["--disable-dead-strip"]
+                    report["test_link_dead_strip_disabled"] = True
                 if sys.platform == "darwin":
                     developer = run(["xcode-select", "-p"], "developer-directory").strip()
                     # Match test-app.sh only for a local Command Line Tools
@@ -128,6 +134,9 @@ def main():
                 command = ["sh", "Tests/run-tests.sh", "--public", "-c", args.configuration.lower(),
                            "--xunit-output", str(out / "tests.xml")]
             run(command, "tests")
+            if args.kind == "swift" and os.name == "nt" and args.configuration == "Release":
+                run(["swift", "test", "list", "--scratch-path", str(build), "-c", "release",
+                     "--skip-build", "--disable-dead-strip"], "test-discovery")
             if args.kind == "swift":
                 configuration = args.configuration.lower()
                 run(["swift", "build", "--scratch-path", str(build), "-c", configuration,
@@ -187,6 +196,16 @@ def main():
                 (out / "example-render.json").write_text(json.dumps(render, indent=2) + "\n", encoding="utf-8")
                 if differences:
                     raise RuntimeError("Rendered example differs from its predeclared lock: " + ", ".join(differences))
+                run(["swift", "build", "--scratch-path", str(build), "-c", configuration,
+                     "--product", "rebase-session"], "session-build")
+                session = Path(bin_path) / ("rebase-session.exe" if os.name == "nt" else "rebase-session")
+                run([sys.executable, str(app / "scripts/check-session-protocol.py"),
+                     "--helper", str(session), "--example", str(app / "Examples/Rebase Preview.rebaseproj"),
+                     "--report", str(out / "session-protocol.json")], "session-protocol")
+                session_result = json.loads((out / "session-protocol.json").read_text())
+                if session_result.get("status") != "passed":
+                    raise RuntimeError("Interactive session protocol checks did not pass")
+                report["interactive_session_checks"] = len(session_result["checks"])
         sanitize_xml()
         report["tests"] = collect_test_results(test_xml_paths())
         report["status"] = "passed"

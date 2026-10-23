@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>Rebase</AssemblyName>
+    <RootNamespace>Rebase.Windows</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets/Rebase.ico</ApplicationIcon>
+    <Version>0.21.1-windows-preview.1</Version>
+    <AssemblyVersion>0.21.1.0</AssemblyVersion>
+    <FileVersion>0.21.1.0</FileVersion>
+    <Company>Rebase Contributors</Company>
+    <Product>Rebase for Windows (development preview)</Product>
+    <Description>Shared project editing and rendering with native Windows output. Development preview.</Description>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Resource Include="../../Assets/Rebase.png" Link="Assets/Rebase.png" />
+    <Compile Remove="Tests/**/*.cs" />
+    <None Remove="Tests/**" />
+  </ItemGroup>
+</Project>

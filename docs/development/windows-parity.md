@@ -1,6 +1,6 @@
 # Windows parity
 
-The comparison baseline is the macOS **0.21.1** application, including its bundled example beat. A Windows application has not been released yet. Work is additive: the public repository, research export, and existing Mac downloads remain available.
+The comparison baseline is the macOS **0.21.1** application, including its bundled example beat. A Windows application has not been released yet. The first native WPF host is implemented and undergoing package/runtime checks. Work is additive: the public repository, research export, and existing Mac downloads remain available.
 
 ## Shared implementation
 
@@ -19,15 +19,19 @@ The x64 lane explicitly qualifies the floating-point environment before enabling
 | Project/CPR models | Same validation, decoding, opaque preservation, recovery profiles and report re-verification | Shared-source component tests and inspection CLI |
 | Ordinary audio | Same trim, automation, pan, interpolation, mute/solo and accumulation; compare bundled example PCM on both architectures | Shared renderer, WAV adapter and comparison checks |
 | Native DSP | Same accepted domains, exact independent controls, explicit environment rejection | Windows x64 Debug/Release passed 5,442 cases and 18,380 checks each; see the [retained run](../../research/publication/windows-portability/run-39915872920/observation.json) |
-| Project files | Load/save/reopen across OS; source checks, containment, junction/drive/UNC/ADS handling and atomic replacement | Full Windows document store pending |
-| Editing | Move/trim/split/delete, snap, undo/redo, tempo/signature and preserved-clock conversion | Shared command controller integrated into macOS; ten shared editing tests pass locally; Windows UI pending |
-| Timeline/mixer | Four-track example, waveforms, automation, gain/pan, keyboard access and dirty-project prompts | Windows UI pending |
-| Native playback | Play/pause/seek/stop, meters, completion, cancellation and supported device formats through WASAPI | WASAPI backend implemented; local cursor controls pass; native Windows compilation and endpoint/device verification pending |
+| Project files | Load/save/reopen across OS; source checks, containment, junction/drive/UNC/ADS handling and atomic replacement | Shared store and bounded snapshot copying implemented; local checks pass; native Windows filesystem checks pending |
+| Editing | Move/trim/split/delete, snap, undo/redo, tempo/signature and preserved-clock conversion | Shared commands integrated into macOS and the Windows session protocol; Windows Debug component checks pass; host integration awaiting native CI |
+| Timeline/mixer | Four-track example, waveforms, automation, gain/pan, keyboard access and dirty-project prompts | WPF timeline and mixer implemented; window checks pending; waveform and automation editing parity remain open |
+| Native playback | Play/pause/seek/stop, meters, completion, cancellation and supported device formats through WASAPI | Windows Debug/Release DLL compilation and 89 lifecycle controls each passed; hosted endpoints unavailable; real playback verification pending |
 | CPR workflows | Review, attachment, source inspection, every current audition mode and overlap-track playback | Full Windows integration pending |
 | Interchange | Audio formats, DAWproject import/export and 64-bit ambisonic export | Windows adapters pending |
-| Distribution | Runtime dependencies, icon, bundled example, clean-machine launch and downloadable Windows app | Pending application build and runtime checks |
+| Distribution | Runtime dependencies, icon, bundled example, clean-machine launch and downloadable Windows app | Self-contained package workflow implemented, including dependency closure, app-local module checks and example; native execution pending |
 
-The machine previously used for Windows development no longer has a confirmed Windows VM. Hosted Windows builds can establish compilation and deterministic processing. They cannot establish the visible interface or output through a real audio endpoint. Those checks stay open until an interactive Windows environment is available.
+Hosted Windows builds can establish compilation, deterministic processing, and the specific WPF window operations exercised by automation. They do not establish physical input, file-dialog behavior, or output through a real audio endpoint. Those checks require an interactive Windows environment.
+
+The [retained Windows component run](../../research/publication/windows-portability/run-39920053417/observation.json) includes a successful SoXR DLL/API probe and exact example exports. The overall run failed because its Release Swift test runner discovered zero tests. A test-link diagnostic is pending verification; a successful render does not substitute for executed tests.
+
+The [Windows host](../../Application/Windows/RebaseWindows/README.md) sends versioned commands to the shared Swift session, then verifies rendered snapshot metadata and bytes before loading the native adapter. Its current playback requires an endpoint at the exact project rate. It does not yet expose all Mac workflows; the ledger remains open.
 
 ## Parallel development gate
 

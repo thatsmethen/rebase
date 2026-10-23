@@ -1,0 +1,93 @@
+{
+  "schema": "rebase.local-session-validation.v1",
+  "observed_at_utc": "2026-10-23T08:28:04.619691+00:00",
+  "base_commit": "002bfbe2ade429a9f2fa1d30e9f1bba2c8c09a1e",
+  "evidence_class": "authored-implementation-local-controls",
+  "host": "macOS arm64",
+  "configuration": "Debug",
+  "final_source_checks": {
+    "portable_swift": {
+      "tests": 45,
+      "suites": 6,
+      "failures": 0
+    },
+    "macos_shared_project_store": {
+      "tests": 7,
+      "suites": 1,
+      "failures": 0
+    },
+    "interactive_example_process": {
+      "checks": 16,
+      "failures": 0,
+      "receipt": "session-protocol.json"
+    }
+  },
+  "raw_test_stdout_retained": false,
+  "test_stdout_note": "Test counts were observed in command output; no separate runner log was saved for these final focused commands. The interactive checker receipt is retained byte for byte.",
+  "scope": [
+    "Shared document validation and save semantics; bounded package copying and source-change rejection.",
+    "Legacy default-map identities remain bound to the exact decoded manifest bytes.",
+    "Interactive helper opens the bundled example before stdin EOF, edits, undoes, renders exact locked PCM, saves a new package, and reopens it."
+  ],
+  "boundaries": [
+    "No proprietary reference execution.",
+    "No Windows runtime, WPF interface, or audio-device playback claim follows from this local record.",
+    "Native Windows CI is required before publishing a downloadable Windows package."
+  ],
+  "source_files": [
+    {
+      "path": "Application/Package.swift",
+      "sha256": "9fa66b1f3214060951d2d48d4517b6f96bcd63a4cf546d6fec8f4f2087c9d51c"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStore.swift",
+      "sha256": "4f5378847206d83ff5039b72b5145f9ed0c1d0f8af017bf98aac6534840ff4d8"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStoreMacAudio.swift",
+      "sha256": "51c545aef870a033fdad411bbe3ce00b9f9616b77ed19a1745617b3a4c6f5cc9"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectStorePortableAudio.swift",
+      "sha256": "4726046a278c164d47f01ef9c8362b530e7fd8e94d4f16d563eab5e72b122a21"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectFileIO.swift",
+      "sha256": "b1392a1f25d1cb79d038fcc880cfa91af024dc232e0db31b586cd6eb48e62427"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/PortablePackageSnapshot.swift",
+      "sha256": "2ef5dfe14aa9a658928bdc0c6791e6d997328e7d83e52891bda7953bb36fac1e"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/PortableSession.swift",
+      "sha256": "bb88ed7a7e99ad9b5daed1f7671ab5292b7a149101384766a4744afef96f1cf4"
+    },
+    {
+      "path": "Application/Sources/RebaseSessionCLI/RebaseSessionCLI.swift",
+      "sha256": "67320a6a3a0d7b00997af24ab28b09d13184bf8303aa5444cc0f551970710805"
+    },
+    {
+      "path": "Application/Tests/SharedDocumentTests/SharedProjectStoreTests.swift",
+      "sha256": "f0f510ca4bea05d36b06f1b51f62b465c6131e8c76e4c2e5cdc101daaae0b6b0"
+    },
+    {
+      "path": "Application/Tests/RebasePortableTests/PortableSessionTests.swift",
+      "sha256": "b72fd4629e37853f455cf99a93659b40c352f725c1f12e01fca39b90ca76a5bd"
+    },
+    {
+      "path": "Application/Tests/RebasePortableTests/PortableSessionCopyTests.swift",
+      "sha256": "d8bbd1b066acde46b00dd7fbcbdf17e2f6095f1f249c1b1a97bb7529f337b71a"
+    },
+    {
+      "path": "Application/scripts/check-session-protocol.py",
+      "sha256": "c95520a90b48b357ecaf5608dbe21b787238762babe8a791371de957caf9f172"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "session-protocol.json",
+      "sha256": "9b4cedeab7327c3d661c27e548ad1cf05608527387b24e5d48aa2696242f2be9"
+    }
+  ]
+}

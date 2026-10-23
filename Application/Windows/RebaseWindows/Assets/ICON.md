@@ -1,0 +1,1 @@
+`Rebase.ico` wraps the existing 256×256 PNG payload from the `ic08` block of `Application/Assets/Rebase.icns` in a standard one-image ICO directory. The PNG bytes and pixels are unchanged. The WPF window uses `Application/Assets/Rebase.png` directly as a linked resource. Both use the existing approved Rebase artwork; no alternate artwork was generated.

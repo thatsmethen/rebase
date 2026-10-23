@@ -21,6 +21,22 @@ On Windows, choose writable Windows paths for `--output`. The Swift runner sets 
 
 On a Mac with only Command Line Tools selected, the driver applies the same Swift Testing framework/plugin flags as `test-app.sh`. Full-Xcode hosted runners use their normal test invocation. SwiftPM may emit `tests-swift-testing.xml` alongside or instead of the requested `tests.xml`; the driver sanitizes and reads both known reports, records skipped and executed counts, and requires at least one executed test with no failures. The portable driver restores the application's existing `Package.resolved` after execution because the dependency-free portable package can otherwise remove it.
 
+Swift 6.4.1 on Windows produced a zero-test Release runner in observed runs, while Debug executed its suite. The Windows Release test link now uses `--disable-dead-strip` and records a separate discovery listing to test a metadata-retention hypothesis. Release optimization and the nonzero executed-test requirement remain in place. This change is a diagnostic candidate until a native Windows run confirms executed tests; it does not change the application's production link.
+
+## Windows application development package
+
+The separate `.github/workflows/windows-application.yml` builds the WPF host with .NET SDK 10.0.402 and the self-contained .NET/Windows Desktop 10.0.13 runtime. It uses the same Swift 6.4.1 release and an independently built Release session helper, the native audio DLL, and the exact manifest-listed authored example. The published directory is untrimmed, with separate DLLs/helper and no PDBs. Source prefix maps use `/_/Rebase`.
+
+```powershell
+python Application/scripts/build-windows-app.py --output "$env:TEMP/rebase-windows-application"
+```
+
+The packager checks native and managed PE architecture and recursively resolves static and delayed imports. Runtime files come only from the selected Swift runtime component and the Visual C++ x64 CRT redistributable directory; Windows API contracts/system DLLs remain operating-system dependencies. ICU runtime components are included for dynamic loading. Hash-pinned upstream license/notices are retained in the package with their source URLs. The resulting package manifest records every other shipped file's SHA-256.
+
+The exact staged helper must pass the interactive session protocol checks, including its predeclared example render. An actual WPF window must then complete its automation-peer smoke scenario and emit a visual-tree PNG. This image is not a desktop screenshot; file dialogs and physical input remain untested. Both processes run with compiler/runtime installation directories removed from PATH, and their observed module lists must locate app runtimes inside the package and OS modules inside Windows. Headless endpoint absence remains explicitly unavailable; the scenario does not play audio.
+
+The mandatory shared Release test/render gate runs after the window diagnostic and before ZIP creation, so a zero-test runner or other failure still prevents a download. Only a fully passing job uploads an unsigned **development build**, retained for seven days. Failure uploads sanitized evidence only. This workflow does not create a GitHub release, sign an executable, establish hardware playback, or establish application parity. Read the actual run for the chosen commit before treating the package as verified.
+
 ## Windows SoXR build
 
 In an x64 Visual Studio developer environment with `clang.exe` available:

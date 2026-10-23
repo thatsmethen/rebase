@@ -10,7 +10,7 @@ The research identifies its reference software and retains its original terminol
 
 [Contributor guide](CONTRIBUTING.md) · [Test guide](Application/Tests/README.md) · [Research guide](research/README.md)
 
-Windows development is underway using the same project and DSP sources. The [parity ledger](docs/development/windows-parity.md) tracks what is implemented and what still needs Windows runtime verification; [component builds and tests](Application/WINDOWS-CI.md) are available before the desktop app.
+Windows development is underway using the same project and DSP sources. The [parity ledger](docs/development/windows-parity.md) tracks what is implemented and what still needs Windows runtime verification; [component and application checks](Application/WINDOWS-CI.md) cover the native Windows host and its development package. A Windows release is not available yet.
 
 ## Release
 

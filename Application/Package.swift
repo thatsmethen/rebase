@@ -11,8 +11,8 @@ let portableOnly = true
 let portableOnly = ProcessInfo.processInfo.environment["REBASE_PORTABLE_ONLY"] == "1"
 #endif
 
-// The portable target compiles these same semantic sources. Its intentionally
-// narrower API has no ProjectStore, device transport, or macOS framework shim.
+// The portable target compiles these same semantic sources. Its document store
+// uses bounded WAV media; device transport and macOS framework APIs stay outside.
 let portableSources = [
     "Automation.swift", "CPRAudioEventArchive.swift", "CPRAudioMediaAttachmentModel.swift",
     "CPRAutoFadeArchive.swift", "CPRClockRoles.swift", "CPRContractMigration.swift",
@@ -20,6 +20,7 @@ let portableSources = [
     "CPRRecoveryV2.swift", "CPRRecoveryV3.swift", "CPRRecoveryV4.swift", "CPRRecoveryV5.swift",
     "CPRSegmentReadPlan.swift", "CPRSignatureRecovery.swift", "CPRTrackContributorArchive.swift",
     "MusicalTime.swift", "NativeTempoClock.swift", "PCMRendering.swift", "PortableSHA256.swift", "Project.swift", "ProjectEditing.swift",
+    "PortablePackageSnapshot.swift", "PortableSession.swift", "ProjectFileIO.swift", "ProjectStore.swift", "ProjectStorePortableAudio.swift",
     "UnresolvedCPRAudioEvent.swift", "WAVPCMSource.swift"
 ]
 let coreDirectory = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
@@ -35,16 +36,18 @@ let portableTargets: [Target] = [
             exclude: portableExcludes, sources: portableSources,
             swiftSettings: [.define("REBASE_PORTABLE")]),
     .executableTarget(name: "RebaseInspectCLI", dependencies: ["RebasePortable"]),
+    .executableTarget(name: "RebaseSessionCLI", dependencies: ["RebasePortable"]),
     .testTarget(name: "RebasePortableTests", dependencies: ["RebasePortable", "RebaseTimingDSP"],
                 path: "Tests", exclude: ["RebaseCoreTests", "PortableDSP", "run-tests.sh", "README.md"],
-                sources: ["RebasePortableTests", "SharedEditingTests"])
+                sources: ["RebasePortableTests", "SharedEditingTests", "SharedDocumentTests"])
 ]
 
 let package = Package(
     name: "Rebase",
     platforms: [.macOS(.v14)],
     products: portableOnly ? [.library(name: "RebasePortable", targets: ["RebasePortable"]),
-        .executable(name: "rebase-inspect", targets: ["RebaseInspectCLI"])] :
+        .executable(name: "rebase-inspect", targets: ["RebaseInspectCLI"]),
+        .executable(name: "rebase-session", targets: ["RebaseSessionCLI"])] :
         [.executable(name: "Rebase", targets: ["Rebase"])],
     dependencies: portableOnly ? [] : [.package(url: "https://github.com/weichsel/ZIPFoundation.git", exact: "0.9.20")],
     targets: portableOnly ? portableTargets : [
@@ -68,7 +71,7 @@ let package = Package(
         .executableTarget(name: "Rebase", dependencies: ["RebaseCore", "RebaseDSP"]),
         .testTarget(name: "RebaseCoreTests", dependencies: ["RebaseCore", "RebaseDSP"],
                     path: "Tests", exclude: ["RebasePortableTests", "PortableDSP", "run-tests.sh", "README.md"],
-                    sources: ["RebaseCoreTests", "SharedEditingTests"])
+                    sources: ["RebaseCoreTests", "SharedEditingTests", "SharedDocumentTests"])
     ],
     swiftLanguageModes: [.v5]
 )
