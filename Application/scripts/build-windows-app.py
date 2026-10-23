@@ -189,6 +189,31 @@ def require_pinned_header_scroll(smoke):
         raise RuntimeError("Timeline event geometry did not follow the measured scroll")
 
 
+def require_cpr_review_layout(path, bounds, layout, minimum_error=False):
+    require_window_visual(path, bounds)
+    width, height = math.ceil(bounds["client_width"]), math.ceil(bounds["client_height"])
+    if (type(layout.get("opaque_pixels")) is not int or type(layout.get("total_pixels")) is not int
+            or layout["opaque_pixels"] != width * height or layout["total_pixels"] != width * height):
+        raise RuntimeError("CPR review capture was not checked as fully opaque")
+    viewport = layout.get("review_viewport_height")
+    if type(viewport) not in (int, float) or not math.isfinite(viewport) or viewport < 40:
+        raise RuntimeError("CPR review has no usable content viewport")
+    controls = layout.get("footer_controls", [])
+    if (len(controls) != 4 or {control.get("name") for control in controls} !=
+            {"Previous", "Next", "Cancel", "Import Supported Data"}):
+        raise RuntimeError("CPR review footer geometry is incomplete")
+    for control in controls:
+        if (any(type(control.get(key)) not in (int, float) or not math.isfinite(control[key])
+                for key in ("x", "y", "width", "height"))
+                or control["x"] < 0 or control["y"] < 0 or control["width"] <= 0 or control["height"] <= 0
+                or control["x"] + control["width"] > bounds["client_width"] + 0.5
+                or control["y"] + control["height"] > bounds["client_height"] + 0.5):
+            raise RuntimeError("CPR review footer control lies outside the captured client")
+    if minimum_error and (bounds["outer_width"] > 650.5 or bounds["outer_height"] > 480.5
+                          or type(layout.get("error_characters")) is not int or layout["error_characters"] <= 0):
+        raise RuntimeError("CPR review error layout was not checked at minimum window size")
+
+
 def require_musical_ruler(smoke):
     ruler = smoke.get("musical_ruler", {})
     numeric = ("tempo", "duration", "pixels_per_second", "bar_two_seconds", "first_label_x", "second_label_x")
@@ -403,7 +428,8 @@ def main():
                            "cpr-review-window-visible", "cpr-review-all-pages-accessible", "cpr-review-cancel-preserves-session",
                            "cpr-changed-source-rejected", "cpr-dirty-cancel-preserves-session",
                            "cpr-destination-cancel-preserves-review", "cpr-import-supported-data", "cpr-import-source-preserved",
-                           "cpr-historical-report-readonly", "cpr-review-visual-artifact"}
+                           "cpr-historical-report-readonly", "cpr-review-visual-artifact",
+                           "cpr-review-footer-visible", "cpr-review-capture-opaque", "cpr-review-minimum-error-layout"}
         if (smoke.get("source_journey_tested") is not True or not required_checks.issubset(smoke["checks"])
                 or smoke.get("source_screenshot") != "native-source-visual.png"
                 or smoke.get("source_output_sha256") != expected_source["outputSHA256"]
@@ -444,7 +470,12 @@ def main():
                 or type(cpr_review.get("pages_checked")) is not int or cpr_review["pages_checked"] < 1
                 or type(cpr_review.get("items_checked")) is not int or cpr_review["items_checked"] < 1):
             raise RuntimeError("Reviewed CPR import window checks are incomplete")
-        require_window_visual(evidence / "native-cpr-review-visual.png", cpr_review.get("window_bounds", {}))
+        require_cpr_review_layout(evidence / "native-cpr-review-visual.png", cpr_review.get("window_bounds", {}),
+                                  cpr_review.get("capture_layout", {}))
+        if cpr_review.get("minimum_error_screenshot") != "native-cpr-review-minimum-error-visual.png":
+            raise RuntimeError("Missing minimum-size CPR error capture")
+        require_cpr_review_layout(evidence / "native-cpr-review-minimum-error-visual.png", cpr_review.get("minimum_error_bounds", {}),
+                                  cpr_review.get("minimum_error_layout", {}), minimum_error=True)
         # Recheck all bundled source bytes after both complete user journeys.
         example_manifest = json.loads((stage / "Examples/example.json").read_text(encoding="utf-8"))
         if any(digest(example / item["path"]) != item["sha256"] for item in example_manifest["files"]):

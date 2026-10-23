@@ -1,0 +1,237 @@
+{
+  "schema": "rebase.portable-ci.v1",
+  "scope": "Authored portable component conformance; no desktop app parity or reference-runtime claim",
+  "lane": "swift",
+  "configuration": "Debug",
+  "platform": "Darwin",
+  "architecture": "arm64",
+  "runner_image": {
+    "ImageOS": "macos15",
+    "ImageVersion": "20260907.0337.1"
+  },
+  "commit": "4679fe92de87e45b85c5365d444397a6227e1898",
+  "commands": [
+    {
+      "name": "cmake-version",
+      "argv": [
+        "cmake",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.084,
+      "log": "cmake-version.log"
+    },
+    {
+      "name": "swift-version",
+      "argv": [
+        "swift",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.56,
+      "log": "swift-version.log"
+    },
+    {
+      "name": "developer-directory",
+      "argv": [
+        "xcode-select",
+        "-p"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.009,
+      "log": "developer-directory.log"
+    },
+    {
+      "name": "tests",
+      "argv": [
+        "swift",
+        "test",
+        "--scratch-path",
+        "<home>/work/_temp/rebase-conformance/build",
+        "-c",
+        "debug",
+        "--filter",
+        "RebasePortableTests",
+        "--xunit-output",
+        "<home>/work/_temp/rebase-conformance/tests.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 102.313,
+      "log": "tests.log"
+    },
+    {
+      "name": "inspector-build",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "<home>/work/_temp/rebase-conformance/build",
+        "-c",
+        "debug",
+        "--product",
+        "rebase-inspect"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.135,
+      "log": "inspector-build.log"
+    },
+    {
+      "name": "inspector-path",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "<home>/work/_temp/rebase-conformance/build",
+        "-c",
+        "debug",
+        "--show-bin-path"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.34,
+      "log": "inspector-path.log"
+    },
+    {
+      "name": "example-render",
+      "argv": [
+        "<home>/work/_temp/rebase-conformance/build/arm64-apple-macosx/debug/rebase-inspect",
+        "render",
+        "<workspace>/Application/Examples/Rebase Preview.rebaseproj",
+        "<home>/work/_temp/rebase-conformance/example-render.wav"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 18.659,
+      "log": "example-render.log"
+    },
+    {
+      "name": "example-overwrite-refusal",
+      "argv": [
+        "<home>/work/_temp/rebase-conformance/build/arm64-apple-macosx/debug/rebase-inspect",
+        "render",
+        "<workspace>/Application/Examples/Rebase Preview.rebaseproj",
+        "<home>/work/_temp/rebase-conformance/example-render.wav"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.013,
+      "log": "example-overwrite-refusal.log"
+    },
+    {
+      "name": "session-build",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "<home>/work/_temp/rebase-conformance/build",
+        "-c",
+        "debug",
+        "--product",
+        "rebase-session"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.673,
+      "log": "session-build.log"
+    },
+    {
+      "name": "session-protocol",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python",
+        "<workspace>/Application/scripts/check-session-protocol.py",
+        "--helper",
+        "<home>/work/_temp/rebase-conformance/build/arm64-apple-macosx/debug/rebase-session",
+        "--example",
+        "<workspace>/Application/Examples/Rebase Preview.rebaseproj",
+        "--report",
+        "<home>/work/_temp/rebase-conformance/session-protocol.json",
+        "--source-project",
+        "<workspace>/Application/Tests/Fixtures/SourceAudition/AuthoredSource.rebaseproj",
+        "--source-media",
+        "<workspace>/Application/Tests/Fixtures/SourceAudition/SelectedSource.wav",
+        "--source-lock",
+        "<workspace>/Application/Tests/Fixtures/SourceAudition/expected.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 183.44,
+      "log": "session-protocol.log"
+    }
+  ],
+  "status": "passed",
+  "interactive_session_checks": 91,
+  "source_journey_tested": true,
+  "source_control": {
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "mediaSHA256": "c1ccbba91f8d9084cba4271ec5cc7c6114d754349d6da98f42a91463830fe956",
+    "outputSHA256": "8090c75bc7ace4f400eb25d428129c68eddec2c488200e9fcad4deb5700afd0a",
+    "pcmSHA256": "06e73a6e5b244c0c187bdd6482d8db7bb3adfd3ac98f2c11e6cd4c29d7a3bce0",
+    "frames": 44100,
+    "sampleRate": 44100,
+    "channels": 2,
+    "playback_tested": false,
+    "expected_lock_sha256": "0e8cf5729264feb03bd4282926c3cb71ba8728dce3b99a221b8ca359b4712cd8"
+  },
+  "waveform_control": {
+    "clips_checked": 11,
+    "peak_bins_checked": 17600,
+    "float32_peak_words_sha256": "ade8ed5eb493af376b7affbfb5bd0bf3f06aafa51eabe63c48c6657406caba29",
+    "oracle": "Independent signed PCM16 extrema over exact source intervals"
+  },
+  "ruler_control": {
+    "read_only": true,
+    "stale_revision_rejected": true,
+    "pixels_per_second": 100,
+    "duration": 20,
+    "ticks_checked": 33,
+    "first_bar_seconds": [
+      0,
+      2.5,
+      5,
+      7.5
+    ],
+    "first_quarter_seconds": [
+      0,
+      0.625,
+      1.25,
+      1.875,
+      2.5
+    ],
+    "oracle": "Authored constant 96 BPM, 4/4: quarter = 5/8 seconds; bar = 5/2 seconds"
+  },
+  "cpr_import_control": {
+    "tested": true,
+    "review_read_only": true,
+    "review_bounded": true,
+    "cancellation_preserves_state": true,
+    "superseded_review_rejected": true,
+    "stale_revision_rejected": true,
+    "changed_source_rejected": true,
+    "explicit_partial_required": true,
+    "dirty_replacement_guarded": true,
+    "existing_destination_preserved": true,
+    "import_published": true,
+    "exact_source_and_report_preserved": true,
+    "save_reopen_preserves_baseline": true,
+    "historical_read_only": true,
+    "tampered_report_rejected": true,
+    "tampered_source_rejected": true,
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "reportSHA256": "f7e8949acac910533f30f21bca9c0daee581f7099770715991a5b9f0ff096833",
+    "evidence_class": "authored-synthetic-control",
+    "playback_tested": false,
+    "review_items_checked": 15,
+    "review_pages_checked": 1
+  },
+  "tests": {
+    "count": 93,
+    "executed": 92,
+    "skipped": 1,
+    "failures": 0,
+    "reports": [
+      {
+        "report": "tests-swift-testing.xml",
+        "count": 93,
+        "executed": 92,
+        "skipped": 1,
+        "failures": 0
+      }
+    ]
+  },
+  "application_dependency_lock_preserved": true
+}

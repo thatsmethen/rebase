@@ -41,3 +41,14 @@ The old manually spaced fader labels were incorrect for the existing slider. Eac
 Those captures showed the separate Channel/Inspector, compact controls and synchronized selection. Root image review also found the selected Channel strip centered inside its stretched outer border, leaving unused space below its nameplate. The correction explicitly anchors that border to the bottom and adds a native nameplate-alignment gate.
 
 [Native run 39949650116](../../research/publication/windows-portability/application-run-39949650116/observation.json) subsequently passed 55 window checks. The selected Channel nameplate bottom is 686 DIP and the lower mixer is 685.5 DIP. Independent inspection of all three fresh captures confirmed the gap is corrected, with the source journey and fixed-header scrolling retained. All 13 [component jobs](../../research/publication/windows-portability/run-39949650135/observation.json) also passed. This accepts the scoped Channel/toolbar refinement; it does not establish complete reference fidelity.
+
+
+## Next visual acceptance work
+
+The Windows reference remains the whole-window target. Inspection of the retained reference project-window image against the current arrangement shows three substantial gaps:
+
+1. **Workspace density and sizing.** The current left panels have fixed widths, track rows are 68 DIP tall, and the lower mixer has a fixed height. Add bounded splitters and compact/normal track heights, while keeping the shared ruler and fixed track headers aligned. Verify selection, trim hit targets, scrolling and focus at smaller window sizes.
+2. **Mixer and Inspector density.** Reuse the working gain, pan, mute, solo and selection commands in narrower strips and collapsible Inspector sections. Verify that the track header, Inspector, selected Channel and lower mixer remain synchronized through edits and undo.
+3. **Top rows and event information.** Tighten the toolbar, status and event-info rows without losing readable fields, command access or Enter/Escape behavior. Keep the empty-selection state compact.
+
+Routing, inserts, record/monitor state, automation read/write, per-channel meters, marker/arranger tracks, Control Room and cycle/locator behavior still need implementation. Their absence is a functional fidelity gap as well as a visual one. New surfaces require working shared behavior and interaction checks; the reviewed CPR import milestone does not satisfy these UI acceptance criteria.

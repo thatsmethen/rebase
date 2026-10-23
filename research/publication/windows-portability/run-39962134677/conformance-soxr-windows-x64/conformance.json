@@ -1,0 +1,107 @@
+{
+  "schema": "rebase.windows-soxr.v1",
+  "status": "passed",
+  "scope": "Independent public-source SoXR build; native reference equivalence unknown",
+  "source_version": "0.1.3",
+  "platform": "Windows",
+  "architecture": "AMD64",
+  "commit": "4679fe92de87e45b85c5365d444397a6227e1898",
+  "commands": [
+    {
+      "name": "compiler-version",
+      "exit_code": 0,
+      "log": "compiler-version.log"
+    },
+    {
+      "name": "cmake-version",
+      "exit_code": 0,
+      "log": "cmake-version.log"
+    },
+    {
+      "name": "configure",
+      "exit_code": 0,
+      "log": "configure.log"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "log": "build.log"
+    },
+    {
+      "name": "install",
+      "exit_code": 0,
+      "log": "install.log"
+    },
+    {
+      "name": "probe-build",
+      "exit_code": 0,
+      "log": "probe-build.log"
+    },
+    {
+      "name": "probe",
+      "exit_code": 0,
+      "log": "probe.log"
+    }
+  ],
+  "source_manifest_sha256": "faeba8d39aa6eb0c4117291be67a99c207f3e0027bd3f79c1184309eca27a66d",
+  "source_entries_verified": 138,
+  "symlink_policy": "Actual symlink or exact Git link-text blob; compiled source bytes remain exact",
+  "options": {
+    "BUILD_SHARED_LIBS": "ON",
+    "BUILD_TESTS": "OFF",
+    "BUILD_EXAMPLES": "OFF",
+    "WITH_OPENMP": "OFF",
+    "WITH_LSR_BINDINGS": "OFF",
+    "BUILD_LSR_TESTS": "OFF",
+    "WITH_CR32": "ON",
+    "WITH_CR64": "ON",
+    "WITH_CR32S": "OFF",
+    "WITH_CR64S": "OFF",
+    "WITH_VR32": "OFF",
+    "WITH_PFFFT": "OFF",
+    "WITH_AVFFT": "OFF",
+    "WITH_HI_PREC_CLOCK": "ON",
+    "WITH_FLOAT_STD_PREC_CLOCK": "OFF",
+    "WITH_DEV_TRACE": "OFF",
+    "WITH_DEV_GPROF": "OFF"
+  },
+  "optimization": "-O3 -DNDEBUG; fast math disabled; FP contraction disabled",
+  "msvc_runtime": "MultiThreadedDLL (CMP0091 NEW)",
+  "windows_exports": "SOXR_DLL explicitly enabled for clang's GNU frontend",
+  "configured_features": {
+    "AVCODEC_FOUND": 0,
+    "AVUTIL_FOUND": 0,
+    "WITH_PFFFT": 0,
+    "HAVE_FENV_H": 1,
+    "HAVE_STDBOOL_H": 1,
+    "HAVE_STDINT_H": 1,
+    "HAVE_LRINT": 1,
+    "HAVE_BIGENDIAN": 0,
+    "WITH_CR32": 1,
+    "WITH_CR32S": 0,
+    "WITH_CR64": 1,
+    "WITH_CR64S": 0,
+    "WITH_VR32": 0,
+    "WITH_HI_PREC_CLOCK": 1,
+    "WITH_FLOAT_STD_PREC_CLOCK": 0,
+    "WITH_DEV_TRACE": 0
+  },
+  "compile_command_count": 9,
+  "artifacts": [
+    {
+      "path": "install/bin/soxr.dll",
+      "bytes": 165888,
+      "sha256": "ced3d7bb608180a69aa8ab727684bd624264dc618298682563c44ad6b7b1742c"
+    },
+    {
+      "path": "install/lib/soxr.lib",
+      "bytes": 4544,
+      "sha256": "159547ca7ca894ad01df568a691a96b135b7b68fdf4bd54bea02f607af032ac4"
+    },
+    {
+      "path": "install/bin/rebase-soxr-probe.exe",
+      "bytes": 11776,
+      "sha256": "a3d33d9d51a7145c100733b245c59208c44bf2c8042e924deb1453fe49926c8c"
+    }
+  ]
+}

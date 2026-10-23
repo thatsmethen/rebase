@@ -20,6 +20,7 @@ public sealed class CPRReviewWindow : Window
     private readonly List<CPRReviewSnapshot> pages;
     private readonly StackPanel rows = new();
     private readonly ScrollViewer scroll;
+    private readonly ScrollViewer errorScroll;
     private readonly TextBlock pageLabel = new(), message = new() { TextWrapping = TextWrapping.Wrap };
     private readonly TaskCompletionSource completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private int index;
@@ -34,6 +35,7 @@ public sealed class CPRReviewWindow : Window
     internal Task Completion => completion.Task;
     internal int PagesVisited => pages.Count;
     internal ScrollViewer ReviewScroll => scroll;
+    internal ScrollViewer ErrorScroll => errorScroll;
     internal FrameworkElement LastReviewItem => rows.Children.OfType<FrameworkElement>().Last();
     internal int? DarkCaptionResult { get; private set; }
     public CPRReviewSnapshot Review { get; }
@@ -52,7 +54,7 @@ public sealed class CPRReviewWindow : Window
             int enabled = 1;
             DarkCaptionResult = DwmSetWindowAttribute(new WindowInteropHelper(this).Handle, 20, ref enabled, sizeof(int));
         };
-        var panel = new Grid { Margin = new Thickness(18) };
+        var panel = new Grid();
         foreach (var height in new[] { GridLength.Auto, GridLength.Auto, new GridLength(1, GridUnitType.Star), GridLength.Auto, GridLength.Auto }) panel.RowDefinitions.Add(new() { Height = height });
         var heading = new StackPanel();
         heading.Children.Add(new TextBlock { Text = first.Historical ? "Preserved import report" : "Review supported CPR data", FontSize = 20, Foreground = Foreground, Margin = new Thickness(0, 0, 0, 10) });
@@ -72,9 +74,14 @@ public sealed class CPRReviewWindow : Window
         pageLabel.VerticalAlignment = VerticalAlignment.Center; pageLabel.Foreground = Brushes.LightGray; navigation.Children.Add(pageLabel);
         Grid.SetRow(navigation, 3); panel.Children.Add(navigation);
         var footer = new Grid(); footer.ColumnDefinitions.Add(new() { Width = new GridLength(1, GridUnitType.Star) }); footer.ColumnDefinitions.Add(new() { Width = GridLength.Auto });
-        message.Foreground = new SolidColorBrush(Color.FromRgb(218, 187, 124)); message.Margin = new Thickness(0, 0, 12, 0); footer.Children.Add(message);
+        message.Foreground = new SolidColorBrush(Color.FromRgb(218, 187, 124));
+        errorScroll = new ScrollViewer { Content = message, MaxHeight = 80, Margin = new Thickness(0, 0, 12, 0),
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled };
+        footer.Children.Add(errorScroll);
         var actions = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Bottom }; actions.Children.Add(CloseButton); actions.Children.Add(ImportButton); Grid.SetColumn(actions, 1); footer.Children.Add(actions); Grid.SetRow(footer, 4); panel.Children.Add(footer);
-        Content = panel;
+        // The content root owns the full opaque client surface. Padding belongs
+        // inside this root so visual-tree captures include every footer control.
+        Content = new Border { Background = Background, Padding = new Thickness(18), Child = panel };
         if (first.Historical) CloseButton.Content = "Close report";
         foreach (var button in new[] { PreviousButton, NextButton, CloseButton, ImportButton }) AutomationProperties.SetName(button, (string)button.Content);
         PreviousButton.Click += (_, _) => { if (!busy && index > 0) { index--; Display(); } };

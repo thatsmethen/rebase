@@ -1,0 +1,262 @@
+{
+  "schema": "rebase.windows-ci-observation.v1",
+  "recorded_at_utc": "2026-10-23T13:45:01.838155+00:00",
+  "commit": "4679fe92de87e45b85c5365d444397a6227e1898",
+  "status": "functional-pass-visual-rejected",
+  "run_url": "https://github.com/thatsmethen/rebase/actions/runs/39962134728",
+  "job_url": "https://github.com/thatsmethen/rebase/actions/runs/39962134728/job/120442506140",
+  "publication_status": "Not published. Native functional checks passed, but independent visual inspection rejected the new CPR capture. A corrected candidate requires a separate run.",
+  "findings": [
+    "The shared Release gate executed 90 tests with one explicit opt-in skip and no failures, including all 14 new CPR review controls.",
+    "The packaged application passed 65 native-window checks,155 host controls and 91 checks through each production helper. All 16 CPR process gates passed.",
+    "The CPR capture is 778 by 575 pixels with a transparent surround. Rendering a margin-bearing inner Grid at its own ActualWidth/Height clipped the right and bottom content, omitted Import/Cancel and excluded the Window background.",
+    "Root and independent inspection accepted the three existing main/source/scroll captures as unchanged in scope; the new CPR capture is not accepted.",
+    "The functional checks validated cancellation, changed-source rejection, dirty protection, destination cancellation, supported import, preserved source and historical report. Their pass did not detect the capture defect.",
+    "No audio endpoint was available; no audio-device playback was measured."
+  ],
+  "package": {
+    "name": "Rebase-Windows-x64-development-4679fe92de87.zip",
+    "bytes": 98946581,
+    "sha256": "c533f5b682c3e06b98f53095ec0ef9b54e49d5ed3930491be3478441eb29dbce"
+  },
+  "package_identity_source": "CI receipt",
+  "package_independently_audited": false,
+  "release_accepted": false,
+  "window_smoke_checks": 65,
+  "host_control_checks": 155,
+  "packaged_protocol_checks": 91,
+  "shared_protocol_checks": 91,
+  "shared_release_tests": {
+    "count": 91,
+    "executed": 90,
+    "skipped": 1,
+    "failures": 0
+  },
+  "shared_cpr_review_tests": {
+    "executed": 14,
+    "skipped": 0,
+    "failures": 0
+  },
+  "cpr_review": {
+    "reviewed": true,
+    "cancelled_without_changes": true,
+    "changed_source_rejected": true,
+    "dirty_guard": true,
+    "destination_cancel_preserved_review": true,
+    "imported": true,
+    "historical_read_only": true,
+    "preserved_source_sha256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "review_screenshot": "native-cpr-review-visual.png",
+    "window_bounds": {
+      "outer_width": 830,
+      "outer_height": 650,
+      "client_width": 778,
+      "client_height": 575,
+      "dpi_x": 96,
+      "dpi_y": 96
+    },
+    "pages_checked": 1,
+    "items_checked": 15,
+    "vertical_scroll_checked": true,
+    "dark_caption_hresult": 0,
+    "native_frame_visual_tested": false,
+    "native_file_pickers_tested": false,
+    "physical_input_tested": false
+  },
+  "cpr_import": {
+    "tested": true,
+    "review_read_only": true,
+    "review_bounded": true,
+    "cancellation_preserves_state": true,
+    "superseded_review_rejected": true,
+    "stale_revision_rejected": true,
+    "changed_source_rejected": true,
+    "explicit_partial_required": true,
+    "dirty_replacement_guarded": true,
+    "existing_destination_preserved": true,
+    "import_published": true,
+    "exact_source_and_report_preserved": true,
+    "save_reopen_preserves_baseline": true,
+    "historical_read_only": true,
+    "tampered_report_rejected": true,
+    "tampered_source_rejected": true,
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "reportSHA256": "f7e8949acac910533f30f21bca9c0daee581f7099770715991a5b9f0ff096833",
+    "evidence_class": "authored-synthetic-control",
+    "playback_tested": false,
+    "review_items_checked": 15,
+    "review_pages_checked": 1
+  },
+  "source": {
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "mediaSHA256": "c1ccbba91f8d9084cba4271ec5cc7c6114d754349d6da98f42a91463830fe956",
+    "outputSHA256": "8090c75bc7ace4f400eb25d428129c68eddec2c488200e9fcad4deb5700afd0a",
+    "pcmSHA256": "06e73a6e5b244c0c187bdd6482d8db7bb3adfd3ac98f2c11e6cd4c29d7a3bce0",
+    "frames": 44100,
+    "sampleRate": 44100,
+    "channels": 2,
+    "playback_tested": false
+  },
+  "waveform": {
+    "clips_checked": 11,
+    "peak_bins_checked": 17600,
+    "float32_peak_words_sha256": "ade8ed5eb493af376b7affbfb5bd0bf3f06aafa51eabe63c48c6657406caba29",
+    "oracle": "Independent signed PCM16 extrema over exact source intervals"
+  },
+  "ruler": {
+    "read_only": true,
+    "stale_revision_rejected": true,
+    "pixels_per_second": 100,
+    "duration": 20,
+    "ticks_checked": 33,
+    "first_bar_seconds": [
+      0,
+      2.5,
+      5,
+      7.5
+    ],
+    "first_quarter_seconds": [
+      0,
+      0.625,
+      1.25,
+      1.875,
+      2.5
+    ],
+    "oracle": "Authored constant 96 BPM, 4/4: quarter = 5/8 seconds; bar = 5/2 seconds"
+  },
+  "visual_evidence": {
+    "images": {
+      "native-app-visual.png": [
+        1084,
+        749
+      ],
+      "native-source-visual.png": [
+        1084,
+        749
+      ],
+      "native-timeline-scroll-visual.png": [
+        1084,
+        749
+      ],
+      "native-cpr-review-visual.png": [
+        778,
+        575
+      ]
+    },
+    "manual_review": "Root and independent reviewer",
+    "cpr_capture_accepted": false,
+    "existing_main_source_scroll_captures_accepted": true
+  },
+  "boundaries": [
+    "All 21 raw artifacts are retained byte-exactly; the failed visual evidence is not repaired.",
+    "The images render the client visual tree of the opened WPF application, excluding the native frame. File-picker decisions and dirty-choice responses were injected; native file dialogs and physical input were not tested.",
+    "Authored fixture controls do not establish proprietary reference behavior, full CPR compatibility or complete Windows fidelity."
+  ],
+  "artifacts": [
+    {
+      "path": "application-build.json",
+      "bytes": 5559,
+      "sha256": "976e4c6a0ad58892c17356d976b1097a43c3309ccaae5b42009c1f0374373a0e"
+    },
+    {
+      "path": "host-controls.json",
+      "bytes": 164,
+      "sha256": "20703e183423e63e0231370fb5eeede6bb14d0041438a414d8f0f9b23fad49fa"
+    },
+    {
+      "path": "packaged-session-protocol.json",
+      "bytes": 9406,
+      "sha256": "f31f7d2770c71d5d96b8b2b106f8b57796ea06c549dd6bb9c080edea0c92ec52"
+    },
+    {
+      "path": "pe-dependency-closure.json",
+      "bytes": 107613,
+      "sha256": "63ee13e46435de0d736ab6a1328b173d3806b7470cfec09ae71b605c66083c78"
+    },
+    {
+      "path": "wpf-smoke.json",
+      "bytes": 6017,
+      "sha256": "6a0b121f24220f3de6c09b5cb97f25dd916ded56e44b442c52f06876906592c2"
+    },
+    {
+      "path": "loaded-modules.json",
+      "bytes": 33823,
+      "sha256": "e351430c240705a941fdb3bd95de2e070ec47783f15a981c8b786a8b4513da62"
+    },
+    {
+      "path": "native-app-visual.png",
+      "bytes": 80717,
+      "sha256": "f365cd8b16a0c4906af1d7cf6dadc7b997239e22e43dec059d0ee4afe3ec13e1"
+    },
+    {
+      "path": "native-source-visual.png",
+      "bytes": 72959,
+      "sha256": "0429783bac6bb03d825b7ebbce0c47d259ca3f25868ba6fdbeedc4be89d1d6d3"
+    },
+    {
+      "path": "native-timeline-scroll-visual.png",
+      "bytes": 75002,
+      "sha256": "1ae5ed77b25d600b64a983f4733489ae08a34b8c021d7cd3103571a08928415f"
+    },
+    {
+      "path": "native/conformance.json",
+      "bytes": 4073,
+      "sha256": "317df8a1a86aa212c697ed12553e2c03c8fd582f646258bec60b3d72647bf0f1"
+    },
+    {
+      "path": "native/lifecycle.json",
+      "bytes": 161,
+      "sha256": "4cf871633cd9cd8fba9c06d7552550837fc5ef3d79fc608370edc07228840ab7"
+    },
+    {
+      "path": "native/endpoint-probe.json",
+      "bytes": 539,
+      "sha256": "4861b7d5be2448c852ce4e272c64bb50e6a79646e65b9d917937b48248d7c38c"
+    },
+    {
+      "path": "shared/conformance.json",
+      "bytes": 8764,
+      "sha256": "008365be586a4906a59c648e6a3519adf30c74e1d7d67d42eb7ed082f45ba414"
+    },
+    {
+      "path": "shared/tests-swift-testing.xml",
+      "bytes": 14065,
+      "sha256": "6253dfaa752e0dc992ae250afcf3fea77ca15756dc9cc8831d75148d8bc05b3a"
+    },
+    {
+      "path": "shared/tests.log",
+      "bytes": 158499,
+      "sha256": "139648fa2897f1b6eeb04821208546786a73d23bdda8e4c8085b56636b56945f"
+    },
+    {
+      "path": "shared/test-discovery.log",
+      "bytes": 9236,
+      "sha256": "887c8a96ee86d65c0b53febb7af46a35ec21732b09940a3a68af896acb6fb787"
+    },
+    {
+      "path": "shared/session-protocol.json",
+      "bytes": 9406,
+      "sha256": "f31f7d2770c71d5d96b8b2b106f8b57796ea06c549dd6bb9c080edea0c92ec52"
+    },
+    {
+      "path": "shared/example-render.json",
+      "bytes": 1118,
+      "sha256": "890ee3e5a7e741ec983107611be2cd16cccaed45d7369bee2ede7e337109f058"
+    },
+    {
+      "path": "packaged-window-smoke.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "host-controls.log",
+      "bytes": 132,
+      "sha256": "302761939769c9beab79afa473471e865ea96e5385c77e54e99919b2ecef8ee5"
+    },
+    {
+      "path": "native-cpr-review-visual.png",
+      "bytes": 59662,
+      "sha256": "6fb7733b743c684ad2e0c5d6741a9e2840b53fb9ffc21728a0755fb2f6ef6e2a"
+    }
+  ]
+}

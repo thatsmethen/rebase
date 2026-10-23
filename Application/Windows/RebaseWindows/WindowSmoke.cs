@@ -402,14 +402,8 @@ public partial class MainWindow
             } while (true);
             Assert(itemsChecked == review.Review.TotalItems && !review.NextButton.IsEnabled && pagesChecked > 0, "cpr-review-all-pages-accessible");
             while (review.PreviousButton.IsEnabled) await Invoke(review.PreviousButton);
-            await Dispatcher.InvokeAsync(review.UpdateLayout, DispatcherPriority.ApplicationIdle);
-            var client = (FrameworkElement)review.Content;
-            var dpi = VisualTreeHelper.GetDpi(review);
-            var reviewBounds = new { outer_width = review.ActualWidth, outer_height = review.ActualHeight, client_width = client.ActualWidth,
-                client_height = client.ActualHeight, dpi_x = dpi.PixelsPerInchX, dpi_y = dpi.PixelsPerInchY };
-            var picture = new RenderTargetBitmap((int)Math.Ceiling(client.ActualWidth), (int)Math.Ceiling(client.ActualHeight), 96, 96, PixelFormats.Pbgra32);
-            picture.Render(client); var encoder = new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(picture));
-            using (var output = File.Create(Path.Combine(root, "native-cpr-review-visual.png"))) encoder.Save(output);
+            var (reviewBounds, reviewLayout) = await CaptureCPRReview(review, "native-cpr-review-visual.png");
+            checks.Add("cpr-review-footer-visible"); checks.Add("cpr-review-capture-opaque");
             checks.Add("cpr-review-visual-artifact");
             await CloseReview(review);
             Assert(StateIdentity() == before && model.CPRReview is null, "cpr-review-cancel-preserves-session");
@@ -423,6 +417,19 @@ public partial class MainWindow
             await Until(() => !review.Working && !model.Busy && review.ReviewMessage.Length > 0, stage);
             Assert(review.IsVisible && StateIdentity() == before && !Directory.Exists(changedDestination) &&
                 model.Status.Contains("changed", StringComparison.OrdinalIgnoreCase), "cpr-changed-source-rejected");
+            review.Width = review.MinWidth; review.Height = review.MinHeight;
+            var (minimumErrorBounds, minimumErrorLayout) = await CaptureCPRReview(review, "native-cpr-review-minimum-error-visual.png");
+            Assert(review.ReviewMessage.Length > 0 && review.ImportButton.IsEnabled && review.ErrorScroll.ActualHeight is > 0 and <= 80,
+                "cpr-review-minimum-error-layout");
+            var errorScrollable = review.ErrorScroll.ScrollableHeight > 0;
+            if (errorScrollable)
+            {
+                var provider = (IScrollProvider)new ScrollViewerAutomationPeer(review.ErrorScroll).GetPattern(PatternInterface.Scroll);
+                provider.SetScrollPercent(System.Windows.Automation.ScrollPatternIdentifiers.NoScroll, 100);
+                await Dispatcher.InvokeAsync(review.UpdateLayout, DispatcherPriority.ApplicationIdle);
+                if (Math.Abs(review.ErrorScroll.VerticalOffset - review.ErrorScroll.ScrollableHeight) > 0.5)
+                    throw new InvalidOperationException("The complete review error is not reachable by scrolling.");
+            }
             await CloseReview(review); await File.WriteAllBytesAsync(source, original);
 
             stage = "cpr-dirty-cancel-preserves-session";
@@ -452,9 +459,41 @@ public partial class MainWindow
             cprReviewReceipt = new { reviewed = true, cancelled_without_changes = true, changed_source_rejected = true, dirty_guard = true,
                 destination_cancel_preserved_review = true, imported = true, historical_read_only = true, preserved_source_sha256 = hash,
                 review_screenshot = "native-cpr-review-visual.png", window_bounds = reviewBounds, pages_checked = pagesChecked, items_checked = itemsChecked,
+                capture_layout = reviewLayout, minimum_error_screenshot = "native-cpr-review-minimum-error-visual.png",
+                minimum_error_bounds = minimumErrorBounds, minimum_error_layout = minimumErrorLayout, error_scrolling_checked = errorScrollable,
                 vertical_scroll_checked = verticalScrollChecked, dark_caption_hresult = review.DarkCaptionResult, native_frame_visual_tested = false,
                 native_file_pickers_tested = false, physical_input_tested = false };
             smokeCPRPath = null; smokeCPRDestination = null; smokeCPRDirtyDecision = null;
+        }
+        async Task<(object Bounds, object Layout)> CaptureCPRReview(CPRReviewWindow review, string filename)
+        {
+            await Dispatcher.InvokeAsync(review.UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var client = review.Content as Border ?? throw new InvalidOperationException("The CPR review has no full client root.");
+            if (client.Margin != new Thickness(0) || client.Background is not SolidColorBrush background || background.Color.A != 255)
+                throw new InvalidOperationException("The CPR review capture root must be marginless and opaque.");
+            var controls = new List<object>();
+            foreach (var button in new[] { review.PreviousButton, review.NextButton, review.CloseButton, review.ImportButton })
+            {
+                var box = button.TransformToAncestor(client).TransformBounds(new Rect(button.RenderSize));
+                if (!button.IsVisible || box.Width <= 0 || box.Height <= 0 || box.Left < 0 || box.Top < 0 ||
+                    box.Right > client.ActualWidth + 0.5 || box.Bottom > client.ActualHeight + 0.5)
+                    throw new InvalidOperationException("A CPR review footer control is outside the captured client surface.");
+                controls.Add(new { name = System.Windows.Automation.AutomationProperties.GetName(button), x = box.X, y = box.Y, width = box.Width, height = box.Height });
+            }
+            if (review.ReviewScroll.ActualHeight < 40) throw new InvalidOperationException("The review content viewport is not usable.");
+            var dpi = VisualTreeHelper.GetDpi(review);
+            var bounds = new { outer_width = review.ActualWidth, outer_height = review.ActualHeight, client_width = client.ActualWidth,
+                client_height = client.ActualHeight, dpi_x = dpi.PixelsPerInchX, dpi_y = dpi.PixelsPerInchY };
+            var width = (int)Math.Ceiling(client.ActualWidth); var height = (int)Math.Ceiling(client.ActualHeight);
+            var picture = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
+            picture.Render(client);
+            var pixels = new byte[checked(width * height * 4)]; picture.CopyPixels(pixels, width * 4, 0);
+            for (var i = 3; i < pixels.Length; i += 4)
+                if (pixels[i] != 255) throw new InvalidOperationException("The CPR review capture contains transparent pixels.");
+            var encoder = new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(picture));
+            using (var output = File.Create(Path.Combine(root, filename))) encoder.Save(output);
+            return (bounds, new { footer_controls = controls, opaque_pixels = width * height, total_pixels = width * height,
+                review_viewport_height = review.ReviewScroll.ActualHeight, error_characters = review.ReviewMessage.Length });
         }
         CheckBox MixerFlag(string name) => Descendants<CheckBox>(Mixer).Single(control => System.Windows.Automation.AutomationProperties.GetName(control) == name);
         async Task Capture(string filename)

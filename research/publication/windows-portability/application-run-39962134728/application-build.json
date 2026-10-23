@@ -1,0 +1,192 @@
+{
+  "schema": "rebase.windows-application-build.v1",
+  "status": "passed",
+  "commit": "4679fe92de87e45b85c5365d444397a6227e1898",
+  "development_build": true,
+  "signed": false,
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "commands": [
+    {
+      "name": "dotnet-version",
+      "argv": [
+        "dotnet",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.297
+    },
+    {
+      "name": "swift-version",
+      "argv": [
+        "swift",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.172
+    },
+    {
+      "name": "host-controls",
+      "argv": [
+        "dotnet",
+        "run",
+        "--project",
+        "<workspace>\\Application\\Windows\\RebaseWindows\\Tests\\RebaseWindows.Controls.csproj",
+        "-c",
+        "Release"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 12.078
+    },
+    {
+      "name": "native-audio-conformance",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\run-windows-native-audio-ci.py",
+        "--configuration",
+        "Release",
+        "--output",
+        "<build-output>\\evidence\\native"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 16.125
+    },
+    {
+      "name": "publish-wpf",
+      "argv": [
+        "dotnet",
+        "publish",
+        "<workspace>\\Application\\Windows\\RebaseWindows\\RebaseWindows.csproj",
+        "-c",
+        "Release",
+        "-r",
+        "win-x64",
+        "--self-contained",
+        "true",
+        "-p:PublishTrimmed=false",
+        "-p:PublishSingleFile=false",
+        "-p:DebugType=None",
+        "-p:DebugSymbols=false",
+        "-p:ContinuousIntegrationBuild=true",
+        "-p:PathMap=<workspace>=/_/Rebase",
+        "-p:RuntimeFrameworkVersion=10.0.13",
+        "-o",
+        "<build-output>\\package\\Rebase"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 12.922
+    },
+    {
+      "name": "build-session",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "<build-output>\\session-build",
+        "-c",
+        "release",
+        "--product",
+        "rebase-session",
+        "-Xswiftc",
+        "-file-prefix-map",
+        "-Xswiftc",
+        "<workspace>=/_/Rebase",
+        "-Xswiftc",
+        "-debug-prefix-map",
+        "-Xswiftc",
+        "<workspace>=/_/Rebase",
+        "-Xcc",
+        "-ffile-prefix-map=<workspace>=/_/Rebase"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 59.516
+    },
+    {
+      "name": "session-bin-path",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "<build-output>\\session-build",
+        "-c",
+        "release",
+        "--show-bin-path"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.984
+    },
+    {
+      "name": "packaged-session-protocol",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\check-session-protocol.py",
+        "--helper",
+        "<build-output>\\package\\Rebase\\rebase-session.exe",
+        "--example",
+        "<build-output>\\package\\Rebase\\Examples\\Rebase Preview.rebaseproj",
+        "--report",
+        "<build-output>\\evidence\\packaged-session-protocol.json",
+        "--source-project",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceAudition\\AuthoredSource.rebaseproj",
+        "--source-media",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceAudition\\SelectedSource.wav",
+        "--source-lock",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceAudition\\expected.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.11
+    },
+    {
+      "name": "packaged-window-smoke",
+      "argv": [
+        "<build-output>\\package\\Rebase\\Rebase.exe",
+        "--smoke",
+        "--smoke-json",
+        "<build-output>\\evidence\\wpf-smoke.json",
+        "--smoke-source-project",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceAudition\\AuthoredSource.rebaseproj",
+        "--smoke-source-media",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceAudition\\SelectedSource.wav"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 9.046
+    },
+    {
+      "name": "shared-release-conformance",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\run-portable-ci.py",
+        "swift",
+        "--configuration",
+        "Release",
+        "--output",
+        "<build-output>\\evidence\\shared"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 149.094
+    }
+  ],
+  "toolchain": {
+    "dotnet_sdk": "10.0.402",
+    "dotnet_runtime": "10.0.13",
+    "swift": "6.4.1"
+  },
+  "runner_image": {
+    "ImageOS": "win25-vs2026",
+    "ImageVersion": "20261021.278.1"
+  },
+  "package": {
+    "name": "Rebase-Windows-x64-development-4679fe92de87.zip",
+    "bytes": 98946581,
+    "sha256": "c533f5b682c3e06b98f53095ec0ef9b54e49d5ed3930491be3478441eb29dbce"
+  },
+  "window_smoke_tested": true,
+  "dialogs_tested": false,
+  "dependency_closure_checked": true,
+  "app_local_modules_observed": true,
+  "source_journey_tested": true,
+  "source_fixture_shipped": false,
+  "real_waveform_checks_passed": true,
+  "pinned_track_headers_scroll_checked": true,
+  "musical_ruler_placement_checked": true
+}
