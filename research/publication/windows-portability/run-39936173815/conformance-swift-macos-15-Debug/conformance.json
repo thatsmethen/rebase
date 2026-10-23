@@ -1,0 +1,168 @@
+{
+  "schema": "rebase.portable-ci.v1",
+  "scope": "Authored portable component conformance; no desktop app parity or reference-runtime claim",
+  "lane": "swift",
+  "configuration": "Debug",
+  "platform": "Darwin",
+  "architecture": "arm64",
+  "runner_image": {
+    "ImageOS": "macos15",
+    "ImageVersion": "20260907.0337.1"
+  },
+  "commit": "34f15d5554049c43e562c99d57fe11eaed1a560d",
+  "commands": [
+    {
+      "name": "cmake-version",
+      "argv": [
+        "cmake",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.096,
+      "log": "cmake-version.log"
+    },
+    {
+      "name": "swift-version",
+      "argv": [
+        "swift",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.711,
+      "log": "swift-version.log"
+    },
+    {
+      "name": "developer-directory",
+      "argv": [
+        "xcode-select",
+        "-p"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.006,
+      "log": "developer-directory.log"
+    },
+    {
+      "name": "tests",
+      "argv": [
+        "swift",
+        "test",
+        "--scratch-path",
+        "<home>/work/_temp/rebase-conformance/build",
+        "-c",
+        "debug",
+        "--filter",
+        "RebasePortableTests",
+        "--xunit-output",
+        "<home>/work/_temp/rebase-conformance/tests.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 86.523,
+      "log": "tests.log"
+    },
+    {
+      "name": "inspector-build",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "<home>/work/_temp/rebase-conformance/build",
+        "-c",
+        "debug",
+        "--product",
+        "rebase-inspect"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.969,
+      "log": "inspector-build.log"
+    },
+    {
+      "name": "inspector-path",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "<home>/work/_temp/rebase-conformance/build",
+        "-c",
+        "debug",
+        "--show-bin-path"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.362,
+      "log": "inspector-path.log"
+    },
+    {
+      "name": "example-render",
+      "argv": [
+        "<home>/work/_temp/rebase-conformance/build/arm64-apple-macosx/debug/rebase-inspect",
+        "render",
+        "<workspace>/Application/Examples/Rebase Preview.rebaseproj",
+        "<home>/work/_temp/rebase-conformance/example-render.wav"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 17.669,
+      "log": "example-render.log"
+    },
+    {
+      "name": "example-overwrite-refusal",
+      "argv": [
+        "<home>/work/_temp/rebase-conformance/build/arm64-apple-macosx/debug/rebase-inspect",
+        "render",
+        "<workspace>/Application/Examples/Rebase Preview.rebaseproj",
+        "<home>/work/_temp/rebase-conformance/example-render.wav"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.016,
+      "log": "example-overwrite-refusal.log"
+    },
+    {
+      "name": "session-build",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "<home>/work/_temp/rebase-conformance/build",
+        "-c",
+        "debug",
+        "--product",
+        "rebase-session"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.746,
+      "log": "session-build.log"
+    },
+    {
+      "name": "session-protocol",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/python",
+        "<workspace>/Application/scripts/check-session-protocol.py",
+        "--helper",
+        "<home>/work/_temp/rebase-conformance/build/arm64-apple-macosx/debug/rebase-session",
+        "--example",
+        "<workspace>/Application/Examples/Rebase Preview.rebaseproj",
+        "--report",
+        "<home>/work/_temp/rebase-conformance/session-protocol.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 186.903,
+      "log": "session-protocol.log"
+    }
+  ],
+  "status": "passed",
+  "interactive_session_checks": 29,
+  "tests": {
+    "count": 62,
+    "executed": 61,
+    "skipped": 1,
+    "failures": 0,
+    "reports": [
+      {
+        "report": "tests-swift-testing.xml",
+        "count": 62,
+        "executed": 61,
+        "skipped": 1,
+        "failures": 0
+      }
+    ]
+  },
+  "application_dependency_lock_preserved": true
+}

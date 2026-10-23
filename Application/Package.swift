@@ -21,7 +21,7 @@ let portableSources = [
     "CPRProject.swift", "CPRProjectAudioSetup.swift", "CPRRecoveryV1.swift",
     "CPRRecoveryV2.swift", "CPRRecoveryV3.swift", "CPRRecoveryV4.swift", "CPRRecoveryV5.swift",
     "CPRSegmentReadPlan.swift", "CPRSignatureRecovery.swift", "CPRTrackContributorArchive.swift",
-    "MusicalTime.swift", "NativeTempoClock.swift", "PCMRendering.swift", "PortableSHA256.swift", "Project.swift", "ProjectEditing.swift",
+    "MusicalTime.swift", "MusicalRuler.swift", "NativeTempoClock.swift", "PCMRendering.swift", "PortableSHA256.swift", "Project.swift", "ProjectEditing.swift",
     "PortablePackageSnapshot.swift", "PortableSession.swift", "ProjectFileIO.swift", "ProjectStore.swift", "ProjectStorePortableAudio.swift",
     "UnresolvedCPRAudioEvent.swift", "WAVPCMSource.swift", "WaveformPeaks.swift"
 ]
@@ -41,7 +41,7 @@ let portableTargets: [Target] = [
     .executableTarget(name: "RebaseSessionCLI", dependencies: ["RebasePortable"]),
     .testTarget(name: "RebasePortableTests", dependencies: ["RebasePortable", "RebaseTimingDSP"],
                 path: "Tests", exclude: ["RebaseCoreTests", "PortableDSP", "Fixtures", "run-tests.sh", "README.md"],
-                sources: ["RebasePortableTests", "SharedEditingTests", "SharedDocumentTests", "SharedCPRAudioTests", "SharedWaveformTests"])
+                sources: ["RebasePortableTests", "SharedEditingTests", "SharedDocumentTests", "SharedCPRAudioTests", "SharedWaveformTests", "SharedMusicalRulerTests"])
 ]
 
 let package = Package(
@@ -73,7 +73,7 @@ let package = Package(
         .executableTarget(name: "Rebase", dependencies: ["RebaseCore", "RebaseDSP"]),
         .testTarget(name: "RebaseCoreTests", dependencies: ["RebaseCore", "RebaseDSP"],
                     path: "Tests", exclude: ["RebasePortableTests", "PortableDSP", "Fixtures", "run-tests.sh", "README.md"],
-                    sources: ["RebaseCoreTests", "SharedEditingTests", "SharedDocumentTests", "SharedCPRAudioTests", "SharedWaveformTests"])
+                    sources: ["RebaseCoreTests", "SharedEditingTests", "SharedDocumentTests", "SharedCPRAudioTests", "SharedWaveformTests", "SharedMusicalRulerTests"])
     ],
     swiftLanguageModes: [.v5]
 )

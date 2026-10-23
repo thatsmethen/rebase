@@ -1,0 +1,202 @@
+{
+  "schema": "rebase.windows-ci-observation.v1",
+  "recorded_at_utc": "2026-10-23T10:15:59.309419+00:00",
+  "commit": "34f15d5554049c43e562c99d57fe11eaed1a560d",
+  "status": "passed",
+  "run_url": "https://github.com/thatsmethen/rebase/actions/runs/39936173813",
+  "job_url": "https://github.com/thatsmethen/rebase/actions/runs/39936173813/job/120356136120",
+  "publication_status": "held-for-visual-corrections-and-independent-package-review",
+  "accepted_for_release_publication": false,
+  "findings": [
+    "The Windows development application workflow passed its mandatory build, shared-core, dependency, process and visible-window gates and reported an unsigned development ZIP.",
+    "The actual opened WPF window passed 21 automated checks, including explicit source-event selection, media attachment, attachment undo/redo, source export, exact provenance and output hash verification, real waveforms and four visible track rows.",
+    "Portable host controls passed 72 checks with zero failures. These are host logic controls, not native audio-device execution.",
+    "The staged Release session helper passed all 47 packaged interactive checks, including 11 exact source waveforms, explicit authored-source attachment, stale and unattached export rejection, exact source-rate Float32 output, overwrite refusal, undo/redo and save/reopen.",
+    "The source waveform/export checks match the predeclared authored fixture hashes. The fixture was used for tests and is reported absent from the user release package.",
+    "The shared Release gate listed 61 tests, executed 60, skipped the opt-in fixture generator, and reported zero failures. Test discovery uses optimized Release compilation with cross-module optimization disabled for the test build.",
+    "Both retained visual-tree PNGs were reviewed. The main arrangement has readable labels, real waveforms and four visible tracks. The source view still displays raw SourceEventView object text in the collapsed selector and None in the top selected-event field despite a selected source event.",
+    "The hosted audio endpoint was unavailable. No audio-device playback or audible output was measured."
+  ],
+  "visual_review": {
+    "status": "changes-required",
+    "reviewed_images": [
+      "native-app-visual.png",
+      "native-source-visual.png"
+    ],
+    "confirmed_gaps": [
+      {
+        "image": "native-source-visual.png",
+        "detail": "The collapsed retained-source selector shows raw SourceEventView { Id = ... object text instead of the event label."
+      },
+      {
+        "image": "native-source-visual.png",
+        "detail": "The top Selected event field says None while a retained source event is selected in the inspector."
+      }
+    ],
+    "follow_up_scope": [
+      "Correct source selector display and selected-event header",
+      "Review hover and dropdown fit",
+      "Keep track headers fixed during timeline scrolling",
+      "Finish inspector controls"
+    ],
+    "follow_up_status": "Corrections are in progress outside this retained build; this observation does not claim they are fixed."
+  },
+  "boundaries": [
+    "All 19 retained files, including both PNGs, are byte-exact copies of the already downloaded CI evidence; no image changes or local redactions were applied.",
+    "Text records were scanned for private home and local temporary paths, personal namespace terms, email addresses, credentials and private-key headers; no matches were found. The images contain authored project labels and synthetic event identity, with no personal material observed.",
+    "The PNGs render the visual tree of the opened WPF window. They are not desktop screenshots and do not capture the native window frame. File dialogs and physical input remain untested.",
+    "The package identity below is reported by CI only. The ZIP was not downloaded, opened or independently audited for this observation; it is not accepted for release publication.",
+    "This authored control and development build do not establish full Windows parity, general CPR playback, or proprietary reference-runtime equivalence.",
+    "No audio-device playback, audible output or physical audio measurement was performed."
+  ],
+  "package": {
+    "name": "Rebase-Windows-x64-development-34f15d555404.zip",
+    "bytes": 98828519,
+    "sha256": "e363895c3199f6fa28e2e4a45f042f02df202a497630283b22a3c67913b2dfc8"
+  },
+  "package_identity_source": "CI application-build.json receipt only",
+  "package_independently_downloaded": false,
+  "package_independently_audited": false,
+  "window_smoke_passed": true,
+  "window_smoke_checks": 21,
+  "host_control_checks": 72,
+  "packaged_protocol_checks": 47,
+  "shared_release_gate_passed": true,
+  "shared_release_tests": {
+    "count": 61,
+    "executed": 60,
+    "skipped": 1,
+    "failures": 0
+  },
+  "loaded_modules": {
+    "wpf_process": 127,
+    "helper": 50
+  },
+  "pe_dependency_images": 417,
+  "source_journey_tested": true,
+  "source_fixture_shipped_as_reported": false,
+  "source": {
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "mediaSHA256": "c1ccbba91f8d9084cba4271ec5cc7c6114d754349d6da98f42a91463830fe956",
+    "outputSHA256": "8090c75bc7ace4f400eb25d428129c68eddec2c488200e9fcad4deb5700afd0a",
+    "pcmSHA256": "06e73a6e5b244c0c187bdd6482d8db7bb3adfd3ac98f2c11e6cd4c29d7a3bce0",
+    "frames": 44100,
+    "sampleRate": 44100,
+    "channels": 2,
+    "playback_tested": false
+  },
+  "waveform": {
+    "clips_checked": 11,
+    "peak_bins_checked": 17600,
+    "float32_peak_words_sha256": "ade8ed5eb493af376b7affbfb5bd0bf3f06aafa51eabe63c48c6657406caba29",
+    "oracle": "Independent signed PCM16 extrema over exact source intervals"
+  },
+  "downloadable_zip_produced": true,
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "artifacts": [
+    {
+      "path": "application-build.json",
+      "bytes": 5467,
+      "sha256": "966a3c4b19633939d7e7096802d8b4fa184c40fdd84161cebc380eac283dc1a1"
+    },
+    {
+      "path": "host-controls.json",
+      "bytes": 163,
+      "sha256": "8561e6f51a53272bbcf977f00ccb37c1d14df3c40f84aa32958b7ed142f8e57f"
+    },
+    {
+      "path": "packaged-session-protocol.json",
+      "bytes": 4374,
+      "sha256": "4343137813d0f3b54c21ba3c94e9fb83b94fefbd08b6469b3df0f4a1824d716d"
+    },
+    {
+      "path": "pe-dependency-closure.json",
+      "bytes": 107613,
+      "sha256": "63ee13e46435de0d736ab6a1328b173d3806b7470cfec09ae71b605c66083c78"
+    },
+    {
+      "path": "wpf-smoke.json",
+      "bytes": 1516,
+      "sha256": "66ff04289ef53c58ea259728d524041983c38425fb9ebd31996a05cf2d1c6a96"
+    },
+    {
+      "path": "loaded-modules.json",
+      "bytes": 33091,
+      "sha256": "a0f16a98bd2bd432ec322d524eba1265259bd32eb08dea97b96722391e2cd0bb"
+    },
+    {
+      "path": "native-app-visual.png",
+      "bytes": 72962,
+      "sha256": "3c392b70b07a311d813f14d3a6a441417a1c9a851ab66c8ec6f742cdea2afcbe",
+      "pixel_dimensions": [
+        1100,
+        788
+      ]
+    },
+    {
+      "path": "native/conformance.json",
+      "bytes": 4072,
+      "sha256": "0190b1387b8519ef42365d4c6d2990460915006516bd8e6fa0dd784aeb9730b4"
+    },
+    {
+      "path": "native/lifecycle.json",
+      "bytes": 161,
+      "sha256": "4cf871633cd9cd8fba9c06d7552550837fc5ef3d79fc608370edc07228840ab7"
+    },
+    {
+      "path": "native/endpoint-probe.json",
+      "bytes": 539,
+      "sha256": "4861b7d5be2448c852ce4e272c64bb50e6a79646e65b9d917937b48248d7c38c"
+    },
+    {
+      "path": "shared/conformance.json",
+      "bytes": 6182,
+      "sha256": "7bada507ba7b298340a8eb56bb21757b235350832c1c227ac0ade2e4ae071812"
+    },
+    {
+      "path": "shared/tests-swift-testing.xml",
+      "bytes": 9477,
+      "sha256": "9589df57445eebdbe2ad997dbc579d609084fa22775ca666d9a76b2977bfa058"
+    },
+    {
+      "path": "shared/tests.log",
+      "bytes": 152240,
+      "sha256": "12c33e04567ef6b55f278920e3d431ed277ddcd4976e5a3832058a5ed7ae0617"
+    },
+    {
+      "path": "shared/test-discovery.log",
+      "bytes": 6180,
+      "sha256": "766e56b5a84eb3539d6d2dc3f915003dcc8d1a2c06f71a13d6fbb8f23ad35a0b"
+    },
+    {
+      "path": "shared/session-protocol.json",
+      "bytes": 2631,
+      "sha256": "3945628db63c3c3dfea1514ea24c5fc7dc4e4191fe343bc2a5ad85722203d1c6"
+    },
+    {
+      "path": "shared/example-render.json",
+      "bytes": 1118,
+      "sha256": "085ddceeb50ad3dcb4187b531171eaaa4b8dfd264c29dc42bbf5ce9025e49ef0"
+    },
+    {
+      "path": "native-source-visual.png",
+      "bytes": 64399,
+      "sha256": "2a86aa195138c533eace8da0b3c5bcda8aaf243668d22e278da2df0e53cb6eb6",
+      "pixel_dimensions": [
+        1100,
+        788
+      ]
+    },
+    {
+      "path": "packaged-window-smoke.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "host-controls.log",
+      "bytes": 131,
+      "sha256": "a284bda664e9fd04904a80fa5e1afcf44a2853539e790958029b2b9ee6bc856a"
+    }
+  ]
+}

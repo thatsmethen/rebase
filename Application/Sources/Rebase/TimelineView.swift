@@ -545,35 +545,9 @@ private struct TimelineRuler: View {
     }
 }
 
-private struct MusicalTick {
-    let seconds: Double
-    let bar: Bool
-    let label: String
-}
-private func musicalTicks(_ project: Project, seconds: Double, pixelsPerSecond: Double) -> [MusicalTick] {
-    guard let end = try? project.tempoMap.beat(atSeconds: min(86_400, seconds)) else { return [] }
-    var ticks: [MusicalTick] = []
-    for (index, signature) in project.signatureMap.events.enumerated() {
-        let limit = min(end, index + 1 < project.signatureMap.events.count ? project.signatureMap.events[index + 1].beat : end)
-        let beatSize = 4.0 / Double(signature.denominator)
-        let barSize = Double(signature.numerator) * beatSize
-        var beat = signature.beat
-        // Zoom chooses visual density only; snap resolution remains independent.
-        let minimumSpacing = 12.0 / pixelsPerSecond
-        let fastest = project.tempoMap.events.map(\.bpm).max() ?? 120
-        let showBeats = beatSize * 60 / fastest >= minimumSpacing
-        let barStride = max(1, ceil(minimumSpacing * fastest / 60 / barSize))
-        let step = showBeats ? beatSize : barSize * barStride
-        while beat <= limit, ticks.count < 8192 {
-            if index + 1 < project.signatureMap.events.count, beat >= limit { break }
-            if let time = try? project.tempoMap.seconds(atBeat: beat), let position = try? project.signatureMap.position(atBeat: beat) {
-                ticks.append(MusicalTick(seconds: time, bar: position.beat == 1 && position.sixteenth == 1 && position.tick == 0,
-                                         label: "\(position.bar)"))
-            }
-            beat += step
-        }
-    }
-    return ticks
+private func musicalTicks(_ project: Project, seconds: Double, pixelsPerSecond: Double) -> [MusicalRulerTick] {
+    (try? MusicalRuler.ticks(project: project, duration: min(MusicalRuler.maximumDuration, seconds),
+                             pixelsPerSecond: pixelsPerSecond)) ?? []
 }
 
 private func timelineInterval(_ pixelsPerSecond: Double) -> Double {

@@ -17,6 +17,8 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
     private readonly Dictionary<string, ulong> waveformFailures = [];
     private Task? waveformTask;
     private ulong waveformEpoch;
+    private Task? rulerTask;
+    private RulerRequest? desiredRuler, failedRuler;
     private bool polling, closing;
     private uint audioPhase;
     private bool accepting = true;
@@ -33,6 +35,8 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
     }
     public SessionState State { get; private set; } = new();
     public RenderSnapshot? LastSourceExport { get; private set; }
+    public RulerSnapshot? Ruler { get; private set; }
+    public string? RulerError { get; private set; }
     public ProjectView? Project => State.Project;
     public TrackView? SelectedTrack => Project?.Tracks.FirstOrDefault(t => t.Id == State.Selection.TrackID);
     public ClipView? SelectedClip => Project?.Tracks.SelectMany(t => t.Clips).FirstOrDefault(c => c.Id == State.Selection.ClipID);
@@ -52,6 +56,7 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
     public event PropertyChangedEventHandler? PropertyChanged;
     public event Action? StateChanged;
     public event Action? WaveformsChanged;
+    public event Action? RulerChanged;
     public IReadOnlyDictionary<string, float[]> WaveformPeaks => waveforms.ToDictionary(item => item.Key, item => item.Value.Snapshot.Peaks);
     private void Changed([CallerMemberName] string? property = null) => PropertyChanged?.Invoke(this, new(property));
     public void Report(Exception error) => Status = error.Message;
@@ -79,6 +84,7 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
         {
             if (State.Revision != response.State.Revision) { await InvalidateAudio(); UseProjectContext(); }
             State = response.State;
+            if (Ruler is not null && Ruler.Revision != State.Revision) { Ruler = null; RulerChanged?.Invoke(); }
             if (response.Ok && request.Command is "open" or "saveAs")
             {
                 waveformEpoch++; waveforms.Clear(); waveformFailures.Clear();
@@ -110,7 +116,44 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
         finally
         {
             actions.Release();
-            if (--pendingActions == 0) { Busy = false; idle.TrySetResult(); RequestWaveforms(); }
+            if (--pendingActions == 0) { Busy = false; idle.TrySetResult(); RequestRuler(); RequestWaveforms(); }
+        }
+    }
+    public void SetRulerViewport(double pixelsPerSecond, double duration)
+    {
+        var request = new RulerRequest(State.Revision, duration, pixelsPerSecond);
+        if (request == desiredRuler) return;
+        desiredRuler = request; Ruler = null; RulerError = null; RulerChanged?.Invoke();
+        RequestRuler();
+    }
+    private void RequestRuler()
+    {
+        if (closing || Busy || !accepting || Project is null || desiredRuler is null || rulerTask is { IsCompleted: false }) return;
+        rulerTask = FetchRuler();
+    }
+    private async Task FetchRuler()
+    {
+        await Task.Yield();
+        while (!closing && accepting && !Busy && Project is not null && desiredRuler is { } request && request.Revision == State.Revision)
+        {
+            if (request == failedRuler || Ruler is not null && Ruler.Revision == request.Revision && Ruler.Duration == request.Duration && Ruler.PixelsPerSecond == request.PixelsPerSecond) return;
+            try
+            {
+                var reply = await session.Send(new() { Command = "ruler", ExpectedRevision = request.Revision, Value = request.PixelsPerSecond, Duration = request.Duration });
+                // Read-only projections never apply the reply's full document
+                // state. A delayed ruler cannot roll back a later edit or zoom.
+                if (closing || Busy || desiredRuler != request || State.Revision != request.Revision) continue;
+                var ruler = reply.Ok ? reply.Ruler : null;
+                if (ruler is null) throw new InvalidDataException(reply.Error?.Message ?? "The musical ruler is unavailable.");
+                ruler.Validate(request);
+                Ruler = ruler; RulerError = null; RulerChanged?.Invoke();
+            }
+            catch (Exception error)
+            {
+                if (!closing && desiredRuler == request && State.Revision == request.Revision)
+                { failedRuler = request; RulerError = error.Message; RulerChanged?.Invoke(); }
+            }
+            await Task.Delay(20);
         }
     }
     private void RequestWaveforms()
@@ -334,6 +377,7 @@ public sealed class StudioViewModel : INotifyPropertyChanged, IAsyncDisposable
         closing = true;
         await session.DisposeAsync();
         if (waveformTask is not null) await waveformTask;
+        if (rulerTask is not null) await rulerTask;
         await actions.WaitAsync();
         try { await audio.DisposeAsync(); }
         finally { actions.Release(); }

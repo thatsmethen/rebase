@@ -12,8 +12,14 @@ public sealed class TimelineView : Canvas
     private const double Header = 228, Row = 68, Ruler = 26;
     public static readonly Color[] TrackColors = [Color.FromRgb(177, 201, 102), Color.FromRgb(141, 175, 210), Color.FromRgb(209, 175, 101), Color.FromRgb(166, 151, 207)];
     private readonly Dictionary<string, WaveformVisual> waveformViews = [];
+    private readonly List<FrameworkElement> headers = [];
+    private readonly List<UIElement> rulerViews = [];
+    private RulerSnapshot? musicalRuler;
+    private bool musical = true;
+    private readonly TextBlock rulerMode = new() { FontSize = 10, Margin = new Thickness(20, 5, 0, 0), Foreground = Brushes.Silver, IsHitTestVisible = false };
+    private readonly Border headerCorner = new() { Width = Header, Height = Ruler, Background = new SolidColorBrush(Color.FromRgb(46, 49, 52)), BorderBrush = new SolidColorBrush(Color.FromRgb(29, 31, 33)), BorderThickness = new Thickness(0, 0, 1, 1) };
     private IReadOnlyDictionary<string, float[]> peaks = new Dictionary<string, float[]>();
-    private double viewport, currentPosition;
+    private double viewport, currentPosition, horizontalOffset;
     private readonly Line playhead = new() { Stroke = Brushes.White, StrokeThickness = 1.5, IsHitTestVisible = false };
     private ProjectView? project;
     private string? selected;
@@ -23,12 +29,31 @@ public sealed class TimelineView : Canvas
     public event Action<double>? SeekRequested;
     public event Action<string>? TrackSelected;
     public event Action<string, bool>? TrackFlagChanged;
-    public TimelineView() { Background = new SolidColorBrush(Color.FromRgb(75, 77, 80)); ClipToBounds = true; MouseLeftButtonDown += EmptyClick; }
+    public TimelineView() { Background = new SolidColorBrush(Color.FromRgb(75, 77, 80)); ClipToBounds = true; MouseLeftButtonDown += EmptyClick; headerCorner.Child = rulerMode; }
     public void SetProject(ProjectView? value, string? selectedID, double pixelsPerSecond)
     {
         project = value; selected = selectedID; pixels = pixelsPerSecond; Rebuild();
     }
     public void SetViewport(double width) { viewport = width; Width = Math.Max(viewport, Header + Math.Max(24, project?.Duration ?? 24) * pixels + 40); }
+    // Keep one vertical coordinate system for headers and events. Opaque header
+    // panels counter the horizontal scroll; their controls stay hit-testable and
+    // the event canvas/ruler scroll underneath without a second vertical viewer.
+    public void SetHorizontalOffset(double value)
+    {
+        horizontalOffset = Math.Max(0, value);
+        foreach (var header in headers) SetLeft(header, horizontalOffset);
+        SetLeft(headerCorner, horizontalOffset);
+    }
+    internal IReadOnlyList<FrameworkElement> TrackHeaders => headers;
+    public void SetRuler(RulerSnapshot? value, bool useMusical, string? error)
+    {
+        musicalRuler = value; musical = useMusical;
+        rulerMode.Text = musical ? (value is null ? "Bars + Beats …" : "Bars + Beats") : "Seconds";
+        if (musical && error is not null) rulerMode.Text = "Ruler unavailable";
+        headerCorner.ToolTip = musical ? error : null;
+        RebuildRuler();
+    }
+    internal bool MusicalRulerVisible => musical && musicalRuler is not null && musicalRuler.PixelsPerSecond == pixels && rulerViews.Count > 0;
     public void SetWaveforms(IReadOnlyDictionary<string, float[]> value)
     {
         peaks = value;
@@ -46,24 +71,18 @@ public sealed class TimelineView : Canvas
     {
         if (e.Handled || project is null) return;
         var x = e.GetPosition(this).X;
-        if (x >= Header) { SeekRequested?.Invoke(Math.Max(0, (x - Header) / pixels)); e.Handled = true; }
+        if (x >= Header + horizontalOffset) { SeekRequested?.Invoke(Math.Max(0, (x - Header) / pixels)); e.Handled = true; }
     }
     private void Rebuild()
     {
         Children.Clear();
+        headers.Clear();
+        rulerViews.Clear();
         waveformViews.Clear();
         var duration = Math.Max(24, project?.Duration ?? 24);
         Width = Math.Max(viewport, Header + duration * pixels + 40);
         Height = Ruler + Math.Max(4, project?.Tracks.Length ?? 0) * Row;
-        var tickStep = Math.Max(1, Math.Ceiling(duration / 150));
-        for (double t = 0; t <= duration; t += tickStep)
-        {
-            var x = Header + t * pixels;
-            var line = new Line { X1 = x, X2 = x, Y1 = 0, Y2 = Height, Stroke = new SolidColorBrush(Color.FromRgb(103, 105, 108)), StrokeThickness = 0.5, IsHitTestVisible = false };
-            Children.Add(line);
-            var label = new TextBlock { Text = t.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture), Foreground = Brushes.LightGray, FontSize = 10, IsHitTestVisible = false };
-            SetLeft(label, x + 4); SetTop(label, 5); Children.Add(label);
-        }
+        RebuildRuler();
         if (project is not null)
         {
             for (var index = 0; index < project.Tracks.Length; ++index)
@@ -71,8 +90,9 @@ public sealed class TimelineView : Canvas
                 var track = project.Tracks[index]; var top = Ruler + index * Row;
                 var divider = new Line { X1 = 0, X2 = Width, Y1 = top + Row, Y2 = top + Row, Stroke = new SolidColorBrush(Color.FromRgb(41, 43, 45)), IsHitTestVisible = false };
                 Children.Add(divider);
-                var header = new Grid { Width = Header - 1, Height = Row - 1, Background = new SolidColorBrush(Color.FromRgb(52, 55, 58)) };
+                var header = new Grid { Width = Header, Height = Row, Background = new SolidColorBrush(Color.FromRgb(52, 55, 58)) };
                 header.Children.Add(new Border { Background = new SolidColorBrush(TrackColors[index % TrackColors.Length]), Width = 13, HorizontalAlignment = HorizontalAlignment.Left });
+                header.Children.Add(new Border { BorderBrush = new SolidColorBrush(Color.FromRgb(29, 31, 33)), BorderThickness = new Thickness(0, 0, 1, 1), IsHitTestVisible = false });
                 var name = new Button { Content = track.Name, HorizontalContentAlignment = HorizontalAlignment.Left, FontSize = 11, Width = Header - 33, Height = 25, Padding = new Thickness(3),
                     Margin = new Thickness(21, 2, 3, 0), HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent };
                 name.Click += (_, _) => TrackSelected?.Invoke(track.Id); header.Children.Add(name);
@@ -80,9 +100,12 @@ public sealed class TimelineView : Canvas
                 var mute = new CheckBox { Content = "M", IsChecked = track.IsMuted, Padding = new Thickness(4, 1, 4, 1), MinWidth = 25, Margin = new Thickness(1), ToolTip = "Mute " + track.Name };
                 var solo = new CheckBox { Content = "S", IsChecked = track.IsSolo, Padding = new Thickness(4, 1, 4, 1), MinWidth = 25, Margin = new Thickness(1), ToolTip = "Solo " + track.Name };
                 AutomationProperties.SetName(mute, "Mute " + track.Name); AutomationProperties.SetName(solo, "Solo " + track.Name);
-                mute.Click += (_, _) => TrackFlagChanged?.Invoke(track.Id, false); solo.Click += (_, _) => TrackFlagChanged?.Invoke(track.Id, true);
+                RoutedEventHandler muteChanged = (_, _) => TrackFlagChanged?.Invoke(track.Id, false);
+                RoutedEventHandler soloChanged = (_, _) => TrackFlagChanged?.Invoke(track.Id, true);
+                mute.Checked += muteChanged; mute.Unchecked += muteChanged;
+                solo.Checked += soloChanged; solo.Unchecked += soloChanged;
                 flags.Children.Add(mute); flags.Children.Add(solo); flags.Children.Add(new TextBlock { Text = $" {track.Clips.Length} clips", Foreground = Brushes.Silver, VerticalAlignment = VerticalAlignment.Center, FontSize = 9 });
-                header.Children.Add(flags); SetLeft(header, 0); SetTop(header, top); Children.Add(header);
+                header.Children.Add(flags); SetLeft(header, horizontalOffset); SetTop(header, top); SetZIndex(header, 2); Children.Add(header); headers.Add(header);
                 foreach (var clip in track.Clips)
                 {
                     var color = TrackColors[index % TrackColors.Length];
@@ -96,6 +119,7 @@ public sealed class TimelineView : Canvas
                     var button = new Button
                     {
                         Content = content,
+                        Style = (Style)FindResource("AccentSurfaceButton"),
                         Width = Math.Max(16, clip.Duration * pixels), Height = Row - 10, Padding = new Thickness(0),
                         Margin = new Thickness(0), HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch,
                         Background = new SolidColorBrush(color), Foreground = Brushes.Black,
@@ -135,7 +159,40 @@ public sealed class TimelineView : Canvas
                 }
             }
         }
+        SetLeft(headerCorner, horizontalOffset); SetTop(headerCorner, 0); SetZIndex(headerCorner, 3); Children.Add(headerCorner);
         Children.Add(playhead); SetPosition(currentPosition);
+    }
+    private void RebuildRuler()
+    {
+        foreach (var view in rulerViews) Children.Remove(view);
+        rulerViews.Clear();
+        var duration = Math.Max(24, project?.Duration ?? 24);
+        if (musical)
+        {
+            if (musicalRuler is null || musicalRuler.PixelsPerSecond != pixels || musicalRuler.Duration != duration) return;
+            double lastLabel = double.NegativeInfinity;
+            foreach (var tick in musicalRuler.Ticks)
+            {
+                bool label = tick.Bar && tick.Seconds * pixels - lastLabel >= 55;
+                AddTick(tick.Seconds, tick.Bar, label ? tick.Label : null, tick);
+                if (label) lastLabel = tick.Seconds * pixels;
+            }
+        }
+        else
+        {
+            var step = Math.Max(1, Math.Ceiling(duration / 150));
+            for (double seconds = 0; seconds <= duration; seconds += step)
+                AddTick(seconds, true, seconds.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture), null);
+        }
+    }
+    private void AddTick(double seconds, bool major, string? text, RulerTick? tick)
+    {
+        var x = Header + seconds * pixels;
+        var line = new Line { X1 = x, X2 = x, Y1 = 0, Y2 = Height, Stroke = new SolidColorBrush(major ? Color.FromRgb(103, 105, 108) : Color.FromRgb(88, 90, 93)), StrokeThickness = major ? 0.8 : 0.5, IsHitTestVisible = false };
+        SetZIndex(line, -1); Children.Add(line); rulerViews.Add(line);
+        if (text is null) return;
+        var label = new TextBlock { Text = text, Foreground = Brushes.LightGray, FontSize = 10, IsHitTestVisible = false, Tag = tick };
+        SetLeft(label, x + 4); SetTop(label, 5); Children.Add(label); rulerViews.Add(label);
     }
 }
 

@@ -1,0 +1,158 @@
+{
+  "schema": "rebase.portable-ci.v1",
+  "scope": "Authored portable component conformance; no desktop app parity or reference-runtime claim",
+  "lane": "swift",
+  "configuration": "Debug",
+  "platform": "Windows",
+  "architecture": "AMD64",
+  "runner_image": {
+    "ImageOS": "win25-vs2026",
+    "ImageVersion": "20261021.278.1"
+  },
+  "commit": "34f15d5554049c43e562c99d57fe11eaed1a560d",
+  "commands": [
+    {
+      "name": "cmake-version",
+      "argv": [
+        "cmake",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.157,
+      "log": "cmake-version.log"
+    },
+    {
+      "name": "swift-version",
+      "argv": [
+        "swift",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.093,
+      "log": "swift-version.log"
+    },
+    {
+      "name": "tests",
+      "argv": [
+        "swift",
+        "test",
+        "--scratch-path",
+        "D:\\a\\_temp\\rebase-conformance\\build",
+        "-c",
+        "debug",
+        "--filter",
+        "RebasePortableTests",
+        "--xunit-output",
+        "D:\\a\\_temp\\rebase-conformance\\tests.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 86.172,
+      "log": "tests.log"
+    },
+    {
+      "name": "inspector-build",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "D:\\a\\_temp\\rebase-conformance\\build",
+        "-c",
+        "debug",
+        "--product",
+        "rebase-inspect"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.141,
+      "log": "inspector-build.log"
+    },
+    {
+      "name": "inspector-path",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "D:\\a\\_temp\\rebase-conformance\\build",
+        "-c",
+        "debug",
+        "--show-bin-path"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.937,
+      "log": "inspector-path.log"
+    },
+    {
+      "name": "example-render",
+      "argv": [
+        "D:\\a\\_temp\\rebase-conformance\\build\\out\\Products\\Debug-windows-x86_64\\rebase-inspect.exe",
+        "render",
+        "<workspace>\\Application\\Examples\\Rebase Preview.rebaseproj",
+        "D:\\a\\_temp\\rebase-conformance\\example-render.wav"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.5,
+      "log": "example-render.log"
+    },
+    {
+      "name": "example-overwrite-refusal",
+      "argv": [
+        "D:\\a\\_temp\\rebase-conformance\\build\\out\\Products\\Debug-windows-x86_64\\rebase-inspect.exe",
+        "render",
+        "<workspace>\\Application\\Examples\\Rebase Preview.rebaseproj",
+        "D:\\a\\_temp\\rebase-conformance\\example-render.wav"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.032,
+      "log": "example-overwrite-refusal.log"
+    },
+    {
+      "name": "session-build",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "D:\\a\\_temp\\rebase-conformance\\build",
+        "-c",
+        "debug",
+        "--product",
+        "rebase-session"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.422,
+      "log": "session-build.log"
+    },
+    {
+      "name": "session-protocol",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\check-session-protocol.py",
+        "--helper",
+        "D:\\a\\_temp\\rebase-conformance\\build\\out\\Products\\Debug-windows-x86_64\\rebase-session.exe",
+        "--example",
+        "<workspace>\\Application\\Examples\\Rebase Preview.rebaseproj",
+        "--report",
+        "D:\\a\\_temp\\rebase-conformance\\session-protocol.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 45.563,
+      "log": "session-protocol.log"
+    }
+  ],
+  "status": "passed",
+  "interactive_session_checks": 29,
+  "tests": {
+    "count": 61,
+    "executed": 60,
+    "skipped": 1,
+    "failures": 0,
+    "reports": [
+      {
+        "report": "tests-swift-testing.xml",
+        "count": 61,
+        "executed": 60,
+        "skipped": 1,
+        "failures": 0
+      }
+    ]
+  },
+  "application_dependency_lock_preserved": true
+}

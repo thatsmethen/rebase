@@ -179,7 +179,7 @@ def main():
         parser.error("Source verification requires project, media and lock inputs together")
     lock = json.loads((Path(__file__).parent / "example-render-lock.json").read_text())
     report = {"schema": "rebase.session-protocol-check.v1", "status": "failed",
-              "scope": "Interactive authored session process, source waveforms and optional source-event PCM; no GUI or audio device claim",
+              "scope": "Interactive authored session process, musical ruler, source waveforms and optional source-event PCM; no GUI or audio device claim",
               "source_journey_tested": False, "checks": []}
     original = (args.example / "Project.json").read_bytes()
     process = subprocess.Popen([str(args.helper.resolve()), "--stdio"], stdin=subprocess.PIPE,
@@ -231,6 +231,33 @@ def main():
             project = opened["state"]["project"]
             check(len(project["tracks"]) == 4 and sum(len(t["clips"]) for t in project["tracks"]) == 11,
                   "example contains four tracks and eleven clips")
+            ruler_reply = send("ruler", 1, value=100, duration=20)
+            ruler = ruler_reply.get("ruler", {})
+            check(ruler_reply.get("ok") is True and ruler_reply["state"] == opened["state"]
+                  and ruler.get("revision") == 1 and ruler.get("duration") == 20
+                  and ruler.get("pixelsPerSecond") == 100,
+                  "musical ruler is read-only and returns the requested revision and extent")
+            ticks = ruler.get("ticks", [])
+            check(isinstance(ticks, list) and 13 <= len(ticks) <= 8192
+                  and all(type(t.get("seconds")) in (int, float) and math.isfinite(t["seconds"])
+                          and 0 <= t["seconds"] <= 20 and type(t.get("bar")) is bool
+                          and isinstance(t.get("label"), str) for t in ticks)
+                  and all(a["seconds"] < b["seconds"] for a, b in zip(ticks, ticks[1:])),
+                  "musical ruler ticks are finite ordered and bounded by the requested extent")
+            # Closed-form controls for the authored constant 96 BPM, 4/4 example:
+            # one quarter is 60/96 = .625 seconds and one bar is 2.5 seconds.
+            expected_first_beats = [(0, True, "1"), (0.625, False, "1"), (1.25, False, "1"),
+                                    (1.875, False, "1"), (2.5, True, "2")]
+            check([(t["seconds"], t["bar"], t["label"]) for t in ticks[:5]] == expected_first_beats,
+                  "96 BPM quarter-note ruler positions and first bar transition match the independent example oracle")
+            expected_bars = [(0, "1"), (2.5, "2"), (5, "3"), (7.5, "4")]
+            check([(t["seconds"], t["label"]) for t in ticks if t["bar"]][:4] == expected_bars,
+                  "4/4 bar boundaries are exactly 0, 2.5, 5 and 7.5 seconds")
+            report["ruler"] = {"read_only": True, "stale_revision_rejected": False,
+                               "pixels_per_second": 100, "duration": 20, "ticks_checked": len(ticks),
+                               "first_bar_seconds": [item[0] for item in expected_bars],
+                               "first_quarter_seconds": [item[0] for item in expected_first_beats],
+                               "oracle": "Authored constant 96 BPM, 4/4: quarter = 5/8 seconds; bar = 5/2 seconds"}
             track = project["tracks"][0]
             waveforms = {}
             peak_digest = hashlib.sha256()
@@ -253,6 +280,10 @@ def main():
             edited = send("setGain", 1, trackID=track["id"], value=-12)
             check(edited.get("ok") is True and edited["state"]["revision"] == 2 and edited["state"]["dirty"],
                   "shared mixer edit advances document revision")
+            stale_ruler = send("ruler", 1, value=100, duration=20)
+            check(stale_ruler.get("ok") is False and stale_ruler["error"]["code"] == "staleRevision"
+                  and stale_ruler["state"] == edited["state"], "stale ruler request is rejected without changing state")
+            report["ruler"]["stale_revision_rejected"] = True
             stale = send("toggleMute", 1, trackID=track["id"])
             check(stale.get("ok") is False and stale["error"]["code"] == "staleRevision"
                   and stale["state"]["revision"] == 2, "stale command leaves document unchanged")

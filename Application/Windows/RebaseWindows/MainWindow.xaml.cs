@@ -16,9 +16,10 @@ public partial class MainWindow : Window
 {
     private readonly StudioViewModel model = new();
     private readonly DispatcherTimer timer = new() { Interval = TimeSpan.FromMilliseconds(80) };
-    private bool closeFinished, closing, updatingSourceList;
+    private bool closeFinished, closing, updatingSourceList, updatingInspector;
     private readonly Dictionary<string, Slider> mixerSliders = [];
     private string? mixerFocus;
+    private FrameworkElement? inspectorFocus;
     private bool mixerRefreshPending;
     private string? smokeAttachPath, smokeSourceExportPath;
     private int? darkCaptionResult;
@@ -37,12 +38,14 @@ public partial class MainWindow : Window
         };
         model.StateChanged += RefreshDocument;
         model.WaveformsChanged += () => Timeline.SetWaveforms(model.WaveformPeaks);
+        model.RulerChanged += RefreshRuler;
         model.PropertyChanged += ModelChanged;
         Timeline.ClipSelected += async id => await model.Command("selectClip", clipID: id);
         Timeline.ClipDragged += async (id, value, trim) => await model.Command(trim ? "trimClip" : "moveClip", clipID: id, value: value);
         Timeline.SeekRequested += async value => await model.SeekProject(value);
         Timeline.TrackSelected += async id => await model.Command("selectTrack", trackID: id);
         Timeline.TrackFlagChanged += async (id, solo) => await model.Command(solo ? "toggleSolo" : "toggleMute", trackID: id);
+        TimelineScroll.ScrollChanged += (_, _) => Timeline.SetHorizontalOffset(TimelineScroll.HorizontalOffset);
         timer.Tick += async (_, _) => await model.Poll(); timer.Start();
         Mixer.LostMouseCapture += (_, _) => { if (mixerRefreshPending && !Mixer.IsMouseCaptureWithin) RefreshMixer(); };
         RefreshDocument();
@@ -66,12 +69,18 @@ public partial class MainWindow : Window
             EditSurface.IsEnabled = !model.Busy;
             Mixer.IsEnabled = !model.Busy;
             SourcePanel.IsEnabled = !model.Busy;
+            InspectorTrackControls.IsEnabled = !model.Busy && model.SelectedTrack is not null;
             UndoButton.IsEnabled = !model.Busy && model.State.CanUndo;
             RedoButton.IsEnabled = !model.Busy && model.State.CanRedo;
             if (!model.Busy && mixerFocus is not null && mixerSliders.TryGetValue(mixerFocus, out var restore))
             {
                 mixerFocus = null;
                 Dispatcher.BeginInvoke(() => restore.Focus(), DispatcherPriority.Input);
+            }
+            if (!model.Busy && inspectorFocus is { } inspectorRestore)
+            {
+                inspectorFocus = null;
+                Dispatcher.BeginInvoke(() => inspectorRestore.Focus(), DispatcherPriority.Input);
             }
         }
     }
@@ -80,16 +89,28 @@ public partial class MainWindow : Window
         if (Timeline is null) return;
         Timeline.SetProject(model.Project, model.State.Selection.ClipID, Zoom.Value);
         Timeline.SetWaveforms(model.WaveformPeaks);
+        model.SetRulerViewport(Zoom.Value, Math.Max(24, model.Project?.Duration ?? 24));
+        RefreshRuler();
         if (!model.IsSourceContext) Timeline.SetPosition(model.Position);
         UndoButton.IsEnabled = model.State.CanUndo && !model.Busy;
         RedoButton.IsEnabled = model.State.CanRedo && !model.Busy;
         TempoBox.Text = (model.Project?.Tempo ?? 120).ToString("0.###", CultureInfo.CurrentCulture);
-        SelectionName.Text = model.SelectedClip?.Name ?? "None";
+        SelectionName.Text = model.SelectedClip?.Name ?? model.SelectedSourceEvent?.Name ?? "None";
         ProjectName.Text = model.Project?.Name ?? "Untitled";
         InspectorTrack.Text = model.SelectedTrack?.Name ?? "No track selected";
         InspectorTrackInfo.Text = model.SelectedSourceEvent is not null ? "Retained source event" : model.SelectedTrack is null ? "Open a project to begin" : "Audio track";
         InspectorGain.Text = model.SelectedTrack is null ? "—" : $"{model.SelectedTrack.GainDB:0.0} dB";
         InspectorPan.Text = model.SelectedTrack is null ? "—" : PanText(model.SelectedTrack.Pan);
+        InspectorTrackControls.IsEnabled = model.SelectedTrack is not null && !model.Busy;
+        updatingInspector = true;
+        try
+        {
+            InspectorGainSlider.Value = model.SelectedTrack?.GainDB ?? 0;
+            InspectorPanSlider.Value = model.SelectedTrack?.Pan ?? 0;
+            InspectorMute.IsChecked = model.SelectedTrack?.IsMuted ?? false;
+            InspectorSolo.IsChecked = model.SelectedTrack?.IsSolo ?? false;
+        }
+        finally { updatingInspector = false; }
         SourceOffsetText.Text = $"{model.SelectedClip?.SourceOffset ?? 0:0.000} s";
         ClipInspector.Visibility = Visibility.Visible;
         ClipInspector.IsEnabled = model.SelectedClip is not null;
@@ -134,17 +155,20 @@ public partial class MainWindow : Window
         var mute = new CheckBox { Content = "M", IsChecked = track.IsMuted, ToolTip = "Mute " + track.Name, MinWidth = 35, Margin = new Thickness(1), Padding = new Thickness(4, 2, 4, 2) };
         var solo = new CheckBox { Content = "S", IsChecked = track.IsSolo, ToolTip = "Solo " + track.Name, MinWidth = 35, Margin = new Thickness(1), Padding = new Thickness(4, 2, 4, 2) };
         AutomationProperties.SetName(mute, "Mute " + track.Name); AutomationProperties.SetName(solo, "Solo " + track.Name);
-        mute.Click += async (_, _) => await model.Command("toggleMute", trackID: track.Id);
-        solo.Click += async (_, _) => await model.Command("toggleSolo", trackID: track.Id);
+        // Subscribe after initial state assignment: pointer, keyboard and UIA
+        // toggles commit, while rebuilding controls from a reply does not edit.
+        RoutedEventHandler muteChanged = async (_, _) => await model.Command("toggleMute", trackID: track.Id);
+        RoutedEventHandler soloChanged = async (_, _) => await model.Command("toggleSolo", trackID: track.Id);
+        mute.Checked += muteChanged; mute.Unchecked += muteChanged;
+        solo.Checked += soloChanged; solo.Unchecked += soloChanged;
         flags.Children.Add(mute); flags.Children.Add(solo); panel.Children.Add(flags);
-        var pan = new Slider { Minimum = -1, Maximum = 1, Value = track.Pan, SmallChange = 0.01, LargeChange = 0.1, Height = 20, Margin = new Thickness(5, 0, 5, 0), ToolTip = PanText(track.Pan) };
+        var pan = new CommitSlider { Style = (Style)FindResource(typeof(Slider)), Minimum = -1, Maximum = 1, Value = track.Pan, SmallChange = 0.01, LargeChange = 0.1, Height = 20, Margin = new Thickness(5, 0, 5, 0), ToolTip = PanText(track.Pan) };
         pan.Tag = track.Id + ":pan"; mixerSliders[(string)pan.Tag] = pan;
         Grid.SetRow(pan, 1); panel.Children.Add(pan); AutomationProperties.SetName(pan, track.Name + " pan");
         pan.ValueChanged += (_, _) => pan.ToolTip = PanText(pan.Value);
-        pan.PreviewMouseLeftButtonUp += async (_, _) => await CommitMixerSlider(pan, "setPan", track.Id);
-        pan.KeyUp += async (_, e) => { if (SliderEditKey(e.Key)) await CommitMixerSlider(pan, "setPan", track.Id); };
+        pan.ValueCommitted += async (_, _) => await CommitMixerSlider(pan, "setPan", track.Id);
         var fader = new Grid { Background = new SolidColorBrush(Color.FromRgb(30, 33, 35)), Margin = new Thickness(5, 1, 5, 1) }; Grid.SetRow(fader, 2); panel.Children.Add(fader);
-        var gain = new Slider { Minimum = -96, Maximum = 24, Value = track.GainDB, SmallChange = 0.5, LargeChange = 6,
+        var gain = new CommitSlider { Style = (Style)FindResource(typeof(Slider)), Minimum = -96, Maximum = 24, Value = track.GainDB, SmallChange = 0.5, LargeChange = 6,
             Orientation = Orientation.Vertical, Width = 28, Height = 110, HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(10, 2, 0, 2) };
         gain.Tag = track.Id + ":gain"; mixerSliders[(string)gain.Tag] = gain;
         AutomationProperties.SetName(gain, track.Name + " gain decibels"); fader.Children.Add(gain);
@@ -152,9 +176,9 @@ public partial class MainWindow : Window
         var value = new TextBlock { Text = track.GainDB.ToString("0.00", CultureInfo.CurrentCulture), FontFamily = new FontFamily("Consolas"), HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, FontSize = 10 };
         Grid.SetRow(value, 3); panel.Children.Add(value);
         gain.ValueChanged += (_, _) => value.Text = gain.Value.ToString("0.00", CultureInfo.CurrentCulture);
-        gain.PreviewMouseLeftButtonUp += async (_, _) => await CommitMixerSlider(gain, "setGain", track.Id);
-        gain.KeyUp += async (_, e) => { if (SliderEditKey(e.Key)) await CommitMixerSlider(gain, "setGain", track.Id); };
+        gain.ValueCommitted += async (_, _) => await CommitMixerSlider(gain, "setGain", track.Id);
         var select = new Button { Content = new TextBlock { Text = track.Name, Foreground = Brushes.Black, FontSize = 10, TextTrimming = TextTrimming.CharacterEllipsis },
+            Style = (Style)FindResource("AccentSurfaceButton"),
             HorizontalContentAlignment = HorizontalAlignment.Left, Padding = new Thickness(4, 2, 4, 2), Margin = new Thickness(0), MinHeight = 22,
             Background = accent, BorderBrush = Brushes.Transparent, Foreground = Brushes.Black };
         select.Click += async (_, _) => await model.Command("selectTrack", trackID: track.Id); Grid.SetRow(select, 4); panel.Children.Add(select);
@@ -166,7 +190,18 @@ public partial class MainWindow : Window
         if (control.IsKeyboardFocusWithin) mixerFocus = (string)control.Tag;
         await model.Command(command, trackID: trackID, value: control.Value);
     }
-    private static bool SliderEditKey(Key key) => key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End or Key.PageUp or Key.PageDown;
+    private async Task CommitInspector(FrameworkElement control, string command, double? value = null)
+    {
+        if (model.SelectedTrack is not { } track || model.Busy) return;
+        if (control.IsKeyboardFocusWithin) inspectorFocus = control;
+        await model.Command(command, trackID: track.Id, value: value);
+    }
+    private async void InspectorGainCommitted(object? sender, EventArgs e) => await CommitInspector(InspectorGainSlider, "setGain", InspectorGainSlider.Value);
+    private async void InspectorPanCommitted(object? sender, EventArgs e) => await CommitInspector(InspectorPanSlider, "setPan", InspectorPanSlider.Value);
+    private async void InspectorMuteChanged(object sender, RoutedEventArgs e) { if (!updatingInspector) await CommitInspector(InspectorMute, "toggleMute"); }
+    private async void InspectorSoloChanged(object sender, RoutedEventArgs e) { if (!updatingInspector) await CommitInspector(InspectorSolo, "toggleSolo"); }
+    private void InspectorGainPreview(object sender, RoutedPropertyChangedEventArgs<double> e) { if (InspectorGain is not null) InspectorGain.Text = $"{e.NewValue:0.0} dB"; }
+    private void InspectorPanPreview(object sender, RoutedPropertyChangedEventArgs<double> e) { if (InspectorPan is not null) InspectorPan.Text = PanText(e.NewValue); }
     private static string PanText(double value) => Math.Abs(value) < 0.005 ? "Center" : (value < 0 ? "L " : "R ") + Math.Abs(value * 100).ToString("0", CultureInfo.CurrentCulture);
     private void TimelineViewportChanged(object sender, SizeChangedEventArgs e)
     {
@@ -254,6 +289,8 @@ public partial class MainWindow : Window
     private async void DeleteClip(object sender, RoutedEventArgs e) { if (model.SelectedClip is not null) await model.Command("deleteEvent", clipID: model.SelectedClip.Id); }
     private void SnapChanged(object sender, SelectionChangedEventArgs e) { if (SnapBox?.SelectedItem is ComboBoxItem item) model.Snap = (string)item.Tag; }
     private void ZoomChanged(object sender, RoutedPropertyChangedEventArgs<double> e) { if (Timeline is not null) RefreshDocument(); }
+    private void RulerModeChanged(object sender, SelectionChangedEventArgs e) { if (Timeline is not null) RefreshRuler(); }
+    private void RefreshRuler() => Timeline.SetRuler(model.Ruler, RulerModeBox?.SelectedIndex != 1, model.RulerError);
     private async void KeyPressed(object sender, KeyEventArgs e)
     {
         if (model.Busy) return;

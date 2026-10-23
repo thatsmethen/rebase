@@ -8,6 +8,8 @@ Imported project packages can expose retained source events in the inspector. At
 
 Real clip waveforms come from the shared Swift source-envelope reducer. Background replies are revision/interval checked and cannot overwrite document state.
 
+The musical ruler uses shared Swift bar/beat positions, validated against the current revision, viewport extent, and zoom. A Seconds selector is also available. Track names and mute/solo controls stay fixed during horizontal scrolling. The selected track's inspector volume, pan, mute, and solo controls use the same shared edits and undo history as the lower mixer.
+
 Build with the pinned .NET SDK chosen by the application CI lane (10.0.402), without toolkit NuGet packages:
 
 ```powershell
@@ -27,7 +29,9 @@ Responses are bounded while reading, with a 60-second command deadline (120 seco
 Rebase.exe --smoke --smoke-json C:\evidence\window-smoke.json
 ```
 
-This opens an actual WPF window, invokes its example/open and editing buttons through WPF automation peers, checks shared undo/redo, saves/reopens a temporary project, validates a shared render, probes the default endpoint without starting audio, and writes `native-app-visual.png` beside the JSON. The PNG is a render of the WPF window's visual tree, not a desktop screenshot. File dialogs and physical mouse/keyboard interaction need separate human or desktop-automation verification.
+This opens an actual WPF window, invokes its example/open and editing buttons through WPF automation peers, checks shared undo/redo, saves/reopens a temporary project, validates a shared render, probes the default endpoint without starting audio, and writes `native-app-visual.png` beside the JSON. The PNG renders the client content at 96 pixels per logical inch; it excludes the operating-system frame. Actual outer/client dimensions and display DPI are recorded in `window_bounds`. File dialogs and physical mouse/keyboard interaction need separate human or desktop-automation verification.
+
+Follow-up smoke also drives inspector/mixer RangeValue and inspector/mixer/track Toggle automation, checks shared state and synchronized mixer controls, verifies undo/redo and focus return, and compares the example's returned bar 2 at 2.5 seconds with actual musical-ruler label placement. A zoomed horizontal scroll must move events while all track-header window coordinates remain fixed. This writes `native-timeline-scroll-visual.png` and a coordinate receipt before restoring the default view.
 
 Exit 0 means those checks passed; 1 means a failure; 2 means invalid invocation or artifact-writing failure. The scenario has a 120-second deadline; CI should enforce an outer 180-second process timeout. Missing audio endpoints are recorded as unavailable, never playback success. Every smoke record has `playback_tested:false`. Hardware playback remains the separate explicit `rebase_wasapi_probe --allow-audio` procedure.
 
@@ -36,10 +40,10 @@ Exit 0 means those checks passed; 1 means a failure; 2 means invalid invocation 
 
 ## Windows interface refinement
 
-The current layout uses the implemented portions of the Windows project window described in the [official Cubase Pro 15.0.30 Operation Manual](https://www.steinberg.help/api/khub/documents/O4PvzgK5U8lOyn4ANi_gKg/content), pages 12 (Windows screenshot provenance), 54 (project window), 306 (integrated transport), and 434–435 (lower-zone mixer). Authored controls use compact top rows, a gray event canvas, a narrow inspector, lower-zone channel strips, and bottom transport. Unsupported reference controls are not represented as working controls. This is a bounded application implementation, not an exact or complete interface recreation. Vendor screenshots and manual bytes are not included in this repository.
+The current layout uses the implemented portions of the Windows project window described in the [official Cubase Pro 15.0.30 Operation Manual](https://www.steinberg.help/api/khub/documents/O4PvzgK5U8lOyn4ANi_gKg/content), pages 12 (Windows screenshot provenance), 54 (project window), 76 (track inspector), 306 (integrated transport), and 434–435 (lower-zone mixer). Authored controls use compact top rows, a gray event canvas, a narrow inspector, lower-zone channel strips, and bottom transport. Unsupported reference controls are not represented as working controls. This is a bounded application implementation, not an exact or complete interface recreation. Vendor screenshots and manual bytes are not included in this repository.
 
 DWM dark-caption opt-in follows [Microsoft's documented API](https://learn.microsoft.com/windows/apps/desktop/modernize/apply-windows-themes). Its HRESULT is recorded by smoke; the WPF visual-tree PNG does not capture or validate the operating-system frame.
 
 For the optional authored source-event smoke, append `--smoke-source-project ABSOLUTE_PACKAGE --smoke-source-media ABSOLUTE_WAV`. Both paths are required together and stay outside the shipped app. The scenario opens a scratch copy, selects the source-event UI item, attaches media through the actual button handler with a supplied path, checks undo/redo, and exports through the actual button handler. File dialogs remain untested. It records provenance/output hashes and `native-source-visual.png`, then returns to the bundled beat, waits for all real waveform geometry, checks that all four rows fit, and captures `native-app-visual.png`. The extended scenario allows 180 seconds; the outer process timeout is 240 seconds. It never starts audio.
 
-Journey queue: open/edit/save/export and bounded source attach/export are implemented with local controls; the redesigned shell and source window require new hosted Windows visual/runtime evidence. Native pointer drag, keyboard focus return, file dialogs, and hardware audition need further desktop/device verification. Future parity work remains separate from this UI milestone.
+Journey queue: the initial redesigned shell and bounded source attach/export ran in hosted Windows at `34f15d5`. Its capture revealed a source selector display defect, now corrected in source. The follow-up inspector, fixed-header scrolling, musical ruler, interaction contrast, and client capture changes have local cross-build and portable-control evidence; their expanded native smoke is pending. Native pointer drag, physical keyboard interaction, file dialogs, and hardware audition need further desktop/device verification. Future parity work remains separate from this UI milestone.

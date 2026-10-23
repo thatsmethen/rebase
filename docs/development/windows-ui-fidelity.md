@@ -14,10 +14,13 @@ Vendor screenshots and the PDF are study inputs outside this repository. Applica
 
 | Journey | Implementation and evidence | Remaining acceptance |
 | --- | --- | --- |
-| Open the bundled beat and select a track/clip | Shared document/session path and existing native-window smoke passed before the redesign. | New native capture, default-size visibility, keyboard focus and selected-state review. |
-| Read and edit audio events | Source-domain waveform reducer is shared with macOS; boundary, offset, channel and chunk controls pass locally. | Real Windows waveform replies and image, move/trim/undo refresh, resize and scroll. |
-| Mix levels and pan | Shared edit history and audio renderer remain authoritative; Windows controls are being restyled into strips. | Native slider/keyboard behavior, focus retention, undo and selected-channel feedback. |
-| Attach and audition a preserved source event | Shared strict PCM24 source snapshot and provenance checks pass authored portable and focused private Mac regressions. | Native Windows source-selection/attachment/export smoke; audio hardware remains separate. |
-| Publish a Windows build | The previous package passed runtime closure, actual-window checks, test gate and privacy scan. | Redesign acceptance and a fresh package; the rejected visual baseline is not a release. |
+| Open the bundled beat and select a track/clip | Native run 39936173813 passed selection, move, undo/redo, Save As, reopen and render through the actual window. | Physical input, keyboard focus and selected-state review after follow-up changes. |
+| Read and edit audio events | Source-domain waveform reducer is shared with macOS; native window displayed all 11 waveforms and all four rows. Process checks independently verified 17,600 peak bins. | Fixed headers during horizontal scrolling, zoom/resize and hover styling. |
+| Mix levels and pan | Shared edit history and audio renderer remain authoritative; native capture shows dense channel strips. | Editable inspector volume/pan and M/S; native slider/keyboard behavior, focus retention, undo and selected-channel feedback. |
+| Read musical time | macOS already uses the shared tempo/signature models for ruler positions. | Extract that display projection for Windows and verify its bars/beats against the authored example. |
+| Attach and audition a preserved source event | Shared strict PCM24 source snapshot passed authored portable/private Mac regressions. Native window selection, attachment, undo/redo, export and exact provenance checks passed. | Correct the observed source selector object string and incorrect None header; audio hardware remains separate. |
+| Publish a Windows build | Native run 39936173813 passed runtime closure, actual-window checks and the test gate. | Follow-up visual acceptance and fresh package audit; this intermediate ZIP is not a release. |
+
+The [retained native images](../../research/publication/windows-portability/application-run-39936173813/observation.json) were reviewed at their recorded 1100 × 788 pixel size. They show readable waveform events and four visible track rows, but also expose the source-selector/header defects above. The capture used outer-window bounds for a client visual, leaving unused pixels corresponding to the nonclient frame; the follow-up should record and render actual client bounds. Passing functional smoke did not override these visual findings.
 
 After implementation, compare the actual Windows window with the reference at a recorded size. A WPF visual-tree PNG does not validate the operating-system title bar, physical input, native file dialogs, or human comprehension. Record those limits alongside the result rather than treating a passing image or component test as full interface parity.

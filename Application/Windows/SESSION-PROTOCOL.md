@@ -24,11 +24,38 @@ Every command except `state` includes the current `expectedRevision`. The helper
 | `attachSourceMedia` | `clipID`: retained event; `path`: explicitly selected matching PCM24 WAV. Shared history records the association and selects the event. |
 | `renderSourceEvent` | `clipID`: retained event; `path`: a new source-event WAV outside the package. |
 | `waveform` | `clipID`: ordinary clip. Read-only source envelope, no revision change. |
+| `ruler` | Required finite `value`: pixels per second in 4…420. Optional finite `duration`: extent in seconds in 0…86,400. Read-only musical ticks, no revision change. |
 | `attachSourceMedia` | Preserved event `clipID` and explicitly selected PCM file `path`; validates and copies matching media, records undo, and selects the event. |
 | `renderSourceEvent` | Preserved event `clipID` and a new WAV `path` outside the source package. |
 | `waveform` | Ordinary `clipID`; a read-only source-envelope request. |
 
 Quarter/eighth/sixteenth snapping is 1, 0.5, and 0.25 quarter notes. Bar snapping uses the shared signature map. The helper derives trim limits from checked media and generates split identifiers. The frontend sends proposed seconds from pointer geometry, leaving all snapping and edit rules to Swift.
+
+`ruler` returns `ruler:{revision,duration,pixelsPerSecond,ticks:[{seconds,bar,label}]}`.
+`bar` is a Boolean marking a bar boundary, and `label` is the one-based bar
+number as ASCII decimal digits (at most 10 characters), including on minor
+ticks. At 96 BPM in 4/4 with 100 pixels per second, the first five ticks are
+`0, 0.625, 1.25, 1.875, 2.5` seconds, with bar flags
+`true, false, false, false, true` and labels `1, 1, 1, 1, 2`.
+
+The omitted extent defaults to `min(86400, max(30, arrangementDuration + 8))`.
+An explicit extent outside 0…86,400 or scale outside 4…420 is rejected; neither
+is silently clamped. Valid projections start at `{seconds:0,bar:true,label:"1"}`
+even for zero extent. Later seconds strictly increase and never exceed the
+accepted extent. At most the first 8,192 ticks are returned; the host must leave
+any remaining span unlabeled rather than invent timing. Zoom chooses visual
+density using the existing Mac 12-pixel target: denominator beats when they fit,
+otherwise whole-bar strides. Hosts may suppress overlapping bar labels (the Mac
+uses 55 pixels between labels), without changing tick positions or snap rules.
+
+Both hosts use the same shared tempo/signature projection, including checked
+native clock arithmetic when present. Bar numbering and density remain
+application display policy, not verified reference display behavior. This does
+not convert a native clock, attach media, resolve source events, or enable project
+playback. The command rejects stale revisions and external manifest changes and
+leaves project, selection, dirty state and history unchanged. A frontend must
+match revision, requested extent and scale before drawing a reply; background
+ruler requests must not replace its current document state.
 
 Every reply includes the full state, including failures:
 

@@ -28,6 +28,19 @@
         </ControlTemplate.Triggers>
       </ControlTemplate></Setter.Value></Setter>
     </Style>
+    <!-- Coloured events/name plates and the light Stop button retain their
+         actual fill and content contrast in every interaction state. -->
+    <Style x:Key="AccentSurfaceButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+      <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Grid>
+        <Border x:Name="Body" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="1" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" /></Border>
+        <Border x:Name="Feedback" Background="White" Opacity="0" IsHitTestVisible="False" CornerRadius="1" />
+      </Grid><ControlTemplate.Triggers>
+        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Body" Property="BorderBrush" Value="#F0F2F4" /><Setter TargetName="Feedback" Property="Opacity" Value="0.08" /></Trigger>
+        <Trigger Property="IsPressed" Value="True"><Setter TargetName="Body" Property="BorderBrush" Value="#171A1D" /><Setter TargetName="Feedback" Property="Opacity" Value="0.16" /></Trigger>
+        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Body" Property="BorderBrush" Value="{StaticResource AccentBrush}" /></Trigger>
+        <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.38" /></Trigger>
+      </ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+    </Style>
     <Style x:Key="QuietButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Setter Property="Background" Value="Transparent" /><Setter Property="BorderBrush" Value="Transparent" /><Setter Property="Foreground" Value="{StaticResource AccentBrush}" /></Style>
     <Style TargetType="TextBox">
       <Setter Property="Foreground" Value="{StaticResource TextBrush}" /><Setter Property="Background" Value="#24292D" /><Setter Property="BorderBrush" Value="#343B46" /><Setter Property="BorderThickness" Value="1" />

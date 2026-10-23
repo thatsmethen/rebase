@@ -69,4 +69,5 @@ using (var cancel = new CancellationTokenSource())
 }
 checks += await SourceAuditionControls.Run();
 checks += await WaveformControls.Run();
+checks += await RulerControls.Run();
 Console.WriteLine(JsonSerializer.Serialize(new { schema = 1, suite = "windows-host-portable-controls", checks, failures = 0, wpf_runtime_tested = false, playback_tested = false }));

@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import platform
@@ -145,11 +146,59 @@ def copy_example(app, stage):
     return target
 
 
-def require_window_visual(path):
+def require_window_visual(path, bounds=None):
     data = path.read_bytes()
+    dimensions = struct.unpack_from(">II", data, 16) if len(data) >= 24 else (0, 0)
     if (len(data) < 1024 or data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR"
-            or not all(0 < value <= 16_384 for value in struct.unpack_from(">II", data, 16))):
+            or not all(0 < value <= 16_384 for value in dimensions)):
         raise RuntimeError("Missing or invalid WPF window visual")
+    if bounds is not None:
+        keys = ("outer_width", "outer_height", "client_width", "client_height", "dpi_x", "dpi_y")
+        if any(type(bounds.get(key)) not in (int, float) or not math.isfinite(bounds[key]) or bounds[key] <= 0 for key in keys):
+            raise RuntimeError("Missing finite client-window capture bounds")
+        # The WPF capture deliberately renders logical client dimensions at 96 DPI;
+        # reported host DPI describes the window, not a scaling of this PNG.
+        if (dimensions != (math.ceil(bounds["client_width"]), math.ceil(bounds["client_height"]))
+                or bounds["client_width"] > bounds["outer_width"] or bounds["client_height"] > bounds["outer_height"]):
+            raise RuntimeError("Window PNG dimensions do not match its declared client capture")
+
+
+def require_pinned_header_scroll(smoke):
+    if smoke.get("timeline_scroll_screenshot") != "native-timeline-scroll-visual.png":
+        raise RuntimeError("Missing scrolled timeline screenshot receipt")
+    scroll = smoke.get("timeline_scroll", {})
+
+    def number(value):
+        if type(value) not in (int, float) or not math.isfinite(value):
+            raise RuntimeError("Invalid timeline scroll geometry")
+        return value
+
+    def point(value):
+        return (number(value["x"]), number(value["y"]))
+
+    if number(scroll.get("zoom_pixels_per_second")) != 100:
+        raise RuntimeError("Timeline scroll was not checked at the declared zoom")
+    delta = number(scroll.get("offset_after")) - number(scroll.get("offset_before"))
+    before, after = scroll.get("headers_before", []), scroll.get("headers_after", [])
+    if delta < 50 or len(before) != 4 or len(after) != 4:
+        raise RuntimeError("Timeline scroll did not exercise all four track headers")
+    if any(abs(a - b) > 0.5 for first, last in zip(before, after) for a, b in zip(point(first), point(last))):
+        raise RuntimeError("Track headers moved during horizontal timeline scroll")
+    first, last = point(scroll["event_before"]), point(scroll["event_after"])
+    if abs(last[0] - first[0] + delta) > 0.5 or abs(last[1] - first[1]) > 0.5:
+        raise RuntimeError("Timeline event geometry did not follow the measured scroll")
+
+
+def require_musical_ruler(smoke):
+    ruler = smoke.get("musical_ruler", {})
+    numeric = ("tempo", "duration", "pixels_per_second", "bar_two_seconds", "first_label_x", "second_label_x")
+    if (type(ruler.get("revision")) is not int or ruler["revision"] <= 0
+            or any(type(ruler.get(key)) not in (int, float) or not math.isfinite(ruler[key]) for key in numeric)):
+        raise RuntimeError("Missing finite musical ruler geometry and revision")
+    if (ruler["tempo"] != 96 or ruler["duration"] != 24 or ruler["pixels_per_second"] != 32
+            or ruler["bar_two_seconds"] != 2.5 or ruler["first_label_x"] < 0
+            or abs(ruler["second_label_x"] - ruler["first_label_x"] - 2.5 * ruler["pixels_per_second"]) > 0.5):
+        raise RuntimeError("Musical ruler labels do not match the authored 96 BPM example")
 
 
 def main():
@@ -308,6 +357,11 @@ def main():
         session = json.loads((evidence / "packaged-session-protocol.json").read_text(encoding="utf-8"))
         if (session.get("status") != "passed" or session.get("source_journey_tested") is not True
                 or session.get("waveform", {}).get("clips_checked") != 11
+                or session.get("source", {}).get("playback_tested") is not False
+                or session.get("ruler", {}).get("read_only") is not True
+                or session.get("ruler", {}).get("stale_revision_rejected") is not True
+                or session.get("ruler", {}).get("first_bar_seconds") != [0, 2.5, 5, 7.5]
+                or session.get("ruler", {}).get("first_quarter_seconds") != [0, 0.625, 1.25, 1.875, 2.5]
                 or any(session.get("source", {}).get(key) != expected_source[key]
                        for key in ("sourceSHA256", "mediaSHA256", "outputSHA256", "pcmSHA256", "frames", "sampleRate", "channels"))):
             raise RuntimeError("Packaged session protocol did not pass")
@@ -322,21 +376,32 @@ def main():
             raise RuntimeError("Window smoke receipt is incomplete")
         required_checks = {"real-waveforms-visible", "four-track-rows-fit", "source-package-copy", "source-event-ui-selection",
                            "source-media-ui-attachment", "source-attachment-undo", "source-attachment-redo",
-                           "source-export-ui-verified", "source-provenance-matches", "source-window-visual-artifact"}
+                           "source-export-ui-verified", "source-provenance-matches", "source-window-visual-artifact",
+                           "snap-control-fits-toolbar", "timeline-horizontal-scroll-performed", "track-headers-stay-anchored",
+                           "timeline-events-scroll", "timeline-scroll-visual-artifact", "inspector-volume-shared-edit",
+                           "inspector-volume-undo", "inspector-volume-redo", "inspector-focus-restored",
+                           "inspector-pan-shared-edit", "inspector-mute-shared-edit", "inspector-solo-shared-edit",
+                           "source-selection-labels", "mixer-mute-shared-edit", "track-solo-shared-edit",
+                           "mixer-volume-shared-edit-and-undo",
+                           "musical-ruler-shared-96bpm", "musical-ruler-seconds-toggle"}
         if (smoke.get("source_journey_tested") is not True or not required_checks.issubset(smoke["checks"])
                 or smoke.get("source_screenshot") != "native-source-visual.png"
                 or smoke.get("source_output_sha256") != expected_source["outputSHA256"]
                 or smoke.get("source_sha256") != expected_source["sourceSHA256"]
                 or smoke.get("media_sha256") != expected_source["mediaSHA256"]):
             raise RuntimeError("Source-event or waveform window checks are incomplete")
+        require_pinned_header_scroll(smoke)
+        require_musical_ruler(smoke)
         modules = {"process": validate_modules(smoke.pop("process_modules", None), stage, windows,
                                                {"rebase.exe", "coreclr.dll", "rebasewindowsaudio.dll"}),
                    "helper": validate_modules(smoke.pop("helper_modules", None), stage, windows,
                                               {"rebase-session.exe", "swiftcore.dll"})}
         write(evidence / "loaded-modules.json", modules)
         write(smoke_path, smoke)
-        require_window_visual(evidence / "native-app-visual.png")
-        require_window_visual(evidence / "native-source-visual.png")
+        bounds = smoke.get("window_bounds", {})
+        require_window_visual(evidence / "native-app-visual.png", bounds)
+        require_window_visual(evidence / "native-source-visual.png", bounds)
+        require_window_visual(evidence / "native-timeline-scroll-visual.png", bounds)
         # Recheck all bundled source bytes after both complete user journeys.
         example_manifest = json.loads((stage / "Examples/example.json").read_text(encoding="utf-8"))
         if any(digest(example / item["path"]) != item["sha256"] for item in example_manifest["files"]):
@@ -373,6 +438,8 @@ def main():
                                                 "sha256": digest(archive)}, window_smoke_tested=True,
                       dialogs_tested=False, dependency_closure_checked=True, app_local_modules_observed=True)
         report.update(source_journey_tested=True, source_fixture_shipped=False, real_waveform_checks_passed=True)
+        report["pinned_track_headers_scroll_checked"] = True
+        report["musical_ruler_placement_checked"] = True
     except Exception as error:
         report["error"] = clean(str(error))
         print(report["error"], file=sys.stderr)

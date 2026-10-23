@@ -11,12 +11,13 @@ public struct PortableSessionRequest: Codable {
     public var clipID: UUID?
     public var trackID: UUID?
     public var value: Double?
+    public var duration: Double?
     public var snap: String?
     public var discardChanges: Bool?
     public var asCopy: Bool?
     enum CodingKeys: String, CodingKey {
         case protocolVersion = "protocol"
-        case id, command, expectedRevision, path, clipID, trackID, value, snap, discardChanges, asCopy
+        case id, command, expectedRevision, path, clipID, trackID, value, duration, snap, discardChanges, asCopy
     }
 }
 
@@ -39,7 +40,14 @@ public struct PortableSessionReply: Encodable {
     public let state: PortableSessionState
     public let render: Render?
     public let waveform: Waveform?
+    public let ruler: Ruler?
     public let error: Failure?
+    public struct Ruler: Encodable {
+        public let revision: UInt64
+        public let duration: Double
+        public let pixelsPerSecond: Double
+        public let ticks: [MusicalRulerTick]
+    }
     public struct Waveform: Encodable {
         public let revision: UInt64
         public let clipID: UUID
@@ -63,7 +71,7 @@ public struct PortableSessionReply: Encodable {
         public let mediaSHA256: String?
     }
     public struct Failure: Encodable { public let code: String; public let message: String }
-    enum CodingKeys: String, CodingKey { case protocolVersion = "protocol"; case id, ok, state, render, waveform, error }
+    enum CodingKeys: String, CodingKey { case protocolVersion = "protocol"; case id, ok, state, render, waveform, ruler, error }
 }
 
 /// Serialized document owner for a native host. The host sends intents; all
@@ -111,13 +119,16 @@ public final class PortableSession {
             }
             if request.command == "waveform" {
                 let envelope = try waveform(request)
-                reply = .init(id: id, ok: true, state: state, render: nil, waveform: envelope, error: nil)
+                reply = .init(id: id, ok: true, state: state, render: nil, waveform: envelope, ruler: nil, error: nil)
+            } else if request.command == "ruler" {
+                let projection = try ruler(request)
+                reply = .init(id: id, ok: true, state: state, render: nil, waveform: nil, ruler: projection, error: nil)
             } else {
                 let render = try execute(request)
-                reply = .init(id: id, ok: true, state: state, render: render, waveform: nil, error: nil)
+                reply = .init(id: id, ok: true, state: state, render: render, waveform: nil, ruler: nil, error: nil)
             }
         } catch {
-            reply = .init(id: id, ok: false, state: state, render: nil, waveform: nil,
+            reply = .init(id: id, ok: false, state: state, render: nil, waveform: nil, ruler: nil,
                 error: .init(code: (error as? SessionError)?.code ?? "operationFailed", message: error.localizedDescription))
         }
         // Validated models contain only finite numbers and bounded strings.
@@ -125,6 +136,20 @@ public final class PortableSession {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         return (try? encoder.encode(reply)) ?? Data("{\"protocol\":1,\"ok\":false,\"error\":{\"code\":\"encoding\",\"message\":\"Unable to encode session state.\"}}".utf8)
+    }
+
+    private func ruler(_ request: PortableSessionRequest) throws -> PortableSessionReply.Ruler {
+        guard let project, let root else { throw failure("noProject", "Open a project first.") }
+        guard let scale = request.value, scale.isFinite, MusicalRuler.pixelsPerSecondRange.contains(scale) else {
+            throw failure("value", "Ruler scale must be finite and between 4 and 420 pixels per second.")
+        }
+        let duration = request.duration ?? MusicalRuler.defaultDuration(for: project)
+        guard duration.isFinite, (0...MusicalRuler.maximumDuration).contains(duration) else {
+            throw failure("duration", "Ruler duration must be finite and between 0 and 86,400 seconds.")
+        }
+        try checkSourceUnchanged(root)
+        return .init(revision: revision, duration: duration, pixelsPerSecond: scale,
+            ticks: try MusicalRuler.ticks(project: project, duration: duration, pixelsPerSecond: scale))
     }
 
     private func waveform(_ request: PortableSessionRequest) throws -> PortableSessionReply.Waveform {

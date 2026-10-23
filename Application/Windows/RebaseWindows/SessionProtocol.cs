@@ -13,6 +13,7 @@ public sealed class SessionRequest
     public string? ClipID { get; set; }
     public string? TrackID { get; set; }
     public double? Value { get; set; }
+    public double? Duration { get; set; }
     public string? Snap { get; set; }
     public bool? DiscardChanges { get; set; }
     public bool? AsCopy { get; set; }
@@ -25,6 +26,7 @@ public sealed class SessionResponse
     public SessionState? State { get; set; }
     public RenderSnapshot? Render { get; set; }
     public WaveformSnapshot? Waveform { get; set; }
+    public RulerSnapshot? Ruler { get; set; }
     public SessionError? Error { get; set; }
 }
 public sealed class SessionError { public string Code { get; set; } = "error"; public string Message { get; set; } = "The session request failed."; }

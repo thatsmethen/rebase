@@ -22,6 +22,9 @@ public partial class MainWindow
         using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(sourceProject is null ? 120 : 180));
         string stage = "window-layout", endpoint = "not-probed", error = "";
         object[] processModules = [], helperModules = [];
+        object? timelineScrollReceipt = null;
+        object? windowBounds = null;
+        object? musicalRulerReceipt = null;
         RenderSnapshot? sourceReceipt = null;
         int exit = 1;
         try
@@ -51,6 +54,9 @@ public partial class MainWindow
             source_screenshot = sourceProject is null ? null : "native-source-visual.png",
             source_output_sha256 = sourceReceipt?.Sha256, source_sha256 = sourceReceipt?.SourceSHA256, media_sha256 = sourceReceipt?.MediaSHA256
             , dark_caption_hresult = darkCaptionResult, native_frame_visual_tested = false
+            , timeline_scroll = timelineScrollReceipt, timeline_scroll_screenshot = "native-timeline-scroll-visual.png"
+            , window_bounds = windowBounds
+            , musical_ruler = musicalRulerReceipt
         };
         try { await File.WriteAllTextAsync(artifact, JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true })); }
         catch (IOException) { return 2; }
@@ -60,6 +66,8 @@ public partial class MainWindow
         {
             await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
             Assert(IsVisible && ActualWidth >= 1020 && ActualHeight >= 700, "visible-window-layout");
+            var snapOrigin = SnapBox.TransformToAncestor(ProjectActions).Transform(new Point());
+            Assert(snapOrigin.Y >= 0 && snapOrigin.Y + SnapBox.ActualHeight <= ProjectActions.ActualHeight, "snap-control-fits-toolbar");
             stage = "open-example-button"; await Invoke(ExampleButton);
             await Until(() => model.Project?.Tracks.Length == 4 && !model.Busy, stage);
             Assert(model.State.NeedsSaveAs && model.State.Path is null, "bundled-example-is-copy");
@@ -68,6 +76,54 @@ public partial class MainWindow
             await Invoke(Timeline.Children.OfType<Button>().First());
             await Until(() => model.State.Selection.ClipID == first.Id && !model.Busy, stage);
             Assert(model.SelectedClip is not null, "clip-selection");
+            var originalTrack = model.SelectedTrack!;
+            var targetGain = originalTrack.GainDB >= 24 ? 23 : originalTrack.GainDB + 1;
+            stage = "inspector-volume-shared-edit";
+            InspectorGainSlider.Focus();
+            RangeValue(InspectorGainSlider).SetValue(targetGain);
+            await Until(() => model.SelectedTrack?.GainDB == targetGain && !model.Busy, stage);
+            Assert(InspectorGainSlider.Value == targetGain && mixerSliders[originalTrack.Id + ":gain"].Value == targetGain && model.State.Dirty, "inspector-volume-shared-edit");
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            Assert(InspectorGainSlider.IsKeyboardFocusWithin, "inspector-focus-restored");
+            stage = "inspector-volume-undo"; await Invoke(UndoButton);
+            await Until(() => model.SelectedTrack?.GainDB == originalTrack.GainDB && !model.Busy, stage);
+            Assert(InspectorGainSlider.Value == originalTrack.GainDB && mixerSliders[originalTrack.Id + ":gain"].Value == originalTrack.GainDB, "inspector-volume-undo");
+            stage = "inspector-volume-redo"; await Invoke(RedoButton);
+            await Until(() => model.SelectedTrack?.GainDB == targetGain && !model.Busy, stage);
+            Assert(InspectorGainSlider.Value == targetGain && mixerSliders[originalTrack.Id + ":gain"].Value == targetGain, "inspector-volume-redo");
+            await Invoke(UndoButton); await Until(() => model.SelectedTrack?.GainDB == originalTrack.GainDB && !model.Busy, "restore-inspector-volume");
+            stage = "inspector-pan-shared-edit";
+            var targetPan = originalTrack.Pan == 0.25 ? -0.25 : 0.25;
+            RangeValue(InspectorPanSlider).SetValue(targetPan);
+            await Until(() => model.SelectedTrack?.Pan == targetPan && !model.Busy, stage);
+            Assert(InspectorPanSlider.Value == targetPan && mixerSliders[originalTrack.Id + ":pan"].Value == targetPan, "inspector-pan-shared-edit");
+            await Invoke(UndoButton); await Until(() => model.SelectedTrack?.Pan == originalTrack.Pan && !model.Busy, "restore-inspector-pan");
+            stage = "mixer-volume-shared-edit-and-undo";
+            mixerSliders[originalTrack.Id + ":gain"].Focus();
+            RangeValue(mixerSliders[originalTrack.Id + ":gain"]).SetValue(targetGain);
+            await Until(() => model.SelectedTrack?.GainDB == targetGain && !model.Busy, stage);
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var mixerEditSynchronized = InspectorGainSlider.Value == targetGain && mixerSliders[originalTrack.Id + ":gain"].Value == targetGain &&
+                mixerSliders[originalTrack.Id + ":gain"].IsKeyboardFocusWithin;
+            await Invoke(UndoButton); await Until(() => model.SelectedTrack?.GainDB == originalTrack.GainDB && !model.Busy, stage);
+            Assert(mixerEditSynchronized && InspectorGainSlider.Value == originalTrack.GainDB && mixerSliders[originalTrack.Id + ":gain"].Value == originalTrack.GainDB, "mixer-volume-shared-edit-and-undo");
+            stage = "inspector-mute-shared-edit"; Toggle(InspectorMute);
+            await Until(() => model.SelectedTrack?.IsMuted == !originalTrack.IsMuted && !model.Busy, stage);
+            Assert(InspectorMute.IsChecked == !originalTrack.IsMuted && MixerFlag("Mute " + originalTrack.Name).IsChecked == !originalTrack.IsMuted, "inspector-mute-shared-edit");
+            await Invoke(UndoButton); await Until(() => model.SelectedTrack?.IsMuted == originalTrack.IsMuted && !model.Busy, "restore-inspector-mute");
+            stage = "inspector-solo-shared-edit"; Toggle(InspectorSolo);
+            await Until(() => model.SelectedTrack?.IsSolo == !originalTrack.IsSolo && !model.Busy, stage);
+            Assert(InspectorSolo.IsChecked == !originalTrack.IsSolo && MixerFlag("Solo " + originalTrack.Name).IsChecked == !originalTrack.IsSolo, "inspector-solo-shared-edit");
+            await Invoke(UndoButton); await Until(() => model.SelectedTrack?.IsSolo == originalTrack.IsSolo && !model.Busy, "restore-inspector-solo");
+            stage = "mixer-mute-shared-edit"; Toggle(MixerFlag("Mute " + originalTrack.Name));
+            await Until(() => model.SelectedTrack?.IsMuted == !originalTrack.IsMuted && !model.Busy, stage);
+            Assert(InspectorMute.IsChecked == !originalTrack.IsMuted && MixerFlag("Mute " + originalTrack.Name).IsChecked == !originalTrack.IsMuted, "mixer-mute-shared-edit");
+            await Invoke(UndoButton); await Until(() => model.SelectedTrack?.IsMuted == originalTrack.IsMuted && !model.Busy, "restore-mixer-mute");
+            stage = "track-solo-shared-edit";
+            Toggle(Timeline.TrackHeaders.SelectMany(Descendants<CheckBox>).Single(control => System.Windows.Automation.AutomationProperties.GetName(control) == "Solo " + originalTrack.Name));
+            await Until(() => model.SelectedTrack?.IsSolo == !originalTrack.IsSolo && !model.Busy, stage);
+            Assert(InspectorSolo.IsChecked == !originalTrack.IsSolo && MixerFlag("Solo " + originalTrack.Name).IsChecked == !originalTrack.IsSolo, "track-solo-shared-edit");
+            await Invoke(UndoButton); await Until(() => model.SelectedTrack?.IsSolo == originalTrack.IsSolo && !model.Busy, "restore-track-solo");
             stage = "move-button"; MoveBox.Text = (first.Position + 0.25).ToString(System.Globalization.CultureInfo.CurrentCulture); await Invoke(MoveButton);
             await Until(() => model.SelectedClip?.Position == first.Position + 0.25 && !model.Busy, stage);
             Assert(model.State.Dirty, "move-changes-document");
@@ -104,11 +160,17 @@ public partial class MainWindow
                 var selector = new ComboBoxAutomationPeer(SourceEventsBox);
                 var expand = (IExpandCollapseProvider)selector.GetPattern(PatternInterface.ExpandCollapse);
                 expand.Expand(); await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
-                var item = selector.GetChildren()?.Select(peer => peer.GetPattern(PatternInterface.SelectionItem)).OfType<ISelectionItemProvider>().FirstOrDefault()
+                var itemPeer = selector.GetChildren()?.FirstOrDefault(peer => peer.GetPattern(PatternInterface.SelectionItem) is ISelectionItemProvider)
                     ?? throw new InvalidOperationException("The source-event selector exposed no selectable UI item.");
+                var accessibleItemName = itemPeer.GetName();
+                var item = (ISelectionItemProvider)itemPeer.GetPattern(PatternInterface.SelectionItem);
                 item.Select(); expand.Collapse();
                 await Until(() => !model.Busy && model.SelectedSourceEvent is not null, stage);
                 Assert(SourceEventsBox.SelectedItem is SourceEventView, "source-event-ui-selection");
+                await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+                Assert(accessibleItemName == model.SelectedSourceEvent!.DisplayName &&
+                    Descendants<TextBlock>(SourceEventsBox).Any(text => text.Text == model.SelectedSourceEvent.DisplayName && text.ActualWidth > 0 && text.ActualHeight > 0) &&
+                    SelectionName.Text == model.SelectedSourceEvent.Name && !MoveBox.IsEnabled && !TrimBox.IsEnabled, "source-selection-labels");
                 stage = "source-media-ui-attachment";
                 smokeAttachPath = sourceMedia;
                 await Invoke(AttachSourceButton);
@@ -137,15 +199,70 @@ public partial class MainWindow
             Assert(Timeline.PopulatedWaveformCount > 0, "real-waveforms-visible");
             await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
             Assert(model.Project!.Tracks.Length == 4 && TimelineScroll.ViewportHeight >= Timeline.TracksBottom, "four-track-rows-fit");
+            stage = "musical-ruler-shared-96bpm";
+            await Until(() => Timeline.MusicalRulerVisible && model.Ruler?.Revision == model.State.Revision && model.Ruler.PixelsPerSecond == Zoom.Value, stage);
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var barTwo = model.Ruler!.Ticks.Single(tick => tick.Bar && tick.Label == "2");
+            var firstBarLabel = Timeline.Children.OfType<TextBlock>().Single(text => text.Tag is RulerTick { Bar: true, Label: "1" });
+            var secondBarLabel = Timeline.Children.OfType<TextBlock>().Single(text => text.Tag is RulerTick { Bar: true, Label: "2" });
+            Assert(model.Project.Tempo == 96 && barTwo.Seconds == 2.5 && firstBarLabel.ActualWidth > 0 && secondBarLabel.ActualWidth > 0 &&
+                Math.Abs(Canvas.GetLeft(secondBarLabel) - Canvas.GetLeft(firstBarLabel) - 2.5 * Zoom.Value) <= 0.5, "musical-ruler-shared-96bpm");
+            musicalRulerReceipt = new { revision = model.Ruler.Revision, tempo = model.Project.Tempo, duration = model.Ruler.Duration,
+                pixels_per_second = model.Ruler.PixelsPerSecond, bar_two_seconds = barTwo.Seconds,
+                first_label_x = Canvas.GetLeft(firstBarLabel), second_label_x = Canvas.GetLeft(secondBarLabel) };
+            stage = "musical-ruler-seconds-toggle";
+            await SelectComboItem(RulerModeBox, 1);
+            Assert(!Timeline.MusicalRulerVisible && Timeline.Children.OfType<TextBlock>().Any(text => text.Tag is null && text.Text == "0") &&
+                !Timeline.Children.OfType<TextBlock>().Any(text => text.Tag is RulerTick), "musical-ruler-seconds-toggle");
+            await SelectComboItem(RulerModeBox, 0);
+            stage = "fixed-track-header-scroll";
+            var originalZoom = Zoom.Value;
+            Zoom.Value = 100;
+            await Until(() => Timeline.MusicalRulerVisible && model.Ruler?.PixelsPerSecond == 100, "zoomed-musical-ruler");
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var scrollPeer = new ScrollViewerAutomationPeer(TimelineScroll);
+            var scroll = (IScrollProvider)scrollPeer.GetPattern(PatternInterface.Scroll);
+            scroll.SetScrollPercent(0, System.Windows.Automation.ScrollPatternIdentifiers.NoScroll);
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var eventButton = Timeline.Children.OfType<Button>().First();
+            var headersBefore = Timeline.TrackHeaders.Select(Origin).ToArray();
+            var eventBefore = Origin(eventButton);
+            var offsetBefore = TimelineScroll.HorizontalOffset;
+            scroll.SetScrollPercent(20, System.Windows.Automation.ScrollPatternIdentifiers.NoScroll);
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var headersAfter = Timeline.TrackHeaders.Select(Origin).ToArray();
+            var eventAfter = Origin(eventButton);
+            var offsetAfter = TimelineScroll.HorizontalOffset;
+            var offsetDelta = offsetAfter - offsetBefore;
+            Assert(offsetDelta >= 50, "timeline-horizontal-scroll-performed");
+            Assert(headersBefore.Length == model.Project.Tracks.Length && headersAfter.Length == headersBefore.Length &&
+                headersBefore.Zip(headersAfter).All(pair => Math.Abs(pair.First.X - pair.Second.X) <= 0.5 && Math.Abs(pair.First.Y - pair.Second.Y) <= 0.5), "track-headers-stay-anchored");
+            Assert(Math.Abs(eventAfter.X - eventBefore.X + offsetDelta) <= 0.5 && Math.Abs(eventAfter.Y - eventBefore.Y) <= 0.5, "timeline-events-scroll");
+            timelineScrollReceipt = new
+            {
+                zoom_pixels_per_second = Zoom.Value, offset_before = offsetBefore, offset_after = offsetAfter,
+                headers_before = headersBefore.Select(point => new { x = point.X, y = point.Y }).ToArray(),
+                headers_after = headersAfter.Select(point => new { x = point.X, y = point.Y }).ToArray(),
+                event_before = new { x = eventBefore.X, y = eventBefore.Y }, event_after = new { x = eventAfter.X, y = eventAfter.Y }
+            };
+            await Capture("native-timeline-scroll-visual.png"); checks.Add("timeline-scroll-visual-artifact");
+            scroll.SetScrollPercent(0, System.Windows.Automation.ScrollPatternIdentifiers.NoScroll);
+            Zoom.Value = originalZoom;
+            await Until(() => Timeline.MusicalRulerVisible && model.Ruler?.PixelsPerSecond == originalZoom, "restored-musical-ruler");
             stage = "capture-window-visual";
             await Capture("native-app-visual.png");
             checks.Add("window-visual-artifact-written"); stage = "completed";
         }
+        Point Origin(FrameworkElement element) => element.TransformToAncestor(this).Transform(new Point());
+        CheckBox MixerFlag(string name) => Descendants<CheckBox>(Mixer).Single(control => System.Windows.Automation.AutomationProperties.GetName(control) == name);
         async Task Capture(string filename)
         {
             await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
-            var image = new RenderTargetBitmap((int)ActualWidth, (int)ActualHeight, 96, 96, PixelFormats.Pbgra32);
-            image.Render(this);
+            var client = Content as FrameworkElement ?? throw new InvalidOperationException("The window has no client visual.");
+            var dpi = VisualTreeHelper.GetDpi(this);
+            windowBounds = new { outer_width = ActualWidth, outer_height = ActualHeight, client_width = client.ActualWidth, client_height = client.ActualHeight, dpi_x = dpi.PixelsPerInchX, dpi_y = dpi.PixelsPerInchY };
+            var image = new RenderTargetBitmap((int)Math.Ceiling(client.ActualWidth), (int)Math.Ceiling(client.ActualHeight), 96, 96, PixelFormats.Pbgra32);
+            image.Render(client);
             var encoder = new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(image));
             using var output = File.Create(Path.Combine(root, filename)); encoder.Save(output);
         }
@@ -164,6 +281,27 @@ public partial class MainWindow
             var peer = new ButtonAutomationPeer(button);
             ((IInvokeProvider)peer.GetPattern(PatternInterface.Invoke)).Invoke();
             await button.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
+        }
+        static IRangeValueProvider RangeValue(Slider slider) => (IRangeValueProvider)(UIElementAutomationPeer.CreatePeerForElement(slider)
+            ?? throw new InvalidOperationException("Slider has no automation peer.")).GetPattern(PatternInterface.RangeValue);
+        static void Toggle(CheckBox control) => ((IToggleProvider)new CheckBoxAutomationPeer(control).GetPattern(PatternInterface.Toggle)).Toggle();
+        async Task SelectComboItem(ComboBox control, int index)
+        {
+            var peer = new ComboBoxAutomationPeer(control);
+            var expand = (IExpandCollapseProvider)peer.GetPattern(PatternInterface.ExpandCollapse);
+            expand.Expand(); await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var item = peer.GetChildren()?.Select(child => child.GetPattern(PatternInterface.SelectionItem)).OfType<ISelectionItemProvider>().ElementAt(index)
+                ?? throw new InvalidOperationException("The ruler selector has no matching UI item.");
+            item.Select(); expand.Collapse(); await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+        }
+        static IEnumerable<T> Descendants<T>(DependencyObject parent) where T : DependencyObject
+        {
+            for (int index = 0; index < VisualTreeHelper.GetChildrenCount(parent); index++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, index);
+                if (child is T matching) yield return matching;
+                foreach (var nested in Descendants<T>(child)) yield return nested;
+            }
         }
     }
 }

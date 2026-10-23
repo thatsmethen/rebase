@@ -219,13 +219,32 @@ def main():
                 run(["swift", "build", "--scratch-path", str(build), "-c", configuration,
                      "--product", "rebase-session"], "session-build")
                 session = Path(bin_path) / ("rebase-session.exe" if os.name == "nt" else "rebase-session")
+                fixture = app / "Tests/Fixtures/SourceAudition"
+                source_lock = fixture / "expected.json"
+                expected_source = json.loads(source_lock.read_text(encoding="utf-8"))
                 run([sys.executable, str(app / "scripts/check-session-protocol.py"),
                      "--helper", str(session), "--example", str(app / "Examples/Rebase Preview.rebaseproj"),
-                     "--report", str(out / "session-protocol.json")], "session-protocol")
+                     "--report", str(out / "session-protocol.json"),
+                     "--source-project", str(fixture / "AuthoredSource.rebaseproj"),
+                     "--source-media", str(fixture / "SelectedSource.wav"),
+                     "--source-lock", str(source_lock)], "session-protocol")
                 session_result = json.loads((out / "session-protocol.json").read_text())
-                if session_result.get("status") != "passed":
+                if (session_result.get("status") != "passed" or session_result.get("source_journey_tested") is not True
+                        or session_result.get("waveform", {}).get("clips_checked") != 11
+                        or session_result.get("source", {}).get("playback_tested") is not False
+                        or session_result.get("ruler", {}).get("read_only") is not True
+                        or session_result.get("ruler", {}).get("stale_revision_rejected") is not True
+                        or session_result.get("ruler", {}).get("first_bar_seconds") != [0, 2.5, 5, 7.5]
+                        or session_result.get("ruler", {}).get("first_quarter_seconds") != [0, 0.625, 1.25, 1.875, 2.5]
+                        or any(session_result.get("source", {}).get(key) != expected_source[key]
+                               for key in ("sourceSHA256", "mediaSHA256", "outputSHA256", "pcmSHA256", "frames", "sampleRate", "channels"))):
                     raise RuntimeError("Interactive session protocol checks did not pass")
                 report["interactive_session_checks"] = len(session_result["checks"])
+                report["source_journey_tested"] = True
+                report["source_control"] = {**session_result["source"],
+                                            "expected_lock_sha256": hashlib.sha256(source_lock.read_bytes()).hexdigest()}
+                report["waveform_control"] = session_result["waveform"]
+                report["ruler_control"] = session_result["ruler"]
         sanitize_xml()
         report["tests"] = collect_test_results(test_xml_paths())
         report["status"] = "passed"
