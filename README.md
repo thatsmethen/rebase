@@ -14,6 +14,14 @@ The research identifies its reference software and retains its original terminol
 
 **Rebase 0.21.0** targets **Apple Silicon (arm64), macOS 14 or later**. Download the app and checksums from the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.0), and follow the [installation guide](Application/INSTALL.md). This is an experimental build, ad hoc signed and not notarized.
 
+## Screenshots
+
+An eight-bar session with four tracks of synthesized audio, shown in the released app.
+
+![Rebase arrangement, inspector and mixer](docs/screenshots/arrangement.jpg)
+
+[Automation editor](docs/screenshots/automation.jpg) · [App icon and version](docs/screenshots/about.jpg) · [Capture details](docs/screenshots/README.md)
+
 ## Build
 
 Requires macOS 14 or later, Apple's command-line developer tools, and CMake. The build downloads the pinned Swift package dependency and builds the included SoXR source.
