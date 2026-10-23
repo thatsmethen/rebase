@@ -1,0 +1,308 @@
+{
+  "schema": "rebase.windows-ci-observation.v1",
+  "recorded_at_utc": "2026-10-23T12:22:27.185328+00:00",
+  "commit": "53141c1d1d2e20307f1a3404fe17422f4c08ab29",
+  "status": "passed",
+  "run_url": "https://github.com/thatsmethen/rebase/actions/runs/39951105287",
+  "job_url": "https://github.com/thatsmethen/rebase/actions/runs/39951105287/job/120405498239",
+  "publication_status": "CI evidence retained only. No application ZIP was downloaded or published during this step; the current release remains the prior 8c6ec4b UI milestone.",
+  "findings": [
+    "The Windows application workflow passed and produced a development ZIP. This observation has not downloaded or independently audited that ZIP.",
+    "The mandatory shared Release gate reported 77 tests, executed 76, skipped one opt-in generator and failed none. All six new SharedCPRImportTests executed without skips.",
+    "The new importer controls exercise reviewed authored source/report preservation, explicit partial acceptance, changed-source rejection, existing destinations, historical-report integrity and failed-publication cleanup.",
+    "The actual opened WPF window passed 55 existing checks. The staged and independent shared helpers each passed 52 interactive checks; the host controls passed 91 checks.",
+    "Existing waveform, ruler, exact example PCM and authored source-output checks retained their predeclared results.",
+    "The hosted audio endpoint was unavailable. No audio-device playback or audible output was measured."
+  ],
+  "package": {
+    "name": "Rebase-Windows-x64-development-53141c1d1d2e.zip",
+    "bytes": 98877389,
+    "sha256": "2c0310323f1af3f842d97e44f750bdfb94644a71c39a7f7ef5da912cbe23dfdc"
+  },
+  "package_identity_source": "CI application-build receipt only",
+  "package_independently_downloaded": false,
+  "package_independently_audited": false,
+  "window_smoke_passed": true,
+  "window_smoke_checks": 55,
+  "host_control_checks": 91,
+  "packaged_protocol_checks": 52,
+  "shared_protocol_checks": 52,
+  "shared_release_gate_passed": true,
+  "shared_release_tests": {
+    "count": 77,
+    "executed": 76,
+    "skipped": 1,
+    "failures": 0
+  },
+  "shared_cpr_import_tests": {
+    "reported": 6,
+    "executed": 6,
+    "skipped": 0,
+    "failures": 0,
+    "cases": [
+      {
+        "classname": "RebasePortableTests.SharedCPRImportTests",
+        "name": "failedPublicationCleansOnlyItsStagingAndRetainsSource()",
+        "time": "2.938517"
+      },
+      {
+        "classname": "RebasePortableTests.SharedCPRImportTests",
+        "name": "changedSourceAfterReviewIsRejectedBeforePublication()",
+        "time": "2.9382544"
+      },
+      {
+        "classname": "RebasePortableTests.SharedCPRImportTests",
+        "name": "partialRecoveryRequiresExplicitAcceptanceWithoutPublishing()",
+        "time": "2.9385035"
+      },
+      {
+        "classname": "RebasePortableTests.SharedCPRImportTests",
+        "name": "savedEditsDoNotRewriteImportBaselineAndTamperingIsRejected()",
+        "time": "2.9389444"
+      },
+      {
+        "classname": "RebasePortableTests.SharedCPRImportTests",
+        "name": "existingFileAndDirectoryDestinationsAreNeverReplaced()",
+        "time": "2.9382954"
+      },
+      {
+        "classname": "RebasePortableTests.SharedCPRImportTests",
+        "name": "reviewedAuthoredImportPublishesExactSourceAndReplayedReport()",
+        "time": "2.9393973"
+      }
+    ],
+    "evidence_class": "authored shared-core filesystem controls"
+  },
+  "loaded_modules": {
+    "wpf_process": 130,
+    "helper": 50
+  },
+  "pe_dependency_images": 417,
+  "source_journey_tested": true,
+  "source_fixture_shipped": false,
+  "source": {
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "mediaSHA256": "c1ccbba91f8d9084cba4271ec5cc7c6114d754349d6da98f42a91463830fe956",
+    "outputSHA256": "8090c75bc7ace4f400eb25d428129c68eddec2c488200e9fcad4deb5700afd0a",
+    "pcmSHA256": "06e73a6e5b244c0c187bdd6482d8db7bb3adfd3ac98f2c11e6cd4c29d7a3bce0",
+    "frames": 44100,
+    "sampleRate": 44100,
+    "channels": 2,
+    "playback_tested": false
+  },
+  "waveform": {
+    "clips_checked": 11,
+    "peak_bins_checked": 17600,
+    "float32_peak_words_sha256": "ade8ed5eb493af376b7affbfb5bd0bf3f06aafa51eabe63c48c6657406caba29",
+    "oracle": "Independent signed PCM16 extrema over exact source intervals"
+  },
+  "ruler": {
+    "read_only": true,
+    "stale_revision_rejected": true,
+    "pixels_per_second": 100,
+    "duration": 20,
+    "ticks_checked": 33,
+    "first_bar_seconds": [
+      0,
+      2.5,
+      5,
+      7.5
+    ],
+    "first_quarter_seconds": [
+      0,
+      0.625,
+      1.25,
+      1.875,
+      2.5
+    ],
+    "oracle": "Authored constant 96 BPM, 4/4: quarter = 5/8 seconds; bar = 5/2 seconds"
+  },
+  "window_ruler": {
+    "revision": 47,
+    "tempo": 96,
+    "duration": 24,
+    "pixels_per_second": 32,
+    "bar_two_seconds": 2.5,
+    "first_label_x": 202,
+    "second_label_x": 282
+  },
+  "window_scroll": {
+    "zoom_pixels_per_second": 100,
+    "offset_before": 0,
+    "offset_after": 368,
+    "headers_before": [
+      {
+        "x": 286,
+        "y": 154
+      },
+      {
+        "x": 286,
+        "y": 222
+      },
+      {
+        "x": 286,
+        "y": 290
+      },
+      {
+        "x": 286,
+        "y": 358
+      }
+    ],
+    "headers_after": [
+      {
+        "x": 286,
+        "y": 154
+      },
+      {
+        "x": 286,
+        "y": 222
+      },
+      {
+        "x": 286,
+        "y": 290
+      },
+      {
+        "x": 286,
+        "y": 358
+      }
+    ],
+    "event_before": {
+      "x": 484,
+      "y": 159
+    },
+    "event_after": {
+      "x": 116,
+      "y": 159
+    }
+  },
+  "downloadable_zip_produced": true,
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "visual_evidence": {
+    "images": [
+      "native-app-visual.png",
+      "native-source-visual.png",
+      "native-timeline-scroll-visual.png"
+    ],
+    "pixel_dimensions": [
+      1084,
+      749
+    ],
+    "new_manual_visual_review_performed": false
+  },
+  "boundaries": [
+    "All 20 retained raw records are byte-exact copies of downloaded CI evidence. No image changes or local redactions were applied.",
+    "The new importer evidence concerns shared-core authored controls. No Windows UI raw-CPR import journey exists or was exercised by this milestone.",
+    "The PNGs render the client visual tree of the opened WPF window, not the native desktop frame. File dialogs and physical input remain untested.",
+    "The observed dependency closure and runtime loading are CI evidence; no new independent package-byte audit was performed.",
+    "No audio-device playback, complete Windows parity, general CPR playback or proprietary reference-runtime equivalence is established."
+  ],
+  "artifacts": [
+    {
+      "path": "application-build.json",
+      "bytes": 5563,
+      "sha256": "793a582ecb737687fb720ac20f3fc6852fd3185025765c217c480287281a08bc"
+    },
+    {
+      "path": "host-controls.json",
+      "bytes": 163,
+      "sha256": "c662be061cd24f6c768a5d7b42551590b94cebda097a7bb652bd4bef88f45956"
+    },
+    {
+      "path": "packaged-session-protocol.json",
+      "bytes": 5217,
+      "sha256": "e230ec4651f73d49b95f2329d959ba7b57bf587819194cf8aa1b151547d2cdfc"
+    },
+    {
+      "path": "pe-dependency-closure.json",
+      "bytes": 107613,
+      "sha256": "63ee13e46435de0d736ab6a1328b173d3806b7470cfec09ae71b605c66083c78"
+    },
+    {
+      "path": "wpf-smoke.json",
+      "bytes": 4786,
+      "sha256": "6aed31a5319cf0584f41fa32f14e7c8e5dcd42c62c015ae275d23d0535ae5a4e"
+    },
+    {
+      "path": "loaded-modules.json",
+      "bytes": 33634,
+      "sha256": "8d02c0de174381735390708ca2449652acbd152254acafd0563537017c9ce76d"
+    },
+    {
+      "path": "native-app-visual.png",
+      "bytes": 80717,
+      "sha256": "f365cd8b16a0c4906af1d7cf6dadc7b997239e22e43dec059d0ee4afe3ec13e1"
+    },
+    {
+      "path": "native-source-visual.png",
+      "bytes": 72988,
+      "sha256": "4bfce5cf6ab591b1f06a4320697756672060c348e1c8b1cfecc52a40c8931f6a"
+    },
+    {
+      "path": "native-timeline-scroll-visual.png",
+      "bytes": 75002,
+      "sha256": "1ae5ed77b25d600b64a983f4733489ae08a34b8c021d7cd3103571a08928415f"
+    },
+    {
+      "path": "native/conformance.json",
+      "bytes": 4077,
+      "sha256": "dc13b290eaf5e55ed516248675292d3cab2131cffed1615f5cf6c615ad300a76"
+    },
+    {
+      "path": "native/lifecycle.json",
+      "bytes": 161,
+      "sha256": "4cf871633cd9cd8fba9c06d7552550837fc5ef3d79fc608370edc07228840ab7"
+    },
+    {
+      "path": "native/endpoint-probe.json",
+      "bytes": 539,
+      "sha256": "4861b7d5be2448c852ce4e272c64bb50e6a79646e65b9d917937b48248d7c38c"
+    },
+    {
+      "path": "shared/conformance.json",
+      "bytes": 7804,
+      "sha256": "ed65793beadc1ce1dceca1ff2c272cb31caab60e00b34e32125d643d6b55d2a3"
+    },
+    {
+      "path": "shared/tests-swift-testing.xml",
+      "bytes": 11920,
+      "sha256": "0f5894de6d81376074bacb01bf61c399fedf8eda97954b65b915f8a894e9a25c"
+    },
+    {
+      "path": "shared/tests.log",
+      "bytes": 155493,
+      "sha256": "b97224a4475888379f2f568e28ccf92740e94ae306c6dbe09661b84ce3912c1c"
+    },
+    {
+      "path": "shared/test-discovery.log",
+      "bytes": 7799,
+      "sha256": "8e9c313d069bb1db34a48d37b9d0d8218f48ab37528d8533dd5a3279d7beffcc"
+    },
+    {
+      "path": "shared/session-protocol.json",
+      "bytes": 5217,
+      "sha256": "e230ec4651f73d49b95f2329d959ba7b57bf587819194cf8aa1b151547d2cdfc"
+    },
+    {
+      "path": "shared/example-render.json",
+      "bytes": 1118,
+      "sha256": "27596bac35690fe73e924a395c8558de1a74ef7284dc0ff6bc58f7fa8b5cbaa6"
+    },
+    {
+      "path": "packaged-window-smoke.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "host-controls.log",
+      "bytes": 131,
+      "sha256": "e54bfe0388c7b9e5aad18558ed2a43ef651edc81b582fc885e2c8b21b078dbee"
+    }
+  ],
+  "privacy_review": {
+    "configured_private_value_and_credential_blockers": 0,
+    "retained_files_scanned": 21,
+    "review_items": "Only local com.apple.provenance filesystem attributes; no file-content finding.",
+    "scope": "Configured known personal values and credential patterns; not a universal disclosure guarantee."
+  }
+}

@@ -30,6 +30,10 @@ These records concern the authored Rebase implementation running on Windows. The
 
 - [Application run 39946278931](application-run-39946278931/observation.json): 54 actual-window checks, 91 host controls and 52 helper checks passed. Both fader sizes match measured thumb coordinates at -96, 0 and +24 dB. Native images show the new Channel/Inspector and compact controls, but root review found an unintended gap below the selected Channel nameplate. Its alignment correction receives a new native gate and separate subsequent evidence. This ZIP has not been independently downloaded or published.
 
+- [Application run 39949650116](application-run-39949650116/observation.json) and [component run 39949650135](run-39949650135/observation.json): the corrected Channel alignment passes the new native gate (686 versus 685.5 DIP). All 55 window checks and all 13 component jobs passed. Three fresh images are accepted for this scoped refinement; the independently downloaded ZIP audit is retained.
+
+- [Component run 39951105337](run-39951105337/observation.json) and [application run 39951105287](application-run-39951105287/observation.json): the portable importer executes six authored controls in each Windows configuration and seven in each macOS configuration, without failures. The app retains 55 passing window checks, 91 host controls and 52 helper checks. Raw CPR review/import is not yet exposed through the Windows session/interface.
+
 New runs receive separate records. A later passing run does not rewrite a failed observation or turn a component check into full application parity. The current feature acceptance plan is the [Windows parity ledger](../../../docs/development/windows-parity.md).
 
 The [local portable CPR import controls](cpr-import-local-20261023/observation.json) retain two raw test reports and exact source hashes. Seven authored cases passed in the macOS portable target; the normal macOS core focused run executed 19 cases with seven explicit private-fixture skips and zero failures. This verifies the shared filesystem adaptation locally; it does not yet establish Windows execution or a Windows review/import interface.
