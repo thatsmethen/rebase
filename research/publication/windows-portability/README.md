@@ -16,4 +16,6 @@ These records concern the authored Rebase implementation running on Windows. The
 
 - [Run 39927473852](run-39927473852/observation.json) and [application run 39927473868](application-run-39927473868/observation.json): the real WPF window passed 11 example/edit/save/reopen/export checks and its loaded runtime modules resolved within the staged app or Windows. The captured image is a visual-tree render. Release still discovered zero tests with explicit `/OPT:NOREF`, so no ZIP was created. Audio-device playback remained untested.
 
+- [Run 39929537043](run-39929537043/observation.json): all 13 jobs passed. Windows Debug/Release each executed 44 Swift tests; macOS each executed 45. Disabling cross-module optimization for the optimized Windows test build restored discovery. Production-flag helpers passed their interactive checks and the example PCM matched exactly on both operating systems/configurations. Audio-device playback remained untested.
+
 New runs receive separate records. A later passing run does not rewrite a failed observation or turn a component check into full application parity. The current feature acceptance plan is the [Windows parity ledger](../../../docs/development/windows-parity.md).

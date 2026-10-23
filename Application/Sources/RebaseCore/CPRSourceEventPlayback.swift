@@ -102,8 +102,29 @@ enum CPRSourceEventPlayback {
             return (info, PreparedProject(format: stream.format, frameCount: stream.frameCount,
                 clips: [], nativeTimelineStream: stream))
         }
-        let source = try CPRSourceEventRenderer.prepare(eventID: eventID, in: project, at: root,
-            applyEventGain: mode == .sourceRate)
+        if mode == .sourceRate {
+            let source = try CPRSourceEventRenderer.prepareAudition(eventID: eventID, in: project, at: root)
+            guard let event = project.unresolvedAudioEvents.first(where: { $0.id == eventID }),
+                  let placement = event.placement else {
+                throw RebaseCoreError.invalidProject("The selected source event is no longer in this project.")
+            }
+            let format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: source.sampleRate,
+                                       channels: 2, interleaved: false)!
+            let buffer = try AudioPreparation.buffer(format: format, frames: source.frameCount)
+            let channels = buffer.floatChannelData!
+            for frame in 0..<source.frameCount {
+                channels[0][frame] = source.samples[frame * 2]
+                channels[1][frame] = source.samples[frame * 2 + 1]
+            }
+            let info = CPRSourceEventPlaybackInfo(eventID: eventID, name: event.name,
+                sampleRate: source.sampleRate, sourceSampleRate: source.sampleRate, mode: mode,
+                frameCount: Int64(source.frameCount), sourceSHA256: source.sourceSHA256, mediaSHA256: source.mediaSHA256)
+            return (info, PreparedProject(format: format, frameCount: Int64(source.frameCount),
+                clips: [PreparedClip(startFrame: 0, buffer: buffer)],
+                nativeEventSelection: CPRTimelineSelection.Segment(
+                    start: placement.position, length: placement.duration, successor: -1)))
+        }
+        let source = try CPRSourceEventRenderer.prepare(eventID: eventID, in: project, at: root, applyEventGain: false)
         let plan = source.plan
         guard plan.channels == 2 else {
             throw RebaseCoreError.unsupportedAudio("Timeline audition currently requires a stereo source; native mono output routing is unresolved.")
@@ -111,38 +132,18 @@ enum CPRSourceEventPlayback {
         guard let event = project.unresolvedAudioEvents.first(where: { $0.id == eventID }), let placement = event.placement else {
             throw RebaseCoreError.invalidProject("The selected source event is no longer in this project.")
         }
-        if mode != .sourceRate {
-            let stream = try CPRRateConvertedStream(source: source.samples,
-                sourceRate: Double(plan.rate), outputRate: project.sampleRate, gain: plan.gain,
-                algorithm: mode == .nativeMode2ProjectRate ? .nativeMode2 :
-                    mode == .nativeMode1ProjectRate ? .nativeMode1 : .nativeMode0)
-            let info = CPRSourceEventPlaybackInfo(eventID: eventID, name: event.name,
-                sampleRate: project.sampleRate, sourceSampleRate: Double(plan.rate), mode: mode,
-                frameCount: stream.frameCount, sourceSHA256: source.sourceSHA256,
-                mediaSHA256: source.mediaSHA256)
-            return (info, PreparedProject(format: stream.format, frameCount: stream.frameCount,
-                clips: [], nativeEventSelection: CPRTimelineSelection.Segment(
-                    start: placement.position, length: placement.duration, successor: -1),
-                sourceEventStream: stream))
-        }
-        // The source plan admits only a complete, zero-origin segment. Do not
-        // pass this audio through Rebase's clip resampler, pan or automation.
-        let format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: Double(plan.rate),
-                                   channels: 2, interleaved: false)!
-        let buffer = try AudioPreparation.buffer(format: format, frames: plan.frames)
-        let channels = buffer.floatChannelData!
-        for frame in 0..<plan.frames {
-            channels[0][frame] = source.samples[frame * 2]
-            channels[1][frame] = source.samples[frame * 2 + 1]
-        }
+        let stream = try CPRRateConvertedStream(source: source.samples,
+            sourceRate: Double(plan.rate), outputRate: project.sampleRate, gain: plan.gain,
+            algorithm: mode == .nativeMode2ProjectRate ? .nativeMode2 :
+                mode == .nativeMode1ProjectRate ? .nativeMode1 : .nativeMode0)
         let info = CPRSourceEventPlaybackInfo(eventID: eventID, name: event.name,
-            sampleRate: Double(plan.rate), sourceSampleRate: Double(plan.rate), mode: mode,
-            frameCount: Int64(plan.frames),
-            sourceSHA256: source.sourceSHA256, mediaSHA256: source.mediaSHA256)
-        return (info, PreparedProject(format: format, frameCount: Int64(plan.frames),
-                                     clips: [PreparedClip(startFrame: 0, buffer: buffer)],
-                                     nativeEventSelection: CPRTimelineSelection.Segment(
-                                        start: placement.position, length: placement.duration, successor: -1)))
+            sampleRate: project.sampleRate, sourceSampleRate: Double(plan.rate), mode: mode,
+            frameCount: stream.frameCount, sourceSHA256: source.sourceSHA256,
+            mediaSHA256: source.mediaSHA256)
+        return (info, PreparedProject(format: stream.format, frameCount: stream.frameCount,
+            clips: [], nativeEventSelection: CPRTimelineSelection.Segment(
+                start: placement.position, length: placement.duration, successor: -1),
+            sourceEventStream: stream))
     }
 }
 

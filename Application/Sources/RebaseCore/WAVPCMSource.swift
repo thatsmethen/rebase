@@ -14,6 +14,11 @@ public final class WAVPCMSource: PCMSourceReader {
     private let bits: Int
     private let format: Int
 
+    // Stored metadata is distinct from the Float32 decoder output.
+    var storedBitsPerSample: Int { bits }
+    var storedBytesPerFrame: Int { blockAlign }
+    var snapshotSHA256: String { cprSHA256(bytes) }
+
     public convenience init(url: URL) throws {
         let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
         guard attributes[.type] as? FileAttributeType == .typeRegular,

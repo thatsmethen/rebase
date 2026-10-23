@@ -24,6 +24,7 @@ public sealed class SessionResponse
     public bool Ok { get; set; }
     public SessionState? State { get; set; }
     public RenderSnapshot? Render { get; set; }
+    public WaveformSnapshot? Waveform { get; set; }
     public SessionError? Error { get; set; }
 }
 public sealed class SessionError { public string Code { get; set; } = "error"; public string Message { get; set; } = "The session request failed."; }
@@ -49,6 +50,8 @@ public sealed class ProjectView
     public TrackView[] Tracks { get; set; } = [];
     public JsonElement TempoMap { get; set; }
     public JsonElement SignatureMap { get; set; }
+    public JsonElement[] CprMediaAttachments { get; set; } = [];
+    [JsonExtensionData] public Dictionary<string, JsonElement>? AdditionalFields { get; set; }
     public double Duration => Tracks.SelectMany(t => t.Clips).Select(c => c.Position + c.Duration).DefaultIfEmpty(0).Max();
 }
 public sealed class TrackView
@@ -61,6 +64,7 @@ public sealed class TrackView
     public bool IsSolo { get; set; }
     public ClipView[] Clips { get; set; } = [];
     public JsonElement[] UnresolvedAudioEvents { get; set; } = [];
+    [JsonExtensionData] public Dictionary<string, JsonElement>? AdditionalFields { get; set; }
 }
 public sealed class ClipView
 {
@@ -70,9 +74,14 @@ public sealed class ClipView
     public double Duration { get; set; }
     public double SourceOffset { get; set; }
     public string MediaPath { get; set; } = "";
+    [JsonExtensionData] public Dictionary<string, JsonElement>? AdditionalFields { get; set; }
 }
 public sealed class RenderSnapshot
 {
+    public string? Kind { get; set; }
+    public string? EventID { get; set; }
+    public string? SourceSHA256 { get; set; }
+    public string? MediaSHA256 { get; set; }
     public string Path { get; set; } = "";
     public ulong Revision { get; set; }
     public double SampleRate { get; set; }

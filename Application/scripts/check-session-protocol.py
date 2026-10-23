@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import queue
 import struct
@@ -11,15 +12,175 @@ import tempfile
 import threading
 
 
+def wav_chunks(data):
+    if data[:4] != b"RIFF" or data[8:12] != b"WAVE" or struct.unpack_from("<I", data, 4)[0] + 8 != len(data):
+        raise RuntimeError("Incomplete WAV envelope")
+    chunks, offset = {}, 12
+    while offset + 8 <= len(data):
+        tag, length = struct.unpack_from("<4sI", data, offset)
+        start = offset + 8
+        if tag in chunks or start + length > len(data):
+            raise RuntimeError("Invalid WAV chunk")
+        chunks[tag] = data[start:start + length]
+        offset = start + length + length % 2
+    if offset != len(data) or b"data" not in chunks or b"fmt " not in chunks:
+        raise RuntimeError("Incomplete WAV chunks")
+    return chunks
+
+
+def example_waveform_oracle(project_root, clip):
+    """Direct signed-integer source oracle; independent of Swift's chunked reducer."""
+    relative = Path(clip["mediaPath"])
+    if relative.is_absolute() or ".." in relative.parts:
+        raise RuntimeError("Unexpected example media path")
+    data = (project_root / relative).read_bytes()
+    chunks = wav_chunks(data)
+    fmt = struct.unpack_from("<HHIIHH", chunks[b"fmt "])
+    if fmt != (1, 2, 48000, 192000, 4, 16):
+        raise RuntimeError("The authored waveform control requires its locked PCM16 source")
+    pcm = chunks[b"data"]
+    start = int(clip["sourceOffset"] * fmt[2])
+    count = min(len(pcm) // fmt[4] - start, int(clip["duration"] * fmt[2]))
+    if start < 0 or count <= 0 or len(pcm) % fmt[4]:
+        raise RuntimeError("Invalid authored waveform control interval")
+    bins = min(1600, count)
+    peaks = []
+    for index in range(bins):
+        # Bin boundaries are derived directly, without the implementation's
+        # frame-to-bin assignment or chunk traversal.
+        first = start + (index * count + bins - 1) // bins
+        last = start + ((index + 1) * count + bins - 1) // bins
+        samples = struct.unpack("<" + str((last - first) * 2) + "h", pcm[first * 4:last * 4])
+        peaks.append(max(abs(value) for value in samples) / 32768.0)
+    return {"sampleRate": fmt[2], "sourceStartFrame": start, "sourceFrames": count,
+            "mediaSHA256": hashlib.sha256(data).hexdigest(), "peaks": peaks}
+
+
+def peak_words(values):
+    if not isinstance(values, list) or not values or len(values) > 1600:
+        raise RuntimeError("Invalid waveform peak count")
+    if any(type(value) not in (int, float) or not math.isfinite(value) or value < 0 for value in values):
+        raise RuntimeError("Invalid waveform peak value")
+    return struct.pack("<" + str(len(values)) + "f", *values)
+
+
+def source_journey(args, work, revision, send, check, report):
+    expected = json.loads(args.source_lock.read_text(encoding="utf-8"))
+    source_original = {path.relative_to(args.source_project).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+                       for path in args.source_project.rglob("*") if path.is_file()}
+    media_original = args.source_media.read_bytes()
+    check(source_original.get("Project.json") == expected["manifestSHA256"]
+          and hashlib.sha256(media_original).hexdigest() == expected["mediaSHA256"],
+          "authored source manifest and selected media match predeclared hashes")
+    opened = send("open", revision, path=str(args.source_project.resolve()), asCopy=True)
+    check(opened.get("ok") is True and opened["state"]["needsSaveAs"] and not opened["state"]["dirty"],
+          "authored source project opens as an isolated working copy")
+    state = opened["state"]
+    project = state["project"]
+    events = [event for track in project["tracks"] for event in track.get("unresolvedAudioEvents", [])]
+    check(len(events) == 1 and events[0]["id"] == expected["eventID"]
+          and events[0]["sourceSHA256"] == expected["sourceSHA256"]
+          and project["sampleRate"] == expected["projectSampleRate"]
+          and not project.get("cprMediaAttachments", [])
+          and all(not track["clips"] for track in project["tracks"]),
+          "source fixture retains one unattached event and no ordinary clips")
+    event_id = expected["eventID"]
+    missing = work / "unattached-source.wav"
+    rejected = send("renderSourceEvent", state["revision"], clipID=event_id, path=str(missing))
+    check(rejected.get("ok") is False and rejected["state"] == state and not missing.exists(),
+          "unattached source export fails without output or state changes")
+    attached = send("attachSourceMedia", state["revision"], clipID=event_id, path=str(args.source_media.resolve()))
+    attached_state = attached["state"]
+    attached_project = attached_state["project"]
+    attachments = attached_project.get("cprMediaAttachments", [])
+    check(attached.get("ok") is True and attached_state["revision"] == state["revision"] + 1
+          and attached_state["dirty"] and len(attachments) == 1
+          and attachments[0]["mediaSHA256"] == expected["mediaSHA256"]
+          and [event for track in attached_project["tracks"] for event in track.get("unresolvedAudioEvents", [])] == events
+          and all(not track["clips"] for track in attached_project["tracks"]),
+          "source attachment advances revision while preserving unresolved event semantics")
+    stale = send("renderSourceEvent", state["revision"], clipID=event_id, path=str(missing))
+    check(stale.get("ok") is False and stale["error"]["code"] == "staleRevision"
+          and stale["state"] == attached_state and not missing.exists(),
+          "stale source export is rejected without output")
+    output = work / "source-event.wav"
+    rendered = send("renderSourceEvent", attached_state["revision"], clipID=event_id, path=str(output))
+    metadata = rendered.get("render", {})
+    check(rendered.get("ok") is True and rendered["state"] == attached_state,
+          "source export is read-only and returns a checked snapshot")
+    data = output.read_bytes()
+    digest = hashlib.sha256(data).hexdigest()
+    check(not output.is_symlink() and metadata.get("kind") == "sourceEvent"
+          and metadata.get("eventID") == event_id and metadata.get("revision") == attached_state["revision"]
+          and metadata.get("sourceSHA256") == expected["sourceSHA256"]
+          and metadata.get("mediaSHA256") == expected["mediaSHA256"]
+          and metadata.get("sha256") == digest == expected["outputSHA256"]
+          and metadata.get("wavBytes") == len(data) == expected["outputBytes"] and Path(metadata["path"]).samefile(output),
+          "source output bytes and event provenance match predeclared locks")
+    chunks = wav_chunks(data)
+    fmt = struct.unpack_from("<HHIIHH", chunks[b"fmt "])
+    pcm_digest = hashlib.sha256(chunks[b"data"]).hexdigest()
+    rate, channels, frames = expected["sampleRate"], expected["channels"], expected["frames"]
+    check(fmt == (3, channels, rate, rate * channels * 4, channels * 4, 32)
+          and metadata.get("sampleRate") == rate and metadata.get("channels") == channels
+          and metadata.get("frames") == frames and len(chunks[b"data"]) == frames * channels * 4
+          and pcm_digest == expected["pcmSHA256"]
+          and all(math.isfinite(sample[0]) for sample in struct.iter_unpack("<f", chunks[b"data"])),
+          "source export uses exact locked Float32 PCM at the saved source rate")
+    refused = send("renderSourceEvent", attached_state["revision"], clipID=event_id, path=str(output))
+    check(refused.get("ok") is False and refused["state"] == attached_state and output.read_bytes() == data,
+          "repeat source export preserves the existing WAV")
+    whole = work / "unresolved-project.wav"
+    rejected_project = send("render", attached_state["revision"], path=str(whole))
+    check(rejected_project.get("ok") is False and rejected_project["error"]["code"] == "nativePlayback"
+          and rejected_project["state"] == attached_state and not whole.exists(),
+          "source attachment does not silently enable ordinary project rendering")
+    undone = send("undo", attached_state["revision"])
+    check(undone.get("ok") is True and undone["state"]["project"] == project and not undone["state"]["dirty"],
+          "undo removes the source attachment without changing event semantics")
+    undone_render = send("renderSourceEvent", undone["state"]["revision"], clipID=event_id, path=str(missing))
+    check(undone_render.get("ok") is False and undone_render["state"] == undone["state"] and not missing.exists(),
+          "source export remains unavailable after attachment undo")
+    redone = send("redo", undone["state"]["revision"])
+    check(redone.get("ok") is True and redone["state"]["project"] == attached_project,
+          "redo restores the same checked source attachment")
+    saved_path = work / "SavedSource.rebaseproj"
+    saved = send("saveAs", redone["state"]["revision"], path=str(saved_path))
+    check(saved.get("ok") is True and not saved["state"]["dirty"] and not saved["state"]["needsSaveAs"],
+          "source working copy saves into a new project package")
+    reopened = send("open", saved["state"]["revision"], path=str(saved_path))
+    check(reopened.get("ok") is True and reopened["state"]["project"] == attached_project,
+          "saved source package reopens with the same attachment and unresolved event")
+    repeated = work / "reopened-source.wav"
+    rerendered = send("renderSourceEvent", reopened["state"]["revision"], clipID=event_id, path=str(repeated))
+    check(rerendered.get("ok") is True and repeated.read_bytes() == data,
+          "reopened source package revalidates and renders identical bytes")
+    final_source = {path.relative_to(args.source_project).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+                    for path in args.source_project.rglob("*") if path.is_file()}
+    check(final_source == source_original and args.source_media.read_bytes() == media_original,
+          "authored source fixture and selected PCM remain unchanged")
+    report["source_journey_tested"] = True
+    report["source"] = {"sourceSHA256": expected["sourceSHA256"], "mediaSHA256": expected["mediaSHA256"],
+                        "outputSHA256": digest, "pcmSHA256": pcm_digest,
+                        "frames": frames, "sampleRate": rate, "channels": channels,
+                        "playback_tested": False}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--helper", type=Path, required=True)
     parser.add_argument("--example", type=Path, required=True)
     parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--source-project", type=Path)
+    parser.add_argument("--source-media", type=Path)
+    parser.add_argument("--source-lock", type=Path)
     args = parser.parse_args()
+    if any((args.source_project, args.source_media, args.source_lock)) and not all((args.source_project, args.source_media, args.source_lock)):
+        parser.error("Source verification requires project, media and lock inputs together")
     lock = json.loads((Path(__file__).parent / "example-render-lock.json").read_text())
     report = {"schema": "rebase.session-protocol-check.v1", "status": "failed",
-              "scope": "Interactive authored session process and example PCM; no GUI or audio device claim", "checks": []}
+              "scope": "Interactive authored session process, source waveforms and optional source-event PCM; no GUI or audio device claim",
+              "source_journey_tested": False, "checks": []}
     original = (args.example / "Project.json").read_bytes()
     process = subprocess.Popen([str(args.helper.resolve()), "--stdio"], stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
@@ -71,12 +232,38 @@ def main():
             check(len(project["tracks"]) == 4 and sum(len(t["clips"]) for t in project["tracks"]) == 11,
                   "example contains four tracks and eleven clips")
             track = project["tracks"][0]
+            waveforms = {}
+            peak_digest = hashlib.sha256()
+            for index, clip in enumerate(c for t in project["tracks"] for c in t["clips"]):
+                oracle = example_waveform_oracle(args.example, clip)
+                reply = send("waveform", 1, clipID=clip["id"])
+                actual = reply.get("waveform", {})
+                check(reply.get("ok") is True and reply["state"] == opened["state"]
+                      and actual.get("revision") == 1 and actual.get("clipID") == clip["id"]
+                      and all(actual.get(key) == oracle[key] for key in
+                              ("sampleRate", "sourceStartFrame", "sourceFrames", "mediaSHA256"))
+                      and peak_words(actual.get("peaks")) == peak_words(oracle["peaks"]),
+                      "clip " + str(index + 1) + " waveform matches exact PCM16 source peaks without changing state")
+                waveforms[clip["id"]] = actual
+                peak_digest.update(peak_words(actual["peaks"]))
+            report["waveform"] = {"clips_checked": len(waveforms),
+                                  "peak_bins_checked": sum(len(item["peaks"]) for item in waveforms.values()),
+                                  "float32_peak_words_sha256": peak_digest.hexdigest(),
+                                  "oracle": "Independent signed PCM16 extrema over exact source intervals"}
             edited = send("setGain", 1, trackID=track["id"], value=-12)
             check(edited.get("ok") is True and edited["state"]["revision"] == 2 and edited["state"]["dirty"],
                   "shared mixer edit advances document revision")
             stale = send("toggleMute", 1, trackID=track["id"])
             check(stale.get("ok") is False and stale["error"]["code"] == "staleRevision"
                   and stale["state"]["revision"] == 2, "stale command leaves document unchanged")
+            stale_waveform = send("waveform", 1, clipID=track["clips"][0]["id"])
+            check(stale_waveform.get("ok") is False and stale_waveform["error"]["code"] == "staleRevision"
+                  and stale_waveform["state"] == edited["state"], "stale waveform request is rejected without changing state")
+            gained_waveform = send("waveform", 2, clipID=track["clips"][0]["id"])
+            expected_waveform = {**waveforms[track["clips"][0]["id"]], "revision": 2}
+            check(gained_waveform.get("ok") is True and gained_waveform["state"] == edited["state"]
+                  and gained_waveform.get("waveform") == expected_waveform,
+                  "mixer gain does not alter source waveform peaks")
             undone = send("undo", 2)
             check(undone.get("ok") is True and undone["state"]["project"] == project
                   and not undone["state"]["dirty"], "undo restores complete original project")
@@ -118,6 +305,8 @@ def main():
             check(reopened.get("ok") is True and reopened["state"]["project"] == project,
                   "saved project reopens with identical document semantics")
             check((args.example / "Project.json").read_bytes() == original, "bundled example manifest remains unchanged")
+            if args.source_project is not None:
+                source_journey(args, root, reopened["state"]["revision"], send, check, report)
             process.stdin.close()
             check(process.wait(timeout=15) == 0, "EOF cleanly terminates session")
             report["wav_sha256"] = digest

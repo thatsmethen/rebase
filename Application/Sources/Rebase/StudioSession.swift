@@ -672,33 +672,8 @@ final class StudioSession: ObservableObject {
     }
     private func peaks(for clip: Clip) -> [Float] {
         do {
-            let file = try AVAudioFile(forReading: projectRoot.appendingPathComponent(clip.mediaPath))
-            let rate = file.processingFormat.sampleRate
-            let sourceFrame = clip.sourceOffset * rate
-            let durationFrames = clip.duration * rate
-            guard sourceFrame.isFinite, durationFrames.isFinite, sourceFrame >= 0,
-                  sourceFrame < Double(file.length), sourceFrame < Double(Int64.max),
-                  durationFrames > 0 else { return [] }
-            let start = AVAudioFramePosition(sourceFrame)
-            let boundedFrames = min(Double(file.length - start), durationFrames)
-            guard boundedFrames < Double(Int64.max) else { return [] }
-            let count = AVAudioFramePosition(boundedFrames)
-            guard count > 0 else { return [] }
-            file.framePosition = start
-            guard let buffer = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: 16384) else { return [] }
-            let bins = min(1600, Int(count))
-            var peaks = [Float](repeating: 0, count: bins)
-            var position: AVAudioFramePosition = 0
-            while position < count {
-                try file.read(into: buffer, frameCount: AVAudioFrameCount(min(16384, count - position)))
-                guard buffer.frameLength > 0, let channels = buffer.floatChannelData else { break }
-                for f in 0..<Int(buffer.frameLength) {
-                    let bin = min(bins - 1, Int((position + Int64(f)) * Int64(bins) / count))
-                    for c in 0..<Int(buffer.format.channelCount) { peaks[bin] = max(peaks[bin], abs(channels[c][f])) }
-                }
-                position += AVAudioFramePosition(buffer.frameLength)
-            }
-            return peaks
+            let url = try ProjectStore.resolveMediaURL(clip.mediaPath, projectRoot: projectRoot)
+            return try WaveformPeaks.read(url: url, offset: clip.sourceOffset, duration: clip.duration).peaks
         } catch { return [] }
     }
     private func show(_ error: Error) { errorMessage = error.localizedDescription; status = "Action could not be completed" }

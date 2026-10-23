@@ -19,7 +19,17 @@ public sealed class NativeAudioException(int code, string message) : IOException
 {
     public int Code { get; } = code;
 }
-public sealed class NativeAudio : IAsyncDisposable
+public interface IAudioOutput : IAsyncDisposable
+{
+    Task<DeviceFormat> Format();
+    Task<AudioStatus> Status();
+    Task SetSource(LoadedSnapshot source);
+    Task Play();
+    Task Pause();
+    Task Stop();
+    Task Seek(ulong frame);
+}
+public sealed class NativeAudio : IAudioOutput
 {
     private sealed class AudioHandle : SafeHandleZeroOrMinusOneIsInvalid
     {

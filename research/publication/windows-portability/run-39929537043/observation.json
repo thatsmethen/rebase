@@ -1,0 +1,253 @@
+{
+  "schema": "rebase.windows-ci-observation.v1",
+  "recorded_at_utc": "2026-10-23T09:15:57.221575+00:00",
+  "commit": "77a451d84e690d2c53774d73bc3a55ed390f811a",
+  "status": "passed",
+  "run_url": "https://github.com/thatsmethen/rebase/actions/runs/39929537043",
+  "findings": [
+    "All 13 workflow jobs passed, including the cross-platform PCM comparison.",
+    "Windows Swift Debug and Release each executed 44 tests with no failures; macOS portable Debug and Release each executed 45.",
+    "The Windows Release test build retained -O and disabled cross-module optimization; the PE runner imports RebasePortableTests.dll and its generated anchor. The test DLL contains Swift discovery sections. The prior NOREF-only run discovered zero tests. This evidence supports the anchor-elimination mechanism; a failed-run PE import baseline was not captured.",
+    "Normal-production-flag inspector and session builds passed 16 interactive checks and exact predeclared example WAV/PCM hashes in each platform/configuration.",
+    "Public macOS application tests: 351 listed, 235 executed, 116 private-fixture skips, zero failures.",
+    "Windows C: 5442 cases and 18380 checks per configuration. Both native audio lanes passed 89 lifecycle checks; SoXR conversion API probe passed."
+  ],
+  "boundaries": [
+    "Retained files are byte-exact downloaded artifacts.",
+    "No proprietary reference execution or full Windows parity claim.",
+    "Hosted audio endpoints were unavailable; no device playback was performed.",
+    "Application packaging and native window validation are recorded separately."
+  ],
+  "artifacts": [
+    {
+      "path": "conformance-c-macos-15-Debug/conformance.json",
+      "bytes": 2752,
+      "sha256": "6ebfb17d34728eff771e1d1021230aedea832ffe83ae988cf64044951bd51ba0"
+    },
+    {
+      "path": "conformance-c-macos-15-Debug/kernel-conformance.json",
+      "bytes": 951,
+      "sha256": "9561773ff98604547e639448eacdb1b45121a70e6ae986c0a8bfb5f6a3049e8b"
+    },
+    {
+      "path": "conformance-c-macos-15-Debug/tests.xml",
+      "bytes": 1381,
+      "sha256": "322c74eb470455269e86e5e57e1a5fb6190b02a8b60285efd2e78346db226d1c"
+    },
+    {
+      "path": "conformance-c-macos-15-Release/conformance.json",
+      "bytes": 2757,
+      "sha256": "98fe3a9dfc9fc48f1e3250f5e7ecf266d2641840af7939a1da91667e0db53ee0"
+    },
+    {
+      "path": "conformance-c-macos-15-Release/kernel-conformance.json",
+      "bytes": 951,
+      "sha256": "9561773ff98604547e639448eacdb1b45121a70e6ae986c0a8bfb5f6a3049e8b"
+    },
+    {
+      "path": "conformance-c-macos-15-Release/tests.xml",
+      "bytes": 1381,
+      "sha256": "7bb1abb77b260866d12169b05516860402867bdf917c4ed99bd8299af477ba47"
+    },
+    {
+      "path": "conformance-c-windows-2025-Debug/conformance.json",
+      "bytes": 2869,
+      "sha256": "3f9fc1c279df1db4c9851a4ae9cc726c8f2a1d14a4b64c7645dba886f29c7eeb"
+    },
+    {
+      "path": "conformance-c-windows-2025-Debug/kernel-conformance.json",
+      "bytes": 961,
+      "sha256": "bcd1f80edbd6377f97d0630c340b9551446df7c4f4157682b55369b8f6056064"
+    },
+    {
+      "path": "conformance-c-windows-2025-Debug/tests.xml",
+      "bytes": 1372,
+      "sha256": "e518cf0351d8bf3ef4746b22be28b92e7a8553e33440a79c21ce2432cbb8cb1e"
+    },
+    {
+      "path": "conformance-c-windows-2025-Release/conformance.json",
+      "bytes": 2871,
+      "sha256": "a1491824439d0ee1b05378294ad2ae54c7095de93fbde682a6b3f314f9cc3e52"
+    },
+    {
+      "path": "conformance-c-windows-2025-Release/kernel-conformance.json",
+      "bytes": 961,
+      "sha256": "bcd1f80edbd6377f97d0630c340b9551446df7c4f4157682b55369b8f6056064"
+    },
+    {
+      "path": "conformance-c-windows-2025-Release/tests.xml",
+      "bytes": 1373,
+      "sha256": "6bedd5fe4eba1aae6ee63ff6a3dd7e548b6a09e11cf2fe56de8e74a0405f19a6"
+    },
+    {
+      "path": "conformance-example-render-comparison/render-comparison.json",
+      "bytes": 1098,
+      "sha256": "c571959c008fe4a2934e0850253d5d551f01533dd5212fbfd5b9764c330f2ce1"
+    },
+    {
+      "path": "conformance-macos-application-public/conformance.json",
+      "bytes": 1416,
+      "sha256": "a0b4b353e88fadb1fadc1e415004bcadc8448a4d35a2d6bbb583c4f54f27eb81"
+    },
+    {
+      "path": "conformance-macos-application-public/tests-swift-testing.xml",
+      "bytes": 69388,
+      "sha256": "0eb5bf7af2c54748a40737119ffba215b7b9d60d1db12292d890d04bd2d070b3"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Debug/conformance.json",
+      "bytes": 3872,
+      "sha256": "ec0f3d7f3073683badf0cb9f4d114796d989eafcb537c133d8baa48eeeae6abf"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Debug/endpoint-probe.json",
+      "bytes": 539,
+      "sha256": "4861b7d5be2448c852ce4e272c64bb50e6a79646e65b9d917937b48248d7c38c"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Debug/lifecycle.json",
+      "bytes": 161,
+      "sha256": "4cf871633cd9cd8fba9c06d7552550837fc5ef3d79fc608370edc07228840ab7"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Debug/lifecycle.xml",
+      "bytes": 529,
+      "sha256": "921dff71110242cc5b2a2d278b75b12472a370df7156d7c1c5ad89969c5218cd"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Release/conformance.json",
+      "bytes": 3875,
+      "sha256": "ac5b37995a6f0688c1cf76cef308b7708dcac51f71e2a9c7d3b558d2fa102610"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Release/endpoint-probe.json",
+      "bytes": 539,
+      "sha256": "4861b7d5be2448c852ce4e272c64bb50e6a79646e65b9d917937b48248d7c38c"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Release/lifecycle.json",
+      "bytes": 161,
+      "sha256": "4cf871633cd9cd8fba9c06d7552550837fc5ef3d79fc608370edc07228840ab7"
+    },
+    {
+      "path": "conformance-native-audio-windows-x64-Release/lifecycle.xml",
+      "bytes": 532,
+      "sha256": "9372758f841b1f3b53f84bbcb1843fa55750434f1ea742148c2955c1c767d9b6"
+    },
+    {
+      "path": "conformance-soxr-windows-x64/conformance.json",
+      "bytes": 2932,
+      "sha256": "92b28121d8b1db1356a50bd34e9a7896601de3a48c201616b91fb311b46deb77"
+    },
+    {
+      "path": "conformance-soxr-windows-x64/soxr-conformance.json",
+      "bytes": 372,
+      "sha256": "c7f6a8e9428d094f1d44bbecaa7248f865e7163c1d5c44040ff994b269c8fc72"
+    },
+    {
+      "path": "conformance-swift-macos-15-Debug/conformance.json",
+      "bytes": 4250,
+      "sha256": "51dbc08f4d6a471b2ec6cb04ac87fe567cc34af0bc54ca9875d4b18321bbc902"
+    },
+    {
+      "path": "conformance-swift-macos-15-Debug/example-render.json",
+      "bytes": 1085,
+      "sha256": "9406d6204b61fcd0e2a523957c710dfe992055c68de49faaa6098d168886f892"
+    },
+    {
+      "path": "conformance-swift-macos-15-Debug/session-protocol.json",
+      "bytes": 1269,
+      "sha256": "9b4cedeab7327c3d661c27e548ad1cf05608527387b24e5d48aa2696242f2be9"
+    },
+    {
+      "path": "conformance-swift-macos-15-Debug/tests-swift-testing.xml",
+      "bytes": 7024,
+      "sha256": "23218d26ab8bea04f8d1391b4c524ab78972bad3eee07dbea509075abeedf66a"
+    },
+    {
+      "path": "conformance-swift-macos-15-Release/conformance.json",
+      "bytes": 4263,
+      "sha256": "dfd335f2a0839d428e0a8c232c9cab97c9be3c7860f4ce7cad553eadc5cb4b89"
+    },
+    {
+      "path": "conformance-swift-macos-15-Release/example-render.json",
+      "bytes": 1087,
+      "sha256": "53f9fd8420bead826bf35d1c894e2567c5f94b8de99041ade4a237fc69283b78"
+    },
+    {
+      "path": "conformance-swift-macos-15-Release/session-protocol.json",
+      "bytes": 1269,
+      "sha256": "9b4cedeab7327c3d661c27e548ad1cf05608527387b24e5d48aa2696242f2be9"
+    },
+    {
+      "path": "conformance-swift-macos-15-Release/tests-swift-testing.xml",
+      "bytes": 7029,
+      "sha256": "6ce6fd256d53bedde6807673de76db32eb2e1f512b0805ed84e5e5d4715eeb61"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Debug/conformance.json",
+      "bytes": 4239,
+      "sha256": "224f307afbf35ac6e330be46739c7ddc8af79eb3428d2aebc49cb946522ed3b2"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Debug/example-render.json",
+      "bytes": 1116,
+      "sha256": "384103ef07e11707e9989caceaa70b1d1de1d8ee9b556b7c27dcc9c90670d592"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Debug/session-protocol.json",
+      "bytes": 1298,
+      "sha256": "b7e7cffddd6de8a41e6ede5fbc74fcda5b53910743dfa0a11a560727d399ac9f"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Debug/tests-swift-testing.xml",
+      "bytes": 6838,
+      "sha256": "bf38f5f513710f783f0ec31434a645e0e8b6d1dd9a6e4526b82363ba2ba704ae"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Release/conformance.json",
+      "bytes": 5816,
+      "sha256": "834eace42d0f44e067cbe10fc066d37bcddafc7c1d4c65cbf33b3e5f8f289d92"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Release/example-render.json",
+      "bytes": 1118,
+      "sha256": "c676846687207d257374feca948b5ece6a9c23d305cd746f2f6620bdd0a5d3d3"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Release/session-protocol.json",
+      "bytes": 1298,
+      "sha256": "b7e7cffddd6de8a41e6ede5fbc74fcda5b53910743dfa0a11a560727d399ac9f"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Release/test-discovery.log",
+      "bytes": 4416,
+      "sha256": "8bc9a9120e9697843288ad998944c2ff27d88bae306524dfb0201ffe5af032e6"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Release/test-generated-sources.json",
+      "bytes": 20031,
+      "sha256": "7d554644b9869b6176c8f904827bd542900dc2ee595aafb276112ee34c164469"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Release/test-pe-RebasePortableTests-test-runner.exe.log",
+      "bytes": 22418,
+      "sha256": "e483e06d4cc38635b43b69e60a5e35056aa86311198a6a8d93ea96dccc5b61e3"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Release/test-pe-RebasePortableTests.dll.log",
+      "bytes": 49047,
+      "sha256": "06816ed6cd00283d719afc71f12d27775a68cfb02ffa55c1cbbc8cbda8ecb732"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Release/tests-swift-testing.xml",
+      "bytes": 6842,
+      "sha256": "b35d3ae811d9b295b424d6dc3605aba518506fea143ee5c79d5007ae15b77ee2"
+    },
+    {
+      "path": "conformance-swift-windows-2025-Release/tests.log",
+      "bytes": 137906,
+      "sha256": "caecec0445f04198e65bcbb56b93aad10e8a57b7e397e81caac9480165b3b174"
+    }
+  ]
+}

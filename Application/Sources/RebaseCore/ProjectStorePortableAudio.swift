@@ -1,14 +1,6 @@
 #if REBASE_PORTABLE
 import Foundation
 
-extension ProjectStore {
-    static func validateCPRAudioMedia(_ project: Project, at root: URL) throws {
-        guard project.cprMediaAttachments.isEmpty else {
-            throw RebaseCoreError.unsupportedAudio("Portable project storage cannot yet validate CPR media attachments. Open this project in the macOS application; its source and associations have not been changed.")
-        }
-    }
-}
-
 enum ProjectStoreMedia {
     static func scan(url: URL, name: String) throws -> (sampleRate: Double, frameCount: Int64) {
         let reader = try WAVPCMSource(url: url)

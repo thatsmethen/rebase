@@ -4,7 +4,12 @@ using System.Text.Json;
 
 namespace Rebase.Windows;
 
-public sealed class SessionProcess : IAsyncDisposable
+public interface ISessionClient : IAsyncDisposable
+{
+    Task<SessionResponse> Send(SessionRequest request);
+    object[] ModuleReceipt();
+}
+public sealed class SessionProcess : ISessionClient
 {
     private readonly SemaphoreSlim gate = new(1, 1);
     private readonly CancellationTokenSource lifetime = new();
@@ -60,7 +65,7 @@ public sealed class SessionProcess : IAsyncDisposable
         {
             ObjectDisposedException.ThrowIf(disposed, this);
             Start();
-            using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(request.Command == "render" ? 120 : 60));
+            using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(request.Command is "render" or "renderSourceEvent" ? 120 : 60));
             using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token, deadline.Token);
             request.Id = checked(++nextID);
             var message = JsonSerializer.Serialize(request, ProtocolJson.Options);

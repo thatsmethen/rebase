@@ -145,6 +145,13 @@ def copy_example(app, stage):
     return target
 
 
+def require_window_visual(path):
+    data = path.read_bytes()
+    if (len(data) < 1024 or data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR"
+            or not all(0 < value <= 16_384 for value in struct.unpack_from(">II", data, 16))):
+        raise RuntimeError("Missing or invalid WPF window visual")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
@@ -284,39 +291,69 @@ def main():
                 del restricted[key]
         restricted.update(PATH=os.pathsep.join((str(stage), str(windows / "System32"), str(windows))),
                           DOTNET_MULTILEVEL_LOOKUP="0")
+        fixture = app / "Tests/Fixtures/SourceAudition"
+        source_project = fixture / "AuthoredSource.rebaseproj"
+        source_media = fixture / "SelectedSource.wav"
+        source_lock = fixture / "expected.json"
+        if (not source_project.is_dir() or not source_media.is_file() or not source_lock.is_file()
+                or any(inside(path, stage) for path in (source_project, source_media, source_lock))):
+            raise RuntimeError("The external authored source fixture is unavailable")
+        expected_source = json.loads(source_lock.read_text(encoding="utf-8"))
+        fixture_bytes = {path.relative_to(fixture).as_posix(): digest(path)
+                         for path in fixture.rglob("*") if path.is_file()}
         run([sys.executable, str(app / "scripts/check-session-protocol.py"), "--helper", str(stage / "rebase-session.exe"),
-             "--example", str(example), "--report", str(evidence / "packaged-session-protocol.json")],
+             "--example", str(example), "--report", str(evidence / "packaged-session-protocol.json"),
+             "--source-project", str(source_project), "--source-media", str(source_media), "--source-lock", str(source_lock)],
             "packaged-session-protocol", restricted, timeout=600, cwd=stage)
         session = json.loads((evidence / "packaged-session-protocol.json").read_text(encoding="utf-8"))
-        if session.get("status") != "passed":
+        if (session.get("status") != "passed" or session.get("source_journey_tested") is not True
+                or session.get("waveform", {}).get("clips_checked") != 11
+                or any(session.get("source", {}).get(key) != expected_source[key]
+                       for key in ("sourceSHA256", "mediaSHA256", "outputSHA256", "pcmSHA256", "frames", "sampleRate", "channels"))):
             raise RuntimeError("Packaged session protocol did not pass")
         smoke_path = evidence / "wpf-smoke.json"
-        run([str(stage / "Rebase.exe"), "--smoke", "--smoke-json", str(smoke_path)],
-            "packaged-window-smoke", restricted, timeout=180, cwd=stage)
+        run([str(stage / "Rebase.exe"), "--smoke", "--smoke-json", str(smoke_path),
+             "--smoke-source-project", str(source_project), "--smoke-source-media", str(source_media)],
+            "packaged-window-smoke", restricted, timeout=240, cwd=stage)
         smoke = json.loads(smoke_path.read_text(encoding="utf-8"))
         if (smoke.get("suite") != "windows-wpf-shared-session-smoke" or smoke.get("outcome") != "passed"
                 or smoke.get("stage") != "completed" or smoke.get("playback_tested") is not False
                 or smoke.get("audible_output_measured") is not False or not smoke.get("checks")):
             raise RuntimeError("Window smoke receipt is incomplete")
+        required_checks = {"real-waveforms-visible", "four-track-rows-fit", "source-package-copy", "source-event-ui-selection",
+                           "source-media-ui-attachment", "source-attachment-undo", "source-attachment-redo",
+                           "source-export-ui-verified", "source-provenance-matches", "source-window-visual-artifact"}
+        if (smoke.get("source_journey_tested") is not True or not required_checks.issubset(smoke["checks"])
+                or smoke.get("source_screenshot") != "native-source-visual.png"
+                or smoke.get("source_output_sha256") != expected_source["outputSHA256"]
+                or smoke.get("source_sha256") != expected_source["sourceSHA256"]
+                or smoke.get("media_sha256") != expected_source["mediaSHA256"]):
+            raise RuntimeError("Source-event or waveform window checks are incomplete")
         modules = {"process": validate_modules(smoke.pop("process_modules", None), stage, windows,
                                                {"rebase.exe", "coreclr.dll", "rebasewindowsaudio.dll"}),
                    "helper": validate_modules(smoke.pop("helper_modules", None), stage, windows,
                                               {"rebase-session.exe", "swiftcore.dll"})}
         write(evidence / "loaded-modules.json", modules)
         write(smoke_path, smoke)
-        png = evidence / "native-app-visual.png"
-        if png.read_bytes()[:8] != b"\x89PNG\r\n\x1a\n" or png.stat().st_size < 1024:
-            raise RuntimeError("Missing WPF window visual")
+        require_window_visual(evidence / "native-app-visual.png")
+        require_window_visual(evidence / "native-source-visual.png")
         # Recheck all bundled source bytes after both complete user journeys.
         example_manifest = json.loads((stage / "Examples/example.json").read_text(encoding="utf-8"))
         if any(digest(example / item["path"]) != item["sha256"] for item in example_manifest["files"]):
             raise RuntimeError("A package check changed the bundled example")
+        if fixture_bytes != {path.relative_to(fixture).as_posix(): digest(path)
+                             for path in fixture.rglob("*") if path.is_file()}:
+            raise RuntimeError("A package check changed the authored source fixture")
         # Keep this mandatory gate after window diagnostics, before any downloadable ZIP.
         # An application smoke pass cannot turn a failed/empty Release suite into success.
         run([sys.executable, str(app / "scripts/run-portable-ci.py"), "swift", "--configuration", "Release",
              "--output", str(evidence / "shared")], "shared-release-conformance", timeout=900)
         files = [{"path": path.relative_to(stage).as_posix(), "bytes": path.stat().st_size, "sha256": digest(path)}
                  for path in sorted(stage.rglob("*")) if path.is_file()]
+        fixture_payload_hashes = {expected_source[key] for key in
+                                  ("sourceSHA256", "mediaSHA256", "manifestSHA256", "reportSHA256", "outputSHA256")}
+        if any(item["sha256"] in fixture_payload_hashes for item in files):
+            raise RuntimeError("A source-audition test payload was copied into the application package")
         if any(path.is_symlink() for path in stage.rglob("*")):
             raise RuntimeError("Package contains a symbolic link")
         write(stage / "package-manifest.json", {"schema": "rebase.windows-package.v1", "commit": env.get("GITHUB_SHA"),
@@ -335,6 +372,7 @@ def main():
         report.update(status="passed", package={"name": archive.name, "bytes": archive.stat().st_size,
                                                 "sha256": digest(archive)}, window_smoke_tested=True,
                       dialogs_tested=False, dependency_closure_checked=True, app_local_modules_observed=True)
+        report.update(source_journey_tested=True, source_fixture_shipped=False, real_waveform_checks_passed=True)
     except Exception as error:
         report["error"] = clean(str(error))
         print(report["error"], file=sys.stderr)

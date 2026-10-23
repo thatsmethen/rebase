@@ -1,0 +1,177 @@
+{
+  "schema": "rebase.windows-application-build.v1",
+  "status": "passed",
+  "commit": "77a451d84e690d2c53774d73bc3a55ed390f811a",
+  "development_build": true,
+  "signed": false,
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "commands": [
+    {
+      "name": "dotnet-version",
+      "argv": [
+        "dotnet",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.125
+    },
+    {
+      "name": "swift-version",
+      "argv": [
+        "swift",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.094
+    },
+    {
+      "name": "host-controls",
+      "argv": [
+        "dotnet",
+        "run",
+        "--project",
+        "<workspace>\\Application\\Windows\\RebaseWindows\\Tests\\RebaseWindows.Controls.csproj",
+        "-c",
+        "Release"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 13.578
+    },
+    {
+      "name": "native-audio-conformance",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\run-windows-native-audio-ci.py",
+        "--configuration",
+        "Release",
+        "--output",
+        "<build-output>\\evidence\\native"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 44.25
+    },
+    {
+      "name": "publish-wpf",
+      "argv": [
+        "dotnet",
+        "publish",
+        "<workspace>\\Application\\Windows\\RebaseWindows\\RebaseWindows.csproj",
+        "-c",
+        "Release",
+        "-r",
+        "win-x64",
+        "--self-contained",
+        "true",
+        "-p:PublishTrimmed=false",
+        "-p:PublishSingleFile=false",
+        "-p:DebugType=None",
+        "-p:DebugSymbols=false",
+        "-p:ContinuousIntegrationBuild=true",
+        "-p:PathMap=<workspace>=/_/Rebase",
+        "-p:RuntimeFrameworkVersion=10.0.13",
+        "-o",
+        "<build-output>\\package\\Rebase"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 11.906
+    },
+    {
+      "name": "build-session",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "<build-output>\\session-build",
+        "-c",
+        "release",
+        "--product",
+        "rebase-session",
+        "-Xswiftc",
+        "-file-prefix-map",
+        "-Xswiftc",
+        "<workspace>=/_/Rebase",
+        "-Xswiftc",
+        "-debug-prefix-map",
+        "-Xswiftc",
+        "<workspace>=/_/Rebase",
+        "-Xcc",
+        "-ffile-prefix-map=<workspace>=/_/Rebase"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 104.125
+    },
+    {
+      "name": "session-bin-path",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "<build-output>\\session-build",
+        "-c",
+        "release",
+        "--show-bin-path"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.438
+    },
+    {
+      "name": "packaged-session-protocol",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\check-session-protocol.py",
+        "--helper",
+        "<build-output>\\package\\Rebase\\rebase-session.exe",
+        "--example",
+        "<build-output>\\package\\Rebase\\Examples\\Rebase Preview.rebaseproj",
+        "--report",
+        "<build-output>\\evidence\\packaged-session-protocol.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.969
+    },
+    {
+      "name": "packaged-window-smoke",
+      "argv": [
+        "<build-output>\\package\\Rebase\\Rebase.exe",
+        "--smoke",
+        "--smoke-json",
+        "<build-output>\\evidence\\wpf-smoke.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.078
+    },
+    {
+      "name": "shared-release-conformance",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\run-portable-ci.py",
+        "swift",
+        "--configuration",
+        "Release",
+        "--output",
+        "<build-output>\\evidence\\shared"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 216.188
+    }
+  ],
+  "toolchain": {
+    "dotnet_sdk": "10.0.402",
+    "dotnet_runtime": "10.0.13",
+    "swift": "6.4.1"
+  },
+  "runner_image": {
+    "ImageOS": "win25-vs2026",
+    "ImageVersion": "20261021.278.1"
+  },
+  "package": {
+    "name": "Rebase-Windows-x64-development-77a451d84e69.zip",
+    "bytes": 98646179,
+    "sha256": "f0b5c0aa32060a97496bcd1fcdd5e922dddb00264a36f7890317eaac2ca3a93f"
+  },
+  "window_smoke_tested": true,
+  "dialogs_tested": false,
+  "dependency_closure_checked": true,
+  "app_local_modules_observed": true
+}

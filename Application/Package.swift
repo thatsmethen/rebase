@@ -15,13 +15,15 @@ let portableOnly = ProcessInfo.processInfo.environment["REBASE_PORTABLE_ONLY"] =
 // uses bounded WAV media; device transport and macOS framework APIs stay outside.
 let portableSources = [
     "Automation.swift", "CPRAudioEventArchive.swift", "CPRAudioMediaAttachmentModel.swift",
+    "CPRAudioMediaAttachment.swift", "CPRAudioMediaValidationPortable.swift",
+    "CPRSourceEventRenderPlan.swift", "CPRSourceEventRenderer.swift", "ProjectStoreCPRAudio.swift",
     "CPRAutoFadeArchive.swift", "CPRClockRoles.swift", "CPRContractMigration.swift",
     "CPRProject.swift", "CPRProjectAudioSetup.swift", "CPRRecoveryV1.swift",
     "CPRRecoveryV2.swift", "CPRRecoveryV3.swift", "CPRRecoveryV4.swift", "CPRRecoveryV5.swift",
     "CPRSegmentReadPlan.swift", "CPRSignatureRecovery.swift", "CPRTrackContributorArchive.swift",
     "MusicalTime.swift", "NativeTempoClock.swift", "PCMRendering.swift", "PortableSHA256.swift", "Project.swift", "ProjectEditing.swift",
     "PortablePackageSnapshot.swift", "PortableSession.swift", "ProjectFileIO.swift", "ProjectStore.swift", "ProjectStorePortableAudio.swift",
-    "UnresolvedCPRAudioEvent.swift", "WAVPCMSource.swift"
+    "UnresolvedCPRAudioEvent.swift", "WAVPCMSource.swift", "WaveformPeaks.swift"
 ]
 let coreDirectory = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
     .appendingPathComponent("Sources/RebaseCore")
@@ -38,8 +40,8 @@ let portableTargets: [Target] = [
     .executableTarget(name: "RebaseInspectCLI", dependencies: ["RebasePortable"]),
     .executableTarget(name: "RebaseSessionCLI", dependencies: ["RebasePortable"]),
     .testTarget(name: "RebasePortableTests", dependencies: ["RebasePortable", "RebaseTimingDSP"],
-                path: "Tests", exclude: ["RebaseCoreTests", "PortableDSP", "run-tests.sh", "README.md"],
-                sources: ["RebasePortableTests", "SharedEditingTests", "SharedDocumentTests"])
+                path: "Tests", exclude: ["RebaseCoreTests", "PortableDSP", "Fixtures", "run-tests.sh", "README.md"],
+                sources: ["RebasePortableTests", "SharedEditingTests", "SharedDocumentTests", "SharedCPRAudioTests", "SharedWaveformTests"])
 ]
 
 let package = Package(
@@ -70,8 +72,8 @@ let package = Package(
         .target(name: "RebaseCore", dependencies: ["ZIPFoundation", "RebaseAmbiDSP", "RebaseTimingDSP", "RebaseSoXR"]),
         .executableTarget(name: "Rebase", dependencies: ["RebaseCore", "RebaseDSP"]),
         .testTarget(name: "RebaseCoreTests", dependencies: ["RebaseCore", "RebaseDSP"],
-                    path: "Tests", exclude: ["RebasePortableTests", "PortableDSP", "run-tests.sh", "README.md"],
-                    sources: ["RebaseCoreTests", "SharedEditingTests", "SharedDocumentTests"])
+                    path: "Tests", exclude: ["RebasePortableTests", "PortableDSP", "Fixtures", "run-tests.sh", "README.md"],
+                    sources: ["RebaseCoreTests", "SharedEditingTests", "SharedDocumentTests", "SharedCPRAudioTests", "SharedWaveformTests"])
     ],
     swiftLanguageModes: [.v5]
 )

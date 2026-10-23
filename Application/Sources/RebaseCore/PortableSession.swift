@@ -38,7 +38,17 @@ public struct PortableSessionReply: Encodable {
     public let ok: Bool
     public let state: PortableSessionState
     public let render: Render?
+    public let waveform: Waveform?
     public let error: Failure?
+    public struct Waveform: Encodable {
+        public let revision: UInt64
+        public let clipID: UUID
+        public let sampleRate: Double
+        public let sourceStartFrame: Int64
+        public let sourceFrames: Int64
+        public let mediaSHA256: String
+        public let peaks: [Float]
+    }
     public struct Render: Encodable {
         public let path: String
         public let revision: UInt64
@@ -47,9 +57,13 @@ public struct PortableSessionReply: Encodable {
         public let channels: Int
         public let wavBytes: Int
         public let sha256: String
+        public let kind: String
+        public let eventID: UUID?
+        public let sourceSHA256: String?
+        public let mediaSHA256: String?
     }
     public struct Failure: Encodable { public let code: String; public let message: String }
-    enum CodingKeys: String, CodingKey { case protocolVersion = "protocol"; case id, ok, state, render, error }
+    enum CodingKeys: String, CodingKey { case protocolVersion = "protocol"; case id, ok, state, render, waveform, error }
 }
 
 /// Serialized document owner for a native host. The host sends intents; all
@@ -95,10 +109,15 @@ public final class PortableSession {
             if request.command != "state" {
                 guard request.expectedRevision == revision else { throw failure("staleRevision", "The project changed. Refresh its state before retrying.") }
             }
-            let render = try execute(request)
-            reply = .init(id: id, ok: true, state: state, render: render, error: nil)
+            if request.command == "waveform" {
+                let envelope = try waveform(request)
+                reply = .init(id: id, ok: true, state: state, render: nil, waveform: envelope, error: nil)
+            } else {
+                let render = try execute(request)
+                reply = .init(id: id, ok: true, state: state, render: render, waveform: nil, error: nil)
+            }
         } catch {
-            reply = .init(id: id, ok: false, state: state, render: nil,
+            reply = .init(id: id, ok: false, state: state, render: nil, waveform: nil,
                 error: .init(code: (error as? SessionError)?.code ?? "operationFailed", message: error.localizedDescription))
         }
         // Validated models contain only finite numbers and bounded strings.
@@ -106,6 +125,19 @@ public final class PortableSession {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         return (try? encoder.encode(reply)) ?? Data("{\"protocol\":1,\"ok\":false,\"error\":{\"code\":\"encoding\",\"message\":\"Unable to encode session state.\"}}".utf8)
+    }
+
+    private func waveform(_ request: PortableSessionRequest) throws -> PortableSessionReply.Waveform {
+        guard let project, let root else { throw failure("noProject", "Open a project first.") }
+        guard let id = request.clipID, let clip = project.tracks.flatMap(\.clips).first(where: { $0.id == id }) else {
+            throw failure("selection", "Select an editable audio clip.")
+        }
+        try checkSourceUnchanged(root)
+        let source = try WAVPCMSource(url: ProjectStore.resolveMediaURL(clip.mediaPath, projectRoot: root))
+        let envelope = try WaveformPeaks.read(source: source, offset: clip.sourceOffset, duration: clip.duration)
+        return .init(revision: revision, clipID: id, sampleRate: envelope.sampleRate,
+            sourceStartFrame: envelope.sourceStartFrame, sourceFrames: envelope.sourceFrames,
+            mediaSHA256: source.snapshotSHA256, peaks: envelope.peaks)
     }
 
     private func execute(_ request: PortableSessionRequest) throws -> PortableSessionReply.Render? {
@@ -205,6 +237,32 @@ public final class PortableSession {
             try checkSourceUnchanged(root)
             _ = try ProjectStore.load(from: root)
             return try render(current, root: root, destination: requiredURL(request.path))
+        case "attachSourceMedia":
+            try checkSourceUnchanged(root)
+            guard let eventID = request.clipID,
+                  current.unresolvedAudioEvents.contains(where: { $0.id == eventID }) else {
+                throw failure("selection", "Select a preserved source event.")
+            }
+            let updated = try ProjectStore.attachCPRAudioMedia(from: requiredURL(request.path),
+                to: eventID, in: current, at: root)
+            history.record(current)
+            project = updated; selection = selection.selectingClip(eventID, in: updated); revision += 1
+        case "renderSourceEvent":
+            try checkSourceUnchanged(root)
+            guard let eventID = request.clipID,
+                  current.unresolvedAudioEvents.contains(where: { $0.id == eventID }) else {
+                throw failure("selection", "Select a preserved source event.")
+            }
+            let destination = try requiredURL(request.path)
+            let rendered = try CPRSourceEventRenderer.renderAudition(eventID: eventID, in: current,
+                at: root, to: destination)
+            let size = try destination.resourceValues(forKeys: [.fileSizeKey]).fileSize
+            guard let size, size > 0 else { throw failure("render", "The source preview has no file data.") }
+            return .init(path: try nativePath(destination), revision: revision,
+                sampleRate: Double(rendered.sampleRate), frames: Int64(rendered.frameCount),
+                channels: rendered.channelCount, wavBytes: size, sha256: rendered.outputSHA256,
+                kind: "sourceEvent", eventID: eventID, sourceSHA256: rendered.sourceSHA256,
+                mediaSHA256: rendered.mediaSHA256)
         default:
             let edit = try makeEdit(request, project: current, root: root)
             if let result = try history.apply(edit, to: current, selection: selection) {
@@ -327,7 +385,8 @@ public final class PortableSession {
         try ProjectFileIO.publishNewFile(stage, to: output)
         return .init(path: try nativePath(output), revision: revision, sampleRate: pcm.sampleRate,
             frames: prepared.frameCount, channels: pcm.channels.count, wavBytes: bytes.count,
-            sha256: PortableSHA256.hexDigest(bytes))
+            sha256: PortableSHA256.hexDigest(bytes), kind: "project", eventID: nil,
+            sourceSHA256: nil, mediaSHA256: nil)
     }
 }
 #endif

@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "evidence_class": "local-synthetic-compiler-mechanism",
+  "compiler": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+  "target": "arm64-apple-macosx28.0",
+  "claimed_scope": "Empty public Swift anchor reference preservation in optimized SIL; not Windows Swift 6.4.1 test discovery acceptance.",
+  "source_mutation": "None in application sources. Standalone synthetic module/caller only.",
+  "common_flags": [
+    "-O",
+    "-whole-module-optimization",
+    "-enable-testing",
+    "-parse-as-library"
+  ],
+  "module_command": [
+    "swiftc",
+    "<common_flags>",
+    "<variant_flags>",
+    "-emit-module",
+    "-emit-library",
+    "-module-name",
+    "Anchor",
+    "Anchor.swift",
+    "-emit-module-path",
+    "<variant>/Anchor.swiftmodule",
+    "-o",
+    "<variant>/libAnchor.dylib"
+  ],
+  "caller_command": [
+    "swiftc",
+    "<common_flags>",
+    "<variant_flags>",
+    "-emit-sil",
+    "-module-name",
+    "Caller",
+    "-I",
+    "<module_variant>",
+    "Caller.swift",
+    "-o",
+    "<variant>.sil"
+  ],
+  "observations": [
+    {
+      "variant": "default",
+      "module_extra_flags": [],
+      "caller_extra_flags": [],
+      "anchor_function_reference_in_optimized_sil": false
+    },
+    {
+      "variant": "disabled",
+      "module_extra_flags": [
+        "-disable-cmo"
+      ],
+      "caller_extra_flags": [
+        "-disable-cmo"
+      ],
+      "anchor_function_reference_in_optimized_sil": true,
+      "apply_instruction_present": true
+    },
+    {
+      "variant": "consumer-disabled-only",
+      "module_extra_flags": [],
+      "caller_extra_flags": [
+        "-disable-cmo"
+      ],
+      "anchor_function_reference_in_optimized_sil": false
+    }
+  ],
+  "normalization": "Temporary experiment root and any SDK/toolchain absolute paths are replaced by placeholders in retained SIL. Hashes identify retained normalized artifacts.",
+  "files": {
+    "Anchor.swift": "b2ebf49ae11f76b56e2fdd1574c070ee0c1e605533d5d0b21887c724e6bd071e",
+    "disabled.sil": "2e56fa75e61bb34b825e0bc66ac7fb4ef094f538146e06b485a91f0d3bb8c0d4",
+    "default.sil": "e5c5c59b0850f2c987b765655a43592b9bb22aeccddca4fdbb72332a0f1c772f",
+    "Caller.swift": "2d57d0fdd4775ee6f411df0d1768f1da8c2dcafb7ec8a24610d339f74c9a54e9",
+    "consumer-disabled-only.sil": "e5c5c59b0850f2c987b765655a43592b9bb22aeccddca4fdbb72332a0f1c772f"
+  }
+}

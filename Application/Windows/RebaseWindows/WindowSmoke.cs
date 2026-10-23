@@ -12,16 +12,17 @@ namespace Rebase.Windows;
 
 public partial class MainWindow
 {
-    public async Task<int> RunSmoke(string artifact)
+    public async Task<int> RunSmoke(string artifact, string? sourceProject = null, string? sourceMedia = null)
     {
         var checks = new List<string>();
         var root = Path.GetDirectoryName(artifact)!;
         Directory.CreateDirectory(root);
         var work = Path.Combine(Path.GetTempPath(), "RebaseSmoke", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(work);
-        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(120));
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(sourceProject is null ? 120 : 180));
         string stage = "window-layout", endpoint = "not-probed", error = "";
         object[] processModules = [], helperModules = [];
+        RenderSnapshot? sourceReceipt = null;
         int exit = 1;
         try
         {
@@ -45,7 +46,11 @@ public partial class MainWindow
             stage, checks, error, endpoint, playback_tested = false, audible_output_measured = false,
             ui_evidence = "WPF visual-tree render of the opened window; not a desktop screen capture",
             tested_dialogs = false, screenshot = "native-app-visual.png"
-            , process_modules = processModules, helper_modules = helperModules
+            , process_modules = processModules, helper_modules = helperModules,
+            source_journey_tested = sourceProject is not null && checks.Contains("source-window-visual-artifact"),
+            source_screenshot = sourceProject is null ? null : "native-source-visual.png",
+            source_output_sha256 = sourceReceipt?.Sha256, source_sha256 = sourceReceipt?.SourceSHA256, media_sha256 = sourceReceipt?.MediaSHA256
+            , dark_caption_hresult = darkCaptionResult, native_frame_visual_tested = false
         };
         try { await File.WriteAllTextAsync(artifact, JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true })); }
         catch (IOException) { return 2; }
@@ -90,13 +95,59 @@ public partial class MainWindow
                 catch (NativeAudioException unavailable) when (unavailable.Code == 3) { endpoint = "unavailable-no-endpoint"; }
             }
             checks.Add("native-dll-endpoint-probe-completed");
+            if (sourceProject is not null && sourceMedia is not null)
+            {
+                stage = "open-source-package";
+                await model.Open(sourceProject, true, false);
+                Assert(model.SourceEvents.Length > 0 && model.State.NeedsSaveAs && model.State.Path is null, "source-package-copy");
+                stage = "source-event-ui-selection";
+                var selector = new ComboBoxAutomationPeer(SourceEventsBox);
+                var expand = (IExpandCollapseProvider)selector.GetPattern(PatternInterface.ExpandCollapse);
+                expand.Expand(); await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+                var item = selector.GetChildren()?.Select(peer => peer.GetPattern(PatternInterface.SelectionItem)).OfType<ISelectionItemProvider>().FirstOrDefault()
+                    ?? throw new InvalidOperationException("The source-event selector exposed no selectable UI item.");
+                item.Select(); expand.Collapse();
+                await Until(() => !model.Busy && model.SelectedSourceEvent is not null, stage);
+                Assert(SourceEventsBox.SelectedItem is SourceEventView, "source-event-ui-selection");
+                stage = "source-media-ui-attachment";
+                smokeAttachPath = sourceMedia;
+                await Invoke(AttachSourceButton);
+                await Until(() => !model.Busy && model.SelectedSourceEvent?.MediaSHA256 is not null, stage);
+                Assert(model.State.Dirty, "source-media-ui-attachment");
+                stage = "source-attachment-undo"; await Invoke(UndoButton);
+                await Until(() => !model.Busy && model.SelectedSourceEvent?.MediaSHA256 is null, stage);
+                Assert(model.State.CanRedo, "source-attachment-undo");
+                stage = "source-attachment-redo"; await Invoke(RedoButton);
+                await Until(() => !model.Busy && model.SelectedSourceEvent?.MediaSHA256 is not null, stage);
+                Assert(model.State.CanUndo, "source-attachment-redo");
+                stage = "source-export-ui-verified";
+                smokeSourceExportPath = Path.Combine(work, "source-export.wav");
+                await Invoke(ExportSourceButton);
+                await Until(() => !model.Busy && model.LastSourceExport is not null, stage);
+                sourceReceipt = model.LastSourceExport!;
+                Assert(File.Exists(smokeSourceExportPath) && model.Status.StartsWith("Exported source WAV:", StringComparison.Ordinal), "source-export-ui-verified");
+                Assert(sourceReceipt.Kind == "sourceEvent" && sourceReceipt.EventID == model.SelectedSourceEvent?.Id &&
+                    sourceReceipt.SourceSHA256 == model.SelectedSourceEvent?.SourceSHA256 && sourceReceipt.MediaSHA256 == model.SelectedSourceEvent?.MediaSHA256, "source-provenance-matches");
+                await Capture("native-source-visual.png"); checks.Add("source-window-visual-artifact");
+                smokeAttachPath = smokeSourceExportPath = null;
+                await model.Open(Path.Combine(AppContext.BaseDirectory, "Examples", "Rebase Preview.rebaseproj", "Project.json"), true, true);
+            }
+            stage = "real-waveforms";
+            await Until(() => Timeline.PopulatedWaveformCount == model.Project!.Tracks.Sum(track => track.Clips.Length), stage);
+            Assert(Timeline.PopulatedWaveformCount > 0, "real-waveforms-visible");
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            Assert(model.Project!.Tracks.Length == 4 && TimelineScroll.ViewportHeight >= Timeline.TracksBottom, "four-track-rows-fit");
             stage = "capture-window-visual";
+            await Capture("native-app-visual.png");
+            checks.Add("window-visual-artifact-written"); stage = "completed";
+        }
+        async Task Capture(string filename)
+        {
             await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
             var image = new RenderTargetBitmap((int)ActualWidth, (int)ActualHeight, 96, 96, PixelFormats.Pbgra32);
             image.Render(this);
             var encoder = new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(image));
-            using (var output = File.Create(Path.Combine(root, "native-app-visual.png"))) encoder.Save(output);
-            checks.Add("window-visual-artifact-written"); stage = "completed";
+            using var output = File.Create(Path.Combine(root, filename)); encoder.Save(output);
         }
         void Assert(bool condition, string check) { deadline.Token.ThrowIfCancellationRequested(); if (!condition) throw new InvalidOperationException(check + ": " + model.Status); checks.Add(check); }
         async Task Until(Func<bool> condition, string label)

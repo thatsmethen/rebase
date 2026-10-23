@@ -10,6 +10,18 @@ public struct CPRSourceEventRenderResult: Equatable {
     public let outputSHA256: String
 }
 
+/// Explicit original-rate stereo audition. These samples bypass the ordinary
+/// project mixer, pan, automation and sample-rate conversion paths.
+public struct CPRSourceEventAuditionSnapshot {
+    public let eventID: UUID
+    public let samples: [Float]
+    public let frameCount: Int
+    public let sampleRate: Double
+    public let channelCount: Int
+    public let sourceSHA256: String
+    public let mediaSHA256: String
+}
+
 /// A verified, immutable source snapshot shared by export and event audition.
 /// Samples are interleaved at the saved source rate; no mixer policy is applied.
 struct CPRPreparedSourceEvent {
@@ -25,18 +37,85 @@ struct CPRPreparedSourceEvent {
 public enum CPRSourceEventRenderer {
     public static func render(eventID: UUID, in project: Project, at root: URL, to destination: URL) throws
         -> CPRSourceEventRenderResult {
-        let output = destination.standardizedFileURL.resolvingSymlinksInPath()
-        let package = root.standardizedFileURL.resolvingSymlinksInPath()
-        guard output != package, !output.path.hasPrefix(package.path + "/") else {
-            throw RebaseCoreError.invalidProject("Save the rendered event outside its source project package.")
-        }
+        let output = try outputURL(destination, outside: root)
         let prepared = try prepare(eventID: eventID, in: project, at: root)
         let plan = prepared.plan
         let wave = encodeWave(prepared.samples, plan: plan)
         // Entire input, output and all checks complete before atomic publication.
+        #if REBASE_PORTABLE
+        try publishNewWave(wave, to: output, outside: root)
+        #else
         try wave.write(to: output, options: .atomic)
+        #endif
         return CPRSourceEventRenderResult(frameCount: plan.frames, sampleRate: plan.rate, channelCount: plan.channels,
             sourceSHA256: prepared.sourceSHA256, mediaSHA256: prepared.mediaSHA256, outputSHA256: cprSHA256(wave))
+    }
+
+    /// Replays preserved source/report and verifies attached bytes on every call.
+    /// Hosts must prepare again before resuming or seeking an existing audition.
+    public static func prepareAudition(eventID: UUID, in project: Project, at root: URL) throws
+        -> CPRSourceEventAuditionSnapshot {
+        let prepared = try prepareStereo(eventID: eventID, in: project, at: root)
+        return CPRSourceEventAuditionSnapshot(eventID: eventID, samples: prepared.samples,
+            frameCount: prepared.plan.frames, sampleRate: Double(prepared.plan.rate), channelCount: 2,
+            sourceSHA256: prepared.sourceSHA256, mediaSHA256: prepared.mediaSHA256)
+    }
+
+    /// A new preview/export file, never an overwrite. The bounded initial
+    /// portable audition domain is stereo, zero-origin, complete PCM24 media.
+    public static func renderAudition(eventID: UUID, in project: Project, at root: URL, to destination: URL) throws
+        -> CPRSourceEventRenderResult {
+        let output = try outputURL(destination, outside: root, exclusive: true)
+        let prepared = try prepareStereo(eventID: eventID, in: project, at: root)
+        let wave = encodeWave(prepared.samples, plan: prepared.plan)
+        try publishNewWave(wave, to: output, outside: root)
+        return CPRSourceEventRenderResult(frameCount: prepared.plan.frames, sampleRate: prepared.plan.rate,
+            channelCount: prepared.plan.channels, sourceSHA256: prepared.sourceSHA256,
+            mediaSHA256: prepared.mediaSHA256, outputSHA256: cprSHA256(wave))
+    }
+
+    private static func prepareStereo(eventID: UUID, in project: Project, at root: URL) throws -> CPRPreparedSourceEvent {
+        let prepared = try prepare(eventID: eventID, in: project, at: root)
+        guard prepared.plan.channels == 2 else {
+            throw RebaseCoreError.unsupportedAudio("Timeline audition currently requires a stereo source; native mono output routing is unresolved.")
+        }
+        return prepared
+    }
+
+    private static func outputURL(_ destination: URL, outside root: URL, exclusive: Bool = false) throws -> URL {
+        let output = try ProjectFileIO.canonicalRoot(destination)
+        let package = try ProjectFileIO.canonicalRoot(root)
+        guard !ProjectFileIO.samePath(output, package), !ProjectFileIO.contains(output, in: package) else {
+            throw RebaseCoreError.invalidProject("Save the rendered event outside its source project package.")
+        }
+        if exclusive {
+            let requested = destination.standardizedFileURL
+            guard !ProjectFileIO.samePath(requested, package), !ProjectFileIO.contains(requested, in: package) else {
+                throw RebaseCoreError.invalidProject("Save the rendered event outside its source project package.")
+            }
+            if let _ = try? FileManager.default.attributesOfItem(atPath: requested.path),
+               try ProjectFileIO.isLinkOrReparsePoint(requested) {
+                throw RebaseCoreError.invalidProject("A new source preview cannot replace a link or redirected file.")
+            }
+        }
+        return output
+    }
+
+    private static func publishNewWave(_ wave: Data, to output: URL, outside root: URL) throws {
+        let destination = try outputURL(output, outside: root, exclusive: true)
+        guard ProjectFileIO.samePath(destination, output) else {
+            throw RebaseCoreError.invalidProject("The output location changed during source preparation.")
+        }
+        let parent = destination.deletingLastPathComponent()
+        try ProjectFileIO.requireRealDirectory(parent)
+        let staging = parent.appendingPathComponent(".rebase-source-audition-" + UUID().uuidString + ".tmp")
+        defer { try? FileManager.default.removeItem(at: staging) }
+        try wave.write(to: staging, options: .withoutOverwriting)
+        guard try CPRAudioMediaValidation.snapshot(staging) == wave else {
+            throw RebaseCoreError.invalidProject("The completed source preview changed before publication.")
+        }
+        try ProjectFileIO.requireRealDirectory(parent)
+        try ProjectFileIO.publishNewFile(staging, to: destination)
     }
 
     static func prepare(eventID: UUID, in project: Project, at root: URL,
@@ -57,18 +136,9 @@ public enum CPRSourceEventRenderer {
             throw RebaseCoreError.unsupportedAudio("Attach matching PCM24 WAV media before using this source event.")
         }
         try attachment.validate(reference: plan.file)
-        let sourceURL = try ProjectStore.resolveMediaURL(attachment.mediaPath, projectRoot: root)
-        let before = try FileManager.default.attributesOfItem(atPath: sourceURL.path)
-        guard let size = (before[.size] as? NSNumber)?.intValue, size <= CPRAudioMediaValidation.maximumBytes else {
-            throw RebaseCoreError.mediaTooLarge
-        }
-        let handle = try FileHandle(forReadingFrom: sourceURL)
-        defer { try? handle.close() }
-        let data = try handle.read(upToCount: CPRAudioMediaValidation.maximumBytes + 1) ?? Data()
-        let after = try FileManager.default.attributesOfItem(atPath: sourceURL.path)
-        guard data.count == size, cprSHA256(data) == attachment.mediaSHA256,
-              before[.systemFileNumber] as? NSNumber == after[.systemFileNumber] as? NSNumber,
-              before[.modificationDate] as? Date == after[.modificationDate] as? Date else {
+        let sourceURL = try CPRAudioMediaValidation.attachedURL(attachment.mediaPath, root: root)
+        let data = try CPRAudioMediaValidation.snapshot(sourceURL)
+        guard cprSHA256(data) == attachment.mediaSHA256 else {
             throw RebaseCoreError.invalidProject("The attached media changed. Attach the intended file again before using this source event.")
         }
         return CPRPreparedSourceEvent(plan: plan, samples: try decodePCM24(data, plan: plan, applyEventGain: applyEventGain),

@@ -41,7 +41,7 @@ var path = Path.Combine(Path.GetTempPath(), "rebase-snapshot-control-" + Guid.Ne
 try
 {
     File.WriteAllBytes(path, bytes);
-    var info = new RenderSnapshot { Path = path, Revision = 17, SampleRate = 48000, Frames = 2, Channels = 2, WavBytes = 60, Sha256 = Convert.ToHexString(SHA256.HashData(bytes)) };
+    var info = new RenderSnapshot { Kind = "project", Path = path, Revision = 17, SampleRate = 48000, Frames = 2, Channels = 2, WavBytes = 60, Sha256 = Convert.ToHexString(SHA256.HashData(bytes)) };
     Check(SnapshotReader.Read(info, path, 17).Samples[1] == -0.5f);
     Reject(() => SnapshotReader.Read(info, path, 18));
     Reject(() => SnapshotReader.Read(info, path + ".other", 17));
@@ -67,4 +67,6 @@ using (var cancel = new CancellationTokenSource())
     try { _ = await SessionResponseReader.Read(new MemoryStream(Encoding.UTF8.GetBytes("reply\n")), cancel.Token); throw new Exception("Expected cancellation"); }
     catch (OperationCanceledException) { }
 }
+checks += await SourceAuditionControls.Run();
+checks += await WaveformControls.Run();
 Console.WriteLine(JsonSerializer.Serialize(new { schema = 1, suite = "windows-host-portable-controls", checks, failures = 0, wpf_runtime_tested = false, playback_tested = false }));

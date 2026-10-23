@@ -8,8 +8,9 @@ public sealed record LoadedSnapshot(float[] Samples, uint SampleRate, ulong Fram
 public static class SnapshotReader
 {
     // Transport adapter for the helper's own output, never a project-media decoder.
-    public static LoadedSnapshot Read(RenderSnapshot info, string requestedPath, ulong revision)
+    public static LoadedSnapshot Read(RenderSnapshot info, string requestedPath, ulong revision, SourceEventView? sourceEvent = null)
     {
+        ValidateContext(info, sourceEvent);
         if (info.Revision != revision || !Path.GetFullPath(info.Path).Equals(Path.GetFullPath(requestedPath), StringComparison.OrdinalIgnoreCase))
             throw new InvalidDataException("The rendered snapshot does not belong to this document revision.");
         if (info.Frames == 0 || info.Frames > 32_000_000 || info.Channels != 2 ||
@@ -23,6 +24,20 @@ public static class SnapshotReader
         if ((ulong)data.Length != info.WavBytes || !Convert.ToHexString(SHA256.HashData(data)).Equals(info.Sha256, StringComparison.OrdinalIgnoreCase))
             throw new InvalidDataException("The snapshot does not match the renderer's SHA-256.");
         return Decode(data, (uint)info.SampleRate, info.Frames);
+    }
+    public static void ValidateContext(RenderSnapshot info, SourceEventView? sourceEvent)
+    {
+        static bool Digest(string? value) => value is { Length: 64 } && value.All(char.IsAsciiHexDigit);
+        if (sourceEvent is null)
+        {
+            if (info.Kind != "project" || info.EventID is not null || info.SourceSHA256 is not null || info.MediaSHA256 is not null)
+                throw new InvalidDataException("The renderer returned a different playback context instead of a project mix.");
+        }
+        else if (info.Kind != "sourceEvent" || !string.Equals(info.EventID, sourceEvent.Id, StringComparison.OrdinalIgnoreCase) ||
+            !Digest(sourceEvent.SourceSHA256) || !Digest(sourceEvent.MediaSHA256) ||
+            !string.Equals(info.SourceSHA256, sourceEvent.SourceSHA256, StringComparison.OrdinalIgnoreCase) ||
+            !string.Equals(info.MediaSHA256, sourceEvent.MediaSHA256, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidDataException("The rendered source event does not match the selected event and its attached media.");
     }
     public static LoadedSnapshot Decode(byte[] data, uint rate, ulong frames)
     {

@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "observed_at_utc": "2026-10-23T09:59:07.804810+00:00",
+  "evidence_class": "local-cross-compilation-and-portable-controls",
+  "host": "macOS arm64",
+  "dotnet_sdk": "10.0.100",
+  "build": {
+    "configuration": "Release",
+    "target": "net10.0-windows",
+    "warnings": 0,
+    "errors": 0
+  },
+  "portable_controls": {
+    "checks": 72,
+    "failures": 0
+  },
+  "windows_ui_runtime_tested": false,
+  "wasapi_playback_tested": false,
+  "source_files": [
+    {
+      "path": "App.xaml",
+      "sha256": "f4ef2f1d8067dd69fcca16151ffdf4922a2fe33d2ab72d995e7b07a6b9eeb39b"
+    },
+    {
+      "path": "App.xaml.cs",
+      "sha256": "3dfd1a39148620abd10936dde900454a20f850f0c4ab93d81a1301cca2e52566"
+    },
+    {
+      "path": "Assets/Rebase.ico",
+      "sha256": "01d7bdc9dbd842c7207e7feaefa259605c4113c7197b4d228b0c4acbac9b15ab"
+    },
+    {
+      "path": "GlobalUsings.cs",
+      "sha256": "9eb56b713f4bd450c169f140e74ff7b6d5e456f3742a30188b947223d01628e4"
+    },
+    {
+      "path": "MainWindow.xaml",
+      "sha256": "da7574612d8f1916205d73b1b97c6984b3ed140c7c448457a2e03458d45c076f"
+    },
+    {
+      "path": "MainWindow.xaml.cs",
+      "sha256": "e7dbf3b1eb8d5dfeea6a6632134da487beca4f4b1b28d5821e22505d18501f04"
+    },
+    {
+      "path": "NativeAudio.cs",
+      "sha256": "2243e36dda2ad3ba4de1cf12a86d0b5ae59b2341cc8220e5fa7985fd08df550c"
+    },
+    {
+      "path": "RebaseWindows.csproj",
+      "sha256": "f92eb555c0c4de6985f5750fd8d7975ddba21c369731c73673f586f38b4f7335"
+    },
+    {
+      "path": "SessionProcess.cs",
+      "sha256": "193391cba9646c0672337fb50fb317bfe3c9a806bd07be6b12e04b6400461bc9"
+    },
+    {
+      "path": "SessionProtocol.cs",
+      "sha256": "5429afdbfa9ee96d4a9c7e93a74b93c9b081cb26ff4934e05c8c808f64aa38f0"
+    },
+    {
+      "path": "SessionResponseReader.cs",
+      "sha256": "e25a150531b051036b5c92ea3ddd58ceb23b1a11d83c402f43983702e4a38de2"
+    },
+    {
+      "path": "SnapshotReader.cs",
+      "sha256": "aea0df6622d7d9a515ccd585f143922bef48bdfcbb1d532434665bd2fe65f9bd"
+    },
+    {
+      "path": "SourceEventView.cs",
+      "sha256": "dcf97e02e54a7ada9e2e5542b2e65a18f06d7c9e771cf628f5b501ba29dbcae7"
+    },
+    {
+      "path": "StudioViewModel.cs",
+      "sha256": "64c0216e8fb47939d375ce09e2c722c40ed8308cae0316d0473e05c2eb9ffbca"
+    },
+    {
+      "path": "Tests/Program.cs",
+      "sha256": "b2265d49cc0f09dbf8cbb3e70bf748646f493933812096282d47af971019d2a3"
+    },
+    {
+      "path": "Tests/RebaseWindows.Controls.csproj",
+      "sha256": "10adfbc354e701ad6b0f12c0012f4dc5e2d6ab77d48f5c6a89b7593c95900412"
+    },
+    {
+      "path": "Tests/SourceAuditionControls.cs",
+      "sha256": "773758c7e55fb35152a7553febccf8ffb102a58411c282d8beabbd1dbe8a615f"
+    },
+    {
+      "path": "Tests/WaveformControls.cs",
+      "sha256": "7443de4b7c5c9e4bd26aea20da683b262a10ed20428090c0cf361bac5f1a27ed"
+    },
+    {
+      "path": "TimelineView.cs",
+      "sha256": "809e45db7d5a731cc6fdcd1c0b0ae30b86b504988f9635380da297a22e2e5078"
+    },
+    {
+      "path": "WaveformSnapshot.cs",
+      "sha256": "c1c966c19a4d799fffa3d75a799bbac849fedffc3a430b506573a810b6914687"
+    },
+    {
+      "path": "WindowSmoke.cs",
+      "sha256": "e8b63722c9c2c0db6b4ec9bd2b79d951c491df63ccf5c8b772f68a95718113f9"
+    },
+    {
+      "path": "app.manifest",
+      "sha256": "98186660a1c945ebcda02a878bd6b1413c3641af4b28bc9235ac49d6aa4df7df"
+    },
+    {
+      "path": "packages.lock.json",
+      "sha256": "3ea8c3864c8f23b39364f9f40beb868ce4d8ecb62c5a25188dca037417beed3b"
+    }
+  ],
+  "boundaries": [
+    "Compilation used Windows desktop reference assemblies from a macOS SDK; this revision of the WPF window was not run locally.",
+    "Portable controls exercise protocol/snapshot/provenance validation plus actual view-model transport and waveform state transitions using controlled fake session/audio endpoints; they do not execute WPF or WASAPI.",
+    "The new Windows visual, source journey, pointer/fader interaction, dialogs, and hardware playback require separate hosted/desktop evidence.",
+    "Official reference imagery is used only for inspection; no vendor manual or screenshots are included."
+  ],
+  "observation": "Windows reference-based shell, real shared waveform display, and distinct checked source-event attach/export/audition controls.",
+  "prior_evidence": {
+    "path": "local-2026-10-23-label-contrast.json",
+    "sha256": "65605cff0caf2c511d16cbc89864bd02f306774100b036230e3fcca82a4943da"
+  }
+}

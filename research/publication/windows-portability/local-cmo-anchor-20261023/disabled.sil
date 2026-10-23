@@ -1,0 +1,32 @@
+sil_stage canonical
+
+import Builtin
+import Swift
+import SwiftShims
+
+import Anchor
+
+public func callAnchor()
+
+// callAnchor()
+// Isolation: unspecified
+sil @$s6Caller10callAnchoryyF : $@convention(thin) () -> () {
+[global: read,write,copy,destroy,allocate,deinit_barrier]
+bb0:
+  // function_ref __test_anchor_RebasePortableTests()
+  %0 = function_ref @$s6Anchor33__test_anchor_RebasePortableTestsyyF : $@convention(thin) () -> () // user: %1
+  %1 = apply %0() : $@convention(thin) () -> ()
+  %2 = tuple ()                                   // user: %3
+  return %2                                       // id: %3
+} // end sil function '$s6Caller10callAnchoryyF'
+
+// __test_anchor_RebasePortableTests()
+// Isolation: unspecified
+sil @$s6Anchor33__test_anchor_RebasePortableTestsyyF : $@convention(thin) () -> ()
+
+
+
+// Mappings from '#fileID' to '#filePath':
+//   'Caller/Caller.swift' => '<experiment>/Caller.swift'
+
+

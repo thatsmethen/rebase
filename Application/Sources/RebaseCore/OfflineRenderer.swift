@@ -164,6 +164,12 @@ enum AudioSampleValidation {
 
 /// AVFoundation decodes only; shared PCMRenderer owns trim, pan, automation,
 /// interpolation, and accumulation policy.
+extension WaveformPeaks {
+    public static func read(url: URL, offset: Double, duration: Double) throws -> WaveformEnvelope {
+        try read(source: AVPCMSourceReader(url: url), offset: offset, duration: duration)
+    }
+}
+
 private final class AVPCMSourceReader: PCMSourceReader {
     private let audio: AVAudioFile
     var sampleRate: Double { audio.processingFormat.sampleRate }

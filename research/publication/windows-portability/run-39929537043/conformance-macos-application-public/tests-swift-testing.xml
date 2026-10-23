@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="TestResults" errors="0" tests="235" failures="0" skipped="116" time="32.122601958">
+    <testcase classname="RebaseCoreTests.CPRTrackOverlapNormalizerTests" name="crossingAndNestedEqualPriorityKeepOriginalContributorOrdinals()" time="6.218646042" />
+    <testcase classname="RebaseCoreTests.CPRTrackOverlapNormalizerTests" name="insufficientOutputAndWrongFloatingPointModeAreTransactional()" time="0.000157917" />
+    <testcase classname="RebaseCoreTests.CPRTrackOverlapNormalizerTests" name="savedSuccessorSurvivesRemovalAndTailReinsertion()" time="1.796453333" />
+    <testcase classname="RebaseCoreTests.CPRTrackOverlapNormalizerTests" name="touchingAndSubEpsilonOverlapBypassPriorityThenClampPublishedStarts()" time="0.5572025" />
+    <testcase classname="RebaseCoreTests.CPRTrackOverlapNormalizerTests" name="fullContributorLimitSupports8191NestedFragmentsAndQuadraticTailVisits()" time="0.466937625" />
+    <testcase classname="RebaseCoreTests.CPRTrackOverlapNormalizerTests" name="invalidInputsRejectWithoutSortingOrRepair()" time="0.001163125" />
+    <testcase classname="RebaseCoreTests.CPRTrackOverlapNormalizerTests" name="epsilonPrefixAndTailThresholdsUseActualRoundedSubtraction()" time="0.773206458" />
+    <testcase classname="RebaseCoreTests.CPRTrackOverlapNormalizerTests" name="prioritiesUseSignedInt32AndOriginalOrdinalRatherThanCurrentQueuePosition()" time="1.1106985" />
+    <testcase classname="RebaseCoreTests.CPRStreamPlaybackQueueTests" name="PrimeIsAtomicAndEmptySourceCompletesOnce()" time="6.22127925" />
+    <testcase classname="RebaseCoreTests.CPRStreamPlaybackQueueTests" name="RefillFailureNotifiesOnceAndRetainsUnplayedBuffersUntilCancel()" time="0.000198208" />
+    <testcase classname="RebaseCoreTests.CPRStreamPlaybackQueueTests" name="OfflinePlayerReceivesMoreThanFourBuffersWhileMainActorIsBlocked()" time="0.016612583" />
+    <testcase classname="RebaseCoreTests.CPRStreamPlaybackQueueTests" name="SynchronousSchedulerCallbacksAreDeferredAndNotRecursive()" time="0.0043325" />
+    <testcase classname="RebaseCoreTests.CPRStreamPlaybackQueueTests" name="RefillAndDrainContinueWhileMainActorIsBlocked()" time="5.017508" />
+    <testcase classname="RebaseCoreTests.CPRStreamPlaybackQueueTests" name="CancelWaitsForInFlightProductionAndRejectsAllLateCallbacks()" time="0.839793375" />
+    <testcase classname="RebaseCoreTests.CPRStreamPlaybackQueueTests" name="CancelFromCompletionDoesNotDeadlockAndOldCallbacksCannotAffectRestart()" time="0.000185833" />
+    <testcase classname="RebaseCoreTests.CPRStreamPlaybackQueueTests" name="EmptyBufferIsRejectedDuringPrimeWithoutScheduling()" time="9.7209e-05" />
+    <testcase classname="RebaseCoreTests.CPRNativeAudioAccessorTests" name="EqualRateDirectReadsPreserveSnapshotAndReturnActualShortCount()" time="0.0005865" />
+    <testcase classname="RebaseCoreTests.CPRNativeAudioAccessorTests" name="FirstBudgetAvailabilityIsSeparateFromChosenFallbackAndZeroCount()" time="0.084351125" />
+    <testcase classname="RebaseCoreTests.CPRNativeAudioAccessorTests" name="InvalidDomainsAndFailedPreflightDoNotPublishProgress()" time="0.067370625" />
+    <testcase classname="RebaseCoreTests.CPRNativeAudioAccessorTests" name="EOFUsesFirstShortPredicateAndDefensiveTerminalStateRemainsExplicit()" time="0.099247917" />
+    <testcase classname="RebaseCoreTests.CPRNativeAudioAccessorTests" name="NonsequentialSeeksRetainFilterHistoryRatherThanResetOrPreroll()" time="0.057817375" />
+    <testcase classname="RebaseCoreTests.CPRNativeAudioAccessorTests" name="EveryReadCountPositionAndSampleMatchesIndependentRetainedSequences()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRNativeAudioAccessorTests" name="ExactFloat32SeekMappingMatchesFractionVectorsAndRejectsBeforeWrites()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.RecoveredDSPTests" name="testFloat32ExactCoefficientsAndThresholdPermutation()" time="6.053619292" />
+    <testcase classname="RebaseCoreTests.RecoveredDSPTests" name="testFourFrameBasisIsScatteredWithSignedZeroPreserved()" time="6.215429083" />
+    <testcase classname="RebaseCoreTests.RecoveredDSPTests" name="testRejectedStateDomainAndAliasingDoNotWriteOutputs()" time="6.053767333" />
+    <testcase classname="RebaseCoreTests.RecoveredDSPTests" name="testFloat64RetainsObservedOneULPInverseDifference()" time="6.053585916" />
+    <testcase classname="RebaseCoreTests.CPRMode2StreamTests" name="GainIsAppliedAfterFilteringAndRingTransferPreservesStereo()" time="1.110748625" />
+    <testcase classname="RebaseCoreTests.CPRMode2StreamTests" name="InvalidDomainsRejectWithoutSelectingAnotherAlgorithm()" time="0.55426825" />
+    <testcase classname="RebaseCoreTests.CPRMode2StreamTests" name="OfflinePlayerDeliversMode2TailAndThenSilence()" time="1.796071542" />
+    <testcase classname="RebaseCoreTests.CPRMode2StreamTests" name="FreshCursorsAndPrerollPreserveOutputAcrossBothRatesAndEqualRate()" time="6.221993041" />
+    <testcase classname="RebaseCoreTests.MusicalTimeTests" name="tempoRejectsUnsupportedRampsAndInvalidMapsWithoutSorting()" time="6.218241292" />
+    <testcase classname="RebaseCoreTests.MusicalTimeTests" name="rulerChangesMeterWithoutResettingBarNumbers()" time="6.218184958" />
+    <testcase classname="RebaseCoreTests.MusicalTimeTests" name="musicalModelsCodableRoundTripAndDecodedInvalidStateStillRejects()" time="6.218242542" />
+    <testcase classname="RebaseCoreTests.MusicalTimeTests" name="displayTicksAreConfigurableAndRoundWithBoundaryCarry()" time="6.218204583" />
+    <testcase classname="RebaseCoreTests.MusicalTimeTests" name="tempoInverseAcrossManySegmentsAndBothDirections()" time="6.218224833" />
+    <testcase classname="RebaseCoreTests.MusicalTimeTests" name="tempoIntegratesKnownDurationsAndIsContinuousAtChanges()" time="6.218268584" />
+    <testcase classname="RebaseCoreTests.MusicalTimeTests" name="signaturesRejectNonBarChangesAndInvalidRulerFields()" time="6.218191041" />
+    <testcase classname="RebaseCoreTests.MusicalTimeTests" name="conversionRejectsNegativeNonfiniteAndUnrepresentableCoordinates()" time="6.218217292" />
+    <testcase classname="RebaseCoreTests.MusicalTimeTests" name="signatureAwareGridUsesDenominatorBeatsAndRejectsUnknownCrossing()" time="6.218200667" />
+    <testcase classname="RebaseCoreTests.MusicalTimeTests" name="ordinaryAndRelativeSnapHaveDifferentCreationDragResults()" time="6.21818575" />
+    <testcase classname="RebaseCoreTests.DAWProjectTests" name="independentFixtureImportsTrimMixAndJumpMaps()" time="6.218259708" />
+    <testcase classname="RebaseCoreTests.DAWProjectTests" name="exportRejectsUnrepresentableSourceAudioFormat()" time="6.218414583" />
+    <testcase classname="RebaseCoreTests.DAWProjectTests" name="exportedRoundtripXMLMatchesExternalSchema()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.DAWProjectTests" name="unsupportedSemanticsAndAmbiguousInterpolationRejectTransactionally()" time="6.218358083" />
+    <testcase classname="RebaseCoreTests.DAWProjectTests" name="exportRejectsMusicalTracksIncludingEmptyTracks()" time="6.218355875" />
+    <testcase classname="RebaseCoreTests.DAWProjectTests" name="selfRoundtripPreservesAudioCurvesAndMaps()" time="6.218538667" />
+    <testcase classname="RebaseCoreTests.DAWProjectTests" name="exportUnsupportedReadStateAndExistingDestinationsRemainUnchanged()" time="6.218224417" />
+    <testcase classname="RebaseCoreTests.DAWProjectTests" name="consumedAudioCRCAndTruncatedDirectoryReject()" time="6.218109833" />
+    <testcase classname="RebaseCoreTests.DAWProjectTests" name="archiveTraversalDuplicateSymlinkAndDTDRejectBeforePublishing()" time="6.218161209" />
+    <testcase classname="RebaseCoreTests.CPRNativeTimelineStreamTests" name="SourceBackedNonzeroCPRControlStaysUnplacedAndRequiresMedia()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRNativeTimelineStreamTests" name="TouchingSegmentsAndRoundedDescriptorEndpointsDoNotDuplicateFrames()" time="1.110768458" />
+    <testcase classname="RebaseCoreTests.CPRNativeTimelineStreamTests" name="SyntheticPlacementGapsOffsetsAndGainArePartitionAndSeekInvariant()" time="6.220887584" />
+    <testcase classname="RebaseCoreTests.CPRNativeTimelineStreamTests" name="UnsupportedSourcesAndFailedBlocksDoNotAdvanceCursor()" time="1.79606375" />
+    <testcase classname="RebaseCoreTests.CPRNativeTimelineStreamTests" name="RealSourceReaderMatchesEveryPCMFrameAndKeepsProofAndProjectBarriers()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAutoFadeArchiveTests" name="pinnedForwardReferencesAndShortBodiesReject()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAutoFadeArchiveTests" name="typedNumericAttributesRemainOpaqueAndUnknownRepresentationsReject()" time="6.053685125" />
+    <testcase classname="RebaseCoreTests.CPRAutoFadeArchiveTests" name="nonnullLocalZeroOverridesEnabledProjectAndMissingProjectStaysUnknown()" time="6.053449583" />
+    <testcase classname="RebaseCoreTests.CPRAutoFadeArchiveTests" name="nonfiniteDurationsRejectAsExplicitApplicationPolicy()" time="6.0534835" />
+    <testcase classname="RebaseCoreTests.CPRAutoFadeArchiveTests" name="pinnedFactoriesMatchIndependentForwardProbeAndInheritExactZeroFlags()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAutoFadeArchiveTests" name="keyedRootRequiresCountedEventTypeAndLoudnessRemainsNullOnly()" time="6.053287834" />
+    <testcase classname="RebaseCoreTests.CPRAutoFadeArchiveTests" name="baseVersionsAreResolvedFromHeadersNotPayloadStrings()" time="6.053101333" />
+    <testcase classname="RebaseCoreTests.CPRAutoFadeArchiveTests" name="sharedPositiveSettingReferencePreservesIdentityAndOpaqueCurves()" time="6.052447292" />
+    <testcase classname="RebaseCoreTests.CPRAutoFadeArchiveTests" name="ExactTailsAndRootClockIdentityRejectFalseForwardInterpretations()" time="6.053609917" />
+    <testcase classname="RebaseCoreTests.NativeMapKernelTests" name="detachedMapArithmeticMatchesIndependentBits()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeMapKernelTests" name="canonicalValidationRejectsOneULPWithoutRewritingDetachedAnchors()" time="6.221316167" />
+    <testcase classname="RebaseCoreTests.NativeMapKernelTests" name="malformedMapInputsFailBeforeWriteAndZeroRetainsNativeSigns()" time="6.221319667" />
+    <testcase classname="RebaseCoreTests.CPRSourceTrackPlaybackTests" name="completeTwoAndThreeEventTracksKeepExactPCMThroughGapsAndSeeks()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceTrackPlaybackTests" name="touchingEventsHaveSeparateSourceAccessorsAtTheExactBoundary()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceTrackPlaybackTests" name="completeTrackUsesSavedClockAndRawSourceFramesDespiteApplicationEdits()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceTrackPlaybackTests" name="unknownMissingOrReversedContributorsCannotBecomePartialTrackPlayback()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceTrackPlaybackTests" name="retainedDeletionMissingAttachmentAndChangedMediaAreRecheckedForTheWholeTrack()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeTimelineBuilderTests" name="InvalidDomainsAndIntermediateSubnormalLeaveOutputUnchanged()" time="0.546" />
+    <testcase classname="RebaseCoreTests.NativeTimelineBuilderTests" name="ClipsBothEndsAndAddsLeftTrimBeforeSourceQuantization()" time="6.053445375" />
+    <testcase classname="RebaseCoreTests.NativeTimelineBuilderTests" name="NoPositiveIntersectionAndSnappedEmptyRemainDistinct()" time="1.541158667" />
+    <testcase classname="RebaseCoreTests.NativeTimelineBuilderTests" name="NonNearestFloatingPointEnvironmentIsRejectedTransactionally()" time="0.772640208" />
+    <testcase classname="RebaseCoreTests.NativeTimelineBuilderTests" name="SignedHalfFramesUseBuilderBiasAndPreserveClippingEqualityOperand()" time="1.035617667" />
+    <testcase classname="RebaseCoreTests.CPRPlacedSourceEventTests" name="UnsupportedSavedFactorCannotSelectDefaultRateAndCustodyIsRechecked()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRPlacedSourceEventTests" name="FreshProofMediaAndRejectedPublicationLeavePackageIntact()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRPlacedSourceEventTests" name="ProjectClockDeclinesIncompleteRawReadsWithoutChangingSource()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRPlacedSourceEventTests" name="BuilderMatchesIndependentIEEEControlsWithoutCollapsingRoundTrips()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRPlacedSourceEventTests" name="ExplicitProjectClockReadsUnconvertedPCMAndKeepsSavedTiming()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRPlacedSourceEventTests" name="UnknownAncestorsTrackShiftDatumsClockAndSourceBoundsReject()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRPlacedSourceEventTests" name="EqualExplicitClockMatchesOriginalRateAndInvalidClockFails()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRPlacedSourceEventTests" name="DetachedAndEditedApplicationClockCannotReinterpretSavedTicks()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRPlacedSourceEventTests" name="SavedProjectClockDrivesUnconvertedPCMAndSurvivesApplicationEdits()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRPlacedSourceEventTests" name="SourceBackedPlacementTrimOffsetAndJumpClockMatchExactPCM()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAudioEventArchiveTests" name="distinctEventsShareDecodedClipClusterFileAndCurveIdentities()" time="6.221326042" />
+    <testcase classname="RebaseCoreTests.CPRAudioEventArchiveTests" name="nonzeroRawFieldsRemainExactInsteadOfBeingConvertedWithGuessedUnits()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAudioEventArchiveTests" name="twoPinnedEventsRetainDistinctStoredTimebasesAndExactLinkedObjects()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAudioEventArchiveTests" name="segmentReferenceMustResolveTheActualListedAudioFile()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAudioEventArchiveTests" name="nonfiniteAndTruncatedFieldsCannotProducePartialRecords()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAudioEventArchiveTests" name="cachedSharingDoesNotAllowDuplicateEventsOrForeignSegmentMembership()" time="6.221206583" />
+    <testcase classname="RebaseCoreTests.CPRAudioEventArchiveTests" name="storedTailAndOpaqueProcessingStateArePreservedWithoutPlaybackPromotion()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceTrackOverlapPlaybackTests" name="coveredInvalidSourceCapacityAndReversedOrderStillRejectTheWholeTrack()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceTrackOverlapPlaybackTests" name="repeatedSplitsKeepEachFragmentAttachedToItsOriginalSource()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceTrackOverlapPlaybackTests" name="coveredContributorStillRequiresMembershipAttachmentAndExactMediaBytes()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceTrackOverlapPlaybackTests" name="signedPriorityExtremesControlBothOverlapDirections()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceTrackOverlapPlaybackTests" name="saved32kSplitProjectsTheOriginalOffsetBeforeReaderQuantization()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceTrackOverlapPlaybackTests" name="nestedWinnerSplitsTheOriginalAndRestoresItsSourceTail()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceTrackOverlapPlaybackTests" name="coveredAnchorAndSameStartTiesRetainAllOriginalContributors()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceTrackOverlapPlaybackTests" name="equalPriorityCrossingSwitchesToTheLaterContributor()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.PCMAdapterTests" name="exampleWaveDecoderAndSharedRendererMatchAVFoundationExactly()" time="32.117703791" />
+    <testcase classname="RebaseCoreTests.PCMAdapterTests" name="portableFloatWAVIsReadableByAVFoundation()" time="6.218700125" />
+    <testcase classname="RebaseCoreTests.CPRRateReadBudgetTests" name="all240IndependentBudgetVectorsAndFourControlsMatchExactBits()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRRateReadBudgetTests" name="conditionalAllowanceAndEqualRateShortcutAreDistinct()" time="6.218766916" />
+    <testcase classname="RebaseCoreTests.CPRRateReadBudgetTests" name="kernelErrorsPreserveCallerOutputAndRejectUnknownBranch()" time="6.218716709" />
+    <testcase classname="RebaseCoreTests.CPRRateReadBudgetTests" name="ratioAndEverySignedConversionBoundaryAreChecked()" time="6.218783334" />
+    <testcase classname="RebaseCoreTests.CPRRateReadBudgetTests" name="roundedDoubleRatioAndReverseCorrectionAreRequired()" time="6.218720833" />
+    <testcase classname="RebaseCoreTests.CPRRateReadBudgetTests" name="nonNearestModesAreRejectedAndNotChangedIncludingEqualRatePath()" time="6.218797375" />
+    <testcase classname="RebaseCoreTests.CPRRateReadBudgetTests" name="invalidRateBitsAndCountsRejectWithoutNarrowingOrNormalization()" time="6.21876425" />
+    <testcase classname="RebaseCoreTests.NativeRateMode0Tests" name="partitionsPreserveSamplesPhaseAndHistoryAcross8192Boundary()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode0Tests" name="capacityAndLateSampleFailuresAreTransactional()" time="6.221256625" />
+    <testcase classname="RebaseCoreTests.NativeRateMode0Tests" name="resetFirstFrameAndZeroInputNeverInventTailPadding()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode0Tests" name="fusedMultiplyAndSeparatelyRoundedTermsAreDiscriminated()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode0Tests" name="invalidStateRateBoundsAndAliasingRejectWithoutWrites()" time="6.221241541" />
+    <testcase classname="RebaseCoreTests.NativeRateMode0Tests" name="highRatioPlanarBuffersCrossRingCapacityAndWrapWithExactOracleDigest()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode0Tests" name="nonNearestModesRejectAndPreserveEnvironmentAndOutputs()" time="6.221253375" />
+    <testcase classname="RebaseCoreTests.NativeRateMode0Tests" name="liveCursorAndPrerollSuffixesMatchIndependentSampleBits()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode0Tests" name="allIndependentOracleSamplesAndStateBitsMatch()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRLiveStereoRingTests" name="underrunHoldDrainAndStopRemainDistinct()" time="6.21863825" />
+    <testcase classname="RebaseCoreTests.CPRLiveStereoRingTests" name="nativeHalfCapacityGuardIsInclusiveAndAtomic()" time="6.218647584" />
+    <testcase classname="RebaseCoreTests.CPRLiveStereoRingTests" name="rejectedCountsAliasingAndOverflowPreserveAllDestinations()" time="6.218638292" />
+    <testcase classname="RebaseCoreTests.CPRLiveStereoRingTests" name="zeroLengthAndInvalidInitializationAreExplicit()" time="6.218683417" />
+    <testcase classname="RebaseCoreTests.CPRLiveStereoRingTests" name="stereoBitOrderAndWrappingMatchIndependentFIFO()" time="6.218637042" />
+    <testcase classname="RebaseCoreTests.PrivateResearchFixtureConfigurationTests" name="absentRelativeMissingAndCheckoutLocalRootsHaveDistinctOutcomes()" time="6.221305375" />
+    <testcase classname="RebaseCoreTests.PrivateResearchFixtureConfigurationTests" name="explicitlyConfiguredResearchRootMustBeValid()" time="6.221336333" />
+    <testcase classname="RebaseCoreTests.PrivateResearchFixtureConfigurationTests" name="recordedSourcePrefixesCannotRedirectTemplateResolution()" time="6.221290625" />
+    <testcase classname="RebaseCoreTests.CPRRecoveryV3Tests" name="unknownAuxiliaryAndVariationStateRemainExplicitlyUnsupported()" time="6.217566292" />
+    <testcase classname="RebaseCoreTests.CPRRecoveryV3Tests" name="mapImportPersistsProofAndRejectsDescriptorTampering()" time="6.21797325" />
+    <testcase classname="RebaseCoreTests.CPRRecoveryV3Tests" name="fixedModeIsExactlyTheFrozenV2Interpretation()" time="6.217611625" />
+    <testcase classname="RebaseCoreTests.CPRRecoveryV3Tests" name="defaultNoteDataBothEncodingsAreAllowedButChangedStateIsNot()" time="6.217603042" />
+    <testcase classname="RebaseCoreTests.CPRRecoveryV3Tests" name="timingBoundariesAndUnconsumedPayloadsDoNotPromoteAClock()" time="6.217565125" />
+    <testcase classname="RebaseCoreTests.CPRRecoveryV3Tests" name="realMapPackagesBindCanonicalAlternativeToSourceAndAllowExplicitExchangeConversion()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRRecoveryV3Tests" name="generatedCanonicalMapRetainsExactRecordsAndDisplayProjection()" time="6.217593375" />
+    <testcase classname="RebaseCoreTests.CPRRecoveryV3Tests" name="tenPinnedFactoryFilesSeparateSixMapClocksFromFourUnchangedFixedClocks()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAudioMediaAttachmentTests" name="replacementKeepsOneAssociationAndExplicitRemovalPrunesIt()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAudioMediaAttachmentTests" name="attachmentManifestTamperingAndMissingSourceProofCannotPersist()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAudioMediaAttachmentTests" name="attachedMediaStillCannotRenderOrExportNativeEvents()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAudioMediaAttachmentTests" name="explicitMatchingAssociationCopiesExactBytesAndPreservesFrozenBaseline()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAudioMediaAttachmentTests" name="legitimateSharedSourceChecksEveryEventBeforeAcceptingOrKeepingCopy()" time="12.013991667" />
+    <testcase classname="RebaseCoreTests.CPRAudioMediaAttachmentTests" name="incompatibleFormatAndFrameCountsLeaveNoAssociationOrCopiedAsset()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRAudioMediaAttachmentTests" name="changedOrMissingCopiedMediaFailsLoadAndSaveBeforeManifestWrites()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRNativeProjectClockTests" name="LongReadSeeksAndCallerMutationPreserveVerifiedSnapshot()" time="1.795981125" />
+    <testcase classname="RebaseCoreTests.CPRNativeProjectClockTests" name="CompleteCapacityIsCheckedBeforeAnyPlaybackAndNeverPadded()" time="0.554629625" />
+    <testcase classname="RebaseCoreTests.CPRNativeProjectClockTests" name="RawSignedZerosAndFailedRequestLeaveCursorUnchanged()" time="0.467226666" />
+    <testcase classname="RebaseCoreTests.CPRNativeProjectClockTests" name="InvalidSourceClockCannotBeHiddenByValidTimelineClock()" time="0.7715225" />
+    <testcase classname="RebaseCoreTests.CPRNativeProjectClockTests" name="MixedSourceRatesGapsAndGainUseOneTimelineIndexSpace()" time="1.110739417" />
+    <testcase classname="RebaseCoreTests.CPRNativeProjectClockTests" name="DifferentClockRatesCopyRawFramesInBothDirections()" time="6.221718958" />
+    <testcase classname="RebaseCoreTests.OfflineRendererTests" name="testTrimAndPositionSelectExactFramesAndLeaveTimelineGapSilent()" time="6.220871958" />
+    <testcase classname="RebaseCoreTests.OfflineRendererTests" name="testSoloExcludesOtherTracksAndMuteOverridesSolo()" time="6.220814625" />
+    <testcase classname="RebaseCoreTests.OfflineRendererTests" name="testExportedWAVContainsStereoFloatMix()" time="6.218266458" />
+    <testcase classname="RebaseCoreTests.OfflineRendererTests" name="testLinearResamplingReconstructsRampBetweenSourceSamples()" time="6.218284834" />
+    <testcase classname="RebaseCoreTests.OfflineRendererTests" name="testSourceOverrunAndEmptyTimelineFailExplicitly()" time="6.21833875" />
+    <testcase classname="RebaseCoreTests.OfflineRendererTests" name="testOverlappingClipsAndTrackGainSumRatherThanOverwrite()" time="6.2182365" />
+    <testcase classname="RebaseCoreTests.OfflineRendererTests" name="testExportCrossesChunkBoundaryReplacesMixAndPreservesSource()" time="6.218276834" />
+    <testcase classname="RebaseCoreTests.OfflineRendererTests" name="testMonoCenterPreservesEnergyAndStereoCenterPreservesEachChannel()" time="6.218273291" />
+    <testcase classname="RebaseCoreTests.NativeRateMode2Tests" name="invalidArgumentsCapacityAndSamplesDoNotConsumeBackendOrState()" time="6.221276375" />
+    <testcase classname="RebaseCoreTests.NativeRateMode2Tests" name="publicSoXRSamplesMatchSeparateInstructionWrapperWithPositiveAndNullEOF()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode2Tests" name="aliasesFactoriesAndRoundingFailuresAreRejectedBeforeCallbacks()" time="6.2212705" />
+    <testcase classname="RebaseCoreTests.NativeRateMode2Tests" name="fullSourceCountsAreBackendIndependentAndKeepQueryStateUnchanged()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode2Tests" name="originalInstructionSpyVectorsMatchCountsCallsStorageAndEverySnapshot()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode2Tests" name="backendFailurePoisonsStateButNeverPublishesPartialSamplesOrCounts()" time="6.221261917" />
+    <testcase classname="RebaseCoreTests.NativeRateMode2Tests" name="oneTerminalCallIsEnforcedAndEqualRatesDoNotBypassBackend()" time="6.221272958" />
+    <testcase classname="RebaseCoreTests.CPRRecoveryV4Tests" name="alteredRawProjectionMediaAndTrackIdentityFailSourceProofBeforeSave()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRRecoveryV4Tests" name="invalidNativeClockAndWrongTrackDatumKeepSourceEventsUnplaced()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRRecoveryV4Tests" name="packageRoundTripPreservesOriginalReportAndExactUnresolvedEvents()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRRecoveryV4Tests" name="frozenV3HasNoNewEventsOrChangedSerialization()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRRecoveryV4Tests" name="unresolvedAudioBlocksRenderingAndExchangeUntilExplicitRemoval()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRRecoveryV4Tests" name="minimumLengthReciprocalAndRateAreRealPlacementGates()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRRecoveryV4Tests" name="pinnedLoFiHasExactTwentyFourSecondSourceExtentAndClassicStaysUnplaced()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRRecoveryV4Tests" name="nonNearestFloatingPointModesCannotPublishSourceProjection()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRRecoveryV4Tests" name="everyAncestorAndEventRequiresPositiveZeroOffsetsAndZeroPrefixWord()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.SharedProjectStoreTests" name="sharedEditsSaveReopenAndRetainOpaquePackageFiles()" time="6.218564542" />
+    <testcase classname="RebaseCoreTests.SharedProjectStoreTests" name="everySourceIntervalAndAllSamplesAreCheckedOnLoad()" time="6.218605958" />
+    <testcase classname="RebaseCoreTests.SharedProjectStoreTests" name="publicationNeverReplacesExistingFilesOrDirectories()" time="6.218545125" />
+    <testcase classname="RebaseCoreTests.SharedProjectStoreTests" name="mediaContainmentRejectsTraversalAlternateStreamsAndRedirectedDirectories()" time="6.2185885" />
+    <testcase classname="RebaseCoreTests.SharedProjectStoreTests" name="nativeClockReplayAndFailedSavesPreserveTheSourceAndReport()" time="6.218575125" />
+    <testcase classname="RebaseCoreTests.SharedProjectStoreTests" name="redirectedAndOversizedManifestsCannotBeOpenedOrOverwritten()" time="6.218587541" />
+    <testcase classname="RebaseCoreTests.SharedProjectStoreTests" name="invalidAndOversizedSavesPreserveTheLastManifest()" time="6.218623875" />
+    <testcase classname="RebaseCoreTests.CPRLiveCallbackAdapterTests" name="AdapterAppliesFirstPlaneSentinelToBothPlanes()" time="6.221256042" />
+    <testcase classname="RebaseCoreTests.CPRLiveCallbackAdapterTests" name="EmptyOrNonStereoOutputRejects()" time="6.221277125" />
+    <testcase classname="RebaseCoreTests.CPRLiveCallbackAdapterTests" name="NormalSentinelRetainsOtherPlaneBitsAndSignedZero()" time="6.221255542" />
+    <testcase classname="RebaseCoreTests.CPRPlacedSourceContextTests" name="reusableContextRejectsForeignSourceRetainedHashAndDescriptorWithoutMutation()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRPlacedSourceContextTests" name="reusedSavedContextMatchesFreshSingleEventBitsBeforeAndAfterTempoJump()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.ProjectBehaviorTests" name="automationReadOffUsesManualAndRejectsDuplicateParameterLanes()" time="6.053624333" />
+    <testcase classname="RebaseCoreTests.ProjectBehaviorTests" name="tempoMapRetimesOnlyMusicalStartsTransactionally()" time="6.054191625" />
+    <testcase classname="RebaseCoreTests.ProjectBehaviorTests" name="automationUsesAbsoluteSampleTimeAcrossClipAndExportBoundary()" time="6.054326791" />
+    <testcase classname="RebaseCoreTests.ProjectBehaviorTests" name="legacyProjectDefaultsAndStaleAnchorReject()" time="6.05368625" />
+    <testcase classname="RebaseCoreTests.CPRMode1StreamTests" name="GainIsAppliedAfterFilteringAndRingTransferPreservesStereo()" time="1.110654709" />
+    <testcase classname="RebaseCoreTests.CPRMode1StreamTests" name="InvalidDomainsRejectWithoutSelectingAnotherAlgorithm()" time="0.554312459" />
+    <testcase classname="RebaseCoreTests.CPRMode1StreamTests" name="OfflinePlayerDeliversMode1TailAndThenSilence()" time="1.796531333" />
+    <testcase classname="RebaseCoreTests.CPRMode1StreamTests" name="FreshCursorsAndPrerollPreserveOutputAcrossBothRatesAndEqualRate()" time="6.218776833" />
+    <testcase classname="RebaseCoreTests.CPRTimelineSelectionTests" name="NativeEndSelectionAndHostFrameEndRemainSeparate()" time="6.221203916" />
+    <testcase classname="RebaseCoreTests.CPRTimelineSelectionTests" name="GenerationMismatchIgnoresOldCurrentAndResetClearsIt()" time="6.221218375" />
+    <testcase classname="RebaseCoreTests.CPRTimelineSelectionTests" name="FreshTraversalFollowsLinksAndRejectsANonterminatingCycle()" time="6.221207125" />
+    <testcase classname="RebaseCoreTests.CPRTimelineSelectionTests" name="EndIsOneRoundedBinary64Addition()" time="6.221218333" />
+    <testcase classname="RebaseCoreTests.CPRTimelineSelectionTests" name="MatchingCursorReturnsSuccessorRegardlessOfQueryWithoutAdvancingCurrent()" time="6.221213625" />
+    <testcase classname="RebaseCoreTests.CPRTimelineSelectionTests" name="FreshScanUsesInclusiveEndAndDoesNotTestTheStart()" time="6.221209834" />
+    <testcase classname="RebaseCoreTests.CPRTimelineSelectionTests" name="InvalidDomainLeavesCursorAndKernelOutputsUntouched()" time="6.221282" />
+    <testcase classname="RebaseCoreTests.CPRSourceEventRendererTests" name="ForwardSourcePlanRejectsEnabledFadesWarpAndInversion()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceEventRendererTests" name="AttachedSourceRenderWritesExactSamplesWithoutChangingPackageAndRejectsTampering()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceEventRendererTests" name="KernelRejectsUnsupportedEnvironmentAndGainBeforeWriting()" time="6.218521791" />
+    <testcase classname="RebaseCoreTests.CPRSourceEventRendererTests" name="WAVParsingRejectsWrongFormatCountsAndAmbiguousChunks()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceEventRendererTests" name="PCM24AndSeparateGainMatchExactBinaryArithmeticAcrossBoundaries()" time="6.218459792" />
+    <testcase classname="RebaseCoreTests.AutomationTests" name="pointEditingAndCodablePreserveIdentityAndSegments()" time="6.21802475" />
+    <testcase classname="RebaseCoreTests.AutomationTests" name="mixedOutgoingSegmentsAndExactBoundaries()" time="6.218119542" />
+    <testcase classname="RebaseCoreTests.AutomationTests" name="malformedPointsRejectWithoutChangingLane()" time="6.217901584" />
+    <testcase classname="RebaseCoreTests.AutomationTests" name="gainInterpolatesInDecibelsAndReadGateUsesManualValue()" time="6.218074625" />
+    <testcase classname="RebaseCoreTests.NativeTempoClockTests" name="dawprojectExportRequiresExplicitClockConversion()" time="6.218839" />
+    <testcase classname="RebaseCoreTests.NativeTempoClockTests" name="reviewerOracleCoversMantissaAndOperationOrderDiscriminators()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeTempoClockTests" name="tempoMapUsesNativeArithmeticAndRejectsInconsistentProjection()" time="6.218785667" />
+    <testcase classname="RebaseCoreTests.NativeTempoClockTests" name="descriptorRoundTripAndMalformedInputsReject()" time="6.218802542" />
+    <testcase classname="RebaseCoreTests.NativeTempoClockTests" name="fixedOperationsMatchIndependentRationalBitVectors()" time="6.218768875" />
+    <testcase classname="RebaseCoreTests.NativeTempoClockTests" name="nonNearestRoundingEnvironmentIsRejectedWithoutChangingIt()" time="6.218735833" />
+    <testcase classname="RebaseCoreTests.NativeTempoClockTests" name="explicitProjectConversionRetainsMusicalAnchorsAtomically()" time="6.218781709" />
+    <testcase classname="RebaseCoreTests.CPRProjectAudioSetupTests" name="V5UnsupportedRateRemainsExplicitAndHistoricalV4ReportIsUntouched()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRProjectAudioSetupTests" name="AllTenPinnedTemplatesBindTheDirectSavedRateWithoutChangingV4()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRProjectAudioSetupTests" name="TypedOwnerAndCompleteBodyAreRequiredEvenWhenDecoyRatesExist()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRProjectAudioSetupTests" name="VariableStringsAndEmbeddedDatumBoundsAreParsedForward()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRProjectAudioSetupTests" name="RawRateAndFactorBoundsCannotBecomeAHostClockByFallback()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRContractMigrationTests" name="historicalPackagesPassReplayWithoutChangingTheirPreservedFiles()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRContractMigrationTests" name="exactHistoricalIdentifiersNormalizeAndNearMissesDoNot()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRContractMigrationTests" name="unknownIdentitiesRemainRejectedByExistingDescriptorGates()" time="6.217608125" />
+    <testcase classname="RebaseCoreTests.CPRContractMigrationTests" name="unsupportedSavedValuesRemainLosslessDuringDecoding()" time="6.217312542" />
+    <testcase classname="RebaseCoreTests.CPRContractMigrationTests" name="canonicalDescriptorsRoundTripWithoutChangingFields()" time="6.21743" />
+    <testcase classname="RebaseCoreTests.NativeMapClockTests" name="mapProjectionAndExplicitConversionRemainAtomic()" time="6.221293167" />
+    <testcase classname="RebaseCoreTests.NativeMapClockTests" name="fixedDescriptorEncodingRemainsUnchanged()" time="6.221310875" />
+    <testcase classname="RebaseCoreTests.NativeMapClockTests" name="swiftClockMatchesIndependentMapOracle()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeMapClockTests" name="exactDescriptorValidationAndSerialization()" time="6.221304917" />
+    <testcase classname="RebaseCoreTests.NativeMapClockTests" name="publishedV2PackagesReplayWithoutRewriting()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRNativeAccessorGainTests" name="EqualRatePCM24ScalarSIMDAndFloat32ProjectionAgreeWithinBound()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRNativeAccessorGainTests" name="SignedZerosUnityAndEqualRateFirstFlagHaveExplicitBehavior()" time="1.796082708" />
+    <testcase classname="RebaseCoreTests.CPRNativeAccessorGainTests" name="GainErrorsPreserveBuffersAndUnsupportedSetterDoesNotResetHistory()" time="0.55430775" />
+    <testcase classname="RebaseCoreTests.CPRNativeAccessorGainTests" name="NonNearestGainEnvironmentRejectsTransactionally()" time="0.77162" />
+    <testcase classname="RebaseCoreTests.CPRNativeAccessorGainTests" name="MutableGainReadsMatchIndependentFilterHistoryAndFormatOrder()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRNativeAccessorGainTests" name="DownsamplePackedRoundtripPrecedesDestinationGainAndDoesNotClipGain()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode0DownTests" name="invalidStateBoundsPointerOrderAndAliasingAreTransactional()" time="6.053829042" />
+    <testcase classname="RebaseCoreTests.NativeRateMode0DownTests" name="nonNearestRoundingRejectsWithoutChangingStateOrEnvironment()" time="6.053652541" />
+    <testcase classname="RebaseCoreTests.NativeRateMode0DownTests" name="partitionPolicyAndReachableSingletonFailureMatchIndependentDigests()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode0DownTests" name="equalRateIsNotCopyAndZeroInputNeverFlushes()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode0DownTests" name="fusedOperationAndDifferentMonoStereoCarryAreDiscriminated()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode0DownTests" name="liveCursorPlanarBuffersAndPrerollMatchIndependentPartitionOracle()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode0DownTests" name="lateSamplesOutputDomainAndCapacityFailuresPreserveAllCallerBytes()" time="6.053794708" />
+    <testcase classname="RebaseCoreTests.NativeRateMode0DownTests" name="originalInstructionVectorsMatchEverySampleStateAndIgnoredFlush()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.InvalidClipIntervalTests" name="testSharedMediaCacheStillValidatesEveryClip()" time="6.218658916" />
+    <testcase classname="RebaseCoreTests.InvalidClipIntervalTests" name="testBoundaryIntervalLoadsAndRendersItsSelectedSamples()" time="6.218606334" />
+    <testcase classname="RebaseCoreTests.InvalidClipIntervalTests" name="testLargeFiniteSourceOffsetsRejectBeforeFrameConversion()" time="6.218604542" />
+    <testcase classname="RebaseCoreTests.InvalidClipIntervalTests" name="testLoadedSourceIntervalMustFitActualMedia()" time="6.218615958" />
+    <testcase classname="RebaseCoreTests.CPRSegmentReadPlanTests" name="signed64EndpointsAndIntegersBeyondDoublePrecisionRemainExact()" time="6.22124325" />
+    <testcase classname="RebaseCoreTests.CPRSegmentReadPlanTests" name="rawSignedRangeAndBothEndpointOverflowsAreRejected()" time="6.221202708" />
+    <testcase classname="RebaseCoreTests.CPRSegmentReadPlanTests" name="allSixPinnedAnalyticalIntervalsMatchIncludingNonzeroStartAndOffset()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSegmentReadPlanTests" name="halfOpenPositionBoundariesAreStrictAndDoNotInventPrefixSilence()" time="6.221255958" />
+    <testcase classname="RebaseCoreTests.CPRSegmentReadPlanTests" name="completeSegmentMustFitValidatedActualSourceEvenForShortRequest()" time="6.22126875" />
+    <testcase classname="RebaseCoreTests.CPRSegmentReadPlanTests" name="pinnedFactorySegmentsProjectOnlyTheirSourceFramesWithoutChangingEvents()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSegmentReadPlanTests" name="requestAndByteCountBoundsIncludePaddingAndNeverAllocate()" time="6.221267833" />
+    <testcase classname="RebaseCoreTests.ProjectStoreTests" name="testMediaDirectorySymlinkCannotRedirectImports()" time="6.221276125" />
+    <testcase classname="RebaseCoreTests.ProjectStoreTests" name="testMalformedAndEscapingMediaReferencesAreRejected()" time="6.221286666" />
+    <testcase classname="RebaseCoreTests.ProjectStoreTests" name="testInvalidSaveLeavesPreviouslySavedProjectReadable()" time="6.221242" />
+    <testcase classname="RebaseCoreTests.ProjectStoreTests" name="testSaveLoadPreservesEditsAndImportedMediaSurvivesSourceRemoval()" time="6.221254167" />
+    <testcase classname="RebaseCoreTests.AmbisonicConverterTests" name="failedLateBlockPreservesDestinationAndRemovesTemporary()" time="6.21852025" />
+    <testcase classname="RebaseCoreTests.AmbisonicConverterTests" name="outputSizePreflightRejectsOverflowBeforeProcessing()" time="6.218646291" />
+    <testcase classname="RebaseCoreTests.AmbisonicConverterTests" name="inPlaceBufferStagesAllChannelsAndBypassCopiesBits()" time="6.218601584" />
+    <testcase classname="RebaseCoreTests.AmbisonicConverterTests" name="sameFileLinksMalformedAndUnsupportedCountsAreRejected()" time="6.218564542" />
+    <testcase classname="RebaseCoreTests.AmbisonicConverterTests" name="allConfigurationsPreserveExactSamplesAndTail()" time="6.219705417" />
+    <testcase classname="RebaseCoreTests.AmbisonicConverterTests" name="successReplacesExistingOutputAndIntegerPCMConvertsToFloat32()" time="6.218591708" />
+    <testcase classname="RebaseCoreTests.CPRSourceFragmentProjectionTests" name="normalizedFragmentsShareImmutableSourceStorageWithinTheInputBudget()" time="6.218357583" />
+    <testcase classname="RebaseCoreTests.CPRSourceFragmentProjectionTests" name="distinctSourcesCannotSpoofSharedStorageIdentityToEvadeTheSampleBudget()" time="6.2224525" />
+    <testcase classname="RebaseCoreTests.CPRSourceFragmentProjectionTests" name="validSnappedEmptyFragmentsAreDistinctFromInvalidOrIncompleteReads()" time="6.218258125" />
+    <testcase classname="RebaseCoreTests.CPRSourceFragmentProjectionTests" name="repeatedFragmentsPreserveOriginalSignedZeroContextWithoutMutation()" time="6.218324833" />
+    <testcase classname="RebaseCoreTests.CPRSourceFragmentProjectionTests" name="everyFragmentProjectsFromOriginalUnsnappedOriginAndOffset()" time="6.218323625" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="malformedHeadersAndRecordBoundsRejectWithoutScanning()" time="6.05386225" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="boundedNamesAndSectionCountsAreEnforced()" time="6.219079417" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="nativeClockRequiresConsistentKnownTrackInterfaceRoles()" time="6.217344292" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="sourceAndDestinationPreflightAreBoundedAndNonDestructive()" time="6.217342833" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="realFixedClockImportPersistsCurrentProfileAndRetainsBaselineAfterExplicitConversion()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="nativeStringMarkersAndCountBoundsDoNotGuessLegacyEncoding()" time="6.217485958" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="realAudioTemplateImportsExplicitSubsetAndPreservesOriginal()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="containerRetainsExactOpaqueBytesAndUnpaddedOddBoundaries()" time="6.05385625" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="unknownArchiveIsReportedAndCannotBecomeAnInventedProject()" time="6.217590625" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="reportSchemaAndInterpretationAreValidatedIndependently()" time="6.2175735" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="fixedTempoUsesFullModeWordAndRejectsMalformedRecords()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="frozenSchemaOneReportsReplayWithoutRewritingEditedProjects()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="oversizedReportCannotPublishAnUnopenableProject()" time="6.219913917" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="zeroRecordTempoCannotBecomeRecoveredFixedTempo()" time="6.217588167" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="persistedNativeClockMustMatchReplayedOriginalBeforeLoadOrSave()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="classRegistryKeysDoNotNormalizeUserStringBOMs()" time="6.217503542" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="realShippedTemplateContainersMatchPinnedInventory()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="historicalReportVerifiesPreservedBytesAndRejectsRedirection()" time="6.217574375" />
+    <testcase classname="RebaseCoreTests.CPRProjectTests" name="signatureRecoveryPreservesV2MeaningAndSurvivesCurrentProfileReopen()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode1Tests" name="AliasesBadRatesAndRoundingModesCannotSilentlyChangeTheAlgorithm()" time="0.771622" />
+    <testcase classname="RebaseCoreTests.NativeRateMode1Tests" name="CompleteCoefficientTablesMatchIndependentInstructionGenerator()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode1Tests" name="PreflightFailuresLeaveStateOutputAndCountUnchanged()" time="1.796089083" />
+    <testcase classname="RebaseCoreTests.NativeRateMode1Tests" name="EveryReturnedSampleAndHistoryMatchesIndependentFractionOracle()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeRateMode1Tests" name="NativeAllocationBoundaryAndRepeatedEOFRejectTransactionally()" time="0.554313833" />
+    <testcase classname="RebaseCoreTests.NativeRateMode1Tests" name="FullSourceCountQueriesMatchIndependentLedgerWithoutMutatingState()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRTrackContributorArchiveTests" name="countExtentVersionAndDepthBoundsFailBeforeReturningAnyInventory()" time="6.221270875" />
+    <testcase classname="RebaseCoreTests.CPRTrackContributorArchiveTests" name="scalarAndInterfaceDatumsKeepBitsWithoutInventingTimingAuthority()" time="6.221290417" />
+    <testcase classname="RebaseCoreTests.CPRTrackContributorArchiveTests" name="unknownBodyCannotCreateHiddenTracksAndFutureTrackVersionStaysUnknown()" time="6.221284958" />
+    <testcase classname="RebaseCoreTests.CPRTrackContributorArchiveTests" name="allTenFactoryInventoriesMatchThePinnedIndependentCountedProbe()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRTrackContributorArchiveTests" name="nullForwardAndCyclicOwnershipCannotYieldPartialInventory()" time="6.221299292" />
+    <testcase classname="RebaseCoreTests.CPRTrackContributorArchiveTests" name="mixedChildrenKeepExactLocalAndTraversalOrderWithoutPromotion()" time="6.221308291" />
+    <testcase classname="RebaseCoreTests.CPRTrackContributorArchiveTests" name="repeatedCountedOwnershipAndSharedNodesAreRejected()" time="6.221287958" />
+    <testcase classname="RebaseCoreTests.CPRSourceEventPlaybackTests" name="SourceRateAndExactPCMBypassProjectMixerWithoutPromotingTheEvent()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceEventPlaybackTests" name="EveryCopiedSeekSampleMatchesIndependentPCM24Oracle()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceEventPlaybackTests" name="NativeMode2MatchesIndependentFullSourceCountsAndPreservesCPRCustody()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceEventPlaybackTests" name="NativeMode1MatchesIndependentFullSourceCountsAndPreservesCPRCustody()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceEventPlaybackTests" name="DownsampledSourceEventMatchesIndependentBlockCountsAndPreservesProvenance()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceEventPlaybackTests" name="SchedulingClampsBeforeConversionAndDefinesHalfOpenEndpoints()" time="0.057897875" />
+    <testcase classname="RebaseCoreTests.CPRSourceEventPlaybackTests" name="ChangedRetainedIdentityPlacementAndSelectionCannotReuseAdmission()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceEventPlaybackTests" name="AVAudioEngineOfflineUnityRoutePreservesThePreparedFinalFrames()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceEventPlaybackTests" name="FreshPreparationRejectsChangedMediaSourceAndReportButPreservesSnapshot()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRSourceEventPlaybackTests" name="NativeMode0StreamsAtProjectRateAndRetainsSourceBarriers()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeCallbackAdapterTests" name="AliasesBadRangesAndRoundingRejectBeforeAnyPublication()" time="1.796043209" />
+    <testcase classname="RebaseCoreTests.NativeCallbackAdapterTests" name="SentinelSelectionAlternatingRoundingAndPrefixOrderingMatchExactBits()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeCallbackAdapterTests" name="FusedWindowAndSeparateReciprocalOffsetMatchIndependentIEEEValues()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeCallbackAdapterTests" name="AdmissionUsesBitZeroButPrefixUsesWholeNonzeroTransportResult()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.ProjectEditingTests" name="moveTrimSplitUndoRedoPreserveSourceCoordinatesAndSelection()" time="6.2213605" />
+    <testcase classname="RebaseCoreTests.ProjectEditingTests" name="historyBoundAndResetDoNotLeakCoalescingAcrossDocuments()" time="6.221357166" />
+    <testcase classname="RebaseCoreTests.ProjectEditingTests" name="musicalMovesSplitsAndTempoEditsRetainAnchorsWithoutStretchingAudio()" time="6.221371292" />
+    <testcase classname="RebaseCoreTests.ProjectEditingTests" name="coalescingUsesSameControlAndRollingHalfSecondWindow()" time="6.221332916" />
+    <testcase classname="RebaseCoreTests.ProjectEditingTests" name="deletingUnresolvedEventsRetainsSharedAttachmentUntilItsLastReference()" time="6.22131225" />
+    <testcase classname="RebaseCoreTests.ProjectEditingTests" name="invalidEditsLeaveHistoryRedoAndSelectionUntouched()" time="6.22136975" />
+    <testcase classname="RebaseCoreTests.ProjectEditingTests" name="trackSelectionAndDeleteReconcileWithoutChoosingAnotherTrack()" time="6.221339375" />
+    <testcase classname="RebaseCoreTests.ProjectEditingTests" name="mixerAndAutomationCommandsKeepControlDomainsAndLaneIdentity()" time="6.221390334" />
+    <testcase classname="RebaseCoreTests.ProjectEditingTests" name="nativeTimingRequiresExplicitConversionAndNoopMapsDoNotAddHistory()" time="6.221375584" />
+    <testcase classname="RebaseCoreTests.ProjectEditingTests" name="backwardClockStartsANewUndoGroup()" time="6.221375208" />
+    <testcase classname="RebaseCoreTests.NativeTimelineReaderTests" name="IntegerWindowsCoverGapsInclusiveSelectionAndHalfOpenReads()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeTimelineReaderTests" name="MappedPartitionsRoundLengthSeparatelyAndRespectSilenceBit()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeTimelineReaderTests" name="UnsupportedArithmeticBoundsAndAliasesPreserveCallerOutput()" time="0.003480416" />
+    <testcase classname="RebaseCoreTests.NativeTimelineReaderTests" name="RetryRequiresExactStartAndOccursOnlyOnceWithoutReinterpretingErrors()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.NativeTimelineReaderTests" name="NarrowedReciprocalFusedQuantizationMatchesIndependentRounding()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.AudioValidityTests" name="testFiniteClipsWhoseOverlapOverflowsAreRejected()" time="6.218697875" />
+    <testcase classname="RebaseCoreTests.AudioValidityTests" name="testFiniteSourceWhoseGainOverflowsIsRejected()" time="6.218757709" />
+    <testcase classname="RebaseCoreTests.AudioValidityTests" name="testNonfiniteDecodedSamplesAreRejectedWithoutReplacingExistingExport()" time="6.218665416" />
+    <testcase classname="RebaseCoreTests.CPRSignatureRecoveryTests" name="contradictoryCompactAndTypedStateIsNotPromotedAcrossUnknownCompatibility()" time="6.221234458" />
+    <testcase classname="RebaseCoreTests.CPRSignatureRecoveryTests" name="nullCounterpartsRemainExplicitWithoutInventingTheMissingClock()" time="6.22127525" />
+    <testcase classname="RebaseCoreTests.CPRSignatureRecoveryTests" name="missingPairedRoleCannotPromoteAnUnrelatedSignature()" time="6.221201916" />
+    <testcase classname="RebaseCoreTests.CPRSignatureRecoveryTests" name="explicitOriginAndExactIntegerTypesAreRequired()" time="6.22120425" />
+    <testcase classname="RebaseCoreTests.CPRSignatureRecoveryTests" name="unknownOrCompoundSignatureExtrasAreNotSilentlyRecovered()" time="6.221286542" />
+    <testcase classname="RebaseCoreTests.CPRSignatureRecoveryTests" name="duplicateKeysAndMalformedExtentsAreNeverDefaults()" time="6.221192084" />
+    <testcase classname="RebaseCoreTests.CPRSignatureRecoveryTests" name="noTypedContainerOrWrongClassCannotBecomeCompactRecovery()" time="6.221233541" />
+    <testcase classname="RebaseCoreTests.CPRSignatureRecoveryTests" name="differentConcreteTrackPairsCannotBeMergedAndNonTrackObjectsDoNotSupplyRoles()" time="6.221253709" />
+    <testcase classname="RebaseCoreTests.CPRSignatureRecoveryTests" name="matchingRepresentationsRecoverAndNamedBarIgnoresPosition()" time="6.221256209" />
+    <testcase classname="RebaseCoreTests.CPRSignatureRecoveryTests" name="nullAlternateVariationIsAcceptedButOtherStatesAreExplicitlyGated()" time="6.221203625" />
+    <testcase classname="RebaseCoreTests.CPRSignatureRecoveryTests" name="allTenPinnedFactorySignaturesRecoverWithoutExecutingTheSource()" >
+      <skipped>Requires external private fixtures; set REBASE_RESEARCH_ROOT to an absolute directory outside this checkout.</skipped>
+    </testcase>
+    <testcase classname="RebaseCoreTests.CPRRateConvertedStreamTests" name="LargeUpsamplingBlocksAreSplitAcrossTheNativeRingCapacity()" time="0.771651166" />
+    <testcase classname="RebaseCoreTests.CPRRateConvertedStreamTests" name="SeekPrerollAndPendingSuffixPreserveContinuousPCM()" time="6.218695292" />
+    <testcase classname="RebaseCoreTests.CPRRateConvertedStreamTests" name="ConvertedBlocksPassThroughActualOfflinePlayerWithoutExtraTail()" time="1.796473709" />
+    <testcase classname="RebaseCoreTests.CPRRateConvertedStreamTests" name="EventGainFollowsConversionAndRejectsInvalidSamplesTransactionally()" time="1.110670083" />
+    <testcase classname="RebaseCoreTests.CPRRateConvertedStreamTests" name="UnsupportedRatesAndSampleDomainsStopWithoutSubstitutingAnotherConverter()" time="0.557241541" />
+  </testsuite>
+</testsuites>
