@@ -19,6 +19,9 @@ try:
         raise ValueError("Expected exactly Windows/macOS Debug and Release render records")
     if any(row.get("matches_predeclared_lock") is not True for row in records):
         raise ValueError("Every render must match the predeclared example lock")
+    if any(row.get("regular_file") is not True or row.get("repeat_render_refused_without_modification") is not True
+           for row in records):
+        raise ValueError("Every render must verify regular-file publication and preservation on overwrite refusal")
     comparison_fields = ("frames", "channels", "sample_rate", "bits_per_sample", "pcm_sha256", "wav_sha256", "wav_bytes", "commit", "expected_render_lock_sha256")
     reference = records[0]
     for record in records[1:]:

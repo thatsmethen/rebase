@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import stat
 import subprocess
 import struct
 import sys
@@ -45,7 +46,14 @@ def main():
     def clean(value):
         return value.replace(str(root), "<workspace>").replace(str(Path.home()), "<home>")
 
-    def run(command, name, cwd=app):
+    def sanitize_xml():
+        path = out / "tests.xml"
+        if path.is_file():
+            value = path.read_text(encoding="utf-8")
+            value = value.replace(str(root), "&lt;workspace&gt;").replace(str(Path.home()), "&lt;home&gt;")
+            path.write_text(value, encoding="utf-8")
+
+    def run(command, name, cwd=app, expected_exit_codes=(0,)):
         start = time.monotonic()
         result = subprocess.run(command, cwd=cwd, env=env, stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT, text=True, errors="replace")
@@ -56,7 +64,7 @@ def main():
                                    "exit_code": result.returncode,
                                    "elapsed_seconds": round(time.monotonic() - start, 3),
                                    "log": f"{name}.log"})
-        if result.returncode:
+        if result.returncode not in expected_exit_codes:
             raise RuntimeError(f"{name} exited with status {result.returncode}")
         return output
 
@@ -79,6 +87,19 @@ def main():
             if args.kind == "swift":
                 command = ["swift", "test", "--scratch-path", str(build), "-c", args.configuration.lower(),
                            "--filter", "RebasePortableTests", "--xunit-output", str(out / "tests.xml")]
+                if sys.platform == "darwin":
+                    developer = run(["xcode-select", "-p"], "developer-directory").strip()
+                    # Match test-app.sh only for a local Command Line Tools
+                    # installation. Full-Xcode CI uses its ordinary toolchain.
+                    if developer.endswith("/CommandLineTools"):
+                        frameworks = developer + "/Library/Developer/Frameworks"
+                        command += ["--disable-xctest", "--enable-swift-testing",
+                                    "-Xswiftc", "-F", "-Xswiftc", frameworks,
+                                    "-Xswiftc", "-Xfrontend", "-Xswiftc", "-disable-cross-import-overlays",
+                                    "-Xswiftc", "-plugin-path", "-Xswiftc",
+                                    developer + "/usr/lib/swift/host/plugins/testing",
+                                    "-Xlinker", "-rpath", "-Xlinker", frameworks]
+                        report["command_line_tools_testing_support"] = True
             else:
                 if sys.platform != "darwin":
                     raise RuntimeError("The macos-app lane requires macOS")
@@ -96,11 +117,18 @@ def main():
                 bin_path = bin_path.replace("<workspace>", str(root)).replace("<home>", str(Path.home()))
                 executable = Path(bin_path) / ("rebase-inspect.exe" if os.name == "nt" else "rebase-inspect")
                 wav_path = out / "example-render.wav"
-                if wav_path.exists():
+                if wav_path.exists() or wav_path.is_symlink():
                     raise RuntimeError("Use a fresh evidence directory for the example render")
                 cli = json.loads(run([str(executable), "render", str(app / "Examples/Rebase Preview.rebaseproj"),
                                       str(wav_path)], "example-render"))
+                if not stat.S_ISREG(wav_path.lstat().st_mode) or wav_path.is_symlink():
+                    raise RuntimeError("Rendered WAV must be a regular file, not a symbolic link")
                 wav = wav_path.read_bytes()
+                run([str(executable), "render", str(app / "Examples/Rebase Preview.rebaseproj"),
+                     str(wav_path)], "example-overwrite-refusal", expected_exit_codes=(1,))
+                if (not stat.S_ISREG(wav_path.lstat().st_mode) or wav_path.is_symlink()
+                        or wav_path.read_bytes() != wav):
+                    raise RuntimeError("Refused repeat render must preserve the existing regular WAV byte for byte")
                 if wav[:4] != b"RIFF" or wav[8:12] != b"WAVE" or struct.unpack_from("<I", wav, 4)[0] + 8 != len(wav):
                     raise RuntimeError("Rendered WAV has an invalid RIFF envelope")
                 chunks = {}
@@ -125,7 +153,8 @@ def main():
                           "configuration": args.configuration, "commit": os.environ.get("GITHUB_SHA"),
                           "frames": len(pcm) // block_align, "channels": channels, "sample_rate": sample_rate,
                           "bits_per_sample": bits, "pcm_sha256": hashlib.sha256(pcm).hexdigest(),
-                          "wav_sha256": hashlib.sha256(wav).hexdigest(), "wav_bytes": len(wav), "cli": cli}
+                          "wav_sha256": hashlib.sha256(wav).hexdigest(), "wav_bytes": len(wav), "cli": cli,
+                          "regular_file": True, "repeat_render_refused_without_modification": True}
                 lock_path = app / "scripts/example-render-lock.json"
                 lock = json.loads(lock_path.read_text())
                 differences = [key for key in ("frames", "channels", "sample_rate", "bits_per_sample", "pcm_sha256", "wav_sha256")
@@ -137,7 +166,7 @@ def main():
                 if differences:
                     raise RuntimeError("Rendered example differs from its predeclared lock: " + ", ".join(differences))
         xml_path = out / "tests.xml"
-        xml_path.write_text(clean(xml_path.read_text()), encoding="utf-8")
+        sanitize_xml()
         tree = ET.parse(xml_path)
         cases = list(tree.iter("testcase"))
         skipped = sum(case.find("skipped") is not None for case in cases)
@@ -150,6 +179,7 @@ def main():
         report["error"] = clean(str(error))
         print(report["error"], file=sys.stderr)
     finally:
+        sanitize_xml()
         if args.kind == "swift" and original_resolution is not None:
             resolved.write_bytes(original_resolution)
             report["application_dependency_lock_preserved"] = True

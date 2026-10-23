@@ -47,8 +47,8 @@ jobs:
         run: |
           set -euo pipefail
           test "$(uname -m)" = arm64
-          test -d /Applications/Xcode_16.4.app/Contents/Developer
-          echo 'DEVELOPER_DIR=/Applications/Xcode_16.4.app/Contents/Developer' >> "$GITHUB_ENV"
+          test -d /Applications/Xcode_26.1.1.app/Contents/Developer
+          echo 'DEVELOPER_DIR=/Applications/Xcode_26.1.1.app/Contents/Developer' >> "$GITHUB_ENV"
       - name: Configure Windows C toolchain
         if: runner.os == 'Windows'
         uses: compnerd/gha-setup-vsdevenv@f1ba60d553a3216ce1b89abe0201213536bc7557 # v6
@@ -111,6 +111,45 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
 
+  windows-native-audio:
+    name: Native audio foundation / Windows x64 / ${{ matrix.configuration }}
+    runs-on: windows-2025
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+      - name: Preserve source bytes
+        shell: pwsh
+        run: |
+          git config --global core.autocrlf false
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+        with:
+          python-version: '3.10.11'
+      - name: Install pinned build tools
+        run: python -m pip install --disable-pip-version-check cmake==3.31.6 ninja==1.11.1.4
+      - uses: compnerd/gha-setup-vsdevenv@f1ba60d553a3216ce1b89abe0201213536bc7557 # v6
+        with:
+          arch: amd64
+      - name: Build adapter and run read-only checks
+        run: python Application/scripts/run-windows-native-audio-ci.py --configuration ${{ matrix.configuration }} --output "${{ runner.temp }}/rebase-native-audio"
+      - name: Upload native audio foundation evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: conformance-native-audio-windows-x64-${{ matrix.configuration }}
+          path: |
+            ${{ runner.temp }}/rebase-native-audio/*.json
+            ${{ runner.temp }}/rebase-native-audio/*.log
+            ${{ runner.temp }}/rebase-native-audio/*.xml
+          retention-days: 7
+          if-no-files-found: warn
+
   compare-example-render:
     name: Compare Windows and macOS example PCM
     needs: portable
@@ -156,8 +195,8 @@ jobs:
         run: |
           set -euo pipefail
           test "$(uname -m)" = arm64
-          test -d /Applications/Xcode_16.4.app/Contents/Developer
-          echo 'DEVELOPER_DIR=/Applications/Xcode_16.4.app/Contents/Developer' >> "$GITHUB_ENV"
+          test -d /Applications/Xcode_26.1.1.app/Contents/Developer
+          echo 'DEVELOPER_DIR=/Applications/Xcode_26.1.1.app/Contents/Developer' >> "$GITHUB_ENV"
       - name: Run existing public tests
         run: python Application/scripts/run-portable-ci.py macos-app --configuration Debug --output "${{ runner.temp }}/rebase-app-conformance"
       - name: Upload application conformance evidence

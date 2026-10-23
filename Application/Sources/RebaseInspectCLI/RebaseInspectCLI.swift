@@ -115,12 +115,55 @@ struct RebaseInspectCLI {
         // The completed file is published in one no-overwrite operation. A
         // concurrent creator wins safely, and write failures expose no WAV.
         // Filesystems without hard-link support fail instead of weakening this.
+        #if os(Windows)
+        // Foundation 6.4.1 linkItem creates a symbolic link on Windows. Calling
+        // the native hard-link API keeps output valid after staging is removed.
+        let sourcePath = try windowsPath(staging)
+        let destinationPath = try windowsPath(output)
+        let error: DWORD = destinationPath.withUnsafeBufferPointer { destination in
+            sourcePath.withUnsafeBufferPointer { source in
+                CreateHardLinkW(destination.baseAddress, source.baseAddress, nil) ? 0 : GetLastError()
+            }
+        }
+        guard error == 0 else { throw InspectionError.publication(error) }
+        #else
         try manager.linkItem(at: staging, to: output)
+        #endif
+        do {
+            let values = try output.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
+            guard values.isRegularFile == true, values.isSymbolicLink == false, values.fileSize == bytes.count else {
+                throw InspectionError.publicationVerification
+            }
+            let file = try FileHandle(forReadingFrom: output)
+            defer { try? file.close() }
+            guard try file.seekToEnd() == UInt64(bytes.count) else { throw InspectionError.publicationVerification }
+        } catch {
+            // Publication succeeded above, so this link belongs to this run.
+            // A failed no-overwrite call never enters this cleanup path.
+            try? manager.removeItem(at: output)
+            throw error
+        }
         return try encoder.encode(RenderSummary(name: project.name, frames: pcm.frameCount, channels: pcm.channels.count,
             sampleRate: pcm.sampleRate, wavBytes: bytes.count,
             sampleWordFingerprint: fingerprint(pcm), peak: pcm.channels.flatMap { $0 }.reduce(Float(0)) { max($0, abs($1)) },
             validation: "Shared application mixer over checked WAV sources. No device playback or native CPR compatibility is claimed."))
     }
+
+    #if os(Windows)
+    private static func windowsPath(_ url: URL) throws -> [WCHAR] {
+        // Foundation's public filesystem conversion handles RFC8089 drive
+        // prefixes and UNC separators before encoding the Win32 UTF-16 path.
+        try url.withUnsafeFileSystemRepresentation { representation in
+            guard let representation else { throw InspectionError.destination }
+            var path = String(cString: representation)
+            if !path.hasPrefix("\\\\?\\") {
+                if path.hasPrefix("\\\\") { path = "\\\\?\\UNC\\" + path.dropFirst(2) }
+                else { path = "\\\\?\\" + path }
+            }
+            return Array(path.utf16) + [0]
+        }
+    }
+    #endif
 
     private static func isWithin(_ url: URL, root: URL) -> Bool {
         #if os(Windows)
@@ -169,12 +212,16 @@ struct RebaseInspectCLI {
 
     private enum InspectionError: Error, LocalizedError {
         case usage, oversized, nativeProject, destination
+        case publication(UInt32)
+        case publicationVerification
         var errorDescription: String? {
             switch self {
             case .usage: "Usage: rebase-inspect project PROJECT.rebaseproj | cpr SOURCE.cpr | render PROJECT.rebaseproj OUTPUT.wav"
             case .oversized: "Project inspection accepts manifests up to 8 MiB."
             case .nativeProject: "Portable rendering accepts authored projects only; native clocks, CPR events and media associations require the original provenance store."
             case .destination: "Choose a new .wav file outside the source project package. Existing files are never replaced."
+            case .publication(let code): "The completed WAV could not be published (Windows error \(code))."
+            case .publicationVerification: "The published WAV did not pass its file and size checks."
             }
         }
     }

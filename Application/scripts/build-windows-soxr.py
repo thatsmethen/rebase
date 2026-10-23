@@ -73,10 +73,12 @@ def main():
                    "WITH_DEV_TRACE": "OFF", "WITH_DEV_GPROF": "OFF"}
         report["options"] = options
         report["optimization"] = "-O3 -DNDEBUG; fast math disabled; FP contraction disabled"
+        report["msvc_runtime"] = "MultiThreadedDLL (CMP0091 NEW)"
         # Upstream adds Unix linker '-s' to Release; select another configuration
         # with the exact application optimization flags, without patching source.
         command = ["cmake", "-S", str(source), "-B", str(build), "-G", "Ninja",
                    "-DCMAKE_C_COMPILER=clang", "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+                   "-DCMAKE_POLICY_DEFAULT_CMP0091=NEW", "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL",
                    "-DCMAKE_C_FLAGS=-fno-fast-math -ffp-contract=off",
                    "-DCMAKE_C_FLAGS_RELWITHDEBINFO=-O3 -DNDEBUG",
                    f"-DCMAKE_INSTALL_PREFIX={install}", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"]
@@ -93,6 +95,8 @@ def main():
         compile_commands = json.loads((build / "compile_commands.json").read_text())
         if not compile_commands or any("-fno-fast-math" not in row["command"] or "-ffp-contract=off" not in row["command"] for row in compile_commands):
             raise RuntimeError("Strict floating-point flags missing from SoXR compilation")
+        if any("--dependent-lib=msvcrt" not in row["command"] for row in compile_commands):
+            raise RuntimeError("Dynamic MSVC runtime selection missing from SoXR compilation")
         report["configured_features"] = macros
         report["compile_command_count"] = len(compile_commands)
         run(["cmake", "--build", str(build), "--parallel", "2"], "build")
@@ -102,7 +106,7 @@ def main():
         if not dll.is_file() or not library.is_file():
             raise RuntimeError("Expected SoXR DLL and import library were not installed")
         probe = install / "bin/rebase-soxr-probe.exe"
-        run(["clang", "-std=c11", "-O2", "-fno-fast-math", "-ffp-contract=off",
+        run(["clang", "-std=c11", "-O2", "-fno-fast-math", "-ffp-contract=off", "-fms-runtime-lib=dll",
              "-DSOXR_DLL", "-I", str(install / "include"),
              str(app / "scripts/windows-soxr-probe.c"), str(library), "-o", str(probe)], "probe-build")
         probe_result = json.loads(run([str(probe)], "probe"))

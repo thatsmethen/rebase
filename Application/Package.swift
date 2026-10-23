@@ -19,7 +19,7 @@ let portableSources = [
     "CPRProject.swift", "CPRProjectAudioSetup.swift", "CPRRecoveryV1.swift",
     "CPRRecoveryV2.swift", "CPRRecoveryV3.swift", "CPRRecoveryV4.swift", "CPRRecoveryV5.swift",
     "CPRSegmentReadPlan.swift", "CPRSignatureRecovery.swift", "CPRTrackContributorArchive.swift",
-    "MusicalTime.swift", "NativeTempoClock.swift", "PCMRendering.swift", "PortableSHA256.swift", "Project.swift",
+    "MusicalTime.swift", "NativeTempoClock.swift", "PCMRendering.swift", "PortableSHA256.swift", "Project.swift", "ProjectEditing.swift",
     "UnresolvedCPRAudioEvent.swift", "WAVPCMSource.swift"
 ]
 let coreDirectory = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
@@ -35,7 +35,9 @@ let portableTargets: [Target] = [
             exclude: portableExcludes, sources: portableSources,
             swiftSettings: [.define("REBASE_PORTABLE")]),
     .executableTarget(name: "RebaseInspectCLI", dependencies: ["RebasePortable"]),
-    .testTarget(name: "RebasePortableTests", dependencies: ["RebasePortable", "RebaseTimingDSP"])
+    .testTarget(name: "RebasePortableTests", dependencies: ["RebasePortable", "RebaseTimingDSP"],
+                path: "Tests", exclude: ["RebaseCoreTests", "PortableDSP", "run-tests.sh", "README.md"],
+                sources: ["RebasePortableTests", "SharedEditingTests"])
 ]
 
 let package = Package(
@@ -64,7 +66,9 @@ let package = Package(
         ]),
         .target(name: "RebaseCore", dependencies: ["ZIPFoundation", "RebaseAmbiDSP", "RebaseTimingDSP", "RebaseSoXR"]),
         .executableTarget(name: "Rebase", dependencies: ["RebaseCore", "RebaseDSP"]),
-        .testTarget(name: "RebaseCoreTests", dependencies: ["RebaseCore", "RebaseDSP"])
+        .testTarget(name: "RebaseCoreTests", dependencies: ["RebaseCore", "RebaseDSP"],
+                    path: "Tests", exclude: ["RebasePortableTests", "PortableDSP", "run-tests.sh", "README.md"],
+                    sources: ["RebaseCoreTests", "SharedEditingTests"])
     ],
     swiftLanguageModes: [.v5]
 )

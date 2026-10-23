@@ -1,0 +1,62 @@
+{
+  "schema": "rebase.shared-editing-local-observation.v1",
+  "date": "2026-10-23",
+  "base_commit": "17707dc3c11879973eb115cd7dfbc1dacd968cb2",
+  "scope": "Local macOS reconstructed application checks; no Windows GUI or audio endpoint acceptance and no proprietary target execution.",
+  "source_files": [
+    {
+      "path": "Application/Sources/RebaseCore/ProjectEditing.swift",
+      "sha256": "062ec74d85b2537db5cb3d5ab8c747b870a21939ef2c640bf9b98a69f8ceac4b"
+    },
+    {
+      "path": "Application/Sources/Rebase/StudioSession.swift",
+      "sha256": "b9db235a6061e4934c2cc55875ac34d6847576393ca38b6230fc6bd1b219d0b7"
+    },
+    {
+      "path": "Application/Tests/SharedEditingTests/ProjectEditingTests.swift",
+      "sha256": "ad79578fb49545f3c8e298847338554d6b186a8ee795b5575e3b001b18982936"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/PCMRendering.swift",
+      "sha256": "d9af61a6a3de979c8168fbd048a93fff9e50bca3627ab667b0373e1aee86cf7c"
+    }
+  ],
+  "automated": {
+    "full_mac_suite": {
+      "tests": 344,
+      "suites": 54,
+      "failures": 0,
+      "includes_private_research_fixtures": true,
+      "raw_fixture_data_published": false
+    },
+    "portable_debug": {
+      "tests": 23,
+      "suites": 3,
+      "failures": 0,
+      "example_pcm_sha256": "f51a6801100ba715e589fcd9d99be2c0c81f6911972548a4c64fff73ff60c8d4",
+      "regular_file_publication": true,
+      "overwrite_refused_without_modification": true
+    }
+  },
+  "mac_gui": {
+    "method": "Native application accessibility observations and actions",
+    "application_executable_sha256": "07942080792488961a3d3d6122ce3b3d1da4bc3f054647beba1786005ef6b203",
+    "observations": [
+      "Bundled example opened with four tracks and eleven clips at 96 BPM.",
+      "Move Opening from 0 to 0.1 seconds, undo to 0, redo to 0.1.",
+      "Trim Opening from 5 to 4.9 seconds, undo to 5.",
+      "Play advanced the displayed playhead with nonzero output meters; pause retained position and zeroed meters.",
+      "Split Pocket at 8.746 seconds into 3.746- and 1.254-second clips; right source offset 8.746; undo and redo restored the respective states.",
+      "Delete the right split clip and undo restored it.",
+      "Change Rhythm gain from -5 to -4.5 dB and undo restored -5 dB.",
+      "Reopen the example with dirty edits: discard prompt appeared; discard restored four tracks, eleven clips, original timing/gain, zero playhead and disabled undo/redo."
+    ],
+    "physical_output_measurement": false
+  },
+  "target_execution_count": 0,
+  "limitations": [
+    "These observations do not establish full Windows parity or proprietary application equivalence.",
+    "Private fixture tests are local observations; public CI uses only public controls.",
+    "The Windows native backend and Swift output fixes require a separate recorded Windows run."
+  ]
+}

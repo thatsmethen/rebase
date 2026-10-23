@@ -25,22 +25,23 @@ final class StudioSession: ObservableObject {
     @Published var status = "Ready"
     @Published var errorMessage: String?
     @Published var waveformPeaks: [UUID: [Float]] = [:]
-    @Published private var undoStack: [Project] = []
-    @Published private var redoStack: [Project] = []
+    @Published private var editHistory = ProjectEditHistory()
     private var projectRoot: URL!
     private var isScratch = true
     private let engine = AudioTransportEngine()
     private var timer: Timer?
     private var refreshTask: DispatchWorkItem?
-    private var lastEditKey: String?
-    private var lastEditTime = Date.distantPast
     private enum CPRSourceAction { case render, audition(CPRSourceEventPlaybackMode) }
     private var sourceInspectionContext: (eventID: UUID, project: Project, root: URL)?
     private var pendingCPRSourceAction: (action: CPRSourceAction, eventID: UUID, project: Project, root: URL)?
     private var sourceAuditionContext: (project: Project, root: URL)?
 
-    var canUndo: Bool { !undoStack.isEmpty }
-    var canRedo: Bool { !redoStack.isEmpty }
+    var canUndo: Bool { editHistory.canUndo }
+    var canRedo: Bool { editHistory.canRedo }
+    private var selection: ProjectSelection {
+        get { ProjectSelection(trackID: selectedTrackID, clipID: selectedClipID) }
+        set { selectedTrackID = newValue.trackID; selectedClipID = newValue.clipID }
+    }
     var selectedTrack: Track? { project.tracks.first { $0.id == selectedTrackID } }
     var selectedClip: Clip? { project.tracks.flatMap(\.clips).first { $0.id == selectedClipID } }
     var selectedUnresolvedEvent: UnresolvedCPRAudioEvent? { project.unresolvedAudioEvents.first { $0.id == selectedClipID } }
@@ -86,7 +87,7 @@ final class StudioSession: ObservableObject {
             isDirty = false
             cprCompatibility = nil
             selectedClipID = nil; selectedTrackID = nil
-            waveformPeaks = [:]; undoStack = []; redoStack = []
+            waveformPeaks = [:]; editHistory.reset()
             status = "Ready — import audio to begin"
         } catch { show(error) }
     }
@@ -144,7 +145,7 @@ final class StudioSession: ObservableObject {
         project = loaded; projectRoot = root
         cprCompatibility = compatibility
         isScratch = asScratch; isDirty = false
-        undoStack = []; redoStack = []; waveformPeaks = [:]
+        editHistory.reset(); waveformPeaks = [:]
         selectedTrackID = loaded.tracks.first?.id
         selectedClipID = loaded.tracks.first?.clips.first?.id ?? loaded.tracks.first?.unresolvedAudioEvents.first?.id
         rebuildWaveforms()
@@ -251,26 +252,17 @@ final class StudioSession: ObservableObject {
 
     func selectClip(_ id: UUID?) {
         if let info = sourceEventPlaybackInfo, id != info.eventID { exitSourceEventAudition() }
-        selectedClipID = id
-        if let id, let t = project.tracks.first(where: {
-            $0.clips.contains { $0.id == id } || $0.unresolvedAudioEvents.contains { $0.id == id }
-        }) { selectedTrackID = t.id }
+        selection = selection.selectingClip(id, in: project)
     }
     func selectTrack(_ id: UUID) {
         if let info = sourceEventPlaybackInfo,
            !project.tracks.contains(where: { $0.id == id && $0.unresolvedAudioEvents.contains(where: { $0.id == info.eventID }) }) {
             exitSourceEventAudition()
         }
-        selectedTrackID = id
-        guard let track = selectedTrack else { selectedClipID = nil; return }
-        if !track.clips.contains(where: { $0.id == selectedClipID }),
-           !track.unresolvedAudioEvents.contains(where: { $0.id == selectedClipID }) {
-            selectedClipID = track.clips.first?.id ?? track.unresolvedAudioEvents.first?.id
-        }
+        selection = selection.selectingTrack(id, in: project)
     }
     private func reconcileSelection() {
-        if !project.tracks.contains(where: { $0.id == selectedTrackID }) { selectedTrackID = project.tracks.first?.id }
-        if let id = selectedTrackID { selectTrack(id) } else { selectedClipID = nil }
+        selection = selection.reconciled(in: project)
     }
 
     func togglePlayback() {
@@ -370,8 +362,7 @@ final class StudioSession: ObservableObject {
         guard let clip = project.tracks.flatMap(\.clips).first(where: { $0.id == id }) else { return }
         do {
             let time = try snappedTime(max(0, position), relativeTo: gridRelative ? clip.position : nil)
-            let beat = clip.timeBase == .musical ? try project.tempoMap.beat(atSeconds: time) : nil
-            editClip(id) { $0.position = time; $0.musicalPosition = beat }
+            try applyEdit(.moveClip(id, position: time))
         } catch { show(error) }
     }
     func trimClip(_ id: UUID, duration: Double) {
@@ -380,28 +371,14 @@ final class StudioSession: ObservableObject {
             let file = try AVAudioFile(forReading: projectRoot.appendingPathComponent(clip.mediaPath))
             let remaining = Double(file.length) / file.processingFormat.sampleRate - clip.sourceOffset
             let snappedEnd = try snappedTime(max(clip.position, clip.position + duration))
-            editClip(id) { $0.duration = min(remaining, max(1 / project.sampleRate, snappedEnd - clip.position)) }
-            if let updated = selectedClip, updated.id == id { waveformPeaks[id] = peaks(for: updated) }
+            try applyEdit(.trimClip(id, end: snappedEnd, availableSourceDuration: remaining))
         } catch { show(error) }
     }
     func splitSelected() {
         guard let id = selectedClipID else { return }
-        for t in project.tracks.indices {
-            guard let c = project.tracks[t].clips.firstIndex(where: { $0.id == id }) else { continue }
-            let old = project.tracks[t].clips[c]
-            let offset = playhead - old.position
-            guard offset > 1 / project.sampleRate, offset < old.duration - 1 / project.sampleRate else {
-                status = "Place the playhead inside the selected clip to split"; return
-            }
-            remember()
-            var right = old; right.id = UUID(); right.position = playhead; right.sourceOffset += offset; right.duration -= offset
-            if right.timeBase == .musical { right.musicalPosition = try? project.tempoMap.beat(atSeconds: playhead) }
-            project.tracks[t].clips[c].duration = offset
-            project.tracks[t].clips.insert(right, at: c + 1)
-            waveformPeaks[id] = peaks(for: project.tracks[t].clips[c]); waveformPeaks[right.id] = peaks(for: right)
-            selectedClipID = right.id
-            changed(); return
-        }
+        do { try applyEdit(.splitClip(id, at: playhead, newClipID: UUID())) }
+        catch ProjectEditingError.splitPosition { status = "Place the playhead inside the selected clip to split" }
+        catch { show(error) }
     }
     func attachSelectedCPRMedia() {
         guard let event = selectedUnresolvedEvent, projectRoot != nil else { return }
@@ -482,36 +459,31 @@ final class StudioSession: ObservableObject {
     func deleteSelected() {
         guard let id = selectedClipID else { return }
         let wasUnresolved = selectedUnresolvedEvent != nil
-        remember()
-        for i in project.tracks.indices {
-            project.tracks[i].clips.removeAll { $0.id == id }
-            project.tracks[i].unresolvedAudioEvents.removeAll { $0.id == id }
+        do {
+            guard try applyEdit(.deleteEvent(id)) else { return }
+            if wasUnresolved { status = "Removed unresolved event from this project · Undo available · original CPR retained" }
+        } catch { show(error) }
+    }
+    @discardableResult
+    private func applyEdit(_ edit: ProjectEdit, status message: String? = nil) throws -> Bool {
+        guard let result = try editHistory.apply(edit, to: project, selection: selection) else { return false }
+        invalidateSourceAudition()
+        project = result.project
+        selection = result.selection
+        for id in result.waveformClipIDs {
+            waveformPeaks[id] = project.tracks.flatMap(\.clips).first(where: { $0.id == id }).map { peaks(for: $0) }
         }
-        project.removeUnusedCPRMediaAttachments()
-        waveformPeaks[id] = nil; selectedClipID = nil; changed()
-        if wasUnresolved { status = "Removed unresolved event from this project · Undo available · original CPR retained" }
+        if let message { status = message }
+        changed()
+        return true
     }
-    private func editClip(_ id: UUID, _ edit: (inout Clip) -> Void) {
-        for t in project.tracks.indices {
-            guard let c = project.tracks[t].clips.firstIndex(where: { $0.id == id }) else { continue }
-            var candidate = project
-            edit(&candidate.tracks[t].clips[c])
-            do { try candidate.validate(); remember(); project = candidate; changed() }
-            catch { show(error) }
-            return
-        }
+    private func performEdit(_ edit: ProjectEdit) {
+        do { try applyEdit(edit) } catch { show(error) }
     }
-    private func editTrack(_ id: UUID, kind: String? = nil, _ edit: (inout Track) -> Void) {
-        guard let t = project.tracks.firstIndex(where: { $0.id == id }) else { return }
-        var candidate = project
-        edit(&candidate.tracks[t])
-        do { try candidate.validate(); remember(key: kind.map { "\($0):\(id)" }); project = candidate; changed() }
-        catch { show(error) }
-    }
-    func setGain(_ id: UUID, _ value: Double) { editTrack(id, kind: "gain") { $0.gainDB = min(24, max(-96, value)) } }
-    func setPan(_ id: UUID, _ value: Double) { editTrack(id, kind: "pan") { $0.pan = min(1, max(-1, value)) } }
-    func toggleMute(_ id: UUID) { editTrack(id) { $0.isMuted.toggle() } }
-    func toggleSolo(_ id: UUID) { editTrack(id) { $0.isSolo.toggle() } }
+    func setGain(_ id: UUID, _ value: Double) { performEdit(.setGain(id, value)) }
+    func setPan(_ id: UUID, _ value: Double) { performEdit(.setPan(id, value)) }
+    func toggleMute(_ id: UUID) { performEdit(.toggleMute(id)) }
+    func toggleSolo(_ id: UUID) { performEdit(.toggleSolo(id)) }
     func setTempo(_ value: Double) {
         guard value.isFinite, (20...400).contains(value) else { return }
         guard project.tempoMap.nativeClock == nil else { showTempoEditor = true; return }
@@ -521,65 +493,19 @@ final class StudioSession: ObservableObject {
     }
 
     func applyMusicalMaps(tempo: TempoMap, signatures: SignatureMap, convertNativeTiming: Bool = false) throws {
-        guard convertNativeTiming || tempo != project.tempoMap || signatures != project.signatureMap else { return }
-        var candidate = project
-        if convertNativeTiming { try candidate.convertToApplicationTiming() }
-        candidate.signatureMap = signatures
-        try candidate.replaceTempoMap(tempo)
-        guard candidate != project else { return }
-        let convertedNativeTiming = project.tempoMap.nativeClock != nil && candidate.tempoMap.nativeClock == nil
-        remember(); project = candidate
-        status = convertedNativeTiming ? "Converted to Rebase Timing" : "Updated tempo and meter"
-        changed()
+        let convertedNativeTiming = project.tempoMap.nativeClock != nil && tempo.nativeClock == nil
+        try applyEdit(.applyMusicalMaps(tempo, signatures, convertNativeTiming: convertNativeTiming),
+                      status: convertedNativeTiming ? "Converted to Rebase Timing" : "Updated tempo and meter")
     }
     func applyAutomation(_ trackID: UUID, lanes: [AutomationLane]) {
-        do {
-            for lane in lanes { try lane.validate() }
-            editTrack(trackID) { $0.automation = lanes }
-        } catch { show(error) }
+        performEdit(.replaceAutomation(trackID, lanes))
     }
-    func updateTempoMap(_ map: TempoMap) {
-        do {
-            var candidate = project
-            try candidate.replaceTempoMap(map)
-            remember(); project = candidate; changed()
-        } catch { show(error) }
-    }
-    func updateSignatureMap(_ map: SignatureMap) {
-        do {
-            try map.validate()
-            remember(); project.signatureMap = map; changed()
-        } catch { show(error) }
-    }
-    func setTrackTimeBase(_ id: UUID, _ base: ClipTimeBase) {
-        guard let index = project.tracks.firstIndex(where: { $0.id == id }) else { return }
-        do {
-            var candidate = project
-            candidate.tracks[index].timeBase = base
-            for c in candidate.tracks[index].clips.indices {
-                let time = candidate.tracks[index].clips[c].position
-                candidate.tracks[index].clips[c].timeBase = base
-                candidate.tracks[index].clips[c].musicalPosition = base == .musical ? try project.tempoMap.beat(atSeconds: time) : nil
-            }
-            try candidate.validate()
-            remember(); project = candidate; changed()
-        } catch { show(error) }
-    }
-    func setAutomation(_ trackID: UUID, lane: AutomationLane) {
-        do {
-            try lane.validate()
-            editTrack(trackID) { track in
-                if let i = track.automation.firstIndex(where: { $0.parameter == lane.parameter }) { track.automation[i] = lane }
-                else { track.automation.append(lane) }
-            }
-        } catch { show(error) }
-    }
+    func updateTempoMap(_ map: TempoMap) { performEdit(.replaceTempoMap(map)) }
+    func updateSignatureMap(_ map: SignatureMap) { performEdit(.replaceSignatureMap(map)) }
+    func setTrackTimeBase(_ id: UUID, _ base: ClipTimeBase) { performEdit(.setTrackTimeBase(id, base)) }
+    func setAutomation(_ trackID: UUID, lane: AutomationLane) { performEdit(.setAutomation(trackID, lane)) }
     func snappedTime(_ seconds: Double, relativeTo origin: Double? = nil) throws -> Double {
-        guard let grid = snapMode.grid else { return seconds }
-        let beat = try project.tempoMap.beat(atSeconds: seconds)
-        let relative = try origin.map { try project.tempoMap.beat(atSeconds: $0) }
-        let snapped = try grid.snappedBeat(beat, signatures: project.signatureMap, relativeTo: relative)
-        return try project.tempoMap.seconds(atBeat: snapped)
+        try ProjectEditing.snappedTime(seconds, in: project, grid: snapMode.grid, relativeTo: origin)
     }
     var musicalPositionText: String {
         guard let beat = try? project.tempoMap.beat(atSeconds: playhead),
@@ -601,7 +527,7 @@ final class StudioSession: ObservableObject {
             let loaded = try DAWProject.importProject(from: source, to: root)
             invalidateSourceAudition(); stop(); project = loaded; projectRoot = root
             cprCompatibility = nil
-            isScratch = false; isDirty = false; undoStack = []; redoStack = []
+            isScratch = false; isDirty = false; editHistory.reset()
             selectedTrackID = loaded.tracks.first?.id; selectedClipID = loaded.tracks.first?.clips.first?.id
             rebuildWaveforms(); status = "Imported \(source.lastPathComponent)"
         } catch { show(error) }
@@ -680,7 +606,7 @@ final class StudioSession: ObservableObject {
                 allowPartial: true, expectedSHA256: preview.sourceSHA256)
             invalidateSourceAudition(); stop(); project = result.project; projectRoot = root
             cprCompatibility = result.report
-            isScratch = false; isDirty = false; undoStack = []; redoStack = []; waveformPeaks = [:]
+            isScratch = false; isDirty = false; editHistory.reset(); waveformPeaks = [:]
             selectedTrackID = project.tracks.first?.id
             selectedClipID = project.tracks.first?.clips.first?.id ?? project.tracks.first?.unresolvedAudioEvents.first?.id
             rebuildWaveforms()
@@ -690,29 +616,19 @@ final class StudioSession: ObservableObject {
 
     private func remember(key: String? = nil) {
         invalidateSourceAudition()
-        let now = Date()
-        if let key, key == lastEditKey, now.timeIntervalSince(lastEditTime) < 0.5 {
-            lastEditTime = now
-            return
-        }
-        lastEditKey = key; lastEditTime = now
-        undoStack.append(project)
-        if undoStack.count > 100 { undoStack.removeFirst() }
-        redoStack.removeAll()
+        editHistory.record(project, coalescingKey: key)
     }
     func undo() {
-        guard let previous = undoStack.popLast() else { return }
+        guard let previous = editHistory.undo(current: project) else { return }
         invalidateSourceAudition()
-        lastEditKey = nil
-        redoStack.append(project); project = previous; reconcileSelection(); rebuildWaveforms()
+        project = previous; reconcileSelection(); rebuildWaveforms()
         status = "Undid last edit"
         changed()
     }
     func redo() {
-        guard let next = redoStack.popLast() else { return }
+        guard let next = editHistory.redo(current: project) else { return }
         invalidateSourceAudition()
-        lastEditKey = nil
-        undoStack.append(project); project = next; reconcileSelection(); rebuildWaveforms()
+        project = next; reconcileSelection(); rebuildWaveforms()
         status = "Redid last edit"
         changed()
     }

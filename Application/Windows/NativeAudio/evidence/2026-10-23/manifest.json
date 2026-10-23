@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "observed_at_utc": "2026-10-23T07:34:26.783653+00:00",
+  "evidence_class": "local-portable-value-model",
+  "host": {
+    "os": "macOS",
+    "os_version": "27.0",
+    "architecture": "arm64",
+    "compiler": "AppleClang 17.0.0.17000404"
+  },
+  "source_files": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "0fcbc8d44d221c94b733dd4f24d90478026cf5e4a534e50164fb2ea40d20fdd9"
+    },
+    {
+      "path": "include/rebase_windows_audio.h",
+      "sha256": "4f02de97ae720db3b3a24a813e0242b5e9be9c323007ace6d6edc14456aada93"
+    },
+    {
+      "path": "src/PlaybackCursor.cpp",
+      "sha256": "2dbccad598fef314ca0e30243ffac805d17ec2500ffa742df0658c887dec059b"
+    },
+    {
+      "path": "src/PlaybackCursor.hpp",
+      "sha256": "a7a69e98ccdbadd1a8c724575e6d7f4de3b0fc8853ce7fa16658b701be872c92"
+    },
+    {
+      "path": "src/WasapiOutput.cpp",
+      "sha256": "54dbd85d9722cee18542f85c7135ab56c18e2bc700d4191f8bea690f082cd74d"
+    },
+    {
+      "path": "tests/lifecycle.cpp",
+      "sha256": "7c4687614491485fa07d2354265f4039d9253831c43961dd331d881e12073309"
+    },
+    {
+      "path": "tests/wasapi_probe.cpp",
+      "sha256": "1b03453b9029dbc89a0da62dae0f463276c8137994528c82ba79bdcc767f75ea"
+    }
+  ],
+  "results": [
+    {
+      "path": "macos-arm64-debug.json",
+      "sha256": "5b32fa535f4b19964543d157d78c3d77e64b621a5923c898608be5e1f6ddc434"
+    },
+    {
+      "path": "macos-arm64-release.json",
+      "sha256": "5b32fa535f4b19964543d157d78c3d77e64b621a5923c898608be5e1f6ddc434"
+    }
+  ],
+  "verification": {
+    "debug_and_release_ctest": "passed",
+    "probe_portable_cpp_syntax": "passed",
+    "windows_wasapi_compilation": "not-run",
+    "windows_endpoint_execution": "not-run",
+    "audio_device_playback": "not-run",
+    "post_shutdown_review_debug_and_release_ctest": "passed; 89 checks each"
+  },
+  "boundaries": [
+    "89 portable lifecycle assertions per configuration; no operating-system audio calls in these tests.",
+    "Probe syntax checked with macOS C++17 headers; not a Windows linkage or runtime result.",
+    "Windows source is included in source hashes for custody, not evidence that it compiled.",
+    "No proprietary reference execution, frontend parity, audible output, or target equivalence claim.",
+    "Worker wait-failure shutdown received static review only; no OS wait-failure injection was executed.",
+    "Destructor rechecks joinable after submit because its error path may already have joined. This Windows-only path was statically reviewed, not executed locally."
+  ]
+}
