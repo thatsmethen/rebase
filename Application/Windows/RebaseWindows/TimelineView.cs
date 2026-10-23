@@ -16,6 +16,9 @@ public sealed class TimelineView : Canvas
     public static readonly Color[] TrackColors = [Color.FromRgb(177, 201, 102), Color.FromRgb(141, 175, 210), Color.FromRgb(209, 175, 101), Color.FromRgb(166, 151, 207)];
     private readonly Dictionary<string, WaveformVisual> waveformViews = [];
     private readonly List<FrameworkElement> headers = [];
+    private readonly List<Line> rowDividers = [];
+    internal IReadOnlyList<Line> RowDividers => rowDividers;
+    internal TextBlock RulerCornerLabel => rulerMode;
     private readonly List<UIElement> rulerViews = [];
     private RulerSnapshot? musicalRuler;
     private bool musical = true;
@@ -51,6 +54,7 @@ public sealed class TimelineView : Canvas
         viewport = width; viewportHeight = height;
         Width = Math.Max(viewport, Header + Math.Max(24, project?.Duration ?? 24) * pixels + 40);
         Height = Math.Max(viewportHeight, Ruler + (project?.Tracks.Length ?? 0) * rowHeight);
+        foreach (var divider in rowDividers) divider.X2 = Width;
         RebuildRuler(); SetPosition(currentPosition);
     }
     // Keep one vertical coordinate system for headers and events. Opaque header
@@ -95,6 +99,7 @@ public sealed class TimelineView : Canvas
     {
         Children.Clear();
         headers.Clear();
+        rowDividers.Clear();
         rulerViews.Clear();
         waveformViews.Clear();
         var duration = Math.Max(24, project?.Duration ?? 24);
@@ -108,7 +113,7 @@ public sealed class TimelineView : Canvas
                 var compact = rowHeight == 44;
                 var track = project.Tracks[index]; var top = Ruler + index * rowHeight;
                 var divider = new Line { X1 = 0, X2 = Width, Y1 = top + rowHeight, Y2 = top + rowHeight, Stroke = new SolidColorBrush(Color.FromRgb(41, 43, 45)), IsHitTestVisible = false };
-                Children.Add(divider);
+                Children.Add(divider); rowDividers.Add(divider);
                 var header = new Grid { Width = Header, Height = rowHeight, Background = new SolidColorBrush(track.Id == selectedTrack ? Color.FromRgb(87, 92, 95) : Color.FromRgb(52, 55, 58)), Tag = track.Id };
                 header.Children.Add(new Border { Background = new SolidColorBrush(TrackColors[index % TrackColors.Length]), Width = 13, HorizontalAlignment = HorizontalAlignment.Left });
                 header.Children.Add(new Border { BorderBrush = new SolidColorBrush(Color.FromRgb(29, 31, 33)), BorderThickness = new Thickness(0, 0, 1, 1), IsHitTestVisible = false });

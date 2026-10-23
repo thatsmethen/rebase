@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "suite": "windows-top-rows-and-event-context-local",
+  "created_utc": "2026-10-23T22:15:28.336892+00:00",
+  "base_commit": "b6b019148608b0081f78e163bb1c32a3d5ff0948",
+  "changes": [
+    "Compact 107 DIP top stack preserves existing commands and exposes 19 DIP more arrangement height.",
+    "Project identity, retained-source playback limitation and selected-event information occupy separate bounded regions.",
+    "Empty and retained-source selections show unavailable ordinary timing markers; real zero-valued ordinary events retain numeric zero.",
+    "Timeline row-divider ends update when measured viewport width changes. The already-visible ruler corner receives anchoring checks, not a production label change.",
+    "Native smoke adds long-name ellipsis/tooltips, layout/state/capture bounds, source/empty disabled invocation checks, divider width and ruler-corner geometry; initial failures retain raw client geometry and PNG."
+  ],
+  "build": {
+    "command": "dotnet build Application/Windows/RebaseWindows/RebaseWindows.csproj -c Release --no-restore --verbosity quiet",
+    "sdk": "10.0.100",
+    "host": "macOS arm64",
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0,
+    "reported_elapsed_seconds": 3.37,
+    "log_sha256": "ad6c11d005c411c5de0a932323500efedd6525418ee443ccbba33717020b416e"
+  },
+  "diff_check": "passed",
+  "native_check_count_expected": 87,
+  "added_native_checks": [
+    "top-rows-compact-layout",
+    "top-rows-empty-state",
+    "top-rows-source-state",
+    "top-rows-long-names",
+    "top-rows-resize-preserves-state",
+    "timeline-dividers-fill-width",
+    "ruler-corner-stays-visible"
+  ],
+  "new_capture_names": [
+    "native-top-rows-long-names-visual.png",
+    "native-top-rows-wide-visual.png"
+  ],
+  "sources": [
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml",
+      "sha256": "441216daa9637c671a9998dd140d6af9ed9c6b8ce74dd421bd8f28f7e85655fd"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml.cs",
+      "sha256": "715383236f83920afb3fa45eb8762bf587e94056cde5621813bf1aa2a04b604d"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/NumericFieldEditing.cs",
+      "sha256": "29d3211346e1aae805815f08532098051c8c4deb1636e17b2c6ec83a940f02b0"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/TimelineView.cs",
+      "sha256": "73fa1c4e1c783dbd95ffca3015ed490d813d73c964def723c5f915fe46be700d"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/WindowSmoke.cs",
+      "sha256": "14990b779210ffadc85d0b974ae14536f9695151b3e60de44b8f01b49a24a93a"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.TopRowsSmoke.cs",
+      "sha256": "f15402a42dbf43951bd43b9059067756deb86a662246db3d73f46339f0dda168"
+    }
+  ],
+  "native_windows_execution_tested": false,
+  "physical_input_tested": false,
+  "native_frame_visual_tested": false,
+  "device_audio_tested": false,
+  "shared_project_semantics_changed": false,
+  "frozen_fixtures_or_evidence_modified": false,
+  "limitations": [
+    "Cross-compilation does not establish native geometry or appearance. Actual Windows smoke and image review are required.",
+    "Wider window evidence will report its observed width; a constrained display is not claimed to have tested a larger width.",
+    "Reference fidelity and full application parity remain unfinished."
+  ]
+}

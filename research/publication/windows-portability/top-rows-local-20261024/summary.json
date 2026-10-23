@@ -1,0 +1,66 @@
+{
+  "schema": "rebase.windows-top-row-local-review.v1",
+  "status": "passed",
+  "baseline_commit": "b6b019148608b0081f78e163bb1c32a3d5ff0948",
+  "native_checks_expected": 87,
+  "authored_gate_controls": 105,
+  "authored_control_failures": 0,
+  "byte_exact_reproduction": true,
+  "gate_script_sha256": "c7505f3ba96e9a2bfad2e77769948230e8cff443c9aacd19b111df7668546dfa",
+  "new_required_checks": [
+    "top-rows-compact-layout",
+    "top-rows-empty-state",
+    "top-rows-source-state",
+    "top-rows-long-names",
+    "top-rows-resize-preserves-state",
+    "timeline-dividers-fill-width",
+    "ruler-corner-stays-visible"
+  ],
+  "gate_scope": [
+    "Measured 107 DIP stack, band/cell/control containment and sibling overlap, readable numeric text, bounded ellipsis with exact full-text tooltip.",
+    "Ordinary zero-time events remain distinct from unavailable source or empty timing; full-session hashes and rendered markers agree.",
+    "Long-name derivation binds the committed bundled example; two PNG hashes, actual client dimensions and resize state are checked. A constrained width request is reported truthfully.",
+    "Saved vertical space reaches the arrangement; all workspace row-divider ends follow actual canvas width. Ruler label and header use explicit client-root rectangles, independently of legacy window-relative points."
+  ],
+  "static_review": [
+    "Existing selected-clip guards and disabled UIA/numeric paths prevent unavailable timing values from being applied.",
+    "Long-name controls derive from the bundled example, change its project/event names, and reopen the canonical example afterward.",
+    "Wide capture bounds are separate and original measured outer bounds are restored before subsequent captures.",
+    "Early top-row failures now retain a raw layout and screenshot even before the workspace scenario begins."
+  ],
+  "prior_validator_function_bodies_unchanged": 9,
+  "ui_cross_build": {
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0,
+    "source_files_verified": 6
+  },
+  "files": [
+    {
+      "path": "controls.py",
+      "bytes": 18951,
+      "sha256": "711baa8cf6bc250fc76c31f97a6689d9e123abddb38803468c703fa8c55dc8fe"
+    },
+    {
+      "path": "gate-controls.json",
+      "bytes": 4029,
+      "sha256": "25213a28a0934de4cb618e0eb03d2ba65c766bbec66ca6cd32a8f5a577894d3b"
+    },
+    {
+      "path": "observation.json",
+      "bytes": 3381,
+      "sha256": "bda55b12431defadc4bca54b7635ca92dfb554b1b0b578c88d85ded06a25a2a3"
+    },
+    {
+      "path": "reproduction-controls.json",
+      "bytes": 607,
+      "sha256": "e1f7b7e1f146abc0556e4643dd2e0dcbf70f310acdff6e8f7f015cbaed42e8b5"
+    }
+  ],
+  "limitations": [
+    "Authored JSON/PNG controls test validators, not Windows behavior.",
+    "The macOS cross-build does not verify native geometry, input, audio, window frames, or reference fidelity.",
+    "Native Windows smoke and actual PNG review remain required before publication."
+  ],
+  "repository_mutation": "Added package gates and this fresh local record; no commit, push, or release action performed."
+}

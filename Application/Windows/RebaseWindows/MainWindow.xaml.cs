@@ -99,8 +99,11 @@ public partial class MainWindow : Window
         UndoButton.IsEnabled = model.State.CanUndo && !model.Busy;
         RedoButton.IsEnabled = model.State.CanRedo && !model.Busy;
         TempoBox.Text = (model.Project?.Tempo ?? 120).ToString("0.###", CultureInfo.CurrentCulture);
-        SelectionName.Text = model.SelectedClip?.Name ?? model.SelectedSourceEvent?.Name ?? "None";
+        SelectionName.Text = model.SelectedClip?.Name ?? model.SelectedSourceEvent?.Name ?? "No event selected";
+        SelectionName.ToolTip = SelectionName.Text;
+        SelectionKind.Text = model.SelectedSourceEvent is not null ? "Retained source event" : model.SelectedClip is not null ? "Selected event" : "Event information";
         ProjectName.Text = model.Project?.Name ?? "Untitled";
+        ProjectName.ToolTip = ProjectName.Text;
         InspectorTrack.Text = model.SelectedTrack?.Name ?? "No track selected";
         ChannelTrack.Text = model.SelectedTrack?.Name ?? "No selection";
         var selectedIndex = Array.FindIndex(model.Project?.Tracks ?? [], track => track.Id == model.State.Selection.TrackID);
@@ -119,15 +122,18 @@ public partial class MainWindow : Window
             InspectorSolo.IsChecked = model.SelectedTrack?.IsSolo ?? false;
         }
         finally { updatingInspector = false; }
-        SourceOffsetText.Text = $"{model.SelectedClip?.SourceOffset ?? 0:0.000} s";
+        SourceOffsetText.Text = model.SelectedClip is { } offsetClip ? $"{offsetClip.SourceOffset:0.000} s" : "—";
+        SourceOffsetText.ToolTip = model.SelectedClip is null ? "Ordinary event timing is unavailable for this selection." : SourceOffsetText.Text;
         ClipInspector.Visibility = Visibility.Visible;
         ClipInspector.IsEnabled = model.SelectedClip is not null;
         MixerCount.Text = $"{model.Project?.Tracks.Length ?? 0} channels";
-        MoveBox.Text = (model.SelectedClip?.Position ?? 0).ToString("0.######", CultureInfo.CurrentCulture);
-        TrimBox.Text = ((model.SelectedClip?.Position ?? 0) + (model.SelectedClip?.Duration ?? 0)).ToString("0.######", CultureInfo.CurrentCulture);
+        MoveBox.Text = model.SelectedClip?.Position.ToString("0.######", CultureInfo.CurrentCulture) ?? "—";
+        TrimBox.Text = model.SelectedClip is { } endClip ? (endClip.Position + endClip.Duration).ToString("0.######", CultureInfo.CurrentCulture) : "—";
         ProjectInfo.Text = model.Project is null ? "No project loaded" : $"{model.Project.Tracks.Length} tracks · {model.Project.SampleRate:0} Hz · {model.Project.Duration:0.##} seconds";
         var unresolved = model.Project?.Tracks.Sum(t => t.UnresolvedAudioEvents.Length) ?? 0;
-        if (unresolved > 0) ProjectInfo.Text += $" · {unresolved} source events: project playback unavailable";
+        ProjectInfo.ToolTip = ProjectInfo.Text;
+        ProjectLimit.Visibility = unresolved > 0 ? Visibility.Visible : Visibility.Collapsed;
+        ProjectLimit.ToolTip = $"{unresolved} retained source events. Project playback is unavailable; isolated source audition is available in the Inspector.";
         updatingSourceList = true;
         try
         {

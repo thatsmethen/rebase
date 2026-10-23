@@ -242,6 +242,314 @@ WORKSPACE_CHECKS = {
 }
 
 
+TOP_ROWS_CHECKS = {
+    "top-rows-compact-layout", "top-rows-empty-state", "top-rows-source-state",
+    "top-rows-long-names", "top-rows-resize-preserves-state",
+    "timeline-dividers-fill-width", "ruler-corner-stays-visible",
+}
+
+
+def require_timeline_dividers(state):
+    """Bind every row baseline to the actual canvas, including expanded panes."""
+    def number(value):
+        if type(value) not in (int, float) or not math.isfinite(value):
+            raise RuntimeError("Timeline divider geometry is missing or non-finite")
+        return value
+
+    if not isinstance(state, dict):
+        raise RuntimeError("Timeline divider state is missing")
+    width = number(state.get("canvas_width"))
+    viewport_width = number(state.get("viewport_width"))
+    row_height = number(state.get("row_height"))
+    rows = state.get("headers", [])
+    lines = state.get("divider_ends", [])
+    if (width < viewport_width - 0.5 or viewport_width <= 0 or row_height not in (44, 68)
+            or not isinstance(rows, list) or not isinstance(lines, list) or len(lines) != len(rows)):
+        raise RuntimeError("Timeline dividers do not cover the measured canvas and tracks")
+    for index, line in enumerate(lines):
+        if not isinstance(line, dict):
+            raise RuntimeError("Timeline divider is not a measured line")
+        x1, y1, x2, y2 = (number(line.get(key)) for key in ("x1", "y1", "x2", "y2"))
+        if (abs(x1) > 0.5 or abs(x2 - width) > 0.5 or abs(y1 - y2) > 0.5
+                or abs(y1 - (26 + (index + 1) * row_height)) > 0.5):
+            raise RuntimeError("Timeline divider ends early or uses the wrong track baseline")
+
+
+def require_pinned_ruler_corner(smoke):
+    """Require the measured ruler label to stay inside the pinned header corner."""
+    scroll = smoke.get("timeline_scroll", {})
+    if not isinstance(scroll, dict):
+        raise RuntimeError("Pinned ruler scroll receipt is missing")
+    labels = []
+    header_boxes = []
+    for suffix in ("before", "after"):
+        label = scroll.get("ruler_" + suffix, {})
+        header = scroll.get("ruler_header_" + suffix, {})
+        if (not isinstance(label, dict) or label.get("text") != "Bars + Beats"
+                or not isinstance(header, dict)):
+            raise RuntimeError("Pinned ruler label was not observed before and after scroll")
+        for item, keys in ((label, ("x", "y", "width", "height")), (header, ("x", "y", "width", "height"))):
+            if (not isinstance(item, dict) or any(type(item.get(key)) not in (int, float)
+                    or not math.isfinite(item[key]) for key in keys)):
+                raise RuntimeError("Pinned ruler label has invalid measured geometry")
+        if (label["width"] <= 0 or label["height"] <= 0 or abs(header["width"] - 198) > 0.5 or header["height"] not in (44, 68)
+                or label["x"] < header["x"] - 0.5 or label["x"] + label["width"] > header["x"] + header["width"] + 0.5
+                or label["y"] < header["y"] - 26.5 or label["y"] + label["height"] > header["y"] + 0.5):
+            raise RuntimeError("Ruler label is clipped outside its pinned header corner")
+        labels.append(label)
+        header_boxes.append(header)
+    if any(abs(boxes[0][key] - boxes[1][key]) > 0.5 for boxes in (labels, header_boxes) for key in ("x", "y", "width", "height")):
+        raise RuntimeError("Pinned ruler label moved during horizontal scroll")
+
+
+def require_top_rows_geometry(layout, bounds):
+    """Check measured controls and text, including ellipsis and content-host bounds."""
+    def fail(message):
+        raise RuntimeError("Top-row geometry: " + message)
+
+    def number(value):
+        if type(value) not in (int, float) or not math.isfinite(value):
+            fail("missing or non-finite measurement")
+        return value
+
+    if not isinstance(layout, dict) or not isinstance(bounds, dict):
+        fail("missing layout or window bounds")
+    width, height = (number(bounds.get(key)) for key in ("client_width", "client_height"))
+    if (width <= 0 or height <= 107 or abs(number(layout.get("stack_height")) - 107) > 0.5
+            or any(abs(number(layout.get(key)) - number(bounds.get(key))) > 0.5
+                   for key in ("client_width", "client_height"))):
+        fail("stack or client dimensions disagree")
+
+    def records(key, names):
+        values = layout.get(key)
+        if (not isinstance(values, list) or len(values) != len(names)
+                or any(not isinstance(item, dict) or not isinstance(item.get("name"), str) for item in values)
+                or {item.get("name") for item in values} != set(names)):
+            fail("missing or duplicate " + key)
+        return {item["name"]: item for item in values}
+
+    def rectangle(item):
+        for key in ("x", "y", "width", "height"):
+            number(item.get(key))
+        if type(item.get("visible")) is not bool:
+            fail("missing visibility measurement")
+        if not item["visible"]:
+            if any(item[key] != 0 for key in ("x", "y", "width", "height")):
+                fail("hidden control retains geometry")
+            return
+        if (item["width"] <= 0 or item["height"] <= 0 or item["x"] < -0.5 or item["y"] < -0.5
+                or item["x"] + item["width"] > width + 0.5 or item["y"] + item["height"] > height + 0.5):
+            fail("visible control is outside the client")
+
+    def contains(parent, child):
+        if child["visible"] and (child["x"] < parent["x"] - 0.5 or child["y"] < parent["y"] - 0.5
+                or child["x"] + child["width"] > parent["x"] + parent["width"] + 0.5
+                or child["y"] + child["height"] > parent["y"] + parent["height"] + 0.5):
+            fail("control leaves its assigned region")
+
+    def disjoint(values):
+        values = [item for item in values if item["visible"]]
+        for index, first in enumerate(values):
+            for last in values[index + 1:]:
+                if (min(first["x"] + first["width"], last["x"] + last["width"]) - max(first["x"], last["x"]) > 0.5
+                        and min(first["y"] + first["height"], last["y"] + last["height"]) - max(first["y"], last["y"]) > 0.5):
+                    fail("sibling controls overlap")
+
+    def text_metrics(item):
+        if not item["visible"]:
+            return
+        text = item.get("text")
+        metrics = ("text_natural_width", "text_natural_height", "text_content_width", "text_content_height")
+        if text is None:
+            if any(item.get(key) is not None for key in (*metrics, "text_fits_width", "text_fits_height")):
+                fail("non-text control has inconsistent text measurements")
+            return
+        if not isinstance(text, str) or not text:
+            fail("invalid text measurement")
+        natural_width, natural_height, content_width, content_height = (number(item.get(key)) for key in metrics)
+        if (natural_width < 0 or natural_height <= 0 or content_width <= 0 or content_height <= 0
+                or content_width > item["width"] + 0.5 or content_height > item["height"] + 0.5):
+            fail("invalid text content-host bounds")
+        fits_width, fits_height = natural_width <= content_width + 0.5, natural_height <= content_height + 0.5
+        if item.get("text_fits_width") is not fits_width or item.get("text_fits_height") is not fits_height or not fits_height:
+            fail("text-fit flags disagree with actual measurements or text is clipped vertically")
+        if not fits_width and (item["name"] not in {"ProjectName", "ProjectInfo", "SelectionName", "SourceOffsetText"}
+                or item.get("text_trimming") != "CharacterEllipsis" or item.get("tooltip") != text):
+            fail("clipped text lacks an exact full-text tooltip and ellipsis")
+
+    band_names = {"menu": "MenuBand", "toolbar": "ToolbarBand", "status": "ProjectStatusBand", "event": "EventInfoBand"}
+    band_records = records("bands", band_names.values())
+    bands = {key: band_records[name] for key, name in band_names.items()}
+    y = 0
+    for name, band_height in (("menu", 25), ("toolbar", 30), ("status", 18), ("event", 34)):
+        band = bands[name]
+        rectangle(band)
+        if (not band["visible"] or any(abs(band[key] - value) > 0.5
+                for key, value in (("x", 0), ("y", y), ("width", width), ("height", band_height)))):
+            fail("bands do not form the measured 107-DIP stack")
+        y += band_height
+    toolbar = records("toolbar_controls", ("ExampleButton", "OpenProjectButton", "SaveProjectButton", "UndoButton", "RedoButton",
+        "SplitToolbarButton", "DeleteToolbarButton", "SnapBox", "Zoom", "RulerModeBox", "RowDensityBox", "LeftZoneToggle", "MixerZoneToggle", "ExportButton"))
+    cells = records("event_cells", ("EventNameCell", "EventStartCell", "EventEndCell", "EventOffsetCell"))
+    controls = records("event_controls", ("SelectionName", "SelectionKind", "MoveBox", "MoveButton", "TrimBox", "TrimButton",
+        "SourceOffsetText", "EventStartLabel", "EventEndLabel", "EventOffsetLabel"))
+    status = records("status_controls", ("ProjectName", "ProjectInfo", "ProjectLimit"))
+    for group, parent in ((toolbar, bands["toolbar"]), (cells, bands["event"]), (controls, bands["event"]), (status, bands["status"])):
+        for item in group.values():
+            rectangle(item)
+            if not item["visible"] and item["name"] != "ProjectLimit":
+                fail("required control is hidden")
+            contains(parent, item)
+            text_metrics(item)
+        disjoint(group.values())
+    for name, control in toolbar.items():
+        if name == "Zoom" and (control["height"] < 12 or control["width"] < 20):
+            fail("timeline zoom target became too small")
+        if name != "Zoom" and (control["height"] < 24.5 or control["width"] < 24.5):
+            fail("toolbar target became too small")
+    for name in ("MoveBox", "MoveButton", "TrimBox", "TrimButton"):
+        if controls[name]["height"] < 19.5 or controls[name]["width"] < 19.5:
+            fail("event timing target became too small")
+    mapping = {"EventNameCell": ("SelectionName", "SelectionKind"), "EventStartCell": ("MoveBox", "MoveButton", "EventStartLabel"),
+               "EventEndCell": ("TrimBox", "TrimButton", "EventEndLabel"), "EventOffsetCell": ("SourceOffsetText", "EventOffsetLabel")}
+    for cell, children in mapping.items():
+        for child in children:
+            contains(cells[cell], controls[child])
+    return {"bands": bands, "toolbar": toolbar, "cells": cells, "controls": controls, "status": status}
+
+
+def require_top_rows(smoke, evidence, example_manifest_sha256, expected_source):
+    """Require native top-row state, layout, resize and capture evidence."""
+    def fail(message):
+        raise RuntimeError("Top-row receipt: " + message)
+
+    def sha(value):
+        if not isinstance(value, str) or len(value) != 64 or set(value) - set("0123456789abcdef"):
+            fail("invalid SHA-256")
+        return value
+
+    def number(value):
+        if type(value) not in (int, float) or not math.isfinite(value):
+            fail("invalid finite geometry")
+        return value
+
+    receipt = smoke.get("top_rows")
+    checks = smoke.get("checks")
+    if (not isinstance(receipt, dict) or not isinstance(checks, list) or any(not isinstance(item, str) for item in checks)
+            or len(checks) != len(set(checks)) or not TOP_ROWS_CHECKS.issubset(checks)
+            or receipt.get("input_evidence") != "UIA and injected routed keyboard events; no physical input"):
+        fail("missing native checks or evidence boundary")
+    bounds = smoke.get("window_bounds", {})
+    require_top_rows_geometry(receipt.get("layout"), bounds)
+    workspace = smoke.get("workspace", {})
+    if not isinstance(workspace, dict):
+        fail("missing workspace receipt")
+    states = workspace.get("states", [])
+    if not isinstance(states, list) or len(states) != 8 or any(not isinstance(item, dict) for item in states):
+        fail("missing workspace states")
+    for state in states:
+        require_timeline_dividers(state)
+    compact = next((state for state in states if state.get("name") == "compact"), {})
+    timeline, mixer = compact.get("timeline", {}), compact.get("mixer", {})
+    if (abs(number(timeline.get("y")) - 107) > 0.5 or abs(number(mixer.get("height")) - 216) > 0.5
+            or abs(number(timeline.get("height")) - (number(bounds.get("client_height")) - 107 - 58 - 216 - 5)) > 0.5):
+        fail("saved top-row height did not reach the arrangement")
+    require_pinned_ruler_corner(smoke)
+
+    measured = receipt.get("states", [])
+    names = {"startup-empty", "ordinary-zero", "retained-source", "empty-track"}
+    if (not isinstance(measured, list) or len(measured) != 4 or any(not isinstance(item, dict) for item in measured)
+            or {item.get("name") for item in measured} != names):
+        fail("missing or duplicate timing states")
+    for state in measured:
+        if (sha(state.get("before_sha256")) != sha(state.get("after_sha256"))
+                or type(state.get("revision")) is not int or state["revision"] < 0):
+            fail("timing inspection changed the session")
+        layout = require_top_rows_geometry(state.get("layout"), bounds)
+        markers = state.get("markers", {})
+        if not isinstance(markers, dict):
+            fail("missing timing markers")
+        name = state["name"]
+        context = "ordinary" if name == "ordinary-zero" else "source" if name == "retained-source" else "empty"
+        kind = {"ordinary": "Selected event", "source": "Retained source event", "empty": "Event information"}[context]
+        if (markers.get("context") != context or markers.get("kind") != kind
+                or markers.get("editing_enabled") is not (context == "ordinary")
+                or markers.get("project_limitation_visible") is not (name in {"retained-source", "empty-track"})
+                or layout["status"]["ProjectLimit"]["visible"] != markers["project_limitation_visible"]):
+            fail("timing context or project limitation is misleading")
+        if markers["project_limitation_visible"] and layout["status"]["ProjectLimit"].get("text") != "Project playback unavailable":
+            fail("visible source-project limitation has misleading text")
+        for key, control in (("name", "SelectionName"), ("kind", "SelectionKind"), ("start", "MoveBox"), ("end", "TrimBox"), ("offset", "SourceOffsetText")):
+            if not isinstance(markers.get(key), str) or markers[key] != layout["controls"][control].get("text"):
+                fail("timing markers differ from rendered controls")
+        if context == "ordinary":
+            if (markers["start"] != "0" or markers["end"] != "5" or markers["offset"] != "0.000 s"
+                    or state.get("selected_clip_id") != compact.get("selected_clip_id")
+                    or state.get("selected_track_id") != compact.get("selected_track_id")):
+                fail("ordinary authored zero-time event was not exercised")
+        else:
+            if any(markers[key] != "—" for key in ("start", "end", "offset")):
+                fail("unavailable timing is displayed as an ordinary value")
+            if context == "empty" and (markers["name"] != "No event selected" or state.get("selected_clip_id") is not None):
+                fail("empty state implies an event selection")
+            if context == "source" and (not markers["name"] or markers["name"] == "No event selected"
+                    or state.get("selected_clip_id") != expected_source["eventID"]):
+                fail("retained-source identity is missing")
+
+    long = receipt.get("long_names", {})
+    if (not isinstance(long, dict) or long.get("original_manifest_sha256") != sha(example_manifest_sha256)
+            or sha(long.get("derived_manifest_sha256")) == example_manifest_sha256):
+        fail("long-name fixture is not bound to the bundled example")
+    for name_key, text_key in (("project_name", "project_text"), ("event_name", "event_text")):
+        name, text = long.get(name_key), long.get(text_key, {})
+        if (not isinstance(name, str) or len(name) < 100 or not isinstance(text, dict)
+                or text.get("text") != name or text.get("tooltip") != name or text.get("trimming") != "CharacterEllipsis"
+                or number(text.get("natural_width")) <= number(text.get("width")) or text["width"] <= 0):
+            fail("long names were not bounded with full tooltips")
+    captures = receipt.get("captures", [])
+    capture_names = {"native-top-rows-long-names-visual.png", "native-top-rows-wide-visual.png"}
+    if (not isinstance(captures, list) or len(captures) != 2 or any(not isinstance(item, dict) for item in captures)
+            or {item.get("screenshot") for item in captures} != capture_names):
+        fail("missing or duplicate top-row captures")
+    captures = {item["screenshot"]: item for item in captures}
+    for capture in captures.values():
+        path = evidence / capture["screenshot"]
+        layout = require_top_rows_geometry(capture.get("layout"), capture.get("window_bounds"))
+        require_window_visual(path, capture.get("window_bounds"))
+        if sha(capture.get("png_sha256")) != digest(path):
+            fail("capture hash does not match its actual PNG")
+        if (layout["status"]["ProjectName"].get("text") != long["project_name"]
+                or layout["controls"]["SelectionName"].get("text") != long["event_name"]):
+            fail("capture did not retain the authored long titles")
+        if any(layout["controls"][key].get("text") != value for key, value in
+               (("SelectionKind", "Selected event"), ("MoveBox", "0"), ("TrimBox", "5"), ("SourceOffsetText", "0.000 s"))):
+            fail("long titles displaced ordinary event timing")
+    first = captures["native-top-rows-long-names-visual.png"]
+    last = captures["native-top-rows-wide-visual.png"]
+    for name, group, control in (("project_text", "status_controls", "ProjectName"),
+                                ("event_text", "event_controls", "SelectionName")):
+        measured_text = next(item for item in first["layout"][group] if item["name"] == control)
+        if any(abs(number(long[name].get(axis)) - number(measured_text.get(axis))) > 0.5 for axis in ("x", "y", "width", "height")):
+            fail("long-name bounds differ from their captured controls")
+        if abs(number(long[name].get("natural_width")) - number(measured_text.get("text_natural_width"))) > 0.5:
+            fail("long-name text measurement differs from its captured control")
+    resize = receipt.get("resize", {})
+    if not isinstance(resize, dict) or sha(resize.get("before_sha256")) != sha(resize.get("after_sha256")):
+        fail("resize changed the session")
+    if (any(resize.get(key + "_before") != resize.get(key + "_after") for key in ("revision", "track", "clip"))
+            or type(resize.get("revision_before")) is not int or resize["revision_before"] < 1
+            or any(not isinstance(resize.get(key + "_before"), str) or not resize[key + "_before"] for key in ("track", "clip"))
+            or resize.get("requested_outer_width") != 1400):
+        fail("resize did not preserve revision and selection")
+    before, after = (number(resize.get("outer_width_" + key)) for key in ("before", "after"))
+    if (before <= 0 or after <= 0 or resize.get("wider_observed") is not (after > before + 0.5)
+            or abs(before - number(first["window_bounds"].get("outer_width"))) > 0.5
+            or abs(after - number(last["window_bounds"].get("outer_width"))) > 0.5
+            or any(abs(number(first["window_bounds"].get(key)) - number(bounds.get(key))) > 0.5
+                   for key in ("outer_width", "outer_height", "client_width", "client_height"))):
+        fail("resize claim or restored bounds do not match actual captures")
+
+
 def require_timeline_viewport(state, *, require_tracks_fit=True):
     """Check the actual content viewport, including legitimate tall timelines."""
     def number(value):
@@ -709,6 +1017,7 @@ def main():
         require_pinned_header_scroll(smoke)
         require_musical_ruler(smoke)
         require_workspace_layout(smoke, evidence, expected_source)
+        require_top_rows(smoke, evidence, digest(example / "Project.json"), expected_source)
         modules = {"process": validate_modules(smoke.pop("process_modules", None), stage, windows,
                                                {"rebase.exe", "coreclr.dll", "rebasewindowsaudio.dll"}),
                    "helper": validate_modules(smoke.pop("helper_modules", None), stage, windows,

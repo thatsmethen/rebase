@@ -32,6 +32,9 @@ public partial class MainWindow
         object? channelAlignment = null;
         object? cprReviewReceipt = null;
         object? workspaceReceipt = null, workspaceSourceOnly = null;
+        object? topRowsLayout = null, topRowsLongNames = null, topRowsResize = null, topRowsFailure = null;
+        var topRowsStates = new List<object>();
+        var topRowsCaptures = new List<object>();
         string? failureScreenshot = null;
         var workspaceStates = new List<object>();
         var workspaceTargets = new List<object>();
@@ -54,13 +57,15 @@ public partial class MainWindow
             error = failure.Message;
             // Preserve the measured failing state before disposing the helper.
             // A failed assertion must not erase the layout that caused it.
-            if (workspaceInitialHash is not null)
+            if (IsVisible && Content is FrameworkElement { ActualWidth: > 0, ActualHeight: > 0 })
             {
                 try
                 {
                     await Capture("native-workspace-failure-visual.png");
                     failureScreenshot = "native-workspace-failure-visual.png";
-                    RefreshWorkspaceReceipt();
+                    topRowsFailure = new { stage, bands = new[] { (FrameworkElement)MenuBand, ToolbarBand, ProjectStatusBand, EventInfoBand }.Select(element => new { name = element.Name, bounds = Box(BoundsOf(element)) }).ToArray(),
+                        event_controls = new[] { (FrameworkElement)SelectionName, SelectionKind, MoveBox, MoveButton, TrimBox, TrimButton, SourceOffsetText }.Select(element => new { name = element.Name, bounds = Box(BoundsOf(element)) }).ToArray() };
+                    if (workspaceInitialHash is not null) RefreshWorkspaceReceipt();
                 }
                 catch (Exception diagnostic) { error += " Layout diagnostic: " + diagnostic.Message; }
             }
@@ -87,6 +92,8 @@ public partial class MainWindow
             , window_bounds = windowBounds
             , musical_ruler = musicalRulerReceipt, fader_scale = faderScaleReceipt, channel_alignment = channelAlignment
             , cpr_review = cprReviewReceipt, workspace = workspaceReceipt, failure_screenshot = failureScreenshot
+            , top_rows = new { layout = topRowsLayout, states = topRowsStates, long_names = topRowsLongNames,
+                resize = topRowsResize, captures = topRowsCaptures, failure_layout = topRowsFailure, input_evidence = "UIA and injected routed keyboard events; no physical input" }
         };
         try { await File.WriteAllTextAsync(artifact, JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true })); }
         catch (IOException) { return 2; }
@@ -99,6 +106,11 @@ public partial class MainWindow
             Assert(IsVisible && ActualWidth >= 1020 && ActualHeight >= 700, "visible-window-layout");
             var snapOrigin = SnapBox.TransformToAncestor(ProjectActions).Transform(new Point());
             Assert(snapOrigin.Y >= 0 && snapOrigin.Y + SnapBox.ActualHeight <= ProjectActions.ActualHeight, "snap-control-fits-toolbar");
+            stage = "top-rows-empty-state";
+            topRowsLayout = MeasureTopRowsLayout();
+            checks.Add("top-rows-compact-layout");
+            RecordTimingState("startup-empty", "empty", rejectEdits: true);
+            checks.Add("top-rows-empty-state");
             stage = "open-example-button"; await Invoke(ExampleButton);
             await Until(() => model.Project?.Tracks.Length == 4 && !model.Busy, stage);
             Assert(model.State.NeedsSaveAs && model.State.Path is null, "bundled-example-is-copy");
@@ -107,6 +119,8 @@ public partial class MainWindow
             await Invoke(Timeline.Children.OfType<Button>().First());
             await Until(() => model.State.Selection.ClipID == first.Id && !model.Busy, stage);
             Assert(model.SelectedClip is not null, "clip-selection");
+            if (model.SelectedClip!.Position != 0) throw new InvalidOperationException("The ordinary zero control requires a clip starting at zero.");
+            RecordTimingState("ordinary-zero", "ordinary", rejectEdits: false);
             var originalTrack = model.SelectedTrack!;
             await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
             Assert(ChannelTrack.Text == originalTrack.Name && InspectorTrack.Text == originalTrack.Name &&
@@ -114,6 +128,7 @@ public partial class MainWindow
                 Timeline.TrackHeaders.Single(header => Equals(header.Tag, originalTrack.Id)) is Grid { Background: SolidColorBrush selectedHeader } &&
                 selectedHeader.Color == Color.FromRgb(87, 92, 95), "selection-synchronized-across-panes");
             await WorkspaceScenario();
+            checks.Add("timeline-dividers-fill-width");
 
             var targetGain = originalTrack.GainDB >= 24 ? 23 : originalTrack.GainDB + 1;
             stage = "inspector-volume-shared-edit";
@@ -214,6 +229,8 @@ public partial class MainWindow
             stage = "numeric-event-enter-and-undo";
             MoveBox.Focus(); MoveBox.Text = (first.Position + 0.125).ToString(System.Globalization.CultureInfo.CurrentCulture); Key(MoveBox, System.Windows.Input.Key.Enter);
             await Until(() => model.SelectedClip?.Position == first.Position + 0.125 && !model.Busy, stage);
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            if (!MoveBox.IsKeyboardFocusWithin) throw new InvalidOperationException("Committing the compact event field lost keyboard focus.");
             await Invoke(UndoButton); await Until(() => model.SelectedClip?.Position == first.Position && !model.Busy, stage);
             Assert(model.SelectedClip!.Position == first.Position, "numeric-event-enter-and-undo");
             stage = "numeric-event-cancel-and-invalid";
@@ -290,6 +307,8 @@ public partial class MainWindow
                 Assert(accessibleItemName == model.SelectedSourceEvent!.DisplayName &&
                     Descendants<TextBlock>(SourceEventsBox).Any(text => text.Text == model.SelectedSourceEvent.DisplayName && text.ActualWidth > 0 && text.ActualHeight > 0) &&
                     SelectionName.Text == model.SelectedSourceEvent.Name && !MoveBox.IsEnabled && !TrimBox.IsEnabled, "source-selection-labels");
+                RecordTimingState("retained-source", "source", rejectEdits: true);
+                checks.Add("top-rows-source-state");
                 var sourceOnlyBefore = SessionHash();
                 foreach (var button in new[] { SplitToolbarButton, DeleteToolbarButton, SplitInspectorButton, DeleteInspectorButton, MoveButton })
                 {
@@ -310,6 +329,7 @@ public partial class MainWindow
                 await model.Command("selectTrack", trackID: selectionFixture.ControlTrackID);
                 if (model.State.Selection.TrackID != selectionFixture.ControlTrackID || model.State.Selection.ClipID is not null || model.SelectedSourceEvent is not null || SourceSection.IsExpanded)
                     throw new InvalidOperationException("The source auto-expansion control did not leave the retained event selected state.");
+                RecordTimingState("empty-track", "empty", rejectEdits: true);
                 var otherSelectionID = model.State.Selection.ClipID;
                 // Select the retained event only after the shared session has
                 // selected the different, empty authored track. Selecting the
@@ -350,6 +370,8 @@ public partial class MainWindow
                 smokeAttachPath = smokeSourceExportPath = null;
                 await model.Open(Path.Combine(AppContext.BaseDirectory, "Examples", "Rebase Preview.rebaseproj", "Project.json"), true, true);
             }
+            await LongNamesScenario();
+            await model.Open(Path.Combine(AppContext.BaseDirectory, "Examples", "Rebase Preview.rebaseproj", "Project.json"), true, true);
             stage = "real-waveforms";
             await Until(() => Timeline.PopulatedWaveformCount == model.Project!.Tracks.Sum(track => track.Clips.Length), stage);
             Assert(Timeline.PopulatedWaveformCount > 0, "real-waveforms-visible");
@@ -382,11 +404,19 @@ public partial class MainWindow
             await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
             var eventButton = Timeline.Children.OfType<Button>().First();
             var headersBefore = Timeline.TrackHeaders.Select(Origin).ToArray();
+            var rulerBefore = BoundsOf(Timeline.RulerCornerLabel);
+            var rulerHeaderBefore = BoundsOf(Timeline.TrackHeaders[0]);
+            ValidateRulerCorner(rulerBefore, rulerHeaderBefore);
             var eventBefore = Origin(eventButton);
             var offsetBefore = TimelineScroll.HorizontalOffset;
             scroll.SetScrollPercent(20, System.Windows.Automation.ScrollPatternIdentifiers.NoScroll);
             await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
             var headersAfter = Timeline.TrackHeaders.Select(Origin).ToArray();
+            var rulerAfter = BoundsOf(Timeline.RulerCornerLabel);
+            var rulerHeaderAfter = BoundsOf(Timeline.TrackHeaders[0]);
+            ValidateRulerCorner(rulerAfter, rulerHeaderAfter);
+            Assert(Math.Abs(rulerBefore.X - rulerAfter.X) <= 0.5 && Math.Abs(rulerBefore.Y - rulerAfter.Y) <= 0.5,
+                "ruler-corner-stays-visible");
             var eventAfter = Origin(eventButton);
             var offsetAfter = TimelineScroll.HorizontalOffset;
             var offsetDelta = offsetAfter - offsetBefore;
@@ -399,7 +429,9 @@ public partial class MainWindow
                 zoom_pixels_per_second = Zoom.Value, offset_before = offsetBefore, offset_after = offsetAfter,
                 headers_before = headersBefore.Select(point => new { x = point.X, y = point.Y }).ToArray(),
                 headers_after = headersAfter.Select(point => new { x = point.X, y = point.Y }).ToArray(),
-                event_before = new { x = eventBefore.X, y = eventBefore.Y }, event_after = new { x = eventAfter.X, y = eventAfter.Y }
+                event_before = new { x = eventBefore.X, y = eventBefore.Y }, event_after = new { x = eventAfter.X, y = eventAfter.Y },
+                ruler_before = RulerBox(rulerBefore), ruler_after = RulerBox(rulerAfter),
+                ruler_header_before = Box(rulerHeaderBefore), ruler_header_after = Box(rulerHeaderAfter)
             };
             await Capture("native-timeline-scroll-visual.png"); checks.Add("timeline-scroll-visual-artifact");
             scroll.SetScrollPercent(0, System.Windows.Automation.ScrollPatternIdentifiers.NoScroll);
@@ -417,6 +449,108 @@ public partial class MainWindow
             await Capture("native-app-visual.png");
             RefreshWorkspaceReceipt();
             checks.Add("window-visual-artifact-written"); stage = "completed";
+        }
+        void RecordTimingState(string name, string context, bool rejectEdits)
+        {
+            UpdateLayout();
+            var before = SessionHash();
+            _ = MeasureTimingMarkers(context);
+            if (rejectEdits)
+            {
+                foreach (var button in new[] { MoveButton, TrimButton })
+                {
+                    try { ((IInvokeProvider)new ButtonAutomationPeer(button).GetPattern(PatternInterface.Invoke)).Invoke(); throw new InvalidOperationException("Unavailable event timing accepted an edit."); }
+                    catch (System.Windows.Automation.ElementNotEnabledException) { }
+                }
+                Key(MoveBox, System.Windows.Input.Key.Enter); Key(MoveBox, System.Windows.Input.Key.Escape);
+                Key(TrimBox, System.Windows.Input.Key.Enter); Key(TrimBox, System.Windows.Input.Key.Escape);
+            }
+            var after = SessionHash();
+            if (before != after) throw new InvalidOperationException("Inspecting unavailable event timing changed the shared session.");
+            topRowsStates.Add(new { name, before_sha256 = before, after_sha256 = after, revision = model.State.Revision,
+                selected_track_id = model.State.Selection.TrackID, selected_clip_id = model.State.Selection.ClipID,
+                markers = MeasureTimingMarkers(context), layout = MeasureTopRowsLayout() });
+        }
+        object RulerBox(Rect rect) => new { text = Timeline.RulerCornerLabel.Text, x = rect.X, y = rect.Y, width = rect.Width, height = rect.Height };
+        void ValidateRulerCorner(Rect label, Rect header)
+        {
+            var viewport = BoundsOf(Descendants<ScrollContentPresenter>(TimelineScroll).Single(presenter => ReferenceEquals(presenter.TemplatedParent, TimelineScroll)));
+            if (Timeline.RulerCornerLabel.Text != "Bars + Beats" || !Timeline.RulerCornerLabel.IsVisible || label.Width <= 0 || label.Height <= 0 ||
+                label.Left < header.Left - 0.5 || label.Right > header.Right + 0.5 || label.Top < viewport.Top - 0.5 || label.Bottom > header.Top + 0.5)
+                throw new InvalidOperationException("The musical ruler corner is not visible inside its pinned header region.");
+        }
+        async Task LongNamesScenario()
+        {
+            stage = "top-rows-long-names";
+            var originalRoot = Path.Combine(AppContext.BaseDirectory, "Examples", "Rebase Preview.rebaseproj");
+            var originalBytes = await File.ReadAllBytesAsync(Path.Combine(originalRoot, "Project.json"));
+            var project = JsonNode.Parse(originalBytes)?.AsObject() ?? throw new InvalidDataException("The bundled project is not an object.");
+            const string projectName = "Authored long project name — arrangement and source information remain separate — " +
+                "a readable complete project identity available from the tooltip while the compact status row retains its clock, track count and media context";
+            const string eventName = "Authored long event name — independent selected event identity — " +
+                "start and end remain accessible without allowing the full title to displace the timing fields or the source offset";
+            project["name"] = projectName;
+            var firstClip = project["tracks"]![0]!["clips"]![0]!.AsObject();
+            firstClip["name"] = eventName;
+            var clipID = firstClip["id"]!.GetValue<string>();
+            var destination = Path.Combine(work, "LongNames.rebaseproj"); Directory.CreateDirectory(destination);
+            foreach (var file in Directory.EnumerateFiles(originalRoot, "*", SearchOption.AllDirectories))
+            {
+                var relative = Path.GetRelativePath(originalRoot, file);
+                if (relative == "Project.json") continue;
+                var target = Path.Combine(destination, relative); Directory.CreateDirectory(Path.GetDirectoryName(target)!); File.Copy(file, target);
+            }
+            var derivedBytes = JsonSerializer.SerializeToUtf8Bytes(project, new JsonSerializerOptions { WriteIndented = true });
+            await File.WriteAllBytesAsync(Path.Combine(destination, "Project.json"), derivedBytes);
+            await model.Open(destination, true, true);
+            await model.Command("selectClip", clipID: clipID);
+            await Until(() => !model.Busy && model.SelectedClip?.Name == eventName && Timeline.PopulatedWaveformCount == model.Project!.Tracks.Sum(track => track.Clips.Length), stage);
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            if (ProjectName.Text != projectName || SelectionName.Text != eventName) throw new InvalidOperationException("The long-name control was not selected.");
+            object TextReceipt(TextBlock text)
+            {
+                var box = BoundsOf(text);
+                var measured = new FormattedText(text.Text, System.Globalization.CultureInfo.CurrentCulture, text.FlowDirection,
+                    new Typeface(text.FontFamily, text.FontStyle, text.FontWeight, text.FontStretch), text.FontSize, text.Foreground, VisualTreeHelper.GetDpi(text).PixelsPerDip);
+                if (text.TextTrimming != TextTrimming.CharacterEllipsis || text.ToolTip as string != text.Text || measured.WidthIncludingTrailingWhitespace <= box.Width || box.Width <= 0)
+                    throw new InvalidOperationException("A long title lacks bounded ellipsis and a complete tooltip.");
+                return new { text = text.Text, tooltip = (string)text.ToolTip, trimming = text.TextTrimming.ToString(), natural_width = measured.WidthIncludingTrailingWhitespace,
+                    x = box.X, y = box.Y, width = box.Width, height = box.Height };
+            }
+            topRowsLongNames = new { project_name = projectName, event_name = eventName, project_text = TextReceipt(ProjectName), event_text = TextReceipt(SelectionName),
+                original_manifest_sha256 = Hash(originalBytes), derived_manifest_sha256 = Hash(derivedBytes) };
+            _ = MeasureTopRowsLayout();
+            await CaptureTopRows("native-top-rows-long-names-visual.png");
+            checks.Add("top-rows-long-names");
+            stage = "top-rows-resize-preserves-state";
+            var before = SessionHash(); var revisionBefore = model.State.Revision;
+            var trackBefore = model.State.Selection.TrackID; var clipBefore = model.State.Selection.ClipID;
+            var widthBefore = ActualWidth; var heightBefore = ActualHeight;
+            Width = 1400;
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var widthAfter = ActualWidth;
+            await CaptureTopRows("native-top-rows-wide-visual.png");
+            var after = SessionHash();
+            topRowsResize = new { before_sha256 = before, after_sha256 = after, revision_before = revisionBefore, revision_after = model.State.Revision,
+                track_before = trackBefore, track_after = model.State.Selection.TrackID, clip_before = clipBefore, clip_after = model.State.Selection.ClipID,
+                requested_outer_width = 1400, outer_width_before = widthBefore, outer_width_after = widthAfter, wider_observed = widthAfter > widthBefore + 0.5 };
+            if (before != after || revisionBefore != model.State.Revision || trackBefore != model.State.Selection.TrackID || clipBefore != model.State.Selection.ClipID)
+                throw new InvalidOperationException("Window resizing changed the shared session.");
+            Width = widthBefore; Height = heightBefore;
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            MeasureWindowBounds();
+            if (Math.Abs(ActualWidth - widthBefore) > 0.5 || Math.Abs(ActualHeight - heightBefore) > 0.5 || before != SessionHash())
+                throw new InvalidOperationException("Restoring the measured window bounds changed the layout or project state.");
+            checks.Add("top-rows-resize-preserves-state");
+            string Hash(byte[] bytes) => Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(bytes)).ToLowerInvariant();
+        }
+        async Task CaptureTopRows(string filename)
+        {
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var layout = MeasureTopRowsLayout();
+            await Capture(filename);
+            topRowsCaptures.Add(new { screenshot = filename, png_sha256 = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(await File.ReadAllBytesAsync(Path.Combine(root, filename)))).ToLowerInvariant(),
+                window_bounds = windowBounds, layout });
         }
         string SessionHash() => Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(model.State, ProtocolJson.Options)))).ToLowerInvariant();
         Rect BoundsOf(FrameworkElement element) => element.IsVisible ? element.TransformToAncestor((FrameworkElement)Content).TransformBounds(new Rect(element.RenderSize)) : new Rect(0, 0, 0, 0);
@@ -445,6 +579,7 @@ public partial class MainWindow
                     selected_track_id = model.State.Selection.TrackID, selected_clip_id = model.State.Selection.ClipID,
                     row_height = Timeline.RowHeight, selected_density_index = RowDensityBox.SelectedIndex,
                     viewport_height = TimelineScroll.ViewportHeight, viewport_width = TimelineScroll.ViewportWidth,
+                    canvas_width = Timeline.Width, divider_ends = Timeline.RowDividers.Select(line => new { x1 = line.X1, y1 = line.Y1, x2 = line.X2, y2 = line.Y2 }).ToArray(),
                     tracks_bottom = Timeline.TracksBottom, extent_height = TimelineScroll.ExtentHeight,
                     scrollable_height = TimelineScroll.ScrollableHeight, vertical_offset = TimelineScroll.VerticalOffset,
                     left_visible = leftZoneVisible, mixer_visible = mixerZoneVisible,
@@ -452,6 +587,9 @@ public partial class MainWindow
                     timeline = Box(BoundsOf(TimelineScroll)), viewport = Box(BoundsOf(Descendants<ScrollContentPresenter>(TimelineScroll).Single(presenter => ReferenceEquals(presenter.TemplatedParent, TimelineScroll)))),
                     mixer = Box(BoundsOf(MixerZone)), headers = Timeline.TrackHeaders.Select(header => Box(BoundsOf(header))).ToArray() });
                 RefreshWorkspaceReceipt();
+                if (Timeline.RowDividers.Count != 4 || Timeline.RowDividers.Any(line => Math.Abs(line.X2 - Timeline.Width) > 0.5 || line.Y1 != line.Y2) ||
+                    Timeline.RowDividers.Select(line => line.Y1).Distinct().Count() != 4)
+                    throw new InvalidOperationException("The track row dividers do not fill the actual canvas width.");
                 var expectedExtent = Math.Max(TimelineScroll.ViewportHeight, Timeline.TracksBottom);
                 if (Math.Abs(TimelineScroll.ExtentHeight - expectedExtent) > 0.5 || Math.Abs(TimelineScroll.ScrollableHeight - Math.Max(0, Timeline.TracksBottom - TimelineScroll.ViewportHeight)) > 0.5)
                     throw new InvalidOperationException("The timeline extent does not match its measured viewport and track rows.");

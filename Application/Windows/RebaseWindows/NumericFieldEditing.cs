@@ -42,6 +42,7 @@ public partial class MainWindow
 
     private void RestoreNumericField(TextBox field)
     {
+        if ((field == MoveBox || field == TrimBox) && model.SelectedClip is null) { field.Text = "—"; return; }
         double value;
         string format;
         if (field == MoveBox) { value = model.SelectedClip?.Position ?? 0; format = "0.######"; }
