@@ -10,17 +10,21 @@ The reference uses compact top tool/status/info rows, separate channel and inspe
 
 Vendor screenshots and the PDF are study inputs outside this repository. Application controls and drawing code are independently authored. No proprietary executable was run. The manual establishes documented layout and visible states; it does not establish measured event timing, undocumented behavior, every customization, or pixel-identical runtime rendering.
 
-## Current verification queue
+## Verified preview and remaining work
 
-| Journey | Implementation and evidence | Remaining acceptance |
+[Native run 39939758507](../../research/publication/windows-portability/application-run-39939758507/observation.json) passed 39 actual-window checks at commit `6a6f4d4077fd817574d7f2756e3f060d693f35b5`. Its three 1084 × 749 client-area images were inspected independently and accepted for the scoped development preview. The earlier [run 39936173813](../../research/publication/windows-portability/application-run-39936173813/observation.json) remains unchanged, including its observed source-selector/header and capture-bounds defects.
+
+| Journey | Current implementation and evidence | Remaining acceptance |
 | --- | --- | --- |
-| Open the bundled beat and select a track/clip | Native run 39936173813 passed selection, move, undo/redo, Save As, reopen and render through the actual window. | Physical input, keyboard focus and selected-state review after follow-up changes. |
-| Read and edit audio events | Source-domain waveform reducer is shared with macOS; native window displayed all 11 waveforms and all four rows. Process checks independently verified 17,600 peak bins. | Fixed headers during horizontal scrolling, zoom/resize and hover styling. |
-| Mix levels and pan | Shared edit history and audio renderer remain authoritative; native capture shows dense channel strips. | Editable inspector volume/pan and M/S; native slider/keyboard behavior, focus retention, undo and selected-channel feedback. |
-| Read musical time | macOS already uses the shared tempo/signature models for ruler positions. | Extract that display projection for Windows and verify its bars/beats against the authored example. |
-| Attach and audition a preserved source event | Shared strict PCM24 source snapshot passed authored portable/private Mac regressions. Native window selection, attachment, undo/redo, export and exact provenance checks passed. | Correct the observed source selector object string and incorrect None header; audio hardware remains separate. |
-| Publish a Windows build | Native run 39936173813 passed runtime closure, actual-window checks and the test gate. | Follow-up visual acceptance and fresh package audit; this intermediate ZIP is not a release. |
+| Open the bundled beat and select a track/clip | Native selection, move, undo/redo, Save As, reopen and render checks passed. The example opens as an editable copy. | Physical pointer/keyboard input and native file dialogs. |
+| Read and edit audio events | Shared source-domain waveforms display all 11 clips and four rows. Independent helper checks verify 17,600 peak bins. Native geometry confirms four fixed headers and a 358-pixel event scroll. | Wider zoom/resize, editing and selection journeys; additional reference tool behavior. |
+| Mix levels and pan | Inspector volume/pan/M/S and channel-strip volume/M/S use shared commands and history. Native automation verifies edits, inspector synchronization, focus restoration and undo. | Physical gestures, broader keyboard coverage, detailed reference fader scales, separate Channel area, routing and metering behavior. |
+| Read musical time | Mac and Windows use the same tempo/signature display projection. Native labels put bar 2 at 2.5 seconds for the authored 96 BPM example; the seconds toggle passes. | Reference-customized ruler configurations and further timing modes. |
+| Attach and audition a preserved source event | Shared strict PCM24 snapshot, native selection/attachment/undo/redo/export and exact provenance checks pass. Source selector and selected-event header now display correct text. | Actual audio output, other native audition modes and full imported-project behavior. |
+| Publish a Windows build | Native package passes the mandatory optimized shared-test gate, runtime dependency closure and application checks. | Interactive Windows 11 and real audio-device verification; full feature parity. |
 
-The [retained native images](../../research/publication/windows-portability/application-run-39936173813/observation.json) were reviewed at their recorded 1100 × 788 pixel size. They show readable waveform events and four visible track rows, but also expose the source-selector/header defects above. The capture used outer-window bounds for a client visual, leaving unused pixels corresponding to the nonclient frame; the follow-up should record and render actual client bounds. Passing functional smoke did not override these visual findings.
+The preview follows the reference's compact top rows, neutral graphite event display, left inspector, lower channel strips and bottom transport. It is not an exact visual reconstruction. Toolbar tools remain text-heavy; the event information row, Channel/Inspector balance, mixer scales, right zone and many reference controls still differ or are absent. Those differences remain development work, not accepted equivalence.
 
-After implementation, compare the actual Windows window with the reference at a recorded size. A WPF visual-tree PNG does not validate the operating-system title bar, physical input, native file dialogs, or human comprehension. Record those limits alongside the result rather than treating a passing image or component test as full interface parity.
+The musical ruler is shared application display policy, not a claim about undocumented reference UI rounding. No source events become resolved merely because the ruler can display their timing.
+
+Compare each subsequent actual Windows build with the reference at a recorded size. A WPF visual-tree PNG does not validate the operating-system title bar, physical input, native file dialogs, or human comprehension. Keep those limits alongside the result.
