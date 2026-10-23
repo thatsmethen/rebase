@@ -39,6 +39,10 @@ The [Windows host](../../Application/Windows/RebaseWindows/README.md) sends vers
 
 ## Parallel development gate
 
+The current automation candidate exposes the existing shared volume/pan lane model in the Windows editor. It adds revision-bound point edits, Read controls, unchanged-edit preservation, undo/redo and saved-project roundtrips. Native acceptance must exercise the real helper and WPF editor, compare the original/restored example bytes against the existing lock, and inspect minimum-size Read-off, invalid-input and restored-state captures. Four portable lanes must also match the edited and restored audio bytes. Local readiness does not close the native acceptance item above.
+
+Windows commits each successful edit immediately and Close retains it; macOS currently defers its editor transaction until Apply. Inline automation lanes, write/touch/latch modes and reference-equivalent presentation remain open.
+
 Changes to shared semantics must run the macOS and Windows conformance lanes. Record exact toolchain, architecture, configuration, test counts and observed output. Keep static reference evidence, independent numerical controls, reconstructed application behavior, and hardware observations distinct. Preserve original research seals and private fixture boundaries.
 
 Do not declare parity from a successful component build. Reviewed raw CPR import now has bounded native-window evidence. The next compatibility integrations are the remaining native conversion/placed/overlap audition modes, device-rate output, interchange and automation workflows. Continue shared REA behavior work through both platform lanes; the full ledger remains the acceptance target.

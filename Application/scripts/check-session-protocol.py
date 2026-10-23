@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Exercise the packaged JSONL helper interactively, before closing its input."""
 import argparse
+import copy
 import hashlib
 import json
 import math
 from pathlib import Path
 import queue
+import shutil
 import struct
 import subprocess
 import tempfile
@@ -63,6 +65,251 @@ def peak_words(values):
     if any(type(value) not in (int, float) or not math.isfinite(value) or value < 0 for value in values):
         raise RuntimeError("Invalid waveform peak value")
     return struct.pack("<" + str(len(values)) + "f", *values)
+
+
+def automation_journey(args, work, state, send, check, report, lock):
+    """Edit actual authored lanes through the production process, preserving locks.
+
+    The complete expected document is compared after each accepted edit, so a
+    targeted operation cannot silently change another lane, track or clip.
+    Render hashes from new edits are observations, never replacements for the
+    predeclared original example lock.
+    """
+    gates = ("existing_volume_projected", "edits_revision_bound", "stale_rejected",
+             "invalid_rejected", "other_automation_preserved", "read_off_preserves_points",
+             "read_off_uses_manual_gain", "pan_edit_read_roundtrip", "undo_restores_project",
+             "undo_restores_locked_render", "redo_restores_edits", "save_reopen_preserves_edits",
+             "source_unchanged")
+    receipt = {"tested": False, **dict.fromkeys(gates, False),
+               "evidence_class": "authored-shared-session-control", "playback_tested": False}
+    report["automation"] = receipt
+    original_files = {p.relative_to(args.example).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                      for p in args.example.rglob("*") if p.is_file()}
+    original = copy.deepcopy(state["project"])
+    current = state
+    target_index = 1
+    track = original["tracks"][target_index]
+    track_id = track["id"]
+    gain = next(lane for lane in track["automation"] if lane["parameter"] == "gainDB")
+    source_track = json.loads((args.example / "Project.json").read_text(encoding="utf-8"))["tracks"][target_index]
+    source_gain = next(lane for lane in source_track["automation"] if lane["parameter"] == "gainDB")
+    original_points = [(0, -10, "linear"), (5, -7, "linear"), (10, -5, "linear"),
+                       (17.5, -5, "linear"), (20, -12, "linear")]
+    check(track["name"] == "Warm pad" and track_id == source_track["id"]
+          and gain == source_gain and gain["isReadEnabled"] is True
+          and [(p["time"], p["value"], p["interpolation"]) for p in gain["points"]] == original_points,
+          "automation projection preserves all five authored volume points and their ordering")
+    receipt.update(existing_volume_projected=True, original_point_count=5,
+                   original_track_id=track_id, original_lane_id=gain["id"])
+    projected = send("state")
+    check(projected.get("ok") is True and projected["state"] == current,
+          "reading the automation document projection preserves revision selection and history")
+    snapshots = [copy.deepcopy(original)]
+
+    def lane_in(project, parameter):
+        return next((lane for lane in project["tracks"][target_index]["automation"]
+                     if lane["parameter"] == parameter), None)
+
+    def valid_uuid(value):
+        try:
+            return isinstance(value, str) and str(uuid.UUID(value)).lower() == value.lower()
+        except (ValueError, AttributeError):
+            return False
+
+    def mutate(command, parameter, name, **values):
+        nonlocal current
+        before = current
+        reply = send(command, before["revision"], trackID=track_id, parameter=parameter, **values)
+        after = reply["state"]
+        expected = copy.deepcopy(before["project"])
+        lane = lane_in(expected, parameter)
+        actual_lane = lane_in(after["project"], parameter)
+        if lane is None:
+            check(actual_lane is not None and valid_uuid(actual_lane.get("id"))
+                  and actual_lane["id"] not in {item["id"] for item in track["automation"]},
+                  name + " creates a distinct valid lane identity")
+            lane = {"id": actual_lane["id"], "parameter": parameter, "isReadEnabled": True, "points": []}
+            expected["tracks"][target_index]["automation"].append(lane)
+        if command == "upsertAutomationPoint":
+            point_id = values.get("pointID")
+            if point_id is None:
+                candidates = [p for p in actual_lane["points"] if p["time"] == values["time"]]
+                check(len(candidates) == 1 and valid_uuid(candidates[0].get("id"))
+                      and candidates[0]["id"] not in {p["id"] for p in lane["points"]},
+                      name + " creates a distinct valid point identity")
+                point_id = candidates[0]["id"]
+            lane["points"] = [p for p in lane["points"] if p["id"] != point_id and p["time"] != values["time"]]
+            lane["points"].append({"id": point_id, "time": values["time"], "value": values["value"],
+                                   "interpolation": values.get("interpolation", "linear")})
+            lane["points"].sort(key=lambda p: p["time"])
+        elif command == "removeAutomationPoint":
+            lane["points"] = [p for p in lane["points"] if p["id"] != values["pointID"]]
+        elif command == "setAutomationRead":
+            lane["isReadEnabled"] = values["enabled"]
+        else:
+            raise RuntimeError("Unknown automation control command")
+        check(reply.get("ok") is True and after["revision"] == before["revision"] + 1
+              and after["project"] == expected and after["selection"] == before["selection"]
+              and after["dirty"] and after["canUndo"],
+              name + " advances exactly one revision and preserves every unrelated document field")
+        current = after
+        snapshots.append(copy.deepcopy(expected))
+        return lane
+
+    # Create a pan lane first so every subsequent volume edit has another lane
+    # on the same track whose exact identities, read state and values must survive.
+    pan = mutate("upsertAutomationPoint", "pan", "pan point insertion", time=0, value=-0.25,
+                 interpolation="step")
+    pan_first = pan["points"][0]["id"]
+    mutate("upsertAutomationPoint", "pan", "second pan point insertion", time=10, value=0.5)
+    mutate("upsertAutomationPoint", "pan", "existing pan point edit", pointID=pan_first,
+           time=0, value=-0.5, interpolation="linear")
+    pan_before_read = copy.deepcopy(lane_in(current["project"], "pan"))
+    mutate("setAutomationRead", "pan", "pan Read off", enabled=False)
+    mutate("setAutomationRead", "pan", "pan Read on", enabled=True)
+    check(lane_in(current["project"], "pan") == pan_before_read,
+          "pan Read roundtrip preserves both authored edit points exactly")
+    receipt["pan_edit_read_roundtrip"] = True
+
+    old_revision = current["revision"]
+    changed = gain["points"][1]
+    mutate("upsertAutomationPoint", "gainDB", "existing volume point move and step edit",
+           pointID=changed["id"], time=6, value=-9, interpolation="step")
+    for command, fields in (("upsertAutomationPoint", {"time": 1, "value": -6}),
+                            ("removeAutomationPoint", {"pointID": gain["points"][0]["id"]}),
+                            ("setAutomationRead", {"enabled": False})):
+        rejected = send(command, old_revision, trackID=track_id, parameter="gainDB", **fields)
+        check(rejected.get("ok") is False and rejected.get("error", {}).get("code") == "staleRevision"
+              and rejected["state"] == current, "stale " + command + " preserves document revision and history")
+    receipt["stale_rejected"] = True
+
+    missing_id = "00000000-0000-4000-8000-000000000001"
+    invalid = [
+        ("upsertAutomationPoint", {"time": -1, "value": -6}),
+        ("upsertAutomationPoint", {"time": 86401, "value": -6}),
+        ("upsertAutomationPoint", {"time": 1, "value": -97}),
+        ("upsertAutomationPoint", {"time": 1, "value": 25}),
+        ("upsertAutomationPoint", {"time": 1, "value": -6, "interpolation": "unsupported"}),
+        ("upsertAutomationPoint", {"time": 1}),
+        ("upsertAutomationPoint", {"value": -6}),
+        ("upsertAutomationPoint", {"pointID": missing_id, "time": 1, "value": -6}),
+        ("upsertAutomationPoint", {"parameter": "unsupported", "time": 1, "value": -6}),
+        ("upsertAutomationPoint", {"parameter": None, "time": 1, "value": -6}),
+        ("upsertAutomationPoint", {"parameter": "pan", "time": 1, "value": 1.01}),
+        ("upsertAutomationPoint", {"parameter": "pan", "time": 1, "value": -1.01}),
+        ("upsertAutomationPoint", {"trackID": missing_id, "time": 1, "value": -6}),
+        ("removeAutomationPoint", {"pointID": missing_id}),
+        ("setAutomationRead", {}),
+    ]
+    for index, (command, fields) in enumerate(invalid, 1):
+        rejected = send(command, current["revision"], **{"trackID": track_id, "parameter": "gainDB", **fields})
+        check(rejected.get("ok") is False and rejected["state"] == current,
+              "invalid automation request " + str(index) + " is rejected without changing state or history")
+    receipt["invalid_rejected"] = True
+    same_point = next(p for p in lane_in(current["project"], "gainDB")["points"] if p["id"] == changed["id"])
+    unchanged = send("upsertAutomationPoint", current["revision"], trackID=track_id, parameter="gainDB",
+                     pointID=same_point["id"], time=same_point["time"], value=same_point["value"],
+                     interpolation=same_point["interpolation"])
+    check(unchanged.get("ok") is True and unchanged["state"] == current,
+          "identical automation upsert does not create a revision or undo entry")
+    mutate("upsertAutomationPoint", "gainDB", "new volume point insertion", time=7.5, value=-3)
+    mutate("removeAutomationPoint", "gainDB", "volume point deletion", pointID=gain["points"][2]["id"])
+    before_read = copy.deepcopy(lane_in(current["project"], "gainDB"))
+    mutate("setAutomationRead", "gainDB", "volume Read off", enabled=False)
+    check(lane_in(current["project"], "gainDB")["points"] == before_read["points"],
+          "volume Read off preserves the complete edited curve")
+    receipt["read_off_preserves_points"] = True
+    repeated_read = send("setAutomationRead", current["revision"], trackID=track_id,
+                         parameter="gainDB", enabled=False)
+    check(repeated_read.get("ok") is True and repeated_read["state"] == current,
+          "repeating automation Read state does not create a revision or undo entry")
+    disabled_project = copy.deepcopy(current["project"])
+
+    def render_checked(filename, label):
+        output = work / filename
+        reply = send("render", current["revision"], path=str(output))
+        check(reply.get("ok") is True and reply["state"] == current and not output.is_symlink(), label)
+        data = output.read_bytes()
+        digest = hashlib.sha256(data).hexdigest()
+        pcm_digest = hashlib.sha256(wav_chunks(data)[b"data"]).hexdigest()
+        metadata = reply.get("render", {})
+        check(metadata.get("revision") == current["revision"] and metadata.get("sha256") == digest
+              and metadata.get("frames") == lock["frames"] and metadata.get("channels") == lock["channels"]
+              and metadata.get("sampleRate") == lock["sample_rate"] and metadata.get("wavBytes") == len(data),
+              label + " returns matching file and frame provenance")
+        return data, digest, pcm_digest
+
+    disabled_audio, _, _ = render_checked("automation-read-off.wav", "disabled volume automation renders read-only")
+    mutate("setAutomationRead", "gainDB", "volume Read on", enabled=True)
+    intended = copy.deepcopy(current["project"])
+    edited_audio, edited_digest, edited_pcm = render_checked("automation-edited.wav", "edited automation renders read-only")
+    check(edited_audio != disabled_audio and edited_digest != lock["wav_sha256"],
+          "enabled edited automation changes the authored render and differs from its Read-off result")
+    receipt.update(edits_revision_bound=True, other_automation_preserved=True)
+    for expected in reversed(snapshots[:-1]):
+        previous = current
+        undone = send("undo", previous["revision"])
+        check(undone.get("ok") is True and undone["state"]["revision"] == previous["revision"] + 1
+              and undone["state"]["project"] == expected,
+              "automation undo restores the exact preceding complete project at revision "
+              + str(undone["state"]["revision"]))
+        current = undone["state"]
+    check(current["project"] == original and not current["dirty"] and not current["canUndo"],
+          "all automation edits undo to the original clean project and empty undo history")
+    receipt["undo_restores_project"] = True
+    _, restored_digest, restored_pcm = render_checked("automation-restored.wav", "automation undo renders the original project")
+    check(restored_digest == lock["wav_sha256"] and restored_pcm == lock["pcm_sha256"],
+          "automation undo restores both predeclared example WAV and PCM hashes exactly")
+    receipt["undo_restores_locked_render"] = True
+    for expected in snapshots[1:]:
+        previous = current
+        redone = send("redo", previous["revision"])
+        check(redone.get("ok") is True and redone["state"]["revision"] == previous["revision"] + 1
+              and redone["state"]["project"] == expected,
+              "automation redo restores the exact next complete project at revision "
+              + str(redone["state"]["revision"]))
+        current = redone["state"]
+    check(current["project"] == intended and not current["canRedo"],
+          "automation redo restores all intended volume and pan edits with stable identities")
+    receipt["redo_restores_edits"] = True
+    saved_path = work / "AutomationEdited.rebaseproj"
+    saved = send("saveAs", current["revision"], path=str(saved_path))
+    check(saved.get("ok") is True and saved["state"]["project"] == intended and not saved["state"]["dirty"],
+          "automation edits save into a new project without changing their values or identities")
+    reopened = send("open", saved["state"]["revision"], path=str(saved_path))
+    check(reopened.get("ok") is True and reopened["state"]["project"] == intended
+          and not reopened["state"]["dirty"] and not reopened["state"]["canUndo"],
+          "saved automation lanes reopen exactly with clean document history")
+    current = reopened["state"]
+    reopened_audio, reopened_digest, reopened_pcm = render_checked("automation-reopened.wav", "reopened automation renders read-only")
+    check(reopened_audio == edited_audio and reopened_digest == edited_digest and reopened_pcm == edited_pcm,
+          "saved and reopened automation produces byte-identical edited audio")
+    receipt["save_reopen_preserves_edits"] = True
+
+    # Independent manual-fallback control: remove only the disabled gain lane
+    # from a scratch derivative. The same pan lane and all other data remain.
+    manual_root = work / "AutomationManualControl.rebaseproj"
+    shutil.copytree(args.example, manual_root)
+    manual_project = copy.deepcopy(disabled_project)
+    manual_project["tracks"][target_index]["automation"] = [
+        lane for lane in manual_project["tracks"][target_index]["automation"] if lane["parameter"] != "gainDB"]
+    (manual_root / "Project.json").write_text(json.dumps(manual_project), encoding="utf-8")
+    manual_opened = send("open", current["revision"], path=str(manual_root), asCopy=True)
+    check(manual_opened.get("ok") is True and manual_opened["state"]["project"] == manual_project,
+          "derived manual-gain control removes only the disabled gain lane")
+    current = manual_opened["state"]
+    manual_audio, _, _ = render_checked("automation-manual.wav", "manual-gain control renders read-only")
+    check(manual_audio == disabled_audio,
+          "Read-off volume automation uses exactly the same audio as manual gain without its lane")
+    receipt["read_off_uses_manual_gain"] = True
+    final_files = {p.relative_to(args.example).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                   for p in args.example.rglob("*") if p.is_file()}
+    check(final_files == original_files, "automation controls preserve every bundled example file byte")
+    receipt.update(tested=True, source_unchanged=True, mutation_count=len(snapshots)-1,
+                   invalid_requests_checked=len(invalid), restored_wav_sha256=restored_digest,
+                   restored_pcm_sha256=restored_pcm, edited_wav_sha256=edited_digest,
+                   edited_pcm_sha256=edited_pcm)
+    return current
 
 
 def source_journey(args, work, revision, send, check, report):
@@ -461,7 +708,7 @@ def main():
         parser.error("Source verification requires project, media and lock inputs together")
     lock = json.loads((Path(__file__).parent / "example-render-lock.json").read_text())
     report = {"schema": "rebase.session-protocol-check.v1", "status": "failed",
-              "scope": "Interactive authored session process, musical ruler, source waveforms, optional source-event PCM and reviewed CPR import; no GUI or audio device claim",
+              "scope": "Interactive authored session process, automation editing, musical ruler, source waveforms, optional source-event PCM and reviewed CPR import; no GUI or audio device claim",
               "source_journey_tested": False, "checks": []}
     original = (args.example / "Project.json").read_bytes()
     process = subprocess.Popen([str(args.helper.resolve()), "--stdio"], stdin=subprocess.PIPE,
@@ -505,7 +752,8 @@ def main():
         report["checks"].append(name)
 
     try:
-        with tempfile.TemporaryDirectory(prefix="rebase-protocol-check-") as work:
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="rebase-protocol-check-", dir=args.report.parent) as work:
             root = Path(work)
             opened = send("open", path=str(args.example.resolve()), asCopy=True)
             check(opened.get("ok") is True and opened["state"]["revision"] == 1 and opened["state"]["needsSaveAs"],
@@ -618,8 +866,9 @@ def main():
             check(reopened.get("ok") is True and reopened["state"]["project"] == project,
                   "saved project reopens with identical document semantics")
             check((args.example / "Project.json").read_bytes() == original, "bundled example manifest remains unchanged")
+            automation_state = automation_journey(args, root, reopened["state"], send, check, report, lock)
             if args.source_project is not None:
-                source_journey(args, root, reopened["state"]["revision"], send, check, report)
+                source_journey(args, root, automation_state["revision"], send, check, report)
                 cpr_import_journey(args, root, send, check, report)
             process.stdin.close()
             check(process.wait(timeout=15) == 0, "EOF cleanly terminates session")

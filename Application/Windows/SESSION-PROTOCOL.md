@@ -22,6 +22,9 @@ Every command except `state` includes the current `expectedRevision`. The helper
 | `deleteEvent` | `clipID`. |
 | `setGain`, `setPan` | `trackID`, finite `value` in dB or −1…1 pan. |
 | `toggleMute`, `toggleSolo` | `trackID`. |
+| `upsertAutomationPoint` | `trackID`, `parameter`: `gainDB` or `pan`, `time`: absolute project seconds, `value`. Optional existing `pointID`; omit to insert a new identity. Optional `interpolation`: `linear` (default) or `step`. |
+| `removeAutomationPoint` | `trackID`, `parameter`, existing `pointID`. |
+| `setAutomationRead` | `trackID`, `parameter`, required Boolean `enabled`. |
 | `setTempo` | Finite `value` in BPM. |
 | `undo`, `redo`, `save` | None. |
 | `saveAs` | `path`: a new, nonexistent `.rebaseproj` directory with an existing parent. |
@@ -32,6 +35,31 @@ Every command except `state` includes the current `expectedRevision`. The helper
 | `ruler` | Required finite `value`: pixels per second in 4…420. Optional finite `duration`: extent in seconds in 0…86,400. Read-only musical ticks, no revision change. |
 
 Quarter/eighth/sixteenth snapping is 1, 0.5, and 0.25 quarter notes. Bar snapping uses the shared signature map. The helper derives trim limits from checked media and generates split identifiers. The frontend sends proposed seconds from pointer geometry, leaving all snapping and edit rules to Swift.
+
+Automation commands use the shared lane model and edit history. Times must be
+finite and within 0…86,400 seconds, volume values within −96…24 dB, and pan
+within −1…1. These commands do not snap or clamp values. Interpolation belongs
+to the point's outgoing segment. Linear volume interpolation is in dB; step
+holds until the next point's exact time. Automation replaces the manual value;
+Read off or an empty lane uses the manual track value. Rendering evaluates the
+lane at absolute project-frame time, independently of clip source offset.
+
+A provided point identifier must exist in the selected parameter's lane;
+otherwise the command fails without changing state. A new point gets a helper
+UUID. An insertion at an occupied timestamp replaces that point, and moving an
+existing identity to an occupied timestamp removes the displaced point. The
+result remains sorted by time. Existing lane identity, Read state, other lanes
+and other tracks are retained. New lanes default to Read on; `setAutomationRead`
+can create an empty lane with the requested Read state. Removing the final
+point retains the empty lane and its identity. An unchanged existing point or
+Read value succeeds without advancing revision or clearing redo history; the
+revision check still precedes that no-op. Missing removal targets fail.
+
+Session edits may grow a lane to 4,096 points. Beyond that, an edit which would
+increase the count fails with `automationLimit`. Existing larger lanes remain
+loadable, editable and reducible without truncation. The limit does not change
+the project format. The authoritative projection remains the complete
+`state.project.tracks[].automation` array, including every point and identity.
 
 CPR inspection and historical report review return `cprReview` with a UUID
 `reviewID`, `sourceName`, `sourceSHA256`, `sourceByteCount`,

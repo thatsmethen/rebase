@@ -78,6 +78,7 @@ public partial class MainWindow : Window
             SourcePanel.IsEnabled = !model.Busy;
             RefreshEditingAvailability();
             InspectorTrackControls.IsEnabled = !model.Busy && model.SelectedTrack is not null;
+            AutomationMenu.IsEnabled = InspectorTrackControls.IsEnabled;
             UndoButton.IsEnabled = !model.Busy && model.State.CanUndo;
             RedoButton.IsEnabled = !model.Busy && model.State.CanRedo;
             RestoreMixerFocus();
@@ -113,6 +114,7 @@ public partial class MainWindow : Window
         InspectorGain.Text = model.SelectedTrack is null ? "—" : $"{model.SelectedTrack.GainDB:0.0} dB";
         InspectorPan.Text = model.SelectedTrack is null ? "—" : PanText(model.SelectedTrack.Pan);
         InspectorTrackControls.IsEnabled = model.SelectedTrack is not null && !model.Busy;
+        AutomationMenu.IsEnabled = InspectorTrackControls.IsEnabled;
         updatingInspector = true;
         try
         {
@@ -402,6 +404,7 @@ public partial class MainWindow : Window
         if (closeFinished) return;
         e.Cancel = true;
         if (reviewingCPR) { activeCPRReview?.Activate(); return; }
+        if (openingAutomation) { activeAutomationEditor?.Activate(); return; }
         if (closing) return;
         closing = true;
         IsEnabled = false;

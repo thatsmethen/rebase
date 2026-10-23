@@ -59,3 +59,10 @@ Nine reviewed native captures show the arrangement, source attachment/export, an
 
 
 The workspace defaults to 44-DIP Compact rows and offers 68-DIP Normal rows. Left/Mixer toggles return their space to the arrangement; the lower-zone divider supports bounded pointer and keyboard resizing. Faders adapt to the mixer height, Inspector sections collapse, and ordinary clip editing stays disabled for retained source events. Native checks record actual content viewports, extent/scroll relationships, state hashes, hit targets, splitter limits and source-selection transitions. The separate selection-control scratch project preserves its original source/report sidecars and is never packaged. Physical gestures remain unverified.
+## Automation editing candidate
+
+`Edit → Track Automation…` and the selected-track Inspector open a volume/pan editor. Select a point to change its time, value or outgoing Linear/Hold segment; Add or a curve click creates a point. Read controls whether the lane affects rendering without deleting its points. Edits enter the shared project undo history immediately, and Close retains successful edits. The macOS editor currently uses an Apply/Cancel transaction instead.
+
+The shared helper checks the project revision, parameter bounds and point identity before each edit. Numeric drafts keep their original revision and are rejected if the project changes. Unchanged edits preserve redo history. Existing larger lanes remain readable and editable, although session commands cannot grow a lane beyond 4,096 points; curves over 16,384 points explicitly report that drawing is unavailable.
+
+Local checks cover the normal Release helper, host command/state handling and shared sample rendering. Native Windows layout, packaged execution and cross-platform edited audio are pending for this candidate. This is authored application behavior; reference automation modes and inline lane fidelity remain separate work.

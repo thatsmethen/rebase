@@ -19,10 +19,16 @@ public struct PortableSessionRequest: Codable {
     public var sourceSHA256: String?
     public var allowPartial: Bool?
     public var reviewOffset: Int?
+    public var parameter: String?
+    public var pointID: UUID?
+    public var time: Double?
+    public var interpolation: String?
+    public var enabled: Bool?
     enum CodingKeys: String, CodingKey {
         case protocolVersion = "protocol"
         case id, command, expectedRevision, path, clipID, trackID, value, duration, snap, discardChanges, asCopy
         case reviewID, sourceSHA256, allowPartial, reviewOffset
+        case parameter, pointID, time, interpolation, enabled
     }
 }
 
@@ -84,6 +90,9 @@ public struct PortableSessionReply: Encodable {
 /// edits, validation, undo, timing and mixing use the same application sources.
 public final class PortableSession {
     public static let maximumRequestBytes = 65_536
+    /// Bounds growth through individual protocol edits, without truncating or
+    /// rejecting an existing larger lane when it is opened or reduced.
+    public static let maximumEditableAutomationPoints = 4_096
     private var project: Project?
     private var savedProject: Project?
     private var root: URL?
@@ -406,15 +415,15 @@ public final class PortableSession {
                 kind: "sourceEvent", eventID: eventID, sourceSHA256: rendered.sourceSHA256,
                 mediaSHA256: rendered.mediaSHA256)
         default:
-            let edit = try makeEdit(request, project: current, root: root)
-            if let result = try history.apply(edit, to: current, selection: selection) {
+            if let edit = try makeEdit(request, project: current, root: root),
+               let result = try history.apply(edit, to: current, selection: selection) {
                 project = result.project; selection = result.selection; revision += 1
             }
         }
         return nil
     }
 
-    private func makeEdit(_ request: PortableSessionRequest, project: Project, root: URL) throws -> ProjectEdit {
+    private func makeEdit(_ request: PortableSessionRequest, project: Project, root: URL) throws -> ProjectEdit? {
         func value() throws -> Double {
             guard let number = request.value, number.isFinite else { throw failure("value", "A finite edit value is required.") }
             return number
@@ -457,6 +466,51 @@ public final class PortableSession {
         case "setPan": return try .setPan(trackID(), value())
         case "toggleMute": return try .toggleMute(trackID())
         case "toggleSolo": return try .toggleSolo(trackID())
+        case "upsertAutomationPoint", "removeAutomationPoint", "setAutomationRead":
+            let id = try trackID()
+            guard let rawParameter = request.parameter,
+                  let parameter = AutomationParameter(rawValue: rawParameter) else {
+                throw failure("automationParameter", "Choose gainDB or pan automation.")
+            }
+            let track = project.tracks.first { $0.id == id }!
+            let original = track.automation.first { $0.parameter == parameter }
+            var lane = original ?? AutomationLane(parameter: parameter)
+            switch request.command {
+            case "upsertAutomationPoint":
+                guard let time = request.time, time.isFinite, (0...86_400).contains(time) else {
+                    throw failure("automationTime", "Automation time must be finite and within 0…86,400 seconds.")
+                }
+                let number = try value()
+                guard parameter.valueRange.contains(number) else {
+                    throw failure("automationValue", "The automation value is outside this parameter's range.")
+                }
+                guard let interpolation = AutomationInterpolation(rawValue: request.interpolation ?? "linear") else {
+                    throw failure("automationInterpolation", "Choose linear or step interpolation.")
+                }
+                if let pointID = request.pointID, !lane.points.contains(where: { $0.id == pointID }) {
+                    throw failure("selection", "The automation point does not exist in this lane.")
+                }
+                let previousCount = lane.points.count
+                try lane.upsert(AutomationPoint(id: request.pointID ?? UUID(), time: time,
+                    value: number, interpolation: interpolation))
+                guard lane.points.count <= Self.maximumEditableAutomationPoints || lane.points.count <= previousCount else {
+                    throw failure("automationLimit", "This lane cannot grow beyond 4,096 points through session edits. Existing points remain editable.")
+                }
+            case "removeAutomationPoint":
+                guard let pointID = request.pointID, lane.points.contains(where: { $0.id == pointID }) else {
+                    throw failure("selection", "The automation point does not exist in this lane.")
+                }
+                lane.removePoint(id: pointID)
+            default:
+                guard let enabled = request.enabled else {
+                    throw failure("automationRead", "An automation Read state is required.")
+                }
+                lane.isReadEnabled = enabled
+            }
+            // Do not replace the other lanes, recreate lane identity, or clear
+            // redo history merely because a field was committed unchanged.
+            guard lane != original else { return nil }
+            return .setAutomation(id, lane)
         case "setTempo":
             guard project.tempoMap.nativeClock == nil else { throw failure("nativeTiming", "This timing map requires an explicit conversion in the Mac application.") }
             var map = project.tempoMap

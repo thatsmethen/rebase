@@ -15,6 +15,8 @@ import time
 import urllib.request
 import zipfile
 
+from windows_automation_gate import require_automation_protocol, require_automation_window
+
 SDK = "10.0.402"
 DOTNET_RUNTIME = "10.0.13"
 SWIFT = "6.4.1"
@@ -969,6 +971,8 @@ def main():
                 or imported.get("sourceSHA256") != expected_source["sourceSHA256"]
                 or imported.get("reportSHA256") != expected_source["reportSHA256"]):
             raise RuntimeError("Packaged CPR import protocol checks did not pass")
+        require_automation_protocol(session, json.loads((example / "Project.json").read_text(encoding="utf-8")),
+                                    json.loads((app / "scripts/example-render-lock.json").read_text(encoding="utf-8")))
         smoke_path = evidence / "wpf-smoke.json"
         run([str(stage / "Rebase.exe"), "--smoke", "--smoke-json", str(smoke_path),
              "--smoke-source-project", str(source_project), "--smoke-source-media", str(source_media)],
@@ -1018,6 +1022,8 @@ def main():
         require_musical_ruler(smoke)
         require_workspace_layout(smoke, evidence, expected_source)
         require_top_rows(smoke, evidence, digest(example / "Project.json"), expected_source)
+        require_automation_window(smoke, evidence, json.loads((example / "Project.json").read_text(encoding="utf-8")),
+                                  json.loads((app / "scripts/example-render-lock.json").read_text(encoding="utf-8")))
         modules = {"process": validate_modules(smoke.pop("process_modules", None), stage, windows,
                                                {"rebase.exe", "coreclr.dll", "rebasewindowsaudio.dll"}),
                    "helper": validate_modules(smoke.pop("helper_modules", None), stage, windows,

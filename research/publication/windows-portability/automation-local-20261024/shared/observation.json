@@ -1,0 +1,76 @@
+{
+  "source_baseline": "0ecf4a813f19760e8e00f6b72ea28d8d3d719bfe",
+  "source_files": [
+    {
+      "path": "Application/Sources/RebaseCore/PortableSession.swift",
+      "bytes": 34504,
+      "sha256": "56ff63b5720bba7dca130b76e3b570cea836337fa11990653000a51b98b49646"
+    },
+    {
+      "path": "Application/Tests/RebasePortableTests/PortableAutomationSessionTests.swift",
+      "bytes": 15487,
+      "sha256": "750a07ab7849fe5e02bff68055c5903291344baea7e24ee93b2447c0df133a30"
+    },
+    {
+      "path": "Application/Tests/SharedEditingTests/AutomationRenderingTests.swift",
+      "bytes": 4661,
+      "sha256": "09276016f4df0994039b83b6b6292b9dd3062c16304a95f7a03aae45cd4dc7ee"
+    },
+    {
+      "path": "Application/Windows/SESSION-PROTOCOL.md",
+      "bytes": 14262,
+      "sha256": "7ff122bb03d9d7a3a49c8311adda670b66b9c6fdc1733592bd533d6f86ccacac"
+    }
+  ],
+  "test_reports": [
+    {
+      "report": "focused-tests-03.xml",
+      "bytes": 1516,
+      "sha256": "39bb56bcc88527a19335f0c461001a1c25b924629c74b0ab46fb7fcbde6ae3b7",
+      "reported": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "session-regression-tests.xml",
+      "bytes": 2973,
+      "sha256": "bd6cc5e20cef9e31c0961fa7ed883e8f6a17eabc670538629e35e7706d2d88f1",
+      "reported": 18,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "prior_attempts": [
+    {
+      "log": "focused-test-01.log",
+      "outcome": "build failed: default Command Line Tools lacked Testing framework flags"
+    },
+    {
+      "log": "focused-test-02.log",
+      "outcome": "test-source compile failed: throwing expression in short-circuit assertion; corrected before attempt03"
+    }
+  ],
+  "production_helper": {
+    "path": "scratch/arm64-apple-macosx/release/rebase-session",
+    "bytes": 2259072,
+    "sha256": "2909ad4d45e3721f427157651c317d695d95020b60e9447998dfca4c17284595",
+    "normal_release_flags": true,
+    "test_framework_flags": false
+  },
+  "package_resolved_restored_exact": true,
+  "new_tests": 8,
+  "regression_tests": 18,
+  "limitations": [
+    "Local macOS ARM64 portable execution only; no Windows native UI or audio device validation in this record.",
+    "Authored application automation semantics; no reference-application behavior or CPR automation compatibility established."
+  ],
+  "commands": {
+    "focused_filter": "PortableAutomationSessionTests|AutomationRenderingTests",
+    "regression_filter": "PortableSessionTests|ProjectEditingTests",
+    "release_product": "rebase-session",
+    "portable_only": true,
+    "configuration": "Debug tests; Release product"
+  }
+}

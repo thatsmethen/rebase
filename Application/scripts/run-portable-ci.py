@@ -13,6 +13,8 @@ import sys
 import time
 import xml.etree.ElementTree as ET
 
+from windows_automation_gate import require_automation_protocol
+
 
 def collect_test_results(xml_paths):
     if not xml_paths:
@@ -257,6 +259,9 @@ def main():
                         or imported.get("reportSHA256") != expected_source["reportSHA256"]):
                     raise RuntimeError("Reviewed CPR import protocol checks did not pass")
                 report["cpr_import_control"] = imported
+                require_automation_protocol(session_result,
+                    json.loads((app / "Examples/Rebase Preview.rebaseproj/Project.json").read_text(encoding="utf-8")), lock)
+                report["automation_control"] = session_result["automation"]
         sanitize_xml()
         report["tests"] = collect_test_results(test_xml_paths())
         report["status"] = "passed"

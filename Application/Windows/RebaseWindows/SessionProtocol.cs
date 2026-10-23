@@ -21,6 +21,11 @@ public sealed class SessionRequest
     public string? SourceSHA256 { get; set; }
     public bool? AllowPartial { get; set; }
     public int? ReviewOffset { get; set; }
+    public string? Parameter { get; set; }
+    public string? PointID { get; set; }
+    public double? Time { get; set; }
+    public string? Interpolation { get; set; }
+    public bool? Enabled { get; set; }
 }
 public sealed class SessionResponse
 {
