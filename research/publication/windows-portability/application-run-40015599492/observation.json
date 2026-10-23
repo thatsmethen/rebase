@@ -1,0 +1,1159 @@
+{
+  "schema": "rebase.windows-ci-observation.v1",
+  "recorded_at_utc": "2026-10-23T20:20:32.152843+00:00",
+  "commit": "83f4956e94bda1e60f62aa9aa28a5d5333740385",
+  "status": "failed",
+  "run_url": "https://github.com/thatsmethen/rebase/actions/runs/40015599492",
+  "job_url": "https://github.com/thatsmethen/rebase/actions/runs/40015599492/job/120626731417",
+  "publication_status": "No ZIP produced or published. The failed native journey requires a separately observed correction.",
+  "findings": [
+    "WPF and the production helper compiled; 155 host controls and 91 packaged-helper protocol checks passed.",
+    "The native window scenario completed 63 checks. It passed normal row sizing, workspace pane toggles, capture refusal, splitter and fader bounds, ordinary editing, and the CPR review/import journey, then timed out at source-auto-expand during source-event-ui-selection.",
+    "The recorded Normal geometry is 68-DIP rows, 298-DIP track-content bottom and 327-DIP viewport height. The previous normal-density failure is not reproduced in this candidate.",
+    "Eight workspace states retain the same shared-session hash and revision. Hiding both panes produces a 565-DIP timeline viewport; the splitter reached mixer heights 196 and 340 with a 220-DIP minimum arrangement and preserved keyboard focus.",
+    "The retained geometry also reports eight DIP of vertical scroll range in the default, normal and restored layouts despite the four tracks fitting. Those original measurements are preserved; this record does not promote the workspace to final visual acceptance.",
+    "Source-level diagnosis found that the smoke selected the current track, whose ProjectSelection.selectingTrack behavior preserves the current source event. Reassigning that event is ignored by the host same-ID guard, so the test did not create the selection transition its auto-expansion expectation required. This is a code-derived explanation, not additional runtime state instrumentation.",
+    "Five PNGs were emitted: normal and expanded workspace views, the source-selection failure view, and both CPR review sizes. Final main/source/scroll captures were not reached. The two CPR PNGs are byte-identical to the earlier accepted captures.",
+    "The source-only ordinary-action refusal check passed, but the aggregate source-only receipt remained null because it is populated after the failed auto-expansion wait. Source attachment/export and the subsequent native ruler/scroll journey were not reached.",
+    "The application workflow shared Release gate and ZIP assembly were not reached. The successful 13-job component run is retained separately.",
+    "All 16 packaged-helper CPR gates and exact example/source PCM, waveform and ruler locks matched the separate component results. The standalone native adapter passed 89 lifecycle checks; both endpoint observations reported unavailable, with no playback measured."
+  ],
+  "host_control_checks": 155,
+  "packaged_helper_checks": 91,
+  "completed_window_checks": 63,
+  "failed_stage": "source-event-ui-selection",
+  "failed_check": "source-auto-expand",
+  "failed_error": "source-auto-expand: Selection updated.",
+  "package_produced": false,
+  "capture_produced": true,
+  "workspace_geometry_available": true,
+  "window_bounds_available": true,
+  "shared_release_gate_reached": false,
+  "release_accepted": false,
+  "completed_window_check_names": [
+    "visible-window-layout",
+    "snap-control-fits-toolbar",
+    "bundled-example-is-copy",
+    "clip-selection",
+    "selection-synchronized-across-panes",
+    "workspace-compact-default",
+    "workspace-normal-density",
+    "workspace-event-hit-targets",
+    "workspace-inspector-sections",
+    "workspace-active-capture-preserved",
+    "workspace-keyboard-pane-toggles",
+    "workspace-pane-state-preserved",
+    "workspace-splitter-bounds",
+    "workspace-resized-fader-geometry",
+    "workspace-visual-artifacts",
+    "inspector-volume-shared-edit",
+    "inspector-focus-restored",
+    "inspector-volume-undo",
+    "inspector-volume-redo",
+    "inspector-pan-shared-edit",
+    "mixer-volume-shared-edit-and-undo",
+    "channel-volume-shared-edit",
+    "channel-volume-undo",
+    "channel-pan-shared-edit",
+    "channel-mute-shared-edit",
+    "fader-scale-matches-value",
+    "mixer-numeric-volume-commit",
+    "mixer-numeric-volume-invalid-preserved",
+    "mixer-numeric-volume-cancel",
+    "inspector-mute-shared-edit",
+    "inspector-solo-shared-edit",
+    "mixer-mute-shared-edit",
+    "track-solo-shared-edit",
+    "numeric-event-enter-and-undo",
+    "numeric-event-cancel",
+    "numeric-event-invalid-preserved",
+    "numeric-trim-enter-and-undo",
+    "numeric-tempo-enter-and-undo",
+    "numeric-seek-and-cancel",
+    "move-changes-document",
+    "shared-undo",
+    "shared-redo",
+    "save-as-persists-project",
+    "reopen-retains-edit",
+    "render-hash-and-format-verified",
+    "native-dll-endpoint-probe-completed",
+    "cpr-review-window-visible",
+    "cpr-review-all-pages-accessible",
+    "cpr-review-footer-visible",
+    "cpr-review-capture-alpha-coverage",
+    "cpr-review-visual-artifact",
+    "cpr-review-cancel-preserves-session",
+    "cpr-changed-source-rejected",
+    "cpr-review-minimum-error-layout",
+    "cpr-dirty-cancel-preserves-session",
+    "cpr-destination-cancel-preserves-review",
+    "cpr-import-supported-data",
+    "cpr-import-source-preserved",
+    "cpr-historical-report-readonly",
+    "source-package-copy",
+    "source-event-ui-selection",
+    "source-selection-labels",
+    "workspace-source-only-actions"
+  ],
+  "window_bounds": {
+    "outer_width": 1100,
+    "outer_height": 788,
+    "client_width": 1084,
+    "client_height": 749,
+    "dpi_x": 96,
+    "dpi_y": 96
+  },
+  "workspace": {
+    "initial_state_sha256": "afde64960fdf9e304370293d4ad8c2a86ab6280b14b3ce667371b97db68b215e",
+    "states": [
+      {
+        "name": "compact",
+        "state_sha256": "afde64960fdf9e304370293d4ad8c2a86ab6280b14b3ce667371b97db68b215e",
+        "revision": 1,
+        "selected_track_id": "73C36D59-A90F-5261-BC69-569A0B6226DD",
+        "selected_clip_id": "4B652FC4-3418-5853-8918-039CBF176A42",
+        "row_height": 44,
+        "selected_density_index": 0,
+        "viewport_height": 327,
+        "viewport_width": 781,
+        "tracks_bottom": 202,
+        "extent_height": 335,
+        "scrollable_height": 8,
+        "vertical_offset": 0,
+        "left_visible": true,
+        "mixer_visible": true,
+        "left_width": 286,
+        "horizontal_offset": 0,
+        "timeline": {
+          "x": 286,
+          "y": 126,
+          "width": 798,
+          "height": 344
+        },
+        "mixer": {
+          "x": 286,
+          "y": 475,
+          "width": 798,
+          "height": 216
+        },
+        "headers": [
+          {
+            "x": 286,
+            "y": 152,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 196,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 240,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 284,
+            "width": 198,
+            "height": 44
+          }
+        ]
+      },
+      {
+        "name": "normal",
+        "state_sha256": "afde64960fdf9e304370293d4ad8c2a86ab6280b14b3ce667371b97db68b215e",
+        "revision": 1,
+        "selected_track_id": "73C36D59-A90F-5261-BC69-569A0B6226DD",
+        "selected_clip_id": "4B652FC4-3418-5853-8918-039CBF176A42",
+        "row_height": 68,
+        "selected_density_index": 1,
+        "viewport_height": 327,
+        "viewport_width": 781,
+        "tracks_bottom": 298,
+        "extent_height": 335,
+        "scrollable_height": 8,
+        "vertical_offset": 0,
+        "left_visible": true,
+        "mixer_visible": true,
+        "left_width": 286,
+        "horizontal_offset": 0,
+        "timeline": {
+          "x": 286,
+          "y": 126,
+          "width": 798,
+          "height": 344
+        },
+        "mixer": {
+          "x": 286,
+          "y": 475,
+          "width": 798,
+          "height": 216
+        },
+        "headers": [
+          {
+            "x": 286,
+            "y": 152,
+            "width": 198,
+            "height": 68
+          },
+          {
+            "x": 286,
+            "y": 220,
+            "width": 198,
+            "height": 68
+          },
+          {
+            "x": 286,
+            "y": 288,
+            "width": 198,
+            "height": 68
+          },
+          {
+            "x": 286,
+            "y": 356,
+            "width": 198,
+            "height": 68
+          }
+        ]
+      },
+      {
+        "name": "left-hidden",
+        "state_sha256": "afde64960fdf9e304370293d4ad8c2a86ab6280b14b3ce667371b97db68b215e",
+        "revision": 1,
+        "selected_track_id": "73C36D59-A90F-5261-BC69-569A0B6226DD",
+        "selected_clip_id": "4B652FC4-3418-5853-8918-039CBF176A42",
+        "row_height": 44,
+        "selected_density_index": 0,
+        "viewport_height": 344,
+        "viewport_width": 1084,
+        "tracks_bottom": 202,
+        "extent_height": 335,
+        "scrollable_height": 0,
+        "vertical_offset": 0,
+        "left_visible": false,
+        "mixer_visible": true,
+        "left_width": 0,
+        "horizontal_offset": 0,
+        "timeline": {
+          "x": 0,
+          "y": 126,
+          "width": 1084,
+          "height": 344
+        },
+        "mixer": {
+          "x": 0,
+          "y": 475,
+          "width": 1084,
+          "height": 216
+        },
+        "headers": [
+          {
+            "x": 4.5,
+            "y": 156.5,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 4.5,
+            "y": 200.5,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 4.5,
+            "y": 244.5,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 4.5,
+            "y": 288.5,
+            "width": 198,
+            "height": 44
+          }
+        ]
+      },
+      {
+        "name": "panes-hidden",
+        "state_sha256": "afde64960fdf9e304370293d4ad8c2a86ab6280b14b3ce667371b97db68b215e",
+        "revision": 1,
+        "selected_track_id": "73C36D59-A90F-5261-BC69-569A0B6226DD",
+        "selected_clip_id": "4B652FC4-3418-5853-8918-039CBF176A42",
+        "row_height": 44,
+        "selected_density_index": 0,
+        "viewport_height": 565,
+        "viewport_width": 1084,
+        "tracks_bottom": 202,
+        "extent_height": 556,
+        "scrollable_height": 0,
+        "vertical_offset": 0,
+        "left_visible": false,
+        "mixer_visible": false,
+        "left_width": 0,
+        "horizontal_offset": 0,
+        "timeline": {
+          "x": 0,
+          "y": 126,
+          "width": 1084,
+          "height": 565
+        },
+        "mixer": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "headers": [
+          {
+            "x": 4.5,
+            "y": 156.5,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 4.5,
+            "y": 200.5,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 4.5,
+            "y": 244.5,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 4.5,
+            "y": 288.5,
+            "width": 198,
+            "height": 44
+          }
+        ]
+      },
+      {
+        "name": "restored",
+        "state_sha256": "afde64960fdf9e304370293d4ad8c2a86ab6280b14b3ce667371b97db68b215e",
+        "revision": 1,
+        "selected_track_id": "73C36D59-A90F-5261-BC69-569A0B6226DD",
+        "selected_clip_id": "4B652FC4-3418-5853-8918-039CBF176A42",
+        "row_height": 44,
+        "selected_density_index": 0,
+        "viewport_height": 327,
+        "viewport_width": 781,
+        "tracks_bottom": 202,
+        "extent_height": 335,
+        "scrollable_height": 8,
+        "vertical_offset": 0,
+        "left_visible": true,
+        "mixer_visible": true,
+        "left_width": 286,
+        "horizontal_offset": 0,
+        "timeline": {
+          "x": 286,
+          "y": 126,
+          "width": 798,
+          "height": 344
+        },
+        "mixer": {
+          "x": 286,
+          "y": 475,
+          "width": 798,
+          "height": 216
+        },
+        "headers": [
+          {
+            "x": 286,
+            "y": 152,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 196,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 240,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 284,
+            "width": 198,
+            "height": 44
+          }
+        ]
+      },
+      {
+        "name": "splitter-minimum",
+        "state_sha256": "afde64960fdf9e304370293d4ad8c2a86ab6280b14b3ce667371b97db68b215e",
+        "revision": 1,
+        "selected_track_id": "73C36D59-A90F-5261-BC69-569A0B6226DD",
+        "selected_clip_id": "4B652FC4-3418-5853-8918-039CBF176A42",
+        "row_height": 44,
+        "selected_density_index": 0,
+        "viewport_height": 347,
+        "viewport_width": 781,
+        "tracks_bottom": 202,
+        "extent_height": 355,
+        "scrollable_height": 8,
+        "vertical_offset": 0,
+        "left_visible": true,
+        "mixer_visible": true,
+        "left_width": 286,
+        "horizontal_offset": 0,
+        "timeline": {
+          "x": 286,
+          "y": 126,
+          "width": 798,
+          "height": 364
+        },
+        "mixer": {
+          "x": 286,
+          "y": 495,
+          "width": 798,
+          "height": 196
+        },
+        "headers": [
+          {
+            "x": 286,
+            "y": 152,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 196,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 240,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 284,
+            "width": 198,
+            "height": 44
+          }
+        ]
+      },
+      {
+        "name": "splitter-maximum",
+        "state_sha256": "afde64960fdf9e304370293d4ad8c2a86ab6280b14b3ce667371b97db68b215e",
+        "revision": 1,
+        "selected_track_id": "73C36D59-A90F-5261-BC69-569A0B6226DD",
+        "selected_clip_id": "4B652FC4-3418-5853-8918-039CBF176A42",
+        "row_height": 44,
+        "selected_density_index": 0,
+        "viewport_height": 203,
+        "viewport_width": 781,
+        "tracks_bottom": 202,
+        "extent_height": 211,
+        "scrollable_height": 8,
+        "vertical_offset": 0,
+        "left_visible": true,
+        "mixer_visible": true,
+        "left_width": 286,
+        "horizontal_offset": 0,
+        "timeline": {
+          "x": 286,
+          "y": 126,
+          "width": 798,
+          "height": 220
+        },
+        "mixer": {
+          "x": 286,
+          "y": 351,
+          "width": 798,
+          "height": 340
+        },
+        "headers": [
+          {
+            "x": 286,
+            "y": 152,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 196,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 240,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 284,
+            "width": 198,
+            "height": 44
+          }
+        ]
+      },
+      {
+        "name": "splitter-restored",
+        "state_sha256": "afde64960fdf9e304370293d4ad8c2a86ab6280b14b3ce667371b97db68b215e",
+        "revision": 1,
+        "selected_track_id": "73C36D59-A90F-5261-BC69-569A0B6226DD",
+        "selected_clip_id": "4B652FC4-3418-5853-8918-039CBF176A42",
+        "row_height": 44,
+        "selected_density_index": 0,
+        "viewport_height": 327,
+        "viewport_width": 781,
+        "tracks_bottom": 202,
+        "extent_height": 335,
+        "scrollable_height": 8,
+        "vertical_offset": 0,
+        "left_visible": true,
+        "mixer_visible": true,
+        "left_width": 286,
+        "horizontal_offset": 0,
+        "timeline": {
+          "x": 286,
+          "y": 126,
+          "width": 798,
+          "height": 344
+        },
+        "mixer": {
+          "x": 286,
+          "y": 475,
+          "width": 798,
+          "height": 216
+        },
+        "headers": [
+          {
+            "x": 286,
+            "y": 152,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 196,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 240,
+            "width": 198,
+            "height": 44
+          },
+          {
+            "x": 286,
+            "y": 284,
+            "width": 198,
+            "height": 44
+          }
+        ]
+      }
+    ],
+    "event_targets": [
+      {
+        "row_height": 44,
+        "event_width": 160,
+        "event_height": 38,
+        "move_x": 80,
+        "trim_x": 155,
+        "trim_width": 10,
+        "move_hit": true,
+        "trim_hit": true
+      },
+      {
+        "row_height": 68,
+        "event_width": 160,
+        "event_height": 58,
+        "move_x": 80,
+        "trim_x": 155,
+        "trim_width": 10,
+        "move_hit": true,
+        "trim_hit": true
+      }
+    ],
+    "splitter": {
+      "minimum_height": 196,
+      "maximum_height": 340,
+      "minimum_actual": 196,
+      "maximum_actual": 340,
+      "arrangement_minimum_actual": 220,
+      "keyboard_focus_preserved": true,
+      "faders": [
+        {
+          "zone_height": 196,
+          "fader_height": 60,
+          "value": -5,
+          "tick_y": 17.858333333333334,
+          "thumb_y": 17.85833333333335
+        },
+        {
+          "zone_height": 340,
+          "fader_height": 204,
+          "value": -5,
+          "tick_y": 52.65833333333334,
+          "thumb_y": 52.6583333333333
+        }
+      ]
+    },
+    "source_only": null,
+    "capture_safety": [
+      {
+        "surface": "inspector",
+        "capture_before": true,
+        "capture_after": true,
+        "layout_refused": true
+      },
+      {
+        "surface": "timeline",
+        "capture_before": true,
+        "capture_after": true,
+        "layout_refused": true
+      },
+      {
+        "surface": "mixer",
+        "capture_before": true,
+        "capture_after": true,
+        "layout_refused": true
+      }
+    ],
+    "current_layout": {
+      "selected_density_index": 0,
+      "row_height": 44,
+      "layout_capture_active": false,
+      "density_dropdown_open": false,
+      "viewport_height": 327,
+      "viewport_width": 781,
+      "tracks_bottom": 70,
+      "extent_height": 335,
+      "scrollable_height": 8,
+      "vertical_offset": 0,
+      "arrangement_height": 344,
+      "mixer_height": 216
+    },
+    "toolbar_controls": [
+      {
+        "name": "RowDensityBox",
+        "x": 626.9766666666667,
+        "y": 29,
+        "width": 88,
+        "height": 25
+      },
+      {
+        "name": "LeftZoneToggle",
+        "x": 970.7333333333333,
+        "y": 29,
+        "width": 32.1,
+        "height": 25
+      },
+      {
+        "name": "MixerZoneToggle",
+        "x": 1006.8333333333334,
+        "y": 29,
+        "width": 41.16666666666667,
+        "height": 25
+      }
+    ],
+    "screenshots": {
+      "normal": "native-workspace-normal-visual.png",
+      "expanded": "native-workspace-expanded-visual.png"
+    },
+    "input_evidence": "UIA and injected routed keyboard events; no physical input"
+  },
+  "cpr_review": {
+    "reviewed": true,
+    "cancelled_without_changes": true,
+    "changed_source_rejected": true,
+    "dirty_guard": true,
+    "destination_cancel_preserved_review": true,
+    "imported": true,
+    "historical_read_only": true,
+    "preserved_source_sha256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "review_screenshot": "native-cpr-review-visual.png",
+    "window_bounds": {
+      "outer_width": 830,
+      "outer_height": 650,
+      "client_width": 814,
+      "client_height": 611,
+      "dpi_x": 96,
+      "dpi_y": 96
+    },
+    "pages_checked": 1,
+    "items_checked": 15,
+    "capture_layout": {
+      "footer_controls": [
+        {
+          "name": "Previous",
+          "x": 634,
+          "y": 532,
+          "width": 78,
+          "height": 24
+        },
+        {
+          "name": "Next",
+          "x": 716,
+          "y": 532,
+          "width": 78,
+          "height": 24
+        },
+        {
+          "name": "Cancel",
+          "x": 538,
+          "y": 567,
+          "width": 82,
+          "height": 24
+        },
+        {
+          "name": "Import Supported Data",
+          "x": 624,
+          "y": 567,
+          "width": 170,
+          "height": 24
+        }
+      ],
+      "alpha_minimum": 254,
+      "alpha_254_pixels": 4979,
+      "alpha_255_pixels": 492375,
+      "alpha_below_254_pixels": 0,
+      "total_pixels": 497354,
+      "review_viewport_height": 347.9,
+      "error_characters": 0
+    },
+    "minimum_error_screenshot": "native-cpr-review-minimum-error-visual.png",
+    "minimum_error_bounds": {
+      "outer_width": 650,
+      "outer_height": 480,
+      "client_width": 634,
+      "client_height": 441,
+      "dpi_x": 96,
+      "dpi_y": 96
+    },
+    "minimum_error_layout": {
+      "footer_controls": [
+        {
+          "name": "Previous",
+          "x": 454,
+          "y": 358.08,
+          "width": 78,
+          "height": 24
+        },
+        {
+          "name": "Next",
+          "x": 536,
+          "y": 358.08,
+          "width": 78,
+          "height": 24
+        },
+        {
+          "name": "Cancel",
+          "x": 358,
+          "y": 397,
+          "width": 82,
+          "height": 24
+        },
+        {
+          "name": "Import Supported Data",
+          "x": 444,
+          "y": 397,
+          "width": 170,
+          "height": 24
+        }
+      ],
+      "alpha_minimum": 254,
+      "alpha_254_pixels": 4979,
+      "alpha_255_pixels": 274615,
+      "alpha_below_254_pixels": 0,
+      "total_pixels": 279594,
+      "review_viewport_height": 173.97999999999996,
+      "error_characters": 85
+    },
+    "error_scrolling_checked": false,
+    "vertical_scroll_checked": true,
+    "dark_caption_hresult": 0,
+    "native_frame_visual_tested": false,
+    "native_file_pickers_tested": false,
+    "physical_input_tested": false
+  },
+  "cpr_import_protocol": {
+    "tested": true,
+    "review_read_only": true,
+    "review_bounded": true,
+    "cancellation_preserves_state": true,
+    "superseded_review_rejected": true,
+    "stale_revision_rejected": true,
+    "changed_source_rejected": true,
+    "explicit_partial_required": true,
+    "dirty_replacement_guarded": true,
+    "existing_destination_preserved": true,
+    "import_published": true,
+    "exact_source_and_report_preserved": true,
+    "save_reopen_preserves_baseline": true,
+    "historical_read_only": true,
+    "tampered_report_rejected": true,
+    "tampered_source_rejected": true,
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "reportSHA256": "f7e8949acac910533f30f21bca9c0daee581f7099770715991a5b9f0ff096833",
+    "evidence_class": "authored-synthetic-control",
+    "playback_tested": false,
+    "review_items_checked": 15,
+    "review_pages_checked": 1
+  },
+  "source": {
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "mediaSHA256": "c1ccbba91f8d9084cba4271ec5cc7c6114d754349d6da98f42a91463830fe956",
+    "outputSHA256": "8090c75bc7ace4f400eb25d428129c68eddec2c488200e9fcad4deb5700afd0a",
+    "pcmSHA256": "06e73a6e5b244c0c187bdd6482d8db7bb3adfd3ac98f2c11e6cd4c29d7a3bce0",
+    "frames": 44100,
+    "sampleRate": 44100,
+    "channels": 2,
+    "playback_tested": false
+  },
+  "waveform": {
+    "clips_checked": 11,
+    "peak_bins_checked": 17600,
+    "float32_peak_words_sha256": "ade8ed5eb493af376b7affbfb5bd0bf3f06aafa51eabe63c48c6657406caba29",
+    "oracle": "Independent signed PCM16 extrema over exact source intervals"
+  },
+  "ruler": {
+    "read_only": true,
+    "stale_revision_rejected": true,
+    "pixels_per_second": 100,
+    "duration": 20,
+    "ticks_checked": 33,
+    "first_bar_seconds": [
+      0,
+      2.5,
+      5,
+      7.5
+    ],
+    "first_quarter_seconds": [
+      0,
+      0.625,
+      1.25,
+      1.875,
+      2.5
+    ],
+    "oracle": "Authored constant 96 BPM, 4/4: quarter = 5/8 seconds; bar = 5/2 seconds"
+  },
+  "example_render": {
+    "frames": 960000,
+    "wav_sha256": "13edfc233369484ff5c88aa4e4ca8a2f013d7c2ac3f21a0c7881e00dc3e457b9",
+    "pcm_sha256": "f51a6801100ba715e589fcd9d99be2c0c81f6911972548a4c64fff73ff60c8d4"
+  },
+  "native_audio": {
+    "portable_lifecycle": {
+      "schema": 1,
+      "suite": "native-audio-portable-lifecycle",
+      "checks": 89,
+      "failures": 0,
+      "wasapi_compiled": false,
+      "playback_tested": false
+    },
+    "endpoint_probe": {
+      "outcome": "unavailable-no-endpoint",
+      "exit_code": 77,
+      "playback_tested": false
+    }
+  },
+  "visual_evidence": {
+    "images": {
+      "native-cpr-review-visual.png": {
+        "width": 814,
+        "height": 611,
+        "bytes": 64349,
+        "sha256": "e0a3943d8698f6132b752149f5fdfda7778e2d66a1925e31239943c510403ca0"
+      },
+      "native-workspace-normal-visual.png": {
+        "width": 1084,
+        "height": 749,
+        "bytes": 79995,
+        "sha256": "143f80947aca31c100f0ead1c2b28697498108388b3e764c84ad9ce2fd755a3c"
+      },
+      "native-cpr-review-minimum-error-visual.png": {
+        "width": 634,
+        "height": 441,
+        "bytes": 41321,
+        "sha256": "4262f6bbe96ace30489893b705f4a82f28f01251535f790ff9409f9759e39b54"
+      },
+      "native-workspace-failure-visual.png": {
+        "width": 1084,
+        "height": 749,
+        "bytes": 61920,
+        "sha256": "a91fe935a1cff4abf02ab2262351b3bf6a60fca97306fcdf861b83de04bf453a"
+      },
+      "native-workspace-expanded-visual.png": {
+        "width": 1084,
+        "height": 749,
+        "bytes": 50412,
+        "sha256": "6c172ac2624782397726725e9f25f0f7004faa86bdf3b9cbeb057b7c87f6a011"
+      }
+    },
+    "manual_review": "Three workspace captures inspected for displayed content and personal information; both CPR captures match previously retained exact PNG bytes. No candidate visual acceptance.",
+    "accepted": false
+  },
+  "component_evidence": {
+    "run_url": "https://github.com/thatsmethen/rebase/actions/runs/40015599436",
+    "observation": "../run-40015599436/observation.json",
+    "scope": "Separate shared-component and production-helper execution; no completed native-window journey inference."
+  },
+  "boundaries": [
+    "All 32 available raw records are retained byte-exactly; the original failure is not repaired.",
+    "The images render the client visual tree, not the native frame or a desktop screenshot. UIA and routed synthetic keyboard controls do not establish physical input or native file-picker behavior.",
+    "Static PE dependency closure does not replace the missing completed loaded-module check; both raw module arrays are empty.",
+    "No completed native-window journey, ZIP, new visual acceptance, audio playback or complete reference fidelity is established."
+  ],
+  "source_files": [
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.Layout.cs",
+      "bytes": 5657,
+      "sha256": "2fe8ff72d371432ed1767c42e7f7c83e226da056032cf0507f6da52b91c599a1"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml",
+      "bytes": 26768,
+      "sha256": "588a629588090bdc177bbdd33f43c6b61e6a595a31ca8f5d21d6ac0f01d7b963"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml.cs",
+      "bytes": 30342,
+      "sha256": "814e2b82b1ace56d863ddc1ec53d8e211156ac1881eca3569edda38cf2e13536"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/TimelineView.cs",
+      "bytes": 16420,
+      "sha256": "bab96064439934221a4fa04790249c356adfeb62595ae08dc9f69ef56d502b90"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/WindowSmoke.cs",
+      "bytes": 65531,
+      "sha256": "3bfd9856af8bb033caddca42c3ecc3263f0a07aa9d9df194cc254f6f8633fdc1"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/ProjectEditing.swift",
+      "bytes": 11562,
+      "sha256": "062ec74d85b2537db5cb3d5ab8c747b870a21939ef2c640bf9b98a69f8ceac4b"
+    },
+    {
+      "path": "Application/Sources/RebaseCore/PortableSession.swift",
+      "bytes": 31150,
+      "sha256": "3163f468b25ef2fffa2fd0c5b577e3b1c9c2d3490ac07643ca16a6283e7575cf"
+    },
+    {
+      "path": "Application/scripts/build-windows-app.py",
+      "bytes": 47299,
+      "sha256": "320a243078b2c8cca3e6c91d2ebab2c49fe181e0694f43f5b9ef320a9e657894"
+    },
+    {
+      "path": ".github/workflows/windows-application.yml",
+      "bytes": 3247,
+      "sha256": "d4576e6630035c801e864a6f8348170bbfd38efc676eb3b31302602f911081e6"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "application-build.json",
+      "bytes": 4669,
+      "sha256": "00de72e878b6739077d70dee9956b7159114836b7380647d7ce11696b2d970e2",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "build-session.log",
+      "bytes": 544,
+      "sha256": "16d18f394bd650b30205f3cd5719f6e1269f9a3ce4ae997adb619412a733ceed",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "dotnet-version.log",
+      "bytes": 10,
+      "sha256": "6d5ab2a4ef35ceec908f01287257f530b0c0d68f0e84326df2ebcea641f9134b",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "host-controls.json",
+      "bytes": 164,
+      "sha256": "20703e183423e63e0231370fb5eeede6bb14d0041438a414d8f0f9b23fad49fa",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "host-controls.log",
+      "bytes": 132,
+      "sha256": "302761939769c9beab79afa473471e865ea96e5385c77e54e99919b2ecef8ee5",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/build.log",
+      "bytes": 3090,
+      "sha256": "2ec9cbb8ef512bc11a3795a80561550435e00952869cd9fb989cbcaab43bdbe6",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/configure.log",
+      "bytes": 474,
+      "sha256": "70cf3751144c37a1ca7a1d2a4ceb484d23e731cb6ce81df18ba5f6a5b395e2e7",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/conformance.json",
+      "bytes": 4073,
+      "sha256": "ca5fb0cebf6cdede74502f31dff99ec5761b3dc17b63218693383f441cc404aa",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/endpoint-probe.json",
+      "bytes": 539,
+      "sha256": "4861b7d5be2448c852ce4e272c64bb50e6a79646e65b9d917937b48248d7c38c",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/endpoint-probe.log",
+      "bytes": 442,
+      "sha256": "8f036324fadb8dcd46422b656a4b72cf46374049603aec888b311d5fd23e67b6",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/lifecycle-controls.log",
+      "bytes": 129,
+      "sha256": "7005a5e46c1e84003cdfff83de9a770ccbafd9e851b07ec3e18dab999d81c5ef",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/lifecycle-ctest.log",
+      "bytes": 377,
+      "sha256": "95ce377d9373325e503cbd4b509cca0ea361d522a2f515f1bdfcf17822e98094",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/lifecycle.json",
+      "bytes": 161,
+      "sha256": "4cf871633cd9cd8fba9c06d7552550837fc5ef3d79fc608370edc07228840ab7",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/lifecycle.xml",
+      "bytes": 532,
+      "sha256": "168206e95e0db57e755c51bfa3e47c5a39f2da6ca125e32872fe0ef70d4511aa",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native-audio-conformance.log",
+      "bytes": 4653,
+      "sha256": "7869f5a16097942bf73a74b25d2897c380bdd1c3f004aea5ea8b2866d6171ab1",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native-cpr-review-minimum-error-visual-alpha.json",
+      "bytes": 1196,
+      "sha256": "266f1c90b8157663ac49615b02ea8edd69599f43c3877f4a6e1aab3bf8231fc8",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native-cpr-review-minimum-error-visual.png",
+      "bytes": 41321,
+      "sha256": "4262f6bbe96ace30489893b705f4a82f28f01251535f790ff9409f9759e39b54",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native-cpr-review-visual-alpha.json",
+      "bytes": 1162,
+      "sha256": "991269d052d52b7532dfe58e1467686212d3e52edfa1c3fc5547ae9f8381ab9c",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native-cpr-review-visual.png",
+      "bytes": 64349,
+      "sha256": "e0a3943d8698f6132b752149f5fdfda7778e2d66a1925e31239943c510403ca0",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native-workspace-expanded-visual.png",
+      "bytes": 50412,
+      "sha256": "6c172ac2624782397726725e9f25f0f7004faa86bdf3b9cbeb057b7c87f6a011",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native-workspace-failure-visual.png",
+      "bytes": 61920,
+      "sha256": "a91fe935a1cff4abf02ab2262351b3bf6a60fca97306fcdf861b83de04bf453a",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native-workspace-normal-visual.png",
+      "bytes": 79995,
+      "sha256": "143f80947aca31c100f0ead1c2b28697498108388b3e764c84ad9ce2fd755a3c",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "packaged-session-protocol.json",
+      "bytes": 9406,
+      "sha256": "f31f7d2770c71d5d96b8b2b106f8b57796ea06c549dd6bb9c080edea0c92ec52",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "packaged-session-protocol.log",
+      "bytes": 8591,
+      "sha256": "179f64773009464d00e98d5fc6d76685eb00d7299d0e8b2893bf51d032af36e8",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "packaged-window-smoke.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "pe-dependency-closure.json",
+      "bytes": 107613,
+      "sha256": "63ee13e46435de0d736ab6a1328b173d3806b7470cfec09ae71b605c66083c78",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "publish-wpf.log",
+      "bytes": 296,
+      "sha256": "7246811f75bca7b3f80f34ee9efb880f81e2da5ce2d8c1c0c0f5a525a60b9935",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "session-bin-path.log",
+      "bytes": 66,
+      "sha256": "39b9005fcfedbfe33e67ca9e9b8332462d79b675449a13725da2b80410027188",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "swift-version.log",
+      "bytes": 107,
+      "sha256": "6a514523e3039e37cd769c4bf8f56b23689ceb2a3e0f3048a06f0024a1d9cfd7",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "wpf-smoke.json",
+      "bytes": 21792,
+      "sha256": "42ac4085fa45d23772794aec5a3d3a91d25f4dfd47ff84a42783ba4d3572ad3d",
+      "origin": "github-actions-artifact"
+    }
+  ]
+}

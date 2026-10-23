@@ -50,7 +50,7 @@ public partial class MainWindow : Window
         Timeline.SeekRequested += async value => await model.SeekProject(value);
         Timeline.TrackSelected += async id => await model.Command("selectTrack", trackID: id);
         Timeline.TrackFlagChanged += async (id, solo) => await model.Command(solo ? "toggleSolo" : "toggleMute", trackID: id);
-        TimelineScroll.ScrollChanged += (_, _) => Timeline.SetHorizontalOffset(TimelineScroll.HorizontalOffset);
+        TimelineScroll.ScrollChanged += TimelineViewportChanged;
         timer.Tick += async (_, _) => await model.Poll(); timer.Start();
         Mixer.LostMouseCapture += (_, _) => FinishMixerCapture();
         SelectedChannel.LostMouseCapture += (_, _) => FinishMixerCapture();
@@ -232,9 +232,14 @@ public partial class MainWindow : Window
     private void InspectorGainPreview(object sender, RoutedPropertyChangedEventArgs<double> e) { if (InspectorGain is not null) InspectorGain.Text = $"{e.NewValue:0.0} dB"; }
     private void InspectorPanPreview(object sender, RoutedPropertyChangedEventArgs<double> e) { if (InspectorPan is not null) InspectorPan.Text = PanText(e.NewValue); }
     private static string PanText(double value) => Math.Abs(value) < 0.005 ? "Center" : (value < 0 ? "L " : "R ") + Math.Abs(value * 100).ToString("0", CultureInfo.CurrentCulture);
-    private void TimelineViewportChanged(object sender, SizeChangedEventArgs e)
+    private void TimelineViewportChanged(object sender, ScrollChangedEventArgs e)
     {
-        if (Timeline is not null) Timeline.SetViewport(Math.Max(0, e.NewSize.Width - 9), Math.Max(0, e.NewSize.Height - 9));
+        if (!ReferenceEquals(e.OriginalSource, TimelineScroll)) return;
+        Timeline.SetHorizontalOffset(TimelineScroll.HorizontalOffset);
+        // ScrollChanged reports the measured content viewport after scrollbar
+        // allocation. The outer control size cannot predict that allocation.
+        if (double.IsFinite(e.ViewportWidth) && double.IsFinite(e.ViewportHeight) && e.ViewportWidth > 0 && e.ViewportHeight > 0)
+            Timeline.SetViewport(e.ViewportWidth, e.ViewportHeight);
     }
     private static double Number(TextBox box)
     {

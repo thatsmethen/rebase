@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "suite": "windows-workspace-viewport-source-local-evidence",
+  "status": "passed-local-controls-only",
+  "base_commit": "83f4956e94bda1e60f62aa9aa28a5d5333740385",
+  "gate_checks": 90,
+  "gate_source": {
+    "path": "Application/scripts/build-windows-app.py",
+    "sha256": "c713482d9c9b692a880727e8d1af104040aec80b6f12a78bc163fcbd2eb25cb7"
+  },
+  "reproduction_byte_exact": true,
+  "prior_57_control_evidence_unchanged": true,
+  "retained": [
+    {
+      "path": "gate-controls.json",
+      "bytes": 3215,
+      "sha256": "4a2a06e6320b974230f2db7557c13bf1e106dde5c35b862c6bbd3a1730e62245"
+    },
+    {
+      "path": "controls.py",
+      "bytes": 15016,
+      "sha256": "5c55b35d0d8637f5629376d082d4cf52b25a69f39618902ab722e0051a54a9af"
+    },
+    {
+      "path": "observation.json",
+      "bytes": 3108,
+      "sha256": "d680d61aec64782d5eba2a53f1110969e12c96c2c7213c7381585c7b1a0c8543"
+    },
+    {
+      "path": "reproduction-controls.json",
+      "bytes": 847,
+      "sha256": "f74543fa22f0621e9beb1704d3ba9ad6155609778b334252109b42d64ab4d9b0"
+    }
+  ],
+  "limitations": [
+    "Authored controls validate receipt gates, not target behavior or native UI execution.",
+    "The UI observation records a macOS crossbuild; corrected native Windows behavior still requires CI.",
+    "Generated PNG controls are not committed and are not application screenshots.",
+    "Earlier failed native receipts and the earlier 57-control evidence remain unchanged."
+  ]
+}

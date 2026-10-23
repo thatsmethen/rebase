@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "suite": "windows-workspace-measured-viewport-and-source-selection-local",
+  "created_utc": "2026-10-23T20:31:41.417757+00:00",
+  "base_commit": "83f4956e94bda1e60f62aa9aa28a5d5333740385",
+  "trigger": {
+    "run_id": 40015599492,
+    "smoke_sha256": "42ac4085fa45d23772794aec5a3d3a91d25f4dfd47ff84a42783ba4d3572ad3d",
+    "outcome": "failed",
+    "passed_checks": 63,
+    "failure": "source-auto-expand: Selection updated.",
+    "initial_geometry": {
+      "timeline": {
+        "x": 286,
+        "y": 126,
+        "width": 798,
+        "height": 344
+      },
+      "viewport_width": 781,
+      "viewport_height": 327,
+      "extent_height": 335,
+      "scrollable_height": 8
+    }
+  },
+  "diagnosis": [
+    "Measured outer-minus9 canvas height produces an8DIP false vertical extent; measured viewport replaces the subtraction.",
+    "Selecting the already selected track retains its source event by shared ProjectSelection policy; the previous auto-expansion scenario never changed selection."
+  ],
+  "changes": [
+    "Guarded, idempotent viewport updates from ScrollChanged with CanContentScroll=false and explicit left/top canvas alignment.",
+    "Native geometry now records the actual ScrollContentPresenter rectangle and asserts extent/scroll range from viewport and track rows.",
+    "Separate derived scratch fixture adds one empty authored track, preserves source/report sidecar bytes, and proves a null-source intermediate selection before source-list re-selection.",
+    "Canonical one-track fixture is reopened before attachment/export/source screenshot.",
+    "Canvas extent uses actual track count, removing the old four-empty-row floor for smaller projects."
+  ],
+  "build": {
+    "command": "dotnet build Application/Windows/RebaseWindows/RebaseWindows.csproj -c Release --no-restore --verbosity quiet",
+    "sdk": "10.0.100",
+    "host": "macOS arm64",
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0,
+    "reported_elapsed_seconds": 3.05
+  },
+  "diff_check": "passed",
+  "sources": [
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml",
+      "sha256": "599fa07041579fd9a73329bc2e4d0d6327971cd88ca0692f2a963ba9e0ab5bfe"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml.cs",
+      "sha256": "4daa1b744bd126f90b43115ce9a80fe2aa25f4a8d5db0d4ffd73607e47543476"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/TimelineView.cs",
+      "sha256": "2ec82f8a7fa5b4e97bf7917fbc265935d949fd55ea0a0a36d537ecd23d85d6f6"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/WindowSmoke.cs",
+      "sha256": "ab92cab6a814e73005f6507a2f7bd55a8a26e255ad37dc57b563c1eeee7b74bc"
+    }
+  ],
+  "native_windows_correction_tested": false,
+  "shared_selection_semantics_changed": false,
+  "frozen_fixtures_or_evidence_modified": false,
+  "references": [
+    "https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.scrollviewer.scrollchanged?view=windowsdesktop-10.0",
+    "https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.scrollviewer.viewportheight?view=windowsdesktop-10.0"
+  ]
+}

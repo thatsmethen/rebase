@@ -242,7 +242,78 @@ WORKSPACE_CHECKS = {
 }
 
 
-def require_workspace_layout(smoke, evidence):
+def require_timeline_viewport(state, *, require_tracks_fit=True):
+    """Check the actual content viewport, including legitimate tall timelines."""
+    def number(value):
+        if type(value) not in (int, float) or not math.isfinite(value):
+            raise RuntimeError("Workspace viewport has missing or non-finite geometry")
+        return value
+
+    viewport, timeline = state.get("viewport", {}), state.get("timeline", {})
+    for rectangle in (viewport, timeline):
+        if not isinstance(rectangle, dict):
+            raise RuntimeError("Workspace viewport rectangle is missing")
+        for key in ("x", "y", "width", "height"):
+            number(rectangle.get(key))
+        if rectangle["width"] <= 0 or rectangle["height"] <= 0:
+            raise RuntimeError("Workspace viewport rectangle is empty")
+    if (viewport["x"] < timeline["x"] - 0.5 or viewport["y"] < timeline["y"] - 0.5
+            or viewport["x"] + viewport["width"] > timeline["x"] + timeline["width"] + 0.5
+            or viewport["y"] + viewport["height"] > timeline["y"] + timeline["height"] + 0.5
+            or abs(viewport["width"] - number(state.get("viewport_width"))) > 0.5
+            or abs(viewport["height"] - number(state.get("viewport_height"))) > 0.5):
+        raise RuntimeError("Workspace viewport scalar and measured rectangle disagree")
+    row_height = number(state.get("row_height"))
+    headers = state.get("headers", [])
+    tracks_bottom = number(state.get("tracks_bottom"))
+    if (row_height not in (44, 68) or not isinstance(headers, list)
+            or type(state.get("selected_density_index")) is not int
+            or state["selected_density_index"] != (0 if row_height == 44 else 1)
+            or abs(tracks_bottom - (26 + len(headers) * row_height)) > 0.5):
+        raise RuntimeError("Workspace density does not match measured track extent")
+    extent = number(state.get("extent_height"))
+    scrolling = number(state.get("scrollable_height"))
+    offset = number(state.get("vertical_offset"))
+    expected_extent = max(viewport["height"], tracks_bottom)
+    expected_scrolling = max(0, expected_extent - viewport["height"])
+    if (abs(extent - expected_extent) > 0.5 or abs(scrolling - expected_scrolling) > 0.5
+            or offset < 0 or offset > expected_scrolling + 0.5
+            or (require_tracks_fit and (tracks_bottom > viewport["height"] or offset > 0.5))):
+        raise RuntimeError("Workspace extent clips tracks or adds unnecessary vertical scrolling")
+    return viewport
+
+
+def require_source_selection_control(source, expected_source):
+    """Bind the separate authored selection control to the unchanged fixture."""
+    transition = source.get("auto_expand", {})
+    derived = transition.get("derived_fixture", {})
+    other_track = transition.get("other_track_id")
+    if (transition.get("before_selection_id") != expected_source["eventID"]
+            or transition.get("after_selection_id") != expected_source["eventID"]
+            or "other_selection_id" not in transition or transition["other_selection_id"] is not None
+            or not isinstance(other_track, str) or not other_track or other_track == expected_source["eventID"]
+            or transition.get("source_sha256_before") != expected_source["sourceSHA256"]
+            or transition.get("source_sha256_after") != expected_source["sourceSHA256"]
+            or transition.get("canonical_source_restored") is not True):
+        raise RuntimeError("Source auto-expansion did not exercise and restore a distinct selection")
+    original, changed = derived.get("original_manifest_sha256"), derived.get("derived_manifest_sha256")
+    if (derived.get("kind") != "authored scratch project with one empty selection-control track"
+            or original != expected_source["manifestSHA256"] or not isinstance(changed, str)
+            or len(changed) != 64 or set(changed) - set("0123456789abcdef") or changed == original
+            or any(type(derived.get(key)) is not int or derived[key] != value for key, value in
+                   (("original_track_count", 1), ("derived_track_count", 2), ("retained_event_count", 1)))):
+        raise RuntimeError("Source selection control has an invalid authored derivative identity")
+    sidecars = derived.get("sidecars", [])
+    expected = {"Compatibility/CPR/Original.cpr": expected_source["sourceSHA256"],
+                "Compatibility/CPR/ImportReport.json": expected_source["reportSHA256"]}
+    if (not isinstance(sidecars, list) or len(sidecars) != len(expected)
+            or {item.get("path") for item in sidecars} != set(expected)
+            or any(item.get("original_sha256") != expected[item["path"]]
+                   or item.get("copied_sha256") != expected[item["path"]] for item in sidecars)):
+        raise RuntimeError("Source selection control changed preserved source or report bytes")
+
+
+def require_workspace_layout(smoke, evidence, expected_source):
     """Require measured native geometry and session invariants, not only check labels."""
     receipt = smoke.get("workspace", {})
     bounds = smoke.get("window_bounds", {})
@@ -323,6 +394,7 @@ def require_workspace_layout(smoke, evidence):
         row_height = number(state.get("row_height"))
         if row_height not in (44, 68):
             fail("unsupported measured row density")
+        viewport = require_timeline_viewport(state)
         if (type(state.get("left_visible")) is not bool or type(state.get("mixer_visible")) is not bool
                 or not near(state.get("left_width"), 286 if state["left_visible"] else 0)
                 or not near(state.get("horizontal_offset"), initial.get("horizontal_offset"))
@@ -347,10 +419,10 @@ def require_workspace_layout(smoke, evidence):
             if (not near(header["width"], 198) or not near(header["height"], row_height)
                     or not near(header["x"], headers[0]["x"])
                     or not near(header["y"], headers[0]["y"] + index * row_height)
-                    or header["x"] < timeline["x"] - 0.5 or header["x"] + header["width"] > timeline["x"] + timeline["width"] + 0.5
-                    or header["y"] < timeline["y"] - 0.5 or header["y"] + header["height"] > timeline["y"] + timeline["height"] + 0.5):
+                    or header["x"] < viewport["x"] - 0.5 or header["x"] + header["width"] > viewport["x"] + viewport["width"] + 0.5
+                    or header["y"] < viewport["y"] - 0.5 or header["y"] + header["height"] > viewport["y"] + viewport["height"] + 0.5):
                 fail("track header dimensions do not follow row density")
-        if not 24 <= headers[0]["y"] - timeline["y"] <= 29 or not -0.5 <= headers[0]["x"] - timeline["x"] <= 2:
+        if not 24 <= headers[0]["y"] - viewport["y"] <= 29 or not -0.5 <= headers[0]["x"] - viewport["x"] <= 2:
             fail("track rows are detached from the visible timeline ruler")
     if initial["row_height"] != 44 or states["normal"]["row_height"] != 68:
         fail("compact default and normal density were not exercised")
@@ -411,6 +483,7 @@ def require_workspace_layout(smoke, evidence):
             or source.get("ordinary_actions_disabled") is not True or source.get("source_expanded") is not True
             or source.get("auto_expand_input") != "Programmatic source-list SelectionChanged event through the shared session"):
         fail("source-only selection changed state or exposed ordinary event actions")
+    require_source_selection_control(source, expected_source)
 
 
 def main():
@@ -635,7 +708,7 @@ def main():
             raise RuntimeError("Fader scale does not match observed native thumb geometry")
         require_pinned_header_scroll(smoke)
         require_musical_ruler(smoke)
-        require_workspace_layout(smoke, evidence)
+        require_workspace_layout(smoke, evidence, expected_source)
         modules = {"process": validate_modules(smoke.pop("process_modules", None), stage, windows,
                                                {"rebase.exe", "coreclr.dll", "rebasewindowsaudio.dll"}),
                    "helper": validate_modules(smoke.pop("helper_modules", None), stage, windows,

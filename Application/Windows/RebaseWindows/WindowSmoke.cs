@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
@@ -300,16 +301,32 @@ public partial class MainWindow
                 Assert(!SplitMenuItem.IsEnabled && !DeleteMenuItem.IsEnabled && !ClipInspector.IsEnabled && sourceOnlyBefore == SessionHash(), "workspace-source-only-actions");
                 var sourceOnlyAfter = SessionHash();
                 var eventID = model.SelectedSourceEvent!.Id;
-                var sourceTrackID = model.State.Selection.TrackID;
+                var sourceHashBefore = model.SelectedSourceEvent.SourceSHA256;
+                stage = "source-auto-expand";
+                var selectionFixture = await MakeSourceSelectionFixture();
+                await model.Open(selectionFixture.Path, true, false);
+                if (model.SelectedSourceEvent?.Id != eventID) throw new InvalidOperationException("The derived source fixture changed the initial retained event.");
                 ((IExpandCollapseProvider)new ExpanderAutomationPeer(SourceSection).GetPattern(PatternInterface.ExpandCollapse)).Collapse();
-                await model.Command("selectTrack", trackID: sourceTrackID);
-                // A programmatic selection event exercises the same handler as
-                // the source list; it is not a physical click on hidden content.
+                await model.Command("selectTrack", trackID: selectionFixture.ControlTrackID);
+                if (model.State.Selection.TrackID != selectionFixture.ControlTrackID || model.State.Selection.ClipID is not null || model.SelectedSourceEvent is not null || SourceSection.IsExpanded)
+                    throw new InvalidOperationException("The source auto-expansion control did not leave the retained event selected state.");
+                var otherSelectionID = model.State.Selection.ClipID;
+                // Select the retained event only after the shared session has
+                // selected the different, empty authored track. Selecting the
+                // original track again would correctly retain its source event.
                 SourceEventsBox.SelectedItem = model.SourceEvents.Single(source => source.Id == eventID);
-                await Until(() => !model.Busy && model.SelectedSourceEvent?.Id == eventID && SourceSection.IsExpanded, "source-auto-expand");
+                await Until(() => !model.Busy && model.SelectedSourceEvent?.Id == eventID && SourceSection.IsExpanded, stage);
                 Assert(SourceSection.IsExpanded && SourcePanel.IsVisible, "workspace-source-auto-expand");
+                var sourceHashAfter = model.SelectedSourceEvent!.SourceSHA256;
+                if (sourceHashBefore != sourceHashAfter) throw new InvalidOperationException("The derived selection control changed the retained source identity.");
+                await model.Open(sourceProject, true, false);
+                if (model.Project!.Tracks.Length != 1 || model.SelectedSourceEvent?.Id != eventID || model.SelectedSourceEvent.SourceSHA256 != sourceHashBefore)
+                    throw new InvalidOperationException("The canonical source fixture was not restored before attachment and export.");
                 workspaceSourceOnly = new { before_sha256 = sourceOnlyBefore, after_sha256 = sourceOnlyAfter, ordinary_actions_disabled = true, source_expanded = true,
-                    auto_expand_input = "Programmatic source-list SelectionChanged event through the shared session" };
+                    auto_expand_input = "Programmatic source-list SelectionChanged event through the shared session",
+                    auto_expand = new { before_selection_id = eventID, other_track_id = selectionFixture.ControlTrackID, other_selection_id = otherSelectionID,
+                        after_selection_id = eventID, source_sha256_before = sourceHashBefore, source_sha256_after = sourceHashAfter,
+                        canonical_source_restored = true, derived_fixture = selectionFixture.Receipt } };
                 stage = "source-media-ui-attachment";
                 smokeAttachPath = sourceMedia;
                 await Invoke(AttachSourceButton);
@@ -432,8 +449,12 @@ public partial class MainWindow
                     scrollable_height = TimelineScroll.ScrollableHeight, vertical_offset = TimelineScroll.VerticalOffset,
                     left_visible = leftZoneVisible, mixer_visible = mixerZoneVisible,
                     left_width = ChannelColumn.ActualWidth + InspectorColumn.ActualWidth, horizontal_offset = TimelineScroll.HorizontalOffset,
-                    timeline = Box(BoundsOf(TimelineScroll)), mixer = Box(BoundsOf(MixerZone)), headers = Timeline.TrackHeaders.Select(header => Box(BoundsOf(header))).ToArray() });
+                    timeline = Box(BoundsOf(TimelineScroll)), viewport = Box(BoundsOf(Descendants<ScrollContentPresenter>(TimelineScroll).Single(presenter => ReferenceEquals(presenter.TemplatedParent, TimelineScroll)))),
+                    mixer = Box(BoundsOf(MixerZone)), headers = Timeline.TrackHeaders.Select(header => Box(BoundsOf(header))).ToArray() });
                 RefreshWorkspaceReceipt();
+                var expectedExtent = Math.Max(TimelineScroll.ViewportHeight, Timeline.TracksBottom);
+                if (Math.Abs(TimelineScroll.ExtentHeight - expectedExtent) > 0.5 || Math.Abs(TimelineScroll.ScrollableHeight - Math.Max(0, Timeline.TracksBottom - TimelineScroll.ViewportHeight)) > 0.5)
+                    throw new InvalidOperationException("The timeline extent does not match its measured viewport and track rows.");
                 if (SessionHash() != workspaceInitialHash) throw new InvalidOperationException("A workspace presentation change modified the shared project state.");
             }
             void CheckRowsAndTargets()
@@ -551,6 +572,41 @@ public partial class MainWindow
             }
         }
         Point Origin(FrameworkElement element) => element.TransformToAncestor(this).Transform(new Point());
+        async Task<(string Path, string ControlTrackID, object Receipt)> MakeSourceSelectionFixture()
+        {
+            var originalRoot = Path.GetFileName(sourceProject) == "Project.json" ? Path.GetDirectoryName(sourceProject)! : sourceProject!;
+            var originalBytes = await File.ReadAllBytesAsync(Path.Combine(originalRoot, "Project.json"));
+            var project = JsonNode.Parse(originalBytes)?.AsObject() ?? throw new InvalidDataException("The authored source fixture is not an object.");
+            var tracks = project["tracks"]?.AsArray() ?? throw new InvalidDataException("The authored source fixture has no tracks.");
+            if (tracks.Count != 1 || tracks[0]?["unresolvedAudioEvents"]?.AsArray().Count != 1)
+                throw new InvalidDataException("The source selection control requires the locked one-track, one-event fixture.");
+            const string trackID = "D22D4F70-A97C-4CCD-A3CD-23D0629365F4";
+            if (tracks[0]?["id"]?.GetValue<string>() == trackID) throw new InvalidDataException("Selection control track identity collides with the fixture.");
+            tracks.Add(new JsonObject { ["id"] = trackID, ["name"] = "Selection control (authored)", ["gainDB"] = 0, ["pan"] = 0,
+                ["isMuted"] = false, ["isSolo"] = false, ["timeBase"] = "seconds", ["clips"] = new JsonArray(),
+                ["automation"] = new JsonArray(), ["unresolvedAudioEvents"] = new JsonArray() });
+            var derivedRoot = Path.Combine(work, "SourceSelectionControl.rebaseproj"); Directory.CreateDirectory(derivedRoot);
+            var sidecars = new List<object>();
+            foreach (var file in Directory.EnumerateFiles(originalRoot, "*", SearchOption.AllDirectories))
+            {
+                var relative = Path.GetRelativePath(originalRoot, file);
+                if (relative == "Project.json") continue;
+                var destination = Path.Combine(derivedRoot, relative); Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+                File.Copy(file, destination);
+                var before = FileHash(file); var after = FileHash(destination);
+                if (before != after) throw new IOException("A source selection control sidecar was not preserved.");
+                sidecars.Add(new { path = relative.Replace('\\', '/'), original_sha256 = before, copied_sha256 = after });
+            }
+            var bytes = JsonSerializer.SerializeToUtf8Bytes(project, new JsonSerializerOptions { WriteIndented = true });
+            await File.WriteAllBytesAsync(Path.Combine(derivedRoot, "Project.json"), bytes);
+            string Hash(byte[] value) => Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(value)).ToLowerInvariant();
+            string FileHash(string path) => Hash(File.ReadAllBytes(path));
+            var originalHash = Hash(originalBytes);
+            if (FileHash(Path.Combine(originalRoot, "Project.json")) != originalHash) throw new IOException("The original source fixture changed during the control.");
+            return (derivedRoot, trackID, new { kind = "authored scratch project with one empty selection-control track",
+                original_manifest_sha256 = originalHash, derived_manifest_sha256 = Hash(bytes), original_track_count = 1,
+                derived_track_count = 2, retained_event_count = 1, sidecars });
+        }
         async Task CPRImportScenario()
         {
             var package = Path.GetFileName(sourceProject) == "Project.json" ? Path.GetDirectoryName(sourceProject)! : sourceProject!;

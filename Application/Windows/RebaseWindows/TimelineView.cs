@@ -46,9 +46,11 @@ public sealed class TimelineView : Canvas
     }
     public void SetViewport(double width, double height)
     {
+        if (!double.IsFinite(width) || !double.IsFinite(height) || width <= 0 || height <= 0) throw new ArgumentOutOfRangeException(nameof(width));
+        if (viewport == width && viewportHeight == height) return;
         viewport = width; viewportHeight = height;
         Width = Math.Max(viewport, Header + Math.Max(24, project?.Duration ?? 24) * pixels + 40);
-        Height = Math.Max(viewportHeight, Ruler + Math.Max(4, project?.Tracks.Length ?? 0) * rowHeight);
+        Height = Math.Max(viewportHeight, Ruler + (project?.Tracks.Length ?? 0) * rowHeight);
         RebuildRuler(); SetPosition(currentPosition);
     }
     // Keep one vertical coordinate system for headers and events. Opaque header
@@ -97,7 +99,7 @@ public sealed class TimelineView : Canvas
         waveformViews.Clear();
         var duration = Math.Max(24, project?.Duration ?? 24);
         Width = Math.Max(viewport, Header + duration * pixels + 40);
-        Height = Math.Max(viewportHeight, Ruler + Math.Max(4, project?.Tracks.Length ?? 0) * rowHeight);
+        Height = Math.Max(viewportHeight, Ruler + (project?.Tracks.Length ?? 0) * rowHeight);
         RebuildRuler();
         if (project is not null)
         {
