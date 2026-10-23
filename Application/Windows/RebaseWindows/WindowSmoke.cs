@@ -31,6 +31,7 @@ public partial class MainWindow
         object? channelAlignment = null;
         object? cprReviewReceipt = null;
         object? workspaceReceipt = null, workspaceSourceOnly = null;
+        string? failureScreenshot = null;
         var workspaceStates = new List<object>();
         var workspaceTargets = new List<object>();
         var workspaceFaders = new List<object>();
@@ -47,7 +48,22 @@ public partial class MainWindow
             helperModules = model.HelperModuleReceipt();
             exit = 0;
         }
-        catch (Exception failure) { error = failure.Message; }
+        catch (Exception failure)
+        {
+            error = failure.Message;
+            // Preserve the measured failing state before disposing the helper.
+            // A failed assertion must not erase the layout that caused it.
+            if (workspaceInitialHash is not null)
+            {
+                try
+                {
+                    await Capture("native-workspace-failure-visual.png");
+                    failureScreenshot = "native-workspace-failure-visual.png";
+                    RefreshWorkspaceReceipt();
+                }
+                catch (Exception diagnostic) { error += " Layout diagnostic: " + diagnostic.Message; }
+            }
+        }
         finally
         {
             deadline.Cancel();
@@ -69,7 +85,7 @@ public partial class MainWindow
             , timeline_scroll = timelineScrollReceipt, timeline_scroll_screenshot = "native-timeline-scroll-visual.png"
             , window_bounds = windowBounds
             , musical_ruler = musicalRulerReceipt, fader_scale = faderScaleReceipt, channel_alignment = channelAlignment
-            , cpr_review = cprReviewReceipt, workspace = workspaceReceipt
+            , cpr_review = cprReviewReceipt, workspace = workspaceReceipt, failure_screenshot = failureScreenshot
         };
         try { await File.WriteAllTextAsync(artifact, JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true })); }
         catch (IOException) { return 2; }
@@ -78,6 +94,7 @@ public partial class MainWindow
         async Task Scenario()
         {
             await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            MeasureWindowBounds();
             Assert(IsVisible && ActualWidth >= 1020 && ActualHeight >= 700, "visible-window-layout");
             var snapOrigin = SnapBox.TransformToAncestor(ProjectActions).Transform(new Point());
             Assert(snapOrigin.Y >= 0 && snapOrigin.Y + SnapBox.ActualHeight <= ProjectActions.ActualHeight, "snap-control-fits-toolbar");
@@ -381,28 +398,43 @@ public partial class MainWindow
             channelAlignment = new { selected_nameplate_bottom = selectedBottom, mixer_nameplate_bottom = mixerBottom };
             stage = "capture-window-visual";
             await Capture("native-app-visual.png");
-            workspaceReceipt = new { initial_state_sha256 = workspaceInitialHash, states = workspaceStates, event_targets = workspaceTargets,
-                splitter = workspaceSplitter, source_only = workspaceSourceOnly, capture_safety = workspaceCaptureSafety,
-                toolbar_controls = new[] { (FrameworkElement)RowDensityBox, LeftZoneToggle, MixerZoneToggle }.Select(control => new { name = control.Name,
-                    x = BoundsOf(control).X, y = BoundsOf(control).Y, width = control.ActualWidth, height = control.ActualHeight }).ToArray(),
-                screenshots = new { normal = "native-workspace-normal-visual.png", expanded = "native-workspace-expanded-visual.png" },
-                input_evidence = "UIA and injected routed keyboard events; no physical input" };
+            RefreshWorkspaceReceipt();
             checks.Add("window-visual-artifact-written"); stage = "completed";
         }
         string SessionHash() => Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(model.State, ProtocolJson.Options)))).ToLowerInvariant();
         Rect BoundsOf(FrameworkElement element) => element.IsVisible ? element.TransformToAncestor((FrameworkElement)Content).TransformBounds(new Rect(element.RenderSize)) : new Rect(0, 0, 0, 0);
         static object Box(Rect rectangle) => new { x = rectangle.X, y = rectangle.Y, width = rectangle.Width, height = rectangle.Height };
+        void RefreshWorkspaceReceipt()
+        {
+            workspaceReceipt = new { initial_state_sha256 = workspaceInitialHash, states = workspaceStates, event_targets = workspaceTargets,
+                splitter = workspaceSplitter, source_only = workspaceSourceOnly, capture_safety = workspaceCaptureSafety,
+                current_layout = new { selected_density_index = RowDensityBox.SelectedIndex, row_height = Timeline.RowHeight,
+                    layout_capture_active = LayoutCaptureActive, density_dropdown_open = RowDensityBox.IsDropDownOpen,
+                    viewport_height = TimelineScroll.ViewportHeight, viewport_width = TimelineScroll.ViewportWidth,
+                    tracks_bottom = Timeline.TracksBottom, extent_height = TimelineScroll.ExtentHeight,
+                    scrollable_height = TimelineScroll.ScrollableHeight, vertical_offset = TimelineScroll.VerticalOffset,
+                    arrangement_height = ArrangementRow.ActualHeight, mixer_height = MixerRow.ActualHeight },
+                toolbar_controls = new[] { (FrameworkElement)RowDensityBox, LeftZoneToggle, MixerZoneToggle }.Select(control => new { name = control.Name,
+                    x = BoundsOf(control).X, y = BoundsOf(control).Y, width = control.ActualWidth, height = control.ActualHeight }).ToArray(),
+                screenshots = new { normal = "native-workspace-normal-visual.png", expanded = "native-workspace-expanded-visual.png" },
+                input_evidence = "UIA and injected routed keyboard events; no physical input" };
+        }
         async Task WorkspaceScenario()
         {
             workspaceInitialHash = SessionHash();
             void Record(string name)
             {
-                if (SessionHash() != workspaceInitialHash) throw new InvalidOperationException("A workspace presentation change modified the shared project state.");
                 workspaceStates.Add(new { name, state_sha256 = SessionHash(), revision = model.State.Revision,
                     selected_track_id = model.State.Selection.TrackID, selected_clip_id = model.State.Selection.ClipID,
-                    row_height = Timeline.RowHeight, left_visible = leftZoneVisible, mixer_visible = mixerZoneVisible,
+                    row_height = Timeline.RowHeight, selected_density_index = RowDensityBox.SelectedIndex,
+                    viewport_height = TimelineScroll.ViewportHeight, viewport_width = TimelineScroll.ViewportWidth,
+                    tracks_bottom = Timeline.TracksBottom, extent_height = TimelineScroll.ExtentHeight,
+                    scrollable_height = TimelineScroll.ScrollableHeight, vertical_offset = TimelineScroll.VerticalOffset,
+                    left_visible = leftZoneVisible, mixer_visible = mixerZoneVisible,
                     left_width = ChannelColumn.ActualWidth + InspectorColumn.ActualWidth, horizontal_offset = TimelineScroll.HorizontalOffset,
                     timeline = Box(BoundsOf(TimelineScroll)), mixer = Box(BoundsOf(MixerZone)), headers = Timeline.TrackHeaders.Select(header => Box(BoundsOf(header))).ToArray() });
+                RefreshWorkspaceReceipt();
+                if (SessionHash() != workspaceInitialHash) throw new InvalidOperationException("A workspace presentation change modified the shared project state.");
             }
             void CheckRowsAndTargets()
             {
@@ -432,9 +464,13 @@ public partial class MainWindow
                     move_x = moveX, trim_x = trimX, trim_width = TimelineView.TrimHitWidth, move_hit = moveHit, trim_hit = trimHit });
             }
             await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            stage = "workspace-compact-default"; Record("compact");
             Assert(Timeline.RowHeight == 44 && RowDensityBox.SelectedIndex == 0 && TimelineScroll.ViewportHeight >= Timeline.TracksBottom, "workspace-compact-default");
-            CheckRowsAndTargets(); Record("compact");
-            await SelectComboItem(RowDensityBox, 1); CheckRowsAndTargets(); Record("normal");
+            CheckRowsAndTargets();
+            stage = "workspace-normal-density";
+            await SelectComboItem(RowDensityBox, 1);
+            await Capture("native-workspace-normal-visual.png"); Record("normal");
+            CheckRowsAndTargets();
             Assert(Timeline.RowHeight == 68 && TimelineScroll.ViewportHeight >= Timeline.TracksBottom, "workspace-normal-density");
             await Until(() => Timeline.PopulatedWaveformCount == model.Project!.Tracks.Sum(track => track.Clips.Length), "workspace-normal-waveforms");
             await Capture("native-workspace-normal-visual.png");
@@ -672,13 +708,18 @@ public partial class MainWindow
         async Task Capture(string filename)
         {
             await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
-            var client = Content as FrameworkElement ?? throw new InvalidOperationException("The window has no client visual.");
-            var dpi = VisualTreeHelper.GetDpi(this);
-            windowBounds = new { outer_width = ActualWidth, outer_height = ActualHeight, client_width = client.ActualWidth, client_height = client.ActualHeight, dpi_x = dpi.PixelsPerInchX, dpi_y = dpi.PixelsPerInchY };
+            var client = MeasureWindowBounds();
             var image = new RenderTargetBitmap((int)Math.Ceiling(client.ActualWidth), (int)Math.Ceiling(client.ActualHeight), 96, 96, PixelFormats.Pbgra32);
             image.Render(client);
             var encoder = new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(image));
             using var output = File.Create(Path.Combine(root, filename)); encoder.Save(output);
+        }
+        FrameworkElement MeasureWindowBounds()
+        {
+            var client = Content as FrameworkElement ?? throw new InvalidOperationException("The window has no client visual.");
+            var dpi = VisualTreeHelper.GetDpi(this);
+            windowBounds = new { outer_width = ActualWidth, outer_height = ActualHeight, client_width = client.ActualWidth, client_height = client.ActualHeight, dpi_x = dpi.PixelsPerInchX, dpi_y = dpi.PixelsPerInchY };
+            return client;
         }
         void Assert(bool condition, string check) { deadline.Token.ThrowIfCancellationRequested(); if (!condition) throw new InvalidOperationException(check + ": " + model.Status); checks.Add(check); }
         async Task Until(Func<bool> condition, string label)

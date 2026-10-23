@@ -1,0 +1,319 @@
+{
+  "schema": "rebase.windows-ci-observation.v1",
+  "recorded_at_utc": "2026-10-23T19:49:36.374802+00:00",
+  "commit": "d26bb196b2131bff7ae86f7ab7d293599cb3f817",
+  "status": "failed",
+  "run_url": "https://github.com/thatsmethen/rebase/actions/runs/40011890840",
+  "job_url": "https://github.com/thatsmethen/rebase/actions/runs/40011890840/job/120614094055",
+  "publication_status": "No ZIP produced or published. The workspace check requires a separately observed correction.",
+  "findings": [
+    "WPF and the production helper compiled; 155 host controls and 91 packaged-helper protocol checks passed.",
+    "The native window scenario completed six checks, including the compact default, and then failed workspace-normal-density. The recorded stage remained select-clip-button; the error names the failing assertion.",
+    "The failed assertion combines a 68-DIP row-height requirement with a viewport-fit requirement. No row-height, selection-index, viewport, workspace geometry or window-bounds snapshot survived in the receipt, so this record cannot determine which predicate failed or establish an exact viewport shortfall.",
+    "No native PNG was emitted. Remaining workspace, native CPR/source, mixer, ruler and scroll journeys were not reached; there is no visual acceptance for this candidate.",
+    "The application workflow shared Release gate and ZIP assembly were not reached. The successful 13-job component run is retained separately and does not turn this application failure into a pass.",
+    "All 16 packaged-helper CPR gates and exact example/source PCM, waveform and ruler locks matched the separately retained component results.",
+    "The standalone native-audio adapter passed 89 lifecycle controls and returned exit 77 for an unavailable endpoint. The WPF scenario had not reached its endpoint probe; no playback was measured."
+  ],
+  "host_control_checks": 155,
+  "packaged_helper_checks": 91,
+  "completed_window_checks": 6,
+  "failed_stage": "select-clip-button",
+  "failed_check": "workspace-normal-density",
+  "failed_error": "workspace-normal-density: Selection updated.",
+  "package_produced": false,
+  "capture_produced": false,
+  "workspace_geometry_available": false,
+  "window_bounds_available": false,
+  "shared_release_gate_reached": false,
+  "release_accepted": false,
+  "completed_window_check_names": [
+    "visible-window-layout",
+    "snap-control-fits-toolbar",
+    "bundled-example-is-copy",
+    "clip-selection",
+    "selection-synchronized-across-panes",
+    "workspace-compact-default"
+  ],
+  "cpr_import_protocol": {
+    "tested": true,
+    "review_read_only": true,
+    "review_bounded": true,
+    "cancellation_preserves_state": true,
+    "superseded_review_rejected": true,
+    "stale_revision_rejected": true,
+    "changed_source_rejected": true,
+    "explicit_partial_required": true,
+    "dirty_replacement_guarded": true,
+    "existing_destination_preserved": true,
+    "import_published": true,
+    "exact_source_and_report_preserved": true,
+    "save_reopen_preserves_baseline": true,
+    "historical_read_only": true,
+    "tampered_report_rejected": true,
+    "tampered_source_rejected": true,
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "reportSHA256": "f7e8949acac910533f30f21bca9c0daee581f7099770715991a5b9f0ff096833",
+    "evidence_class": "authored-synthetic-control",
+    "playback_tested": false,
+    "review_items_checked": 15,
+    "review_pages_checked": 1
+  },
+  "source": {
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "mediaSHA256": "c1ccbba91f8d9084cba4271ec5cc7c6114d754349d6da98f42a91463830fe956",
+    "outputSHA256": "8090c75bc7ace4f400eb25d428129c68eddec2c488200e9fcad4deb5700afd0a",
+    "pcmSHA256": "06e73a6e5b244c0c187bdd6482d8db7bb3adfd3ac98f2c11e6cd4c29d7a3bce0",
+    "frames": 44100,
+    "sampleRate": 44100,
+    "channels": 2,
+    "playback_tested": false
+  },
+  "waveform": {
+    "clips_checked": 11,
+    "peak_bins_checked": 17600,
+    "float32_peak_words_sha256": "ade8ed5eb493af376b7affbfb5bd0bf3f06aafa51eabe63c48c6657406caba29",
+    "oracle": "Independent signed PCM16 extrema over exact source intervals"
+  },
+  "ruler": {
+    "read_only": true,
+    "stale_revision_rejected": true,
+    "pixels_per_second": 100,
+    "duration": 20,
+    "ticks_checked": 33,
+    "first_bar_seconds": [
+      0,
+      2.5,
+      5,
+      7.5
+    ],
+    "first_quarter_seconds": [
+      0,
+      0.625,
+      1.25,
+      1.875,
+      2.5
+    ],
+    "oracle": "Authored constant 96 BPM, 4/4: quarter = 5/8 seconds; bar = 5/2 seconds"
+  },
+  "example_render": {
+    "frames": 960000,
+    "wav_sha256": "13edfc233369484ff5c88aa4e4ca8a2f013d7c2ac3f21a0c7881e00dc3e457b9",
+    "pcm_sha256": "f51a6801100ba715e589fcd9d99be2c0c81f6911972548a4c64fff73ff60c8d4"
+  },
+  "native_audio": {
+    "portable_lifecycle": {
+      "schema": 1,
+      "suite": "native-audio-portable-lifecycle",
+      "checks": 89,
+      "failures": 0,
+      "wasapi_compiled": false,
+      "playback_tested": false
+    },
+    "endpoint_probe": {
+      "outcome": "unavailable-no-endpoint",
+      "exit_code": 77,
+      "playback_tested": false
+    }
+  },
+  "component_evidence": {
+    "run_url": "https://github.com/thatsmethen/rebase/actions/runs/40011890925",
+    "observation": "../run-40011890925/observation.json",
+    "scope": "Separate shared-component and production-helper execution; no native-window success inference."
+  },
+  "boundaries": [
+    "All 25 available raw text, JSON and XML records are retained byte-exactly; the original failure is not repaired.",
+    "Source-level sizing hypotheses are separate from measured evidence. Prior window dimensions cannot establish the failed viewport in this run.",
+    "Static PE dependency closure does not replace the missing end-of-scenario loaded-module receipt.",
+    "No full native-window journey, new visual acceptance, native file-picker interaction, physical input, audio playback or complete reference fidelity is established."
+  ],
+  "source_files": [
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.Layout.cs",
+      "bytes": 5509,
+      "sha256": "29e7f1d81da38679fe51c60b11ca45ba3974b85e72eef346b085690c649f3e84"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml",
+      "bytes": 26768,
+      "sha256": "df94ff43c3c2c268f67ceebad8de0cef3c32999a72131f26556fbeaded33a9eb"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml.cs",
+      "bytes": 30342,
+      "sha256": "814e2b82b1ace56d863ddc1ec53d8e211156ac1881eca3569edda38cf2e13536"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/TimelineView.cs",
+      "bytes": 16420,
+      "sha256": "bab96064439934221a4fa04790249c356adfeb62595ae08dc9f69ef56d502b90"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/WindowSmoke.cs",
+      "bytes": 63223,
+      "sha256": "b7bf6f56b2ebe209db4f8d1dbe4573a28daff9068b1b15727eaae1608d895d1f"
+    },
+    {
+      "path": "Application/scripts/build-windows-app.py",
+      "bytes": 47299,
+      "sha256": "320a243078b2c8cca3e6c91d2ebab2c49fe181e0694f43f5b9ef320a9e657894"
+    },
+    {
+      "path": ".github/workflows/windows-application.yml",
+      "bytes": 3247,
+      "sha256": "d4576e6630035c801e864a6f8348170bbfd38efc676eb3b31302602f911081e6"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "application-build.json",
+      "bytes": 4668,
+      "sha256": "b769c613a09b3f33c9b352d818ce4d47fae4c71f6aefe7391185d71546294709",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "build-session.log",
+      "bytes": 570,
+      "sha256": "cb1acb4084fca6ea3388407296ade6412c85ea5669de77044318f5d0e43d3e47",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "dotnet-version.log",
+      "bytes": 10,
+      "sha256": "6d5ab2a4ef35ceec908f01287257f530b0c0d68f0e84326df2ebcea641f9134b",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "host-controls.json",
+      "bytes": 164,
+      "sha256": "20703e183423e63e0231370fb5eeede6bb14d0041438a414d8f0f9b23fad49fa",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "host-controls.log",
+      "bytes": 132,
+      "sha256": "302761939769c9beab79afa473471e865ea96e5385c77e54e99919b2ecef8ee5",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/build.log",
+      "bytes": 3090,
+      "sha256": "2ec9cbb8ef512bc11a3795a80561550435e00952869cd9fb989cbcaab43bdbe6",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/configure.log",
+      "bytes": 474,
+      "sha256": "de30eec558ba390fbd01ec1fa91568d9a9cdb264300757e4936b82a14ee5ba16",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/conformance.json",
+      "bytes": 4075,
+      "sha256": "6dfea2ccbcc6c84a00d475b393f2ca084db2e41268e10304eab56183a86cc9d2",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/endpoint-probe.json",
+      "bytes": 539,
+      "sha256": "4861b7d5be2448c852ce4e272c64bb50e6a79646e65b9d917937b48248d7c38c",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/endpoint-probe.log",
+      "bytes": 442,
+      "sha256": "8f036324fadb8dcd46422b656a4b72cf46374049603aec888b311d5fd23e67b6",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/lifecycle-controls.log",
+      "bytes": 129,
+      "sha256": "7005a5e46c1e84003cdfff83de9a770ccbafd9e851b07ec3e18dab999d81c5ef",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/lifecycle-ctest.log",
+      "bytes": 377,
+      "sha256": "95ce377d9373325e503cbd4b509cca0ea361d522a2f515f1bdfcf17822e98094",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/lifecycle.json",
+      "bytes": 161,
+      "sha256": "4cf871633cd9cd8fba9c06d7552550837fc5ef3d79fc608370edc07228840ab7",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native/lifecycle.xml",
+      "bytes": 531,
+      "sha256": "bb64d8f146633b62c4248e16c5eaa48f58efc8e1db99843f3c83b7eb2b08bf66",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "native-audio-conformance.log",
+      "bytes": 4653,
+      "sha256": "c21fae77efc6d7cc70bf270c8d279e1e2218cbba967cabd275745ce9bfbffb12",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "packaged-session-protocol.json",
+      "bytes": 9406,
+      "sha256": "f31f7d2770c71d5d96b8b2b106f8b57796ea06c549dd6bb9c080edea0c92ec52",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "packaged-session-protocol.log",
+      "bytes": 8591,
+      "sha256": "179f64773009464d00e98d5fc6d76685eb00d7299d0e8b2893bf51d032af36e8",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "packaged-window-smoke.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "pe-dependency-closure.json",
+      "bytes": 107613,
+      "sha256": "63ee13e46435de0d736ab6a1328b173d3806b7470cfec09ae71b605c66083c78",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "publish-wpf.log",
+      "bytes": 296,
+      "sha256": "33d51d70328f203d1a1eeaa98d834ca4bbf158eb697e7658357358382d5a1e78",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "session-bin-path.log",
+      "bytes": 66,
+      "sha256": "39b9005fcfedbfe33e67ca9e9b8332462d79b675449a13725da2b80410027188",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "swift-version.log",
+      "bytes": 107,
+      "sha256": "6a514523e3039e37cd769c4bf8f56b23689ceb2a3e0f3048a06f0024a1d9cfd7",
+      "origin": "github-actions-artifact"
+    },
+    {
+      "path": "wpf-smoke.json",
+      "bytes": 1203,
+      "sha256": "6724fc63160ce7e3d2a73cc713c363637c75de42ab8acccb3e4329147850f2e5",
+      "origin": "github-actions-artifact"
+    }
+  ]
+}

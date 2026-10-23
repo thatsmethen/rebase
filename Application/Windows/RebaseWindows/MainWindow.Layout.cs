@@ -10,7 +10,9 @@ public partial class MainWindow
 {
     private bool workspaceReady, changingWorkspace;
     private bool leftZoneVisible = true, mixerZoneVisible = true;
-    private double savedMixerHeight = 246, mixerFaderHeight = 110;
+    // Reserve enough arrangement height for four normal rows at MinHeight.
+    // The user can still enlarge the mixer and scroll the arrangement.
+    private double savedMixerHeight = 216, mixerFaderHeight = 110;
     private string? lastExpandedSourceID;
     private bool LayoutCaptureActive => Timeline.IsMouseCaptureWithin || Mixer.IsMouseCaptureWithin || SelectedChannel.IsMouseCaptureWithin || EditSurface.IsMouseCaptureWithin || MixerSplitter.IsMouseCaptureWithin;
 

@@ -1,0 +1,60 @@
+clang version 20.1.8
+Target: x86_64-pc-windows-msvc
+Thread model: posix
+InstalledDir: C:\Program Files\LLVM\bin
+cmake version 3.31.6
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+-- The CXX compiler identification is Clang 20.1.8 with MSVC-like command-line
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/LLVM/bin/clang-cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (7.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: <build-output>/evidence/native/build
+[1/8] Building CXX object CMakeFiles\rebase_audio_lifecycle_tests.dir\tests\lifecycle.cpp.obj
+<workspace>\Application\Windows\NativeAudio\tests\lifecycle.cpp(115,27): warning: 'fopen' is deprecated: This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  115 |         FILE *file = std::fopen(json_path, "wb");
+      |                           ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdio.h(212,20): note: 'fopen' has been explicitly marked deprecated here
+  212 |     _Check_return_ _CRT_INSECURE_DEPRECATE(fopen_s)
+      |                    ^
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include\vcruntime.h(358,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  358 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include\vcruntime.h(348,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  348 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+1 warning generated.
+[2/8] Building CXX object CMakeFiles\rebase_audio_lifecycle.dir\src\PlaybackCursor.cpp.obj
+[3/8] Linking CXX static library rebase_audio_lifecycle.lib
+[4/8] Linking CXX executable rebase_audio_lifecycle_tests.exe
+[5/8] Building CXX object CMakeFiles\rebase_wasapi_probe.dir\tests\wasapi_probe.cpp.obj
+<workspace>\Application\Windows\NativeAudio\tests\wasapi_probe.cpp(139,27): warning: 'fopen' is deprecated: This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  139 |         FILE *file = std::fopen(json_path, "wb");
+      |                           ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdio.h(212,20): note: 'fopen' has been explicitly marked deprecated here
+  212 |     _Check_return_ _CRT_INSECURE_DEPRECATE(fopen_s)
+      |                    ^
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include\vcruntime.h(358,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  358 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include\vcruntime.h(348,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  348 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+1 warning generated.
+[6/8] Building CXX object CMakeFiles\RebaseWindowsAudio.dir\src\WasapiOutput.cpp.obj
+[7/8] Linking CXX shared library RebaseWindowsAudio.dll
+[8/8] Linking CXX executable rebase_wasapi_probe.exe
+Internal ctest changing into directory: <build-output>/evidence/native/build
+Test project <build-output>/evidence/native/build
+    Start 1: native_audio_portable_lifecycle
+1/1 Test #1: native_audio_portable_lifecycle ...   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.01 sec
+{"schema":1,"suite":"native-audio-portable-lifecycle","checks":89,"failures":0,"wasapi_compiled":false,"playback_tested":false}
+{"schema":1,"suite":"windows-wasapi-native-probe","outcome":"unavailable-no-endpoint","stage":"default-endpoint","result":3,"hresult":0,"checks":1,"wasapi_compiled":true,"allow_audio":false,"playback_attempted":false,"playback_tested":false,"audible_output_measured":false,"mix_sample_rate":0,"mix_channels":0,"mix_float32_stereo":false,"final_phase":0,"final_position_frames":0,"endpoint_buffer_frames":0,"clock_reading_approximate":false}

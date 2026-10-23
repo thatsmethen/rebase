@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "suite": "windows-workspace-normal-density-correction-local",
+  "created_utc": "2026-10-23T19:52:28.223705+00:00",
+  "base_commit": "d26bb196b2131bff7ae86f7ab7d293599cb3f817",
+  "trigger": {
+    "run_id": 40011890840,
+    "smoke_sha256": "6724fc63160ce7e3d2a73cc713c363637c75de42ab8acccb3e4329147850f2e5",
+    "outcome": "failed",
+    "passed_checks": 6,
+    "failure": "workspace-normal-density",
+    "bounds_retained": false,
+    "exact_failure_geometry_known": false
+  },
+  "changes": {
+    "initial_mixer_height_before_dip": 246,
+    "initial_mixer_height_after_dip": 216,
+    "resize_minimum_dip": 196,
+    "resize_maximum_cap_dip": 376,
+    "normal_fit_assertion_retained": true,
+    "incremental_workspace_diagnostics": true,
+    "pre_assert_normal_capture": true,
+    "failure_capture": true
+  },
+  "sizing_analysis": {
+    "kind": "source-derived minimum-window bound; not recovered failing-run geometry",
+    "normal_tracks_plus_ruler_dip": 298,
+    "fixed_root_rows_dip": 184,
+    "divider_dip": 5,
+    "if_horizontal_scrollbar_17_dip_required_client_before": 750,
+    "if_horizontal_scrollbar_17_dip_required_client_after": 720
+  },
+  "build": {
+    "command": "dotnet build Application/Windows/RebaseWindows/RebaseWindows.csproj -c Release --no-restore --verbosity quiet",
+    "sdk": "10.0.100",
+    "host": "macOS arm64",
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0,
+    "reported_elapsed_seconds": 2.84
+  },
+  "diff_check": "passed",
+  "sources": [
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.xaml",
+      "sha256": "588a629588090bdc177bbdd33f43c6b61e6a595a31ca8f5d21d6ac0f01d7b963"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.Layout.cs",
+      "sha256": "2fe8ff72d371432ed1767c42e7f7c83e226da056032cf0507f6da52b91c599a1"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/WindowSmoke.cs",
+      "sha256": "3bfd9856af8bb033caddca42c3ecc3263f0a07aa9d9df194cc254f6f8633fdc1"
+    }
+  ],
+  "native_windows_correction_tested": false,
+  "previous_raw_evidence_modified": false
+}
