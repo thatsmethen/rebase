@@ -1,0 +1,145 @@
+{
+  "schema": "rebase.windows-native-audio-ci.v1",
+  "status": "passed",
+  "scope": "Authored adapter compilation and portable lifecycle controls; endpoint discovery does not establish playback",
+  "mode": "windows-native",
+  "configuration": "Release",
+  "platform": "Windows",
+  "architecture": "AMD64",
+  "commit": "5dd3beb2538024a85143af984105fe6d2daea943",
+  "runner_image": {
+    "ImageOS": "win25-vs2026",
+    "ImageVersion": "20261021.278.1"
+  },
+  "commands": [
+    {
+      "name": "compiler-version",
+      "argv": [
+        "clang-cl",
+        "--version"
+      ],
+      "log": "compiler-version.log",
+      "exit_code": 0,
+      "elapsed_seconds": 2.094
+    },
+    {
+      "name": "cmake-version",
+      "argv": [
+        "cmake",
+        "--version"
+      ],
+      "log": "cmake-version.log",
+      "exit_code": 0,
+      "elapsed_seconds": 0.234
+    },
+    {
+      "name": "configure",
+      "argv": [
+        "cmake",
+        "-S",
+        "<workspace>\\Application\\Windows\\NativeAudio",
+        "-B",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\native\\build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_CXX_COMPILER=clang-cl",
+        "-DBUILD_TESTING=ON",
+        "-DREBASE_RUN_AUDIO_DEVICE_TESTS=OFF",
+        "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
+      ],
+      "log": "configure.log",
+      "exit_code": 0,
+      "elapsed_seconds": 8.969
+    },
+    {
+      "name": "build",
+      "argv": [
+        "cmake",
+        "--build",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\native\\build",
+        "--parallel",
+        "2"
+      ],
+      "log": "build.log",
+      "exit_code": 0,
+      "elapsed_seconds": 6.531
+    },
+    {
+      "name": "lifecycle-ctest",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\native\\build",
+        "--output-on-failure",
+        "--timeout",
+        "30",
+        "--output-junit",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\native\\lifecycle.xml"
+      ],
+      "log": "lifecycle-ctest.log",
+      "exit_code": 0,
+      "elapsed_seconds": 0.172
+    },
+    {
+      "name": "lifecycle-controls",
+      "argv": [
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\native\\build\\rebase_audio_lifecycle_tests.exe",
+        "--json",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\native\\lifecycle.json"
+      ],
+      "log": "lifecycle-controls.log",
+      "exit_code": 0,
+      "elapsed_seconds": 0.0
+    },
+    {
+      "name": "endpoint-probe",
+      "argv": [
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\native\\build\\rebase_wasapi_probe.exe",
+        "--json",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\native\\endpoint-probe.json"
+      ],
+      "log": "endpoint-probe.log",
+      "exit_code": 77,
+      "elapsed_seconds": 0.032
+    }
+  ],
+  "native_library_built": true,
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "endpoint_probe": {
+    "outcome": "unavailable-no-endpoint",
+    "exit_code": 77,
+    "playback_tested": false
+  },
+  "tests": {
+    "count": 1,
+    "skipped": 0,
+    "failures": 0
+  },
+  "portable_lifecycle": {
+    "schema": 1,
+    "suite": "native-audio-portable-lifecycle",
+    "checks": 89,
+    "failures": 0,
+    "wasapi_compiled": false,
+    "playback_tested": false
+  },
+  "build_products": [
+    {
+      "name": "RebaseWindowsAudio.dll",
+      "bytes": 27648,
+      "sha256": "898522641f202f9a9a17c5e14b0dc13b544d4b4502e28eb39ea11833d8b7ef57"
+    },
+    {
+      "name": "RebaseWindowsAudio.lib",
+      "bytes": 3276,
+      "sha256": "94a654984f5bbfc4c4252239da4e9d708d30f1d35efa0596f4ce4d452f540353"
+    },
+    {
+      "name": "rebase_wasapi_probe.exe",
+      "bytes": 19968,
+      "sha256": "6f7bf365cd9ee4c5d54f5eab24c4b94a3fc65736a2c3a4020bee139c445c4050"
+    }
+  ]
+}
