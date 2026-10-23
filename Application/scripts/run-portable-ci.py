@@ -14,6 +14,23 @@ import time
 import xml.etree.ElementTree as ET
 
 
+def collect_test_results(xml_paths):
+    if not xml_paths:
+        raise RuntimeError("No test XML report was emitted")
+    sources = []
+    for path in xml_paths:
+        cases = list(ET.parse(path).iter("testcase"))
+        skipped = sum(case.find("skipped") is not None for case in cases)
+        failures = sum(case.find("failure") is not None or case.find("error") is not None for case in cases)
+        sources.append({"report": path.name, "count": len(cases), "executed": len(cases) - skipped,
+                        "skipped": skipped, "failures": failures})
+    result = {field: sum(source[field] for source in sources) for field in ("count", "executed", "skipped", "failures")}
+    result["reports"] = sources
+    if result["executed"] == 0 or result["failures"]:
+        raise RuntimeError("Expected at least one executed passing test and no failures")
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("kind", choices=("c", "swift", "macos-app"))
@@ -46,9 +63,14 @@ def main():
     def clean(value):
         return value.replace(str(root), "<workspace>").replace(str(Path.home()), "<home>")
 
+    def test_xml_paths():
+        # SwiftPM uses a separate report for Swift Testing when XCTest is
+        # enabled, even when this package has no XCTest cases. CLT-only runs
+        # with XCTest disabled write the requested tests.xml directly.
+        return [out / name for name in ("tests.xml", "tests-swift-testing.xml") if (out / name).is_file()]
+
     def sanitize_xml():
-        path = out / "tests.xml"
-        if path.is_file():
+        for path in test_xml_paths():
             value = path.read_text(encoding="utf-8")
             value = value.replace(str(root), "&lt;workspace&gt;").replace(str(Path.home()), "&lt;home&gt;")
             path.write_text(value, encoding="utf-8")
@@ -165,15 +187,8 @@ def main():
                 (out / "example-render.json").write_text(json.dumps(render, indent=2) + "\n", encoding="utf-8")
                 if differences:
                     raise RuntimeError("Rendered example differs from its predeclared lock: " + ", ".join(differences))
-        xml_path = out / "tests.xml"
         sanitize_xml()
-        tree = ET.parse(xml_path)
-        cases = list(tree.iter("testcase"))
-        skipped = sum(case.find("skipped") is not None for case in cases)
-        failures = sum(case.find("failure") is not None or case.find("error") is not None for case in cases)
-        report["tests"] = {"count": len(cases), "skipped": skipped, "failures": failures}
-        if not cases or len(cases) == skipped or failures:
-            raise RuntimeError("Expected at least one executed passing test and no failures")
+        report["tests"] = collect_test_results(test_xml_paths())
         report["status"] = "passed"
     except Exception as error:
         report["error"] = clean(str(error))

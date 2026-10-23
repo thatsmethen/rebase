@@ -19,7 +19,7 @@ python Application/scripts/run-portable-ci.py swift --configuration Release --ou
 
 On Windows, choose writable Windows paths for `--output`. The Swift runner sets `REBASE_PORTABLE_ONLY=1`, which excludes the macOS app, AVFoundation, and ZIPFoundation. Neither private research fixtures nor installed proprietary binaries are used.
 
-On a Mac with only Command Line Tools selected, the driver applies the same Swift Testing framework/plugin flags as `test-app.sh`. Full-Xcode hosted runners use their normal test invocation. The portable driver restores the application's existing `Package.resolved` after execution because the dependency-free portable package can otherwise remove it.
+On a Mac with only Command Line Tools selected, the driver applies the same Swift Testing framework/plugin flags as `test-app.sh`. Full-Xcode hosted runners use their normal test invocation. SwiftPM may emit `tests-swift-testing.xml` alongside or instead of the requested `tests.xml`; the driver sanitizes and reads both known reports, records skipped and executed counts, and requires at least one executed test with no failures. The portable driver restores the application's existing `Package.resolved` after execution because the dependency-free portable package can otherwise remove it.
 
 ## Windows SoXR build
 
@@ -31,7 +31,7 @@ python Application/scripts/build-windows-soxr.py --output "$env:TEMP/rebase-soxr
 
 The script verifies the pinned SoXR 0.1.3 source manifest. Git's exact link-text representation is accepted for its noncompiled symlink wrapper on Windows. All compiled source bytes must match. CR32, CR64, and the high-precision clock remain enabled; OpenMP, SIMD variants, VR32, LSR bindings, PFFFT, AVFFT, examples, upstream tests, and developer tracing remain disabled, matching the macOS build's feature selection. Optimization remains `-O3 -DNDEBUG`, with fast math and floating-point contraction disabled. It selects CMake's `RelWithDebInfo` configuration with those explicit flags to avoid upstream's Unix-only `-s` shared-linker option in `Release`.
 
-The DLL probe loads the built library, checks its version, converts an authored stereo impulse from 48 kHz to 44.1 kHz, flushes the converter, and verifies frame count, finite output, and channel relationship. This is an API plumbing check. It does not establish matching impulse responses or project playback between platforms.
+The Windows build explicitly enables `SOXR_DLL` exports because upstream enables that macro automatically only for MSVC's frontend. The probe uses `clang-cl /MD` to select the dynamic C runtime consistently. It loads the built library, checks its version, converts an authored stereo impulse from 48 kHz to 44.1 kHz, flushes the converter, and verifies frame count, finite output, and channel relationship. This is an API plumbing check. It does not establish matching impulse responses or project playback between platforms.
 
 ## Windows native audio foundation
 

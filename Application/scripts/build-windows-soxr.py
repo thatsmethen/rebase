@@ -74,12 +74,13 @@ def main():
         report["options"] = options
         report["optimization"] = "-O3 -DNDEBUG; fast math disabled; FP contraction disabled"
         report["msvc_runtime"] = "MultiThreadedDLL (CMP0091 NEW)"
+        report["windows_exports"] = "SOXR_DLL explicitly enabled for clang's GNU frontend"
         # Upstream adds Unix linker '-s' to Release; select another configuration
         # with the exact application optimization flags, without patching source.
         command = ["cmake", "-S", str(source), "-B", str(build), "-G", "Ninja",
                    "-DCMAKE_C_COMPILER=clang", "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
                    "-DCMAKE_POLICY_DEFAULT_CMP0091=NEW", "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL",
-                   "-DCMAKE_C_FLAGS=-fno-fast-math -ffp-contract=off",
+                   "-DCMAKE_C_FLAGS=-fno-fast-math -ffp-contract=off -DSOXR_DLL",
                    "-DCMAKE_C_FLAGS_RELWITHDEBINFO=-O3 -DNDEBUG",
                    f"-DCMAKE_INSTALL_PREFIX={install}", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"]
         command += [f"-D{key}={value}" for key, value in options.items()]
@@ -97,6 +98,8 @@ def main():
             raise RuntimeError("Strict floating-point flags missing from SoXR compilation")
         if any("--dependent-lib=msvcrt" not in row["command"] for row in compile_commands):
             raise RuntimeError("Dynamic MSVC runtime selection missing from SoXR compilation")
+        if any("-DSOXR_DLL" not in row["command"] for row in compile_commands):
+            raise RuntimeError("Windows DLL exports missing from SoXR compilation")
         report["configured_features"] = macros
         report["compile_command_count"] = len(compile_commands)
         run(["cmake", "--build", str(build), "--parallel", "2"], "build")
@@ -106,9 +109,12 @@ def main():
         if not dll.is_file() or not library.is_file():
             raise RuntimeError("Expected SoXR DLL and import library were not installed")
         probe = install / "bin/rebase-soxr-probe.exe"
-        run(["clang", "-std=c11", "-O2", "-fno-fast-math", "-ffp-contract=off", "-fms-runtime-lib=dll",
-             "-DSOXR_DLL", "-I", str(install / "include"),
-             str(app / "scripts/windows-soxr-probe.c"), str(library), "-o", str(probe)], "probe-build")
+        # clang-cl /MD selects both compiler and linker dynamic-CRT behavior.
+        # The GNU frontend's -fms-runtime-lib=dll alone leaves a conflicting
+        # static default library in this standalone executable link.
+        run(["clang-cl", "/clang:-std=c11", "/O2", "/MD", "/clang:-fno-fast-math",
+             "/clang:-ffp-contract=off", "/DSOXR_DLL", "/I" + str(install / "include"),
+             str(app / "scripts/windows-soxr-probe.c"), str(library), "/Fe:" + str(probe)], "probe-build")
         probe_result = json.loads(run([str(probe)], "probe"))
         if probe_result.get("status") != "passed":
             raise RuntimeError("SoXR probe did not report success")
