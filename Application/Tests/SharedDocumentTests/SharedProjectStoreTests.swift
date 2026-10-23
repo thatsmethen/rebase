@@ -11,7 +11,7 @@ import WinSDK
 
 struct SharedProjectStoreTests {
     private func workspace(_ body: (URL) throws -> Void) throws {
-        let root = FileManager.default.temporaryDirectory.appendingPathComponent("RebaseDocument-" + UUID().uuidString)
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("RebaseDocument-" + Foundation.UUID().uuidString)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: root) }
         try body(root)
@@ -101,7 +101,7 @@ struct SharedProjectStoreTests {
             var project = try fixture(at: root)
             let manifest = root.appendingPathComponent(ProjectStore.manifestName)
             var invalid = project.tracks[0].clips[0]
-            invalid.id = UUID(); invalid.sourceOffset = 4 / 48_000; invalid.duration = 1 / 48_000
+            invalid.id = Foundation.UUID(); invalid.sourceOffset = 4 / 48_000; invalid.duration = 1 / 48_000
             project.tracks[0].clips.append(invalid)
             project.tracks[0].isMuted = true
             try JSONEncoder().encode(project).write(to: manifest)
@@ -224,7 +224,7 @@ struct SharedProjectStoreTests {
     #if !canImport(RebaseCore)
     @Test func portableAttachmentValidationRefusesUncheckedAssociations() throws {
         let digest = String(repeating: "a", count: 64)
-        let attachment = CPRAudioMediaAttachment(id: UUID(), association: "user-selected", sourceSHA256: digest,
+        let attachment = CPRAudioMediaAttachment(id: Foundation.UUID(), association: "user-selected", sourceSHA256: digest,
             sourceFileIdentity: 10, mediaPath: "Media/Control.wav", mediaSHA256: digest, selectedFilename: "Control.wav",
             frameCount: 4, sampleRate: 48_000, channels: 1, bitsPerSample: 32, bytesPerFrame: 4)
         try workspace { root in

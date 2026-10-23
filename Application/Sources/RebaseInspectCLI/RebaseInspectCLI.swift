@@ -109,7 +109,7 @@ struct RebaseInspectCLI {
         let pcm = try PCMRenderer.mix(prepared.clips, sampleRate: prepared.sampleRate, from: 0, count: Int(prepared.frameCount))
         let bytes = try WAVPCMSource.encode(pcm)
         let manager = FileManager.default
-        let staging = output.deletingLastPathComponent().appendingPathComponent(".rebase-render-" + UUID().uuidString + ".tmp")
+        let staging = output.deletingLastPathComponent().appendingPathComponent(".rebase-render-" + Foundation.UUID().uuidString + ".tmp")
         defer { try? manager.removeItem(at: staging) }
         try bytes.write(to: staging, options: .withoutOverwriting)
         // The completed file is published in one no-overwrite operation. A

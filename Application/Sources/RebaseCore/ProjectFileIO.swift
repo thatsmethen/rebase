@@ -117,7 +117,7 @@ enum ProjectFileIO {
         // No cross-volume copy fallback: publish a completed sibling using one
         // rename. Foundation .atomic can fall back to COPY_ALLOWED on Windows.
         let manager = FileManager.default
-        let staging = root.appendingPathComponent(".rebase-manifest-" + UUID().uuidString + ".tmp")
+        let staging = root.appendingPathComponent(".rebase-manifest-" + Foundation.UUID().uuidString + ".tmp")
         defer { try? manager.removeItem(at: staging) }
         try data.write(to: staging, options: .withoutOverwriting)
         do {

@@ -167,7 +167,7 @@ def main():
               "commit": env.get("GITHUB_SHA"), "development_build": True, "signed": False,
               "playback_tested": False, "audible_output_measured": False, "commands": [],
               "toolchain": {"dotnet_sdk": SDK, "dotnet_runtime": DOTNET_RUNTIME, "swift": SWIFT},
-              "runner_image": {key: env.get(key) for key in ("ImageOS", "ImageVersion")}}
+              "runner_image": {key: os.environ.get(key) for key in ("ImageOS", "ImageVersion")}}
     replacements = []
     for path, label in ((root, "workspace"), (Path.home(), "home"), (out, "build-output")):
         for value in (str(path), str(path).replace("\\", "/"), str(path).replace("/", "\\")):
@@ -245,11 +245,11 @@ def main():
         candidates = [path for path in candidates if path.is_dir()]
         if len(candidates) != 1:
             raise RuntimeError("Cannot identify the pinned Swift runtime component")
-        vc_root = Path(env.get("VCToolsRedistDir", "missing"))
+        vc_root = Path(os.environ.get("VCToolsRedistDir", "missing"))
         vc_dirs = list((vc_root / "x64").glob("Microsoft.*.CRT"))
         if not vc_dirs:
             raise RuntimeError("Visual C++ x64 redistribution directory is unavailable")
-        windows = Path(env["SystemRoot"])
+        windows = Path(os.environ["SystemRoot"])
         closure = assemble_dependencies(stage, candidates[0], vc_dirs, windows / "System32")
         write(evidence / "pe-dependency-closure.json", closure)
         example = copy_example(app, stage)

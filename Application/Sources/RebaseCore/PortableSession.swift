@@ -1,8 +1,5 @@
 import Foundation
 #if REBASE_PORTABLE
-#if os(Windows)
-import WinSDK
-#endif
 
 /// Versioned local-process protocol. This is not a network service.
 public struct PortableSessionRequest: Codable {
