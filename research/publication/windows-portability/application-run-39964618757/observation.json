@@ -1,0 +1,144 @@
+{
+  "schema": "rebase.windows-ci-observation.v1",
+  "recorded_at_utc": "2026-10-23T14:01:33.081920+00:00",
+  "commit": "7563aa8cdbb490c529466df32b672f908434e8fe",
+  "status": "failed",
+  "run_url": "https://github.com/thatsmethen/rebase/actions/runs/39964618757",
+  "publication_status": "No ZIP produced or published. A corrected capture gate requires a new run.",
+  "findings": [
+    "WPF and the production helper compiled. 155 host controls and 91 packaged-helper checks passed.",
+    "The native scenario completed 38 checks before the exact alpha==255 capture assertion failed at the default-size CPR review. Footer containment and page access had passed.",
+    "The PNG encoder ran after the assertion, so this failed candidate produced no capture or alpha histogram. The precise failed-image pixel distribution is unavailable.",
+    "Minimum-size error-state capture, remaining native journeys and the application workflow shared Release gate were not reached. Separate component-workflow results are retained independently.",
+    "Independent analysis of previously accepted main/source/scroll PNGs subsequently found alpha 254 pixels alongside 255. This motivates a separately tested one-step alpha coverage tolerance; it does not reconstruct the missing failed capture."
+  ],
+  "host_control_checks": 155,
+  "packaged_helper_checks": 91,
+  "completed_window_checks": 38,
+  "failed_stage": "cpr-review-window-visible",
+  "failed_error": "The CPR review capture contains transparent pixels.",
+  "package_produced": false,
+  "capture_produced": false,
+  "cpr_import_protocol": {
+    "tested": true,
+    "review_read_only": true,
+    "review_bounded": true,
+    "cancellation_preserves_state": true,
+    "superseded_review_rejected": true,
+    "stale_revision_rejected": true,
+    "changed_source_rejected": true,
+    "explicit_partial_required": true,
+    "dirty_replacement_guarded": true,
+    "existing_destination_preserved": true,
+    "import_published": true,
+    "exact_source_and_report_preserved": true,
+    "save_reopen_preserves_baseline": true,
+    "historical_read_only": true,
+    "tampered_report_rejected": true,
+    "tampered_source_rejected": true,
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "reportSHA256": "f7e8949acac910533f30f21bca9c0daee581f7099770715991a5b9f0ff096833",
+    "evidence_class": "authored-synthetic-control",
+    "playback_tested": false,
+    "review_items_checked": 15,
+    "review_pages_checked": 1
+  },
+  "source": {
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "mediaSHA256": "c1ccbba91f8d9084cba4271ec5cc7c6114d754349d6da98f42a91463830fe956",
+    "outputSHA256": "8090c75bc7ace4f400eb25d428129c68eddec2c488200e9fcad4deb5700afd0a",
+    "pcmSHA256": "06e73a6e5b244c0c187bdd6482d8db7bb3adfd3ac98f2c11e6cd4c29d7a3bce0",
+    "frames": 44100,
+    "sampleRate": 44100,
+    "channels": 2,
+    "playback_tested": false
+  },
+  "waveform": {
+    "clips_checked": 11,
+    "peak_bins_checked": 17600,
+    "float32_peak_words_sha256": "ade8ed5eb493af376b7affbfb5bd0bf3f06aafa51eabe63c48c6657406caba29",
+    "oracle": "Independent signed PCM16 extrema over exact source intervals"
+  },
+  "ruler": {
+    "read_only": true,
+    "stale_revision_rejected": true,
+    "pixels_per_second": 100,
+    "duration": 20,
+    "ticks_checked": 33,
+    "first_bar_seconds": [
+      0,
+      2.5,
+      5,
+      7.5
+    ],
+    "first_quarter_seconds": [
+      0,
+      0.625,
+      1.25,
+      1.875,
+      2.5
+    ],
+    "oracle": "Authored constant 96 BPM, 4/4: quarter = 5/8 seconds; bar = 5/2 seconds"
+  },
+  "boundaries": [
+    "All 11 retained raw records are byte-exact; the original failure is not repaired.",
+    "No full window journey, new visual acceptance, audio-device playback or complete reference fidelity is established."
+  ],
+  "artifacts": [
+    {
+      "path": "application-build.json",
+      "bytes": 4665,
+      "sha256": "05756795202f66cd42121a06d9567822fbc4386818faac02256c615eb63f9abd"
+    },
+    {
+      "path": "host-controls.json",
+      "bytes": 164,
+      "sha256": "20703e183423e63e0231370fb5eeede6bb14d0041438a414d8f0f9b23fad49fa"
+    },
+    {
+      "path": "host-controls.log",
+      "bytes": 132,
+      "sha256": "302761939769c9beab79afa473471e865ea96e5385c77e54e99919b2ecef8ee5"
+    },
+    {
+      "path": "packaged-session-protocol.json",
+      "bytes": 9406,
+      "sha256": "f31f7d2770c71d5d96b8b2b106f8b57796ea06c549dd6bb9c080edea0c92ec52"
+    },
+    {
+      "path": "packaged-session-protocol.log",
+      "bytes": 8591,
+      "sha256": "179f64773009464d00e98d5fc6d76685eb00d7299d0e8b2893bf51d032af36e8"
+    },
+    {
+      "path": "wpf-smoke.json",
+      "bytes": 3038,
+      "sha256": "ef9e59e8c8d0d6db37fdb5e4a3007769deb1e92ca053ace249241e28f98ec07f"
+    },
+    {
+      "path": "packaged-window-smoke.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "pe-dependency-closure.json",
+      "bytes": 107613,
+      "sha256": "63ee13e46435de0d736ab6a1328b173d3806b7470cfec09ae71b605c66083c78"
+    },
+    {
+      "path": "native/conformance.json",
+      "bytes": 4074,
+      "sha256": "7447884bcd79d3cf6b25d0737d3da618e860c100c649eb98f1abce417a2fef5d"
+    },
+    {
+      "path": "native/lifecycle.json",
+      "bytes": 161,
+      "sha256": "4cf871633cd9cd8fba9c06d7552550837fc5ef3d79fc608370edc07228840ab7"
+    },
+    {
+      "path": "native/endpoint-probe.json",
+      "bytes": 539,
+      "sha256": "4861b7d5be2448c852ce4e272c64bb50e6a79646e65b9d917937b48248d7c38c"
+    }
+  ]
+}

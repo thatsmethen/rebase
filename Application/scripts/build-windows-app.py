@@ -192,9 +192,17 @@ def require_pinned_header_scroll(smoke):
 def require_cpr_review_layout(path, bounds, layout, minimum_error=False):
     require_window_visual(path, bounds)
     width, height = math.ceil(bounds["client_width"]), math.ceil(bounds["client_height"])
-    if (type(layout.get("opaque_pixels")) is not int or type(layout.get("total_pixels")) is not int
-            or layout["opaque_pixels"] != width * height or layout["total_pixels"] != width * height):
-        raise RuntimeError("CPR review capture was not checked as fully opaque")
+    counts = ("alpha_minimum", "alpha_254_pixels", "alpha_255_pixels", "alpha_below_254_pixels", "total_pixels")
+    if (any(type(layout.get(key)) is not int or layout[key] < 0 for key in counts)
+            or layout["total_pixels"] != width * height or layout["alpha_below_254_pixels"] != 0
+            or layout["alpha_254_pixels"] + layout["alpha_255_pixels"] != width * height
+            or layout["alpha_minimum"] != (254 if layout["alpha_254_pixels"] else 255)):
+        raise RuntimeError("CPR review capture lacks complete alpha 254-or-255 coverage")
+    diagnostic = json.loads(path.with_name(path.stem + "-alpha.json").read_text(encoding="utf-8"))
+    if (diagnostic.get("schema") != 1 or diagnostic.get("screenshot") != path.name
+            or diagnostic.get("png_sha256") != digest(path) or diagnostic.get("root_background_alpha") != 255
+            or diagnostic.get("window_bounds") != bounds or diagnostic.get("capture_layout") != layout):
+        raise RuntimeError("CPR review alpha diagnostic does not match the capture and layout")
     viewport = layout.get("review_viewport_height")
     if type(viewport) not in (int, float) or not math.isfinite(viewport) or viewport < 40:
         raise RuntimeError("CPR review has no usable content viewport")
@@ -429,7 +437,7 @@ def main():
                            "cpr-changed-source-rejected", "cpr-dirty-cancel-preserves-session",
                            "cpr-destination-cancel-preserves-review", "cpr-import-supported-data", "cpr-import-source-preserved",
                            "cpr-historical-report-readonly", "cpr-review-visual-artifact",
-                           "cpr-review-footer-visible", "cpr-review-capture-opaque", "cpr-review-minimum-error-layout"}
+                           "cpr-review-footer-visible", "cpr-review-capture-alpha-coverage", "cpr-review-minimum-error-layout"}
         if (smoke.get("source_journey_tested") is not True or not required_checks.issubset(smoke["checks"])
                 or smoke.get("source_screenshot") != "native-source-visual.png"
                 or smoke.get("source_output_sha256") != expected_source["outputSHA256"]

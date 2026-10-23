@@ -403,7 +403,7 @@ public partial class MainWindow
             Assert(itemsChecked == review.Review.TotalItems && !review.NextButton.IsEnabled && pagesChecked > 0, "cpr-review-all-pages-accessible");
             while (review.PreviousButton.IsEnabled) await Invoke(review.PreviousButton);
             var (reviewBounds, reviewLayout) = await CaptureCPRReview(review, "native-cpr-review-visual.png");
-            checks.Add("cpr-review-footer-visible"); checks.Add("cpr-review-capture-opaque");
+            checks.Add("cpr-review-footer-visible"); checks.Add("cpr-review-capture-alpha-coverage");
             checks.Add("cpr-review-visual-artifact");
             await CloseReview(review);
             Assert(StateIdentity() == before && model.CPRReview is null, "cpr-review-cancel-preserves-session");
@@ -488,12 +488,25 @@ public partial class MainWindow
             var picture = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
             picture.Render(client);
             var pixels = new byte[checked(width * height * 4)]; picture.CopyPixels(pixels, width * 4, 0);
+            var alphaMinimum = 255; var alpha254 = 0; var alpha255 = 0; var alphaBelow254 = 0;
             for (var i = 3; i < pixels.Length; i += 4)
-                if (pixels[i] != 255) throw new InvalidOperationException("The CPR review capture contains transparent pixels.");
+            {
+                var alpha = pixels[i]; alphaMinimum = Math.Min(alphaMinimum, alpha);
+                if (alpha == 255) alpha255++; else if (alpha == 254) alpha254++; else alphaBelow254++;
+            }
             var encoder = new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(picture));
-            using (var output = File.Create(Path.Combine(root, filename))) encoder.Save(output);
-            return (bounds, new { footer_controls = controls, opaque_pixels = width * height, total_pixels = width * height,
-                review_viewport_height = review.ReviewScroll.ActualHeight, error_characters = review.ReviewMessage.Length });
+            var imagePath = Path.Combine(root, filename);
+            using (var output = File.Create(imagePath)) encoder.Save(output);
+            var layout = new { footer_controls = controls, alpha_minimum = alphaMinimum, alpha_254_pixels = alpha254, alpha_255_pixels = alpha255,
+                alpha_below_254_pixels = alphaBelow254, total_pixels = width * height,
+                review_viewport_height = review.ReviewScroll.ActualHeight, error_characters = review.ReviewMessage.Length };
+            var diagnostic = new { schema = 1, screenshot = filename, png_sha256 = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(await File.ReadAllBytesAsync(imagePath))).ToLowerInvariant(),
+                root_background_alpha = background.Color.A, window_bounds = bounds, capture_layout = layout };
+            // Keep failed captures inspectable. WPF captures already measured in
+            // this project contain alpha 254 as well as 255; actual holes do not.
+            await File.WriteAllTextAsync(Path.Combine(root, Path.GetFileNameWithoutExtension(filename) + "-alpha.json"), JsonSerializer.Serialize(diagnostic, new JsonSerializerOptions { WriteIndented = true }));
+            if (alphaBelow254 != 0) throw new InvalidOperationException("The CPR review capture contains pixels below alpha 254; inspect the retained alpha diagnostic.");
+            return (bounds, layout);
         }
         CheckBox MixerFlag(string name) => Descendants<CheckBox>(Mixer).Single(control => System.Windows.Automation.AutomationProperties.GetName(control) == name);
         async Task Capture(string filename)
