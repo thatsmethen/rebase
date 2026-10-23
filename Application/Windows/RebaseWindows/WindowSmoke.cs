@@ -28,6 +28,7 @@ public partial class MainWindow
         object? windowBounds = null;
         object? musicalRulerReceipt = null;
         var faderScaleReceipt = new List<object>();
+        object? channelAlignment = null;
         RenderSnapshot? sourceReceipt = null;
         int exit = 1;
         try
@@ -59,7 +60,7 @@ public partial class MainWindow
             , dark_caption_hresult = darkCaptionResult, native_frame_visual_tested = false
             , timeline_scroll = timelineScrollReceipt, timeline_scroll_screenshot = "native-timeline-scroll-visual.png"
             , window_bounds = windowBounds
-            , musical_ruler = musicalRulerReceipt, fader_scale = faderScaleReceipt
+            , musical_ruler = musicalRulerReceipt, fader_scale = faderScaleReceipt, channel_alignment = channelAlignment
         };
         try { await File.WriteAllTextAsync(artifact, JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true })); }
         catch (IOException) { return 2; }
@@ -338,6 +339,14 @@ public partial class MainWindow
             scroll.SetScrollPercent(0, System.Windows.Automation.ScrollPatternIdentifiers.NoScroll);
             Zoom.Value = originalZoom;
             await Until(() => Timeline.MusicalRulerVisible && model.Ruler?.PixelsPerSecond == originalZoom, "restored-musical-ruler");
+            stage = "channel-strip-bottom-aligned";
+            await Dispatcher.InvokeAsync(UpdateLayout, DispatcherPriority.ApplicationIdle);
+            var selectedNamePlate = Descendants<Button>(SelectedChannel).Single();
+            var mixerNamePlate = Descendants<Button>(Mixer.Children[0]).Single();
+            var selectedBottom = Origin(selectedNamePlate).Y + selectedNamePlate.ActualHeight;
+            var mixerBottom = Origin(mixerNamePlate).Y + mixerNamePlate.ActualHeight;
+            Assert(Math.Abs(selectedBottom - mixerBottom) <= 6, "channel-strip-bottom-aligned");
+            channelAlignment = new { selected_nameplate_bottom = selectedBottom, mixer_nameplate_bottom = mixerBottom };
             stage = "capture-window-visual";
             await Capture("native-app-visual.png");
             checks.Add("window-visual-artifact-written"); stage = "completed";

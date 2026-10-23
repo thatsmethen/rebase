@@ -26,4 +26,8 @@ These records concern the authored Rebase implementation running on Windows. The
 
 - [Application run 39939758507](application-run-39939758507/observation.json): 52 packaged-helper checks, 91 host controls and 39 actual-window checks passed. Three client-area images record the corrected source labels, editable inspector, musical ruler and fixed track headers. The downloaded ZIP was independently checked against its CI digest, file manifest and committed example, then privacy reviewed. This is the first Windows development preview; physical input, native dialogs and device playback remain unverified.
 
+- [Run 39946279018](run-39946279018/observation.json): all 13 jobs passed for the Channel/compact-controls candidate. Windows Swift executed 70 tests per configuration, Mac portable 71, public Mac 255; explicit skips and zero failures are recorded. All four helpers passed 52 checks with the same locked example/source audio, waveform and ruler results.
+
+- [Application run 39946278931](application-run-39946278931/observation.json): 54 actual-window checks, 91 host controls and 52 helper checks passed. Both fader sizes match measured thumb coordinates at -96, 0 and +24 dB. Native images show the new Channel/Inspector and compact controls, but root review found an unintended gap below the selected Channel nameplate. Its alignment correction receives a new native gate and separate subsequent evidence. This ZIP has not been independently downloaded or published.
+
 New runs receive separate records. A later passing run does not rewrite a failed observation or turn a component check into full application parity. The current feature acceptance plan is the [Windows parity ledger](../../../docs/development/windows-parity.md).

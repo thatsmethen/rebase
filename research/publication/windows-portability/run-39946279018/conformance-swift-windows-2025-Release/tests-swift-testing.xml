@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="TestResults" errors="0" tests="70" failures="0" skipped="1" time="2.8434424">
+    <testcase classname="RebasePortableTests.SourceAuditionFixtureTests" name="checkedInAuthoredFixtureAttachesRendersAndReopensWithoutChangingOriginal()" time="1.3153685" />
+    <testcase classname="RebasePortableTests.SourceAuditionFixtureTests" name="generateAuthoredFixtureAtExplicitNewDestination()" >
+      <skipped />
+    </testcase>
+    <testcase classname="RebasePortableTests.PortablePCMTests" name="trimResamplePanAndTimelineGapUseSharedPolicy()" time="1.3929327" />
+    <testcase classname="RebasePortableTests.PortablePCMTests" name="invalidBuffersRangesAndAccumulationReject()" time="1.2491048" />
+    <testcase classname="RebasePortableTests.PortablePCMTests" name="wavFloatRoundTripPreservesBitPatternsIncludingNegativeZero()" time="1.049737" />
+    <testcase classname="RebasePortableTests.PortablePCMTests" name="malformedWavBoundsMetadataAndNonfiniteSamplesReject()" time="1.3929195" />
+    <testcase classname="RebasePortableTests.PortablePCMTests" name="stableFloat32AccumulationAndChunkBoundaries()" time="0.9865079" />
+    <testcase classname="RebasePortableTests.PortablePCMTests" name="soloMuteAndAutomationAreAppliedBeforeMixing()" time="1.0498839" />
+    <testcase classname="RebasePortableTests.PortablePCMTests" name="integerWavDecodesSignedExtremesAndStereoOrdering()" time="1.2315089" />
+    <testcase classname="RebasePortableTests.SharedProjectStoreTests" name="everySourceIntervalAndAllSamplesAreCheckedOnLoad()" time="2.0424672" />
+    <testcase classname="RebasePortableTests.SharedProjectStoreTests" name="sharedEditsSaveReopenAndRetainOpaquePackageFiles()" time="1.7616447" />
+    <testcase classname="RebasePortableTests.SharedProjectStoreTests" name="publicationNeverReplacesExistingFilesOrDirectories()" time="1.7617415" />
+    <testcase classname="RebasePortableTests.SharedProjectStoreTests" name="deniedWindowsReplacementRetainsTheSavedDocumentAndCleansStaging()" time="2.0428496" />
+    <testcase classname="RebasePortableTests.SharedProjectStoreTests" name="mediaContainmentRejectsTraversalAlternateStreamsAndRedirectedDirectories()" time="1.7618437" />
+    <testcase classname="RebasePortableTests.SharedProjectStoreTests" name="portableAttachmentValidationRefusesUncheckedAssociations()" time="2.0426235" />
+    <testcase classname="RebasePortableTests.SharedProjectStoreTests" name="redirectedAndOversizedManifestsCannotBeOpenedOrOverwritten()" time="2.0428341" />
+    <testcase classname="RebasePortableTests.SharedProjectStoreTests" name="invalidAndOversizedSavesPreserveTheLastManifest()" time="2.0446585" />
+    <testcase classname="RebasePortableTests.SharedProjectStoreTests" name="nativeClockReplayAndFailedSavesPreserveTheSourceAndReport()" time="2.0427309" />
+    <testcase classname="RebasePortableTests.PortableSessionTests" name="sourceCommandsRejectOrdinaryClipsAndStaleStateWithoutSideEffects()" time="2.0433407" />
+    <testcase classname="RebasePortableTests.PortableSessionTests" name="saveAndRenderRejectExternalManifestChanges()" time="2.0434792" />
+    <testcase classname="RebasePortableTests.PortableSessionTests" name="sourceAuditionRevalidatesAttachedBytesAndRetainsUnresolvedIdentity()" time="2.1763361" />
+    <testcase classname="RebasePortableTests.PortableSessionTests" name="badFramesAndUnknownCommandsDoNotCreateProjectsOrEdits()" time="2.0431515" />
+    <testcase classname="RebasePortableTests.PortableSessionTests" name="editsUseSharedHistoryAndRejectStaleMessagesTransactionally()" time="2.0434522" />
+    <testcase classname="RebasePortableTests.PortableSessionTests" name="exampleCopySaveAsPreservesOriginalAndSidecarsAndRefusesReplacement()" time="2.0459114" />
+    <testcase classname="RebasePortableTests.PortableSessionTests" name="renderingPublishesOwnedSnapshotAndPreservesExistingFiles()" time="2.0435701" />
+    <testcase classname="RebasePortableTests.PortableSessionTests" name="waveformIsSourceBoundedReadOnlyAndRejectsStaleOrDeletedClips()" time="2.0438927" />
+    <testcase classname="RebasePortableTests.WaveformPeaksTests" name="binBoundariesAndChunkEdgesMatchIndependentFrameOracle()" time="2.0439325" />
+    <testcase classname="RebasePortableTests.WaveformPeaksTests" name="offsetsAndDurationTruncateAtSourceRateAndClampToEOF()" time="2.0438987" />
+    <testcase classname="RebasePortableTests.WaveformPeaksTests" name="shortWrongFormatAndNonfiniteReadsFailWithoutPartialEnvelope()" time="2.0440118" />
+    <testcase classname="RebasePortableTests.WaveformPeaksTests" name="invalidOrEmptyRangesAreRejected()" time="2.0440123" />
+    <testcase classname="RebasePortableTests.PortableRulerTests" name="invalidRequestsAndExternalManifestChangesNeverMutateStateOrReturnTicks()" time="1.759157" />
+    <testcase classname="RebasePortableTests.PortableRulerTests" name="rulerIsReadOnlyAndReflectsTempoEditsUndoAndMeterChanges()" time="1.7587766" />
+    <testcase classname="RebasePortableTests.PortableRulerTests" name="retainedNativeClockRulerDoesNotConvertOrResolveTheProject()" time="1.7617421" />
+    <testcase classname="RebasePortableTests.ProjectEditingTests" name="backwardClockStartsANewUndoGroup()" time="1.7592569" />
+    <testcase classname="RebasePortableTests.ProjectEditingTests" name="musicalMovesSplitsAndTempoEditsRetainAnchorsWithoutStretchingAudio()" time="1.7593126" />
+    <testcase classname="RebasePortableTests.ProjectEditingTests" name="invalidEditsLeaveHistoryRedoAndSelectionUntouched()" time="1.7592103" />
+    <testcase classname="RebasePortableTests.ProjectEditingTests" name="historyBoundAndResetDoNotLeakCoalescingAcrossDocuments()" time="1.7593438" />
+    <testcase classname="RebasePortableTests.ProjectEditingTests" name="moveTrimSplitUndoRedoPreserveSourceCoordinatesAndSelection()" time="1.7595696" />
+    <testcase classname="RebasePortableTests.ProjectEditingTests" name="trackSelectionAndDeleteReconcileWithoutChoosingAnotherTrack()" time="1.7595718" />
+    <testcase classname="RebasePortableTests.ProjectEditingTests" name="deletingUnresolvedEventsRetainsSharedAttachmentUntilItsLastReference()" time="1.759759" />
+    <testcase classname="RebasePortableTests.ProjectEditingTests" name="mixerAndAutomationCommandsKeepControlDomainsAndLaneIdentity()" time="1.7593014" />
+    <testcase classname="RebasePortableTests.ProjectEditingTests" name="coalescingUsesSameControlAndRollingHalfSecondWindow()" time="1.7594323" />
+    <testcase classname="RebasePortableTests.ProjectEditingTests" name="nativeTimingRequiresExplicitConversionAndNoopMapsDoNotAddHistory()" time="1.7596651" />
+    <testcase classname="RebasePortableTests.SharedCPRAudioTests" name="incompatibleStoredFormatNeverCreatesAnAssociationOrLeavesCopiedMedia()" time="1.7594278" />
+    <testcase classname="RebasePortableTests.SharedCPRAudioTests" name="unsupportedSourceProcessingAndMonoNeverEnterStereoAudition()" time="2.0440997" />
+    <testcase classname="RebasePortableTests.SharedCPRAudioTests" name="attachedMediaLinksAreRejectedEvenWhenTheirBytesMatch()" time="1.7588086" />
+    <testcase classname="RebasePortableTests.SharedCPRAudioTests" name="authoredAttachmentRoundtripAndStereoAuditionPreserveExactSourceBytes()" time="1.7589864" />
+    <testcase classname="RebasePortableTests.SharedCPRAudioTests" name="sourceReportAndMediaTamperingAreRecheckedBeforeEverySnapshot()" time="1.7626654" />
+    <testcase classname="RebasePortableTests.SharedCPRAudioTests" name="strictPCM24DecoderRejectsMalformedAndAmbiguousWaves()" time="1.7585526" />
+    <testcase classname="RebasePortableTests.SharedCPRAudioTests" name="auditionPublicationRefusesOverwriteAndPackageContainment()" time="1.7589805" />
+    <testcase classname="RebasePortableTests.SharedCPRAudioTests" name="sharedFileAssociationChecksEveryRetainedEventInterval()" time="1.7595452" />
+    <testcase classname="RebasePortableTests.PortableSessionCopyTests" name="copyVerifiesAllChunksAndCleansAChangedSource()" time="2.0433931" />
+    <testcase classname="RebasePortableTests.PortableSessionCopyTests" name="bundledLegacyExampleOpensAsAnEditableCopy()" time="2.8387685" />
+    <testcase classname="RebasePortableTests.PortableSessionCopyTests" name="sizeBoundsAreCheckedBeforeOpeningTheOversizedFile()" time="1.7618729" />
+    <testcase classname="RebasePortableTests.PortableSessionCopyTests" name="legacyDefaultMapsDoNotMasqueradeAsExternalManifestChanges()" time="2.0430657" />
+    <testcase classname="RebasePortableTests.PortableSessionCopyTests" name="nulPathsAreRejectedByTheDocumentLayerAndProtocol()" time="2.0425197" />
+    <testcase classname="RebasePortableTests.PortableSessionCopyTests" name="addedAndRemovedEntriesInvalidateTheCopyAndNeverReplaceExistingDirectories()" time="2.0427511" />
+    <testcase classname="RebasePortableTests.PortableSessionCopyTests" name="failedSaveAsPreservesSessionHistoryAndLeavesNoStage()" time="2.043052" />
+    <testcase classname="RebasePortableTests.MusicalRulerTests" name="zoomChangesDensityWithoutChangingMusicalPositions()" time="1.758843" />
+    <testcase classname="RebasePortableTests.MusicalRulerTests" name="fixedTempoProducesMusicalBarsRatherThanSecondLabels()" time="1.759598" />
+    <testcase classname="RebasePortableTests.MusicalRulerTests" name="visibleEndpointIsIncludedEvenWhenAnotherSignatureComesLater()" time="1.7590348" />
+    <testcase classname="RebasePortableTests.MusicalRulerTests" name="recoveredFixedAndJumpClocksKeepTheirOwnArithmetic()" time="1.7592771" />
+    <testcase classname="RebasePortableTests.MusicalRulerTests" name="tempoAndSignatureChangesKeepContinuousBarNumbersAndUniqueBoundaries()" time="1.7592444" />
+    <testcase classname="RebasePortableTests.MusicalRulerTests" name="zeroExtentAndResourceLimitsAreExplicitAndBounded()" time="1.7591363" />
+    <testcase classname="RebasePortableTests.MusicalRulerTests" name="invalidInputsAndUnsupportedMapsFailWithoutASecondsFallback()" time="1.7591538" />
+    <testcase classname="RebasePortableTests.RebasePortableTests" name="preservedReportMustStillMatchItsSourceAndInterpretation()" time="2.0431659" />
+    <testcase classname="RebasePortableTests.RebasePortableTests" name="bundledExampleModelRoundTripsWithoutRewritingItsMedia()" time="2.0436725" />
+    <testcase classname="RebasePortableTests.RebasePortableTests" name="sha256MatchesStandardKnownAnswersAndIndependentPaddingControls()" time="2.0429503" />
+    <testcase classname="RebasePortableTests.RebasePortableTests" name="modelEditsPreserveValidationAndAutomationSemantics()" time="2.0429695" />
+    <testcase classname="RebasePortableTests.RebasePortableTests" name="authoredCPRControlUsesCurrentRecoveryWithoutSourceMutation()" time="2.0436955" />
+    <testcase classname="RebasePortableTests.RebasePortableTests" name="malformedCPRControlsRemainRejected()" time="2.0433101" />
+  </testsuite>
+</testsuites>

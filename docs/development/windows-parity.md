@@ -39,7 +39,15 @@ The [Windows host](../../Application/Windows/RebaseWindows/README.md) sends vers
 
 Changes to shared semantics must run the macOS and Windows conformance lanes. Record exact toolchain, architecture, configuration, test counts and observed output. Keep static reference evidence, independent numerical controls, reconstructed application behavior, and hardware observations distinct. Preserve original research seals and private fixture boundaries.
 
-Do not declare parity from a successful component build. The next integration order is: portable project store; shared renderer/ABI; native Windows window and WASAPI integration; complete the ledger above; then continue new REA behavior work on both platforms together.
+Do not declare parity from a successful component build. The next compatibility integration is reviewed raw CPR import on Windows, followed by the remaining native conversion/placed/overlap audition modes, device-rate output, interchange and automation workflows. Continue shared REA behavior work through both platform lanes; the full ledger remains the acceptance target.
+
+### Next: reviewed CPR import
+
+The shared parser, recovery profiles and historical report replay already compile portably. `CPRProject.importProject` still excludes portable builds, and the Windows file picker currently accepts only an existing Rebase manifest. Expose the same inspect → review → explicitly accepted partial import journey as the Mac app, using the existing Windows-aware `ProjectFileIO` new-directory publication helpers.
+
+Bind review confirmation to the source path/name/hash and interpretation profile, reject changed input, preserve the full original and report, and never replace an existing destination. Inspection/cancellation must leave the active project/history unchanged; import must preserve dirty-project protection and only switch state after successful validated publication. Historical reports retain their original frozen interpretation.
+
+Use a bounded review projection instead of duplicating the entire report and recovered project in the helper's response. `CPRInspection` computed counts and `canImport` need explicit serialization. Authored raw CPR and the existing source-audition fixture can exercise the shared path on both operating systems, with filename-derived metadata accounted for. Windows reparse/containment cases and uncertain publication outcomes after a helper timeout need explicit handling. No proprietary executable is required.
 
 ## Primary documentation
 

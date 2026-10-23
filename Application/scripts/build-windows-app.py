@@ -384,7 +384,7 @@ def main():
                            "source-selection-labels", "mixer-mute-shared-edit", "track-solo-shared-edit",
                            "mixer-volume-shared-edit-and-undo",
                            "musical-ruler-shared-96bpm", "musical-ruler-seconds-toggle",
-                           "selection-synchronized-across-panes", "channel-volume-shared-edit", "channel-volume-undo",
+                           "selection-synchronized-across-panes", "channel-strip-bottom-aligned", "channel-volume-shared-edit", "channel-volume-undo",
                            "channel-pan-shared-edit", "channel-mute-shared-edit", "fader-scale-matches-value",
                            "mixer-numeric-volume-commit", "mixer-numeric-volume-invalid-preserved", "mixer-numeric-volume-cancel",
                            "numeric-event-enter-and-undo", "numeric-event-cancel", "numeric-event-invalid-preserved",
@@ -395,6 +395,10 @@ def main():
                 or smoke.get("source_sha256") != expected_source["sourceSHA256"]
                 or smoke.get("media_sha256") != expected_source["mediaSHA256"]):
             raise RuntimeError("Source-event or waveform window checks are incomplete")
+        alignment = smoke.get("channel_alignment", {})
+        if (any(type(alignment.get(key)) not in (int, float) or not math.isfinite(alignment[key]) for key in ("selected_nameplate_bottom", "mixer_nameplate_bottom")) or
+                abs(alignment["selected_nameplate_bottom"] - alignment["mixer_nameplate_bottom"]) > 6):
+            raise RuntimeError("Selected Channel strip is not aligned with the lower console")
         scale = smoke.get("fader_scale", [])
         if (len(scale) != 6 or {(entry.get("selected_channel"), entry.get("value")) for entry in scale} !=
                 {(side, value) for side in (False, True) for value in (-96, 0, 24)} or

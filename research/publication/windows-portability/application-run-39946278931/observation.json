@@ -1,0 +1,337 @@
+{
+  "schema": "rebase.windows-ci-observation.v1",
+  "recorded_at_utc": "2026-10-23T11:54:07.323237+00:00",
+  "commit": "9bb8b767796bd291db3dbcbb1f0aa194029ee406",
+  "status": "passed",
+  "run_url": "https://github.com/thatsmethen/rebase/actions/runs/39946278931",
+  "job_url": "https://github.com/thatsmethen/rebase/actions/runs/39946278931/job/120389623443",
+  "publication_status": "Candidate evidence retained; visual follow-up required. Existing released preview is unchanged.",
+  "findings": [
+    "The Windows application workflow completed successfully and produced a development ZIP; this observation has not downloaded or independently audited that ZIP.",
+    "The actual opened WPF window passed 54 checks, including selected Channel gain/pan/mute edits, shared undo, synchronized selection, numeric commit/cancel/rejection, source attachment/export, musical ruler and anchored track headers.",
+    "Actual fader thumb and scale tick positions agreed within 0.5 DIP for -96, 0 and +24 dB in both the short mixer and taller selected Channel controls. This validates the application linear-dB mapping, not the proprietary reference fader taper.",
+    "The staged session helper and independent shared Release helper each passed 52 interactive checks. The host control executable passed 91 checks with zero failures.",
+    "The shared Release gate reported 71 tests, executed 70, skipped one opt-in generator, and reported zero failures.",
+    "Visual review found the selected Channel strip vertically centered inside a stretched background, leaving a large empty area below its name plate. The 54 passing checks did not assert its bottom alignment; a subsequent candidate must correct and measure that geometry.",
+    "The hosted audio endpoint was unavailable. No device playback or audible output was measured."
+  ],
+  "visual_review": {
+    "status": "follow-up-required-for-channel-bottom-alignment",
+    "reviewed_images": [
+      "native-app-visual.png",
+      "native-source-visual.png",
+      "native-timeline-scroll-visual.png"
+    ],
+    "pixel_dimensions": [
+      1084,
+      749
+    ],
+    "observed": [
+      "The compact vector toolbar and explicit event/tempo/seek fields fit the observed client width.",
+      "Separate Channel and Inspector panels identify the selected track; four complete event rows and real waveforms remain visible.",
+      "Fader scale labels are aligned with the implemented value geometry, and the selected Channel exposes the same working controls as the mixer.",
+      "Source names are readable without raw object formatting; the narrow source inspector uses vertical scrolling.",
+      "The zoomed view retains all track headers while events and ruler positions scroll.",
+      "All three captures use client dimensions without native-frame padding."
+    ],
+    "required_correction": "Bottom-align the selected Channel strip/name plate with the lower mixer; its current centered position leaves approximately 110 pixels of unused gray area below the name plate.",
+    "remaining_differences": [
+      "The Channel bottom alignment is not visually accepted in this candidate.",
+      "A transient focus/hover outline can appear on a different track-name button from the selected track; selected header fill and Channel/Inspector plates still identify the correct selection.",
+      "Per-channel audio meters, additional reference controls, exact fader taper, complete interface equivalence and full application parity are not established."
+    ]
+  },
+  "package": {
+    "name": "Rebase-Windows-x64-development-9bb8b767796b.zip",
+    "bytes": 98870305,
+    "sha256": "42cc08cbe6b62d34f202e388048631752136bb035ce7aa1f858f432fa6beb141"
+  },
+  "package_identity_source": "CI application-build record only",
+  "package_independently_downloaded": false,
+  "package_independently_audited": false,
+  "window_smoke_passed": true,
+  "window_smoke_checks": 54,
+  "host_control_checks": 91,
+  "packaged_protocol_checks": 52,
+  "shared_protocol_checks": 52,
+  "shared_release_gate_passed": true,
+  "shared_release_tests": {
+    "count": 71,
+    "executed": 70,
+    "skipped": 1,
+    "failures": 0
+  },
+  "source_journey_tested": true,
+  "source_fixture_shipped": false,
+  "source": {
+    "sourceSHA256": "6ad02d3183ea0ee47e5b45f291512362a0932015d4c0b37affaf3eb980c1fe66",
+    "mediaSHA256": "c1ccbba91f8d9084cba4271ec5cc7c6114d754349d6da98f42a91463830fe956",
+    "outputSHA256": "8090c75bc7ace4f400eb25d428129c68eddec2c488200e9fcad4deb5700afd0a",
+    "pcmSHA256": "06e73a6e5b244c0c187bdd6482d8db7bb3adfd3ac98f2c11e6cd4c29d7a3bce0",
+    "frames": 44100,
+    "sampleRate": 44100,
+    "channels": 2,
+    "playback_tested": false
+  },
+  "waveform": {
+    "clips_checked": 11,
+    "peak_bins_checked": 17600,
+    "float32_peak_words_sha256": "ade8ed5eb493af376b7affbfb5bd0bf3f06aafa51eabe63c48c6657406caba29",
+    "oracle": "Independent signed PCM16 extrema over exact source intervals"
+  },
+  "ruler": {
+    "read_only": true,
+    "stale_revision_rejected": true,
+    "pixels_per_second": 100,
+    "duration": 20,
+    "ticks_checked": 33,
+    "first_bar_seconds": [
+      0,
+      2.5,
+      5,
+      7.5
+    ],
+    "first_quarter_seconds": [
+      0,
+      0.625,
+      1.25,
+      1.875,
+      2.5
+    ],
+    "oracle": "Authored constant 96 BPM, 4/4: quarter = 5/8 seconds; bar = 5/2 seconds"
+  },
+  "window_ruler": {
+    "revision": 47,
+    "tempo": 96,
+    "duration": 24,
+    "pixels_per_second": 32,
+    "bar_two_seconds": 2.5,
+    "first_label_x": 202,
+    "second_label_x": 282
+  },
+  "window_scroll": {
+    "zoom_pixels_per_second": 100,
+    "offset_before": 0,
+    "offset_after": 368,
+    "headers_before": [
+      {
+        "x": 286,
+        "y": 154
+      },
+      {
+        "x": 286,
+        "y": 222
+      },
+      {
+        "x": 286,
+        "y": 290
+      },
+      {
+        "x": 286,
+        "y": 358
+      }
+    ],
+    "headers_after": [
+      {
+        "x": 286,
+        "y": 154
+      },
+      {
+        "x": 286,
+        "y": 222
+      },
+      {
+        "x": 286,
+        "y": 290
+      },
+      {
+        "x": 286,
+        "y": 358
+      }
+    ],
+    "event_before": {
+      "x": 484,
+      "y": 159
+    },
+    "event_after": {
+      "x": 116,
+      "y": 159
+    }
+  },
+  "fader_scale": [
+    {
+      "selected_channel": false,
+      "value": -96,
+      "tick_y": 103.5,
+      "thumb_y": 103.5
+    },
+    {
+      "selected_channel": true,
+      "value": -96,
+      "tick_y": 193.5,
+      "thumb_y": 193.4999999999999
+    },
+    {
+      "selected_channel": false,
+      "value": 0,
+      "tick_y": 25.899999999999995,
+      "thumb_y": 25.899999999999977
+    },
+    {
+      "selected_channel": true,
+      "value": 0,
+      "tick_y": 43.89999999999999,
+      "thumb_y": 43.89999999999998
+    },
+    {
+      "selected_channel": false,
+      "value": 24,
+      "tick_y": 6.5,
+      "thumb_y": 6.5
+    },
+    {
+      "selected_channel": true,
+      "value": 24,
+      "tick_y": 6.5,
+      "thumb_y": 6.5
+    }
+  ],
+  "window_bounds": {
+    "outer_width": 1100,
+    "outer_height": 788,
+    "client_width": 1084,
+    "client_height": 749,
+    "dpi_x": 96,
+    "dpi_y": 96
+  },
+  "downloadable_zip_produced": true,
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "boundaries": [
+    "All 20 retained raw records are byte-exact copies of downloaded CI evidence. No image edits or redactions were applied.",
+    "All 47 downloaded artifacts passed configured private-value/pattern and credential checks with zero blocker records. Manual review of all three images found authored project/event labels and no personal material.",
+    "The private audit reported only local com.apple.provenance extended attributes; these are not file content and are not retained in Git blobs.",
+    "The PNGs render the client visual tree of an actual opened WPF window. They are not desktop screenshots and do not capture the native frame.",
+    "UI checks use WPF automation peers and injected routed key events. They do not establish physical keyboard/mouse input, native file-dialog behavior, or hardware playback.",
+    "The candidate ZIP remains unsigned and has not been downloaded or independently audited in this observation. No release was replaced.",
+    "Passing bounded application checks do not establish complete Windows parity, general CPR project playback or proprietary reference-runtime equivalence."
+  ],
+  "artifacts": [
+    {
+      "path": "application-build.json",
+      "bytes": 5562,
+      "sha256": "50f9ffe548d4102b31c5bfa6aebf5c70374e90cb541e2b4dd9636a493672baf8"
+    },
+    {
+      "path": "host-controls.json",
+      "bytes": 163,
+      "sha256": "c662be061cd24f6c768a5d7b42551590b94cebda097a7bb652bd4bef88f45956"
+    },
+    {
+      "path": "packaged-session-protocol.json",
+      "bytes": 5217,
+      "sha256": "e230ec4651f73d49b95f2329d959ba7b57bf587819194cf8aa1b151547d2cdfc"
+    },
+    {
+      "path": "pe-dependency-closure.json",
+      "bytes": 107613,
+      "sha256": "63ee13e46435de0d736ab6a1328b173d3806b7470cfec09ae71b605c66083c78"
+    },
+    {
+      "path": "wpf-smoke.json",
+      "bytes": 4652,
+      "sha256": "3cd4dc47e9d76563279188fdb014481e02b51f45b3f4a2650fb078e9d68b83cb"
+    },
+    {
+      "path": "loaded-modules.json",
+      "bytes": 33634,
+      "sha256": "7f4ecec9ddd3e63b7c56b50f5d6d199bcebe5d4d6f283f7e909208fc9675f785"
+    },
+    {
+      "path": "native-app-visual.png",
+      "bytes": 81100,
+      "sha256": "4c2da0317462a8f03a937db6d678cf4b6d98f9927b02b06eecf5cc9d08b2bb39",
+      "pixel_dimensions": [
+        1084,
+        749
+      ]
+    },
+    {
+      "path": "native-source-visual.png",
+      "bytes": 73675,
+      "sha256": "d8ad3b006f544b1bf19c5757a199bc3a3de7713b9dc9a7e113db1354f4d23934",
+      "pixel_dimensions": [
+        1084,
+        749
+      ]
+    },
+    {
+      "path": "native-timeline-scroll-visual.png",
+      "bytes": 74757,
+      "sha256": "6132205da0e6d942957793ca59b46d350152ae8f50286413b695ed22dd5e20e4",
+      "pixel_dimensions": [
+        1084,
+        749
+      ]
+    },
+    {
+      "path": "native/conformance.json",
+      "bytes": 4079,
+      "sha256": "1321628120d992114094effe55bf105e9c1fe48084a6852b0fe80d95ad30b3ce"
+    },
+    {
+      "path": "native/lifecycle.json",
+      "bytes": 161,
+      "sha256": "4cf871633cd9cd8fba9c06d7552550837fc5ef3d79fc608370edc07228840ab7"
+    },
+    {
+      "path": "native/endpoint-probe.json",
+      "bytes": 539,
+      "sha256": "4861b7d5be2448c852ce4e272c64bb50e6a79646e65b9d917937b48248d7c38c"
+    },
+    {
+      "path": "shared/conformance.json",
+      "bytes": 7853,
+      "sha256": "1809258a541772f793103ffbd86c807726d5bdbcba7ade9b4c81c68fd6a98bbd"
+    },
+    {
+      "path": "shared/tests-swift-testing.xml",
+      "bytes": 10997,
+      "sha256": "c2a7d912d8956c317c0eacc34b8b374a2c7bf50dc606e1650c608fd66fecfe41"
+    },
+    {
+      "path": "shared/tests.log",
+      "bytes": 154563,
+      "sha256": "f81e2bc0efec8aac20d277f2f0f38d67b1a5f10018be2b1a983f9879e6a2cd1b"
+    },
+    {
+      "path": "shared/test-discovery.log",
+      "bytes": 7186,
+      "sha256": "e3cbbcd3460b4e334e40ac86e1620a90e7e23dfb8dfd3ba6e8dea49869a136a6"
+    },
+    {
+      "path": "shared/session-protocol.json",
+      "bytes": 5217,
+      "sha256": "e230ec4651f73d49b95f2329d959ba7b57bf587819194cf8aa1b151547d2cdfc"
+    },
+    {
+      "path": "shared/example-render.json",
+      "bytes": 1118,
+      "sha256": "c3f561825ceaad76c3f2d75088b5f297438941afe88f881c5380d612b4112b61"
+    },
+    {
+      "path": "packaged-window-smoke.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "host-controls.log",
+      "bytes": 131,
+      "sha256": "e54bfe0388c7b9e5aad18558ed2a43ef651edc81b582fc885e2c8b21b078dbee"
+    }
+  ],
+  "loaded_modules": {
+    "wpf_process": 130,
+    "helper": 50
+  }
+}

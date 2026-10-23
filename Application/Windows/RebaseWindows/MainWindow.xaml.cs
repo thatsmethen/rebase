@@ -210,7 +210,7 @@ public partial class MainWindow : Window
             Style = (Style)FindResource("AccentSurfaceButton"), HorizontalContentAlignment = HorizontalAlignment.Left, Padding = new Thickness(4, 2, 4, 2), Margin = new Thickness(0), MinHeight = 22,
             Background = accent, BorderBrush = Brushes.Transparent, Foreground = Brushes.Black };
         select.Click += async (_, _) => await model.Command("selectTrack", trackID: track.Id); Grid.SetRow(select, 4); panel.Children.Add(select);
-        return new Border { Child = panel, Background = new SolidColorBrush(track.Id == model.State.Selection.TrackID ? Color.FromRgb(86, 91, 94) : Color.FromRgb(47, 51, 54)),
+        return new Border { Child = panel, VerticalAlignment = selectedStrip ? VerticalAlignment.Bottom : VerticalAlignment.Stretch, Background = new SolidColorBrush(track.Id == model.State.Selection.TrackID ? Color.FromRgb(86, 91, 94) : Color.FromRgb(47, 51, 54)),
             Margin = new Thickness(0, 0, 2, 0), BorderThickness = new Thickness(1), BorderBrush = (Brush)FindResource("HairlineBrush") };
     }
     private async Task CommitMixerSlider(Slider control, string command, string trackID)
