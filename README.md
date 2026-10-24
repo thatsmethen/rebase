@@ -14,9 +14,9 @@ Windows development follows the [Windows reference interface](docs/development/w
 
 ## Release
 
-**[Download Rebase for Windows](https://github.com/thatsmethen/rebase/releases/download/v0.21.1-windows-preview.6/Rebase-0.21.1-windows-preview.6-x64.zip)**
+**[Download Rebase for Windows](https://github.com/thatsmethen/rebase/releases/download/v0.21.1-windows-preview.7/Rebase-0.21.1-windows-preview.7-x64.zip)**
 
-The **Windows x64 development preview** includes its runtimes and the example beat. Preview.6 adds a track automation editor for Volume and Pan, with real curves, point editing, Read controls and shared undo/redo. Successful edits apply immediately; closing the editor retains them. It retains compact/normal track rows, adjustable panels and the mixer. Reviewed CPR import preserves the original source and interpretation report. Extract the entire archive, open `Rebase.exe`, and choose **File → Open example**. See the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.6) and [Windows installation guide](docs/install/windows.md). This unsigned preview targets Windows 11; native automated checks ran on Windows Server 2025. Audio-device output and physical input still need interactive verification.
+The **Windows x64 development preview** includes its runtimes and the example beat. Preview.7 adds bounded conversion between project/source and output-device rates, with source-position fixes for pause, resume and seek. The Volume/Pan automation editor retains real curves, point editing, Read controls and shared undo/redo; successful edits apply immediately. It retains compact/normal track rows, adjustable panels and the mixer. Reviewed CPR import preserves the original source and interpretation report. Extract the entire archive, open `Rebase.exe`, and choose **File → Open example**. See the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.7) and [Windows installation guide](docs/install/windows.md). This unsigned preview targets Windows 11; native automated checks ran on Windows Server 2025. Audio-device output and physical input still need interactive verification.
 
 **[Download Rebase for Mac](https://github.com/thatsmethen/rebase/releases/download/v0.21.1/Rebase-0.21.1-macos-arm64.zip)**
 
