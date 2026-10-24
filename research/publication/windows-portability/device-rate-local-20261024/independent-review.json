@@ -1,0 +1,47 @@
+{
+  "schema": "rebase.device-rate-source-review.v1",
+  "baseline_commit": "3c099ba049ac56255a39f358d27d5fcd15c9809b",
+  "scope": "Independent source inspection of an uncommitted device-adaptation candidate; no Windows compilation, native PE execution, endpoint playback or audible-output measurement",
+  "reviewed": [
+    {
+      "path": "Application/Windows/NativeAudio/src/RateConversion.cpp",
+      "sha256": "6f5b2c5a93d0995ca9c6d822baf2e3ca8f93fc6939b8057a1e3085153c096efe"
+    },
+    {
+      "path": "Application/Windows/NativeAudio/src/RatePlaybackCursor.cpp",
+      "sha256": "b988740d938f15a3851638f46e5fd7fd89c02015460352900891d2541fbeae84"
+    },
+    {
+      "path": "Application/Windows/NativeAudio/src/WasapiOutput.cpp",
+      "sha256": "a54a98525eb45c73829b8dd1e7dd83309b267514e0039f1e4b333f066d33e4d1"
+    },
+    {
+      "path": "Application/Windows/NativeAudio/src/PlaybackCursor.cpp",
+      "sha256": "13cc7af2f0c35506c7d0608e51ca1ed386d8a6f178fc81374164723699a04604"
+    },
+    {
+      "path": "Application/Windows/NativeAudio/include/rebase_windows_audio.h",
+      "sha256": "85ed10ef99f8959bf9221fa0e5845aea39ea2c7aa58eacef6ec5d685a7af2275"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/NativeAudio.cs",
+      "sha256": "690d09a0440de073bc417fe17d0671cb2b572639fd45da09fdd94ba08cf5c8ab"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/StudioViewModel.cs",
+      "sha256": "f2691f9983091ef39b5e6b46a141ab00db98e1c32aa570609d017238f4f5d957"
+    },
+    {
+      "path": "Application/scripts/run-windows-native-audio-ci.py",
+      "sha256": "2b5199093b3727ee30604a8887b722b173e3f64fa9e3511cfcb6bee938022865"
+    }
+  ],
+  "new_actionable_findings": [],
+  "existing_api_risk": "NativeAudio.SetSource currently trusts LoadedSnapshot.Frames rather than validating its managed Samples.Length before exposing the pointer. Current production callers use SnapshotReader-validated objects; no demonstrated user-path trigger.",
+  "limits": [
+    "Source and converted snapshots each bounded to 32M stereo frames; upsampled capacity can reject.",
+    "Very short downsampling can produce zero output; explicit error is retained.",
+    "Windows shared-mode effects/device state and actual endpoint output remain unmeasured.",
+    "Current Windows source-rate audition remains separate from future shared native CPR modes."
+  ]
+}

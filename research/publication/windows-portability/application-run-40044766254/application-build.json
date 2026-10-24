@@ -1,0 +1,85 @@
+{
+  "schema": "rebase.windows-application-build.v1",
+  "status": "failed",
+  "commit": "7234c8458186b720ea87e1953aaea3fced62b845",
+  "development_build": true,
+  "signed": false,
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "commands": [
+    {
+      "name": "dotnet-version",
+      "argv": [
+        "dotnet",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.0
+    },
+    {
+      "name": "swift-version",
+      "argv": [
+        "swift",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.187
+    },
+    {
+      "name": "native-receipt-controls",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\test_windows_native_audio_gate.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.172
+    },
+    {
+      "name": "dependency-package-controls",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\test_windows_soxr_package.py",
+        "--output",
+        "<build-output>\\evidence\\dependency-controls"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.031
+    },
+    {
+      "name": "host-controls",
+      "argv": [
+        "dotnet",
+        "run",
+        "--project",
+        "<workspace>\\Application\\Windows\\RebaseWindows\\Tests\\RebaseWindows.Controls.csproj",
+        "-c",
+        "Release"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 16.391
+    },
+    {
+      "name": "native-audio-conformance",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\run-windows-native-audio-ci.py",
+        "--configuration",
+        "Release",
+        "--output",
+        "<build-output>\\evidence\\native"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 23.203
+    }
+  ],
+  "toolchain": {
+    "dotnet_sdk": "10.0.402",
+    "dotnet_runtime": "10.0.13",
+    "swift": "6.4.1"
+  },
+  "runner_image": {
+    "ImageOS": "win25-vs2026",
+    "ImageVersion": "20261021.278.1"
+  },
+  "error": "native-audio-conformance failed with exit 1"
+}

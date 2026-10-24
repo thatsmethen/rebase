@@ -1,0 +1,40 @@
+[0/2] Re-checking globbed directories...
+[1/22] Building C object CMakeFiles/RebaseDSP.dir/Sources/RebaseDSP/ambi_first_order.c.obj
+[2/22] Building C object CMakeFiles/RebaseAmbiDSP.dir/Sources/RebaseAmbiDSP/ambi_processor.c.obj
+[3/22] Linking C static library RebaseDSP.lib
+[4/22] Linking C static library RebaseAmbiDSP.lib
+[5/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/cpr_accessor_seek.c.obj
+[6/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/cpr_accessor_format.c.obj
+[7/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/cpr_live_stereo_ring.c.obj
+[8/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/cpr_event_pcm.c.obj
+[9/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/cpr_rate_budget.c.obj
+[10/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/cpr_timeline_builder.c.obj
+[11/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/cpr_timeline_selector.c.obj
+[12/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/cpr_timeline_reader.c.obj
+[13/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/native_callback_adapter.c.obj
+[14/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/cpr_track_overlap.c.obj
+[15/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/native_rate_mode0.c.obj
+[16/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/native_rate_mode0_down.c.obj
+[17/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/native_rate_mode1.c.obj
+[18/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/native_rate_mode2.c.obj
+[19/22] Building C object CMakeFiles/RebaseTimingDSP.dir/Sources/RebaseTimingDSP/native_tempo.c.obj
+[20/22] Linking C static library RebaseTimingDSP.lib
+[21/22] Building C object CMakeFiles/rebase_portable_dsp_tests.dir/Tests/PortableDSP/conformance.c.obj
+D:/a/rebase/rebase/Application/Tests/PortableDSP/conformance.c:402:32: warning: 'fopen' is deprecated: This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  402 |     if (output) { FILE *file = fopen(output, "wb"); if (!file) return 2; report(file); if (fclose(file) != 0) return 2; }
+      |                                ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdio.h:212:20: note: 'fopen' has been explicitly marked deprecated here
+  212 |     _Check_return_ _CRT_INSECURE_DEPRECATE(fopen_s)
+      |                    ^
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include\vcruntime.h:358:55: note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  358 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include\vcruntime.h:348:47: note: expanded from macro '_CRT_DEPRECATE_TEXT'
+
+  348 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+
+      |                                               ^
+
+1 warning generated.
+
+[22/22] Linking C executable rebase_portable_dsp_tests.exe

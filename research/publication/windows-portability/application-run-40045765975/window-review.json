@@ -1,0 +1,261 @@
+{
+  "schema": "rebase.windows-independent-window-review.v1",
+  "recorded_utc": "2026-10-24T00:49:14.825343+00:00",
+  "source_commit": "53cb669f0e2bbf28003c79a355e7de526aeeef9b",
+  "run_id": 40045765975,
+  "run_conclusion": "success",
+  "status": "accepted-with-scoped-limitations",
+  "native_window_checks": 102,
+  "native_check_labels_unchanged_from_run": 40040015003,
+  "host_controls": {
+    "checks": 268,
+    "failures": 0,
+    "actual_platform": "Windows hosted runner",
+    "scope": "Authored managed-host controls using fake session and audio adapters. Aggregate pass is bound to the exact commit and reviewed test sources."
+  },
+  "source_pause_seek_review": [
+    "Frozen native-status position is read after Pause before immediate source resume.",
+    "Source resume/seek rechecks event/source/media proof and uses source-rate frame units.",
+    "Near-end downsample seek observes actual endpoint-quantized EOF and avoids issuing Play in Finished phase.",
+    "Delayed pre-pause and pre-resume status polls cannot overwrite the newer transport epoch.",
+    "Malformed managed sample arrays/frame/rate/nonfinite values are rejected before native pointer calls."
+  ],
+  "images_reviewed_with_view_image": 12,
+  "images": [
+    {
+      "path": "native-app-visual.png",
+      "bytes": 78544,
+      "sha256": "92837bc71574a1b95e4114e05f545fea9e38897ad25dcc095ea864f1c7885d7f",
+      "width": 1084,
+      "height": 749,
+      "mode": "RGBA",
+      "fully_decoded": true,
+      "crc_verified": true,
+      "alpha_minimum": 254,
+      "alpha_below_254_pixels": 0,
+      "alpha_254_pixels": 5314,
+      "alpha_255_pixels": 806602,
+      "visual_observation": "Four compact tracks and waveforms, numeric event fields, inspector/channel strips, mixer and complete transport/footer are visible; no observed clipping regression."
+    },
+    {
+      "path": "native-automation-invalid-visual.png",
+      "bytes": 34012,
+      "sha256": "5408fd5a73fcc13cfebaebd8b422a8deb3e4b7968d9ad084d2b4755fdbb6d16f",
+      "width": 664,
+      "height": 521,
+      "mode": "RGBA",
+      "fully_decoded": true,
+      "crc_verified": true,
+      "alpha_minimum": 254,
+      "alpha_below_254_pixels": 0,
+      "alpha_254_pixels": 6428,
+      "alpha_255_pixels": 339516,
+      "visual_observation": "Invalid NaN draft remains visible with the finite-value error; all editing controls and footer remain visible."
+    },
+    {
+      "path": "native-automation-minimum-visual.png",
+      "bytes": 31407,
+      "sha256": "cb15520067bed02bf435470857f4103aeac46941b30bc35dc0e5f578f3a96769",
+      "width": 664,
+      "height": 521,
+      "mode": "RGBA",
+      "fully_decoded": true,
+      "crc_verified": true,
+      "alpha_minimum": 254,
+      "alpha_below_254_pixels": 0,
+      "alpha_254_pixels": 6428,
+      "alpha_255_pixels": 339516,
+      "visual_observation": "Five authored points, curve, parameter/read controls, time/value/interpolation fields, add/update/delete/reset actions and Undo/Redo/Close footer are visible."
+    },
+    {
+      "path": "native-automation-read-off-visual.png",
+      "bytes": 31448,
+      "sha256": "7574078f4c9f7b99551202ec4cf43cabfc1274c9ab0c97e7b6e9bd8dfd06726d",
+      "width": 664,
+      "height": 521,
+      "mode": "RGBA",
+      "fully_decoded": true,
+      "crc_verified": true,
+      "alpha_minimum": 254,
+      "alpha_below_254_pixels": 0,
+      "alpha_254_pixels": 6486,
+      "alpha_255_pixels": 339458,
+      "visual_observation": "Read is visibly off, stored curve/points remain shown, and the manual-volume explanation is readable; no audible playback was observed."
+    },
+    {
+      "path": "native-cpr-review-minimum-error-visual.png",
+      "bytes": 41321,
+      "sha256": "4262f6bbe96ace30489893b705f4a82f28f01251535f790ff9409f9759e39b54",
+      "width": 634,
+      "height": 441,
+      "mode": "RGBA",
+      "fully_decoded": true,
+      "crc_verified": true,
+      "alpha_minimum": 254,
+      "alpha_below_254_pixels": 0,
+      "alpha_254_pixels": 4979,
+      "alpha_255_pixels": 274615,
+      "visual_observation": "Changed-source error remains readable at the smaller bounds; report scroll viewport and all footer buttons remain inside the capture."
+    },
+    {
+      "path": "native-cpr-review-visual.png",
+      "bytes": 64349,
+      "sha256": "e0a3943d8698f6132b752149f5fdfda7778e2d66a1925e31239943c510403ca0",
+      "width": 814,
+      "height": 611,
+      "mode": "RGBA",
+      "fully_decoded": true,
+      "crc_verified": true,
+      "alpha_minimum": 254,
+      "alpha_below_254_pixels": 0,
+      "alpha_254_pixels": 4979,
+      "alpha_255_pixels": 492375,
+      "visual_observation": "Review title, source identity/digest, partial-import explanation, scrollable report and complete Previous/Next/Cancel/Import footer are visible."
+    },
+    {
+      "path": "native-source-visual.png",
+      "bytes": 72739,
+      "sha256": "8f46fd96682f1184139ae372443599eca8d585a8c67011b6ca8ac8c7a4eaaa69",
+      "width": 1084,
+      "height": 749,
+      "mode": "RGBA",
+      "fully_decoded": true,
+      "crc_verified": true,
+      "alpha_minimum": 254,
+      "alpha_below_254_pixels": 0,
+      "alpha_254_pixels": 5745,
+      "alpha_255_pixels": 806171,
+      "visual_observation": "Retained-source identity, unavailable project playback marker, empty timing placeholders, disabled ordinary event actions, attachment/audition/export actions and provenance-related copy are visible. The inspector is scrollable; this capture does not show source playback."
+    },
+    {
+      "path": "native-timeline-scroll-visual.png",
+      "bytes": 74391,
+      "sha256": "f81d162a9a99b537d973d355c3445d5739c9806be3eaad16a97938907d471f07",
+      "width": 1084,
+      "height": 749,
+      "mode": "RGBA",
+      "fully_decoded": true,
+      "crc_verified": true,
+      "alpha_minimum": 254,
+      "alpha_below_254_pixels": 0,
+      "alpha_254_pixels": 5314,
+      "alpha_255_pixels": 806602,
+      "visual_observation": "Timeline content moves horizontally while the four track headers and Bars + Beats corner remain anchored; transport and footer remain visible."
+    },
+    {
+      "path": "native-top-rows-long-names-visual.png",
+      "bytes": 82503,
+      "sha256": "386098c635f898c16dd14c34dabd1dd37fa32c9a95f5ea6dc4e593df11e223cb",
+      "width": 1084,
+      "height": 749,
+      "mode": "RGBA",
+      "fully_decoded": true,
+      "crc_verified": true,
+      "alpha_minimum": 254,
+      "alpha_below_254_pixels": 0,
+      "alpha_254_pixels": 7808,
+      "alpha_255_pixels": 804108,
+      "visual_observation": "Long project and selected-event names ellipsize within assigned regions; numeric timing values and compact toolbar remain readable."
+    },
+    {
+      "path": "native-top-rows-wide-visual.png",
+      "bytes": 82503,
+      "sha256": "386098c635f898c16dd14c34dabd1dd37fa32c9a95f5ea6dc4e593df11e223cb",
+      "width": 1084,
+      "height": 749,
+      "mode": "RGBA",
+      "fully_decoded": true,
+      "crc_verified": true,
+      "alpha_minimum": 254,
+      "alpha_below_254_pixels": 0,
+      "alpha_254_pixels": 7808,
+      "alpha_255_pixels": 804108,
+      "visual_observation": "Same constrained hosted client width as long-name view; controls remain contained, but this does not establish a larger physical-display layout."
+    },
+    {
+      "path": "native-workspace-expanded-visual.png",
+      "bytes": 46637,
+      "sha256": "fe749e25219e7d03aaa5839b5d927bb199f3f3889148a67f2c261ddab4ab7b09",
+      "width": 1084,
+      "height": 749,
+      "mode": "RGBA",
+      "fully_decoded": true,
+      "crc_verified": true,
+      "alpha_minimum": 254,
+      "alpha_below_254_pixels": 0,
+      "alpha_254_pixels": 3808,
+      "alpha_255_pixels": 808108,
+      "visual_observation": "Hidden left/mixer panes allow the arrangement to fill the client area; row dividers span the enlarged viewport and the transport remains visible."
+    },
+    {
+      "path": "native-workspace-normal-visual.png",
+      "bytes": 80672,
+      "sha256": "d6f02ff5491ec7cc2aac96b35544d45d44c2facfdba9c0dc8652a3134857bfd3",
+      "width": 1084,
+      "height": 749,
+      "mode": "RGBA",
+      "fully_decoded": true,
+      "crc_verified": true,
+      "alpha_minimum": 254,
+      "alpha_below_254_pixels": 0,
+      "alpha_254_pixels": 4854,
+      "alpha_255_pixels": 807062,
+      "visual_observation": "All four larger track rows fit; event waveforms and labels, mixer, inspector and transport remain visible."
+    }
+  ],
+  "hash_comparison_to_prior_run": {
+    "run_id": 40040015003,
+    "byte_identical_images": 11,
+    "changed_image": "native-automation-minimum-visual.png",
+    "changed_pixels": 541,
+    "changed_pixel_bounds": [
+      400,
+      272,
+      522,
+      303
+    ],
+    "observation": "Difference is confined to the time-entry field and its focus/caret appearance; no observed loss of controls or content."
+  },
+  "endpoint": {
+    "outcome": "unavailable-no-endpoint",
+    "result": 3,
+    "playback_attempted": false
+  },
+  "limitations": [
+    "Captures are visual-tree renders of actual opened WPF windows, not desktop/native-frame screenshots.",
+    "No new device-rate conversion status was captured; no playback endpoint was available.",
+    "No physical input, audible output, full application parity or reference fidelity is established.",
+    "The long-name and requested-wide captures have identical hosted bounds; no larger physical display coverage.",
+    "Scrollable report and source inspector content is intentionally not fully visible in a single capture."
+  ],
+  "release_accepted": false,
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "records": [
+    {
+      "path": "run.json",
+      "bytes": 3276,
+      "sha256": "8bc994128ada3bda93d9471ea61a435391e93a608c468ac95e07ea4183f70d21"
+    },
+    {
+      "path": "source-preparation.json",
+      "bytes": 1485,
+      "sha256": "4357548a193003dd08eea0ccc827a751f25a04a7603cd8e4508e8df0c6744000"
+    },
+    {
+      "path": "evidence-verification.json",
+      "bytes": 10979,
+      "sha256": "6ff6b88257323c9ce98f85ee04af9ed51794f14eaa220cd26a11a29968d1744b"
+    },
+    {
+      "path": "evidence-verification.log",
+      "bytes": 204,
+      "sha256": "dc946112424e3a67f74197e4527d2d5b61859d4667fe36cfe001837737aad497"
+    },
+    {
+      "path": "inspect_evidence.py",
+      "bytes": 6964,
+      "sha256": "e093b05a7b108821d37675fd8972e28721a7806214386a3a41163af5d03ea1b9"
+    }
+  ]
+}

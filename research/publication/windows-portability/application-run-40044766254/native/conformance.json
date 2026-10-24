@@ -1,0 +1,55 @@
+{
+  "schema": "rebase.windows-native-audio-ci.v1",
+  "status": "failed",
+  "scope": "Authored adapter compilation, lifecycle and device-rate controls; endpoint discovery does not establish playback",
+  "mode": "windows-native",
+  "configuration": "Release",
+  "platform": "Windows",
+  "architecture": "AMD64",
+  "commit": "7234c8458186b720ea87e1953aaea3fced62b845",
+  "runner_image": {
+    "ImageOS": "win25-vs2026",
+    "ImageVersion": "20261021.278.1"
+  },
+  "commands": [
+    {
+      "name": "compiler-version",
+      "argv": [
+        "clang-cl",
+        "--version"
+      ],
+      "log": "compiler-version.log",
+      "exit_code": 0,
+      "elapsed_seconds": 2.218
+    },
+    {
+      "name": "cmake-version",
+      "argv": [
+        "cmake",
+        "--version"
+      ],
+      "log": "cmake-version.log",
+      "exit_code": 0,
+      "elapsed_seconds": 0.203
+    },
+    {
+      "name": "build-pinned-soxr",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\build-windows-soxr.py",
+        "--output",
+        "D:\\a\\_temp\\rebase-windows-application\\evidence\\native\\soxr"
+      ],
+      "log": "build-pinned-soxr.log",
+      "exit_code": 0,
+      "elapsed_seconds": 20.61
+    }
+  ],
+  "native_library_built": false,
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "endpoint_probe": {
+    "outcome": "not-run"
+  },
+  "error": "SoXR dependency: empty build log"
+}

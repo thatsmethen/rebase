@@ -1,0 +1,141 @@
+{
+  "schema": "rebase.windows-application-observation.v1",
+  "run_id": 40044766254,
+  "source_commit": "7234c8458186b720ea87e1953aaea3fced62b845",
+  "status": "failed",
+  "published_release": false,
+  "failure": "Pinned public SoXR compiled and its probe passed, but a successful silent compiler command produced an empty log, rejected by the newly added dependency validator.",
+  "host_controls": {
+    "checks": 268,
+    "failures": 0,
+    "scope": "Authored host controls executed on Windows; no WPF/device playback claim"
+  },
+  "not_reached": [
+    "native adapter compilation",
+    "native lifecycle/rate controls",
+    "endpoint discovery",
+    "WPF package build",
+    "window smoke",
+    "downloadable ZIP"
+  ],
+  "correction": "Require all bounded regular command logs to exist and successful exit codes; allow empty successful command logs. Probe output must still parse and match the validated probe record. Keep source/artifact/profile pins and raw failed evidence.",
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "files": [
+    {
+      "path": "application-build.json",
+      "bytes": 2271,
+      "sha256": "ccfd3996292316b8b449f21f2236e8b61f97331528b84b2341ea6282a6a281b8"
+    },
+    {
+      "path": "dependency-controls/controls.log",
+      "bytes": 3385,
+      "sha256": "91cc7f2d73c972ef3640be146510090a5e483cb1f545b07fee691da40e7b256e"
+    },
+    {
+      "path": "dependency-controls/observation.json",
+      "bytes": 488,
+      "sha256": "501d6091f5eb637c111a14a282caa65ca5657a24287c4150ef41eb6a95952f30"
+    },
+    {
+      "path": "dependency-package-controls.log",
+      "bytes": 488,
+      "sha256": "501d6091f5eb637c111a14a282caa65ca5657a24287c4150ef41eb6a95952f30"
+    },
+    {
+      "path": "dotnet-version.log",
+      "bytes": 10,
+      "sha256": "6d5ab2a4ef35ceec908f01287257f530b0c0d68f0e84326df2ebcea641f9134b"
+    },
+    {
+      "path": "host-controls.json",
+      "bytes": 164,
+      "sha256": "c27e06d31dedb3f045e4222e9e72fa9ffcff3d2cfe0785d9c6bd26a676dd5dd1"
+    },
+    {
+      "path": "host-controls.log",
+      "bytes": 132,
+      "sha256": "221cbecc23e9176289d26d1499dda6c396f7d5ee2bcf8bafe3d6729c168ffb0e"
+    },
+    {
+      "path": "native/build-pinned-soxr.log",
+      "bytes": 38391,
+      "sha256": "8cd8e1bd0958d0784c79ba2ebbde065ff52596a539796faee758336ea57c0cd1"
+    },
+    {
+      "path": "native/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "native/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+    },
+    {
+      "path": "native/conformance.json",
+      "bytes": 1527,
+      "sha256": "591550bc5b051bef67ed8caea2bda693f27cad028cab9da4bfcc1f256fa65f54"
+    },
+    {
+      "path": "native/soxr/build.log",
+      "bytes": 32905,
+      "sha256": "db3d3c51d6c77d701dc87dd9b7a89b8aeb4e4041ca8236c2624aab0a59abad92"
+    },
+    {
+      "path": "native/soxr/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "native/soxr/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+    },
+    {
+      "path": "native/soxr/configure.log",
+      "bytes": 5146,
+      "sha256": "c5f9a186cf888d240ccd5c796dbb3328b5a39ef54b9449e870079090733297cc"
+    },
+    {
+      "path": "native/soxr/conformance.json",
+      "bytes": 2932,
+      "sha256": "508bb1329e1c43e759bd4aea23619332774703217f08eb15da9d0748d287d811"
+    },
+    {
+      "path": "native/soxr/install.log",
+      "bytes": 615,
+      "sha256": "ddc4dcb35d742788de2fcfa4e8d35188c2e386a9775f74884be67a9230f2e37d"
+    },
+    {
+      "path": "native/soxr/probe-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native/soxr/probe.log",
+      "bytes": 313,
+      "sha256": "62fae0aea95ca4c330afeb972a3465ed8050a4985470d238bac92b8234ba1aa2"
+    },
+    {
+      "path": "native/soxr/soxr-conformance.json",
+      "bytes": 372,
+      "sha256": "c7f6a8e9428d094f1d44bbecaa7248f865e7163c1d5c44040ff994b269c8fc72"
+    },
+    {
+      "path": "native-audio-conformance.log",
+      "bytes": 38474,
+      "sha256": "d30fec2ed17805d1c265dffbd44e7113b40f3bc0d3a3b38a63b354302212ab6d"
+    },
+    {
+      "path": "native-receipt-controls.log",
+      "bytes": 108,
+      "sha256": "3fe68edd4c0fb085181b1c38b098bd9a30f9293138b6756410846957d39b22ee"
+    },
+    {
+      "path": "swift-version.log",
+      "bytes": 107,
+      "sha256": "6a514523e3039e37cd769c4bf8f56b23689ceb2a3e0f3048a06f0024a1d9cfd7"
+    }
+  ]
+}

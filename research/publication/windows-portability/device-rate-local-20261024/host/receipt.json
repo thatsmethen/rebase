@@ -1,0 +1,141 @@
+{
+  "schema": "rebase.windows-host-device-rate-local.v1",
+  "created_utc": "2026-10-24T00:24:04.136849+00:00",
+  "source_base_commit": "7234c8458186b720ea87e1953aaea3fced62b845",
+  "source_state": "uncommitted candidate; exact source hashes below",
+  "platform": "Darwin",
+  "architecture": "arm64",
+  "sdk": "10.0.100",
+  "host_controls": {
+    "checks": 268,
+    "failures": 0,
+    "authored_controls": true,
+    "log": "controls-05.log"
+  },
+  "wpf_cross_build": {
+    "configuration": "Release",
+    "warnings": 0,
+    "errors": 0,
+    "log": "wpf-build-02.log"
+  },
+  "scope": [
+    "Managed ABI validation and host transport decisions using authored fake audio/session adapters",
+    "Managed snapshot shape/rate/finite validation before pinning or native calls",
+    "Source and project rate conversion metadata, source-frame pause/seek/resume, quantized EOF and late-poll rejection",
+    "WPF target cross-compilation on macOS only"
+  ],
+  "not_observed": {
+    "windows_runtime": true,
+    "native_dll_execution": true,
+    "actual_endpoint_playback": true,
+    "audible_output": true,
+    "reference_equivalence": true
+  },
+  "preserved_attempts": {
+    "controls-01.log": "Failed new authored fixture setup: missing JSON map fields; corrected the fixture, preserved first log",
+    "controls-02.log": "246 controls passed",
+    "controls-03.log": "247 controls passed",
+    "controls-04.log": "251 controls passed",
+    "controls-05.log": "268 controls passed",
+    "wpf-build-01.log": "0 warnings and 0 errors before final snapshot guard/copy correction",
+    "wpf-build-02.log": "0 warnings and 0 errors on final candidate"
+  },
+  "commands": {
+    "controls": "TMPDIR=\"$PWD/.local/work/rebase-device-rate-20261024/host/tmp\" DOTNET_CLI_TELEMETRY_OPTOUT=1 .local/work/rebase-dotnet-10/dotnet run --project Application/Windows/RebaseWindows/Tests/RebaseWindows.Controls.csproj -c Release",
+    "wpf_cross_build": "TMPDIR=\"$PWD/.local/work/rebase-device-rate-20261024/host/tmp\" DOTNET_CLI_TELEMETRY_OPTOUT=1 .local/work/rebase-dotnet-10/dotnet build Application/Windows/RebaseWindows/RebaseWindows.csproj -c Release -p:EnableWindowsTargeting=true -p:PathMap=\"$PWD=/_/Rebase\""
+  },
+  "sources": [
+    {
+      "path": "Application/Windows/RebaseWindows/NativeAudio.cs",
+      "bytes": 8965,
+      "sha256": "4846b1b2fa340fc5289507688b6d4d301e50cc0654364549be719bf0fd08b902"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/StudioViewModel.cs",
+      "bytes": 25443,
+      "sha256": "edcc16f9e2e922ff8bc36acadeb6c81d7f231c2deb2a72c2b896945e386b38e4"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/PlaybackRateControls.cs",
+      "bytes": 18709,
+      "sha256": "74b8f05829ce809e6b8202a90d3f60981e1aa190aae72dca60e1d9a2d7437c10"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/SourceAuditionControls.cs",
+      "bytes": 11657,
+      "sha256": "50f5192231d2dee0a5acf5dac052a32198d02c44acf0144bf2a4466e9bc228b3"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/AutomationControls.cs",
+      "bytes": 10934,
+      "sha256": "0480e9ff96827d234eeca611c9d17e1e255acb42ba07d841a1df910cfc113315"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/CPRReviewControls.cs",
+      "bytes": 14634,
+      "sha256": "6d25c2e0b409364c3bdd847f60167efce4c20622627f77d9a9cba32886265ca2"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/RulerControls.cs",
+      "bytes": 5946,
+      "sha256": "5fc4c8ae53f7a9283fcfba0ba114136f8e34b73a934b18ab6a854c8a46a7bf97"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/WaveformControls.cs",
+      "bytes": 6097,
+      "sha256": "a7992f3cedf55abca72740e6da1443120c9f93bd6d8e8dc53283eb14b6d99264"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/Program.cs",
+      "bytes": 5301,
+      "sha256": "bb656a7af1690bfea20e12b114f2dc9cce034416bb8ab9c535e8c64cd9eb53e2"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/Tests/RebaseWindows.Controls.csproj",
+      "bytes": 1322,
+      "sha256": "8c0e41ef0018b5634906fa65c257cdf77fbbb538ab736bb8bde393de049e22fb"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/RebaseWindows.csproj",
+      "bytes": 1288,
+      "sha256": "f92eb555c0c4de6985f5750fd8d7975ddba21c369731c73673f586f38b4f7335"
+    }
+  ],
+  "logs": [
+    {
+      "path": "controls-01.log",
+      "bytes": 2240,
+      "sha256": "a31707eaa0d4dc8e499e2ee7d1eeee2f9429ce8dd0a5c436fa10b49bfc6f25f2"
+    },
+    {
+      "path": "controls-02.log",
+      "bytes": 131,
+      "sha256": "5f151f6fdcd4f294db9ff3fbf6715b8adf574b550ab777a0960f2faea4c13b9e"
+    },
+    {
+      "path": "controls-03.log",
+      "bytes": 131,
+      "sha256": "e36f67ce84c74d1f2228df88c724cb7232a7d525f928d1bfd2ab3ae20cbeceba"
+    },
+    {
+      "path": "controls-04.log",
+      "bytes": 131,
+      "sha256": "e7c2913ddb5df1d121dd8c662b1b98b605e6cc84a8230704c73332e8240ca100"
+    },
+    {
+      "path": "controls-05.log",
+      "bytes": 131,
+      "sha256": "47bc5c07983ae2ee25798ac5bcebd126656fd8eb0507654de95f9b32d0bb1890"
+    },
+    {
+      "path": "wpf-build-01.log",
+      "bytes": 348,
+      "sha256": "f4e89251014374d758b17ae5a54e19f54257809784bd50342305bdd6ec27a7d7"
+    },
+    {
+      "path": "wpf-build-02.log",
+      "bytes": 279,
+      "sha256": "a6dcde18d5c5e9106b8d548bc1fd1ccb4720c9d027407a03ef1592076a582b10"
+    }
+  ]
+}

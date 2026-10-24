@@ -1,0 +1,280 @@
+{
+  "schema": "rebase.device-rate-local-observation.v1",
+  "source_commit": "7234c8458186b720ea87e1953aaea3fced62b845",
+  "scope": "Local authored controls and macOS cross-build; actual Windows compilation and output require separate evidence",
+  "native": {
+    "configurations": [
+      "Debug",
+      "Release"
+    ],
+    "lifecycle_checks_each": 89,
+    "rate_assertions_each": 41369,
+    "rate_cases_each": 14,
+    "wasapi_compiled": false
+  },
+  "host": {
+    "checks": 268,
+    "failures": 0,
+    "wpf_release_crossbuild_warnings": 0,
+    "wpf_release_crossbuild_errors": 0,
+    "wpf_runtime_tested": false
+  },
+  "package_controls": {
+    "tests": 49,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "native_pe_executed": false
+  },
+  "receipt_gate_tests": 5,
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "preserved_observations": "host/controls-01.log retains the initial authored fixture failure; later fixture correction did not alter that log",
+  "review_disposition": "The independently reported managed-array length risk was subsequently guarded before P/Invoke and tested in the final host suite. The original review is retained.",
+  "files": [
+    {
+      "path": "native/observation.json",
+      "original_sha256": "feff5811d50c9f53c541b2620cc23acbbeda9ac676b161de46a3c2b769b9aadc",
+      "published_sha256": "feff5811d50c9f53c541b2620cc23acbbeda9ac676b161de46a3c2b769b9aadc",
+      "bytes": 7319,
+      "path_redacted": false
+    },
+    {
+      "path": "native/debug/lifecycle.json",
+      "original_sha256": "5b32fa535f4b19964543d157d78c3d77e64b621a5923c898608be5e1f6ddc434",
+      "published_sha256": "5b32fa535f4b19964543d157d78c3d77e64b621a5923c898608be5e1f6ddc434",
+      "bytes": 128,
+      "path_redacted": false
+    },
+    {
+      "path": "native/debug/lifecycle.xml",
+      "original_sha256": "ea72cf0dcccedb18b908299308f31016d3c5c01642b5f4e0eeafe8e41303e76e",
+      "published_sha256": "ea72cf0dcccedb18b908299308f31016d3c5c01642b5f4e0eeafe8e41303e76e",
+      "bytes": 1816,
+      "path_redacted": false
+    },
+    {
+      "path": "native/debug/rate-conversion.json",
+      "original_sha256": "a3707c978d0a149cf9fd4e389a88de808c592b5f2903df94cd8f444f7f163635",
+      "published_sha256": "a3707c978d0a149cf9fd4e389a88de808c592b5f2903df94cd8f444f7f163635",
+      "bytes": 2078,
+      "path_redacted": false
+    },
+    {
+      "path": "native/debug/rebase_audio_conversion_tests.log",
+      "original_sha256": "a3707c978d0a149cf9fd4e389a88de808c592b5f2903df94cd8f444f7f163635",
+      "published_sha256": "a3707c978d0a149cf9fd4e389a88de808c592b5f2903df94cd8f444f7f163635",
+      "bytes": 2078,
+      "path_redacted": false
+    },
+    {
+      "path": "native/debug/rebase_audio_lifecycle_tests.log",
+      "original_sha256": "5b32fa535f4b19964543d157d78c3d77e64b621a5923c898608be5e1f6ddc434",
+      "published_sha256": "5b32fa535f4b19964543d157d78c3d77e64b621a5923c898608be5e1f6ddc434",
+      "bytes": 128,
+      "path_redacted": false
+    },
+    {
+      "path": "native/release/lifecycle.json",
+      "original_sha256": "5b32fa535f4b19964543d157d78c3d77e64b621a5923c898608be5e1f6ddc434",
+      "published_sha256": "5b32fa535f4b19964543d157d78c3d77e64b621a5923c898608be5e1f6ddc434",
+      "bytes": 128,
+      "path_redacted": false
+    },
+    {
+      "path": "native/release/lifecycle.xml",
+      "original_sha256": "0cd2b3e004c198694b13d7649d71fd772643f9d99d53c645d90f31d4743fa764",
+      "published_sha256": "0cd2b3e004c198694b13d7649d71fd772643f9d99d53c645d90f31d4743fa764",
+      "bytes": 1818,
+      "path_redacted": false
+    },
+    {
+      "path": "native/release/rate-conversion.json",
+      "original_sha256": "a3707c978d0a149cf9fd4e389a88de808c592b5f2903df94cd8f444f7f163635",
+      "published_sha256": "a3707c978d0a149cf9fd4e389a88de808c592b5f2903df94cd8f444f7f163635",
+      "bytes": 2078,
+      "path_redacted": false
+    },
+    {
+      "path": "native/release/rebase_audio_conversion_tests.log",
+      "original_sha256": "a3707c978d0a149cf9fd4e389a88de808c592b5f2903df94cd8f444f7f163635",
+      "published_sha256": "a3707c978d0a149cf9fd4e389a88de808c592b5f2903df94cd8f444f7f163635",
+      "bytes": 2078,
+      "path_redacted": false
+    },
+    {
+      "path": "native/release/rebase_audio_lifecycle_tests.log",
+      "original_sha256": "5b32fa535f4b19964543d157d78c3d77e64b621a5923c898608be5e1f6ddc434",
+      "published_sha256": "5b32fa535f4b19964543d157d78c3d77e64b621a5923c898608be5e1f6ddc434",
+      "bytes": 128,
+      "path_redacted": false
+    },
+    {
+      "path": "host/controls-01.log",
+      "original_sha256": "a31707eaa0d4dc8e499e2ee7d1eeee2f9429ce8dd0a5c436fa10b49bfc6f25f2",
+      "published_sha256": "c6a20538fec5346350768fab96c5d7e85428e32f1a5047aa368fa7db80e18314",
+      "bytes": 2183,
+      "path_redacted": true
+    },
+    {
+      "path": "host/controls-02.log",
+      "original_sha256": "5f151f6fdcd4f294db9ff3fbf6715b8adf574b550ab777a0960f2faea4c13b9e",
+      "published_sha256": "5f151f6fdcd4f294db9ff3fbf6715b8adf574b550ab777a0960f2faea4c13b9e",
+      "bytes": 131,
+      "path_redacted": false
+    },
+    {
+      "path": "host/controls-03.log",
+      "original_sha256": "e36f67ce84c74d1f2228df88c724cb7232a7d525f928d1bfd2ab3ae20cbeceba",
+      "published_sha256": "e36f67ce84c74d1f2228df88c724cb7232a7d525f928d1bfd2ab3ae20cbeceba",
+      "bytes": 131,
+      "path_redacted": false
+    },
+    {
+      "path": "host/controls-04.log",
+      "original_sha256": "e7c2913ddb5df1d121dd8c662b1b98b605e6cc84a8230704c73332e8240ca100",
+      "published_sha256": "e7c2913ddb5df1d121dd8c662b1b98b605e6cc84a8230704c73332e8240ca100",
+      "bytes": 131,
+      "path_redacted": false
+    },
+    {
+      "path": "host/controls-05.log",
+      "original_sha256": "47bc5c07983ae2ee25798ac5bcebd126656fd8eb0507654de95f9b32d0bb1890",
+      "published_sha256": "47bc5c07983ae2ee25798ac5bcebd126656fd8eb0507654de95f9b32d0bb1890",
+      "bytes": 131,
+      "path_redacted": false
+    },
+    {
+      "path": "host/receipt.json",
+      "original_sha256": "f3bd1b32f93430e1827a1c388cfb7f5ef892b4f535638004a9ad2ca842252822",
+      "published_sha256": "f3bd1b32f93430e1827a1c388cfb7f5ef892b4f535638004a9ad2ca842252822",
+      "bytes": 5406,
+      "path_redacted": false
+    },
+    {
+      "path": "host/wpf-build-01.log",
+      "original_sha256": "f4e89251014374d758b17ae5a54e19f54257809784bd50342305bdd6ec27a7d7",
+      "published_sha256": "b2509df6db03013dbad70e25408ce1063d7405295959342d08ed4edff8b944c6",
+      "bytes": 310,
+      "path_redacted": true
+    },
+    {
+      "path": "host/wpf-build-02.log",
+      "original_sha256": "a6dcde18d5c5e9106b8d548bc1fd1ccb4720c9d027407a03ef1592076a582b10",
+      "published_sha256": "2876f72c66d1b3fc1e4430a09317e75cf38052cdbb2bf3694c5741799d1ed72f",
+      "bytes": 260,
+      "path_redacted": true
+    },
+    {
+      "path": "runner/build.log",
+      "original_sha256": "fba0e9b95eb591e4d32d6c3bdf572cd7efd8dfea1ca51e3a79b28b0e8529640c",
+      "published_sha256": "fba0e9b95eb591e4d32d6c3bdf572cd7efd8dfea1ca51e3a79b28b0e8529640c",
+      "bytes": 898,
+      "path_redacted": false
+    },
+    {
+      "path": "runner/cmake-version.log",
+      "original_sha256": "1787229100389a5104346ca3418d77e84ea1ae3b94438871ab847b513bcbeac0",
+      "published_sha256": "1787229100389a5104346ca3418d77e84ea1ae3b94438871ab847b513bcbeac0",
+      "bytes": 107,
+      "path_redacted": false
+    },
+    {
+      "path": "runner/compiler-version.log",
+      "original_sha256": "508486ac8970f154aced6f23e5b68504e3c20b5341569f3cc1e2d08f0d7dbd08",
+      "published_sha256": "508486ac8970f154aced6f23e5b68504e3c20b5341569f3cc1e2d08f0d7dbd08",
+      "bytes": 157,
+      "path_redacted": false
+    },
+    {
+      "path": "runner/configure.log",
+      "original_sha256": "ebd9fbc32ef216c92b5ed4f7eefc668e953803addacf2998f920ca4e4c3a94b6",
+      "published_sha256": "ebd9fbc32ef216c92b5ed4f7eefc668e953803addacf2998f920ca4e4c3a94b6",
+      "bytes": 453,
+      "path_redacted": false
+    },
+    {
+      "path": "runner/conformance.json",
+      "original_sha256": "7b5bd8d5744890b756c445c2d3b1463d6b7fe97a55ae18177449077541d83fe4",
+      "published_sha256": "7b5bd8d5744890b756c445c2d3b1463d6b7fe97a55ae18177449077541d83fe4",
+      "bytes": 7048,
+      "path_redacted": false
+    },
+    {
+      "path": "runner/lifecycle-controls.log",
+      "original_sha256": "5b32fa535f4b19964543d157d78c3d77e64b621a5923c898608be5e1f6ddc434",
+      "published_sha256": "5b32fa535f4b19964543d157d78c3d77e64b621a5923c898608be5e1f6ddc434",
+      "bytes": 128,
+      "path_redacted": false
+    },
+    {
+      "path": "runner/lifecycle-ctest.log",
+      "original_sha256": "51d776070609ffad718cda6f13d0c83ba552a3da67e8c97a89aaa5c265b60f90",
+      "published_sha256": "51d776070609ffad718cda6f13d0c83ba552a3da67e8c97a89aaa5c265b60f90",
+      "bytes": 529,
+      "path_redacted": false
+    },
+    {
+      "path": "runner/lifecycle.json",
+      "original_sha256": "ea4a911e259540d3d213b1dbda8e13e9ab2cdf689ec3635e93ff807a06fa0daf",
+      "published_sha256": "ea4a911e259540d3d213b1dbda8e13e9ab2cdf689ec3635e93ff807a06fa0daf",
+      "bytes": 153,
+      "path_redacted": false
+    },
+    {
+      "path": "runner/lifecycle.xml",
+      "original_sha256": "e2b2b3d5e98cc5af114713e5f0aedd44706a03ea8af97b4ac051eef7521c8ba2",
+      "published_sha256": "e2b2b3d5e98cc5af114713e5f0aedd44706a03ea8af97b4ac051eef7521c8ba2",
+      "bytes": 1817,
+      "path_redacted": false
+    },
+    {
+      "path": "runner/rate-conversion-controls.log",
+      "original_sha256": "a3707c978d0a149cf9fd4e389a88de808c592b5f2903df94cd8f444f7f163635",
+      "published_sha256": "a3707c978d0a149cf9fd4e389a88de808c592b5f2903df94cd8f444f7f163635",
+      "bytes": 2078,
+      "path_redacted": false
+    },
+    {
+      "path": "runner/rate-conversion.json",
+      "original_sha256": "af46f4efff5256215d78db192c175d6728055309a360dd3e8be3351848a8282f",
+      "published_sha256": "af46f4efff5256215d78db192c175d6728055309a360dd3e8be3351848a8282f",
+      "bytes": 2967,
+      "path_redacted": false
+    },
+    {
+      "path": "package-controls/observation.json",
+      "original_sha256": "7e249c4be37d35dbb9c4e3dec4d280c53c9e13068d16772ff2b53ef50a3eb707",
+      "published_sha256": "7e249c4be37d35dbb9c4e3dec4d280c53c9e13068d16772ff2b53ef50a3eb707",
+      "bytes": 476,
+      "path_redacted": false
+    },
+    {
+      "path": "package-controls/controls.log",
+      "original_sha256": "19a8e3bc4fa521d2d5e7bd25834a1cd31712c4bb1e3baa0a4a24b8d8dbb30b92",
+      "published_sha256": "19a8e3bc4fa521d2d5e7bd25834a1cd31712c4bb1e3baa0a4a24b8d8dbb30b92",
+      "bytes": 4316,
+      "path_redacted": false
+    },
+    {
+      "path": "native-receipt-controls.log",
+      "original_sha256": "d03ce458f2a6cd2b4f27522f3aacad03ce1872c028853507c3ad02ca621bdcad",
+      "published_sha256": "d03ce458f2a6cd2b4f27522f3aacad03ce1872c028853507c3ad02ca621bdcad",
+      "bytes": 103,
+      "path_redacted": false
+    },
+    {
+      "path": "independent-review.json",
+      "original_sha256": "ae555f60bdde035c300bde9c7ad28af5534e8439ff96a44cfad1e9366802e744",
+      "published_sha256": "ae555f60bdde035c300bde9c7ad28af5534e8439ff96a44cfad1e9366802e744",
+      "bytes": 2362,
+      "path_redacted": false
+    }
+  ],
+  "publication_privacy": {
+    "content_blockers": 0,
+    "content_review_findings": 0,
+    "local_extended_attribute_findings": 42,
+    "disposition": "Only com.apple.provenance local filesystem attributes were reported; these are not Git blob content. Raw local originals remain private."
+  }
+}

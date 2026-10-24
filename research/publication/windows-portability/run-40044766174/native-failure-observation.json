@@ -1,0 +1,314 @@
+{
+  "schema": "rebase.native-device-rate-ci-failure.v1",
+  "recorded_utc": "2026-10-24T00:31:53.900365+00:00",
+  "source_commit": "7234c8458186b720ea87e1953aaea3fced62b845",
+  "status": "failed-before-native-adapter-compilation",
+  "raw_manifest_sha256": "9c7b3bff946cbe67ebee606a587bad40709f2aa5b53062e1fe82634913a1f608",
+  "raw_file_count": 49,
+  "raw_bytes": 292799,
+  "lanes": [
+    {
+      "lane": "native-debug",
+      "run_id": "40044766174",
+      "job_id": "120723842191",
+      "status": "failed",
+      "failure_stage": "SoXR dependency receipt validation before native adapter configure",
+      "error": "SoXR dependency: empty build log",
+      "soxr_build_status": "passed",
+      "soxr_probe": {
+        "schema": "rebase.soxr-plumbing.v1",
+        "status": "passed",
+        "scope": "Public SoXR API plumbing, not reference-runtime fidelity",
+        "source_rate": 48000,
+        "output_rate": 44100,
+        "channels": 2,
+        "input_frames": 4800,
+        "output_frames": 4410,
+        "finite": true,
+        "peak": 0.820379376411438,
+        "energy": 0.6877241076615714,
+        "maximum_channel_error": 0
+      },
+      "soxr_commands": [
+        {
+          "name": "compiler-version",
+          "exit_code": 0,
+          "bytes": 116,
+          "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+        },
+        {
+          "name": "cmake-version",
+          "exit_code": 0,
+          "bytes": 94,
+          "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+        },
+        {
+          "name": "configure",
+          "exit_code": 0,
+          "bytes": 5124,
+          "sha256": "17c1514da41332acbfe6979895fd28b581db54a0fe86a088641496032baa2c17"
+        },
+        {
+          "name": "build",
+          "exit_code": 0,
+          "bytes": 32905,
+          "sha256": "db3d3c51d6c77d701dc87dd9b7a89b8aeb4e4041ca8236c2624aab0a59abad92"
+        },
+        {
+          "name": "install",
+          "exit_code": 0,
+          "bytes": 477,
+          "sha256": "0a0bcfc6f14fa6439efd8cbd74a61c8ba91f351ee5ce035a4d52c1ed94f5bac1"
+        },
+        {
+          "name": "probe-build",
+          "exit_code": 0,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "probe",
+          "exit_code": 0,
+          "bytes": 313,
+          "sha256": "62fae0aea95ca4c330afeb972a3465ed8050a4985470d238bac92b8234ba1aa2"
+        }
+      ],
+      "recorded_soxr_artifacts": [
+        {
+          "path": "install/bin/soxr.dll",
+          "bytes": 165888,
+          "sha256": "5c1626aca40c82290b6adac6dc16b01774c3666e2be1414a1a993c6d46a59be5"
+        },
+        {
+          "path": "install/lib/soxr.lib",
+          "bytes": 4544,
+          "sha256": "159547ca7ca894ad01df568a691a96b135b7b68fdf4bd54bea02f607af032ac4"
+        },
+        {
+          "path": "install/bin/rebase-soxr-probe.exe",
+          "bytes": 11776,
+          "sha256": "5ff2fd18ed54ccbebfc056c8e768a75dbd1a1fa13a638d63c133ce8e263df37a"
+        }
+      ],
+      "soxr_binary_bytes_independently_downloaded": false,
+      "adapter_configured": false,
+      "adapter_compiled": false,
+      "adapter_lifecycle_executed": false,
+      "adapter_rate_conversion_executed": false,
+      "wasapi_endpoint_probed": false,
+      "wpf_runtime_tested": false,
+      "playback_tested": false
+    },
+    {
+      "lane": "native-release",
+      "run_id": "40044766174",
+      "job_id": "120723842513",
+      "status": "failed",
+      "failure_stage": "SoXR dependency receipt validation before native adapter configure",
+      "error": "SoXR dependency: empty build log",
+      "soxr_build_status": "passed",
+      "soxr_probe": {
+        "schema": "rebase.soxr-plumbing.v1",
+        "status": "passed",
+        "scope": "Public SoXR API plumbing, not reference-runtime fidelity",
+        "source_rate": 48000,
+        "output_rate": 44100,
+        "channels": 2,
+        "input_frames": 4800,
+        "output_frames": 4410,
+        "finite": true,
+        "peak": 0.820379376411438,
+        "energy": 0.6877241076615714,
+        "maximum_channel_error": 0
+      },
+      "soxr_commands": [
+        {
+          "name": "compiler-version",
+          "exit_code": 0,
+          "bytes": 116,
+          "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+        },
+        {
+          "name": "cmake-version",
+          "exit_code": 0,
+          "bytes": 94,
+          "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+        },
+        {
+          "name": "configure",
+          "exit_code": 0,
+          "bytes": 5124,
+          "sha256": "2a0a1245ed49372c15624d76b6974c47101de0bd5628accfe000ae92945ea1dc"
+        },
+        {
+          "name": "build",
+          "exit_code": 0,
+          "bytes": 32905,
+          "sha256": "db3d3c51d6c77d701dc87dd9b7a89b8aeb4e4041ca8236c2624aab0a59abad92"
+        },
+        {
+          "name": "install",
+          "exit_code": 0,
+          "bytes": 477,
+          "sha256": "0a0bcfc6f14fa6439efd8cbd74a61c8ba91f351ee5ce035a4d52c1ed94f5bac1"
+        },
+        {
+          "name": "probe-build",
+          "exit_code": 0,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "probe",
+          "exit_code": 0,
+          "bytes": 313,
+          "sha256": "62fae0aea95ca4c330afeb972a3465ed8050a4985470d238bac92b8234ba1aa2"
+        }
+      ],
+      "recorded_soxr_artifacts": [
+        {
+          "path": "install/bin/soxr.dll",
+          "bytes": 165888,
+          "sha256": "5317a017f661a4c9fdab0f81fdb0a61a279569354fc80874f0d73c0692c8ffec"
+        },
+        {
+          "path": "install/lib/soxr.lib",
+          "bytes": 4544,
+          "sha256": "159547ca7ca894ad01df568a691a96b135b7b68fdf4bd54bea02f607af032ac4"
+        },
+        {
+          "path": "install/bin/rebase-soxr-probe.exe",
+          "bytes": 11776,
+          "sha256": "1ba37b849ce2d2bc43437ebcb50cd3bc0c9bf24247b86e1a4c22c48aaba61023"
+        }
+      ],
+      "soxr_binary_bytes_independently_downloaded": false,
+      "adapter_configured": false,
+      "adapter_compiled": false,
+      "adapter_lifecycle_executed": false,
+      "adapter_rate_conversion_executed": false,
+      "wasapi_endpoint_probed": false,
+      "wpf_runtime_tested": false,
+      "playback_tested": false
+    },
+    {
+      "lane": "application",
+      "run_id": "40044766254",
+      "job_id": "120723842319",
+      "status": "failed",
+      "failure_stage": "SoXR dependency receipt validation before native adapter configure",
+      "error": "SoXR dependency: empty build log",
+      "soxr_build_status": "passed",
+      "soxr_probe": {
+        "schema": "rebase.soxr-plumbing.v1",
+        "status": "passed",
+        "scope": "Public SoXR API plumbing, not reference-runtime fidelity",
+        "source_rate": 48000,
+        "output_rate": 44100,
+        "channels": 2,
+        "input_frames": 4800,
+        "output_frames": 4410,
+        "finite": true,
+        "peak": 0.820379376411438,
+        "energy": 0.6877241076615714,
+        "maximum_channel_error": 0
+      },
+      "soxr_commands": [
+        {
+          "name": "compiler-version",
+          "exit_code": 0,
+          "bytes": 116,
+          "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+        },
+        {
+          "name": "cmake-version",
+          "exit_code": 0,
+          "bytes": 94,
+          "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+        },
+        {
+          "name": "configure",
+          "exit_code": 0,
+          "bytes": 5146,
+          "sha256": "c5f9a186cf888d240ccd5c796dbb3328b5a39ef54b9449e870079090733297cc"
+        },
+        {
+          "name": "build",
+          "exit_code": 0,
+          "bytes": 32905,
+          "sha256": "db3d3c51d6c77d701dc87dd9b7a89b8aeb4e4041ca8236c2624aab0a59abad92"
+        },
+        {
+          "name": "install",
+          "exit_code": 0,
+          "bytes": 615,
+          "sha256": "ddc4dcb35d742788de2fcfa4e8d35188c2e386a9775f74884be67a9230f2e37d"
+        },
+        {
+          "name": "probe-build",
+          "exit_code": 0,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "probe",
+          "exit_code": 0,
+          "bytes": 313,
+          "sha256": "62fae0aea95ca4c330afeb972a3465ed8050a4985470d238bac92b8234ba1aa2"
+        }
+      ],
+      "recorded_soxr_artifacts": [
+        {
+          "path": "install/bin/soxr.dll",
+          "bytes": 165888,
+          "sha256": "5a817da11eab34d85fc7a5123ba0899fb2a12cbe6c44ceb1f92be2cac6366248"
+        },
+        {
+          "path": "install/lib/soxr.lib",
+          "bytes": 4544,
+          "sha256": "159547ca7ca894ad01df568a691a96b135b7b68fdf4bd54bea02f607af032ac4"
+        },
+        {
+          "path": "install/bin/rebase-soxr-probe.exe",
+          "bytes": 11776,
+          "sha256": "c152c87d2e34951ad0da7ea821f8cedf43afb662b1e97c856d30064336ec9267"
+        }
+      ],
+      "soxr_binary_bytes_independently_downloaded": false,
+      "adapter_configured": false,
+      "adapter_compiled": false,
+      "adapter_lifecycle_executed": false,
+      "adapter_rate_conversion_executed": false,
+      "wasapi_endpoint_probed": false,
+      "wpf_runtime_tested": false,
+      "playback_tested": false
+    }
+  ],
+  "application_host_controls": {
+    "schema": 1,
+    "suite": "windows-host-portable-controls",
+    "checks": 268,
+    "failures": 0,
+    "wpf_runtime_tested": false,
+    "playback_tested": false
+  },
+  "diagnosis": "A successful silent probe-build command wrote a zero-byte log. The dependency validator rejected that log although the recorded command exit was zero, produced artifacts were recorded, and the subsequent actual public SoXR conversion probe passed. This does not establish new NativeAudio compilation or runtime success.",
+  "proposed_correction_owner": "cpr_protocol_controls; retain log existence, command success, probe and artifact validation while allowing silent successful commands",
+  "source_edits_in_this_review": false,
+  "privacy": {
+    "scanned_file_count": 49,
+    "blocker_records": 0,
+    "review_records": 57,
+    "review_categories": [
+      "non_resource_extended_attribute"
+    ],
+    "summary_sha256": "704390afb3d4a9f84ea1d0aec33443ae35e0e7319650bae9f0e3839e32b207f1"
+  },
+  "boundaries": [
+    "Failed raw records retained without mutation.",
+    "No new adapter CTest, rate conversion or WASAPI endpoint result was reached in these three jobs.",
+    "No WPF window or package ZIP was produced in the failed application run.",
+    "Recorded SoXR binary hashes were retained, not independently rehashed from binary downloads.",
+    "No physical input, audible output or proprietary target execution."
+  ]
+}
