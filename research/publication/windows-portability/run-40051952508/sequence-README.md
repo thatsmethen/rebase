@@ -1,0 +1,9 @@
+# Component evidence for the CPR audition modes milestone
+
+The accepted component workflow is run 40051952508 at source `81e96c9b29b6e3d87184e067af58f4ab2973db89`. All 13 jobs passed. The four portable lanes each completed the new 425-check, 48-scenario audition journey and the unchanged 169-check session journey. Their actual WAV, PCM, availability and normalized full provenance records match exactly. Windows reported 118 tests (116 executed, two opt-in generators skipped); portable macOS reported 120 (118 executed, two skipped). Normal macOS reported 397 (279 executed, 118 private-fixture/opt-in cases skipped), including all three new AV adapter controls.
+
+The cancelled predecessors remain separate. Run 40050983527 began with sixteen fixture files omitted by an existing ignore pattern; run 40051095014 used the corrected complete fixture and passed all twelve build/test jobs, but its comparison was cancelled when the subsequent Windows Stop error-handling correction was pushed. Neither cancelled run is substituted for final-source acceptance.
+
+Artifact files are byte-exact copies of the downloaded GitHub Actions artifacts. The workflow already normalizes workspace/home prefixes in its retained logs and XML; these are observations of that published instrument, not unmodified terminal captures. Full workflow logs, raw API metadata, local audit attempts and download diagnostics remain private. `run.json` and `github-artifacts.json` identify their source hashes and selected-field transformations. Download metadata is not copied.
+
+These are authored controls and shared implementation comparisons. No proprietary reference execution or audible device measurement is claimed. Hosted audio endpoints were unavailable. Source snapshots over the 32 million frame bound remain refused; streaming for those projects remains future work.

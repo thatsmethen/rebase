@@ -94,3 +94,7 @@ The editor displays the actual shared points and outgoing Linear/Hold segments, 
 Successful Windows edits enter shared undo history immediately and Close retains them. The Mac editor currently stages changes until Apply or Cancel. The Windows editor is a separate selected-track window, not an implementation of the reference's inline automation lanes or writing modes. Existing larger lanes are retained; the session limits growth to 4,096 points, and curves above 16,384 points explicitly report unavailable drawing while retaining list/numeric access.
 
 These checks use automation peers, injected routed keys and a programmatically invoked production curve callback. Physical input, native dialogs, operating-system frames and audible device output remain unverified. The twelve images retain the existing 1100-DIP hosted width constraint. Full Mac parity and exact Windows reference fidelity remain open.
+
+## Shared source-audio dialog
+
+The [preview.8 native run](../../research/publication/windows-portability/application-run-40051952551/observation.json) adds a Source Audio window with eight shared modes, selected clock/duration and complete-track contributor metadata. Actual UI Automation exports match a separately invoked helper. Three 724 × 501 client captures show conversion, complete-track and unavailable states with the full mode list and footer. All fifteen native images were reviewed; the new dialog is an authored Rebase workflow and does not establish exact reference dialog fidelity. Physical input, native frame and hardware audio remain unverified.

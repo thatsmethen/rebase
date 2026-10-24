@@ -1,0 +1,75 @@
+{
+  "schema": "rebase.shared-cpr-stop-correction-local.v1",
+  "recorded_at_utc": "2026-10-24T01:56:59.196460+00:00",
+  "source_commit": "81e96c9b29b6e3d87184e067af58f4ab2973db89",
+  "previous_source_commit": "91fcaa565c908c94d055cc3d73f296f264bef06b",
+  "previous_local_observation_sha256": "b017cc21dd6fe19e14f340be4d5420576052f1eb85779994f82e6450d3254355",
+  "status": "passed",
+  "scope": "Local authored managed-host controls and WPF cross-compilation; no Windows runtime, device, physical input or proprietary reference execution.",
+  "correction": "Explicit source Stop now awaits native Stop before clearing installed state. IOException stays visible; the original source position remains available for polling and retry. Successful retry discards the suffix before returning position to zero.",
+  "host_controls": {
+    "checks": 421,
+    "existing_checks": 268,
+    "source_mode_checks": 153,
+    "failures": 0,
+    "source_stable_during_command": true,
+    "source_hashes_matching_commit": 25,
+    "wpf_runtime_tested": false,
+    "playback_tested": false
+  },
+  "regression": "All eight modes: nonzero seek, failed native Stop, Poll, successful Stop retry, Poll, Play. Original error/state preserved on failure; successful retry remains zero and requests a fresh zero-start render.",
+  "wpf_crossbuild": {
+    "log": "windows-build/attempt-04.log",
+    "warnings": 0,
+    "errors": 0,
+    "windows_runtime_executed": false
+  },
+  "files": [
+    {
+      "path": "host-controls/observation-03.json",
+      "original_sha256": "9d981ee393c73193e60e84f2ee69b8e5a6f4057cb1de7c79573904ac9cb9ea5e",
+      "published_sha256": "9d981ee393c73193e60e84f2ee69b8e5a6f4057cb1de7c79573904ac9cb9ea5e",
+      "original_bytes": 6053,
+      "bytes": 6053,
+      "privacy_redacted": false
+    },
+    {
+      "path": "host-controls/attempt-08-stop-failure-regression.log",
+      "original_sha256": "81ec6175f617b01d369ccdc9dc1276b8306b1e008d8ba022de7c099a8a9db81a",
+      "published_sha256": "81ec6175f617b01d369ccdc9dc1276b8306b1e008d8ba022de7c099a8a9db81a",
+      "original_bytes": 131,
+      "bytes": 131,
+      "privacy_redacted": false
+    },
+    {
+      "path": "windows-build/attempt-04.log",
+      "original_sha256": "f201777359836e0e34753e5119200ccd3173e732db37129682562e0b9426691d",
+      "published_sha256": "f3000f2e093fc2578f8c0802a6eb1d27fbe09408a950ec982922df29a41d87e5",
+      "original_bytes": 199,
+      "bytes": 180,
+      "privacy_redacted": true
+    },
+    {
+      "path": "stop-failure-correction.json",
+      "original_sha256": "e4695ed4f9390c99faceab2184793d6edbb53ff976120e9072eddcded3eadee1",
+      "published_sha256": "e4695ed4f9390c99faceab2184793d6edbb53ff976120e9072eddcded3eadee1",
+      "original_bytes": 248,
+      "bytes": 248,
+      "privacy_redacted": false
+    },
+    {
+      "path": "stop-failure-push.log",
+      "original_sha256": "e86d5b83b59d9298f0c8c575c9a4d6c9c5cdb4f16b46ba27429f4bfe10f781ff",
+      "published_sha256": "e86d5b83b59d9298f0c8c575c9a4d6c9c5cdb4f16b46ba27429f4bfe10f781ff",
+      "original_bytes": 79,
+      "bytes": 79,
+      "privacy_redacted": false
+    }
+  ],
+  "prior_records_modified": false,
+  "publication_privacy": {
+    "content_blockers": 0,
+    "content_review_findings": 0,
+    "disposition": "Configured sanitization and private detectors passed. Local com.apple.provenance attributes are excluded from Git blob content."
+  }
+}
