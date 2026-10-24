@@ -127,6 +127,10 @@ static class SourceModeControls
                 // Stop discards a prepared suffix. A later timer poll must not
                 // restore its old absolute base and make Play resume mid-source.
                 await model.Seek(0.025); copies = audio.Copies; var stoppedRenders = session.Renders;
+                var beforeStop = model.Position; audio.FailStop = true;
+                await model.Stop(); await model.Poll();
+                Check(model.Position == beforeStop && model.IsPlaying && model.PlaybackRateInfo is not null && model.Status == "Authored native stop failure.");
+                audio.FailStop = false;
                 await model.Stop(); await model.Poll();
                 Check(model.Position == 0 && model.IsSourceContext && !model.IsPlaying && model.PlaybackRateInfo is null && session.Renders == stoppedRenders);
                 await model.Play();
@@ -164,7 +168,7 @@ static class SourceModeControls
     }
     private sealed class ControlAudio : IAudioOutput
     {
-        public uint Rate; public ulong Frames, LastSeek, Frozen; private ulong position; private uint phase;
+        public uint Rate; public ulong Frames, LastSeek, Frozen; private ulong position; private uint phase; public bool FailStop;
         public int Copies,Plays;
         public Task<DeviceFormat> Format()=>Task.FromResult(new DeviceFormat { SampleRate=48000,Channels=2,Float32=1 });
         public Task SetSource(LoadedSnapshot source) { Copies++; Rate=source.SampleRate;Frames=source.Frames;position=0;phase=1;return Task.CompletedTask; }
@@ -172,7 +176,7 @@ static class SourceModeControls
         public Task<AudioStatus> Status()=>Task.FromResult(new AudioStatus { AbiVersion=1,SampleRate=Rate,TotalFrames=Frames,PositionFrames=position,SubmittedFrames=Frames,Phase=phase });
         public Task Play() { Plays++;phase=2;return Task.CompletedTask; }
         public Task Pause() { position=Frozen;phase=3;return Task.CompletedTask; }
-        public Task Stop() { position=0;phase=1;return Task.CompletedTask; }
+        public Task Stop() { if (FailStop) throw new IOException("Authored native stop failure."); position=0;phase=1;return Task.CompletedTask; }
         public Task Seek(ulong frame) { LastSeek=frame;position=frame;return Task.CompletedTask; }
         public ValueTask DisposeAsync()=>ValueTask.CompletedTask;
     }

@@ -448,14 +448,16 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     public Task Stop() => Execute(async () =>
     {
         audioEpoch++;
+        // Keep the installed source available for status/retry if the native
+        // stop fails. Explicit Stop must not hide that failure as "Stopped".
+        if (loadedRevision is not null) await audio.Stop();
         if (IsSourceContext)
         {
             // A source seek installs a freshly prepared suffix. Its native
             // frame zero is not the full source's zero, so discard it before
             // returning the UI to the beginning and allowing another play.
-            await InvalidateAudio(); sourceStartFrame = 0;
+            loadedRevision = null; PlaybackRateInfo = null; sourceStartFrame = 0;
         }
-        else if (loadedRevision is not null) await audio.Stop();
         audioPhase = loadedRevision is null ? 0u : 1u; Position = 0; PeakLeft = PeakRight = 0; Status = "Stopped";
     });
     public Task Seek(double seconds) => Execute(async () =>
