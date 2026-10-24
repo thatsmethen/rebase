@@ -48,16 +48,16 @@ static class SourceAuditionControls
             await model.RenderSourceTo(export);
             Check(model.Status.StartsWith("Exported source WAV:", StringComparison.Ordinal) && audio.FormatCalls == 0 && File.Exists(export));
         }
-        finally { File.Delete(export); }
+        finally { SourceControlData.Delete(export); }
         await model.AuditionSource();
         Check(model.IsSourceContext && model.IsPlaying && session.SourceRenders == 2 && audio.SourceRate == 48000 && project.SampleRate == 44100);
         Check(model.TransportContext.Contains("event-local seconds", StringComparison.Ordinal));
         await model.Pause(); Check(!model.IsPlaying && session.SourceRenders == 2);
         await model.Play(); Check(model.IsPlaying && session.SourceRenders == 3 && audio.SourceCopies == 2);
-        await model.Seek(0.005); Check(session.SourceRenders == 4 && audio.LastSeek == 240 && model.Position == 0.005 && model.IsPlaying);
+        await model.Seek(0.005); Check(session.SourceRenders == 4 && audio.LastSeek == 0 && session.LastSourceStart == 0.005 && model.Position == 0.005 && model.IsPlaying);
         await model.Pause(); var plays = audio.Plays;
-        await model.Seek(0.002); Check(session.SourceRenders == 5 && audio.LastSeek == 96 && audio.Plays == plays && !model.IsPlaying);
-        await model.Play(); Check(session.SourceRenders == 6 && audio.LastSeek == 96 && model.IsPlaying);
+        await model.Seek(0.002); Check(session.SourceRenders == 5 && audio.LastSeek == 0 && session.LastSourceStart == 0.002 && audio.Plays == plays && !model.IsPlaying);
+        await model.Play(); Check(session.SourceRenders == 6 && audio.LastSeek == 0 && session.LastSourceStart == 0.002 && model.IsPlaying);
         var copies = audio.SourceCopies; plays = audio.Plays; var stops = audio.Stops;
         session.WrongMediaReceipt = true;
         await model.Play(); Check(session.SourceRenders == 7 && audio.Stops > stops && audio.Plays == plays && audio.SourceCopies == copies && !model.IsPlaying);
@@ -77,11 +77,11 @@ static class SourceAuditionControls
         audio.Rate = 44100;
         await model.PlayProject(); Check(!model.IsSourceContext && !model.IsPlaying && session.ProjectRenders == 1 && model.Status == "Native CPR project playback is unavailable.");
         audio.Rate = 48000; await model.AuditionSource();
-        await model.Seek(0.75 / 48000); Check(audio.LastSeek == 1 && model.IsPlaying);
-        await model.Seek(0.5 / 48000); Check(audio.LastSeek == 1);
-        await model.Seek(0.49 / 48000); Check(audio.LastSeek == 0);
+        await model.Seek(0.75 / 48000); Check(audio.LastSeek == 0 && model.Position == 1.0 / 48000 && model.IsPlaying);
+        await model.Seek(0.5 / 48000); Check(audio.LastSeek == 0 && model.Position == 1.0 / 48000);
+        await model.Seek(0.49 / 48000); Check(audio.LastSeek == 0 && model.Position == 0);
         plays = audio.Plays;
-        await model.Seek(1); Check(audio.LastSeek == 480 && !model.IsPlaying && audio.Plays == plays);
+        await model.Seek(1); Check(audio.LastSeek == 0 && model.Position == 0.01 && !model.IsPlaying && audio.Plays == plays);
         await model.Play(); Check(audio.LastSeek == 0 && model.IsPlaying);
         await model.AttachSourceMedia("synthetic-media.wav"); Check(!model.IsSourceContext && !model.IsPlaying && model.State.Revision == 2);
         return checks;
@@ -91,6 +91,7 @@ static class SourceAuditionControls
         private readonly SessionState state = new() { Revision = 1, Project = project, Selection = new() { TrackID = "track", ClipID = EventID } };
         public int SourceRenders, ProjectRenders;
         public bool WrongMediaReceipt, FailSourceRender;
+        public double LastSourceStart;
         public object[] ModuleReceipt() => [];
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
         public Task<SessionResponse> Send(SessionRequest request)
@@ -101,30 +102,18 @@ static class SourceAuditionControls
             if (request.Command == "render") { ProjectRenders++; response.Ok = false; response.Error = new() { Message = "Native CPR project playback is unavailable." }; }
             if (request.Command == "renderSourceEvent")
             {
-                SourceRenders++;
+                SourceRenders++; LastSourceStart = request.StartSeconds ?? 0;
                 if (FailSourceRender) { response.Ok = false; response.Error = new() { Message = "Source changed outside the session." }; }
                 else
                 {
-                    var bytes = Wave(); File.WriteAllBytes(request.Path!, bytes);
-                    response.Render = new() { Kind = "sourceEvent", EventID = EventID, SourceSHA256 = SourceHash,
-                        MediaSHA256 = WrongMediaReceipt ? new string('c', 64) : MediaHash, Path = request.Path!, Revision = state.Revision,
-                        SampleRate = 48000, Frames = 480, Channels = 2, WavBytes = (ulong)bytes.Length, Sha256 = Convert.ToHexString(SHA256.HashData(bytes)) };
+                    response.Render = SourceControlData.Render(project, SourceEventView.Read(project).Single(), request,
+                        state.Revision, 48000, 480, WrongMediaReceipt ? new string('c', 64) : MediaHash);
                 }
             }
             return Task.FromResult(response);
         }
-        private static byte[] Wave()
-        {
-            var bytes = new byte[44 + 480 * 8];
-            Encoding.ASCII.GetBytes("RIFF").CopyTo(bytes, 0); BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(4), (uint)bytes.Length - 8);
-            Encoding.ASCII.GetBytes("WAVEfmt ").CopyTo(bytes, 8); BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(16), 16);
-            BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(20), 3); BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(22), 2);
-            BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(24), 48000); BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(28), 384000);
-            BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(32), 8); BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(34), 32);
-            Encoding.ASCII.GetBytes("data").CopyTo(bytes, 36); BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(40), 480 * 8);
-            return bytes;
-        }
     }
+
     private sealed class ControlAudio : IAudioOutput
     {
         public uint Rate = 48000, SourceRate;

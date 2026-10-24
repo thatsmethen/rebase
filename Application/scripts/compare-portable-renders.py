@@ -8,6 +8,8 @@ import re
 import subprocess
 
 from windows_automation_gate import require_automation_protocol
+from cpr_audition_gate import require_cpr_audition
+from windows_soxr_package import SOURCE_COMMIT, SOURCE_VERSION, MANIFEST_SHA256
 
 
 def read_object(path, schema):
@@ -45,7 +47,7 @@ parser.add_argument("--input", type=Path, required=True)
 parser.add_argument("--output", type=Path, required=True)
 args = parser.parse_args()
 report = {"schema": "rebase.portable-render-comparison.v1", "status": "failed",
-          "scope": "Cross-platform authored-example render only; no device playback or reference fidelity claim"}
+          "scope": "Cross-platform authored example, automation and CPR audition output; no device playback or reference fidelity claim"}
 try:
     app = Path(__file__).resolve().parent.parent
     lock_path = app / "scripts/example-render-lock.json"
@@ -97,6 +99,11 @@ try:
     report["matching_fields"] = {field: reference[field] for field in comparison_fields}
     report["lanes"] = [{key: row[key] for key in ("platform", "architecture", "configuration")} for row in records]
     automation = []
+    audition = []
+    modes_lock_path = app / "Tests/Fixtures/SourceAuditionModes/expected.json"
+    modes_lock_bytes = modes_lock_path.read_bytes()
+    modes_lock = json.loads(modes_lock_bytes)
+    modes_lock_sha256 = hashlib.sha256(modes_lock_bytes).hexdigest()
     for path, rendered in zip(paths, records):
         lane = read_object(path.parent / "conformance.json", "rebase.portable-ci.v1")
         session = read_object(path.parent / "session-protocol.json", "rebase.session-protocol-check.v1")
@@ -119,6 +126,29 @@ try:
         if lane.get("automation_control") != session["automation"]:
             raise ValueError("Automation conformance summary differs from its actual process receipt")
         automation.append(session["automation"])
+        mode_path = path.parent / "cpr-audition-modes.json"
+        modes = read_object(mode_path, "rebase.cpr-audition-modes-control.v1")
+        mode_summary = require_cpr_audition(modes, modes_lock, modes_lock_sha256)
+        mode_summary["receipt_sha256"] = hashlib.sha256(mode_path.read_bytes()).hexdigest()
+        if lane.get("cpr_audition_control") != mode_summary:
+            raise ValueError("CPR audition summary differs from the actual helper receipt")
+        dependency_schema = ("rebase.windows-soxr-dependency.v1" if rendered["platform"] == "Windows"
+                             else "rebase.portable-soxr-dependency.v1")
+        dependency = read_object(path.parent / "soxr-dependency.json", dependency_schema)
+        if (dependency != lane.get("cpr_mode2_dependency") or dependency.get("status") != "passed"
+                or dependency.get("application_commit") != expected_commit
+                or dependency.get("source_commit") != SOURCE_COMMIT or dependency.get("source_version") != SOURCE_VERSION
+                or dependency.get("source_manifest_sha256") != MANIFEST_SHA256
+                or type(dependency.get("source_entries_verified")) is not int or dependency["source_entries_verified"] != 138):
+            raise ValueError("CPR audition mode 2 lacks the exact successful pinned dependency receipt")
+        if rendered["platform"] == "Windows":
+            dlls = [entry for entry in dependency.get("artifacts", []) if entry.get("path") == "install/bin/soxr.dll"]
+            runtime = lane.get("cpr_mode2_runtime", {})
+            if (len(dlls) != 1 or not digest(dlls[0].get("sha256")) or not positive_integer(dlls[0].get("bytes"))
+                    or runtime.get("sha256") != dlls[0]["sha256"] or runtime.get("bytes") != dlls[0]["bytes"]
+                    or runtime.get("name") != "soxr.dll"):
+                raise ValueError("Windows portable runtime differs from its pinned SoXR build")
+        audition.append(modes)
     automation_fields = ("edited_wav_sha256", "edited_pcm_sha256", "restored_wav_sha256",
                          "restored_pcm_sha256", "original_track_id", "original_lane_id",
                          "original_point_count", "mutation_count", "invalid_requests_checked")
@@ -126,6 +156,15 @@ try:
         raise ValueError("Edited/restored automation output differs across platform or configuration")
     report["automation_matching_fields"] = {key: automation[0][key] for key in automation_fields}
     report["automation_scope"] = "Actual edited and restored authored-project WAV/PCM bytes; original locks remain unchanged. No device audio or reference equivalence claim."
+    scenario_key = lambda row: (row["case"], row["mode"], row["seek"])
+    matched_scenarios = sorted(audition[0]["scenarios"], key=scenario_key)
+    if any(sorted(row["scenarios"], key=scenario_key) != matched_scenarios for row in audition[1:]):
+        raise ValueError("CPR audition PCM, clocks, source or normalized full provenance differs across platform/configuration")
+    if any(row["inspection"] != audition[0]["inspection"] for row in audition[1:]):
+        raise ValueError("CPR audition availability/metadata differs across platform/configuration")
+    report["cpr_audition_fixture_manifest_sha256"] = modes_lock_sha256
+    report["cpr_audition_matching_scenarios"] = matched_scenarios
+    report["cpr_audition_scope"] = "All 48 actual full/odd/EOF/rewind scenarios over eight authored modes and complete overlap-track controls. Exact WAV/PCM and normalized provenance equality; no measured device or proprietary reference audio."
     report["status"] = "passed"
 except Exception as error:
     report["error"] = str(error)

@@ -74,6 +74,10 @@ jobs:
             ${{ runner.temp }}/rebase-conformance/*.json
             ${{ runner.temp }}/rebase-conformance/*.log
             ${{ runner.temp }}/rebase-conformance/*.xml
+            ${{ runner.temp }}/rebase-conformance/portable-soxr-controls/observation.json
+            ${{ runner.temp }}/rebase-conformance/portable-soxr-controls/controls.log
+            ${{ runner.temp }}/rebase-conformance/cpr-audition-gate-controls/observation.json
+            ${{ runner.temp }}/rebase-conformance/cpr-audition-gate-controls/controls.log
           retention-days: 7
           if-no-files-found: warn
 
@@ -153,7 +157,7 @@ jobs:
           if-no-files-found: warn
 
   compare-example-render:
-    name: Compare Windows and macOS example PCM
+    name: Compare Windows and macOS authored PCM
     needs: portable
     runs-on: ubuntu-24.04
     timeout-minutes: 5

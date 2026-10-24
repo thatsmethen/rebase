@@ -24,11 +24,14 @@ public struct PortableSessionRequest: Codable {
     public var time: Double?
     public var interpolation: String?
     public var enabled: Bool?
+    public var mode: String?
+    public var startSeconds: Double?
+    public var rewindAtEnd: Bool?
     enum CodingKeys: String, CodingKey {
         case protocolVersion = "protocol"
         case id, command, expectedRevision, path, clipID, trackID, value, duration, snap, discardChanges, asCopy
         case reviewID, sourceSHA256, allowPartial, reviewOffset
-        case parameter, pointID, time, interpolation, enabled
+        case parameter, pointID, time, interpolation, enabled, mode, startSeconds, rewindAtEnd
     }
 }
 
@@ -53,7 +56,29 @@ public struct PortableSessionReply: Encodable {
     public let waveform: Waveform?
     public let ruler: Ruler?
     public let cprReview: PortableCPRReview?
+    public var sourceInspection: SourceInspection? = nil
     public let error: Failure?
+    public struct SourceInspection: Encodable {
+        public let revision: UInt64
+        public let eventID: UUID
+        public let sourceSHA256: String
+        public let availabilityScope = "preparation-only"
+        public let maximumFrames = PortableSession.maximumSourceAuditionFrames
+        public let modes: [SourceMode]
+    }
+    public struct SourceMode: Encodable {
+        public let mode: String
+        public let available: Bool
+        public let reason: String?
+        public let sampleRate: Double?
+        public let frames: Int64?
+        public let sourceSampleRate: Double?
+        public let mediaSHA256: String?
+        public let timelineRange: PortableSourceAuditionManifest.Range?
+        public let savedProjectAudioSetup: CPRProjectAudioSetup?
+        public let contributorCount: Int?
+        public let fragmentCount: Int?
+    }
     public struct Ruler: Encodable {
         public let revision: UInt64
         public let duration: Double
@@ -81,9 +106,96 @@ public struct PortableSessionReply: Encodable {
         public let eventID: UUID?
         public let sourceSHA256: String?
         public let mediaSHA256: String?
+        public var mode: String? = nil
+        public var manifestPath: String? = nil
+        public var manifestSHA256: String? = nil
+        public var manifestBytes: Int? = nil
+        public var startFrame: Int64? = nil
+        public var totalFrames: Int64? = nil
     }
     public struct Failure: Encodable { public let code: String; public let message: String }
-    enum CodingKeys: String, CodingKey { case protocolVersion = "protocol"; case id, ok, state, render, waveform, ruler, cprReview, error }
+    enum CodingKeys: String, CodingKey { case protocolVersion = "protocol"; case id, ok, state, render, waveform, ruler, cprReview, sourceInspection, error }
+}
+
+/// Complete, ephemeral audition provenance. Stored beside a newly rendered WAV,
+/// never inside the imported package and never substituted for its import report.
+public struct PortableSourceAuditionManifest: Encodable {
+    public struct Range: Encodable {
+        public let contract: String
+        public let position: Double
+        public let duration: Double
+        public let offset: Double
+        init(_ range: CPRSourceEventTimelineRange) {
+            contract = range.contract; position = range.position; duration = range.duration; offset = range.offset
+        }
+    }
+    public struct Contributor: Encodable {
+        public let eventID: UUID
+        public let eventIdentity: Int
+        public let sourceOrdinal: Int
+        public let priority: Int32
+        public let sourceSampleRate: Double
+        public let mediaSHA256: String
+        public let canonicalStart: Double
+        public let canonicalEnd: Double
+        public let range: Range?
+        init(_ event: CPRSourceTrackPlaybackInfo.Event) {
+            eventID = event.eventID; eventIdentity = event.eventIdentity; sourceOrdinal = event.sourceOrdinal
+            priority = event.priority; sourceSampleRate = event.sourceSampleRate; mediaSHA256 = event.mediaSHA256
+            canonicalStart = event.canonicalStart; canonicalEnd = event.canonicalEnd; range = event.range.map(Range.init)
+        }
+    }
+    public struct Fragment: Encodable {
+        public let eventID: UUID
+        public let eventIdentity: Int
+        public let sourceOrdinal: Int
+        public let range: Range
+        init(_ fragment: CPRSourceTrackPlaybackInfo.Fragment) {
+            eventID = fragment.eventID; eventIdentity = fragment.eventIdentity
+            sourceOrdinal = fragment.sourceOrdinal; range = Range(fragment.range)
+        }
+    }
+    public struct Track: Encodable {
+        public let contract: String
+        public let freshRootMode: UInt32
+        public let trackIdentity: Int
+        public let events: [Contributor]
+        public let fragments: [Fragment]
+        public let snappedEmptyFragmentCount: Int
+        init(_ track: CPRSourceTrackPlaybackInfo) {
+            contract = track.contract; freshRootMode = track.freshRootMode; trackIdentity = track.trackIdentity
+            events = track.events.map(Contributor.init); fragments = track.fragments.map(Fragment.init)
+            snappedEmptyFragmentCount = track.snappedEmptyFragmentCount
+        }
+    }
+    public let schema = "rebase.source-audition-manifest.v1"
+    public let revision: UInt64
+    public let eventID: UUID
+    public let name: String
+    public let mode: String
+    public let sourceKind: String
+    public let clockRole: String
+    public let projectSampleRate: Double
+    public let currentNativeClock: NativeTempoClock?
+    public let preservedNativeClock: NativeTempoClock?
+    public let projectManifestSHA256: String
+    public let currentProjectSHA256: String
+    public let importReportSHA256: String
+    public let sourceSHA256: String
+    public let mediaSHA256: String
+    public let sampleRate: Double
+    public let sourceSampleRate: Double
+    public let frames: Int64
+    public let startFrame: Int64
+    public let totalFrames: Int64
+    public let channels = 2
+    public let maximumFrames = PortableSession.maximumSourceAuditionFrames
+    public let timelineRange: Range?
+    public let savedProjectAudioSetup: CPRProjectAudioSetup?
+    public let sourceTrack: Track?
+    public let wavFileName: String
+    public let wavBytes: Int
+    public let wavSHA256: String
 }
 
 /// Serialized document owner for a native host. The host sends intents; all
@@ -93,6 +205,8 @@ public final class PortableSession {
     /// Bounds growth through individual protocol edits, without truncating or
     /// rejecting an existing larger lane when it is opened or reduced.
     public static let maximumEditableAutomationPoints = 4_096
+    public static let maximumSourceAuditionFrames: Int64 = 32_000_000
+    public static let maximumSourceAuditionManifestBytes = 8_388_608
     private var project: Project?
     private var savedProject: Project?
     private var root: URL?
@@ -144,7 +258,11 @@ public final class PortableSession {
             if request.command != "state" {
                 guard request.expectedRevision == revision else { throw failure("staleRevision", "The project changed. Refresh its state before retrying.") }
             }
-            if request.command == "waveform" {
+            if request.command == "inspectSourceEvent" {
+                let inspection = try inspectSourceEvent(request)
+                reply = .init(id: id, ok: true, state: state, render: nil, waveform: nil, ruler: nil,
+                    cprReview: nil, sourceInspection: inspection, error: nil)
+            } else if request.command == "waveform" {
                 let envelope = try waveform(request)
                 reply = .init(id: id, ok: true, state: state, render: nil, waveform: envelope, ruler: nil, cprReview: nil, error: nil)
             } else if request.command == "ruler" {
@@ -404,16 +522,12 @@ public final class PortableSession {
                   current.unresolvedAudioEvents.contains(where: { $0.id == eventID }) else {
                 throw failure("selection", "Select a preserved source event.")
             }
-            let destination = try requiredURL(request.path)
-            let rendered = try CPRSourceEventRenderer.renderAudition(eventID: eventID, in: current,
-                at: root, to: destination)
-            let size = try destination.resourceValues(forKeys: [.fileSizeKey]).fileSize
-            guard let size, size > 0 else { throw failure("render", "The source preview has no file data.") }
-            return .init(path: try nativePath(destination), revision: revision,
-                sampleRate: Double(rendered.sampleRate), frames: Int64(rendered.frameCount),
-                channels: rendered.channelCount, wavBytes: size, sha256: rendered.outputSHA256,
-                kind: "sourceEvent", eventID: eventID, sourceSHA256: rendered.sourceSHA256,
-                mediaSHA256: rendered.mediaSHA256)
+            guard let mode = CPRSourceEventPlaybackMode(rawValue: request.mode ?? "sourceRate") else {
+                throw failure("sourceMode", "Choose a supported source audition mode.")
+            }
+            return try renderSourceEvent(eventID: eventID, mode: mode, project: current, root: root,
+                destination: requiredURL(request.path), startSeconds: request.startSeconds ?? 0,
+                rewindAtEnd: request.rewindAtEnd == true)
         default:
             if let edit = try makeEdit(request, project: current, root: root),
                let result = try history.apply(edit, to: current, selection: selection) {
@@ -518,6 +632,235 @@ public final class PortableSession {
             return .replaceTempoMap(map)
         default: throw failure("command", "Unknown session command.")
         }
+    }
+
+    private func inspectSourceEvent(_ request: PortableSessionRequest) throws -> PortableSessionReply.SourceInspection {
+        guard let current = project, let root else { throw failure("noProject", "Open a project first.") }
+        try checkSourceUnchanged(root)
+        guard let eventID = request.clipID else { throw failure("selection", "Select a preserved source event.") }
+        let verified = try ProjectStore.verifiedCPRSourceEvent(eventID, in: current, at: root)
+        var modes: [PortableSessionReply.SourceMode] = []
+        for mode in CPRSourceEventPlaybackMode.allCases {
+            do {
+                // Preparation validates the supported source interpretation and
+                // media. It does not drain a converter or promise device playback.
+                let prepared = try CPRSourceAudition.prepare(eventID: eventID, in: current, at: root, mode: mode)
+                let info = prepared.info
+                guard info.sourceSHA256 == verified.container.sha256 else {
+                    throw failure("externalChange", "The preserved source changed during inspection.")
+                }
+                let available = info.frameCount > 0 && info.frameCount <= Self.maximumSourceAuditionFrames
+                modes.append(.init(mode: mode.rawValue, available: available,
+                    reason: available ? nil : "This preview exceeds the 32 million frame snapshot limit; streaming is required.",
+                    sampleRate: info.sampleRate, frames: info.frameCount, sourceSampleRate: info.sourceSampleRate,
+                    mediaSHA256: info.mediaSHA256, timelineRange: info.timelineRange.map(PortableSourceAuditionManifest.Range.init),
+                    savedProjectAudioSetup: info.savedProjectAudioSetup, contributorCount: info.sourceTrack?.events.count ?? 1,
+                    fragmentCount: info.sourceTrack?.fragments.count ?? (info.timelineRange == nil ? 0 : 1)))
+            } catch {
+                modes.append(.init(mode: mode.rawValue, available: false, reason: error.localizedDescription,
+                    sampleRate: nil, frames: nil, sourceSampleRate: nil, mediaSHA256: nil, timelineRange: nil,
+                    savedProjectAudioSetup: nil, contributorCount: nil, fragmentCount: nil))
+            }
+        }
+        try checkSourceUnchanged(root)
+        let after = try ProjectStore.verifiedCPRSourceEvent(eventID, in: current, at: root)
+        guard after.container.sha256 == verified.container.sha256 else {
+            throw failure("externalChange", "The preserved source changed during inspection.")
+        }
+        let result = PortableSessionReply.SourceInspection(revision: revision, eventID: eventID,
+            sourceSHA256: verified.container.sha256, modes: modes)
+        guard try JSONEncoder().encode(result).count <= 131_072 else {
+            throw failure("sourceInspectionLimit", "The complete source inspection exceeds the reply limit.")
+        }
+        return result
+    }
+
+    private func sourceOutputURL(_ requested: URL, outside root: URL) throws -> URL {
+        let output = requested.standardizedFileURL
+        let parent = output.deletingLastPathComponent()
+        try ProjectFileIO.requireRealDirectory(parent)
+        guard ProjectFileIO.samePath(output, try ProjectFileIO.canonicalRoot(output)),
+              !ProjectFileIO.samePath(output, root), !ProjectFileIO.contains(output, in: root),
+              (try? FileManager.default.attributesOfItem(atPath: output.path)) == nil else {
+            throw failure("destination", "Choose new output files outside the source project; existing files and links are never replaced.")
+        }
+        return output
+    }
+
+    private func readSourceManifestFile(_ url: URL) throws -> Data {
+        guard ProjectFileIO.samePath(url, try ProjectFileIO.canonicalRoot(url)),
+              try !ProjectFileIO.isLinkOrReparsePoint(url) else {
+            throw failure("externalChange", "The source report must remain a regular file.")
+        }
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        guard attributes[.type] as? FileAttributeType == .typeRegular,
+              let size = (attributes[.size] as? NSNumber)?.intValue,
+              (1...Self.maximumSourceAuditionManifestBytes).contains(size) else {
+            throw failure("sourceManifestLimit", "The source report exceeds the bounded file contract.")
+        }
+        let file = try FileHandle(forReadingFrom: url)
+        defer { try? file.close() }
+        let bytes = try file.read(upToCount: size + 1) ?? Data()
+        guard bytes.count == size else { throw failure("externalChange", "The source report changed while being read.") }
+        return bytes
+    }
+
+    private func revalidateAudition(_ info: CPRSourceEventPlaybackInfo, project: Project, root: URL,
+                                    reportBytes: Data) throws {
+        try checkSourceUnchanged(root)
+        let verified = try ProjectStore.verifiedCPRSourceEvent(info.eventID, in: project, at: root)
+        guard verified.container.sha256 == info.sourceSHA256,
+              try readSourceManifestFile(root.appendingPathComponent(CPRProject.reportRelativePath)) == reportBytes else {
+            throw failure("externalChange", "The source or import report changed during audition preparation.")
+        }
+        let identities = info.sourceTrack?.events.map { ($0.eventID, $0.mediaSHA256) } ?? [(info.eventID, info.mediaSHA256)]
+        for (id, digest) in identities {
+            guard let event = project.unresolvedAudioEvents.first(where: { $0.id == id }),
+                  let attachment = project.attachedMedia(for: event), attachment.mediaSHA256 == digest else {
+                throw failure("externalChange", "An audition contributor no longer has its verified media association.")
+            }
+            let url = try CPRAudioMediaValidation.attachedURL(attachment.mediaPath, root: root)
+            guard PortableSHA256.hexDigest(try CPRAudioMediaValidation.snapshot(url)) == digest else {
+                throw failure("externalChange", "An audition contributor's media changed before publication.")
+            }
+        }
+    }
+
+    private func renderSourceEvent(eventID: UUID, mode: CPRSourceEventPlaybackMode, project: Project,
+                                   root: URL, destination: URL, startSeconds: Double,
+                                   rewindAtEnd: Bool) throws -> PortableSessionReply.Render {
+        guard startSeconds.isFinite, startSeconds >= 0 else {
+            throw failure("sourceSeek", "Source audition time must be finite and nonnegative.")
+        }
+        guard ["wav", "wave"].contains(destination.pathExtension.lowercased()) else {
+            throw failure("destination", "Choose a new WAV outside the project folder.")
+        }
+        let output = try sourceOutputURL(destination, outside: root)
+        let sidecar = try sourceOutputURL(output.appendingPathExtension("source-audition.json"), outside: root)
+        // Resolve returned paths before publishing either output.
+        let outputPath = try nativePath(output), sidecarPath = try nativePath(sidecar)
+        let reportURL = root.appendingPathComponent(CPRProject.reportRelativePath)
+        let reportBytes = try readSourceManifestFile(reportURL)
+        guard let report = try CPRProject.compatibilityReport(from: root),
+              try readSourceManifestFile(reportURL) == reportBytes else {
+            throw failure("externalChange", "The verified import report changed before source preparation.")
+        }
+        let prepared = try CPRSourceAudition.prepare(eventID: eventID, in: project, at: root, mode: mode)
+        let info = prepared.info
+        guard info.frameCount > 0, info.frameCount <= Self.maximumSourceAuditionFrames else {
+            throw failure("sourceFrameLimit", "This preview exceeds the 32 million frame snapshot limit; streaming is required.")
+        }
+        guard info.sampleRate.isFinite, let rate = UInt32(exactly: info.sampleRate), rate > 0, rate <= UInt32.max / 8,
+              info.mode == mode, info.eventID == eventID,
+              prepared.frameCount == info.frameCount, prepared.sampleRate == info.sampleRate else {
+            throw failure("sourceRender", "Source audition metadata is inconsistent.")
+        }
+        let roundedFrame = try prepared.startFrame(at: startSeconds)
+        let startFrame: Int64 = rewindAtEnd && roundedFrame == info.frameCount ? 0 : roundedFrame
+        let remainingFrames = info.frameCount - startFrame
+        // The 58-byte IEEE-float/fact header is the existing authored writer
+        // contract. Blocks are already in the shared playback output domain;
+        // do not rerun gain, conversion, ring transfer or callback processing.
+        func le<T: FixedWidthInteger>(_ value: T) -> Data {
+            var little = value.littleEndian; return withUnsafeBytes(of: &little) { Data($0) }
+        }
+        let pcmBytes = Int(remainingFrames) * 8
+        var wave = Data("RIFF".utf8) + le(UInt32(50 + pcmBytes)) + Data("WAVEfmt ".utf8)
+        wave += le(UInt32(18)) + le(UInt16(3)) + le(UInt16(2)) + le(rate)
+        wave += le(rate * 8) + le(UInt16(8)) + le(UInt16(32)) + le(UInt16(0))
+        wave += Data("fact".utf8) + le(UInt32(4)) + le(UInt32(remainingFrames))
+        wave += Data("data".utf8) + le(UInt32(pcmBytes))
+        wave.reserveCapacity(58 + pcmBytes)
+        let cursor = try prepared.cursor(from: startFrame)
+        var frames: Int64 = 0
+        while let block = try cursor.nextPlaybackBlock() {
+            guard block.frameCount > 0, Int64(block.frameCount) <= remainingFrames - frames,
+                  block.left.count == block.frameCount, block.right.count == block.frameCount else {
+                throw failure("sourceRender", "The source cursor returned an invalid or excessive block.")
+            }
+            let samples = block.interleaved
+            guard samples.count == block.frameCount * 2, samples.allSatisfy(\.isFinite) else {
+                throw failure("sourceRender", "The source cursor returned non-finite or incomplete samples.")
+            }
+            #if _endian(little)
+            samples.withUnsafeBytes { wave.append(contentsOf: $0) }
+            #else
+            for sample in samples { wave += le(sample.bitPattern) }
+            #endif
+            frames += Int64(block.frameCount)
+        }
+        guard frames == remainingFrames, wave.count == 58 + pcmBytes else {
+            throw failure("sourceRender", "The source cursor ended before its declared output frame count.")
+        }
+        let outputDigest = PortableSHA256.hexDigest(wave)
+        let clockRole: String
+        switch mode {
+        case .sourceRate: clockRole = "source-rate"
+        case .nativeTimelineSourceRate: clockRole = "source-clock-unconverted"
+        case .nativeTimelineProjectClock: clockRole = "current-project-clock-unconverted"
+        case .nativeTimelineSavedProjectClock, .nativeTrackSavedProjectClock: clockRole = "saved-project-clock-unconverted"
+        case .nativeMode0ProjectRate, .nativeMode1ProjectRate, .nativeMode2ProjectRate: clockRole = "current-project-rate-converted"
+        }
+        let manifest = PortableSourceAuditionManifest(revision: revision, eventID: eventID, name: info.name,
+            mode: mode.rawValue, sourceKind: info.sourceTrack == nil ? "event" : "track", clockRole: clockRole,
+            projectSampleRate: project.sampleRate, currentNativeClock: project.tempoMap.nativeClock,
+            preservedNativeClock: report.nativeClock, projectManifestSHA256: try digestManifest(root),
+            currentProjectSHA256: PortableSHA256.hexDigest(try ProjectStore.encodedManifest(project)),
+            importReportSHA256: PortableSHA256.hexDigest(reportBytes), sourceSHA256: info.sourceSHA256,
+            mediaSHA256: info.mediaSHA256, sampleRate: info.sampleRate, sourceSampleRate: info.sourceSampleRate,
+            frames: frames, startFrame: startFrame, totalFrames: info.frameCount,
+            timelineRange: info.timelineRange.map(PortableSourceAuditionManifest.Range.init),
+            savedProjectAudioSetup: info.savedProjectAudioSetup, sourceTrack: info.sourceTrack.map(PortableSourceAuditionManifest.Track.init),
+            wavFileName: output.lastPathComponent, wavBytes: wave.count, wavSHA256: outputDigest)
+        let encoder = JSONEncoder(); encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
+        let proof = try encoder.encode(manifest)
+        guard proof.count <= Self.maximumSourceAuditionManifestBytes else {
+            throw failure("sourceManifestLimit", "The complete audition provenance exceeds 8 MiB; no contributors were omitted.")
+        }
+        let parent = output.deletingLastPathComponent()
+        let stage = parent.appendingPathComponent(".rebase-source-wave-" + UUID().uuidString)
+        let proofStage = parent.appendingPathComponent(".rebase-source-proof-" + UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: stage); try? FileManager.default.removeItem(at: proofStage) }
+        try wave.write(to: stage, options: .withoutOverwriting)
+        try proof.write(to: proofStage, options: .withoutOverwriting)
+        // Re-read exact staged bytes and all contributor media before exposing
+        // either file. The output limit is checked before the WAV allocation.
+        let stagedAttributes = try FileManager.default.attributesOfItem(atPath: stage.path)
+        guard stagedAttributes[.type] as? FileAttributeType == .typeRegular,
+              (stagedAttributes[.size] as? NSNumber)?.intValue == wave.count,
+              try !ProjectFileIO.isLinkOrReparsePoint(stage) else {
+            throw failure("sourceRender", "The staged audition is no longer the completed regular file.")
+        }
+        let stagedFile = try FileHandle(forReadingFrom: stage)
+        let stagedBytes: Data
+        do { defer { try? stagedFile.close() }; stagedBytes = try stagedFile.read(upToCount: wave.count + 1) ?? Data() }
+        guard stagedBytes == wave, try readSourceManifestFile(proofStage) == proof else {
+            throw failure("sourceRender", "The staged audition changed before publication.")
+        }
+        try revalidateAudition(info, project: project, root: root, reportBytes: reportBytes)
+        _ = try sourceOutputURL(output, outside: root)
+        _ = try sourceOutputURL(sidecar, outside: root)
+        try ProjectFileIO.publishNewFile(proofStage, to: sidecar)
+        do {
+            try ProjectFileIO.publishNewFile(stage, to: output)
+        } catch {
+            // Delete only the exact hard link we published. If ownership cannot
+            // be proved, preserve the file and report possible publication.
+            let staged = try? FileManager.default.attributesOfItem(atPath: proofStage.path)
+            let published = try? FileManager.default.attributesOfItem(atPath: sidecar.path)
+            if let inode = staged?[.systemFileNumber] as? NSNumber,
+               published?[.type] as? FileAttributeType == .typeRegular,
+               published?[.systemFileNumber] as? NSNumber == inode,
+               (try? ProjectFileIO.isLinkOrReparsePoint(sidecar)) == false {
+                try? FileManager.default.removeItem(at: sidecar)
+            }
+            throw failure("sourcePublicationIncomplete", "The audition could not be published completely. Its provenance file may exist; existing outputs are never replaced.")
+        }
+        return .init(path: outputPath, revision: revision, sampleRate: info.sampleRate, frames: frames,
+            channels: 2, wavBytes: wave.count, sha256: outputDigest, kind: "sourceEvent", eventID: eventID,
+            sourceSHA256: info.sourceSHA256, mediaSHA256: info.mediaSHA256, mode: mode.rawValue,
+            manifestPath: sidecarPath, manifestSHA256: PortableSHA256.hexDigest(proof), manifestBytes: proof.count,
+            startFrame: startFrame, totalFrames: info.frameCount)
     }
 
     private func requiredURL(_ path: String?) throws -> URL {

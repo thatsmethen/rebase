@@ -1,4 +1,3 @@
-import AVFoundation
 import Foundation
 import RebaseTimingDSP
 
@@ -50,7 +49,7 @@ struct CPRNativeTimelineStream {
         let endFrame: Int64
     }
 
-    let format: AVAudioFormat
+    let sampleRate: Double
     let frameCount: Int64
     private let period: Double
     private let segments: [BoundSegment]
@@ -103,8 +102,7 @@ struct CPRNativeTimelineStream {
         self.period = period
         self.segments = bound
         frameCount = previousEnd
-        format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: sampleRate,
-                              channels: 2, interleaved: false)!
+        self.sampleRate = sampleRate
     }
 
     func cursor(from frame: Int64) throws -> Cursor {
@@ -135,84 +133,85 @@ struct CPRNativeTimelineStream {
 
         /// The block size is application policy. Equal-rate direct source reads
         /// have no converter history. No audition FIFO or resampler is used.
-        func nextBuffer(maximumFrames: Int = 4096) throws -> AVAudioPCMBuffer? {
+        func nextPlaybackBlock(maximumFrames: Int = 4096) throws -> StereoPCMBlock? {
             guard (1...65_536).contains(maximumFrames) else { throw CPRNativeTimelineStream.invalid }
             guard !isAtEnd else { return nil }
             let first = deliveredFrames
             let end = min(stream.frameCount, first + Int64(maximumFrames))
             let frames = Int(end - first)
-            let buffer = try AudioPreparation.buffer(format: stream.format, frames: frames)
-            let channels = buffer.floatChannelData!
-            for channel in 0..<2 { channels[channel].update(repeating: 0, count: frames) }
+            var buffer = try StereoPCMBlock(frameCount: frames)
             var position = first
             var index = segmentIndex
-            while position < end {
-                // The native lease survives another block selecting the same
-                // descriptor, and ends when selection changes (including nil).
-                // A dictionary of every visited segment would retain history
-                // beyond the native last-descriptor cache's lifetime.
-                if activeAccessor?.segment != index || index >= stream.segments.count {
-                    activeAccessor = nil
-                }
-                var plan = RBTimelinePlan()
-                let status: Int32
-                if index < stream.segments.count {
-                    var descriptor = stream.segments[index].descriptor
-                    status = rb_cpr_timeline_plan(first, end, position, stream.period, &descriptor, &plan)
-                } else {
-                    status = rb_cpr_timeline_plan(first, end, position, stream.period, nil, &plan)
-                }
-                guard status == 0 else { throw CPRNativeTimelineStream.invalid }
-                if plan.action == RB_TIMELINE_SKIP {
-                    guard index < stream.segments.count else { throw CPRNativeTimelineStream.invalid }
-                    index += 1
-                    continue
-                }
-                if plan.action == RB_TIMELINE_READ {
-                    guard index < stream.segments.count, plan.readFrames > 0,
-                          plan.sourceSeek >= 0, plan.readOffset >= 0,
-                          plan.readOffset + plan.readFrames <= Int64(frames) else {
-                        throw CPRNativeTimelineStream.invalid
+            try buffer.withUnsafeMutableChannels { left, right in
+                let channels = [left, right]
+                while position < end {
+                    // The native lease survives another block selecting the same
+                    // descriptor, and ends when selection changes (including nil).
+                    // A dictionary of every visited segment would retain history
+                    // beyond the native last-descriptor cache's lifetime.
+                    if activeAccessor?.segment != index || index >= stream.segments.count {
+                        activeAccessor = nil
                     }
-                    let source = stream.segments[index].source
-                    guard plan.sourceSeek + plan.readFrames <= Int64(source.samples.count / 2) else {
-                        throw CPRNativeTimelineStream.invalid
+                    var plan = RBTimelinePlan()
+                    let status: Int32
+                    if index < stream.segments.count {
+                        var descriptor = stream.segments[index].descriptor
+                        status = rb_cpr_timeline_plan(first, end, position, stream.period, &descriptor, &plan)
+                    } else {
+                        status = rb_cpr_timeline_plan(first, end, position, stream.period, nil, &plan)
                     }
-                    let count = Int(plan.readFrames)
-                    // The ordinary native reader does not set accessor rate.
-                    // Its source-owned rate therefore stays unchanged even
-                    // when the timeline consumes these raw frames at a different
-                    // clock rate. No rate conversion is inserted here.
-                    let accessor: CPRNativeAudioAccessor
-                    if let cached = activeAccessor { accessor = cached.accessor }
-                    else {
-                        accessor = try CPRNativeAudioAccessor(source: source.samples,
-                            sourceRate: source.sourceRate,
-                            outputRate: source.sourceRate)
-                        activeAccessor = (index, accessor)
+                    guard status == 0 else { throw CPRNativeTimelineStream.invalid }
+                    if plan.action == RB_TIMELINE_SKIP {
+                        guard index < stream.segments.count else { throw CPRNativeTimelineStream.invalid }
+                        index += 1
+                        continue
                     }
-                    _ = try accessor.seek(to: plan.sourceSeek)
-                    let read = try accessor.read(requestedFrames: count)
-                    var decision = RBTimelineReadDecision()
-                    guard rb_cpr_timeline_read_result(Int32(count), plan.readBegin, plan.segmentStart,
-                        0, Int32(read.returnedOutputFrames), &decision) == 0,
-                        decision.action == RB_TIMELINE_READ_COMPLETE else { throw CPRNativeTimelineStream.invalid }
-                    for channel in 0..<2 {
-                        let output = channels[channel].advanced(by: Int(plan.readOffset))
-                        for frame in 0..<count {
-                            output[frame] = read.samples[frame * 2 + channel]
-                        }
-                        guard rb_cpr_event_gain_f32(output, count, source.gain.bitPattern) == 0 else {
+                    if plan.action == RB_TIMELINE_READ {
+                        guard index < stream.segments.count, plan.readFrames > 0,
+                              plan.sourceSeek >= 0, plan.readOffset >= 0,
+                              plan.readOffset + plan.readFrames <= Int64(frames) else {
                             throw CPRNativeTimelineStream.invalid
                         }
+                        let source = stream.segments[index].source
+                        guard plan.sourceSeek + plan.readFrames <= Int64(source.samples.count / 2) else {
+                            throw CPRNativeTimelineStream.invalid
+                        }
+                        let count = Int(plan.readFrames)
+                        // The ordinary native reader does not set accessor rate.
+                        // Its source-owned rate therefore stays unchanged even
+                        // when the timeline consumes these raw frames at a different
+                        // clock rate. No rate conversion is inserted here.
+                        let accessor: CPRNativeAudioAccessor
+                        if let cached = activeAccessor { accessor = cached.accessor }
+                        else {
+                            accessor = try CPRNativeAudioAccessor(source: source.samples,
+                                sourceRate: source.sourceRate,
+                                outputRate: source.sourceRate)
+                            activeAccessor = (index, accessor)
+                        }
+                        _ = try accessor.seek(to: plan.sourceSeek)
+                        let read = try accessor.read(requestedFrames: count)
+                        var decision = RBTimelineReadDecision()
+                        guard rb_cpr_timeline_read_result(Int32(count), plan.readBegin, plan.segmentStart,
+                            0, Int32(read.returnedOutputFrames), &decision) == 0,
+                            decision.action == RB_TIMELINE_READ_COMPLETE else { throw CPRNativeTimelineStream.invalid }
+                        for channel in 0..<2 {
+                            let output = channels[channel].advanced(by: Int(plan.readOffset))
+                            for frame in 0..<count {
+                                output[frame] = read.samples[frame * 2 + channel]
+                            }
+                            guard rb_cpr_event_gain_f32(output, count, source.gain.bitPattern) == 0 else {
+                                throw CPRNativeTimelineStream.invalid
+                            }
+                        }
                     }
+                    guard plan.nextCursor > position || plan.stopAfter != 0 else { throw CPRNativeTimelineStream.invalid }
+                    position = plan.nextCursor
+                    if plan.stopAfter != 0 { break }
+                    // The native selector advances its current node after each
+                    // segment. Our admitted sorted list has no concurrent mutation.
+                    index += 1
                 }
-                guard plan.nextCursor > position || plan.stopAfter != 0 else { throw CPRNativeTimelineStream.invalid }
-                position = plan.nextCursor
-                if plan.stopAfter != 0 { break }
-                // The native selector advances its current node after each
-                // segment. Our admitted sorted list has no concurrent mutation.
-                index += 1
             }
             // Publish cursor progress only after the complete block succeeds.
             deliveredFrames = end
@@ -221,3 +220,17 @@ struct CPRNativeTimelineStream {
         }
     }
 }
+
+#if canImport(AVFoundation) && !REBASE_PORTABLE
+import AVFoundation
+
+extension CPRNativeTimelineStream {
+    var format: AVAudioFormat { StereoPCMBlock.audioFormat(sampleRate: sampleRate) }
+}
+
+extension CPRNativeTimelineStream.Cursor {
+    func nextBuffer(maximumFrames: Int = 4096) throws -> AVAudioPCMBuffer? {
+        try nextPlaybackBlock(maximumFrames: maximumFrames)?.audioBuffer(sampleRate: stream.sampleRate)
+    }
+}
+#endif

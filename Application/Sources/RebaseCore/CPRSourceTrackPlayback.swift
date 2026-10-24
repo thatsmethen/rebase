@@ -36,9 +36,9 @@ public struct CPRSourceTrackPlaybackInfo: Equatable {
 /// Entire contributor membership/media verification completes before transport
 /// installation, including source events completely covered by stronger events.
 enum CPRSourceTrackPlayback {
-    static func prepare(eventID: UUID, project: Project, root: URL) throws
+    static func prepareStream(eventID: UUID, project: Project, root: URL) throws
         -> (track: CPRSourceTrackPlaybackInfo, setup: CPRProjectAudioSetup,
-            name: String, sourceSHA256: String, audio: PreparedProject) {
+            name: String, sourceSHA256: String, stream: CPRNativeTimelineStream) {
         let plan = try CPRSourceTrackPlan.make(eventID: eventID, project: project, root: root)
         let rate = try plan.setup.supportedSampleRate()
         var remainingSamples = 32_000_000
@@ -76,7 +76,6 @@ enum CPRSourceTrackPlayback {
             freshRootMode: 0, trackIdentity: plan.track.track.identityOffset, events: events,
             fragments: fragments, snappedEmptyFragmentCount: plan.snappedEmptyFragmentCount),
             plan.setup, plan.track.name, plan.setup.sourceSHA256,
-            PreparedProject(format: stream.format, frameCount: stream.frameCount,
-                clips: [], nativeTimelineStream: stream))
+            stream)
     }
 }

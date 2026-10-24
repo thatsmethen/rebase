@@ -17,6 +17,7 @@ import zipfile
 
 from windows_automation_gate import require_automation_protocol, require_automation_window
 from windows_soxr_package import stage_soxr
+from cpr_audition_gate import require_cpr_audition, require_cpr_audition_window
 
 SDK = "10.0.402"
 DOTNET_RUNTIME = "10.0.13"
@@ -879,6 +880,9 @@ def main():
         shutil.copyfile(evidence / "native/build/RebaseWindowsAudio.dll", stage / "RebaseWindowsAudio.dll")
         report["device_resampler"] = stage_soxr(app, evidence / "native/soxr", stage, env.get("GITHUB_SHA"))
         write(evidence / "device-resampler-package.json", report["device_resampler"])
+        # Both explicit CPR mode 2 and the separate endpoint-rate adapter link
+        # this same verified public library; their caller profiles stay distinct.
+        env["REBASE_SOXR_LIBRARY_DIR"] = str(evidence / "native/soxr/install/lib")
         run(["dotnet", "publish", str(app / "Windows/RebaseWindows/RebaseWindows.csproj"), "-c", "Release",
              "-r", "win-x64", "--self-contained", "true", "-p:PublishTrimmed=false", "-p:PublishSingleFile=false",
              "-p:DebugType=None", "-p:DebugSymbols=false", "-p:ContinuousIntegrationBuild=true",
@@ -912,6 +916,10 @@ def main():
                                if row["path"].lower() == "rebasewindowsaudio.dll"), [])
         if {"name": "soxr.dll", "source": "application"} not in native_imports:
             raise RuntimeError("Native device adapter does not import the packaged SoXR DLL")
+        helper_imports = next((row["imports"] for row in closure["images"]
+                               if row["path"].lower() == "rebase-session.exe"), [])
+        if {"name": "soxr.dll", "source": "application"} not in helper_imports:
+            raise RuntimeError("Shared CPR helper does not import the packaged SoXR DLL")
         write(evidence / "pe-dependency-closure.json", closure)
         example = copy_example(app, stage)
         licenses = stage / "ThirdPartyNotices"
@@ -934,7 +942,9 @@ def main():
             "This preview supports a bounded set of shared project editing and rendering workflows.\n"
             "Stereo Float32 playback adapts 8–192 kHz snapshots to the default endpoint using bundled SoXR.\n"
             "Source and converted snapshots are each limited to 32 million stereo frames.\n"
-            "Recording, plugins, native CPR timeline modes and streaming playback remain incomplete.\n"
+            "Source Audio exposes eight shared audition modes, including retained timeline and complete-track snapshots.\n"
+            "Availability requires verified media, timing and saved-clock data; exports preserve full provenance.\n"
+            "Recording, plugins, general project compatibility and streaming playback remain incomplete.\n"
             "CI window checks do not establish audio-device playback or complete application parity.\n"
             "Source and development notes: https://github.com/thatsmethen/rebase"
             "\n", encoding="utf-8")
@@ -957,6 +967,12 @@ def main():
         expected_source = json.loads(source_lock.read_text(encoding="utf-8"))
         fixture_bytes = {path.relative_to(fixture).as_posix(): digest(path)
                          for path in fixture.rglob("*") if path.is_file()}
+        modes_fixture = app / "Tests/Fixtures/SourceAuditionModes"
+        if not (modes_fixture / "expected.json").is_file() or inside(modes_fixture, stage):
+            raise RuntimeError("The external authored all-mode source fixture is unavailable")
+        modes_fixture_bytes = {path.relative_to(modes_fixture).as_posix(): digest(path)
+                               for path in modes_fixture.rglob("*") if path.is_file()}
+        restricted["REBASE_SMOKE_SOURCE_MODES_FIXTURE"] = str(modes_fixture)
         run([sys.executable, str(app / "scripts/check-session-protocol.py"), "--helper", str(stage / "rebase-session.exe"),
              "--example", str(example), "--report", str(evidence / "packaged-session-protocol.json"),
              "--source-project", str(source_project), "--source-media", str(source_media), "--source-lock", str(source_lock)],
@@ -985,10 +1001,19 @@ def main():
             raise RuntimeError("Packaged CPR import protocol checks did not pass")
         require_automation_protocol(session, json.loads((example / "Project.json").read_text(encoding="utf-8")),
                                     json.loads((app / "scripts/example-render-lock.json").read_text(encoding="utf-8")))
+        modes_result_path = evidence / "packaged-cpr-audition-modes.json"
+        run([sys.executable, str(app / "scripts/check-cpr-audition-modes.py"),
+             "--helper", str(stage / "rebase-session.exe"), "--fixtures", str(modes_fixture),
+             "--report", str(modes_result_path)], "packaged-cpr-audition-modes", restricted, timeout=600, cwd=stage)
+        modes_lock = modes_fixture / "expected.json"
+        report["cpr_audition_control"] = require_cpr_audition(
+            json.loads(modes_result_path.read_text(encoding="utf-8")), json.loads(modes_lock.read_text(encoding="utf-8")),
+            digest(modes_lock), digest(stage / "rebase-session.exe"))
+        report["cpr_audition_control"]["receipt_sha256"] = digest(modes_result_path)
         smoke_path = evidence / "wpf-smoke.json"
         run([str(stage / "Rebase.exe"), "--smoke", "--smoke-json", str(smoke_path),
              "--smoke-source-project", str(source_project), "--smoke-source-media", str(source_media)],
-            "packaged-window-smoke", restricted, timeout=240, cwd=stage)
+            "packaged-window-smoke", restricted, timeout=300, cwd=stage)
         smoke = json.loads(smoke_path.read_text(encoding="utf-8"))
         if (smoke.get("suite") != "windows-wpf-shared-session-smoke" or smoke.get("outcome") != "passed"
                 or smoke.get("stage") != "completed" or smoke.get("playback_tested") is not False
@@ -1036,10 +1061,12 @@ def main():
         require_top_rows(smoke, evidence, digest(example / "Project.json"), expected_source)
         require_automation_window(smoke, evidence, json.loads((example / "Project.json").read_text(encoding="utf-8")),
                                   json.loads((app / "scripts/example-render-lock.json").read_text(encoding="utf-8")))
+        report["source_modes_window_control"] = require_cpr_audition_window(smoke, evidence,
+            json.loads(modes_lock.read_text(encoding="utf-8")), json.loads(modes_result_path.read_text(encoding="utf-8")))
         modules = {"process": validate_modules(smoke.pop("process_modules", None), stage, windows,
                                                {"rebase.exe", "coreclr.dll", "rebasewindowsaudio.dll", "soxr.dll"}),
                    "helper": validate_modules(smoke.pop("helper_modules", None), stage, windows,
-                                              {"rebase-session.exe", "swiftcore.dll"})}
+                                              {"rebase-session.exe", "swiftcore.dll", "soxr.dll"})}
         write(evidence / "loaded-modules.json", modules)
         write(smoke_path, smoke)
         bounds = smoke.get("window_bounds", {})
@@ -1071,14 +1098,19 @@ def main():
         if fixture_bytes != {path.relative_to(fixture).as_posix(): digest(path)
                              for path in fixture.rglob("*") if path.is_file()}:
             raise RuntimeError("A package check changed the authored source fixture")
+        if modes_fixture_bytes != {path.relative_to(modes_fixture).as_posix(): digest(path)
+                                   for path in modes_fixture.rglob("*") if path.is_file()}:
+            raise RuntimeError("A package check changed the authored all-mode source fixture")
         # Keep this mandatory gate after window diagnostics, before any downloadable ZIP.
         # An application smoke pass cannot turn a failed/empty Release suite into success.
         run([sys.executable, str(app / "scripts/run-portable-ci.py"), "swift", "--configuration", "Release",
-             "--output", str(evidence / "shared")], "shared-release-conformance", timeout=900)
+             "--output", str(evidence / "shared"), "--soxr-build", str(evidence / "native/soxr")],
+             "shared-release-conformance", timeout=900)
         files = [{"path": path.relative_to(stage).as_posix(), "bytes": path.stat().st_size, "sha256": digest(path)}
                  for path in sorted(stage.rglob("*")) if path.is_file()]
         fixture_payload_hashes = {expected_source[key] for key in
                                   ("sourceSHA256", "mediaSHA256", "manifestSHA256", "reportSHA256", "outputSHA256")}
+        fixture_payload_hashes.update(modes_fixture_bytes.values())
         if any(item["sha256"] in fixture_payload_hashes for item in files):
             raise RuntimeError("A source-audition test payload was copied into the application package")
         if any(path.is_symlink() for path in stage.rglob("*")):
@@ -1100,6 +1132,7 @@ def main():
                                                 "sha256": digest(archive)}, window_smoke_tested=True,
                       dialogs_tested=False, dependency_closure_checked=True, app_local_modules_observed=True)
         report.update(source_journey_tested=True, source_fixture_shipped=False, real_waveform_checks_passed=True)
+        report["source_modes_fixture_shipped"] = False
         report["pinned_track_headers_scroll_checked"] = True
         report["musical_ruler_placement_checked"] = True
     except Exception as error:

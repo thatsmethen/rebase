@@ -1,4 +1,3 @@
-import AVFoundation
 import Foundation
 import RebaseTimingDSP
 import RebaseSoXR
@@ -11,7 +10,7 @@ struct CPRRateConvertedStream {
     enum Algorithm { case nativeMode0, nativeMode1, nativeMode2 }
     static let inputBlockFrames = 8192
     let source: [Float]
-    let format: AVAudioFormat
+    let sampleRate: Double
     let frameCount: Int64
     let gain: Float
     enum ConverterState {
@@ -73,8 +72,7 @@ struct CPRRateConvertedStream {
         }
         self.source = source; self.gain = gain; initialState = state
         frameCount = Int64(count)
-        format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: outputRate,
-                              channels: 2, interleaved: false)!
+        sampleRate = outputRate
     }
 
     private static var preparationError: RebaseCoreError {
@@ -103,10 +101,10 @@ struct CPRRateConvertedStream {
         fileprivate init(stream: CPRRateConvertedStream, from first: Int64) throws {
             self.stream = stream; state = stream.initialState; deliveredFrames = first
             if case .mode2(let sourceRate) = state {
-                mode2 = try Mode2Converter(sourceRate: sourceRate, outputRate: stream.format.sampleRate)
+                mode2 = try Mode2Converter(sourceRate: sourceRate, outputRate: stream.sampleRate)
             } else { mode2 = nil }
             if case .mode1(let sourceRate) = state {
-                mode1 = try Mode1Converter(sourceRate: sourceRate, outputRate: stream.format.sampleRate)
+                mode1 = try Mode1Converter(sourceRate: sourceRate, outputRate: stream.sampleRate)
             } else { mode1 = nil }
             transfer = try CPRLiveStereoTransfer()
             // The end has no samples and does not need expensive preroll.
@@ -141,12 +139,12 @@ struct CPRRateConvertedStream {
             return result
         }
 
-        func nextBuffer() throws -> AVAudioPCMBuffer? {
+        func nextPlaybackBlock() throws -> StereoPCMBlock? {
             guard let values = try nextInterleaved() else { return nil }
             let frames = values.count / 2
-            let buffer = try AudioPreparation.buffer(format: stream.format, frames: frames)
-            try transfer.copy(values, to: buffer)
-            try CPRLiveCallbackAdapter.process(buffer)
+            var buffer = try StereoPCMBlock(frameCount: frames)
+            try transfer.copy(values, to: &buffer)
+            try CPRLiveCallbackAdapter.process(&buffer)
             return buffer
         }
 
@@ -312,3 +310,17 @@ struct CPRRateConvertedStream {
         }
     }
 }
+
+#if canImport(AVFoundation) && !REBASE_PORTABLE
+import AVFoundation
+
+extension CPRRateConvertedStream {
+    var format: AVAudioFormat { StereoPCMBlock.audioFormat(sampleRate: sampleRate) }
+}
+
+extension CPRRateConvertedStream.Cursor {
+    func nextBuffer() throws -> AVAudioPCMBuffer? {
+        try nextPlaybackBlock()?.audioBuffer(sampleRate: stream.sampleRate)
+    }
+}
+#endif

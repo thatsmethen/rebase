@@ -30,7 +30,8 @@ Every command except `state` includes the current `expectedRevision`. The helper
 | `saveAs` | `path`: a new, nonexistent `.rebaseproj` directory with an existing parent. |
 | `render` | `path`: a new WAV outside the source package. |
 | `attachSourceMedia` | `clipID`: retained event; `path`: explicitly selected matching PCM24 WAV. Shared history records the association and selects the event. |
-| `renderSourceEvent` | `clipID`: retained event; `path`: a new source-event WAV outside the package. |
+| `inspectSourceEvent` | `clipID`: retained event. Read-only preparation availability for all eight source modes. |
+| `renderSourceEvent` | `clipID`: retained event; `path`: a new WAV outside the package. Optional `mode` (default `sourceRate`), `startSeconds` (default 0), `rewindAtEnd` (default false). |
 | `waveform` | `clipID`: ordinary clip. Read-only source envelope, no revision change. |
 | `ruler` | Required finite `value`: pixels per second in 4…420. Optional finite `duration`: extent in seconds in 0…86,400. Read-only musical ticks, no revision change. |
 
@@ -134,11 +135,103 @@ The frontend verifies the returned path, revision, byte count, SHA-256, exact Fl
 
 `waveform` returns `waveform:{revision,clipID,sampleRate,sourceStartFrame,sourceFrames,mediaSHA256,peaks}` without changing the document or selection. The shared reducer reads at most 16 million source frames in bounded chunks and returns at most 1,600 finite nonnegative peaks across all channels. Source offset and duration truncate at the source sample rate; the interval ends at source EOF. Position, gain, pan and project rate do not alter the envelope. The digest identifies the actual WAV byte snapshot. The host rejects stale/deleted-clip replies; opening or saving under a new root clears its display cache, while trim/split require new source ranges. These peaks are display data, not evidence of device playback.
 
-`renderSourceEvent` uses the shared source-event renderer for an already-imported project. Its initial domain is a complete, zero-origin stereo PCM24 event at its saved source rate with the existing gain/fade/warp restrictions. It re-verifies preserved CPR bytes, the retained report/event relationship, and the attached media on each request. It never turns the event into an editable clip. The reply has `kind:"sourceEvent"`, `eventID`, `sourceSHA256`, and `mediaSHA256` in addition to the render fields above. The host checks those identities against the selected event and its attachment. Source audition has its own clock at the returned sample rate and must request a fresh render on resume and seek; a document revision alone does not establish unchanged external bytes. This command does not recover project mixing, effects, automation, or general native timeline playback.
+`inspectSourceEvent` returns `sourceInspection:{revision,eventID,sourceSHA256,
+availabilityScope:"preparation-only",maximumFrames:32000000,modes:[...]}`. There
+are exactly eight mode entries, in the order below. Each has `mode`, `available`,
+and an optional refusal `reason`. Successful preparation additionally supplies
+`sampleRate`, `frames`, `sourceSampleRate`, `mediaSHA256`, optional
+`timelineRange` and `savedProjectAudioSetup`, `contributorCount`, and
+`fragmentCount`. The complete inspection is bounded to 128 KiB; it is never
+truncated. Inspection prepares each mode without draining converter output or
+writing files. Availability is provisional until a fresh render succeeds; it
+does not establish device playback. Missing media or an unsupported mode-specific
+source shape is an explicit unavailable entry. Invalid preserved source/report
+provenance fails the inspection itself.
 
-The current adapter requires the default Windows endpoint to mix Float32 stereo at the rendered snapshot's exact sample rate. A mismatch is an explicit playback error. There is no hidden Windows resampling, alternate editing implementation, or claim of full macOS/native CPR parity in this host.
+| Mode | Clock and interpretation |
+| --- | --- |
+| `sourceRate` | Complete zero-origin stereo source at its saved rate, with event gain. |
+| `nativeTimelineSourceRate` | Retained placement/trim/offset, source clock, no resampling. |
+| `nativeTimelineProjectClock` | Retained placement using the current project clock, raw frames without resampling. |
+| `nativeTimelineSavedProjectClock` | Retained placement using the explicit preserved saved setup, raw frames without resampling. |
+| `nativeTrackSavedProjectClock` | Complete original source track, saved clock, normalized priority fragments with every original contributor verified. |
+| `nativeMode0ProjectRate` | Existing mode-0 converter into current project rate; equal rates remain unsupported. |
+| `nativeMode1ProjectRate` | Existing mode-1 converter into current project rate. |
+| `nativeMode2ProjectRate` | Public SoXR 0.1.3 mode-2 path into current project rate. This does not establish reference-library equality. |
 
+Unknown mode strings fail with `sourceMode`; an omitted mode preserves the
+original `sourceRate` WAV contract. These operations use the same prepared
+sources, timeline/conversion cursors and output stages as macOS. They preserve
+the existing stereo, gain, fade, warp, saved-setup, contributor-membership and
+priority restrictions. No event is promoted to an editable clip. Project mixer,
+effects, routing and ordinary automation are outside these explicit audition
+paths.
 
-A source-event render uses `kind:"sourceEvent"` and includes `eventID`, `sourceSHA256`, and `mediaSHA256` in the render object. The frontend requires all three to match the selected retained event and its single user-selected media association. It uses the snapshot rate and event-local time, not the project rate. Source audition never reuses a snapshot on the strength of a document revision alone. Resume and seek render afresh. Source seek follows the existing Mac host frame policy (nearest frame, ties away from zero); seek-to-end stays at the end, while Play/resume may restart. Revision-changing edits exit audition. Native transport receives stereo Float32 only; mono expansion is not performed by the host.
+`renderSourceEvent` always replays the source/report relationship and validates
+all relevant media. `startSeconds` must be finite and nonnegative. The shared
+macOS scheduling function applies native event selection where applicable,
+clamps to the freshly prepared duration, and rounds output frames to nearest,
+ties away from zero. `rewindAtEnd:true` restarts only if that result equals the
+total frame count. Each request creates a fresh cursor at the resulting frame;
+the host must not substitute a slice of a previously rendered full snapshot.
+
+The render reply adds `kind:"sourceEvent"`, `eventID`, `sourceSHA256`,
+`mediaSHA256`, `mode`, `startFrame`, `totalFrames`, `manifestPath`,
+`manifestSHA256`, and `manifestBytes`. `frames` is the remaining output count,
+so `startFrame + frames == totalFrames`. Exact EOF still revalidates all source
+bytes and returns a valid 58-byte zero-frame Float32 stereo WAV and complete
+provenance; the host marks playback finished without passing zero frames to the
+native audio adapter. Source audition never reuses external-byte validation on
+the strength of a revision alone. Resume and seek require fresh rendering.
+
+Every source WAV has a companion `requested.wav.source-audition.json`. The
+sidecar is compact UTF-8 JSON, encoded with sorted keys and unescaped slashes,
+bounded to 8 MiB. The returned digest identifies its exact bytes; hosts verify
+the digest, byte count, schema, source identities and complete contributor proof
+before installing audio. `rebase.source-audition-manifest.v1` contains:
+
+- `revision`, `eventID`, `name`, `mode`, `sourceKind` (`event` or `track`), and
+  `clockRole` (`source-rate`, `source-clock-unconverted`,
+  `current-project-clock-unconverted`, `saved-project-clock-unconverted`, or
+  `current-project-rate-converted`).
+- `projectSampleRate`, optional `currentNativeClock` and
+  `preservedNativeClock` in their full existing Codable forms,
+  `projectManifestSHA256` for saved bytes, `currentProjectSHA256` for the current
+  encoded model, `importReportSHA256`, `sourceSHA256`, and anchor `mediaSHA256`.
+- `sampleRate`, `sourceSampleRate`, `frames`, `startFrame`, `totalFrames`,
+  `channels:2`, `maximumFrames:32000000`, optional `timelineRange` and
+  `savedProjectAudioSetup`, and optional `sourceTrack`.
+- `wavFileName`, `wavBytes`, and `wavSHA256`, binding the manifest to the output.
+
+Ranges contain `contract`, `position`, `duration`, and `offset`. Saved audio
+setup retains its existing contract, raw base-rate/factor bits, object identities
+and offsets. `sourceTrack` contains `contract`, `freshRootMode`, `trackIdentity`,
+`events`, `fragments`, and `snappedEmptyFragmentCount`. Every event contains
+`eventID`, `eventIdentity`, `sourceOrdinal`, signed `priority`,
+`sourceSampleRate`, `mediaSHA256`, `canonicalStart`, `canonicalEnd`, and optional
+original `range`. Every fragment contains `eventID`, `eventIdentity`,
+`sourceOrdinal`, and its projected `range`. Fully covered contributors remain in
+`events` and their attached bytes are checked; the anchor digest alone is never
+complete-track proof. Large proof arrays are not truncated.
+
+All modes currently use a bounded Windows snapshot: total output above
+32 million stereo frames is refused with `sourceFrameLimit` before WAV
+allocation or publication, including a long silent timeline. Full admitted
+macOS timeline duration requires a later streaming transport. Both outputs must
+be new regular files outside the project. They are staged and checked, followed
+by a fresh manifest/source/report/all-contributor-media check. The sidecar is
+published first and the WAV last, with exclusive file publication. If WAV
+publication fails, rollback removes the sidecar only when its identity proves
+ownership. `sourcePublicationIncomplete` means an output may remain: inspect
+the destination, do not silently retry or overwrite it. The two files are not
+one atomic filesystem transaction.
+
+Inspection and source rendering leave revision, dirty state, project,
+selection, undo/redo and imported package bytes unchanged. Transport receives
+stereo Float32 only. The explicit source-mode rate and downstream device-rate
+adaptation are separate: the native adapter uses its pinned public SoXR path
+when the endpoint rate differs, and does not ask Windows for hidden conversion.
+Neither source conversion controls nor an unavailable CI endpoint establish
+audible output or reference-runtime fidelity.
 
 A waveform reply adds `waveform:{revision,clipID,sampleRate,sourceStartFrame,sourceFrames,mediaSHA256,peaks}`. Peaks are finite, nonnegative, source-domain maxima across channels, with at most 1,600 bins. Source start truncates `sourceOffset*sourceRate`; count truncates the bounded source duration. The frontend validates receipt identity/interval and finite limits, draws those peaks, and never synthesizes an envelope. It sends at most one background envelope request at a time, yields between requests, and never applies a background reply's document state. Open/Save As clear cached envelopes; trim, split, and deletion invalidate changed source intervals. Move/mixer/zoom changes can reuse unchanged source ranges.

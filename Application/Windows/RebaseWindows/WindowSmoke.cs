@@ -22,7 +22,7 @@ public partial class MainWindow
         Directory.CreateDirectory(root);
         var work = Path.Combine(Path.GetTempPath(), "RebaseSmoke", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(work);
-        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(sourceProject is null ? 120 : 180));
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(sourceProject is null ? 180 : 240));
         string stage = "window-layout", endpoint = "not-probed", error = "";
         object[] processModules = [], helperModules = [];
         object? timelineScrollReceipt = null;
@@ -30,7 +30,7 @@ public partial class MainWindow
         object? musicalRulerReceipt = null;
         var faderScaleReceipt = new List<object>();
         object? channelAlignment = null;
-        object? cprReviewReceipt = null, automationReceipt = null;
+        object? cprReviewReceipt = null, automationReceipt = null, sourceModesReceipt = null;
         object? workspaceReceipt = null, workspaceSourceOnly = null;
         object? topRowsLayout = null, topRowsLongNames = null, topRowsResize = null, topRowsFailure = null;
         var topRowsStates = new List<object>();
@@ -91,7 +91,7 @@ public partial class MainWindow
             , timeline_scroll = timelineScrollReceipt, timeline_scroll_screenshot = "native-timeline-scroll-visual.png"
             , window_bounds = windowBounds
             , musical_ruler = musicalRulerReceipt, fader_scale = faderScaleReceipt, channel_alignment = channelAlignment
-            , cpr_review = cprReviewReceipt, automation = automationReceipt, workspace = workspaceReceipt, failure_screenshot = failureScreenshot
+            , cpr_review = cprReviewReceipt, automation = automationReceipt, source_modes = sourceModesReceipt, workspace = workspaceReceipt, failure_screenshot = failureScreenshot
             , top_rows = new { layout = topRowsLayout, states = topRowsStates, long_names = topRowsLongNames,
                 resize = topRowsResize, captures = topRowsCaptures, failure_layout = topRowsFailure, input_evidence = "UIA and injected routed keyboard events; no physical input" }
         };
@@ -370,6 +370,8 @@ public partial class MainWindow
                 smokeAttachPath = smokeSourceExportPath = null;
                 await model.Open(Path.Combine(AppContext.BaseDirectory, "Examples", "Rebase Preview.rebaseproj", "Project.json"), true, true);
             }
+            await model.Open(Path.Combine(AppContext.BaseDirectory, "Examples", "Rebase Preview.rebaseproj", "Project.json"), true, true);
+            sourceModesReceipt = await RunSourceAudioSmoke(root, work, checks, value => stage = value, deadline.Token);
             await model.Open(Path.Combine(AppContext.BaseDirectory, "Examples", "Rebase Preview.rebaseproj", "Project.json"), true, true);
             automationReceipt = await RunAutomationSmoke(root, work, checks, value => stage = value, deadline.Token);
             await LongNamesScenario();

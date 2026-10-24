@@ -26,6 +26,9 @@ public sealed class SessionRequest
     public double? Time { get; set; }
     public string? Interpolation { get; set; }
     public bool? Enabled { get; set; }
+    public string? Mode { get; set; }
+    public double? StartSeconds { get; set; }
+    public bool? RewindAtEnd { get; set; }
 }
 public sealed class SessionResponse
 {
@@ -37,6 +40,7 @@ public sealed class SessionResponse
     public WaveformSnapshot? Waveform { get; set; }
     public RulerSnapshot? Ruler { get; set; }
     public CPRReviewSnapshot? CprReview { get; set; }
+    public SourceInspectionSnapshot? SourceInspection { get; set; }
     public SessionError? Error { get; set; }
 }
 public sealed class SessionError { public string Code { get; set; } = "error"; public string Message { get; set; } = "The session request failed."; }
@@ -94,6 +98,12 @@ public sealed class RenderSnapshot
     public string? EventID { get; set; }
     public string? SourceSHA256 { get; set; }
     public string? MediaSHA256 { get; set; }
+    public string? Mode { get; set; }
+    public string? ManifestPath { get; set; }
+    public string? ManifestSHA256 { get; set; }
+    public ulong? ManifestBytes { get; set; }
+    public ulong? StartFrame { get; set; }
+    public ulong? TotalFrames { get; set; }
     public string Path { get; set; } = "";
     public ulong Revision { get; set; }
     public double SampleRate { get; set; }

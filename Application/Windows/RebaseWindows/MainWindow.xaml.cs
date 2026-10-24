@@ -405,6 +405,7 @@ public partial class MainWindow : Window
         e.Cancel = true;
         if (reviewingCPR) { activeCPRReview?.Activate(); return; }
         if (openingAutomation) { activeAutomationEditor?.Activate(); return; }
+        if (openingSourceAudio) { activeSourceAudio?.Activate(); return; }
         if (closing) return;
         closing = true;
         IsEnabled = false;

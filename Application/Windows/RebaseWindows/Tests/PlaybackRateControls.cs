@@ -81,11 +81,11 @@ static class PlaybackRateControls
             await model.Pause();
             Check(!model.IsPlaying && model.Position == 0.05 && session.SourceRenders == 1);
             await model.Play();
-            Check(model.IsPlaying && session.SourceRenders == 2 && audio.LastSeek == 2205 && audio.SourceCopies == 2);
+            Check(model.IsPlaying && session.SourceRenders == 2 && audio.LastSeek == 0 && session.LastSourceStart == 0.05 && audio.SourceCopies == 2);
             await model.Seek(0.025);
-            Check(model.IsPlaying && session.SourceRenders == 3 && audio.LastSeek == 1103); // Source-frame half-up policy.
+            Check(model.IsPlaying && session.SourceRenders == 3 && audio.LastSeek == 0 && model.Position == 1103.0 / 44100); // Shared helper quantization; native tail begins at zero.
             await model.Seek(5);
-            Check(!model.IsPlaying && audio.LastSeek == 4410 && model.Position == 0.1);
+            Check(!model.IsPlaying && audio.LastSeek == 0 && model.Position == 0.1);
             await model.Play(); Check(model.IsPlaying && audio.LastSeek == 0);
             var late = new TaskCompletionSource<AudioStatus>(TaskCreationOptions.RunContinuationsAsynchronously);
             audio.NextStatus = late; var polling = model.Poll();
@@ -95,7 +95,7 @@ static class PlaybackRateControls
                 SubmittedFrames = 4410, PositionFrames = 4000 });
             await polling;
             Check(!model.IsPlaying && model.Position == 0.02);
-            await model.Play(); Check(audio.LastSeek == 882);
+            await model.Play(); Check(audio.LastSeek == 0 && session.LastSourceStart == 0.02 && model.Position == 0.02);
             var plays = audio.Plays; var copies = audio.SourceCopies;
             session.WrongMedia = true;
             await model.Play();
@@ -173,9 +173,11 @@ static class PlaybackRateControls
         {
             await model.Open("authored-rounded-eof", false, false); await model.AuditionSource();
             var plays = endAudio.Plays;
+            endAudio.SourceFailure = 12;
             await model.Seek(4409.0 / 44100);
-            Check(!model.IsPlaying && model.Position == 0.1 && endAudio.LastSeek == 4409 && endAudio.Plays == plays);
-            await model.Play(); Check(model.IsPlaying && endAudio.LastSeek == 0 && endAudio.Plays == plays + 1);
+            Check(!model.IsPlaying && model.Position == 4409.0 / 44100 && endAudio.Plays == plays && model.PlaybackRateInfo is null);
+            endAudio.SourceFailure = 0;
+            await model.Seek(0); await model.Play(); Check(model.IsPlaying && endAudio.LastSeek == 0 && endAudio.Plays == plays + 1);
             await model.Stop();
             await model.SeekProject(4799.0 / 48000);
             endAudio.QuantizedEndFrom = 4797; plays = endAudio.Plays;
@@ -238,6 +240,7 @@ static class PlaybackRateControls
         private ulong revision = 1;
         public int SourceRenders, ProjectRenders;
         public bool WrongMedia, SourceChanged;
+        public double LastSourceStart;
         private readonly ProjectView project = JsonSerializer.Deserialize<ProjectView>($$$"""
             {"id":"project","name":"Authored playback control","sampleRate":48000,"tempo":120,"tempoMap":[],"signatureMap":[],
              "tracks":[{"id":"track","name":"Control","clips":[{"id":"ordinary","position":0,"duration":0.1}],
@@ -257,25 +260,21 @@ static class PlaybackRateControls
                 if (isSource) SourceRenders++; else ProjectRenders++;
                 if (isSource && SourceChanged) { response.Ok = false; response.Error = new() { Message = "Source changed outside the session." }; return Task.FromResult(response); }
                 uint rate = isSource ? 44100u : 48000u; uint frames = rate / 10;
-                var wave = Wave(rate, frames); File.WriteAllBytes(request.Path!, wave);
-                response.Render = new() { Kind = isSource ? "sourceEvent" : "project", Path = request.Path!, Revision = revision,
-                    EventID = isSource ? EventID : null, SourceSHA256 = isSource ? SourceHash : null,
-                    MediaSHA256 = isSource ? WrongMedia ? new('c', 64) : MediaHash : null,
-                    SampleRate = rate, Frames = frames, Channels = 2, WavBytes = (ulong)wave.Length,
-                    Sha256 = Convert.ToHexString(SHA256.HashData(wave)) };
+                if (isSource)
+                {
+                    LastSourceStart = request.StartSeconds ?? 0;
+                    response.Render = SourceControlData.Render(project, SourceEventView.Read(project).Single(), request,
+                        revision, rate, frames, WrongMedia ? new string('c', 64) : MediaHash);
+                }
+                else
+                {
+                    var wave = SourceControlData.Wave(rate, frames); File.WriteAllBytes(request.Path!, wave);
+                    response.Render = new() { Kind = "project", Path = request.Path!, Revision = revision,
+                        SampleRate = rate, Frames = frames, Channels = 2, WavBytes = (ulong)wave.Length,
+                        Sha256 = SourceControlData.Hash(wave) };
+                }
             }
             return Task.FromResult(response);
-        }
-        private static byte[] Wave(uint rate, uint frames)
-        {
-            var bytes = new byte[44 + frames * 8];
-            Encoding.ASCII.GetBytes("RIFF").CopyTo(bytes, 0); BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(4), (uint)bytes.Length - 8);
-            Encoding.ASCII.GetBytes("WAVEfmt ").CopyTo(bytes, 8); BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(16), 16);
-            BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(20), 3); BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(22), 2);
-            BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(24), rate); BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(28), rate * 8);
-            BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(32), 8); BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(34), 32);
-            Encoding.ASCII.GetBytes("data").CopyTo(bytes, 36); BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(40), frames * 8);
-            return bytes;
         }
     }
 }

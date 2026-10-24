@@ -1,9 +1,8 @@
-import AVFoundation
 import Foundation
 import RebaseTimingDSP
 
 /// The recovered stereo producer/consumer value operations, serialized by the
-/// owning cursor. Rebase fills and drains each chunk before AVAudioEngine
+/// owning cursor. Rebase fills and drains each chunk before a host
 /// schedules it; this is not the proprietary callback graph or polling policy.
 final class CPRLiveStereoTransfer {
     private let left: UnsafeMutablePointer<Float>
@@ -22,24 +21,26 @@ final class CPRLiveStereoTransfer {
 
     deinit { left.deallocate(); right.deallocate() }
 
-    func copy(_ interleaved: [Float], to output: AVAudioPCMBuffer) throws {
-        guard interleaved.count % 2 == 0, output.format.channelCount == 2,
-              !output.format.isInterleaved, let channels = output.floatChannelData,
-              Int(output.frameLength) == interleaved.count / 2 else {
+    func copy(_ interleaved: [Float], to output: inout StereoPCMBlock) throws {
+        guard interleaved.count % 2 == 0,
+              output.frameCount == interleaved.count / 2 else {
             throw RebaseCoreError.invalidProject("The stereo transfer requires matching planar output storage.")
         }
-        try interleaved.withUnsafeBufferPointer { input in
-            var position = 0
-            while position < interleaved.count / 2 {
-                let frames = min(8192, interleaved.count / 2 - position)
-                var result = rb_cpr_live_ring_result()
-                guard rb_cpr_live_ring_write(&state, input.baseAddress!.advanced(by: position * 2), Int32(frames)) == 0,
-                      rb_cpr_live_ring_consume(&state, channels[0].advanced(by: position),
-                        channels[1].advanced(by: position), 0, Int64(frames), 0, 0, &result) == 0,
-                      result.copied_frames == frames, result.silent_frames == 0 else {
-                    throw RebaseCoreError.invalidProject("The stereo transfer could not deliver the converted block.")
+        if interleaved.isEmpty { return }
+        try output.withUnsafeMutableChannels { leftOutput, rightOutput in
+            try interleaved.withUnsafeBufferPointer { input in
+                var position = 0
+                while position < interleaved.count / 2 {
+                    let frames = min(8192, interleaved.count / 2 - position)
+                    var result = rb_cpr_live_ring_result()
+                    guard rb_cpr_live_ring_write(&state, input.baseAddress!.advanced(by: position * 2), Int32(frames)) == 0,
+                          rb_cpr_live_ring_consume(&state, leftOutput.advanced(by: position),
+                            rightOutput.advanced(by: position), 0, Int64(frames), 0, 0, &result) == 0,
+                          result.copied_frames == frames, result.silent_frames == 0 else {
+                        throw RebaseCoreError.invalidProject("The stereo transfer could not deliver the converted block.")
+                    }
+                    position += frames
                 }
-                position += frames
             }
         }
     }

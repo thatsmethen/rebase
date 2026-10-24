@@ -12,6 +12,8 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     private ulong? loadedRevision;
     private ulong audioEpoch;
     private string? sourceEventID;
+    private string sourcePlaybackMode = SourceAuditionMode.Original;
+    private ulong sourceStartFrame;
     private double sourceDuration, projectPosition;
     private readonly Dictionary<string, (WaveformRange Range, WaveformSnapshot Snapshot)> waveforms = [];
     private readonly Dictionary<string, ulong> waveformFailures = [];
@@ -36,6 +38,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     public SessionState State { get; private set; } = new();
     public AudioRateInfo? PlaybackRateInfo { get; private set; }
     public RenderSnapshot? LastSourceExport { get; private set; }
+    public SourceInspectionSnapshot? SourceInspection { get; private set; }
     public RulerSnapshot? Ruler { get; private set; }
     public string? RulerError { get; private set; }
     public ProjectView? Project => State.Project;
@@ -44,8 +47,11 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     public SourceEventView[] SourceEvents => SourceEventView.Read(Project);
     public SourceEventView? SelectedSourceEvent => SourceEvents.FirstOrDefault(e => e.Id == State.Selection.ClipID);
     public bool IsSourceContext => sourceEventID is not null;
+    public string SourcePlaybackMode => sourcePlaybackMode;
     public string TransportContext => sourceEventID is null ? "Project timeline" :
-        "Source event: " + (SourceEvents.FirstOrDefault(e => e.Id == sourceEventID)?.Name ?? "Unavailable") + " · event-local seconds";
+        (sourcePlaybackMode == SourceAuditionMode.CompleteTrack ? "Source track: " : "Source event: ") +
+        (SourceEvents.FirstOrDefault(e => e.Id == sourceEventID)?.Name ?? "Unavailable") +
+        (SourceAuditionMode.Find(sourcePlaybackMode).UsesTimeline ? " · saved timeline seconds" : " · event-local seconds");
     public bool NeedsSaveDecision => Project is not null && (State.Dirty || saveConfirmationRequired);
     public string Title => (Project?.Name ?? "Rebase") + (NeedsSaveDecision ? " •" : "") + " — Rebase";
     public string Status { get => status; private set { status = value; Changed(); } }
@@ -76,7 +82,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     private void UseProjectContext()
     {
         var wasSource = sourceEventID is not null;
-        sourceEventID = null; sourceDuration = 0;
+        sourceEventID = null; sourceDuration = 0; sourceStartFrame = 0;
         if (wasSource) Position = Math.Min(projectPosition, Project?.Duration ?? 0);
         NotifyContext();
     }
@@ -130,11 +136,13 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         ValidateStatus(current);
         // A rounded source-to-endpoint seek can reach endpoint EOF before the
         // requested source frame equals source EOF. The native cursor decides.
-        Position = (double)current.PositionFrames / current.SampleRate;
+        Position = PlaybackPosition(current);
         audioPhase = current.Phase;
         if (audioPhase != 2) PeakLeft = PeakRight = 0;
         return current;
     }
+    private double PlaybackPosition(AudioStatus snapshot) =>
+        (double)(snapshot.PositionFrames + (IsSourceContext ? sourceStartFrame : 0)) / snapshot.SampleRate;
     private async Task<SessionResponse> Send(SessionRequest request)
     {
         request.ExpectedRevision = State.Revision;
@@ -143,6 +151,8 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         {
             if (State.Revision != response.State.Revision) { await InvalidateAudio(); UseProjectContext(); }
             State = response.State;
+            if (SourceInspection is { } inspection && (inspection.Revision != State.Revision || inspection.EventID != State.Selection.ClipID))
+                SourceInspection = null;
             if (response.Ok && request.Command is "open" or "importCPR") SetSaveConfirmationRequired(false);
             if (Ruler is not null && Ruler.Revision != State.Revision) { Ruler = null; RulerChanged?.Invoke(); }
             if (response.Ok && request.Command is "open" or "saveAs" or "importCPR")
@@ -294,22 +304,40 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         await Send(new() { Command = "attachSourceMedia", ClipID = selected.Id, Path = path });
         Status = "Media attached to " + selected.Name + ". Save the project to keep the association.";
     });
-    public Task RenderSourceTo(string path) => Execute(async () =>
+    public Task InspectSource() => Execute(async () =>
     {
+        SourceInspection = null;
+        var selected = SelectedSourceEvent ?? throw new InvalidOperationException("Select a retained source event first.");
+        var revision = State.Revision;
+        Status = "Inspecting source playback modes…";
+        var response = await Send(new() { Command = "inspectSourceEvent", ClipID = selected.Id });
+        var inspection = response.SourceInspection ?? throw new InvalidDataException("The helper omitted its source inspection.");
+        inspection.Validate(revision, selected);
+        if (State.Revision != revision || State.Selection.ClipID != selected.Id)
+            throw new InvalidDataException("The selected event changed during source inspection.");
+        SourceInspection = inspection;
+        Status = "Source playback modes inspected; media is checked again for each playback or export.";
+    });
+    public Task RenderSourceTo(string path, string mode = SourceAuditionMode.Original) => Execute(async () =>
+    {
+        _ = SourceAuditionMode.Find(mode);
         LastSourceExport = null;
         var selected = SelectedSourceEvent ?? throw new InvalidOperationException("Select a source event before export.");
         var revision = State.Revision;
         Status = "Rendering source event…";
-        var response = await Send(new() { Command = "renderSourceEvent", ClipID = selected.Id, Path = path });
+        var response = await Send(new() { Command = "renderSourceEvent", ClipID = selected.Id, Path = path, Mode = mode });
         var info = response.Render ?? throw new InvalidDataException("The renderer omitted its source-event metadata.");
-        _ = await Task.Run(() => SnapshotReader.Read(info, path, revision, selected));
+        _ = await Task.Run(() => SnapshotReader.Read(info, path, revision, selected, Project!, mode));
         LastSourceExport = info;
         Status = "Exported source WAV: " + Path.GetFileName(path);
     });
-    public Task AuditionSource() => Execute(async () =>
+    public Task AuditionSource(string mode = SourceAuditionMode.Original) => Execute(async () =>
     {
+        _ = SourceAuditionMode.Find(mode);
         var selected = SelectedSourceEvent ?? throw new InvalidOperationException("Select a source event before audition.");
-        await PrepareSource(selected.Id, sourceEventID == selected.Id ? Position : 0, true, rewindAtEnd: true);
+        var seconds = sourceEventID == selected.Id && sourcePlaybackMode == mode ? Position : 0;
+        sourcePlaybackMode = mode;
+        await PrepareSource(selected.Id, seconds, true, rewindAtEnd: true);
     });
     public Task PlayProject() => Execute(async () =>
     {
@@ -367,21 +395,32 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         {
             // Every play/resume and seek asks Swift to re-check the retained
             // source and attached media. A cached revision never authorizes it.
-            var response = await Send(new() { Command = "renderSourceEvent", ClipID = id, Path = path });
+            var response = await Send(new() { Command = "renderSourceEvent", ClipID = id, Path = path,
+                Mode = sourcePlaybackMode, StartSeconds = seconds, RewindAtEnd = rewindAtEnd });
             var info = response.Render ?? throw new InvalidDataException("The renderer omitted its source-event metadata.");
-            var source = await Task.Run(() => SnapshotReader.Read(info, path, revision, selected));
+            var source = await Task.Run(() => SnapshotReader.Read(info, path, revision, selected, Project!, sourcePlaybackMode));
             if (State.Revision != revision || State.Selection.ClipID != id) throw new InvalidOperationException("The selected source event changed while rendering.");
+            sourceStartFrame = info.StartFrame!.Value;
+            sourceDuration = (double)info.TotalFrames!.Value / source.SampleRate;
+            Position = (double)sourceStartFrame / source.SampleRate;
+            if (source.Frames == 0)
+            {
+                // EOF still has a freshly verified complete source manifest.
+                // An empty source is never installed in the native adapter.
+                audioPhase = 4; Status = "Finished; source and media rechecked."; return;
+            }
             var format = await audio.Format();
             ValidateOutputFormat(format);
             await InstallSource(source, revision);
-            sourceDuration = (double)source.Frames / source.SampleRate;
-            var frame = (ulong)Math.Clamp(Math.Round(seconds * source.SampleRate, MidpointRounding.AwayFromZero), 0, source.Frames);
-            if (rewindAtEnd && frame == source.Frames) frame = 0;
-            var current = await SeekLoadedSource(frame);
+            var current = await SeekLoadedSource(0);
             if (play && current.Phase != 4) { await audio.Play(); audioPhase = 2; }
             Status = (audioPhase == 2 ? "Auditioning source: " + selected.Name : "Source position updated; source and media rechecked.") + PlaybackFormatSuffix;
         }
-        finally { try { File.Delete(path); } catch (IOException) { } }
+        finally
+        {
+            try { File.Delete(path); } catch (IOException) { }
+            try { File.Delete(path + SourceAuditionManifest.Suffix); } catch (IOException) { }
+        }
     }
     public Task Pause() => Execute(async () =>
     {
@@ -396,7 +435,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
             var frozen = await audio.Status();
             ValidateStatus(frozen);
             if (frozen.Phase is not (3 or 4)) throw new InvalidDataException("The native transport did not confirm a paused position.");
-            Position = (double)frozen.PositionFrames / frozen.SampleRate;
+            Position = PlaybackPosition(frozen);
             audioPhase = frozen.Phase; PeakLeft = PeakRight = 0;
             Status = (audioPhase == 4 ? "Finished" : "Paused") + PlaybackFormatSuffix;
         }
@@ -409,7 +448,14 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     public Task Stop() => Execute(async () =>
     {
         audioEpoch++;
-        if (loadedRevision is not null) await audio.Stop();
+        if (IsSourceContext)
+        {
+            // A source seek installs a freshly prepared suffix. Its native
+            // frame zero is not the full source's zero, so discard it before
+            // returning the UI to the beginning and allowing another play.
+            await InvalidateAudio(); sourceStartFrame = 0;
+        }
+        else if (loadedRevision is not null) await audio.Stop();
         audioPhase = loadedRevision is null ? 0u : 1u; Position = 0; PeakLeft = PeakRight = 0; Status = "Stopped";
     });
     public Task Seek(double seconds) => Execute(async () =>
@@ -449,7 +495,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
             if (loadedRevision != revision || audioEpoch != epoch || Busy || closing) return;
             ValidateStatus(snapshot);
             audioPhase = snapshot.Phase;
-            Position = snapshot.SampleRate == 0 ? 0 : (double)snapshot.PositionFrames / snapshot.SampleRate;
+            Position = PlaybackPosition(snapshot);
             PeakLeft = snapshot.PeakLeft; PeakRight = snapshot.PeakRight;
             if (snapshot.Phase == 4) Status = "Finished";
         }

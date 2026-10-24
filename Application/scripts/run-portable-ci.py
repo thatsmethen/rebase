@@ -14,6 +14,8 @@ import time
 import xml.etree.ElementTree as ET
 
 from windows_automation_gate import require_automation_protocol
+from portable_soxr import verify_windows, verify_macos, stage_windows_runtime
+from cpr_audition_gate import require_cpr_audition
 
 
 def collect_test_results(xml_paths):
@@ -39,6 +41,8 @@ def main():
     parser.add_argument("--configuration", choices=("Debug", "Release"), default="Debug")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--generator", default="Ninja")
+    parser.add_argument("--soxr-build", type=Path,
+                        help="Reuse an explicitly validated pinned SoXR build; otherwise build it in this lane")
     args = parser.parse_args()
     app = Path(__file__).resolve().parents[1]
     root = app.parent
@@ -47,6 +51,7 @@ def main():
     build = out / "build"
     env = dict(os.environ)
     env.pop("REBASE_RESEARCH_ROOT", None)
+    env.pop("REBASE_SOXR_ALLOW_MODIFIED_SOURCE", None)
     if args.kind == "swift":
         env["REBASE_PORTABLE_ONLY"] = "1"
     else:
@@ -109,6 +114,39 @@ def main():
         else:
             run(["swift", "--version"], "swift-version")
             if args.kind == "swift":
+                run([sys.executable, str(app / "scripts/test_portable_soxr.py"),
+                     "--output", str(out / "portable-soxr-controls")], "portable-soxr-controls")
+                controls = json.loads((out / "portable-soxr-controls/observation.json").read_text())
+                if (controls.get("status") != "passed" or controls.get("failures") != 0
+                        or controls.get("errors") != 0 or type(controls.get("tests")) is not int
+                        or controls["tests"] - controls.get("skipped", 0) <= 0):
+                    raise RuntimeError("Portable SoXR dependency controls did not execute successfully")
+                report["soxr_dependency_controls"] = controls
+                dependency = args.soxr_build.resolve() if args.soxr_build else out / "soxr"
+                if os.name == "nt":
+                    if args.soxr_build is None:
+                        run([sys.executable, str(app / "scripts/build-windows-soxr.py"),
+                             "--output", str(dependency)], "soxr-build")
+                    dependency_receipt, library_dir, runtime, runtime_digest = verify_windows(
+                        app, dependency, env.get("GITHUB_SHA"))
+                elif sys.platform == "darwin":
+                    if args.soxr_build is None:
+                        env["REBASE_SOXR_BUILD_DIR"] = str(dependency)
+                        run(["sh", "ThirdParty/build-soxr.sh"], "soxr-build")
+                    dependency_receipt, library_dir = verify_macos(app, dependency, env.get("GITHUB_SHA"))
+                else:
+                    raise RuntimeError("Portable SoXR CI currently qualifies Windows x64 and macOS arm64 only")
+                env["REBASE_SOXR_LIBRARY_DIR"] = str(library_dir)
+                report["cpr_mode2_dependency"] = dependency_receipt
+                (out / "soxr-dependency.json").write_text(json.dumps(dependency_receipt, indent=2) + "\n", encoding="utf-8")
+                if os.name == "nt":
+                    # Test DLLs and runner executables share SwiftPM's actual
+                    # product directory. Stage before swift test can launch it.
+                    path_text = run(["swift", "build", "--scratch-path", str(build),
+                                     "-c", args.configuration.lower(), "--show-bin-path"], "test-products-path")
+                    product_directory = Path(path_text.strip().splitlines()[-1]
+                        .replace("<workspace>", str(root)).replace("<home>", str(Path.home())))
+                    report["cpr_mode2_runtime"] = stage_windows_runtime(runtime, product_directory, runtime_digest)
                 command = ["swift", "test", "--scratch-path", str(build), "-c", args.configuration.lower(),
                            "--filter", "RebasePortableTests", "--xunit-output", str(out / "tests.xml")]
                 if os.name == "nt" and args.configuration == "Release":
@@ -262,6 +300,29 @@ def main():
                 require_automation_protocol(session_result,
                     json.loads((app / "Examples/Rebase Preview.rebaseproj/Project.json").read_text(encoding="utf-8")), lock)
                 report["automation_control"] = session_result["automation"]
+                modes_fixture = app / "Tests/Fixtures/SourceAuditionModes"
+                modes_lock = modes_fixture / "expected.json"
+                modes_result_path = out / "cpr-audition-modes.json"
+                run([sys.executable, str(app / "scripts/check-cpr-audition-modes.py"),
+                     "--helper", str(session), "--fixtures", str(modes_fixture),
+                     "--report", str(modes_result_path)], "cpr-audition-modes")
+                report["cpr_audition_control"] = require_cpr_audition(
+                    json.loads(modes_result_path.read_text()), json.loads(modes_lock.read_text()),
+                    hashlib.sha256(modes_lock.read_bytes()).hexdigest(),
+                    hashlib.sha256(session.read_bytes()).hexdigest())
+                report["cpr_audition_control"]["receipt_sha256"] = hashlib.sha256(modes_result_path.read_bytes()).hexdigest()
+                run([sys.executable, str(app / "scripts/test_cpr_audition_gate.py"),
+                     "--receipt", str(modes_result_path), "--fixture", str(modes_lock),
+                     "--output", str(out / "cpr-audition-gate-controls")], "cpr-audition-gate-controls")
+                mode_controls = json.loads((out / "cpr-audition-gate-controls/observation.json").read_text())
+                if (mode_controls.get("status") != "passed" or mode_controls.get("failures") != 0
+                        or mode_controls.get("errors") != 0 or type(mode_controls.get("tests")) is not int
+                        or mode_controls["tests"] <= 0 or mode_controls.get("skipped") != 0):
+                    raise RuntimeError("CPR audition receipt rejection controls did not execute successfully")
+                report["cpr_audition_gate_controls"] = mode_controls
+                if os.name == "nt":
+                    # Verify execution/build steps did not replace the DLL.
+                    report["cpr_mode2_runtime"] = stage_windows_runtime(runtime, product_directory, runtime_digest)
         sanitize_xml()
         report["tests"] = collect_test_results(test_xml_paths())
         report["status"] = "passed"
