@@ -217,8 +217,15 @@ class Controls(unittest.TestCase):
     def test_missing_log(self):
         (self.native / "build.log").unlink(); self.rejected()
 
-    def test_empty_log(self):
-        (self.native / "build.log").write_bytes(b""); self.rejected()
+    def test_successful_silent_probe_build_matches_observed_ci(self):
+        # Run 40044766254 produced exactly zero stdout/stderr bytes for the
+        # successful clang-cl probe-build command. A missing file still rejects.
+        (self.native / "probe-build.log").write_bytes(b"")
+        self.assertEqual(self.report["commands"][-2]["exit_code"], 0)
+        self.assertEqual(self.validate()["status"], "passed")
+
+    def test_empty_probe_output_still_rejects(self):
+        (self.native / "probe.log").write_bytes(b""); self.rejected()
 
     def test_truncated_json(self):
         (self.native / "conformance.json").write_text('{"status":'); self.rejected()
