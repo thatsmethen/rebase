@@ -2,7 +2,7 @@
 
 This WPF/.NET 10 host uses the shared Swift session for project loading, editing, undo, tempo, snapping, save, and WAV rendering, and the native WASAPI DLL for transport. The timeline and four-channel example are real project views, not a static mockup. The UI supports selection, pointer or numeric move/trim, split/delete, track gain/pan/mute/solo, volume/pan automation, undo/redo, tempo, snap, Save/Save As, WAV export, and play/pause/stop/seek with submitted-sample peaks.
 
-The Windows host is an initial application milestone. Recording, plugins, advanced media formats, project-level CPR playback, general device-rate adaptation, and the remaining macOS workflows are not integrated. Playback currently requires a Float32 stereo endpoint at the project sample rate. The included example opens as a separate editable copy.
+The Windows host is an initial application milestone. Recording, plugins, advanced media formats, project-level CPR playback, streaming and the remaining macOS workflows are not integrated. Playback accepts a default Float32 stereo endpoint at 8–192 kHz; the native adapter explicitly converts differing snapshot rates with pinned public SoXR before playback. Source and converted snapshots are each bounded to 32 million stereo frames. This device policy is distinct from the recovered CPR conversion modes. Hardware output remains unverified. The included example opens as a separate editable copy.
 
 Imported project packages can expose retained source events in the inspector. Attach PCM explicitly, then audition or export a checked stereo source event. This uses a distinct event-local transport, rechecks source/media every play, resume, and seek, and does not apply project timing, track effects, mixer, or automation.
 

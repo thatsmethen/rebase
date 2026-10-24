@@ -64,12 +64,13 @@ static class SourceAuditionControls
         session.WrongMediaReceipt = false; session.FailSourceRender = true;
         await model.Play(); Check(session.SourceRenders == 8 && audio.Plays == plays && model.Status == "Source changed outside the session.");
         session.FailSourceRender = false; audio.Rate = 44100;
-        await model.Play(); Check(session.SourceRenders == 9 && audio.SourceCopies == copies && model.Status.Contains("source event uses 48000 Hz", StringComparison.Ordinal));
+        await model.Play(); Check(session.SourceRenders == 9 && audio.SourceCopies == copies + 1 && model.IsPlaying && model.Status.Contains("48000 → 44100 Hz (converted)", StringComparison.Ordinal));
         audio.Rate = 48000; await model.Play(); Check(session.SourceRenders == 10 && model.IsPlaying);
-        audio.DelayedStatus = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        var delayedStatus = new TaskCompletionSource<AudioStatus>(TaskCreationOptions.RunContinuationsAsynchronously);
+        audio.DelayedStatus = delayedStatus;
         var polling = model.Poll();
         await model.Pause();
-        audio.DelayedStatus.SetResult(new AudioStatus { AbiVersion = 1, Phase = 2, SampleRate = 48000, PositionFrames = 400 });
+        delayedStatus.SetResult(new AudioStatus { AbiVersion = 1, Phase = 2, SampleRate = 48000, PositionFrames = 400 });
         await polling; audio.DelayedStatus = null;
         Check(!model.IsPlaying && model.Position != 400.0 / 48000);
         await model.Stop(); Check(model.Position == 0 && !model.IsPlaying && session.SourceRenders == 10);
@@ -129,14 +130,24 @@ static class SourceAuditionControls
         public uint Rate = 48000, SourceRate;
         public int FormatCalls, SourceCopies, Plays, Stops;
         public ulong LastSeek;
+        private ulong frames;
+        private uint phase;
         public TaskCompletionSource<AudioStatus>? DelayedStatus;
         public Task<DeviceFormat> Format() { FormatCalls++; return Task.FromResult(new DeviceFormat { SampleRate = Rate, Channels = 2, Float32 = 1 }); }
-        public Task<AudioStatus> Status() => DelayedStatus?.Task ?? Task.FromResult(new AudioStatus { AbiVersion = 1, SampleRate = SourceRate, PositionFrames = LastSeek });
-        public Task SetSource(LoadedSnapshot source) { SourceCopies++; SourceRate = source.SampleRate; return Task.CompletedTask; }
-        public Task Play() { Plays++; return Task.CompletedTask; }
-        public Task Pause() => Task.CompletedTask;
-        public Task Stop() { Stops++; return Task.CompletedTask; }
-        public Task Seek(ulong frame) { LastSeek = frame; return Task.CompletedTask; }
+        public Task<AudioStatus> Status()
+        {
+            if (DelayedStatus is { } delayed) { DelayedStatus = null; return delayed.Task; }
+            return Task.FromResult(new AudioStatus { AbiVersion = 1, SampleRate = SourceRate, TotalFrames = frames,
+                PositionFrames = LastSeek, SubmittedFrames = frames, Phase = phase });
+        }
+        public Task<AudioRateInfo> RateInfo() => Task.FromResult(new AudioRateInfo { AbiVersion = 1, SourceRate = SourceRate,
+            EndpointRate = Rate, SourceFrames = frames, EndpointFrames = (frames * Rate + SourceRate - 1) / SourceRate,
+            Converted = Rate == SourceRate ? 0u : 1u, SoxrRecipe = Rate == SourceRate ? 0u : 6u });
+        public Task SetSource(LoadedSnapshot source) { SourceCopies++; SourceRate = source.SampleRate; frames = source.Frames; LastSeek = 0; phase = 1; return Task.CompletedTask; }
+        public Task Play() { Plays++; phase = 2; return Task.CompletedTask; }
+        public Task Pause() { phase = 3; return Task.CompletedTask; }
+        public Task Stop() { Stops++; LastSeek = 0; phase = 1; return Task.CompletedTask; }
+        public Task Seek(ulong frame) { LastSeek = frame; if (frame == frames) phase = 4; return Task.CompletedTask; }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }

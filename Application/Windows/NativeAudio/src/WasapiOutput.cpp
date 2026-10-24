@@ -16,7 +16,8 @@
 #include <thread>
 #include <vector>
 #include <utility>
-#include "PlaybackCursor.hpp"
+#include "RatePlaybackCursor.hpp"
+#include "RateConversion.hpp"
 
 namespace {
 template<class T> class Com {
@@ -32,7 +33,7 @@ public:
     explicit operator bool() const { return value_ != nullptr; }
 };
 struct TaskMemory { void operator()(WAVEFORMATEX *p) const { CoTaskMemFree(p); } };
-enum class Operation { Format, Source, Play, Pause, Stop, Seek, Status, Quit };
+enum class Operation { Format, Source, Play, Pause, Stop, Seek, Status, RateInfo, Quit };
 struct Command {
     Operation operation;
     uint64_t frame = 0;
@@ -40,6 +41,7 @@ struct Command {
     std::vector<float> *samples = nullptr;
     RBAudioDeviceFormat format{};
     RBAudioStatus status{};
+    RBAudioRateInfo rate_info{};
     int result = RB_AUDIO_INTERNAL;
 };
 bool float_stereo(const WAVEFORMATEX *format) {
@@ -66,7 +68,7 @@ struct RBAudio {
     Com<IAudioRenderClient> render;
     Com<IAudioClock> clock;
     std::vector<float> samples;
-    rebase::PlaybackCursor cursor;
+    rebase::RatePlaybackCursor cursor;
     UINT32 capacity = 0;
     UINT64 frequency = 0;
     bool clock_approximate = false;
@@ -151,13 +153,14 @@ struct RBAudio {
         format = {mix->nSamplesPerSec, mix->nChannels, float_stereo(mix.get()) ? 1u : 0u};
         return RB_AUDIO_OK;
     }
-    int open_device(uint32_t rate) {
+    int open_device(uint32_t &rate) {
         HRESULT hr;
         RBAudioDeviceFormat format{};
         int result = activate(client, format, hr);
         if (result) return failure(result, hr);
-        if (!format.float32 || format.channels != 2 || format.sample_rate != rate)
+        if (!format.float32 || format.channels != 2 || format.sample_rate < 8000 || format.sample_rate > 192000)
             return failure(RB_AUDIO_FORMAT, AUDCLNT_E_UNSUPPORTED_FORMAT);
+        rate = format.sample_rate;
         WAVEFORMATEX requested{};
         requested.wFormatTag = WAVE_FORMAT_IEEE_FLOAT;
         requested.nChannels = 2; requested.nSamplesPerSec = rate;
@@ -167,9 +170,9 @@ struct RBAudio {
         hr = client->IsFormatSupported(AUDCLNT_SHAREMODE_SHARED, &requested, &raw);
         std::unique_ptr<WAVEFORMATEX, TaskMemory> closest(raw);
         if (hr != S_OK) return failure(RB_AUDIO_FORMAT, FAILED(hr) ? hr : AUDCLNT_E_UNSUPPORTED_FORMAT);
-        // No AUTOCONVERTPCM/SRC_DEFAULT_QUALITY: source/device adaptation is
-        // an explicit upstream responsibility. Shared-mode Windows effects
-        // may still process this stream; no bit-exact DAC claim is made.
+        // No AUTOCONVERTPCM/SRC_DEFAULT_QUALITY: public SoXR explicitly adapts
+        // the immutable snapshot to this rate before the stream can start.
+        // Shared-mode effects may still process it; no DAC equivalence claim.
         hr = client->Initialize(AUDCLNT_SHAREMODE_SHARED,
             AUDCLNT_STREAMFLAGS_EVENTCALLBACK | AUDCLNT_STREAMFLAGS_NOPERSIST,
             0, 0, &requested, nullptr);
@@ -193,12 +196,12 @@ struct RBAudio {
         HRESULT hr = clock->GetPosition(&ticks, nullptr);
         if (FAILED(hr)) return failure(RB_AUDIO_DEVICE, hr);
         clock_approximate = hr == S_FALSE;
-        auto status = cursor.status();
+        auto status = cursor.rate_info();
         // Integer quotient/remainder avoids multiplying an unbounded clock.
         uint64_t seconds = ticks / frequency;
-        uint64_t frames = seconds > status.total_frames / status.sample_rate + 1
-            ? status.total_frames + 1
-            : seconds * status.sample_rate + ((ticks % frequency) * status.sample_rate) / frequency;
+        uint64_t frames = seconds > status.endpoint_frames / status.endpoint_rate + 1
+            ? status.endpoint_frames + 1
+            : seconds * status.endpoint_rate + ((ticks % frequency) * status.endpoint_rate) / frequency;
         bool finished = cursor.observe(frames);
         if (cursor.status().phase == RB_AUDIO_FAULT)
             return failure(cursor.status().result, 0); // Clock outran submitted data.
@@ -218,7 +221,7 @@ struct RBAudio {
         BYTE *destination = nullptr;
         hr = render->GetBuffer(available, &destination);
         if (FAILED(hr)) return failure(RB_AUDIO_DEVICE, hr);
-        const float *source = samples.data() + cursor.source_index() * 2;
+        const float *source = samples.data() + cursor.endpoint_index() * 2;
         // This is the only audio-data path: bounded copies/peak scans, no
         // allocation, IPC, source reads, or caller/managed callbacks.
         std::memcpy(destination, source, static_cast<size_t>(actual) * 2 * sizeof(float));
@@ -244,11 +247,18 @@ struct RBAudio {
             return activate(temporary, command.format, hr);
         }
         case Operation::Source: {
-            close_device(); samples.clear();
-            int result = open_device(command.rate);
+            close_device(); std::vector<float>().swap(samples);
+            uint32_t endpoint_rate = 0;
+            int result = open_device(endpoint_rate);
             if (result) return result;
-            samples = std::move(*command.samples);
-            return cursor.configure(command.frame, command.rate);
+            if (endpoint_rate == command.rate) samples = std::move(*command.samples);
+            else {
+                result = rebase::convert_snapshot(command.samples->data(), command.frame,
+                                                  command.rate, endpoint_rate, samples);
+                if (result) return failure(result, E_FAIL);
+            }
+            result = cursor.configure(command.frame, command.rate, samples.size() / 2, endpoint_rate);
+            return result ? failure(result, E_UNEXPECTED) : RB_AUDIO_OK;
         }
         case Operation::Play: {
             if (cursor.playing()) return RB_AUDIO_OK;
@@ -299,6 +309,10 @@ struct RBAudio {
             command.status = cursor.status();
             command.status.endpoint_buffer_frames = capacity;
             command.status.clock_reading_approximate = clock_approximate ? 1 : 0;
+            return RB_AUDIO_OK;
+        case Operation::RateInfo:
+            refresh_clock();
+            command.rate_info = cursor.rate_info();
             return RB_AUDIO_OK;
         case Operation::Quit:
             close_device(); samples.clear(); return RB_AUDIO_OK;
@@ -380,6 +394,11 @@ int32_t rb_audio_seek(RBAudio *audio, uint64_t frame) { return simple(audio, Ope
 int32_t rb_audio_status(RBAudio *audio, RBAudioStatus *output) {
     if (!audio || !output) return RB_AUDIO_ARGUMENT;
     try { Command command{Operation::Status}; int result = audio->submit(command); if (!result) *output = command.status; return result; }
+    catch (...) { return RB_AUDIO_INTERNAL; }
+}
+int32_t rb_audio_rate_info(RBAudio *audio, RBAudioRateInfo *output) {
+    if (!audio || !output) return RB_AUDIO_ARGUMENT;
+    try { Command command{Operation::RateInfo}; int result = audio->submit(command); if (!result) *output = command.rate_info; return result; }
     catch (...) { return RB_AUDIO_INTERNAL; }
 }
 }

@@ -1,11 +1,17 @@
 #include "PlaybackCursor.hpp"
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 
 namespace rebase {
 bool valid_snapshot(const float *samples, uint64_t frames, uint32_t rate) {
     if (!samples || frames == 0 || frames > 32000000 || rate < 8000 || rate > 192000) return false;
-    for (uint64_t i = 0; i < frames * 2; ++i) if (!std::isfinite(samples[i])) return false;
+    // Classify without floating arithmetic: even signaling NaNs must be
+    // rejected safely before qualifying a caller's floating-point traps.
+    for (uint64_t i = 0; i < frames * 2; ++i) {
+        uint32_t bits; std::memcpy(&bits, samples + i, sizeof(bits));
+        if ((bits & 0x7f800000u) == 0x7f800000u) return false;
+    }
     return true;
 }
 int PlaybackCursor::configure(uint64_t frames, uint32_t rate) {

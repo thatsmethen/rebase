@@ -11,16 +11,70 @@ import sys
 import time
 import xml.etree.ElementTree as ET
 
+from windows_soxr_package import validate_soxr_build
+
 
 def validate_test_xml(path):
     cases = list(ET.parse(path).iter("testcase"))
     skipped = sum(case.find("skipped") is not None for case in cases)
     failures = sum(case.find("failure") is not None or case.find("error") is not None for case in cases)
-    if not cases or skipped == len(cases) or failures:
-        raise ValueError("Expected executed lifecycle tests with no failures")
-    if len(cases) != 1 or cases[0].get("name") != "native_audio_portable_lifecycle":
-        raise ValueError("Expected only the portable lifecycle CTest case")
+    if not cases or skipped or failures:
+        raise ValueError("Expected executed native portable tests with no skips or failures")
+    if len(cases) != 2 or {case.get("name") for case in cases} != {
+            "native_audio_portable_lifecycle", "native_audio_rate_conversion"}:
+        raise ValueError("Expected the portable lifecycle and rate-conversion CTest cases")
     return {"count": len(cases), "skipped": skipped, "failures": failures}
+
+
+def validate_rate_controls(record):
+    if (type(record.get("schema")) is not int or record["schema"] != 1
+            or record.get("suite") != "native-audio-rate-conversion"
+            or type(record.get("checks")) is not int or record["checks"] <= 0
+            or type(record.get("failures")) is not int or record["failures"] != 0
+            or any(record.get(key) is not False for key in (
+                "wasapi_compiled", "playback_tested", "audible_output_measured"))
+            or record.get("soxr_version") != "libsoxr-0.1.3"):
+        raise ValueError("Missing executed portable device-rate controls")
+    profile = record.get("profile", {})
+    if (type(profile.get("recipe")) is not int or profile["recipe"] != 6
+            or type(profile.get("channels")) is not int or profile["channels"] != 2
+            or type(profile.get("runtime_threads")) is not int or profile["runtime_threads"] != 1
+            or profile.get("linear_phase") is not True or profile.get("implicit_os_conversion") is not False):
+        raise ValueError("Device conversion profile is missing or changed")
+    expected = {"identity-bits", "44100-to-48000", "48000-to-44100", "8000-to-192000",
+                "192000-to-8000", "short-empty-downsample", "fractional-frame-count", "seek-phase-preserved",
+                "pause-reset-drain", "allocation-failure", "converter-failure", "capacity-rejection",
+                "environment-rejection", "zero-isolation-tail-drain"}
+    cases = record.get("cases")
+    if (not isinstance(cases, list) or len(cases) != len(expected)
+            or any(not isinstance(case, dict) for case in cases)
+            or {case.get("name") for case in cases} != expected
+            or any(type(case.get("failures")) is not int or case["failures"] != 0 for case in cases)):
+        raise ValueError("Required device conversion cases did not all pass")
+    for case in cases:
+        if any(type(case.get(key)) is not int or case[key] < 0 for key in (
+                "source_rate", "endpoint_rate", "source_frames", "endpoint_frames")):
+            raise ValueError("Invalid device conversion case measurements")
+        if (not 8000 <= case["source_rate"] <= 192000 or not 8000 <= case["endpoint_rate"] <= 192000
+                or not 0 < case["source_frames"] <= 32_000_000 or case["endpoint_frames"] > 32_000_000):
+            raise ValueError("Device conversion case is outside the declared domain")
+    indexed = {case["name"]: case for case in cases}
+    for name, rates in {"44100-to-48000": (44100, 48000), "48000-to-44100": (48000, 44100),
+                        "8000-to-192000": (8000, 192000), "192000-to-8000": (192000, 8000),
+                        "fractional-frame-count": (44100, 48000)}.items():
+        case = indexed[name]
+        if (case["source_rate"], case["endpoint_rate"]) != rates or case["endpoint_frames"] != (
+                case["source_frames"] * rates[1] + rates[0] // 2) // rates[0]:
+            raise ValueError("Device conversion count/rate case disagrees with its declared input")
+    identity = indexed["identity-bits"]
+    if (identity["source_rate"] != identity["endpoint_rate"]
+            or identity["source_frames"] != identity["endpoint_frames"]):
+        raise ValueError("Identity control changed the sample clock or frame count")
+    if any(indexed[name]["endpoint_frames"] != 0 for name in (
+            "short-empty-downsample", "allocation-failure", "converter-failure", "capacity-rejection",
+            "environment-rejection")):
+        raise ValueError("A rejected conversion reported committed output")
+    return record
 
 
 def validate_endpoint_probe(record, exit_code):
@@ -43,7 +97,9 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--generator", default="Ninja")
     parser.add_argument("--portable-lifecycle-only", action="store_true",
-                        help="Validate the portable driver locally on a non-Windows host; no WASAPI build or endpoint probe")
+                        help="Validate lifecycle and device-rate controls locally; no WASAPI build or endpoint probe")
+    parser.add_argument("--soxr-library", type=Path,
+                        help="Explicit public SoXR library for local portable controls; Windows builds its pinned source")
     args = parser.parse_args()
     app = Path(__file__).resolve().parents[1]
     root = app.parent
@@ -55,7 +111,7 @@ def main():
     env.pop("REBASE_RESEARCH_ROOT", None)
     report = {
         "schema": "rebase.windows-native-audio-ci.v1", "status": "failed",
-        "scope": "Authored adapter compilation and portable lifecycle controls; endpoint discovery does not establish playback",
+        "scope": "Authored adapter compilation, lifecycle and device-rate controls; endpoint discovery does not establish playback",
         "mode": "portable-lifecycle-only" if args.portable_lifecycle_only else "windows-native",
         "configuration": args.configuration, "platform": platform.system(), "architecture": platform.machine(),
         "commit": os.environ.get("GITHUB_SHA"),
@@ -115,19 +171,34 @@ def main():
         if args.portable_lifecycle_only:
             if os.name == "nt":
                 raise RuntimeError("Use the full native lane on Windows")
+            if args.soxr_library is None or not args.soxr_library.is_file():
+                raise RuntimeError("Local portable controls require an explicit public --soxr-library")
         elif os.name != "nt" or platform.machine().lower() not in ("amd64", "x86_64"):
             raise RuntimeError("This lane requires native Windows x64; local portable mode must be explicit")
+        elif args.soxr_library is not None:
+            raise RuntimeError("Windows must build and validate the pinned SoXR source")
         if build.exists() or xml_path.exists() or (out / "endpoint-probe.json").exists():
             raise RuntimeError("Use a fresh evidence directory")
         compiler = "clang++" if args.portable_lifecycle_only else "clang-cl"
         run([compiler, "--version"], "compiler-version", timeout=30)
         run(["cmake", "--version"], "cmake-version", timeout=30)
+        if args.portable_lifecycle_only:
+            library = args.soxr_library.resolve()
+            report["soxr"] = {"scope": "Explicit local library; not a Windows binary qualification",
+                              "library": clean(str(library)), "sha256": hashlib.sha256(library.read_bytes()).hexdigest()}
+        else:
+            soxr_out = out / "soxr"
+            run([sys.executable, str(app / "scripts/build-windows-soxr.py"), "--output", str(soxr_out)],
+                "build-pinned-soxr")
+            report["soxr"] = validate_soxr_build(app, soxr_out, os.environ.get("GITHUB_SHA"))
+            library = soxr_out / "install/lib/soxr.lib"
         configure = ["cmake", "-S", str(app / "Windows/NativeAudio"), "-B", str(build),
                      "-G", args.generator, f"-DCMAKE_BUILD_TYPE={args.configuration}",
                      "-DCMAKE_CXX_COMPILER=" + compiler, "-DBUILD_TESTING=ON",
-                     "-DREBASE_RUN_AUDIO_DEVICE_TESTS=OFF"]
+                     "-DREBASE_RUN_AUDIO_DEVICE_TESTS=OFF", "-DREBASE_SOXR_LIBRARY=" + str(library)]
         if not args.portable_lifecycle_only:
             configure.append("-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+            configure.append("-DREBASE_SOXR_RUNTIME=" + str(soxr_out / "install/bin/soxr.dll"))
         run(configure, "configure")
         run(["cmake", "--build", str(build), "--parallel", "2"], "build")
         run(["ctest", "--test-dir", str(build), "--output-on-failure", "--timeout", "30",
@@ -145,6 +216,11 @@ def main():
                 lifecycle.get("wasapi_compiled") is not False):
             raise RuntimeError("Portable lifecycle control evidence is incomplete or failed")
         report["portable_lifecycle"] = lifecycle
+        run([str(build / ("rebase_audio_conversion_tests" + suffix)), "--json", str(out / "rate-conversion.json")],
+            "rate-conversion-controls", timeout=60)
+        rate_controls = json.loads((out / "rate-conversion.json").read_text(encoding="utf-8"))
+        write_record(out / "rate-conversion.json", rate_controls)
+        report["portable_rate_conversion"] = validate_rate_controls(rate_controls)
         if args.portable_lifecycle_only:
             report["endpoint_probe"] = {"outcome": "not-run-non-windows-portable-mode"}
         else:
@@ -171,7 +247,7 @@ def main():
     finally:
         try:
             sanitize_xml()
-            for name in ("lifecycle.json", "endpoint-probe.json"):
+            for name in ("lifecycle.json", "rate-conversion.json", "endpoint-probe.json"):
                 path = out / name
                 if path.is_file():
                     write_record(path, json.loads(path.read_text(encoding="utf-8")))

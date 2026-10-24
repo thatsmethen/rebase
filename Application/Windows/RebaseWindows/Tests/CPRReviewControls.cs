@@ -168,6 +168,7 @@ static class CPRReviewControls
     private sealed class SilentAudio : IAudioOutput
     {
         public Task<DeviceFormat> Format() => throw new Exception("Review must not open audio.");
+        public Task<AudioRateInfo> RateInfo() => throw new Exception("Review must not query audio conversion.");
         public Task<AudioStatus> Status() => throw new Exception("Review must not poll audio.");
         public Task SetSource(LoadedSnapshot source) => throw new Exception("Review must not load audio.");
         public Task Play() => throw new Exception("Review must not play audio.");

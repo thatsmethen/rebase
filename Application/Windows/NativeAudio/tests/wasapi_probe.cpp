@@ -17,6 +17,7 @@ struct Report {
     unsigned checks = 0;
     RBAudioDeviceFormat format{};
     RBAudioStatus status{};
+    RBAudioRateInfo rate{};
     bool ok(bool condition, const char *name) {
         ++checks;
         if (!condition) { stage = name; return false; }
@@ -30,12 +31,14 @@ struct Report {
             "\"wasapi_compiled\":true,\"allow_audio\":%s,\"playback_attempted\":%s,\"playback_tested\":%s,"
             "\"audible_output_measured\":false,\"mix_sample_rate\":%u,\"mix_channels\":%u,"
             "\"mix_float32_stereo\":%s,\"final_phase\":%u,\"final_position_frames\":%llu,"
-            "\"endpoint_buffer_frames\":%u,\"clock_reading_approximate\":%s}\n",
+            "\"endpoint_buffer_frames\":%u,\"clock_reading_approximate\":%s,"
+            "\"source_sample_rate\":%u,\"rate_conversion\":%s,\"converted_frames\":%llu}\n",
             outcome, stage, result, status.hresult, checks,
             allow_audio ? "true" : "false", attempted ? "true" : "false", verified ? "true" : "false",
             format.sample_rate, format.channels, format.float32 ? "true" : "false", status.phase,
             static_cast<unsigned long long>(status.position_frames), status.endpoint_buffer_frames,
-            status.clock_reading_approximate ? "true" : "false");
+            status.clock_reading_approximate ? "true" : "false", rate.source_rate,
+            rate.converted ? "true" : "false", static_cast<unsigned long long>(rate.endpoint_frames));
     }
 };
 bool read(RBAudio *audio, Report &report) {
@@ -75,7 +78,8 @@ int probe(Report &report) {
     RBAudioStatus sentinel{}; sentinel.abi_version = 1234;
     if (!report.ok(rb_audio_status(nullptr, &sentinel) == RB_AUDIO_ARGUMENT && sentinel.abi_version == 1234,
                    "failed-output-preserved")) return 1;
-    const uint32_t rate = report.format.sample_rate;
+    // Deliberately differ from the endpoint to exercise the explicit converter.
+    const uint32_t rate = report.format.sample_rate == 44100 ? 48000u : 44100u;
     const uint64_t total = rate * 2;
     std::vector<float> pcm(static_cast<size_t>(total) * 2);
     for (uint64_t i = 0; i < total; ++i) {
@@ -86,6 +90,12 @@ int probe(Report &report) {
     if (!report.call(rb_audio_set_source(raw, pcm.data(), total, rate), "snapshot")) {
         rb_audio_status(raw, &report.status); return 1;
     }
+    if (!report.call(rb_audio_rate_info(raw, &report.rate), "rate-info") ||
+        !report.ok(report.rate.abi_version == 1 && report.rate.source_rate == rate &&
+            report.rate.endpoint_rate == report.format.sample_rate && report.rate.converted == 1 &&
+            report.rate.soxr_recipe == 6 && report.rate.source_frames == total &&
+            report.rate.endpoint_frames == static_cast<uint64_t>(report.format.sample_rate) * 2,
+            "converted-snapshot-rates")) return 1;
     std::fill(pcm.begin(), pcm.end(), 0); // Backend must own an independent snapshot.
     pcm.clear(); pcm.shrink_to_fit();
     if (!report.ok(rb_audio_set_source(raw, nullptr, total, rate) == RB_AUDIO_ARGUMENT,
@@ -94,8 +104,8 @@ int probe(Report &report) {
                                        "invalid-snapshot-preserves-source")) return 1;
     report.attempted = true;
     if (!report.call(rb_audio_play(raw), "play") || !wait_position(raw, report, 0)) return 1;
-    if (!report.ok(report.status.submitted_peak_left > 0 && report.status.submitted_peak_left <= 0.02001f &&
-                   report.status.submitted_peak_right > 0 && report.status.submitted_peak_right <= 0.01001f,
+    if (!report.ok(report.status.submitted_peak_left > 0 && report.status.submitted_peak_left <= 0.021f &&
+                   report.status.submitted_peak_right > 0 && report.status.submitted_peak_right <= 0.011f,
                    "copied-source-meters")) return 1;
     if (!report.call(rb_audio_pause(raw), "pause") || !read(raw, report) ||
         !report.ok(report.status.phase == RB_AUDIO_PAUSED, "paused-phase")) return 1;

@@ -1,72 +1,86 @@
-# Native Windows audio foundation
+# Native Windows audio
 
-This is the Windows 10+ output adapter for the shared Rebase rendering work. It is a standalone C ABI and WASAPI shared-mode backend, not yet a Windows application, project renderer, or full device-support claim. The public header is `include/rebase_windows_audio.h`.
+This Windows 10+ C ABI supplies the WPF host's WASAPI shared-mode output. The caller supplies a complete, pre-rendered, interleaved Float32 stereo snapshot. It is copied during `rb_audio_set_source`; the caller must keep its memory stable until that call returns and may release it afterward. No reader, Swift, managed-runtime or caller callback runs on the device thread.
 
-The caller supplies a complete, pre-rendered, interleaved Float32 stereo snapshot. The adapter validates all samples, copies the snapshot during `rb_audio_set_source`, then owns the copy. The caller must keep the input memory stable until that call returns and may release it afterward. Accepted source lengths are 1–32,000,000 frames; accepted integral rates are 8,000–192,000 Hz. This bounded snapshot design consumes memory proportional to project length. Streaming from disk remains separate work.
+Accepted sources contain 1–32,000,000 frames at integral rates from 8,000 to 192,000 Hz. The converted snapshot has a separate 32,000,000-frame limit. Memory and preparation time therefore scale with project length. Disk streaming, recording, device selection, exclusive mode and ASIO remain separate work.
 
-## Rate and format boundary
+## Explicit device-rate conversion
 
-`rb_audio_default_format` discovers the default multimedia render endpoint's mix rate and channel count. Its `float32` flag means that the mix is specifically Float32 **stereo** with either the conventional left/right channel mask or no mask. Discovery exposes no endpoint name, device identifier, or personal machine information.
+`rb_audio_default_format` discovers the default multimedia render endpoint's mix rate and channel count. Its `float32` flag means Float32 **stereo** with the conventional left/right mask or no mask. No device name or identifier is exposed. Other channel layouts, sample types and rates outside 8–192 kHz are rejected.
 
-The snapshot must already have that exact mix rate and stereo layout. Source-rate conversion belongs upstream in the shared rendering layer. This adapter does not enable `AUTOCONVERTPCM`, select an implicit rate-conversion algorithm, or downmix multichannel audio. An unsupported endpoint or mismatched rate returns `RB_AUDIO_FORMAT`. Windows shared-mode processing and device effects can still affect output; this API does not claim bit-identical DAC output.
+At equal rates the adapter moves its copied snapshot directly into playback storage, preserving every Float32 word, including signed zero and subnormal samples. At different rates it uses the pinned public **SoXR 0.1.3** library with an explicit application profile: interleaved Float32 stereo, VHQ recipe 6, linear phase, default quality flags and one runtime thread. This device adapter is independently authored. It does not reuse the recovered CPR mode-2 wrapper's carry/EOF policy and does not claim reference-library or AVAudioEngine output equivalence.
+
+Conversion completes during source setup before READY. It consumes actual backend counts, signals EOF with NULL input and drains all returned frames. The upper allocation bound is `ceil(sourceFrames * endpointRate / sourceRate)`; bounds above 32 million endpoint frames fail before allocation. Actual output may be shorter because of final sample-count rounding. A downsampled source that produces zero frames is rejected explicitly. No artificial tail, padding or truncated converter output is installed. A spare single-frame sink detects unexpected output beyond the allocated bound. Destination storage is allocated once and shrunk in place after draining; it is not repeatedly copied while growing.
+
+Conversion requires nearest rounding, preserved denormals and masked floating-point traps on qualified x64/arm64 environments. Unsupported environments fail without changing their controls. Converter creation/process errors, nonfinite output and nonprogress are rejected. Equal-rate copying needs no floating arithmetic and bypasses converter qualification. The public source validator classifies sample bits before arithmetic, including rejection of signaling NaNs.
+
+This adapter never enables `AUTOCONVERTPCM` or `SRC_DEFAULT_QUALITY`. WASAPI is initialized at the discovered endpoint mix rate. Shared-mode processing, Windows effects and the device can still change output; this is not a bit-identical DAC claim.
+
+## Clock and frame units
+
+The existing 72-byte `RBAudioStatus` and seek ABI remain in **source frames**: `sample_rate`, `total_frames`, `position_frames` and `submitted_frames` describe the supplied project or source-event snapshot. `endpoint_buffer_frames` is explicitly in endpoint frames. Peaks measure the most recently submitted endpoint-rate PCM block before Windows processing, not speakers or the DAC.
+
+The additive `rb_audio_rate_info` returns the 56-byte `RBAudioRateInfo`: ABI version 1, source/endpoint rates, conversion flag, original frame count, actual converted frame count, endpoint position/submitted counters, recipe 6 for conversion (0 for identity), and reserved zero. Before any successful source configuration the rates and frame counts are zero. A fault may retain the last configured metadata; inspect the status phase and accept a new rate receipt only after successful source setup. Failed API calls preserve caller output structures.
+
+Transport runs internally in endpoint frames. Seeking maps a source frame to the nearest frame in the **same fully converted snapshot**, with integer half-up rounding; exact source end maps to exact endpoint end. Resampling is never restarted from the seek offset, so conversion phase and surrounding filter context are preserved. Quantization is at most half an endpoint frame. A near-end seek that rounds to endpoint end finishes at exact source end.
+
+Within a seek generation, the public position is the requested source-frame origin plus `floor(endpointClockElapsed * sourceRate / endpointRate)`, bounded to the source. A stale clock cannot move it backward. Natural completion waits for all real converted endpoint frames to be consumed, then sets exact source end. An enqueued count is not a playback position. At the tail, zero-fill used to complete a WASAPI buffer does not extend the source duration. Clock progress beyond submitted endpoint audio before that tail is an underrun fault.
 
 ## Ownership and lifecycle
 
-One MTA worker owns every COM audio object, snapshot, clock observation, and transport state. All public operations run synchronously through a serialized command queue. Callers may submit operations from different threads, but must not destroy a handle concurrently with another call. They must not call the API from an audio callback. Destruction signals the command loop, stops the stream, releases COM objects on their owning thread, and joins the worker. It does not promise to interrupt a blocking operating-system/driver call.
+One MTA worker owns every COM audio object, snapshot, clock observation and transport state. Calls run synchronously through a serialized queue. Callers may submit from different threads but must not destroy a handle concurrently with another call or call from an audio callback. Shutdown stops the stream, releases COM objects on their owner and joins the worker. It cannot interrupt a blocking driver call or an in-progress source conversion.
 
-The worker waits for WASAPI's event notification. Its data path consists of bounded copies, zero-filling the final buffer, and peak scans. It performs no file I/O, IPC, allocation, Swift callback, or managed-runtime callback in that data path. Source replacement may allocate and close/open a device as a control operation. Signalled output events are serviced between commands so sustained UI polling does not starve rendering. No hard real-time scheduling or low-latency guarantee is claimed in this foundation.
+The event-driven data path performs bounded copies, final-buffer zero fill and peak scans. It performs no conversion, file I/O, IPC or allocation. Source setup is a control operation and may allocate, convert and open a device. Audio events are serviced between commands so sustained UI polling does not starve rendering. No hard real-time or low-latency guarantee is claimed.
 
 | Operation | Result |
 | --- | --- |
-| Create | Empty handle; no device opened or sound played. |
-| Set source | Validate and copy input; stop previous stream; open default endpoint; enter ready. Invalid input preserves the previous source; an open failure enters fault. |
-| Play | Prime a ready stream or resume a paused stream. Repeated play is harmless. A finished stream needs a seek or stop first. |
-| Pause | Stop the device clock and retain queued audio. Repeated pause is harmless. |
-| Stop | Stop and reset WASAPI; flush queue; rewind to frame zero; enter ready. |
-| Seek | Stop/reset/flush, set a new source position and clock origin, then resume if previously playing. Seek to end enters finished. Seeking while paused enters ready. |
-| Status | Observe the device clock. Position remains bounded and monotonic within the current generation. It is not merely the count enqueued. |
-| Device error | Enter fault, preserve the error and HRESULT, close the stream. Setting a new valid source is the recovery boundary. |
+| Create | Empty handle; no endpoint opened or sound played. |
+| Set source | Validate/copy input, stop the old stream, open the endpoint and prepare its rate snapshot. Invalid input preserves the old source. Endpoint, allocation or conversion failure after replacement begins enters fault; no partial new source is installed. |
+| Play | Prime READY or resume PAUSED. Repeated PLAYING is harmless. FINISHED requires seek or stop. |
+| Pause | Stop the device clock and retain converted data already queued. Repeated pause is harmless. |
+| Stop | Stop/reset WASAPI, flush the queue and rewind both clocks to zero; enter READY. |
+| Seek | Stop/reset/flush, map the source position to the converted snapshot, then resume only if previously playing. Seeking while paused enters READY. |
+| Status/rate info | Observe the owning device clock, preserving source-unit and endpoint-unit diagnostics separately. |
+| Device/converter failure | Enter FAULT and close the stream. A new valid source configuration is the recovery boundary. |
 
-Stop, seek, source replacement, and fault each advance `generation`, allowing a host to discard obsolete UI observations. Clock progress beyond submitted source frames before the final buffer is an underrun fault; inserted silence must not be reported as delivered source audio. At the tail, position is capped at the final source frame. `submitted_peak_left/right` describe the last submitted source block before Windows processing, not a speaker measurement. Paused, finished, and fault states clear these meters. `clock_reading_approximate` exposes `IAudioClock::GetPosition` returning `S_FALSE`.
+Stop, seek, source replacement and fault each advance `generation`. `clock_reading_approximate` exposes `IAudioClock::GetPosition` returning `S_FALSE`. Pause, completion and fault clear peaks. Endpoint changes are not followed automatically; invalidation faults, and source reload can open the new default.
 
-Output structs are written only when the public operation succeeds. A successful status query can report a fault state; inspect `phase`, `result`, and `hresult`. Format discovery is rejected while playing. Default-device changes are not followed automatically; an invalidated device faults and a source reload can reopen the new default. Recording, device selection, exclusive mode, ASIO, disk streaming, and frontend integration are outside this adapter.
+Error codes retain the original values 0–8 and add 9 (conversion failure), 10 (converted snapshot capacity), 11 (unsupported floating-point environment) and 12 (downsampling produced no endpoint frames).
 
 ## Build and verification
 
-```sh
-cmake -S Application/Windows/NativeAudio -B build-native-audio -G Ninja -DCMAKE_BUILD_TYPE=Release
-cmake --build build-native-audio
-ctest --test-dir build-native-audio --output-on-failure --output-junit lifecycle.xml
-```
-
-Use a Visual Studio developer environment with the Windows SDK on Windows. The CMake target builds `RebaseWindowsAudio.dll` and `rebase_wasapi_probe.exe` there; keep them together. On other platforms only the portable transport model and its tests build. On macOS without Ninja, use `-G "Unix Makefiles"`.
-
-The default CTest suite exercises the portable transport model, not WASAPI. Its assertions remain enabled in Release. `rebase_audio_lifecycle_tests --json lifecycle.json` emits machine-readable results, with `playback_tested:false`.
-
-Hosted Windows CI should then run the read-only probe and retain its JSON and exit code:
+Build and verify the pinned public library first. On Windows, from the repository root in a Visual Studio developer environment:
 
 ```powershell
-& ./build-native-audio/rebase_wasapi_probe.exe --json native-audio-endpoint.json
+python Application/scripts/build-windows-soxr.py --output .local/builds/windows-soxr
+cmake -S Application/Windows/NativeAudio -B .local/builds/native-audio -G Ninja -DCMAKE_BUILD_TYPE=Release -DREBASE_SOXR_LIBRARY="$PWD/.local/builds/windows-soxr/install/lib/soxr.lib" -DREBASE_SOXR_RUNTIME="$PWD/.local/builds/windows-soxr/install/bin/soxr.dll"
+cmake --build .local/builds/native-audio
+ctest --test-dir .local/builds/native-audio --output-on-failure --output-junit lifecycle.xml
+```
+
+CMake copies the supplied matching `soxr.dll` beside the native DLL and conversion tests. Distribution must retain that library and its notices. The library/runtime paths must come from the same verified build. On macOS use the pinned `Application/ThirdParty/build-soxr.sh` build, pass its installed dylib as `REBASE_SOXR_LIBRARY`, and use `Unix Makefiles` if Ninja is absent. Only portable components build there; WASAPI is Windows-only.
+
+The default CTest suite executes `native_audio_portable_lifecycle` and `native_audio_rate_conversion`. Their binaries accept `--json PATH`; assertions remain enabled in Release. Controls cover identity bits, 44.1/48 kHz and 8/192 kHz boundaries, fractional/short/empty results, zero/stereo isolation and a late impulse through EOF, source/endpoint clock projection, near-end seeks, pause/reset/drain, invalid configuration, fault recovery, capacity, and injected allocation/backend failures. Injection checks the production failure paths; it is not evidence of an actual memory outage or driver failure. Both portable receipts report `playback_tested:false` and `wasapi_compiled:false`.
+
+Hosted Windows CI builds the WASAPI DLL and runs this read-only endpoint probe:
+
+```powershell
+& ./.local/builds/native-audio/rebase_wasapi_probe.exe --json endpoint.json
 $probeExit = $LASTEXITCODE
-# 0: endpoint observed; 77: no endpoint; any other code: probe failure.
-# Neither 0 nor 77 from this command establishes playback.
+# 0: endpoint observed; 77: no endpoint; other codes: failure.
+# Neither 0 nor 77 establishes playback.
 ```
 
-On an explicitly selected machine with an output endpoint, opt in to a quiet tone and native lifecycle test:
+On an explicitly selected machine with a real output endpoint, `--allow-audio` opts into a quiet tone and lifecycle test. It deliberately chooses a source rate different from the endpoint, checks the rate receipt, copied-snapshot meters, clock advance, pause/resume, active seek, stop/reset, exact-end completion and active destruction. Successful execution reports `playback_tested:true` but still `audible_output_measured:false`; there is no loopback or DAC measurement. Unsupported formats/missing endpoints return 77, failures return 1, and invalid invocation/artifact writing returns 2. `REBASE_RUN_AUDIO_DEVICE_TESTS=ON` adds this opt-in test to CTest.
 
-```powershell
-& ./build-native-audio/rebase_wasapi_probe.exe --allow-audio --json native-audio-device.json
-```
-
-The device test checks snapshot-copy ownership through submitted meters, real device-clock advance, pause/resume, active seek, stop/flush/rewind, seek-to-end, natural completion, and active destruction. A successful run reports `playback_tested:true` and `device-lifecycle-verified`; it still reports `audible_output_measured:false`. It does not record loopback or measure the DAC. Missing endpoints and unsupported mix formats return 77 with explicit unavailable results. Other failures return 1, invalid arguments/artifact output failures return 2. `-DREBASE_RUN_AUDIO_DEVICE_TESTS=ON` adds this opt-in test to CTest, where 77 is a skip rather than audio success.
-
-Local portable evidence is in `evidence/2026-10-23`. Windows compilation, endpoint behavior, frontend integration, and hardware output need their own evidence; local portable success establishes none of them.
+Historical local evidence under `evidence/2026-10-23` predates rate adaptation and remains unchanged. New local portable checks do not establish Windows compilation, real device behavior or equivalence with either platform's output system.
 
 ## Public implementation references
 
-- [IAudioClient::Initialize](https://learn.microsoft.com/en-us/windows/win32/api/audioclient/nf-audioclient-iaudioclient-initialize): shared-mode event initialization, duration/periodicity, and event-handle requirements.
-- [IAudioClock::GetPosition](https://learn.microsoft.com/en-us/windows/win32/api/audioclient/nf-audioclient-iaudioclock-getposition): device clock units, approximate readings, and stop/reset semantics.
-- [IAudioClient::Reset](https://learn.microsoft.com/en-us/windows/win32/api/audioclient/nf-audioclient-iaudioclient-reset): flushing requires a stopped stream.
-- [Low-latency audio](https://learn.microsoft.com/en-us/windows-hardware/drivers/audio/low-latency-audio): device-dependent periods and scheduling considerations for later latency work.
+- [IAudioClient::GetMixFormat](https://learn.microsoft.com/en-us/windows/win32/api/audioclient/nf-audioclient-iaudioclient-getmixformat): shared-engine format discovery and supported initialization format.
+- [IAudioClient::Initialize](https://learn.microsoft.com/en-us/windows/win32/api/audioclient/nf-audioclient-iaudioclient-initialize): shared-mode event initialization and event-handle requirements.
+- [IAudioClock::GetPosition](https://learn.microsoft.com/en-us/windows/win32/api/audioclient/nf-audioclient-iaudioclock-getposition): clock units/frequency, approximate readings and stream-relative time.
+- [IAudioClient::Reset](https://learn.microsoft.com/en-us/windows/win32/api/audioclient/nf-audioclient-iaudioclient-reset): stop before flushing/resetting the clock.
+- [Pinned public SoXR API](../../ThirdParty/soxr-0.1.3/src/soxr.h): explicit profile, consumed/produced counts and NULL-input EOF.
 
-The implementation uses public Windows APIs and independently authored lifecycle controls. It does not execute the proprietary reference or establish reference-application equivalence.
+No proprietary executable is used by this adapter or its authored controls.

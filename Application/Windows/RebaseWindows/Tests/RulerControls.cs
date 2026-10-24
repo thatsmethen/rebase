@@ -85,6 +85,7 @@ static class RulerControls
     {
         private static Exception Unexpected() => new Exception("Ruler projection must not access an audio device.");
         public Task<DeviceFormat> Format() => throw Unexpected();
+        public Task<AudioRateInfo> RateInfo() => throw Unexpected();
         public Task<AudioStatus> Status() => throw Unexpected();
         public Task SetSource(LoadedSnapshot source) => throw Unexpected();
         public Task Play() => throw Unexpected();

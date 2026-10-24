@@ -34,6 +34,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         this.audio = audio ?? new NativeAudio();
     }
     public SessionState State { get; private set; } = new();
+    public AudioRateInfo? PlaybackRateInfo { get; private set; }
     public RenderSnapshot? LastSourceExport { get; private set; }
     public RulerSnapshot? Ruler { get; private set; }
     public string? RulerError { get; private set; }
@@ -82,10 +83,57 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     private async Task InvalidateAudio()
     {
         audioEpoch++;
-        if (loadedRevision is null) return;
+        var configured = loadedRevision is not null;
+        loadedRevision = null; PlaybackRateInfo = null; audioPhase = 0; PeakLeft = PeakRight = 0;
+        if (!configured) return;
         try { await audio.Stop(); }
         catch (IOException error) { Report(error); }
-        finally { loadedRevision = null; audioPhase = 0; PeakLeft = PeakRight = 0; }
+    }
+    private string PlaybackFormatSuffix => PlaybackRateInfo is { } info && info.Converted == 1
+        ? $" · {info.SourceRate} → {info.EndpointRate} Hz (converted)" : "";
+    private static void ValidateOutputFormat(DeviceFormat format)
+    {
+        if (format.Float32 != 1 || format.Channels != 2 || format.SampleRate < 8000 || format.SampleRate > 192000)
+            throw new InvalidOperationException("The default output must use Float32 stereo at a rate from 8000 to 192000 Hz.");
+    }
+    private async Task InstallSource(LoadedSnapshot source, ulong revision)
+    {
+        await audio.SetSource(source);
+        try
+        {
+            // The default endpoint can change after discovery. Bind to the
+            // actual installed source and endpoint, not the earlier query.
+            var info = await audio.RateInfo();
+            info.ValidateForSource(source);
+            PlaybackRateInfo = info; loadedRevision = revision; audioPhase = 1;
+        }
+        catch
+        {
+            loadedRevision = null; PlaybackRateInfo = null; audioPhase = 0; PeakLeft = PeakRight = 0;
+            try { await audio.Stop(); } catch (IOException) { }
+            throw;
+        }
+    }
+    private void ValidateStatus(AudioStatus snapshot)
+    {
+        if (PlaybackRateInfo is not { } info || snapshot.AbiVersion != 1 || snapshot.Reserved != 0 ||
+            snapshot.SampleRate != info.SourceRate || snapshot.TotalFrames != info.SourceFrames ||
+            snapshot.PositionFrames > snapshot.SubmittedFrames || snapshot.SubmittedFrames > snapshot.TotalFrames ||
+            snapshot.Phase is < 1 or > 4 || snapshot.Result != 0 || snapshot.ClockReadingApproximate > 1 ||
+            !float.IsFinite(snapshot.PeakLeft) || !float.IsFinite(snapshot.PeakRight))
+            throw new InvalidDataException("The native transport position does not match the installed source.");
+    }
+    private async Task<AudioStatus> SeekLoadedSource(ulong frame)
+    {
+        await audio.Seek(frame);
+        var current = await audio.Status();
+        ValidateStatus(current);
+        // A rounded source-to-endpoint seek can reach endpoint EOF before the
+        // requested source frame equals source EOF. The native cursor decides.
+        Position = (double)current.PositionFrames / current.SampleRate;
+        audioPhase = current.Phase;
+        if (audioPhase != 2) PeakLeft = PeakRight = 0;
+        return current;
     }
     private async Task<SessionResponse> Send(SessionRequest request)
     {
@@ -276,14 +324,14 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     private async Task PlayProjectCore()
     {
         if (Project is null) throw new InvalidOperationException("Open a project before playback.");
+        audioEpoch++;
         if (loadedRevision == State.Revision)
         {
-            if (audioPhase == 4) { await audio.Seek(0); Position = 0; }
-            await audio.Play(); audioPhase = 2; Status = "Playing"; return;
+            if (audioPhase == 4) await SeekLoadedSource(0);
+            await audio.Play(); audioPhase = 2; Status = "Playing" + PlaybackFormatSuffix; return;
         }
         var format = await audio.Format();
-        if (format.Float32 != 1 || format.Channels != 2 || format.SampleRate != Project.SampleRate)
-            throw new InvalidOperationException($"This project uses {Project.SampleRate:0} Hz. The default output must use Float32 stereo at the same rate ({format.SampleRate} Hz currently). Device-rate conversion is not yet available.");
+        ValidateOutputFormat(format);
         Status = "Preparing playback…";
         Directory.CreateDirectory(scratch);
         var path = Path.Combine(scratch, "render-" + Guid.NewGuid().ToString("N") + ".wav");
@@ -293,13 +341,14 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
             var response = await Send(new() { Command = "render", Path = path });
             var info = response.Render ?? throw new InvalidDataException("The renderer omitted its output metadata.");
             var source = await Task.Run(() => SnapshotReader.Read(info, path, revision));
+            if (source.SampleRate != Project.SampleRate) throw new InvalidDataException("The project render changed its source sample rate.");
             if (revision != State.Revision) throw new InvalidOperationException("The project changed while rendering. Prepare playback again.");
-            await audio.SetSource(source);
-            loadedRevision = revision; audioPhase = 1;
+            await InstallSource(source, revision);
             var frame = (ulong)Math.Clamp(Math.Floor(Position * source.SampleRate), 0, source.Frames);
             if (frame >= source.Frames) frame = 0;
-            await audio.Seek(frame);
-            await audio.Play(); audioPhase = 2; Status = "Playing";
+            var current = await SeekLoadedSource(frame);
+            if (current.Phase == 4) { Status = "Finished" + PlaybackFormatSuffix; return; }
+            await audio.Play(); audioPhase = 2; Status = "Playing" + PlaybackFormatSuffix;
         }
         finally { try { File.Delete(path); } catch (IOException) { } }
     }
@@ -323,17 +372,14 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
             var source = await Task.Run(() => SnapshotReader.Read(info, path, revision, selected));
             if (State.Revision != revision || State.Selection.ClipID != id) throw new InvalidOperationException("The selected source event changed while rendering.");
             var format = await audio.Format();
-            if (format.Float32 != 1 || format.Channels != 2 || format.SampleRate != source.SampleRate)
-                throw new InvalidOperationException($"This source event uses {source.SampleRate} Hz. The default output must use Float32 stereo at that exact rate ({format.SampleRate} Hz currently). Device-rate conversion is not yet available.");
-            await audio.SetSource(source);
-            loadedRevision = revision; audioPhase = 1;
+            ValidateOutputFormat(format);
+            await InstallSource(source, revision);
             sourceDuration = (double)source.Frames / source.SampleRate;
             var frame = (ulong)Math.Clamp(Math.Round(seconds * source.SampleRate, MidpointRounding.AwayFromZero), 0, source.Frames);
             if (rewindAtEnd && frame == source.Frames) frame = 0;
-            await audio.Seek(frame); Position = (double)frame / source.SampleRate;
-            if (play && frame < source.Frames) { await audio.Play(); audioPhase = 2; }
-            else if (frame == source.Frames) audioPhase = 4;
-            Status = audioPhase == 2 ? "Auditioning source: " + selected.Name : "Source position updated; source and media rechecked.";
+            var current = await SeekLoadedSource(frame);
+            if (play && current.Phase != 4) { await audio.Play(); audioPhase = 2; }
+            Status = (audioPhase == 2 ? "Auditioning source: " + selected.Name : "Source position updated; source and media rechecked.") + PlaybackFormatSuffix;
         }
         finally { try { File.Delete(path); } catch (IOException) { } }
     }
@@ -341,7 +387,24 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     {
         if (loadedRevision is null || audioPhase != 2) return;
         audioEpoch++;
-        await audio.Pause(); audioPhase = 3; PeakLeft = PeakRight = 0; Status = "Paused";
+        try
+        {
+            await audio.Pause();
+            // Source audition deliberately reconstructs and revalidates on
+            // resume. Preserve the frozen device position before that rebuild;
+            // the last UI poll can be older than the actual pause boundary.
+            var frozen = await audio.Status();
+            ValidateStatus(frozen);
+            if (frozen.Phase is not (3 or 4)) throw new InvalidDataException("The native transport did not confirm a paused position.");
+            Position = (double)frozen.PositionFrames / frozen.SampleRate;
+            audioPhase = frozen.Phase; PeakLeft = PeakRight = 0;
+            Status = (audioPhase == 4 ? "Finished" : "Paused") + PlaybackFormatSuffix;
+        }
+        catch
+        {
+            await InvalidateAudio(); Position = 0;
+            throw;
+        }
     });
     public Task Stop() => Execute(async () =>
     {
@@ -371,8 +434,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         Position = Math.Clamp(seconds, 0, Project?.Duration ?? 0);
         if (loadedRevision is not null && Project is not null)
         {
-            await audio.Seek((ulong)Math.Floor(Position * Project.SampleRate));
-            var current = await audio.Status(); audioPhase = current.Phase;
+            await SeekLoadedSource((ulong)Math.Floor(Position * PlaybackRateInfo!.Value.SourceRate));
         }
     }
     public async Task Poll()
@@ -385,6 +447,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         {
             var snapshot = await audio.Status();
             if (loadedRevision != revision || audioEpoch != epoch || Busy || closing) return;
+            ValidateStatus(snapshot);
             audioPhase = snapshot.Phase;
             Position = snapshot.SampleRate == 0 ? 0 : (double)snapshot.PositionFrames / snapshot.SampleRate;
             PeakLeft = snapshot.PeakLeft; PeakRight = snapshot.PeakRight;
@@ -393,7 +456,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         catch (Exception error)
         {
             if (loadedRevision != revision || audioEpoch != epoch || Busy || closing) return;
-            loadedRevision = null; audioPhase = 0; PeakLeft = PeakRight = 0; Report(error);
+            await InvalidateAudio(); Report(error);
         }
         finally { polling = false; }
     }

@@ -122,9 +122,11 @@ static class AutomationControls
     private sealed class ControlAudio : IAudioOutput
     {
         public int SourceCopies, Stops;
+        private ulong frames;
         public Task<DeviceFormat> Format() => Task.FromResult(new DeviceFormat { SampleRate = 48000, Channels = 2, Float32 = 1 });
-        public Task<AudioStatus> Status() => Task.FromResult(new AudioStatus { AbiVersion = 1, SampleRate = 48000 });
-        public Task SetSource(LoadedSnapshot source) { SourceCopies++; return Task.CompletedTask; }
+        public Task<AudioStatus> Status() => Task.FromResult(new AudioStatus { AbiVersion = 1, SampleRate = 48000, TotalFrames = frames, SubmittedFrames = frames, Phase = 2 });
+        public Task<AudioRateInfo> RateInfo() => Task.FromResult(new AudioRateInfo { AbiVersion = 1, SourceRate = 48000, EndpointRate = 48000, SourceFrames = frames, EndpointFrames = frames });
+        public Task SetSource(LoadedSnapshot source) { SourceCopies++; frames = source.Frames; return Task.CompletedTask; }
         public Task Play() => Task.CompletedTask;
         public Task Pause() => Task.CompletedTask;
         public Task Stop() { Stops++; return Task.CompletedTask; }

@@ -72,4 +72,5 @@ checks += await WaveformControls.Run();
 checks += await RulerControls.Run();
 checks += await CPRReviewControls.Run();
 checks += await AutomationControls.Run();
+checks += await PlaybackRateControls.Run();
 Console.WriteLine(JsonSerializer.Serialize(new { schema = 1, suite = "windows-host-portable-controls", checks, failures = 0, wpf_runtime_tested = false, playback_tested = false }));

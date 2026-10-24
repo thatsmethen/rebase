@@ -15,6 +15,26 @@ public struct AudioStatus
     public int Result, HResult;
     public uint ClockReadingApproximate, Reserved;
 }
+[StructLayout(LayoutKind.Sequential)]
+public struct AudioRateInfo
+{
+    public uint AbiVersion, SourceRate, EndpointRate, Converted;
+    public ulong SourceFrames, EndpointFrames, EndpointPositionFrames, EndpointSubmittedFrames;
+    public uint SoxrRecipe, Reserved;
+
+    public readonly void ValidateForSource(LoadedSnapshot source)
+    {
+        if (source.SampleRate < 8000 || source.SampleRate > 192000 || source.Frames == 0 || source.Frames > 32_000_000)
+            throw new InvalidDataException("The source exceeds the native transport format.");
+        var maximum = (source.Frames * EndpointRate + source.SampleRate - 1) / source.SampleRate;
+        if (AbiVersion != 1 || Reserved != 0 || SourceRate != source.SampleRate || SourceFrames != source.Frames ||
+            EndpointRate < 8000 || EndpointRate > 192000 || EndpointFrames == 0 || EndpointFrames > 32_000_000 ||
+            EndpointFrames > maximum || EndpointPositionFrames != 0 || EndpointSubmittedFrames != 0 ||
+            Converted != (SourceRate == EndpointRate ? 0u : 1u) || SoxrRecipe != (Converted == 1 ? 6u : 0u) ||
+            (Converted == 0 && EndpointFrames != SourceFrames))
+            throw new InvalidDataException("The native rate-conversion receipt does not match this audio snapshot.");
+    }
+}
 public sealed class NativeAudioException(int code, string message) : IOException(message)
 {
     public int Code { get; } = code;
@@ -23,6 +43,7 @@ public interface IAudioOutput : IAsyncDisposable
 {
     Task<DeviceFormat> Format();
     Task<AudioStatus> Status();
+    Task<AudioRateInfo> RateInfo();
     Task SetSource(LoadedSnapshot source);
     Task Play();
     Task Pause();
@@ -48,11 +69,12 @@ public sealed class NativeAudio : IAudioOutput
         [DllImport(Dll, EntryPoint = "rb_audio_stop", CallingConvention = CallingConvention.Cdecl)] public static extern int Stop(AudioHandle handle);
         [DllImport(Dll, EntryPoint = "rb_audio_seek", CallingConvention = CallingConvention.Cdecl)] public static extern int Seek(AudioHandle handle, ulong frame);
         [DllImport(Dll, EntryPoint = "rb_audio_status", CallingConvention = CallingConvention.Cdecl)] public static extern int Status(AudioHandle handle, out AudioStatus status);
+        [DllImport(Dll, EntryPoint = "rb_audio_rate_info", CallingConvention = CallingConvention.Cdecl)] public static extern int RateInfo(AudioHandle handle, out AudioRateInfo info);
     }
     static NativeAudio()
     {
         NativeLibrary.SetDllImportResolver(typeof(NativeAudio).Assembly, Resolve);
-        if (Marshal.SizeOf<DeviceFormat>() != 12 || Marshal.SizeOf<AudioStatus>() != 72)
+        if (Marshal.SizeOf<DeviceFormat>() != 12 || Marshal.SizeOf<AudioStatus>() != 72 || Marshal.SizeOf<AudioRateInfo>() != 56)
             throw new InvalidOperationException("The native audio ABI layout does not match this build.");
     }
     private static IntPtr Resolve(string name, Assembly assembly, DllImportSearchPath? path) => name == "RebaseWindowsAudio.dll"
@@ -68,10 +90,14 @@ public sealed class NativeAudio : IAudioOutput
             1 => "The audio snapshot or transport position is invalid.",
             2 => "This transport operation is not available in the current state.",
             3 => "Windows has no default playback device. Connect or enable an output device and try again.",
-            4 => "The output must use Float32 stereo at the project's exact sample rate. Device-rate conversion is not yet available.",
+            4 => "The output must use Float32 stereo at a supported rate from 8000 to 192000 Hz.",
             5 => "The Windows audio device failed or changed. Prepare playback again.",
             6 => "There is not enough memory for this audio snapshot.",
             8 => "Playback stopped because the device clock outran submitted audio.",
+            9 => "The endpoint-rate conversion failed. Prepare playback again.",
+            10 => "The converted audio exceeds the supported playback snapshot size.",
+            11 => "The audio converter requires the supported floating-point environment.",
+            12 => "This source is too short to produce an output frame at the device rate.",
             _ => "The native audio service stopped unexpectedly (code " + result + ")."
         });
     }
@@ -97,11 +123,27 @@ public sealed class NativeAudio : IAudioOutput
         if (result.Phase == 5) Check(result.Result);
         return result;
     });
-    public Task SetSource(LoadedSnapshot source) => Run(h =>
+    internal static void ValidateSource(LoadedSnapshot? source)
     {
-        unsafe { fixed (float* samples = source.Samples) { Check(Api.Source(h, (IntPtr)samples, source.Frames, source.SampleRate)); } }
-        return true;
-    });
+        if (source is null || source.Samples is null || source.SampleRate < 8000 || source.SampleRate > 192000 ||
+            source.Frames == 0 || source.Frames > 32_000_000 || (ulong)source.Samples.LongLength != source.Frames * 2)
+            throw new InvalidDataException("The native audio source must contain exactly two samples per frame at a supported rate.");
+        foreach (var sample in source.Samples)
+            if (!float.IsFinite(sample)) throw new InvalidDataException("The native audio source contains a nonfinite sample.");
+    }
+    public async Task SetSource(LoadedSnapshot source)
+    {
+        // Validate even independently constructed managed snapshots before any
+        // native call can read their pinned memory. Keep the full sample scan
+        // off the UI thread; native installation also validates its own copy.
+        await Task.Run(() => ValidateSource(source));
+        await Run(h =>
+        {
+            unsafe { fixed (float* samples = source.Samples) { Check(Api.Source(h, (IntPtr)samples, source.Frames, source.SampleRate)); } }
+            return true;
+        });
+    }
+    public Task<AudioRateInfo> RateInfo() => Run(h => { Check(Api.RateInfo(h, out var result)); return result; });
     public Task Play() => Run(h => { Check(Api.Play(h)); return true; });
     public Task Pause() => Run(h => { Check(Api.Pause(h)); return true; });
     public Task Stop() => Run(h => { Check(Api.Stop(h)); return true; });

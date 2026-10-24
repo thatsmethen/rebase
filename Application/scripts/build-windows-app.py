@@ -16,6 +16,7 @@ import urllib.request
 import zipfile
 
 from windows_automation_gate import require_automation_protocol, require_automation_window
+from windows_soxr_package import stage_soxr
 
 SDK = "10.0.402"
 DOTNET_RUNTIME = "10.0.13"
@@ -863,6 +864,9 @@ def main():
             raise RuntimeError("Unexpected .NET SDK")
         if "Swift version " + SWIFT not in run(["swift", "--version"], "swift-version", timeout=30):
             raise RuntimeError("Unexpected Swift toolchain")
+        run([sys.executable, str(app / "scripts/test_windows_native_audio_gate.py")], "native-receipt-controls")
+        run([sys.executable, str(app / "scripts/test_windows_soxr_package.py"), "--output",
+             str(evidence / "dependency-controls")], "dependency-package-controls")
         controls = run(["dotnet", "run", "--project", str(app / "Windows/RebaseWindows/Tests/RebaseWindows.Controls.csproj"),
                         "-c", "Release"], "host-controls")
         controls = json.loads(controls.strip().splitlines()[-1])
@@ -873,6 +877,8 @@ def main():
         run([sys.executable, str(app / "scripts/run-windows-native-audio-ci.py"), "--configuration", "Release",
              "--output", str(evidence / "native")], "native-audio-conformance")
         shutil.copyfile(evidence / "native/build/RebaseWindowsAudio.dll", stage / "RebaseWindowsAudio.dll")
+        report["device_resampler"] = stage_soxr(app, evidence / "native/soxr", stage, env.get("GITHUB_SHA"))
+        write(evidence / "device-resampler-package.json", report["device_resampler"])
         run(["dotnet", "publish", str(app / "Windows/RebaseWindows/RebaseWindows.csproj"), "-c", "Release",
              "-r", "win-x64", "--self-contained", "true", "-p:PublishTrimmed=false", "-p:PublishSingleFile=false",
              "-p:DebugType=None", "-p:DebugSymbols=false", "-p:ContinuousIntegrationBuild=true",
@@ -902,10 +908,14 @@ def main():
             raise RuntimeError("Visual C++ x64 redistribution directory is unavailable")
         windows = Path(os.environ["SystemRoot"])
         closure = assemble_dependencies(stage, candidates[0], vc_dirs, windows / "System32")
+        native_imports = next((row["imports"] for row in closure["images"]
+                               if row["path"].lower() == "rebasewindowsaudio.dll"), [])
+        if {"name": "soxr.dll", "source": "application"} not in native_imports:
+            raise RuntimeError("Native device adapter does not import the packaged SoXR DLL")
         write(evidence / "pe-dependency-closure.json", closure)
         example = copy_example(app, stage)
         licenses = stage / "ThirdPartyNotices"
-        licenses.mkdir()
+        licenses.mkdir(exist_ok=True)
         license_sources = json.loads((app / "scripts/windows-runtime-license-sources.json").read_text(encoding="utf-8"))
         for source in license_sources:
             with urllib.request.urlopen(source["url"], timeout=60) as response:
@@ -922,7 +932,9 @@ def main():
             "Extract this entire folder before running Rebase.exe. Keep the DLLs and helper beside it.\n"
             "The authored example opens as a separate editable copy. Its audio permission is in Examples/README.md.\n"
             "This preview supports a bounded set of shared project editing and rendering workflows.\n"
-            "Recording, plugins, native CPR playback and general device-rate adaptation are not integrated.\n"
+            "Stereo Float32 playback adapts 8–192 kHz snapshots to the default endpoint using bundled SoXR.\n"
+            "Source and converted snapshots are each limited to 32 million stereo frames.\n"
+            "Recording, plugins, native CPR timeline modes and streaming playback remain incomplete.\n"
             "CI window checks do not establish audio-device playback or complete application parity.\n"
             "Source and development notes: https://github.com/thatsmethen/rebase"
             "\n", encoding="utf-8")
@@ -1025,7 +1037,7 @@ def main():
         require_automation_window(smoke, evidence, json.loads((example / "Project.json").read_text(encoding="utf-8")),
                                   json.loads((app / "scripts/example-render-lock.json").read_text(encoding="utf-8")))
         modules = {"process": validate_modules(smoke.pop("process_modules", None), stage, windows,
-                                               {"rebase.exe", "coreclr.dll", "rebasewindowsaudio.dll"}),
+                                               {"rebase.exe", "coreclr.dll", "rebasewindowsaudio.dll", "soxr.dll"}),
                    "helper": validate_modules(smoke.pop("helper_modules", None), stage, windows,
                                               {"rebase-session.exe", "swiftcore.dll"})}
         write(evidence / "loaded-modules.json", modules)
