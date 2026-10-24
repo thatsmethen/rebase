@@ -1,0 +1,98 @@
+{
+  "schema": "rebase.authored-cpr-comparison-controls.v1",
+  "status": "passed",
+  "scope": "Authored instrument controls only. Four synthetic lanes repeat one actual macOS helper receipt and adapt historical ordinary-project receipts. Windows dependency fields are synthetic. This is not a Windows or cross-platform execution observation.",
+  "authored_head_binding": "85c38792548b9679772fb14e81cb712fd1bf9cea",
+  "actual_single_mac_receipt_sha256": "e610483c243cdbd4d69d0889c5b048b3bd2679bf507a570e0c052443af72576a",
+  "compare_script_sha256": "dc265bdfff2573ecc95355b65b53c2d801449e5cdb6209e5fd896136d165af44",
+  "cases": [
+    {
+      "case": "valid",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "matched": true,
+      "report_sha256": "901880c3d8c6f33ef9032f8d97124f9506dab0d57d9ab2626fc32a001f290f24",
+      "error": null
+    },
+    {
+      "case": "wav_divergence",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "matched": true,
+      "report_sha256": "010bf60b5bf9f0d9639cad5fc65c41c6f5e0afde344fe1b396764e3cf81b2ec6",
+      "error": "CPR audition PCM, clocks, source or normalized full provenance differs across platform/configuration"
+    },
+    {
+      "case": "proof_divergence",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "matched": true,
+      "report_sha256": "010bf60b5bf9f0d9639cad5fc65c41c6f5e0afde344fe1b396764e3cf81b2ec6",
+      "error": "CPR audition PCM, clocks, source or normalized full provenance differs across platform/configuration"
+    },
+    {
+      "case": "missing_scenario",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "matched": true,
+      "report_sha256": "7f8c3627737bf051bf74569e261480ad8ed88eef7173f92923489ddc4b075e8a",
+      "error": "CPR audition control: expected exactly 48 complete render scenarios"
+    },
+    {
+      "case": "failed_mode_gate",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "matched": true,
+      "report_sha256": "f01dc7b1ea98b9a253686d554e5b71e8b6665fee73d9ce2a3f097f57e451467d",
+      "error": "CPR audition control: one or more required process gates did not pass"
+    },
+    {
+      "case": "wrong_mode_clock",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "matched": true,
+      "report_sha256": "6e7d7cd4e96c94f25cbd73c8c5ce85358187905c14731c8fbebe661f8d67eb69",
+      "error": "CPR audition control: mode clock differs from its independent fixture rate"
+    },
+    {
+      "case": "mode_wrong_source",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "matched": true,
+      "report_sha256": "6f8db608cf88ab6935a3332df6a805a7c962d93193bd189c8603c0831ef8c204",
+      "error": "CPR audition control: source/media identity differs"
+    },
+    {
+      "case": "missing_dependency",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "matched": true,
+      "report_sha256": "b9361c0abdb46c9b0addb3e9f2c0fe950543272e92836b69c5c46d9b63e9afc9",
+      "error": "Missing or malformed receipt: soxr-dependency.json"
+    },
+    {
+      "case": "dependency_source_changed",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "matched": true,
+      "report_sha256": "8a534dafc3baa1637fde337a02712b1f24cb8385efa4422f2814f582fd21c30d",
+      "error": "CPR audition mode 2 lacks the exact successful pinned dependency receipt"
+    },
+    {
+      "case": "helper_hash_missing",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "matched": true,
+      "report_sha256": "4dd973a37ddbfb57d6568403b48a08d57d16e43f084a1b116ac0af0486069c65",
+      "error": "CPR audition control: helper identity differs"
+    },
+    {
+      "case": "source_commit_wrong",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "matched": true,
+      "report_sha256": "3674f263ffdd68807723e68277ae37d82660b0cae4b64e16d8392a83d62ac8b5",
+      "error": "Automation comparison needs a successful source-matched session for every lane"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+[0/1] Planning build
+Building for debugging...
+[0/9] Write sources
+[2/9] Write swift-version--1AB21518FC5DEDBE.txt
+[4/12] Emitting module RebasePortable
+[5/12] Compiling RebasePortable PortableSession.swift
+[6/12] Compiling RebasePortable CPRSourceAudition.swift
+[6/13] Write Objects.LinkFileList
+[8/19] Linking rebase-session
+[9/19] Linking rebase-inspect
+[10/19] Applying rebase-session
+[11/19] Applying rebase-inspect
+[13/19] Compiling RebasePortableTests SharedCPRAuditionModeTests.swift
+[14/19] Compiling RebasePortableTests CPRAuditionModesFixtureTests.swift
+[15/19] Emitting module RebasePortableTests
+[16/19] Compiling RebasePortableTests CPRSharedOutputTests.swift
+[17/19] Compiling RebasePortableTests PortableSourceAuditionTests.swift
+macro expansion #expect:1:111: error: call can throw, but it is not marked with 'try' and it is executed in a non-throwing autoclosure
+`- <workspace>/Application/Tests/RebasePortableTests/PortableSourceAuditionTests.swift:99:174: note: expanded code originates here
+ 97 |             #expect(proof["projectSampleRate"] as? Double == 44_100)
+ 98 |             #expect(proof["projectManifestSHA256"] as? String == PortableSHA256.hexDigest(original))
+ 99 |             #expect(proof["importReportSHA256"] as? String == PortableSHA256.hexDigest(Data(contentsOf: fixture.root.appendingPathComponent(CPRProject.reportRelativePath))))
+    |             `- note: in expansion of macro 'expect' here
+    +--- macro expansion #expect ---------------------------------------
+    |1 | Testing.__checkBinaryOperation(proof["importReportSHA256"] as? String,{ $0 == $1() },PortableSHA256.hexDigest(Data(contentsOf: fixture.root.appendingPathComponent(CPRProject.reportRelativePath))),expression: .__fromBinaryOperation(.__fromSyntaxNode(#"proof["importReportSHA256"] as? String"#),"==",.__fromSyntaxNode("PortableSHA256.hexDigest(Data(contentsOf: fixture.root.appendingPathComponent(CPRProject.reportRelativePath)))")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
+    |  |                                                                                                               `- error: call can throw, but it is not marked with 'try' and it is executed in a non-throwing autoclosure
+    +-------------------------------------------------------------------
+100 |             #expect(try state(reply) == stable)
+101 |             #expect(try Data(contentsOf: fixture.root.appendingPathComponent(ProjectStore.manifestName)) == original)
+
+macro expansion #require:2:3: error: call can throw, but it is not marked with 'try' and the error is not handled
+`- <workspace>/Application/Tests/RebasePortableTests/PortableSourceAuditionTests.swift:127:86: note: expanded code originates here
+125 |         #expect(setup["factorBits"] as? UInt64 == Double(1).bitPattern)
+126 |         #expect(saved["timelineRange"] is [String: Any])
+127 |         let report = try #require(CPRProject.compatibilityReport(from: fixture.root))
+    |                          `- note: in expansion of macro 'require' here
+    +--- macro expansion #require --------------------------------------
+    |1 | Testing.__checkFunctionCall(CPRProject.self,calling: {
+    |2 |   $0.compatibilityReport(from: $1)
+    |  |   `- error: call can throw, but it is not marked with 'try' and the error is not handled
+    |3 | },fixture.root,expression: .__fromFunctionCall(.__fromSyntaxNode("CPRProject"),"compatibilityReport",("from",.__fromSyntaxNode("fixture.root"))),comments: [],isRequired: true,sourceLocation: Testing.SourceLocation.__here()).__required()
+    +-------------------------------------------------------------------
+128 |         if let clock = report.nativeClock {
+129 |             let returned = try JSONDecoder().decode(NativeTempoClock.self, from: JSONSerialization.data(withJSONObject: #require(saved["preservedNativeClock"])))
+
+macro expansion #expect:1:54: error: operator can throw but expression is not marked with 'try'
+`- <workspace>/Application/Tests/RebasePortableTests/PortableSourceAuditionTests.swift:217:85: note: expanded code originates here
+215 |         for command in ["inspectSourceEvent", "renderSourceEvent"] {
+216 |             let stale = try client.send(command, base, revision: 0)
+217 |             #expect(error(stale) == "staleRevision" && (try state(stale)) == stable)
+    |             |- note: in expansion of macro 'expect' here
+    |             `- note: in expansion of macro 'expect' here
+    +--- macro expansion #expect ---------------------------------------
+    |1 | Testing.__checkValue(error(stale) == "staleRevision" && (try state(stale)) == stable,expression: .__fromSyntaxNode(#"error(stale) == "staleRevision" && (try state(stale)) == stable"#),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
+    |  |                                                      |  `- note: call is to 'rethrows' function, but argument function can throw
+    |  |                                                      `- error: operator can throw but expression is not marked with 'try'
+    +-------------------------------------------------------------------
+218 |         }
+219 |         for fields: [String: Any] in [["mode": "guessed"], ["mode": ""], ["startSeconds": -1], ["rewindAtEnd": "yes"]] {
+
+macro expansion #expect:1:54: error: operator can throw but expression is not marked with 'try'
+`- <workspace>/Application/Tests/RebasePortableTests/PortableSourceAuditionTests.swift:221:87: note: expanded code originates here
+219 |         for fields: [String: Any] in [["mode": "guessed"], ["mode": ""], ["startSeconds": -1], ["rewindAtEnd": "yes"]] {
+220 |             let refused = try client.send("renderSourceEvent", base.merging(fields) { _, new in new })
+221 |             #expect(refused["ok"] as? Bool == false && (try state(refused)) == stable)
+    |             |- note: in expansion of macro 'expect' here
+    |             `- note: in expansion of macro 'expect' here
+    +--- macro expansion #expect ---------------------------------------
+    |1 | Testing.__checkValue(refused["ok"] as? Bool == false && (try state(refused)) == stable,expression: .__fromSyntaxNode(#"refused["ok"] as? Bool == false && (try state(refused)) == stable"#),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
+    |  |                                                      |  `- note: call is to 'rethrows' function, but argument function can throw
+    |  |                                                      `- error: operator can throw but expression is not marked with 'try'
+    +-------------------------------------------------------------------
+222 |             #expect(!FileManager.default.fileExists(atPath: output.path))
+223 |         }
+
+macro expansion #expect:1:52: error: operator can throw but expression is not marked with 'try'
+`- <workspace>/Application/Tests/RebasePortableTests/PortableSourceAuditionTests.swift:274:83: note: expanded code originates here
+272 |             let output = directory.appendingPathComponent("end.wav")
+273 |             let reply = try render(client, event, .nativeMode2ProjectRate, output, seconds: 1e100)
+274 |             #expect(reply["ok"] as? Bool == false && (try state(reply)) == stable)
+    |             |- note: in expansion of macro 'expect' here
+    |             `- note: in expansion of macro 'expect' here
+    +--- macro expansion #expect ---------------------------------------
+    |1 | Testing.__checkValue(reply["ok"] as? Bool == false && (try state(reply)) == stable,expression: .__fromSyntaxNode(#"reply["ok"] as? Bool == false && (try state(reply)) == stable"#),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
+    |  |                                                    |  `- note: call is to 'rethrows' function, but argument function can throw
+    |  |                                                    `- error: operator can throw but expression is not marked with 'try'
+    +-------------------------------------------------------------------
+275 |             #expect(!FileManager.default.fileExists(atPath: output.path))
+276 |             #expect(!FileManager.default.fileExists(atPath: output.appendingPathExtension("source-audition.json").path))
+error: fatalError
