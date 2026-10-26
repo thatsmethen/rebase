@@ -10,6 +10,7 @@ public sealed class SessionRequest
     public required string Command { get; set; }
     public ulong? ExpectedRevision { get; set; }
     public string? Path { get; set; }
+    public string[]? Paths { get; set; }
     public string? ClipID { get; set; }
     public string? TrackID { get; set; }
     public double? Value { get; set; }

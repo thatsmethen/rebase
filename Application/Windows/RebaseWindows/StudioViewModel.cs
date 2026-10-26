@@ -168,9 +168,9 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
             }
             if (SourceInspection is { } inspection && (inspection.Revision != State.Revision || inspection.EventID != State.Selection.ClipID))
                 SourceInspection = null;
-            if (response.Ok && request.Command is "open" or "importCPR") SetSaveConfirmationRequired(false);
+            if (response.Ok && request.Command is "open" or "importCPR" or "newProject") SetSaveConfirmationRequired(false);
             if (Ruler is not null && Ruler.Revision != State.Revision) { Ruler = null; RulerChanged?.Invoke(); }
-            if (response.Ok && request.Command is "open" or "saveAs" or "importCPR")
+            if (response.Ok && request.Command is "open" or "saveAs" or "importCPR" or "newProject")
             {
                 waveformEpoch++; waveforms.Clear(); waveformFailures.Clear();
             }
@@ -276,7 +276,11 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
             await Task.Delay(20);
         }
     }
-    public async Task SuspendAndDrain() { accepting = false; await idle.Task; }
+    public async Task SuspendAndDrain(bool cancelSourcePreparation = false)
+    {
+        if (cancelSourcePreparation) CancelSourcePreparation();
+        accepting = false; await idle.Task;
+    }
     public void ResumeInput() { if (!closing) accepting = true; }
     public object[] HelperModuleReceipt() => session.ModuleReceipt();
     public Task Open(string path, bool asCopy, bool discardChanges) => SourceAction(async () =>

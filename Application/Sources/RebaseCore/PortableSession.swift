@@ -8,6 +8,7 @@ public struct PortableSessionRequest: Codable {
     public var command: String
     public var expectedRevision: UInt64?
     public var path: String?
+    public var paths: [String]?
     public var clipID: UUID?
     public var trackID: UUID?
     public var value: Double?
@@ -29,7 +30,7 @@ public struct PortableSessionRequest: Codable {
     public var rewindAtEnd: Bool?
     enum CodingKeys: String, CodingKey {
         case protocolVersion = "protocol"
-        case id, command, expectedRevision, path, clipID, trackID, value, duration, snap, discardChanges, asCopy
+        case id, command, expectedRevision, path, paths, clipID, trackID, value, duration, snap, discardChanges, asCopy
         case reviewID, sourceSHA256, allowPartial, reviewOffset
         case parameter, pointID, time, interpolation, enabled, mode, startSeconds, rewindAtEnd
     }
@@ -437,6 +438,28 @@ public final class PortableSession {
     private func execute(_ request: PortableSessionRequest) throws -> PortableSessionReply.Render? {
         if request.command == "state" { return nil }
         if request.command == "importCPR" { try importReviewedCPR(request); return nil }
+        if request.command == "newProject" {
+            guard project == savedProject || request.discardChanges == true else {
+                throw failure("unsavedChanges", "Save or explicitly discard your changes before creating another project.")
+            }
+            let requested = try requiredURL(request.path)
+            let destination = try ProjectFileIO.canonicalRoot(requested.deletingLastPathComponent())
+                .appendingPathComponent(requested.lastPathComponent)
+            if let root {
+                try checkSourceUnchanged(root)
+                guard !ProjectFileIO.samePath(destination, root), !ProjectFileIO.contains(destination, in: root) else {
+                    throw failure("destination", "Choose a new scratch folder outside the current project.")
+                }
+            }
+            let created = try ProjectStore.createExclusiveSnapshot(at: destination)
+            // No fallible I/O remains after publication. The session immediately
+            // adopts ownership of this verified scratch package.
+            ownedScratch.append(destination)
+            project = created.project; savedProject = created.project; self.root = destination; isScratch = true
+            manifestDigest = PortableSHA256.hexDigest(created.manifest)
+            selection = ProjectSelection(); history.reset(); reviewedCPR = nil; revision += 1
+            return nil
+        }
         if request.command == "open" {
             guard project == savedProject || request.discardChanges == true else {
                 throw failure("unsavedChanges", "Save or explicitly discard your changes before opening another project.")
@@ -477,6 +500,20 @@ public final class PortableSession {
         }
         guard let current = project, let root else { throw failure("noProject", "Open a project first.") }
         switch request.command {
+        case "importAudio":
+            guard let paths = request.paths, (1...ProjectStore.maximumAudioImportFiles).contains(paths.count) else {
+                throw failure("audioPaths", "Choose 1–32 audio files to import.")
+            }
+            guard let position = request.value, position.isFinite, (0...86_400).contains(position) else {
+                throw failure("value", "Import audio at a finite position within 24 hours.")
+            }
+            let grid = try snapGrid(request.snap)
+            let sources = try paths.map { try requiredURL($0) }
+            try checkSourceUnchanged(root)
+            let imported = try ProjectStore.importAudioTracks(from: sources, into: root,
+                project: current, position: position, grid: grid, expectedManifestSHA256: manifestDigest)
+            history.record(current)
+            project = imported.project; selection = imported.selection; revision += 1
         case "selectClip":
             guard let id = request.clipID, current.tracks.contains(where: { $0.clips.contains { $0.id == id } || $0.unresolvedAudioEvents.contains { $0.id == id } }) else {
                 throw failure("selection", "The clip does not exist.")
@@ -489,7 +526,7 @@ public final class PortableSession {
             let next = request.command == "undo" ? history.undo(current: current) : history.redo(current: current)
             if let next { project = next; selection = selection.reconciled(in: next); revision += 1 }
         case "save":
-            guard !isScratch else { throw failure("saveAsRequired", "Choose Save As for this example copy.") }
+            guard !isScratch else { throw failure("saveAsRequired", "Choose Save As for this unsaved project.") }
             try checkSourceUnchanged(root)
             _ = try ProjectStore.load(from: root)
             let expectedDigest = PortableSHA256.hexDigest(try ProjectStore.encodedManifest(current))
@@ -564,6 +601,17 @@ public final class PortableSession {
         return nil
     }
 
+    private func snapGrid(_ snap: String?) throws -> GridSnap? {
+        switch snap ?? "off" {
+        case "off": return nil
+        case "quarter": return .quantize(1)
+        case "eighth": return .quantize(0.5)
+        case "sixteenth": return .quantize(0.25)
+        case "bar": return .bar
+        default: throw failure("snap", "Unsupported snap grid.")
+        }
+    }
+
     private func makeEdit(_ request: PortableSessionRequest, project: Project, root: URL) throws -> ProjectEdit? {
         func value() throws -> Double {
             guard let number = request.value, number.isFinite else { throw failure("value", "A finite edit value is required.") }
@@ -580,15 +628,7 @@ public final class PortableSession {
             return id
         }
         func snapped() throws -> Double {
-            let grid: GridSnap?
-            switch request.snap ?? "off" {
-            case "off": grid = nil
-            case "quarter": grid = .quantize(1)
-            case "eighth": grid = .quantize(0.5)
-            case "sixteenth": grid = .quantize(0.25)
-            case "bar": grid = .bar
-            default: throw failure("snap", "Unsupported snap grid.")
-            }
+            let grid = try snapGrid(request.snap)
             return try ProjectEditing.snappedTime(max(0, value()), in: project, grid: grid)
         }
         switch request.command {

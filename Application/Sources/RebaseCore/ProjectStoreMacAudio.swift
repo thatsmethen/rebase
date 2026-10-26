@@ -35,6 +35,20 @@ extension ProjectStore {
 }
 
 enum ProjectStoreMedia {
+    static func inspectImport(url: URL, name: String) throws -> (sampleRate: Double, frameCount: Int64, channelCount: Int) {
+        let file = try AVAudioFile(forReading: url, commonFormat: .pcmFormatFloat32, interleaved: false)
+        let format = file.processingFormat
+        guard (1...2).contains(format.channelCount), format.sampleRate.isFinite,
+              (8_000...192_000).contains(format.sampleRate),
+              file.length > 0, file.length <= PCMRenderer.maximumClipFrames else {
+            throw RebaseCoreError.unsupportedAudio("Import supports mono/stereo audio at 8–192 kHz with 1–16 million frames per file.")
+        }
+        let facts = try AudioSampleValidation.scan(url: url, name: name)
+        guard facts.sampleRate == format.sampleRate, facts.frameCount == file.length else {
+            throw RebaseCoreError.unsupportedAudio("The decoded audio changed while importing.")
+        }
+        return (facts.sampleRate, facts.frameCount, Int(format.channelCount))
+    }
     static func scan(url: URL, name: String) throws -> (sampleRate: Double, frameCount: Int64) {
         try AudioSampleValidation.scan(url: url, name: name)
     }

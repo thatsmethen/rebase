@@ -66,6 +66,12 @@ public partial class MainWindow
             var encoder = new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(bitmap));
             const string name = "native-source-stream-visual.png";
             var path = Path.Combine(artifactRoot, name); using (var stream = File.Create(path)) encoder.Save(stream);
+            var alphaCoverage = MeasureClientAlpha(bitmap, content);
+            var imageHash = Hash(await File.ReadAllBytesAsync(path, cancellation));
+            await File.WriteAllTextAsync(Path.Combine(artifactRoot, "native-source-stream-visual-alpha.json"),
+                JsonSerializer.Serialize(new { screenshot = name, png_sha256 = imageHash, alpha_coverage = alphaCoverage }), cancellation);
+            if (alphaCoverage["root_background_alpha"] != 255 || alphaCoverage["alpha_below_254_pixels"] != 0)
+                throw new InvalidOperationException("Source-stream capture failed measured alpha coverage; inspect its retained PNG and alpha diagnostic.");
             var controls = new List<object>();
             foreach (var (controlName, element) in new (string, FrameworkElement)[] {
                 ("modes",dialog.Modes),("position",dialog.PositionInput),("seek",dialog.SeekButton),
@@ -78,7 +84,7 @@ public partial class MainWindow
                     throw new InvalidOperationException("A source-stream control is outside the client capture: " + controlName);
                 controls.Add(new { name = controlName, x = point.X, y = point.Y, width = element.ActualWidth, height = element.ActualHeight, enabled = element.IsEnabled });
             }
-            return new { file = name, sha256 = Hash(await File.ReadAllBytesAsync(path, cancellation)),
+            return new { file = name, sha256 = imageHash, alpha_coverage = alphaCoverage,
                 bounds = new { outer_width_dip = dialog.ActualWidth, outer_height_dip = dialog.ActualHeight,
                     width_dip = content.ActualWidth, height_dip = content.ActualHeight, dpi_scale_x = dpi.DpiScaleX, dpi_scale_y = dpi.DpiScaleY,
                     pixel_width = width, pixel_height = height }, controls, selected_mode = dialog.SelectedMode,
@@ -174,5 +180,23 @@ public partial class MainWindow
         {
             if (dialog is { IsVisible: true, Working: false }) dialog.Close();
         }
+    }
+
+    private static Dictionary<string, int> MeasureClientAlpha(RenderTargetBitmap bitmap, FrameworkElement content)
+    {
+        var background = content switch { Border border => border.Background, Panel panel => panel.Background, _ => null };
+        if (content.Margin != new Thickness(0) || background is not SolidColorBrush solid)
+            throw new InvalidOperationException("The client capture must have a marginless solid background root.");
+        var pixels = new byte[checked(bitmap.PixelWidth * bitmap.PixelHeight * 4)];
+        bitmap.CopyPixels(pixels, bitmap.PixelWidth * 4, 0);
+        var minimum = 255; var alpha254 = 0; var alpha255 = 0; var below254 = 0;
+        for (var i = 3; i < pixels.Length; i += 4)
+        {
+            var alpha = pixels[i]; minimum = Math.Min(minimum, alpha);
+            if (alpha == 255) alpha255++; else if (alpha == 254) alpha254++; else below254++;
+        }
+        return new() { ["root_background_alpha"] = solid.Color.A, ["alpha_minimum"] = minimum,
+            ["alpha_254_pixels"] = alpha254, ["alpha_255_pixels"] = alpha255,
+            ["alpha_below_254_pixels"] = below254, ["total_pixels"] = bitmap.PixelWidth * bitmap.PixelHeight };
     }
 }

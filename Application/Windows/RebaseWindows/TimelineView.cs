@@ -142,6 +142,7 @@ public sealed class TimelineView : Canvas
                     Grid.SetRow(waveform, 1); content.Children.Add(waveform); waveformViews[clip.Id] = waveform;
                     var button = new Button
                     {
+                        Tag = clip.Id,
                         Content = content,
                         Style = (Style)FindResource("AccentSurfaceButton"),
                         Width = Math.Max(16, clip.Duration * pixels), Height = rowHeight - (compact ? 6 : 10), Padding = new Thickness(0),

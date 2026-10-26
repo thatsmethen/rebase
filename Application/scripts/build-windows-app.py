@@ -20,6 +20,7 @@ from windows_soxr_package import stage_soxr
 from cpr_audition_gate import require_cpr_audition, require_cpr_audition_window
 from source_stream_gate import require_receipt as require_source_stream
 from source_stream_window_gate import require_source_stream_window
+from documents_window_gate import require_documents_window
 from native_stream_package import validate_native_stream_package
 
 SDK = "10.0.402"
@@ -1081,8 +1082,8 @@ def main():
             "source-stream-window-controls", restricted, timeout=180, cwd=stage)
         window_controls = json.loads((stream_window_controls / "observation.json").read_text(encoding="utf-8"))
         if (window_controls.get("schema") != "rebase.source-stream-window-gate-controls.v1"
-                or window_controls.get("outcome") != "passed" or window_controls.get("check_count") != 98
-                or len(window_controls.get("checks", [])) != 98 or len(window_controls.get("real_workers", [])) != 3
+                or window_controls.get("outcome") != "passed" or window_controls.get("check_count") != 115
+                or len(window_controls.get("checks", [])) != 115 or len(window_controls.get("real_workers", [])) != 3
                 or window_controls.get("process_receipt_sha256") != digest(stream_result_path)
                 or window_controls.get("helper_sha256") != digest(stage / "rebase-session.exe")
                 or window_controls.get("fixture_sha256") != digest(stream_fixture / "expected.json")
@@ -1091,6 +1092,23 @@ def main():
                     ("native_wpf_executed", "physical_input_tested", "audio_device_playback_measured", "reference_execution"))):
             raise RuntimeError("Source stream window receipt rejection controls did not execute successfully")
         report["source_stream_window_gate_controls"] = window_controls
+        documents_controls_path = evidence / "documents-window-controls"
+        run([sys.executable, str(app / "scripts/test_documents_window_gate.py"),
+             "--output", str(documents_controls_path)], "documents-window-controls", restricted, cwd=stage)
+        documents_controls = json.loads((documents_controls_path / "observation.json").read_text(encoding="utf-8"))
+        if (documents_controls.get("schema") != "rebase.documents-window-gate-controls.v1"
+                or documents_controls.get("outcome") != "passed" or documents_controls.get("control_count") != 92
+                or len(documents_controls.get("checks", [])) != 92
+                or any(check.get("passed") is not True for check in documents_controls["checks"])
+                or documents_controls.get("evidence_class") != "authored-receipt-and-pixel-mutation-controls"
+                or documents_controls.get("example_manifest_sha256") != digest(stage / "Examples/example.json")
+                or documents_controls.get("gate_sha256") != digest(app / "scripts/documents_window_gate.py")
+                or documents_controls.get("instrument_sha256") != digest(app / "scripts/test_documents_window_gate.py")
+                or documents_controls.get("controls_log_sha256") != digest(documents_controls_path / "controls.log")
+                or any(documents_controls.get(key) is not False for key in
+                    ("native_wpf_executed", "helper_executed", "physical_input_tested", "playback_tested"))):
+            raise RuntimeError("Documents window receipt rejection controls did not execute successfully")
+        report["documents_window_gate_controls"] = documents_controls
         smoke_path = evidence / "wpf-smoke.json"
         run([str(stage / "Rebase.exe"), "--smoke", "--smoke-json", str(smoke_path),
              "--smoke-source-project", str(source_project), "--smoke-source-media", str(source_media)],
@@ -1147,6 +1165,8 @@ def main():
         report["source_stream_window_control"] = require_source_stream_window(smoke, evidence,
             json.loads((stream_fixture / "expected.json").read_text(encoding="utf-8")),
             json.loads(stream_result_path.read_text(encoding="utf-8")), digest(stream_fixture / "expected.json"))
+        report["documents_window_control"] = require_documents_window(smoke, evidence,
+            (stage / "Examples/example.json").read_bytes(), digest(stage / "rebase-session.exe"))
         modules = {"process": validate_modules(smoke.pop("process_modules", None), stage, windows,
                                                {"rebase.exe", "coreclr.dll", "rebasewindowsaudio.dll", "soxr.dll"}),
                    "helper": validate_modules(smoke.pop("helper_modules", None), stage, windows,

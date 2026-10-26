@@ -84,6 +84,7 @@ public partial class MainWindow : Window
             RefreshEditingAvailability();
             InspectorTrackControls.IsEnabled = !model.Busy && model.SelectedTrack is not null;
             AutomationMenu.IsEnabled = InspectorTrackControls.IsEnabled;
+            ImportAudioMenu.IsEnabled = !model.Busy && model.Project is not null;
             UndoButton.IsEnabled = !model.Busy && model.State.CanUndo;
             RedoButton.IsEnabled = !model.Busy && model.State.CanRedo;
             RestoreMixerFocus();
@@ -104,6 +105,7 @@ public partial class MainWindow : Window
         if (!model.IsSourceContext) Timeline.SetPosition(model.Position);
         UndoButton.IsEnabled = model.State.CanUndo && !model.Busy;
         RedoButton.IsEnabled = model.State.CanRedo && !model.Busy;
+        ImportAudioMenu.IsEnabled = model.Project is not null && !model.Busy;
         TempoBox.Text = (model.Project?.Tempo ?? 120).ToString("0.###", CultureInfo.CurrentCulture);
         SelectionName.Text = model.SelectedClip?.Name ?? model.SelectedSourceEvent?.Name ?? "No event selected";
         SelectionName.ToolTip = SelectionName.Text;
@@ -283,10 +285,16 @@ public partial class MainWindow : Window
     private async Task<bool> SaveAs(Window? owner = null)
     {
         if (model.Project is null) return false;
-        var dialog = new SaveFileDialog { Title = "Save as a new Rebase project folder", Filter = "Rebase project folder|*.rebaseproj", DefaultExt = ".rebaseproj", AddExtension = true, OverwritePrompt = false, FileName = model.Project.Name + ".rebaseproj" };
-        if (dialog.ShowDialog(owner ?? this) != true) return false;
-        if (Directory.Exists(dialog.FileName) || File.Exists(dialog.FileName)) { model.Report(new IOException("Choose a new project name; Save As does not replace existing files or folders.")); return false; }
-        return await model.Save(dialog.FileName) && !model.State.Dirty && !model.State.NeedsSaveAs;
+        string? destination;
+        if (smokeDocumentSaveDestination is not null) destination = smokeDocumentSaveDestination();
+        else
+        {
+            var dialog = new SaveFileDialog { Title = "Save as a new Rebase project folder", Filter = "Rebase project folder|*.rebaseproj", DefaultExt = ".rebaseproj", AddExtension = true, OverwritePrompt = false, FileName = model.Project.Name + ".rebaseproj" };
+            destination = dialog.ShowDialog(owner ?? this) == true ? dialog.FileName : null;
+        }
+        if (destination is null) return false;
+        if (Directory.Exists(destination) || File.Exists(destination)) { model.Report(new IOException("Choose a new project name; Save As does not replace existing files or folders.")); return false; }
+        return await model.Save(destination) && !model.State.Dirty && !model.State.NeedsSaveAs;
     }
     private async Task<bool> Save(Window? owner = null)
     {
@@ -400,6 +408,8 @@ public partial class MainWindow : Window
             if (e.Key == Key.Escape && model.SourceStreamPreparing) { e.Handled = true; await model.Stop(); }
             return;
         }
+        if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.N) { e.Handled = true; await CreateNewProject(); return; }
+        if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.I) { e.Handled = true; await SelectAudioToImport(); return; }
         if (e.OriginalSource is TextBox || e.OriginalSource is System.Windows.Controls.Primitives.TextBoxBase || e.OriginalSource is ComboBox) return;
         if (e.Key == Key.Space && Keyboard.FocusedElement is System.Windows.Controls.Primitives.ButtonBase) return;
         if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.S) { e.Handled = true; await Guard(async () => { await Save(); }); }
@@ -412,6 +422,7 @@ public partial class MainWindow : Window
     {
         if (closeFinished) return;
         e.Cancel = true;
+        if (documentOperation) return;
         if (reviewingCPR) { activeCPRReview?.Activate(); return; }
         if (openingAutomation) { activeAutomationEditor?.Activate(); return; }
         if (openingSourceAudio) { activeSourceAudio?.Activate(); return; }

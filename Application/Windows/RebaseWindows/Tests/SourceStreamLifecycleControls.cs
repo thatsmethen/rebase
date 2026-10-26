@@ -92,6 +92,21 @@ static class SourceStreamLifecycleControls
             Check(model.Status.StartsWith("The project state was updated",StringComparison.Ordinal)&&!factory.Workers[0].Disposed);
             audio.FailCancel=false;await model.Stop();Check(model.Status=="Stopped"&&model.NeedsSaveDecision&&factory.Workers[0].Disposed);
         }
+        // Replacing/importing a document waits for the native cancellation
+        // barrier; a failure cannot dispatch an otherwise irreversible edit.
+        foreach (var replace in new[] { false, true })
+        {
+            client=new Client();audio=new Device();factory=new Factory();
+            await using var model=new StudioViewModel(client,audio,factory);
+            await model.Open("authored",false,false);await model.AuditionSource("nativeTimelineSourceRate");
+            await model.Seek(2.5);var before=JsonSerializer.Serialize(model.State,ProtocolJson.Options);
+            audio.FailCancel=true;
+            var success=replace?await model.NewProject():await model.ImportAudio(["authored.wav"]);
+            Check(!success&&client.DocumentRequests==0&&JsonSerializer.Serialize(model.State,ProtocolJson.Options)==before&&model.Position==2.5);
+            Check(!factory.Workers[^1].Disposed&&model.Status=="Authored cancellation barrier failure.");
+            audio.FailCancel=false;await model.Stop();
+            Check(model.Status=="Stopped"&&factory.Workers[^1].Disposed&&model.Position==0);
+        }
         // A producer failure cannot reach Finish or silently become device EOF.
         client=new Client();audio=new Device();factory=new Factory{FailRead=true};
         await using(var model=new StudioViewModel(client,audio,factory))
@@ -138,12 +153,13 @@ static class SourceStreamLifecycleControls
     private sealed class Client : ISessionClient
     {
         private readonly ProjectView project=SourceStreamControls.Project();
-        public SessionRequest? Last;public int Requests,WavRequests;public bool Disposed;
+        public SessionRequest? Last;public int Requests,WavRequests,DocumentRequests;public bool Disposed;
         private ulong revision=1;private bool dirty;
         public TaskCompletionSource<SessionResponse>? Pending;
         public object[] ModuleReceipt()=>[];public ValueTask DisposeAsync(){Disposed=true;return ValueTask.CompletedTask;}
         public Task<SessionResponse> Send(SessionRequest request)
         {
+            if(request.Command is "newProject" or "importAudio")DocumentRequests++;
             if(request.Command=="setGain") {revision++;dirty=true;project.Tracks[0].GainDB=request.Value!.Value;}
             if(request.Command=="renderSourceEvent")WavRequests++;
             if(request.Command=="prepareSourceStream") {Requests++;Last=request;if(Pending is not null)return Pending.Task;}

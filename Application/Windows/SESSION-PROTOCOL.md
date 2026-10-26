@@ -18,7 +18,9 @@ not change project, media, ticket, or worker symlink/reparse admission rules.
 | Command | Additional fields |
 | --- | --- |
 | `state` | None. |
+| `newProject` | `path`: new, nonexistent scratch `.rebaseproj` directory with an existing parent, outside the current package. `discardChanges:true` only after an explicit discard choice. |
 | `open` | `path`: package directory or its `Project.json`; `discardChanges:true` only after the user elects to discard; `asCopy:true` for the included example. |
+| `importAudio` | `paths`: 1–32 source files; finite `value`: insertion position in project seconds, 0…86,400. Optional `snap` uses the same vocabulary as clip edits. |
 | `inspectCPR` | `path`: raw CPR file. Creates one reviewed snapshot without changing the active document. |
 | `cprReviewPage` | `reviewID`, `reviewOffset`: next or previously visited item offset within that snapshot. |
 | `cancelCPRReview` | `reviewID`: discard that snapshot without changing the active document. |
@@ -44,6 +46,34 @@ not change project, media, ticket, or worker symlink/reparse admission rules.
 | `ruler` | Required finite `value`: pixels per second in 4…420. Optional finite `duration`: extent in seconds in 0…86,400. Read-only musical ticks, no revision change. |
 
 Quarter/eighth/sixteenth snapping is 1, 0.5, and 0.25 quarter notes. Bar snapping uses the shared signature map. The helper derives trim limits from checked media and generates split identifiers. The frontend sends proposed seconds from pointer geometry, leaving all snapping and edit rules to Swift.
+
+`newProject` publishes a verified empty package without replacing any existing
+file or directory, then adopts it as an owned scratch session. Its name is
+`Untitled`, selection and history are empty, `dirty=false`, `needsSaveAs=true`,
+and the exposed path is absent. Save As chooses the permanent destination.
+The prior document survives a rejected creation. Dirty replacement requires
+the explicit discard flag, and external manifest changes remain errors.
+
+`importAudio` copies complete, validated sources into one newly published media
+directory and appends one track per source at the same snapped project position.
+The last imported track and clip become selected. A batch is one edit and one
+revision: Undo removes all its tracks, while owned media remains available for
+Redo. Invalid input or failed publication preserves the prior document/history
+and removes owned staging. Source files are never moved or modified. Successful
+New/import operations revoke existing source-stream tickets.
+
+The current portable decoder accepts mono/stereo RIFF/WAVE PCM16/24/32 or
+Float32/64 at 8–192 kHz, with at most 16 million frames per file. A batch is at
+most 256 MiB encoded; the resulting package must fit the existing 512 MiB and
+10,000-entry copy bounds. These are current Windows admission limits, not full
+format parity with the macOS importer. The Mac interface retains its existing
+AVFoundation import behavior.
+
+The Windows host binds each queued New/import intent to the project identity
+and revision captured when requested. It rejects changed intent before stopping
+audio or sending a mutation. A successful native Stop/cancel barrier precedes
+the edit; failed cancellation retains ownership for retry. Import uses the
+ordinary arrangement position retained before any source-audition context.
 
 Automation commands use the shared lane model and edit history. Times must be
 finite and within 0…86,400 seconds, volume values within −96…24 dB, and pan

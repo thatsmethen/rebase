@@ -91,11 +91,13 @@ def chunk(kind, data):
 
 
 def png(width=724, height=501, alpha=255, filtering=0, dpi=3779, trailing=b"", invalid_crc=False,
-        short_pixels=False, extra_pixels=False, bad_filter=False):
+        short_pixels=False, extra_pixels=False, bad_filter=False, first_alpha=None):
     # Exercise every PNG predictor independently with authored opaque RGBA.
     rows, previous = [], bytes(width * 4)
-    raw = bytes((28, 31, 35, alpha)) * width
-    for _ in range(height):
+    for y in range(height):
+        raw = bytes((28, 31, 35, alpha)) * width
+        if y == 0 and first_alpha is not None:
+            raw = raw[:3] + bytes((first_alpha,)) + raw[4:]
         encoded = bytearray(len(raw))
         for i, value in enumerate(raw):
             left = raw[i - 4] if i >= 4 else 0
@@ -119,6 +121,17 @@ def png(width=724, height=501, alpha=255, filtering=0, dpi=3779, trailing=b"", i
     if invalid_crc:
         result = result[:-1] + bytes((result[-1] ^ 1,))
     return result + trailing
+
+
+def alpha_coverage(width=724, height=501, alpha=255, first_alpha=None):
+    total = width * height
+    values = {alpha: total}
+    if first_alpha is not None:
+        values[alpha] -= 1
+        values[first_alpha] = values.get(first_alpha, 0) + 1
+    return {"root_background_alpha": 255, "alpha_minimum": min(k for k, v in values.items() if v),
+            "alpha_254_pixels": values.get(254, 0), "alpha_255_pixels": values.get(255, 0),
+            "alpha_below_254_pixels": sum(v for k, v in values.items() if k < 254), "total_pixels": total}
 
 
 def authored(fixture, fixture_sha, seeds):
@@ -160,6 +173,7 @@ def authored(fixture, fixture_sha, seeds):
         x += width + 8
     return {"outcome": "passed", "checks": sorted(CHECKS), "source_stream_window": {"tested": True,
         "fixture_sha256": fixture_sha, "cases": records, "capture": {"file": CAPTURE, "sha256": "",
+            "alpha_coverage": alpha_coverage(),
             "bounds": {"outer_width_dip": 740, "outer_height_dip": 540, "width_dip": 724, "height_dip": 501,
                        "dpi_scale_x": 1, "dpi_scale_y": 1, "pixel_width": 724, "pixel_height": 501},
             "controls": controls, "selected_mode": MODE, "details": "Authored geometry control; no native UI execution",
@@ -240,6 +254,21 @@ def main():
         for filtering in range(1, 5):
             run("opaque PNG predictor " + str(filtering), accept=True, image=png(filtering=filtering))
         prefix = ("source_stream_window",)
+        coverage_path = prefix + ("capture", "alpha_coverage")
+        for filtering in range(5):
+            run("measured near-opaque254 PNG predictor " + str(filtering),
+                lambda s: set_path(s, coverage_path, alpha_coverage(alpha=254)), accept=True,
+                image=png(alpha=254, filtering=filtering))
+        run("measured mixed254 and255 coverage accepted", lambda s: set_path(s, coverage_path, alpha_coverage(first_alpha=254)),
+            accept=True, image=png(first_alpha=254, filtering=4))
+        for name, value in (("root_background_alpha", 254), ("root_background_alpha", True), ("alpha_minimum", 254),
+            ("alpha_254_pixels", 1), ("alpha_255_pixels", 0), ("alpha_below_254_pixels", 1), ("total_pixels", 0)):
+            run("incorrect alpha coverage " + name + " " + str(value),
+                lambda s, k=name, v=value: set_path(s, coverage_path + (k,), v))
+        run("missing alpha coverage", lambda s: s["source_stream_window"]["capture"].pop("alpha_coverage"))
+        run("extra alpha coverage member", lambda s: s["source_stream_window"]["capture"]["alpha_coverage"].update(opaque=True))
+        run("measured253 pixel rejected", lambda s: set_path(s, coverage_path, alpha_coverage(first_alpha=253)), image=png(first_alpha=253))
+        run("measured uncovered pixel rejected", lambda s: set_path(s, coverage_path, alpha_coverage(first_alpha=0)), image=png(first_alpha=0))
         for label, path, value in (
             ("nonobject window", prefix, None),
             ("nonobject case", prefix + ("cases", 0), False),

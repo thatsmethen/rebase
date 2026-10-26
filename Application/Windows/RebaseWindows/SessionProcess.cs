@@ -72,7 +72,7 @@ public sealed class SessionProcess : ISessionClient, ISessionRequestObservation
         {
             ObjectDisposedException.ThrowIf(disposed, this);
             Start();
-            using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(request.Command is "render" or "renderSourceEvent" or "prepareSourceStream" or "inspectSourceEvent" or "inspectCPR" or "cprImportReport" or "importCPR" ? 120 : 60));
+            using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(request.Command is "render" or "renderSourceEvent" or "prepareSourceStream" or "inspectSourceEvent" or "inspectCPR" or "cprImportReport" or "importCPR" or "newProject" or "importAudio" ? 120 : 60));
             using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token, deadline.Token);
             request.Id = checked(++nextID);
             var message = JsonSerializer.Serialize(request, ProtocolJson.Options);

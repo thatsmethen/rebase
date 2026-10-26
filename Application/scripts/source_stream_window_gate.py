@@ -53,7 +53,12 @@ def number(value, low, high):
     return type(value) in (int, float) and math.isfinite(value) and low <= value <= high
 
 
-def _png(path, expected_hash, bounds):
+def _png(path, expected_hash, bounds, coverage):
+    coverage_keys = {"root_background_alpha", "alpha_minimum", "alpha_254_pixels", "alpha_255_pixels",
+                     "alpha_below_254_pixels", "total_pixels"}
+    require(isinstance(coverage, dict) and set(coverage) == coverage_keys and
+            all(integer(coverage[key], 0, 16_777_216) for key in coverage_keys) and
+            coverage["root_background_alpha"] == 255, "missing or invalid measured client alpha coverage")
     require(path.is_file() and not path.is_symlink() and 0 < path.stat().st_size <= 16_777_216,
             "missing, redirected, or excessive client PNG")
     data = path.read_bytes()
@@ -103,6 +108,7 @@ def _png(path, expected_hash, bounds):
     # Only alpha is needed for coverage. PNG predictors at byte offset 4k+3
     # depend on preceding alpha bytes, so this exactly decodes that channel.
     previous = bytearray(width)
+    minimum, alpha254, alpha255, below254 = 255, 0, 0, 0
     for y in range(height):
         start = y * (width * 4 + 1)
         filtering = pixels[start]
@@ -121,10 +127,19 @@ def _png(path, expected_hash, bounds):
                 a, b, c = abs(p - left), abs(p - up), abs(p - diagonal)
                 predictor = left if a <= b and a <= c else up if b <= c else diagonal
             current[x] = (pixels[start + 1 + x * 4 + 3] + predictor) & 255
-        require(all(alpha == 255 for alpha in current), "client PNG has uncovered transparent pixels")
+        minimum = min(minimum, min(current))
+        alpha254 += current.count(254)
+        alpha255 += current.count(255)
+        below254 += sum(alpha < 254 for alpha in current)
         previous = current
+    measured = {"root_background_alpha": 255, "alpha_minimum": minimum, "alpha_254_pixels": alpha254,
+                "alpha_255_pixels": alpha255, "alpha_below_254_pixels": below254, "total_pixels": width * height}
+    require(measured == coverage, "client PNG alpha histogram differs from measured capture")
+    # Source-bound WPF captures have measured near-opaque254 as well as255.
+    # Preserve that one-level raster tolerance; actual uncovered pixels fail.
+    require(below254 == 0, "client PNG has pixels below the measured alpha254 coverage floor")
     return {"file": CAPTURE, "sha256": expected_hash, "width": width, "height": height,
-            "opaque_pixels": width * height, "crc_and_pixels_verified": True}
+            "alpha_coverage": measured, "crc_and_pixels_verified": True}
 
 
 def _capture(capture, evidence):
@@ -165,7 +180,7 @@ def _capture(capture, evidence):
             require(min(a["x"] + a["width"], b["x"] + b["width"]) - max(a["x"], b["x"]) <= .5 or
                     min(a["y"] + a["height"], b["y"] + b["height"]) - max(a["y"], b["y"]) <= .5,
                     "overlapping client controls")
-    return _png(Path(evidence) / CAPTURE, capture["sha256"], bounds)
+    return _png(Path(evidence) / CAPTURE, capture["sha256"], bounds, capture.get("alpha_coverage"))
 
 
 def _require(smoke, evidence, long_fixture, process_receipt, fixture_sha256):

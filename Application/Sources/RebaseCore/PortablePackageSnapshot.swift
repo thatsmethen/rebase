@@ -1,5 +1,4 @@
 import Foundation
-#if REBASE_PORTABLE
 
 /// Bounded identities for regular package contents. Hashing and copying use
 /// fixed chunks; neither operation allocates a whole large media asset.
@@ -26,7 +25,7 @@ struct PortablePackageSnapshot: Equatable {
         var result = entries
         var chunks: [String] = []
         for start in stride(from: 0, to: data.count, by: Self.chunkBytes) {
-            chunks.append(PortableSHA256.hexDigest(data.subdata(in: start..<min(data.count, start + Self.chunkBytes))))
+            chunks.append(cprSHA256(data.subdata(in: start..<min(data.count, start + Self.chunkBytes))))
         }
         result[index] = Entry(components: [ProjectStore.manifestName], isDirectory: false, size: data.count, chunks: chunks)
         return Self(entries: result)
@@ -37,7 +36,7 @@ struct PortablePackageSnapshot: Equatable {
         var result = inventory
         for index in result.indices where !result[index].isDirectory {
             var hashes: [String] = []
-            try readChunks(result[index], in: root) { hashes.append(PortableSHA256.hexDigest($0)) }
+            try readChunks(result[index], in: root) { hashes.append(cprSHA256($0)) }
             result[index].chunks = hashes
         }
         guard try Self.inventory(in: root) == inventory else { throw changed() }
@@ -73,7 +72,7 @@ struct PortablePackageSnapshot: Equatable {
                     var index = 0
                     try Self.readChunks(entry, in: source) { data in
                         guard index < entry.chunks.count,
-                              PortableSHA256.hexDigest(data) == entry.chunks[index] else { throw Self.changed() }
+                              cprSHA256(data) == entry.chunks[index] else { throw Self.changed() }
                         try handle.write(contentsOf: data)
                         index += 1
                     }
@@ -168,4 +167,3 @@ struct PortablePackageSnapshot: Equatable {
     private static func changed() -> RebaseCoreError { invalid("The project package changed while it was being copied or verified. Reopen it and try again.") }
     private static func tooLarge() -> RebaseCoreError { invalid("Project copying is currently bounded to 10,000 entries and 512 MiB.") }
 }
-#endif
