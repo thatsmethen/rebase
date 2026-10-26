@@ -225,8 +225,11 @@ def main():
         (output / "authored-baseline.json").write_text(json.dumps(baseline, indent=2) + "\n")
         result["control_count"] = len(checks)
         log = "\n".join(row["name"] + ": " + row["observed"] for row in checks) + "\n"
-        (output / "controls.log").write_text(log)
-        result["controls_log_sha256"] = sha(log.encode())
+        # Explicit bytes keep the log and its receipt identical on Windows,
+        # where text-mode writing would translate LF into CRLF.
+        log_path = output / "controls.log"
+        log_path.write_bytes(log.encode("utf-8"))
+        result["controls_log_sha256"] = sha(log_path.read_bytes())
         (output / "observation.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps({"outcome": result["outcome"], "control_count": len(checks), "native_wpf_executed": False}))
 
