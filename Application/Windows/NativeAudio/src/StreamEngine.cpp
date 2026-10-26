@@ -143,8 +143,12 @@ void StreamEngine::stop_producer() {
 void StreamEngine::cancel() { stop_producer(); result_.store(RB_AUDIO_OK); hresult_.store(0); left_.store(0); right_.store(0); phase_.store(RB_AUDIO_CANCELLED); }
 void StreamEngine::update_prime() {
     if (endpoint_.size() >= prime_ || (final_.load(std::memory_order_acquire) && total_.load() > 0)) {
-        primed_.store(true); uint32_t expected = RB_AUDIO_PRIMING;
+        uint32_t expected = RB_AUDIO_PRIMING;
         phase_.compare_exchange_strong(expected, RB_AUDIO_READY);
+        // Admission certifies the preceding state transition as well as the
+        // queued PCM (and final tail, when shorter than the normal prime).
+        // Publish it last so an immediate Play cannot still see PRIMING.
+        primed_.store(true, std::memory_order_release);
     }
 }
 bool StreamEngine::flush(const float *samples, uint32_t count) {
@@ -213,9 +217,10 @@ void StreamEngine::run() noexcept {
 }
 bool StreamEngine::playing() const { const auto p = phase_.load(); return p == RB_AUDIO_PLAYING || p == RB_AUDIO_DRAINING; }
 int StreamEngine::play() {
+    if (!primed_.load(std::memory_order_acquire)) return RB_AUDIO_STATE;
     if (playing()) return RB_AUDIO_OK;
     const auto p = phase_.load();
-    if (!primed_.load() || (p != RB_AUDIO_READY && p != RB_AUDIO_PAUSED)) return RB_AUDIO_STATE;
+    if (p != RB_AUDIO_READY && p != RB_AUDIO_PAUSED) return RB_AUDIO_STATE;
     uint32_t expected = p;
     return phase_.compare_exchange_strong(expected, final_.load() ? RB_AUDIO_DRAINING : RB_AUDIO_PLAYING) ? RB_AUDIO_OK : RB_AUDIO_STATE;
 }
@@ -260,6 +265,9 @@ bool StreamEngine::observe(uint64_t frames) {
 }
 RBAudioStreamStatus StreamEngine::status() const {
     RBAudioStreamStatus s{};
+    // Acquire admission before phase: primed=true must not be paired with an
+    // older PRIMING snapshot from before the producer's READY transition.
+    s.primed = primed_.load(std::memory_order_acquire) ? 1 : 0;
     s.abi_version = 1; s.phase = phase_.load(); s.source_rate = descriptor_.source_rate; s.endpoint_rate = endpoint_rate_;
     s.generation = descriptor_.generation; s.source_frames = descriptor_.source_frames;
     // Read release-published completion flags before the monotonic counters
@@ -274,7 +282,7 @@ RBAudioStreamStatus StreamEngine::status() const {
     if (!rate_frame_floor(s.endpoint_position, endpoint_rate_, descriptor_.source_rate, mapped)) mapped = descriptor_.source_frames;
     s.source_position = s.phase == RB_AUDIO_FINISHED ? descriptor_.source_frames : std::min(std::min(mapped, s.source_consumed), descriptor_.source_frames - 1);
     s.source_queued = source_.size(); s.endpoint_queued = endpoint_.size(); s.source_capacity = source_.capacity(); s.endpoint_capacity = endpoint_.capacity();
-    s.source_peak = source_.peak(); s.endpoint_peak = endpoint_.peak(); s.primed = primed_.load() ? 1 : 0;
+    s.source_peak = source_.peak(); s.endpoint_peak = endpoint_.peak();
     s.converted = descriptor_.source_rate == endpoint_rate_ ? 0 : 1;
     s.result = result_.load(); s.hresult = hresult_.load(); s.peak_left = left_.load(); s.peak_right = right_.load();
     s.endpoint_buffer_frames = device_buffer_; s.soxr_recipe = s.converted ? 6 : 0; return s;

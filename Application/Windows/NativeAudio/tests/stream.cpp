@@ -38,6 +38,7 @@ bool valid_status(const RBAudioStreamStatus &s) {
         s.endpoint_position <= s.endpoint_submitted && s.endpoint_submitted <= s.endpoint_produced &&
         s.source_queued <= s.source_capacity && s.endpoint_queued <= s.endpoint_capacity &&
         s.source_peak <= s.source_capacity && s.endpoint_peak <= s.endpoint_capacity &&
+        (!s.primed || s.phase != RB_AUDIO_PRIMING) &&
         (!s.source_eof || s.source_accepted == s.source_frames) &&
         (s.endpoint_total_final ? (s.source_eof && s.source_consumed == s.source_frames && s.endpoint_total == s.endpoint_produced) : s.endpoint_total == 0) &&
         (s.phase != RB_AUDIO_FINISHED || (s.endpoint_total_final && s.endpoint_position == s.endpoint_total && s.source_position == s.source_frames));
@@ -73,7 +74,11 @@ void exact(uint32_t from, uint32_t to, uint32_t frames, uint32_t partition, uint
             if(!code) { accepted+=count; ++sequence; progressed=true; }
         } else if(!finished) { check(engine.finish(1,sequence,accepted)==0,"finish"); finished=true; progressed=true; }
         s=engine.status();
-        if(s.primed && !playing) { check(engine.play()==0,"play"); playing=true; progressed=true; }
+        if(s.primed && !playing) {
+            const auto code=engine.play();
+            if(code)progress_report("primed play rejected",from,to,frames,partition,accepted,result.size()/2,engine.status(),started);
+            check(code==0,"play"); playing=true; progressed=true;
+        }
         // Deterministic fake endpoint waits for enough queued data rather than
         // claiming a real-time scheduling guarantee. Separate controls underrun.
         if(playing && (s.endpoint_queued>=512 || s.endpoint_total_final)) {
@@ -146,7 +151,7 @@ void identity_bits() {
     const uint32_t bits[8]={0x80000000,1,0x80000001,0,0x00800000,0x80800000,0x3f800000,0xbf800000};
     float input[8]; std::memcpy(input,bits,sizeof(input));
     check(e.submit(1,0,0,input,4)==0 && e.finish(1,1,4)==0,"identity submit");
-    until([&]{return e.status().endpoint_total_final!=0;}); check(e.play()==0,"short priming");
+    until([&]{return e.status().primed!=0;}); check(e.play()==0,"short priming");
     uint32_t actual=0; float output[8]; check(e.available(128,actual)==0 && actual==4,"short terminal");
     check(e.consume(output,4)==0 && std::memcmp(input,output,sizeof(input))==0,"identity exact bits");
     e.submitted(4); check(e.status().source_position==0,"submission not position");
@@ -319,7 +324,13 @@ void concurrent_status() {
         std::atomic<bool> done{false}, invalid{false};
         std::thread observer([&]{while(!done.load()){if(!valid_status(e.status()))invalid.store(true);status_samples.fetch_add(1);std::this_thread::yield();}});
         check(e.submit(1,0,0,input.data(),17)==0 && e.finish(1,1,17)==0,"status admission");
-        until([&]{return e.status().endpoint_total_final!=0;});
+        // Act immediately on the public admission flag. Sleeping through the
+        // transition hides a producer publishing primed before READY.
+        const auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(5);
+        while(!e.status().primed) {
+            check(std::chrono::steady_clock::now()<deadline,"status priming deadline");
+            std::this_thread::yield();
+        }
         check(e.play()==0,"status play");uint32_t actual=0;float output[34]{};
         check(e.available(128,actual)==0 && actual<=17,"status terminal");
         check(e.consume(output,actual)==0,"status consume");e.submitted(actual);check(e.observe(actual),"status finished");

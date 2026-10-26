@@ -1,0 +1,106 @@
+{
+  "schema": "rebase.native-priming-correction.v1",
+  "host": "Darwin",
+  "arch": "arm64",
+  "configurations": [
+    {
+      "configuration": "debug",
+      "build_exit": 0,
+      "ctest_exit": 0
+    },
+    {
+      "configuration": "release",
+      "build_exit": 0,
+      "ctest_exit": 0,
+      "json_exit": 0
+    },
+    {
+      "configuration": "ubsan",
+      "build_exit": 0,
+      "ctest_exit": 0
+    }
+  ],
+  "source_files": {
+    "Application/Windows/NativeAudio/src/StreamEngine.cpp": "da1d83348119e895ce277e1297cf6202239100cab30203755db58897fdff8a93",
+    "Application/Windows/NativeAudio/src/StreamEngine.hpp": "ff4c07e7de494be770e2356bf0dfdd33208772ff8d7c6d1e43e3961d5109ae42",
+    "Application/Windows/NativeAudio/tests/stream.cpp": "73f0be15dcb1b0b079b602e011c42d10771075ef5a23ab7926e600b6986d31aa"
+  },
+  "wasapi_compiled": false,
+  "physical_playback_tested": false,
+  "tests": [
+    {
+      "configuration": "debug",
+      "xml_sha256": "98e09a7ccda4d09324da152e8363802d93da69dc2efea178e19323a7202e74f8",
+      "cases": [
+        {
+          "name": "native_audio_portable_lifecycle",
+          "seconds": "0.00270004",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "native_audio_rate_conversion",
+          "seconds": "0.069363",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "native_audio_bounded_stream",
+          "seconds": "2.54439",
+          "failed": false,
+          "skipped": false
+        }
+      ]
+    },
+    {
+      "configuration": "release",
+      "xml_sha256": "973436349ff16488778d3c875b4b66cbd200b906e2dbbd895783fc352f133deb",
+      "cases": [
+        {
+          "name": "native_audio_portable_lifecycle",
+          "seconds": "0.002691",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "native_audio_rate_conversion",
+          "seconds": "0.043519",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "native_audio_bounded_stream",
+          "seconds": "1.20897",
+          "failed": false,
+          "skipped": false
+        }
+      ]
+    },
+    {
+      "configuration": "ubsan",
+      "xml_sha256": "a646a17668f198caec1e1b2916bc87d0f7bee392854879d76643725a9ad857d7",
+      "cases": [
+        {
+          "name": "native_audio_portable_lifecycle",
+          "seconds": "0.00619033",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "native_audio_rate_conversion",
+          "seconds": "0.101812",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "native_audio_bounded_stream",
+          "seconds": "3.55195",
+          "failed": false,
+          "skipped": false
+        }
+      ]
+    }
+  ],
+  "stream_receipt_sha256": "3f6079bc637301ae5de44032dbe40e33f6a2ecad50158316ff4afbda02ce3a1d",
+  "scope": "Authored native engine tests on macOS arm64, not WASAPI execution or physical output."
+}
