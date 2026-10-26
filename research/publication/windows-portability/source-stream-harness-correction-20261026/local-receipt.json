@@ -1,0 +1,40 @@
+{
+  "schema": "rebase.native-stream-local-validation.v1",
+  "host_os": "Darwin",
+  "host_arch": "arm64",
+  "configurations": [
+    {
+      "configuration": "debug",
+      "build_exit": 0,
+      "ctest_exit": 0
+    },
+    {
+      "configuration": "release",
+      "build_exit": 0,
+      "ctest_exit": 0,
+      "json_exit": 0,
+      "json_sha256": "6f7e2f5078effc0341a4b73e743beadbe9a70879efc3fddb9a585c29107a3797"
+    },
+    {
+      "configuration": "ubsan",
+      "build_exit": 0,
+      "ctest_exit": 0
+    }
+  ],
+  "source_files": {
+    "Application/Windows/NativeAudio/CMakeLists.txt": "462d1c887c1d0419e6089faf12f08dd45c842a0b29bc968d13e838af0f4d8f32",
+    "Application/Windows/NativeAudio/include/rebase_windows_audio.h": "8c40dd17c5e7b26d3e117a79556bd738157bda6ac1606308010490d002a16c4a",
+    "Application/Windows/NativeAudio/src/StreamEngine.cpp": "c4814360c3dbb9f93a06a93eac48f9036cfb758b9a39e2c6ceb21622108ab430",
+    "Application/Windows/NativeAudio/src/StreamEngine.hpp": "ff4c07e7de494be770e2356bf0dfdd33208772ff8d7c6d1e43e3961d5109ae42",
+    "Application/Windows/NativeAudio/src/WasapiOutput.cpp": "0bc79981ba74d2a4e8dc444b7cbb04a9b40d166119eb9253f9cb04edcc414a7d",
+    "Application/Windows/NativeAudio/tests/stream.cpp": "29e78182684be7f803de82020ab14e4d26c9426214c923a8ee09c2c39abdfa46",
+    "Application/Windows/NativeAudio/README.md": "b548780b019a8cfb9efad5f485624d47a5a742e8a65cdd0c7e258bbd46fce5d0"
+  },
+  "wasapi_compiled": false,
+  "physical_playback_tested": false,
+  "sanitizer_limits": {
+    "address": "minimal host control times out before main; original attempt retained",
+    "thread": "minimal host control SIGSEGV before main; original attempt retained",
+    "undefined": "see actual suite result"
+  }
+}

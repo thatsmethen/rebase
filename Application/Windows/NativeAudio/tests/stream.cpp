@@ -16,6 +16,8 @@ namespace {
 uint64_t checks = 0;
 uint64_t long_hash = 0;
 uint32_t long_source_peak = 0, long_endpoint_peak = 0;
+uint32_t oracle_completed = 0;
+bool progress_diagnostics = false;
 std::atomic<uint64_t> status_samples{0};
 void check(bool value, const char *message) { ++checks; if (!value) { std::fprintf(stderr, "stream control failed: %s\n", message); std::exit(1); } }
 RBAudioStreamDescriptor descriptor(uint64_t frames, uint32_t rate, uint32_t capacity = 4096) {
@@ -40,15 +42,27 @@ bool valid_status(const RBAudioStreamStatus &s) {
         (s.endpoint_total_final ? (s.source_eof && s.source_consumed == s.source_frames && s.endpoint_total == s.endpoint_produced) : s.endpoint_total == 0) &&
         (s.phase != RB_AUDIO_FINISHED || (s.endpoint_total_final && s.endpoint_position == s.endpoint_total && s.source_position == s.source_frames));
 }
+void progress_report(const char *control, uint32_t from, uint32_t to, uint64_t frames,
+                     uint32_t partition, uint64_t accepted, uint64_t played,
+                     const RBAudioStreamStatus &s, std::chrono::steady_clock::time_point started) {
+    const auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - started).count();
+    std::fprintf(stderr, "stream diagnostic: control=%s source_rate=%u endpoint_rate=%u frames=%llu partition=%u elapsed_ms=%lld accepted=%llu consumed=%llu produced=%llu played=%llu source_queued=%u endpoint_queued=%u phase=%u eof=%u final=%u result=%d completed_oracles=%u long_completed=%u long_fnv1a64=%llu\n",
+        control, from, to, static_cast<unsigned long long>(frames), partition, static_cast<long long>(elapsed),
+        static_cast<unsigned long long>(accepted), static_cast<unsigned long long>(s.source_consumed),
+        static_cast<unsigned long long>(s.endpoint_produced), static_cast<unsigned long long>(played),
+        s.source_queued, s.endpoint_queued, s.phase, s.source_eof, s.endpoint_total_final, s.result,
+        oracle_completed, long_hash != 0 ? 1u : 0u, static_cast<unsigned long long>(long_hash));
+}
 void exact(uint32_t from, uint32_t to, uint32_t frames, uint32_t partition, uint32_t capacity) {
     auto input = source(frames); std::vector<float> oracle;
     check(convert_snapshot(input.data(),frames,from,to,oracle)==0,"snapshot oracle");
     StreamEngine engine(descriptor(frames,from,capacity),to,128); check(engine.start()==0,"start");
     std::vector<float> result; result.reserve(oracle.size());
     uint64_t accepted=0,sequence=0; bool finished=false,playing=false;
-    const auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(10);
+    const auto started=std::chrono::steady_clock::now(), deadline=started+std::chrono::seconds(10);
     std::array<float,1024> block{};
     while(true) {
+        bool progressed=false;
         auto s=engine.status(); check(s.result==0,"producer no error"); check(valid_status(s),"public status invariants");
         check(s.source_peak<=capacity && s.endpoint_peak<=capacity,"bounded queues");
         check(s.endpoint_total_final || s.endpoint_total==0,"unknown total not estimated");
@@ -56,10 +70,10 @@ void exact(uint32_t from, uint32_t to, uint32_t frames, uint32_t partition, uint
             const uint32_t count=static_cast<uint32_t>(std::min<uint64_t>(partition,frames-accepted));
             const int code=engine.submit(1,sequence,accepted,input.data()+accepted*2,count);
             check(code==0 || code==RB_AUDIO_BACKPRESSURE,"submit/backpressure");
-            if(!code) { accepted+=count; ++sequence; }
-        } else if(!finished) { check(engine.finish(1,sequence,accepted)==0,"finish"); finished=true; }
+            if(!code) { accepted+=count; ++sequence; progressed=true; }
+        } else if(!finished) { check(engine.finish(1,sequence,accepted)==0,"finish"); finished=true; progressed=true; }
         s=engine.status();
-        if(s.primed && !playing) { check(engine.play()==0,"play"); playing=true; }
+        if(s.primed && !playing) { check(engine.play()==0,"play"); playing=true; progressed=true; }
         // Deterministic fake endpoint waits for enough queued data rather than
         // claiming a real-time scheduling guarantee. Separate controls underrun.
         if(playing && (s.endpoint_queued>=512 || s.endpoint_total_final)) {
@@ -68,16 +82,26 @@ void exact(uint32_t from, uint32_t to, uint32_t frames, uint32_t partition, uint
                 check(engine.consume(block.data(),actual)==0,"consume"); engine.submitted(actual);
                 result.insert(result.end(),block.data(),block.data()+size_t(actual)*2);
                 engine.observe(result.size()/2);
+                progressed=true;
             }
         }
         if(playing) engine.observe(result.size()/2);
         s=engine.status();
         if(s.phase==RB_AUDIO_FINISHED) { check(s.source_position==frames,"finished source end"); break; }
         check(s.source_position<frames,"no early source end");
-        check(std::chrono::steady_clock::now()<deadline,"conversion deadline"); tick();
+        if(std::chrono::steady_clock::now()>=deadline) {
+            progress_report("conversion deadline",from,to,frames,partition,accepted,result.size()/2,s,started);
+            check(false,"conversion deadline");
+        }
+        // This authored endpoint is not clock-paced. One-frame admission must
+        // not incur 16,403 deliberate sleeps merely to compare converter bytes.
+        // Yield during progress, and retain bounded polling only while idle.
+        if(progressed)std::this_thread::yield();else tick();
     }
     check(result.size()==oracle.size(),"oracle output count");
     check(std::memcmp(result.data(),oracle.data(),result.size()*4)==0,"bit exact oracle output");
+    ++oracle_completed;
+    if(progress_diagnostics)progress_report("conversion completed",from,to,frames,partition,accepted,result.size()/2,engine.status(),started);
     engine.cancel(); check(engine.status().phase==RB_AUDIO_CANCELLED,"cancel barrier");
     check(engine.submit(1,sequence,accepted,input.data(),1)==RB_AUDIO_STATE,"cancel late block");
 }
@@ -207,7 +231,7 @@ void long_stream() {
     auto input=source(4096);std::array<float,8192> output{};
     StreamEngine e(descriptor(frames,32000,8192),32000,128);check(e.start()==0,"long start");
     uint64_t accepted=0,sequence=0,played=0,hash=UINT64_C(14695981039346656037),expected=hash;bool eof=false,playing=false;
-    const auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(30);
+    const auto started=std::chrono::steady_clock::now(), deadline=started+std::chrono::seconds(30);
     while(e.status().phase!=RB_AUDIO_FINISHED) {
         if(accepted<frames) {
             const uint32_t count=static_cast<uint32_t>(std::min<uint64_t>(4096,frames-accepted));
@@ -222,12 +246,16 @@ void long_stream() {
                 const auto*bytes=reinterpret_cast<const unsigned char*>(output.data());for(size_t i=0;i<size_t(actual)*8;++i){hash^=bytes[i];hash*=UINT64_C(1099511628211);}}
         }
         if(playing)e.observe(played);
-        if(std::chrono::steady_clock::now()>=deadline)check(false,"long deadline");
+        if(std::chrono::steady_clock::now()>=deadline) {
+            progress_report("long deadline",32000,32000,frames,4096,accepted,played,e.status(),started);
+            check(false,"long deadline");
+        }
         std::this_thread::yield();
     }
     check(played==frames&&hash==expected,"long incremental hash exactly matches submitted bytes");
     const auto s=e.status();check(s.source_peak<=8192&&s.endpoint_peak<=8192,"long bounded peaks");
     long_hash=hash;long_source_peak=s.source_peak;long_endpoint_peak=s.endpoint_peak;
+    if(progress_diagnostics)progress_report("long completed",32000,32000,frames,4096,accepted,played,s,started);
 }
 
 void explicit_eof() {
@@ -302,6 +330,9 @@ void concurrent_status() {
 
 }
 int main(int argc,char **argv) {
+    // CTest retains completed stage diagnostics if a later control fails.
+    // --json success output remains exactly the machine-readable receipt.
+    progress_diagnostics=argc==1;
     protocol(); duration(); identity_bits(); fault_controls(); concurrent_cancel(); concurrent_status(); explicit_eof(); deferred_eof_clock(); pause_final_race(); maximum_block_ownership(); long_stream();
     const uint32_t ratios[][2]={{48000,48000},{48000,44100},{44100,48000},{32000,44100},{44100,32000},{8000,192000},{192000,8000}};
     for(const auto &r:ratios) for(uint32_t partition:{1u,257u,4096u}) exact(r[0],r[1],16403,partition,4096);
