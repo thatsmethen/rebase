@@ -1,0 +1,157 @@
+{
+  "schema": "rebase.source-stream-copy-correction.v1",
+  "outcome": "passed",
+  "evidence_class": "local-authored-portable-controls",
+  "correction": "macOS internal asCopy packages use checked managed user cache parents; strict worker ancestry stops after checking the filesystem root. Windows temporary location and existing user-path/link checks are unchanged.",
+  "source_files": [
+    {
+      "file": "Application/Sources/RebaseCore/PortableSession.swift",
+      "sha256": "00981368699614bf1c9805783789061d728b14501165fcf6255a42c73ab2f6c5"
+    },
+    {
+      "file": "Application/Sources/RebaseCore/PortableSourceStream.swift",
+      "sha256": "4627a871aca00cd740924050a01d9f39c3f43ed105c8ec1dfba14f49a69d316a"
+    },
+    {
+      "file": "Application/Tests/RebasePortableTests/PortableSourceStreamTests.swift",
+      "sha256": "6aa2303b2e5b599a22e831a90c9532999973de190a62c5c10872af64928e3b35"
+    },
+    {
+      "file": "Application/Windows/SESSION-PROTOCOL.md",
+      "sha256": "8acd3ee253c098f5f6c8de2b29ce018dabe6067c9a036e212836418530fb2f0b"
+    },
+    {
+      "file": "Application/scripts/source_stream_window_gate.py",
+      "sha256": "3a721d0c9e83eff05bb5efa22e494411511a3cf88f3049c5122a7968efef83da"
+    },
+    {
+      "file": "Application/scripts/test_source_stream_window_gate.py",
+      "sha256": "174d5b3c1f121b17dab8a13f754d25b7042a93281952f3e34f912c176743a9b3"
+    }
+  ],
+  "focused_attempts": [
+    {
+      "attempt": 1,
+      "outcome": "failed",
+      "detail": "POSIX resolved temporary parent was rewritten to its system alias by later Foundation canonicalization.",
+      "log": {
+        "file": "copy-tests-01.log",
+        "sha256": "d3507a43db105a30daa9f88b290f8e50c85d77c292a05470ee65ee250c6cbca7",
+        "bytes": 5169
+      },
+      "xml": {
+        "file": "copy-tests-01.xml",
+        "sha256": "07d57e4e025fe39cb3c85a1a181776b7015f9ab9a50ca262f6002edc557b8e7d",
+        "bytes": 1922
+      },
+      "counts": {
+        "testcases": 9,
+        "executed": 9,
+        "skipped": 0,
+        "failed_cases": 1
+      }
+    },
+    {
+      "attempt": 2,
+      "outcome": "interrupted",
+      "detail": "New managed-cache parent traversal continued past filesystem root on a bridged Foundation URL; sampled stack retained, process terminated.",
+      "log": {
+        "file": "copy-tests-02.log",
+        "sha256": "52bc4846927f52cdb20ff175022b280aafaefe206fbc8f0fb6cb1f00c757755f",
+        "bytes": 4438
+      },
+      "xml": {
+        "file": "copy-tests-02.xml",
+        "sha256": "6edbe77098b9cbc5d4d33c4279d3def109144c23b8014d646fdd7793d16b20b3",
+        "bytes": 52
+      },
+      "counts": {
+        "complete_xml": false
+      }
+    },
+    {
+      "attempt": 3,
+      "outcome": "failed",
+      "detail": "Managed copy opened, but worker ancestor traversal exposed the same bridged-root parent edge.",
+      "log": {
+        "file": "copy-tests-03.log",
+        "sha256": "9a6a530455686e9748738f677d2ce9b6c5830c0b988d11a217df47666119fd7b",
+        "bytes": 3456
+      },
+      "xml": {
+        "file": "copy-tests-03.xml",
+        "sha256": "e681662fe13d71ff25aa79ca5a60cf63f8d50fad2a4350e991a167da9be68b88",
+        "bytes": 2090
+      },
+      "counts": {
+        "testcases": 10,
+        "executed": 10,
+        "skipped": 0,
+        "failed_cases": 1
+      }
+    },
+    {
+      "attempt": 4,
+      "outcome": "passed",
+      "detail": "Managed macOS cache and explicit checked-root termination; all ten focused controls pass.",
+      "log": {
+        "file": "copy-tests-04.log",
+        "sha256": "f468e4e05aa2761960f2a8464c2ea3b34356686f9b5618a13819594cff76193a",
+        "bytes": 2626
+      },
+      "xml": {
+        "file": "copy-tests-04.xml",
+        "sha256": "5624db86ba19db0a9f611fa9d5fa6791065485bc8a10928d1938b3a202332cae",
+        "bytes": 1809
+      },
+      "counts": {
+        "testcases": 10,
+        "executed": 10,
+        "skipped": 0,
+        "failed_cases": 0
+      }
+    }
+  ],
+  "interruption_sample": {
+    "file": "copy-tests-02-sample.log",
+    "sha256": "918fe69d225ca3e57b17784606c4a9b417933190fb7cc80a4a2712a934f7a993",
+    "bytes": 139607
+  },
+  "full_suite": {
+    "log": {
+      "file": "full-tests-04.log",
+      "sha256": "0c718bf4813148f6deb444b4b0738fd02861ae699801e13d2ffb8c3d29430924",
+      "bytes": 26582
+    },
+    "xml": {
+      "file": "full-tests-04.xml",
+      "sha256": "cd5a93791860330fe3d2067d99f26d8e8d27ac5f9aa1c6b35090437bb0dfa6f5",
+      "bytes": 21332
+    },
+    "testcases": 134,
+    "executed": 131,
+    "skipped": 3,
+    "failed_cases": 0
+  },
+  "release_build": {
+    "log": {
+      "file": "release-02.log",
+      "sha256": "22922cc12e54787fd1081d4c4cd2c1d8ebfd50d26660d49b3e7f97371b628226",
+      "bytes": 335
+    },
+    "helper_sha256": "6cc3d0f572d38a2d44f41fa3d07fb9a50c3db3e87edafb0ab6980747fa10f4a1",
+    "previous_helper_sha256": "2d2b2135fbe00b08828e95baea748923de015283c208f156b681b639085d5f9c"
+  },
+  "package_resolved_restored": true,
+  "unchanged_source_verified": true,
+  "all_eight_copy_modes_output_verified": true,
+  "linked_cache_and_ticket_parents_rejected": true,
+  "native_windows_executed": false,
+  "audio_device_playback_measured": false,
+  "reference_execution": false,
+  "limitations": [
+    "Local portable tests and helper build do not establish Windows runtime, audio device, desktop visual, or reference-application equivalence.",
+    "Earlier full-tests-02 intermittent preparation failures remain unattributed; this correction does not retroactively explain those observations.",
+    "Window authored controls attempt01 used the previous independent receipt schema; final rerun requires the strengthened successful85-worker receipt."
+  ]
+}

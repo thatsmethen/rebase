@@ -16,6 +16,7 @@ import xml.etree.ElementTree as ET
 from windows_automation_gate import require_automation_protocol
 from portable_soxr import verify_windows, verify_macos, stage_windows_runtime
 from cpr_audition_gate import require_cpr_audition
+from source_stream_gate import require_receipt as require_source_stream
 
 
 def collect_test_results(xml_paths):
@@ -320,6 +321,30 @@ def main():
                         or mode_controls["tests"] <= 0 or mode_controls.get("skipped") != 0):
                     raise RuntimeError("CPR audition receipt rejection controls did not execute successfully")
                 report["cpr_audition_gate_controls"] = mode_controls
+                long_fixture = app / "Tests/Fixtures/SourceStreamTimelines"
+                stream_result_path = out / "source-stream.json"
+                run([sys.executable, str(app / "scripts/check-source-stream.py"),
+                     "--helper", str(session), "--fixtures", str(modes_fixture),
+                     "--long-fixtures", str(long_fixture), "--report", str(stream_result_path)], "source-stream")
+                report["source_stream_control"] = require_source_stream(
+                    json.loads(stream_result_path.read_text()), json.loads(modes_lock.read_text()),
+                    json.loads((long_fixture / "expected.json").read_text()),
+                    hashlib.sha256(modes_lock.read_bytes()).hexdigest(),
+                    hashlib.sha256((long_fixture / "expected.json").read_bytes()).hexdigest(),
+                    hashlib.sha256(session.read_bytes()).hexdigest(), json.loads(modes_result_path.read_text()))
+                report["source_stream_control"]["receipt_sha256"] = hashlib.sha256(stream_result_path.read_bytes()).hexdigest()
+                run([sys.executable, "-m", "unittest", "discover", "-s", str(app / "scripts"),
+                     "-p", "test_source_stream_gate.py"], "source-stream-gate-controls")
+                run([sys.executable, str(app / "scripts/test_source_stream_receipt.py"),
+                     "--receipt", str(stream_result_path), "--short-fixture", str(modes_lock),
+                     "--long-fixture", str(long_fixture / "expected.json"), "--snapshot-receipt", str(modes_result_path),
+                     "--output", str(out / "source-stream-receipt-controls")], "source-stream-receipt-controls")
+                stream_controls = json.loads((out / "source-stream-receipt-controls/observation.json").read_text())
+                if (stream_controls.get("status") != "passed" or stream_controls.get("tests") != 36
+                        or stream_controls.get("failures") != 0 or stream_controls.get("errors") != 0
+                        or stream_controls.get("skipped") != 0):
+                    raise RuntimeError("Source stream receipt rejection controls did not execute successfully")
+                report["source_stream_gate_controls"] = stream_controls
                 if os.name == "nt":
                     # Verify execution/build steps did not replace the DLL.
                     report["cpr_mode2_runtime"] = stage_windows_runtime(runtime, product_directory, runtime_digest)

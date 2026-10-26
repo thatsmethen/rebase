@@ -253,7 +253,9 @@ struct PortableSourceAuditionTests {
         let inspect = try client.send("inspectSourceEvent", ["clipID": event.uuidString])
         let modes = try #require((inspect["sourceInspection"] as? [String: Any])?["modes"] as? [[String: Any]])
         let timeline = try #require(modes.first { $0["mode"] as? String == "nativeTimelineProjectClock" })
-        #expect(timeline["available"] as? Bool == false && timeline["frames"] as? Int64 == prepared.frameCount)
+        #expect(timeline["available"] as? Bool == true && timeline["liveAvailable"] as? Bool == true)
+        #expect(timeline["snapshotExportAvailable"] as? Bool == false && timeline["snapshotExportReason"] as? String != nil)
+        #expect(timeline["frames"] as? Int64 == prepared.frameCount)
     }
 
     @Test func freshEOFRendersStillRejectChangedSourceReportManifestAndMedia() throws {

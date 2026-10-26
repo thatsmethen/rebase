@@ -4,6 +4,20 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
+if (args.Contains("--authored-unread-source-child"))
+{
+    Console.Error.WriteLine("authored-child-started");
+    using var pipe = Console.OpenStandardOutput();
+    var childPayload = new byte[65536];
+    try { while (true) { await pipe.WriteAsync(childPayload); await pipe.FlushAsync(); } }
+    catch (IOException) { }
+    return;
+}
+if (args.Length == 4 && args[0] == "--actual-source-stream-reader")
+{
+    await ActualSourceStreamReaderControl.Run(args[1], args[2], args[3]);
+    return;
+}
 var checks = 0;
 void Check(bool good) { ++checks; if (!good) throw new Exception("Control " + checks + " failed."); }
 void Reject(Action action) { ++checks; try { action(); } catch (InvalidDataException) { return; } throw new Exception("Expected rejection " + checks); }
@@ -74,4 +88,6 @@ checks += await CPRReviewControls.Run();
 checks += await AutomationControls.Run();
 checks += await PlaybackRateControls.Run();
 checks += await SourceModeControls.Run();
+checks += await SourceStreamControls.Run();
+checks += await SourceStreamLifecycleControls.Run();
 Console.WriteLine(JsonSerializer.Serialize(new { schema = 1, suite = "windows-host-portable-controls", checks, failures = 0, wpf_runtime_tested = false, playback_tested = false }));

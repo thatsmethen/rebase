@@ -9,7 +9,11 @@ public interface ISessionClient : IAsyncDisposable
     Task<SessionResponse> Send(SessionRequest request);
     object[] ModuleReceipt();
 }
-public sealed class SessionProcess : ISessionClient
+public interface ISessionRequestObservation
+{
+    IReadOnlyDictionary<string, ulong> DispatchedCommandCounts();
+}
+public sealed class SessionProcess : ISessionClient, ISessionRequestObservation
 {
     private readonly SemaphoreSlim gate = new(1, 1);
     private readonly CancellationTokenSource lifetime = new();
@@ -19,6 +23,9 @@ public sealed class SessionProcess : ISessionClient
     private string lastError = "";
     private bool disposed;
     private bool faulted;
+    private readonly Dictionary<string, ulong> dispatchedCommands = [];
+    public IReadOnlyDictionary<string, ulong> DispatchedCommandCounts()
+    { lock (dispatchedCommands) return new Dictionary<string, ulong>(dispatchedCommands); }
 
     private void Start()
     {
@@ -65,7 +72,7 @@ public sealed class SessionProcess : ISessionClient
         {
             ObjectDisposedException.ThrowIf(disposed, this);
             Start();
-            using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(request.Command is "render" or "renderSourceEvent" or "inspectCPR" or "cprImportReport" or "importCPR" ? 120 : 60));
+            using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(request.Command is "render" or "renderSourceEvent" or "prepareSourceStream" or "inspectSourceEvent" or "inspectCPR" or "cprImportReport" or "importCPR" ? 120 : 60));
             using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token, deadline.Token);
             request.Id = checked(++nextID);
             var message = JsonSerializer.Serialize(request, ProtocolJson.Options);
@@ -74,6 +81,7 @@ public sealed class SessionProcess : ISessionClient
             {
                 await process!.StandardInput.WriteLineAsync(message.AsMemory(), cancellation.Token);
                 await process.StandardInput.FlushAsync(cancellation.Token);
+                lock (dispatchedCommands) dispatchedCommands[request.Command] = checked(dispatchedCommands.GetValueOrDefault(request.Command) + 1);
                 return ProtocolJson.Decode(await SessionResponseReader.Read(process.StandardOutput.BaseStream, cancellation.Token), request.Id);
             }
             catch (OperationCanceledException) when (!lifetime.IsCancellationRequested)

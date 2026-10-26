@@ -39,6 +39,25 @@ public static class SourceAuditionManifest
             "The source provenance does not match this event, document, interval and WAV.");
         foreach (var key in new[] { "projectManifestSHA256", "currentProjectSHA256", "importReportSHA256", "sourceSHA256", "mediaSHA256", "wavSHA256" })
             Require(Digest(Text(proof, key)), "The source provenance contains an invalid digest.");
+        ValidatePreparation(proof, revision, selected, project, mode, render.SampleRate, render.StartFrame!.Value,
+            render.TotalFrames!.Value, render.Frames);
+    }
+
+    // Shared semantic proof checks. Streaming has its own admission schema and
+    // interval bounds; it does not invent a WAV hash or inherit the export cap.
+    internal static void ValidatePreparation(JsonElement proof, ulong revision, SourceEventView selected,
+        ProjectView project, string mode, double sampleRate, ulong startFrame, ulong totalFrames, ulong frames)
+    {
+        UniqueFields(proof);
+        Require(Integer(proof, "revision") == revision && Same(Text(proof, "eventID"), selected.Id) &&
+            Text(proof, "mode") == mode && Same(Text(proof, "sourceSHA256"), selected.SourceSHA256) &&
+            Same(Text(proof, "mediaSHA256"), selected.MediaSHA256) && Number(proof, "sampleRate") == sampleRate &&
+            Integer(proof, "startFrame") == startFrame && Integer(proof, "totalFrames") == totalFrames &&
+            Integer(proof, "frames") == frames && Integer(proof, "channels") == 2 &&
+            Number(proof, "projectSampleRate") == project.SampleRate,
+            "The source proof does not match this event, document and playback interval.");
+        foreach (var key in new[] { "projectManifestSHA256", "currentProjectSHA256", "importReportSHA256", "sourceSHA256", "mediaSHA256" })
+            Require(Digest(Text(proof, key)), "The source proof contains an invalid digest.");
         var sourceRate = Number(proof, "sourceSampleRate");
         Require(sourceRate is >= 8000 and <= 192000 && sourceRate == Math.Truncate(sourceRate), "Invalid source rate in audition provenance.");
         var clock = mode switch
@@ -50,17 +69,17 @@ public static class SourceAuditionManifest
             _ => "current-project-rate-converted"
         };
         Require(Text(proof, "clockRole") == clock, "The source render changed its clock interpretation.");
-        if (mode is SourceAuditionMode.Original or "nativeTimelineSourceRate") Require(render.SampleRate == sourceRate, "Source-clock output changed rate.");
+        if (mode is SourceAuditionMode.Original or "nativeTimelineSourceRate") Require(sampleRate == sourceRate, "Source-clock output changed rate.");
         if (mode is "nativeTimelineProjectClock" or "nativeMode0ProjectRate" or "nativeMode1ProjectRate" or "nativeMode2ProjectRate")
-            Require(render.SampleRate == project.SampleRate, "Project-clock output changed rate.");
-        if (mode == "nativeMode0ProjectRate") Require(render.SampleRate != sourceRate, "Mode 0 accepted an equal-rate source.");
+            Require(sampleRate == project.SampleRate, "Project-clock output changed rate.");
+        if (mode == "nativeMode0ProjectRate") Require(sampleRate != sourceRate, "Mode 0 accepted an equal-rate source.");
         if (mode is "nativeTimelineSavedProjectClock" or SourceAuditionMode.CompleteTrack)
         {
             var setup = Property(proof, "savedProjectAudioSetup");
             Require(Text(setup, "contract") == "cpr-15.0.30.287-parrangement-audio-setup-v1" &&
                 Same(Text(setup, "sourceSHA256"), selected.SourceSHA256) && Integer(setup, "factorBits") == 0x3ff0000000000000UL &&
                 Integer(setup, "baseRateBits") <= uint.MaxValue &&
-                BitConverter.UInt32BitsToSingle((uint)Integer(setup, "baseRateBits")) == render.SampleRate,
+                BitConverter.UInt32BitsToSingle((uint)Integer(setup, "baseRateBits")) == sampleRate,
                 "The saved output clock is not bound to the preserved source setup.");
         }
         if (project.TempoMap.ValueKind == JsonValueKind.Object && project.TempoMap.TryGetProperty("nativeClock", out var currentClock))

@@ -64,6 +64,8 @@ A [separate Stop correction](../../research/publication/windows-portability/sour
 
 ## Parallel development gate
 
+The current unaccepted streaming implementation replaces source-mode live WAV snapshots with a separate shared worker, bounded binary records and bounded native source/endpoint queues. Ordinary-project playback and WAV exports retain their snapshot limits. Authored long-timeline controls cover sparse, overlap and near-24-hour cases; the overlap proof retains fully covered contributors. Local worker, host and native tests exercise the new path, but acceptance still requires the exact Windows package, actual window records, cross-platform comparisons and publication review. The existing preview.8 evidence above remains the released baseline until those gates pass. These scheduling and device policies are authored application behavior; they are not observations of a proprietary scheduler.
+
 The accepted automation editor exposes the shared volume/pan lane model with revision-bound point edits, Read controls, unchanged-edit preservation and undo/redo. The native run exercises the real helper and WPF editor, compares original/restored example bytes against the existing lock, and captures minimum-size Read-off, invalid-input and restored states. Four portable lanes also match edited/restored audio and saved-project roundtrips. These checks remain required when the shared behavior changes.
 
 Windows commits each successful edit immediately and Close retains it; macOS currently defers its editor transaction until Apply. Inline automation lanes, write/touch/latch modes and reference-equivalent presentation remain open.

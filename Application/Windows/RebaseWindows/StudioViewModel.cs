@@ -30,10 +30,11 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     private string status = "Open a project, or explore the included example.";
     private bool busy;
     private double position, peakLeft, peakRight;
-    public StudioViewModel(ISessionClient? session = null, IAudioOutput? audio = null)
+    public StudioViewModel(ISessionClient? session = null, IAudioOutput? audio = null, ISourceStreamFactory? streamFactory = null)
     {
         this.session = session ?? new SessionProcess();
         this.audio = audio ?? new NativeAudio();
+        this.streamFactory = streamFactory ?? new SourceStreamProcessFactory();
     }
     public SessionState State { get; private set; } = new();
     public AudioRateInfo? PlaybackRateInfo { get; private set; }
@@ -60,7 +61,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     public double PeakLeft { get => peakLeft; private set { peakLeft = value; Changed(); } }
     public double PeakRight { get => peakRight; private set { peakRight = value; Changed(); } }
     public string Snap { get; set; } = "off";
-    public bool IsPlaying => audioPhase == 2;
+    public bool IsPlaying => audioPhase is 2 or 7;
     public event PropertyChangedEventHandler? PropertyChanged;
     public event Action? StateChanged;
     public event Action? WaveformsChanged;
@@ -89,11 +90,17 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     private async Task InvalidateAudio()
     {
         audioEpoch++;
-        var configured = loadedRevision is not null;
-        loadedRevision = null; PlaybackRateInfo = null; audioPhase = 0; PeakLeft = PeakRight = 0;
-        if (!configured) return;
-        try { await audio.Stop(); }
-        catch (IOException error) { Report(error); }
+        if (sourceStream is not null)
+        {
+            // Native cancellation is a barrier. A failed barrier must remain
+            // visible and retain this generation for retry/diagnostics.
+            await sourceStream.Cancel(); sourceStream = null; LastSourceStreamWorkerJoined = true;
+        }
+        else if (loadedRevision is not null)
+        {
+            try { await audio.Stop(); } catch (IOException error) { Report(error); }
+        }
+        loadedRevision = null; PlaybackRateInfo = null; SourcePlaybackStatus = null; audioPhase = 0; PeakLeft = PeakRight = 0;
     }
     private string PlaybackFormatSuffix => PlaybackRateInfo is { } info && info.Converted == 1
         ? $" · {info.SourceRate} → {info.EndpointRate} Hz (converted)" : "";
@@ -149,8 +156,16 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         var response = await session.Send(request);
         if (response.State is not null)
         {
-            if (State.Revision != response.State.Revision) { await InvalidateAudio(); UseProjectContext(); }
+            var revisionChanged = State.Revision != response.State.Revision;
+            // The helper may already have committed an edit. Audio cleanup
+            // failure must never hide its authoritative revision/dirty state.
             State = response.State;
+            Exception? cancellationFailure = null;
+            if (revisionChanged || sourceEventID is not null && sourceEventID != State.Selection.ClipID)
+            {
+                try { await InvalidateAudio(); UseProjectContext(); }
+                catch (Exception error) { cancellationFailure = error; audioPhase = 5; PeakLeft = PeakRight = 0; }
+            }
             if (SourceInspection is { } inspection && (inspection.Revision != State.Revision || inspection.EventID != State.Selection.ClipID))
                 SourceInspection = null;
             if (response.Ok && request.Command is "open" or "importCPR") SetSaveConfirmationRequired(false);
@@ -161,12 +176,10 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
             }
             var clips = Project?.Tracks.SelectMany(t => t.Clips).ToDictionary(c => c.Id) ?? [];
             foreach (var id in waveforms.Keys.Where(id => !clips.TryGetValue(id, out var clip) || waveforms[id].Range != WaveformRange.Of(clip)).ToArray()) waveforms.Remove(id);
-            if (sourceEventID is not null && sourceEventID != State.Selection.ClipID)
-            {
-                await InvalidateAudio(); UseProjectContext();
-            }
             Position = Math.Min(Position, IsSourceContext ? sourceDuration : Project?.Duration ?? 0);
             Changed(nameof(NeedsSaveDecision)); Changed(nameof(Title)); StateChanged?.Invoke();
+            if (cancellationFailure is not null)
+                throw new IOException("The project state was updated, but audio cleanup could not be confirmed. Use Stop to retry: " + cancellationFailure.Message, cancellationFailure);
         }
         if (!response.Ok)
         {
@@ -186,6 +199,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
             if (closing) return;
             await work();
         }
+        catch (OperationCanceledException) { Status = "Source preparation cancelled."; }
         catch (Exception error) { Report(error); }
         finally
         {
@@ -265,14 +279,14 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
     public async Task SuspendAndDrain() { accepting = false; await idle.Task; }
     public void ResumeInput() { if (!closing) accepting = true; }
     public object[] HelperModuleReceipt() => session.ModuleReceipt();
-    public Task Open(string path, bool asCopy, bool discardChanges) => Execute(async () =>
+    public Task Open(string path, bool asCopy, bool discardChanges) => SourceAction(async () =>
     {
         RequireSaveDecision(discardChanges);
         await Send(new() { Command = "open", Path = path, AsCopy = asCopy, DiscardChanges = discardChanges });
         UseProjectContext();
         Position = 0; Status = asCopy ? "Example opened as a new project. Use Save As to keep your edits." : "Opened " + Project?.Name;
     });
-    public Task Command(string command, string? clipID = null, string? trackID = null, double? value = null) => Execute(async () =>
+    public Task Command(string command, string? clipID = null, string? trackID = null, double? value = null) => SourceAction(async () =>
     {
         await Send(new() { Command = command, ClipID = clipID, TrackID = trackID, Value = value, Snap = Snap });
         Status = command.StartsWith("select", StringComparison.Ordinal) ? "Selection updated." : "Project updated.";
@@ -331,7 +345,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         LastSourceExport = info;
         Status = "Exported source WAV: " + Path.GetFileName(path);
     });
-    public Task AuditionSource(string mode = SourceAuditionMode.Original) => Execute(async () =>
+    public Task AuditionSource(string mode = SourceAuditionMode.Original) => SourceAction(async () =>
     {
         _ = SourceAuditionMode.Find(mode);
         var selected = SelectedSourceEvent ?? throw new InvalidOperationException("Select a source event before audition.");
@@ -339,12 +353,12 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         sourcePlaybackMode = mode;
         await PrepareSource(selected.Id, seconds, true, rewindAtEnd: true);
     });
-    public Task PlayProject() => Execute(async () =>
+    public Task PlayProject() => SourceAction(async () =>
     {
         if (IsSourceContext) { await InvalidateAudio(); UseProjectContext(); }
         await PlayProjectCore();
     });
-    public Task Play() => Execute(async () =>
+    public Task Play() => SourceAction(async () =>
     {
         if (sourceEventID is not null) await PrepareSource(sourceEventID, Position, true, rewindAtEnd: true);
         else await PlayProjectCore();
@@ -380,54 +394,18 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         }
         finally { try { File.Delete(path); } catch (IOException) { } }
     }
-    private async Task PrepareSource(string id, double seconds, bool play, bool rewindAtEnd)
-    {
-        var selected = SelectedSourceEvent;
-        if (selected is null || selected.Id != id) throw new InvalidOperationException("Select the source event again before audition.");
-        var revision = State.Revision;
-        await InvalidateAudio();
-        if (!IsSourceContext) projectPosition = Position;
-        sourceEventID = id; NotifyContext();
-        Status = "Checking source and attached media…";
-        Directory.CreateDirectory(scratch);
-        var path = Path.Combine(scratch, "source-" + Guid.NewGuid().ToString("N") + ".wav");
-        try
-        {
-            // Every play/resume and seek asks Swift to re-check the retained
-            // source and attached media. A cached revision never authorizes it.
-            var response = await Send(new() { Command = "renderSourceEvent", ClipID = id, Path = path,
-                Mode = sourcePlaybackMode, StartSeconds = seconds, RewindAtEnd = rewindAtEnd });
-            var info = response.Render ?? throw new InvalidDataException("The renderer omitted its source-event metadata.");
-            var source = await Task.Run(() => SnapshotReader.Read(info, path, revision, selected, Project!, sourcePlaybackMode));
-            if (State.Revision != revision || State.Selection.ClipID != id) throw new InvalidOperationException("The selected source event changed while rendering.");
-            sourceStartFrame = info.StartFrame!.Value;
-            sourceDuration = (double)info.TotalFrames!.Value / source.SampleRate;
-            Position = (double)sourceStartFrame / source.SampleRate;
-            if (source.Frames == 0)
-            {
-                // EOF still has a freshly verified complete source manifest.
-                // An empty source is never installed in the native adapter.
-                audioPhase = 4; Status = "Finished; source and media rechecked."; return;
-            }
-            var format = await audio.Format();
-            ValidateOutputFormat(format);
-            await InstallSource(source, revision);
-            var current = await SeekLoadedSource(0);
-            if (play && current.Phase != 4) { await audio.Play(); audioPhase = 2; }
-            Status = (audioPhase == 2 ? "Auditioning source: " + selected.Name : "Source position updated; source and media rechecked.") + PlaybackFormatSuffix;
-        }
-        finally
-        {
-            try { File.Delete(path); } catch (IOException) { }
-            try { File.Delete(path + SourceAuditionManifest.Suffix); } catch (IOException) { }
-        }
-    }
     public Task Pause() => Execute(async () =>
     {
-        if (loadedRevision is null || audioPhase != 2) return;
+        if (loadedRevision is null || audioPhase is not (2 or 7)) return;
         audioEpoch++;
         try
         {
+            if (sourceStream is not null)
+            {
+                ApplyStreamStatus(await sourceStream.Pause());
+                PeakLeft = PeakRight = 0; Status = (audioPhase == 4 ? "Finished" : "Paused") + PlaybackFormatSuffix;
+                return;
+            }
             await audio.Pause();
             // Source audition deliberately reconstructs and revalidates on
             // resume. Preserve the frozen device position before that rebuild;
@@ -445,12 +423,13 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
             throw;
         }
     });
-    public Task Stop() => Execute(async () =>
+    public Task Stop() => SourceAction(async () =>
     {
         audioEpoch++;
         // Keep the installed source available for status/retry if the native
         // stop fails. Explicit Stop must not hide that failure as "Stopped".
-        if (loadedRevision is not null) await audio.Stop();
+        if (sourceStream is not null) { await sourceStream.Cancel(); sourceStream = null; LastSourceStreamWorkerJoined = true; SourcePlaybackStatus = null; }
+        else if (loadedRevision is not null) await audio.Stop();
         if (IsSourceContext)
         {
             // A source seek installs a freshly prepared suffix. Its native
@@ -460,7 +439,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         }
         audioPhase = loadedRevision is null ? 0u : 1u; Position = 0; PeakLeft = PeakRight = 0; Status = "Stopped";
     });
-    public Task Seek(double seconds) => Execute(async () =>
+    public Task Seek(double seconds) => SourceAction(async () =>
     {
         if (!double.IsFinite(seconds)) throw new InvalidOperationException("Enter a finite playhead time.");
         if (sourceEventID is not null)
@@ -470,7 +449,7 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         }
         await SeekProjectCore(seconds);
     });
-    public Task SeekProject(double seconds) => Execute(async () =>
+    public Task SeekProject(double seconds) => SourceAction(async () =>
     {
         if (!double.IsFinite(seconds)) throw new InvalidOperationException("Enter a finite playhead time.");
         if (IsSourceContext) { await InvalidateAudio(); UseProjectContext(); }
@@ -493,6 +472,15 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         var epoch = audioEpoch;
         try
         {
+            if (sourceStream is { } running)
+            {
+                var streamStatus = await running.Status();
+                if (sourceStream != running || loadedRevision != revision || audioEpoch != epoch || Busy || closing) return;
+                ApplyStreamStatus(streamStatus);
+                if (streamStatus.Phase == 4) Status = "Finished";
+                else if (streamStatus.Phase == 7) Status = "Draining source stream" + PlaybackFormatSuffix;
+                return;
+            }
             var snapshot = await audio.Status();
             if (loadedRevision != revision || audioEpoch != epoch || Busy || closing) return;
             ValidateStatus(snapshot);
@@ -504,18 +492,31 @@ public sealed partial class StudioViewModel : INotifyPropertyChanged, IAsyncDisp
         catch (Exception error)
         {
             if (loadedRevision != revision || audioEpoch != epoch || Busy || closing) return;
-            await InvalidateAudio(); Report(error);
+            try { await InvalidateAudio(); Report(error); }
+            catch (Exception cancellationError)
+            {
+                // Retain the installed generation for an explicit Stop retry.
+                // A timer callback must not escape without reporting failure.
+                audioPhase = 5; PeakLeft = PeakRight = 0;
+                Report(new IOException(error.Message + " Stop could not be confirmed: " + cancellationError.Message, cancellationError));
+            }
         }
         finally { polling = false; }
     }
     public async ValueTask DisposeAsync()
     {
-        closing = true;
+        closing = true; CancelSourcePreparation();
+        sourceStream?.RequestCancel();
         await session.DisposeAsync();
+        await Task.WhenAll(abandonedTickets);
         if (waveformTask is not null) await waveformTask;
         if (rulerTask is not null) await rulerTask;
         await actions.WaitAsync();
-        try { await audio.DisposeAsync(); }
+        try
+        {
+            try { if (sourceStream is not null) await sourceStream.DisposeAsync(); }
+            finally { await audio.DisposeAsync(); }
+        }
         finally { actions.Release(); }
         try { if (Directory.Exists(scratch)) Directory.Delete(scratch, recursive: true); }
         catch (IOException) { }

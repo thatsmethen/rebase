@@ -9,6 +9,7 @@ import subprocess
 
 from windows_automation_gate import require_automation_protocol
 from cpr_audition_gate import require_cpr_audition
+from source_stream_gate import require_receipt as require_source_stream
 from windows_soxr_package import SOURCE_COMMIT, SOURCE_VERSION, MANIFEST_SHA256
 
 
@@ -100,10 +101,15 @@ try:
     report["lanes"] = [{key: row[key] for key in ("platform", "architecture", "configuration")} for row in records]
     automation = []
     audition = []
+    streams = []
     modes_lock_path = app / "Tests/Fixtures/SourceAuditionModes/expected.json"
     modes_lock_bytes = modes_lock_path.read_bytes()
     modes_lock = json.loads(modes_lock_bytes)
     modes_lock_sha256 = hashlib.sha256(modes_lock_bytes).hexdigest()
+    stream_lock_path = app / "Tests/Fixtures/SourceStreamTimelines/expected.json"
+    stream_lock_bytes = stream_lock_path.read_bytes()
+    stream_lock = json.loads(stream_lock_bytes)
+    stream_lock_sha256 = hashlib.sha256(stream_lock_bytes).hexdigest()
     for path, rendered in zip(paths, records):
         lane = read_object(path.parent / "conformance.json", "rebase.portable-ci.v1")
         session = read_object(path.parent / "session-protocol.json", "rebase.session-protocol-check.v1")
@@ -149,6 +155,14 @@ try:
                     or runtime.get("name") != "soxr.dll"):
                 raise ValueError("Windows portable runtime differs from its pinned SoXR build")
         audition.append(modes)
+        stream_path = path.parent / "source-stream.json"
+        stream = read_object(stream_path, "rebase.source-stream-control.v1")
+        stream_summary = require_source_stream(stream, modes_lock, stream_lock, modes_lock_sha256, stream_lock_sha256,
+                                               modes.get("helper_sha256"), modes)
+        stream_summary["receipt_sha256"] = hashlib.sha256(stream_path.read_bytes()).hexdigest()
+        if lane.get("source_stream_control") != stream_summary:
+            raise ValueError("Source-stream summary differs from the actual worker receipt")
+        streams.append(stream)
     automation_fields = ("edited_wav_sha256", "edited_pcm_sha256", "restored_wav_sha256",
                          "restored_pcm_sha256", "original_track_id", "original_lane_id",
                          "original_point_count", "mutation_count", "invalid_requests_checked")
@@ -165,6 +179,17 @@ try:
     report["cpr_audition_fixture_manifest_sha256"] = modes_lock_sha256
     report["cpr_audition_matching_scenarios"] = matched_scenarios
     report["cpr_audition_scope"] = "All 48 actual full/odd/EOF/rewind scenarios over eight authored modes and complete overlap-track controls. Exact WAV/PCM and normalized provenance equality; no measured device or proprietary reference audio."
+    stream_comparison_fields = ("case", "mode", "sample_rate", "start_frame", "total_frames", "frames",
+        "pcm_sha256", "normalized_proof_sha256", "transport_chunk_bound", "records", "peak_payload_bytes",
+        "producer_peak_logical_frames", "producer_peak_payload_frames", "producer_logical_blocks",
+        "observed_logical_blocks", "observed_peak_logical_frames", "logical_blocks_sha256")
+    normalized_streams = [sorted([{key: scenario[key] for key in stream_comparison_fields}
+                                 for scenario in row["scenarios"]], key=lambda row: row["case"]) for row in streams]
+    if any(row != normalized_streams[0] for row in normalized_streams[1:]):
+        raise ValueError("Source-stream PCM, complete proof or logical partitions differ across platform/configuration")
+    report["source_stream_matching_scenarios"] = normalized_streams[0]
+    report["source_stream_fixture_manifest_sha256"] = stream_lock_sha256
+    report["source_stream_scope"] = "85 actual worker scenarios, including complete >32M-frame drain, direct near-day tails, EOF and varied transport partitions. Shared output and complete normalized proof equality; no physical device or proprietary runtime claim."
     report["status"] = "passed"
 except Exception as error:
     report["error"] = str(error)

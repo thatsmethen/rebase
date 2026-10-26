@@ -20,24 +20,67 @@ enum PortableSHA256 {
         (value >> count) | (value << (32 - count))
     }
 
-    static func hexDigest(_ data: Data) -> String {
-        // All callers bound their input well below UInt64's bit-count limit.
-        precondition(UInt64(data.count) <= UInt64.max / 8)
-        let bitCount = UInt64(data.count) * 8
-        var bytes = Array(data)
-        bytes.append(0x80)
-        while bytes.count % 64 != 56 { bytes.append(0) }
-        for shift in stride(from: 56, through: 0, by: -8) {
-            bytes.append(UInt8(truncatingIfNeeded: bitCount >> UInt64(shift)))
+    /// Incremental state retains only a partial 64-byte block and fixed words.
+    /// Finalization is non-destructive, so callers can inspect a prefix digest.
+    struct Hasher {
+        private var state: [UInt32] = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+                                       0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19]
+        private var words = [UInt32](repeating: 0, count: 64)
+        private var pending: [UInt8] = []
+        private(set) var byteCount: UInt64 = 0
+        var bufferedByteCount: Int { pending.count }
+
+        mutating func update(_ data: Data) {
+            precondition(UInt64(data.count) <= UInt64.max / 8 - byteCount)
+            byteCount += UInt64(data.count)
+            data.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) in
+                var offset = 0
+                if !pending.isEmpty {
+                    let take = min(64 - pending.count, bytes.count)
+                    pending.append(contentsOf: bytes.prefix(take)); offset += take
+                    if pending.count == 64 {
+                        let block = pending
+                        block.withUnsafeBytes { compress($0) }
+                        pending.removeAll(keepingCapacity: true)
+                    }
+                }
+                while bytes.count - offset >= 64 {
+                    compress(UnsafeRawBufferPointer(rebasing: bytes[offset..<(offset + 64)]))
+                    offset += 64
+                }
+                pending.append(contentsOf: bytes.dropFirst(offset))
+            }
         }
-        var state: [UInt32] = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
-                               0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19]
-        var words = [UInt32](repeating: 0, count: 64)
-        for offset in stride(from: 0, to: bytes.count, by: 64) {
+
+        func hexDigest() -> String {
+            var finalized = self
+            var tail = pending
+            tail.append(0x80)
+            while tail.count % 64 != 56 { tail.append(0) }
+            let bitCount = byteCount * 8
+            for shift in stride(from: 56, through: 0, by: -8) {
+                tail.append(UInt8(truncatingIfNeeded: bitCount >> UInt64(shift)))
+            }
+            tail.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) in
+                for offset in stride(from: 0, to: bytes.count, by: 64) {
+                    finalized.compress(UnsafeRawBufferPointer(rebasing: bytes[offset..<(offset + 64)]))
+                }
+            }
+            let digits = Array("0123456789abcdef".utf8)
+            var result = [UInt8](); result.reserveCapacity(64)
+            for word in finalized.state {
+                for shift in stride(from: 28, through: 0, by: -4) {
+                    result.append(digits[Int((word >> UInt32(shift)) & 15)])
+                }
+            }
+            return String(decoding: result, as: UTF8.self)
+        }
+
+        private mutating func compress(_ block: UnsafeRawBufferPointer) {
             for i in 0..<16 {
-                let j = offset + i * 4
-                words[i] = UInt32(bytes[j]) << 24 | UInt32(bytes[j + 1]) << 16 |
-                    UInt32(bytes[j + 2]) << 8 | UInt32(bytes[j + 3])
+                let j = i * 4
+                words[i] = UInt32(block[j]) << 24 | UInt32(block[j + 1]) << 16 |
+                    UInt32(block[j + 2]) << 8 | UInt32(block[j + 3])
             }
             for i in 16..<64 {
                 let x = words[i - 15], y = words[i - 2]
@@ -59,15 +102,10 @@ enum PortableSHA256 {
             }
             for (i, value) in [a, b, c, d, e, f, g, h].enumerated() { state[i] &+= value }
         }
-        let digits = Array("0123456789abcdef".utf8)
-        var result = [UInt8]()
-        result.reserveCapacity(64)
-        for word in state {
-            for shift in stride(from: 28, through: 0, by: -4) {
-                result.append(digits[Int((word >> UInt32(shift)) & 15)])
-            }
-        }
-        return String(decoding: result, as: UTF8.self)
+    }
+
+    static func hexDigest(_ data: Data) -> String {
+        var hasher = Hasher(); hasher.update(data); return hasher.hexDigest()
     }
 }
 #endif

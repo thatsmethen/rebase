@@ -69,6 +69,12 @@ jobs:
             ${{ runner.temp }}/rebase-windows-application/evidence/shared/*.json
             ${{ runner.temp }}/rebase-windows-application/evidence/shared/*.xml
             ${{ runner.temp }}/rebase-windows-application/evidence/shared/*.log
+            ${{ runner.temp }}/rebase-windows-application/evidence/shared/source-stream-receipt-controls/observation.json
+            ${{ runner.temp }}/rebase-windows-application/evidence/shared/source-stream-receipt-controls/controls.log
+            ${{ runner.temp }}/rebase-windows-application/evidence/source-stream-window-controls/observation.json
+            ${{ runner.temp }}/rebase-windows-application/evidence/source-stream-window-controls/controls.log
+            ${{ runner.temp }}/rebase-windows-application/evidence/native-package-controls/observation.json
+            ${{ runner.temp }}/rebase-windows-application/evidence/native-package-controls/controls.log
           retention-days: 7
           if-no-files-found: warn
       - name: Upload verified development build

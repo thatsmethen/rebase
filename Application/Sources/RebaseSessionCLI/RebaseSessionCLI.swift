@@ -10,8 +10,31 @@ import Glibc
 
 @main struct RebaseSessionCLI {
     static func main() {
+        if Array(CommandLine.arguments.dropFirst()) == ["--source-stream"] {
+            var pending = Data()
+            while true {
+                    let chunk = FileHandle.standardInput.availableData
+                    if chunk.isEmpty { break }
+                    pending.append(chunk)
+                    if let end = pending.firstIndex(of: 10) {
+                        let line = Data(pending[..<end])
+                        guard end == pending.count - 1 else { break }
+                        let result = PortableSourceStream.produce(startup: line) {
+                            try FileHandle.standardOutput.write(contentsOf: $0)
+                        }
+                        finish(UInt32(result))
+                    }
+                    if pending.count > PortableSession.maximumRequestBytes { break }
+            }
+            // Malformed/truncated startup still has a machine-readable terminal
+            // failure when stdout is writable. No diagnostics mix with records.
+            _ = PortableSourceStream.produce(startup: Data()) {
+                try FileHandle.standardOutput.write(contentsOf: $0)
+            }
+            finish(1)
+        }
         guard Array(CommandLine.arguments.dropFirst()) == ["--stdio"] else {
-            FileHandle.standardError.write(Data("Usage: rebase-session --stdio\n".utf8))
+            FileHandle.standardError.write(Data("Usage: rebase-session --stdio | --source-stream\n".utf8))
             finish(2)
         }
         let session = PortableSession()

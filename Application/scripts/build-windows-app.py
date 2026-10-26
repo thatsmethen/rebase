@@ -18,6 +18,9 @@ import zipfile
 from windows_automation_gate import require_automation_protocol, require_automation_window
 from windows_soxr_package import stage_soxr
 from cpr_audition_gate import require_cpr_audition, require_cpr_audition_window
+from source_stream_gate import require_receipt as require_source_stream
+from source_stream_window_gate import require_source_stream_window
+from native_stream_package import validate_native_stream_package
 
 SDK = "10.0.402"
 DOTNET_RUNTIME = "10.0.13"
@@ -866,6 +869,18 @@ def main():
         if "Swift version " + SWIFT not in run(["swift", "--version"], "swift-version", timeout=30):
             raise RuntimeError("Unexpected Swift toolchain")
         run([sys.executable, str(app / "scripts/test_windows_native_audio_gate.py")], "native-receipt-controls")
+        native_package_controls = evidence / "native-package-controls"
+        run([sys.executable, str(app / "scripts/test_native_stream_package.py"), "--output",
+             str(native_package_controls)], "native-package-controls")
+        native_controls = json.loads((native_package_controls / "observation.json").read_text(encoding="utf-8"))
+        # Windows does not assume symbolic-link creation privilege. Three
+        # physical-link cases share one skipped method; reparse-bit controls run.
+        if (native_controls.get("status") != "passed" or native_controls.get("test_methods") != 13
+                or native_controls.get("scenarios") != 80 or native_controls.get("skipped") != 1
+                or native_controls.get("failures") != 0 or native_controls.get("errors") != 0
+                or native_controls.get("real_pe_parser_exercised") is not False):
+            raise RuntimeError("Native stream package rejection controls did not execute successfully")
+        report["native_stream_package_gate_controls"] = native_controls
         run([sys.executable, str(app / "scripts/test_windows_soxr_package.py"), "--output",
              str(evidence / "dependency-controls")], "dependency-package-controls")
         controls = run(["dotnet", "run", "--project", str(app / "Windows/RebaseWindows/Tests/RebaseWindows.Controls.csproj"),
@@ -940,11 +955,12 @@ def main():
             "Extract this entire folder before running Rebase.exe. Keep the DLLs and helper beside it.\n"
             "The authored example opens as a separate editable copy. Its audio permission is in Examples/README.md.\n"
             "This preview supports a bounded set of shared project editing and rendering workflows.\n"
-            "Stereo Float32 playback adapts 8–192 kHz snapshots to the default endpoint using bundled SoXR.\n"
-            "Source and converted snapshots are each limited to 32 million stereo frames.\n"
-            "Source Audio exposes eight shared audition modes, including retained timeline and complete-track snapshots.\n"
+            "Stereo Float32 playback adapts 8–192 kHz audio to the default endpoint using bundled SoXR.\n"
+            "Ordinary playback snapshots and WAV exports remain limited to 32 million stereo frames.\n"
+            "Source Audio streams eight shared audition modes with bounded transport and native audio queues.\n"
+            "Supported sparse source timelines can extend to 24 hours without a full-timeline WAV.\n"
             "Availability requires verified media, timing and saved-clock data; exports preserve full provenance.\n"
-            "Recording, plugins, general project compatibility and streaming playback remain incomplete.\n"
+            "Recording, plugins, general project compatibility and ordinary-project streaming remain incomplete.\n"
             "CI window checks do not establish audio-device playback or complete application parity.\n"
             "Source and development notes: https://github.com/thatsmethen/rebase"
             "\n", encoding="utf-8")
@@ -973,6 +989,12 @@ def main():
         modes_fixture_bytes = {path.relative_to(modes_fixture).as_posix(): digest(path)
                                for path in modes_fixture.rglob("*") if path.is_file()}
         restricted["REBASE_SMOKE_SOURCE_MODES_FIXTURE"] = str(modes_fixture)
+        stream_fixture = app / "Tests/Fixtures/SourceStreamTimelines"
+        if not (stream_fixture / "expected.json").is_file() or inside(stream_fixture, stage):
+            raise RuntimeError("The external authored long-timeline fixture is unavailable")
+        stream_fixture_bytes = {path.relative_to(stream_fixture).as_posix(): digest(path)
+                                for path in stream_fixture.rglob("*") if path.is_file()}
+        restricted["REBASE_SMOKE_SOURCE_STREAM_FIXTURE"] = str(stream_fixture)
         run([sys.executable, str(app / "scripts/check-session-protocol.py"), "--helper", str(stage / "rebase-session.exe"),
              "--example", str(example), "--report", str(evidence / "packaged-session-protocol.json"),
              "--source-project", str(source_project), "--source-media", str(source_media), "--source-lock", str(source_lock)],
@@ -1010,6 +1032,65 @@ def main():
             json.loads(modes_result_path.read_text(encoding="utf-8")), json.loads(modes_lock.read_text(encoding="utf-8")),
             digest(modes_lock), digest(stage / "rebase-session.exe"))
         report["cpr_audition_control"]["receipt_sha256"] = digest(modes_result_path)
+        stream_result_path = evidence / "packaged-source-stream.json"
+        run([sys.executable, str(app / "scripts/check-source-stream.py"),
+             "--helper", str(stage / "rebase-session.exe"), "--fixtures", str(modes_fixture),
+             "--long-fixtures", str(stream_fixture), "--report", str(stream_result_path)],
+            "packaged-source-stream", restricted, timeout=900, cwd=stage)
+        report["source_stream_control"] = require_source_stream(
+            json.loads(stream_result_path.read_text(encoding="utf-8")),
+            json.loads(modes_lock.read_text(encoding="utf-8")),
+            json.loads((stream_fixture / "expected.json").read_text(encoding="utf-8")),
+            digest(modes_lock), digest(stream_fixture / "expected.json"), digest(stage / "rebase-session.exe"),
+            json.loads(modes_result_path.read_text(encoding="utf-8")))
+        report["source_stream_control"]["receipt_sha256"] = digest(stream_result_path)
+        reader_receipt = evidence / "managed-source-stream-reader.json"
+        run([str(Path(shutil.which("dotnet")).resolve()),
+             str(app / "Windows/RebaseWindows/Tests/bin/Release/net10.0/RebaseWindows.Controls.dll"),
+             "--actual-source-stream-reader", str(stage / "rebase-session.exe"), str(stream_fixture), str(reader_receipt)],
+            "managed-source-stream-reader", restricted, timeout=180, cwd=stage)
+        reader = json.loads(reader_receipt.read_text(encoding="utf-8"))
+        if (reader.get("suite") != "actual-shared-helper-managed-stream-reader" or reader.get("checks") != 19
+                or reader.get("failures") != 0 or reader.get("helper_responsive_after_cancellation") is not True
+                or reader.get("device_playback_tested") is not False or reader.get("wpf_runtime_tested") is not False
+                or reader.get("project_open") != "explicit-private-copy"):
+            raise RuntimeError("Managed reader did not complete its real helper journey")
+        rows = reader.get("records", [])
+        long_lock = json.loads((stream_fixture / "expected.json").read_text(encoding="utf-8"))
+        expected_pairs = {(case["name"], point) for case in long_lock["cases"] for point in ("tail", "eof", "cancel")}
+        if len(rows) != 9 or {(row.get("fixture"), row.get("point")) for row in rows} != expected_pairs:
+            raise RuntimeError("Managed reader omitted or repeated a worker scenario")
+        for row in rows:
+            case = next(case for case in long_lock["cases"] if case["name"] == row["fixture"])
+            mode = next(mode for mode in case["modes"] if mode["mode"] == "nativeTrackSavedProjectClock")
+            point, total = row["point"], mode["totalFrames"]
+            expected_start = total - 1000 if point == "tail" else total if point == "eof" else 0
+            if (row.get("first") != expected_start or row.get("total") != total or row.get("worker_joined") is not True
+                    or type(row.get("frames")) is not int or type(row.get("peak_payload_frames")) is not int
+                    or not 0 <= row["peak_payload_frames"] <= 65_536
+                    or (point == "tail" and (row["frames"] != 1000 or row.get("pcm_sha256") != mode["tailPCMSHA256"]))
+                    or (point == "eof" and (row["frames"] != 0 or row.get("pcm_sha256") != hashlib.sha256(b"").hexdigest()))
+                    or (point == "cancel" and not 0 < row["frames"] <= 65_536)):
+                raise RuntimeError("Managed reader output or cancellation differs from its locked scenario")
+        report["managed_source_stream_reader"] = {"receipt_sha256": digest(reader_receipt), "workers": 9, "checks": 19,
+            "helper_sha256": digest(stage / "rebase-session.exe"), "device_playback_tested": False}
+        stream_window_controls = evidence / "source-stream-window-controls"
+        run([sys.executable, str(app / "scripts/test_source_stream_window_gate.py"),
+             "--receipt", str(stream_result_path), "--fixture", str(stream_fixture / "expected.json"),
+             "--helper", str(stage / "rebase-session.exe"), "--output", str(stream_window_controls)],
+            "source-stream-window-controls", restricted, timeout=180, cwd=stage)
+        window_controls = json.loads((stream_window_controls / "observation.json").read_text(encoding="utf-8"))
+        if (window_controls.get("schema") != "rebase.source-stream-window-gate-controls.v1"
+                or window_controls.get("outcome") != "passed" or window_controls.get("check_count") != 98
+                or len(window_controls.get("checks", [])) != 98 or len(window_controls.get("real_workers", [])) != 3
+                or window_controls.get("process_receipt_sha256") != digest(stream_result_path)
+                or window_controls.get("helper_sha256") != digest(stage / "rebase-session.exe")
+                or window_controls.get("fixture_sha256") != digest(stream_fixture / "expected.json")
+                or window_controls.get("controls_log_sha256") != digest(stream_window_controls / "controls.log")
+                or any(window_controls.get(key) is not False for key in
+                    ("native_wpf_executed", "physical_input_tested", "audio_device_playback_measured", "reference_execution"))):
+            raise RuntimeError("Source stream window receipt rejection controls did not execute successfully")
+        report["source_stream_window_gate_controls"] = window_controls
         smoke_path = evidence / "wpf-smoke.json"
         run([str(stage / "Rebase.exe"), "--smoke", "--smoke-json", str(smoke_path),
              "--smoke-source-project", str(source_project), "--smoke-source-media", str(source_media)],
@@ -1063,6 +1144,9 @@ def main():
                                   json.loads((app / "scripts/example-render-lock.json").read_text(encoding="utf-8")))
         report["source_modes_window_control"] = require_cpr_audition_window(smoke, evidence,
             json.loads(modes_lock.read_text(encoding="utf-8")), json.loads(modes_result_path.read_text(encoding="utf-8")))
+        report["source_stream_window_control"] = require_source_stream_window(smoke, evidence,
+            json.loads((stream_fixture / "expected.json").read_text(encoding="utf-8")),
+            json.loads(stream_result_path.read_text(encoding="utf-8")), digest(stream_fixture / "expected.json"))
         modules = {"process": validate_modules(smoke.pop("process_modules", None), stage, windows,
                                                {"rebase.exe", "coreclr.dll", "rebasewindowsaudio.dll", "soxr.dll"}),
                    "helper": validate_modules(smoke.pop("helper_modules", None), stage, windows,
@@ -1101,16 +1185,22 @@ def main():
         if modes_fixture_bytes != {path.relative_to(modes_fixture).as_posix(): digest(path)
                                    for path in modes_fixture.rglob("*") if path.is_file()}:
             raise RuntimeError("A package check changed the authored all-mode source fixture")
+        if stream_fixture_bytes != {path.relative_to(stream_fixture).as_posix(): digest(path)
+                                    for path in stream_fixture.rglob("*") if path.is_file()}:
+            raise RuntimeError("A package check changed the authored long-timeline fixture")
         # Keep this mandatory gate after window diagnostics, before any downloadable ZIP.
         # An application smoke pass cannot turn a failed/empty Release suite into success.
         run([sys.executable, str(app / "scripts/run-portable-ci.py"), "swift", "--configuration", "Release",
              "--output", str(evidence / "shared"), "--soxr-build", str(evidence / "native/soxr")],
              "shared-release-conformance", timeout=900)
+        report["native_stream_package"] = validate_native_stream_package(stage, evidence / "native", env.get("GITHUB_SHA"))
+        write(evidence / "native-stream-package.json", report["native_stream_package"])
         files = [{"path": path.relative_to(stage).as_posix(), "bytes": path.stat().st_size, "sha256": digest(path)}
                  for path in sorted(stage.rglob("*")) if path.is_file()]
         fixture_payload_hashes = {expected_source[key] for key in
                                   ("sourceSHA256", "mediaSHA256", "manifestSHA256", "reportSHA256", "outputSHA256")}
         fixture_payload_hashes.update(modes_fixture_bytes.values())
+        fixture_payload_hashes.update(stream_fixture_bytes.values())
         if any(item["sha256"] in fixture_payload_hashes for item in files):
             raise RuntimeError("A source-audition test payload was copied into the application package")
         if any(path.is_symlink() for path in stage.rglob("*")):

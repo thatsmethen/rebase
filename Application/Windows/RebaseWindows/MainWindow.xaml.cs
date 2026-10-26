@@ -65,10 +65,15 @@ public partial class MainWindow : Window
             if (!PositionBox.IsKeyboardFocused) PositionBox.Text = model.Position.ToString("0.000", CultureInfo.CurrentCulture);
         }
         if (e.PropertyName == nameof(model.TransportContext)) TransportContextName.Text = model.TransportContext;
+        if (e.PropertyName is nameof(model.Busy) or nameof(model.SourceStreamPreparing))
+        {
+            CommandSurface.IsEnabled = !model.Busy || model.SourceStreamPreparing;
+            TransportStopButton.IsEnabled = !model.Busy || model.SourceStreamPreparing;
+            TransportPauseButton.IsEnabled = TransportPlayButton.IsEnabled = TransportTempoControls.IsEnabled = TransportPositionControls.IsEnabled = !model.Busy;
+        }
         if (e.PropertyName == nameof(model.Busy))
         {
             Timeline.IsEnabled = !model.Busy;
-            CommandSurface.IsEnabled = !model.Busy;
             ProjectActions.IsEnabled = !model.Busy;
             MainMenu.IsEnabled = !model.Busy;
             ArrangementActions.IsEnabled = !model.Busy;
@@ -390,7 +395,11 @@ public partial class MainWindow : Window
     private void RefreshRuler() => Timeline.SetRuler(model.Ruler, RulerModeBox?.SelectedIndex != 1, model.RulerError);
     private async void KeyPressed(object sender, KeyEventArgs e)
     {
-        if (model.Busy) return;
+        if (model.Busy)
+        {
+            if (e.Key == Key.Escape && model.SourceStreamPreparing) { e.Handled = true; await model.Stop(); }
+            return;
+        }
         if (e.OriginalSource is TextBox || e.OriginalSource is System.Windows.Controls.Primitives.TextBoxBase || e.OriginalSource is ComboBox) return;
         if (e.Key == Key.Space && Keyboard.FocusedElement is System.Windows.Controls.Primitives.ButtonBase) return;
         if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.S) { e.Handled = true; await Guard(async () => { await Save(); }); }

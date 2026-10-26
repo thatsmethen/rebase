@@ -20,9 +20,9 @@ def validate_test_xml(path):
     failures = sum(case.find("failure") is not None or case.find("error") is not None for case in cases)
     if not cases or skipped or failures:
         raise ValueError("Expected executed native portable tests with no skips or failures")
-    if len(cases) != 2 or {case.get("name") for case in cases} != {
-            "native_audio_portable_lifecycle", "native_audio_rate_conversion"}:
-        raise ValueError("Expected the portable lifecycle and rate-conversion CTest cases")
+    if len(cases) != 3 or {case.get("name") for case in cases} != {
+            "native_audio_portable_lifecycle", "native_audio_rate_conversion", "native_audio_bounded_stream"}:
+        raise ValueError("Expected the portable lifecycle, snapshot conversion and bounded-stream CTest cases")
     return {"count": len(cases), "skipped": skipped, "failures": failures}
 
 
@@ -89,6 +89,45 @@ def validate_endpoint_probe(record, exit_code):
     if exit_code not in expected or (record.get("outcome"), record.get("result")) != expected[exit_code]:
         raise ValueError("Endpoint result and native exit code disagree")
     return "endpoint-observed" if exit_code == 0 else "unavailable-no-endpoint"
+
+
+def validate_stream_controls(record):
+    if (record.get("schema") != "rebase.native-bounded-stream-controls.v1" or record.get("status") != "passed"
+            or record.get("physical_playback_tested") is not False
+            or type(record.get("checks")) is not int or record["checks"] <= 0):
+        raise ValueError("Missing executed bounded native stream controls")
+    expected_counts = {"oracle_cases": 28, "cancel_race_cycles": 40, "fault_injection_cases": 9,
+        "status_race_cycles": 300, "pause_final_race_cycles": 200,
+        "long_stream_frames": 32_004_240, "duration_admission_frames": 16_588_800_000,
+        "source_queue_bound_frames": 65_536, "endpoint_queue_bound_frames": 8192,
+        "fixed_pcm_storage_bound_bytes": 622_592}
+    if any(type(record.get(key)) is not int or record[key] != value for key, value in expected_counts.items()):
+        raise ValueError("Native stream coverage or bounded storage changed")
+    if (type(record.get("status_samples")) is not int or record["status_samples"] <= 0
+            or record.get("long_fnv1a64") != "9856751957304272980"):
+        raise ValueError("Native status observations or long-stream hash changed")
+    if any(type(record.get(key)) is not int or not 1 <= record[key] <= 8192 for key in
+           ("long_source_peak_frames", "long_endpoint_peak_frames")):
+        raise ValueError("Native observed long-stream queue peaks exceed their configured capacities")
+    # This paired case is the largest PCM allocation observed. The aggregate
+    # endpoint-capacity maximum belongs to another case; do not combine them.
+    storage = record.get("max_pcm_storage_case")
+    expected_storage = {"source_capacity_frames": 65_536, "endpoint_capacity_frames": 4096,
+        "rolling_input_frames": 4096, "pending_output_frames": 4096, "bytes": 622_592}
+    if (not isinstance(storage, dict) or set(storage) != set(expected_storage)
+            or any(type(storage[key]) is not int or storage[key] != value for key, value in expected_storage.items())
+            or storage["bytes"] != 8 * sum(storage[key] for key in expected_storage if key != "bytes")):
+        raise ValueError("Native PCM storage measurement is incomplete or inconsistent")
+    expected_gates = {"snapshot_exact", "canonical_partitions", "coherent_status_publication",
+        "identity_bits", "exact_eof", "zero_output_not_eof", "deferred_eof_clock_completion",
+        "maximum_block_owned_copy", "bounded_backpressure",
+        "starvation_fault", "u64_duration_mapping", "cancel_join_barrier", "pause_freezes_position",
+        "pause_final_drain_race", "stop_reset_failure_retry", "converter_failures", "allocation_failures",
+        "failed_startup_unpublished", "long_incremental_hash"}
+    gates = record.get("gates")
+    if not isinstance(gates, dict) or set(gates) != expected_gates or any(value is not True for value in gates.values()):
+        raise ValueError("Native stream did not complete every required control")
+    return record
 
 
 def main():
@@ -202,7 +241,7 @@ def main():
         run(configure, "configure")
         run(["cmake", "--build", str(build), "--parallel", "2"], "build")
         run(["ctest", "--test-dir", str(build), "--output-on-failure", "--timeout", "30",
-             "--output-junit", str(xml_path)], "lifecycle-ctest", timeout=60)
+             "--output-junit", str(xml_path)], "lifecycle-ctest", timeout=240)
         sanitize_xml()
         report["tests"] = validate_test_xml(xml_path)
         suffix = ".exe" if os.name == "nt" else ""
@@ -221,6 +260,11 @@ def main():
         rate_controls = json.loads((out / "rate-conversion.json").read_text(encoding="utf-8"))
         write_record(out / "rate-conversion.json", rate_controls)
         report["portable_rate_conversion"] = validate_rate_controls(rate_controls)
+        run([str(build / ("rebase_audio_stream_tests" + suffix)), "--json", str(out / "bounded-stream.json")],
+            "bounded-stream-controls", timeout=180)
+        stream_controls = json.loads((out / "bounded-stream.json").read_text(encoding="utf-8"))
+        write_record(out / "bounded-stream.json", stream_controls)
+        report["portable_bounded_stream"] = validate_stream_controls(stream_controls)
         if args.portable_lifecycle_only:
             report["endpoint_probe"] = {"outcome": "not-run-non-windows-portable-mode"}
         else:
@@ -247,7 +291,7 @@ def main():
     finally:
         try:
             sanitize_xml()
-            for name in ("lifecycle.json", "rate-conversion.json", "endpoint-probe.json"):
+            for name in ("lifecycle.json", "rate-conversion.json", "bounded-stream.json", "endpoint-probe.json"):
                 path = out / name
                 if path.is_file():
                     write_record(path, json.loads(path.read_text(encoding="utf-8")))

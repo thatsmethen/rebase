@@ -18,6 +18,7 @@
 #include <utility>
 #include "RatePlaybackCursor.hpp"
 #include "RateConversion.hpp"
+#include "StreamEngine.hpp"
 
 namespace {
 template<class T> class Com {
@@ -33,7 +34,7 @@ public:
     explicit operator bool() const { return value_ != nullptr; }
 };
 struct TaskMemory { void operator()(WAVEFORMATEX *p) const { CoTaskMemFree(p); } };
-enum class Operation { Format, Source, Play, Pause, Stop, Seek, Status, RateInfo, Quit };
+enum class Operation { Format, Source, Play, Pause, Stop, Seek, Status, RateInfo, StreamBegin, StreamPlay, StreamPause, StreamCancel, StreamStatus, Quit };
 struct Command {
     Operation operation;
     uint64_t frame = 0;
@@ -42,6 +43,8 @@ struct Command {
     RBAudioDeviceFormat format{};
     RBAudioStatus status{};
     RBAudioRateInfo rate_info{};
+    RBAudioStreamDescriptor stream_descriptor{};
+    RBAudioStreamStatus stream_status{};
     int result = RB_AUDIO_INTERNAL;
 };
 bool float_stereo(const WAVEFORMATEX *format) {
@@ -72,6 +75,18 @@ struct RBAudio {
     UINT32 capacity = 0;
     UINT64 frequency = 0;
     bool clock_approximate = false;
+    // Atomic shared ownership permits concurrent bounded Submit/Finish without
+    // acquiring calls. The device worker alone changes active_stream; it uses
+    // the raw pointer while its published shared owner remains installed.
+    std::shared_ptr<rebase::StreamEngine> stream_owner;
+    rebase::StreamEngine *active_stream = nullptr;
+    uint64_t last_stream_generation = 0;
+    bool playing() const { return active_stream ? active_stream->playing() : cursor.playing(); }
+    void retire_stream() {
+        if (active_stream) active_stream->cancel();
+        active_stream = nullptr;
+        std::atomic_store(&stream_owner, std::shared_ptr<rebase::StreamEngine>{});
+    }
 
     ~RBAudio() {
         if (thread.joinable()) {
@@ -127,6 +142,7 @@ struct RBAudio {
         ResetEvent(audio_event);
     }
     int failure(int result, HRESULT hr) {
+        if (active_stream) active_stream->fail(result, static_cast<int32_t>(hr));
         cursor.fail(result, static_cast<int32_t>(hr));
         close_device();
         return result;
@@ -191,6 +207,25 @@ struct RBAudio {
         return RB_AUDIO_OK;
     }
     int refresh_clock() {
+        if (active_stream) {
+            if (active_stream->status().phase == RB_AUDIO_FAULT) {
+                close_device(); return active_stream->status().result;
+            }
+            if (!active_stream->playing()) return RB_AUDIO_OK;
+            UINT64 ticks = 0;
+            HRESULT hr = clock->GetPosition(&ticks, nullptr);
+            if (FAILED(hr)) return failure(RB_AUDIO_DEVICE, hr);
+            clock_approximate = hr == S_FALSE;
+            const uint32_t rate = active_stream->status().endpoint_rate;
+            const uint64_t whole = ticks / frequency;
+            const uint64_t partial = ((ticks % frequency) * rate) / frequency;
+            if (whole > (UINT64_MAX - partial) / rate) return failure(RB_AUDIO_DEVICE, E_UNEXPECTED);
+            const bool finished = active_stream->observe(whole * rate + partial);
+            const auto state = active_stream->status();
+            if (state.phase == RB_AUDIO_FAULT) return failure(state.result, 0);
+            if (finished) { hr = client->Stop(); if (FAILED(hr)) return failure(RB_AUDIO_DEVICE, hr); }
+            return RB_AUDIO_OK;
+        }
         if (!cursor.playing()) return RB_AUDIO_OK;
         UINT64 ticks = 0;
         HRESULT hr = clock->GetPosition(&ticks, nullptr);
@@ -216,6 +251,23 @@ struct RBAudio {
         HRESULT hr = client->GetCurrentPadding(&padding);
         if (FAILED(hr) || padding > capacity) return failure(RB_AUDIO_DEVICE, FAILED(hr) ? hr : E_UNEXPECTED);
         UINT32 available = capacity - padding;
+        if (active_stream) {
+            UINT32 actual = 0;
+            int result = active_stream->available(available, actual);
+            if (result) return failure(result, E_UNEXPECTED);
+            if (!actual) return RB_AUDIO_OK;
+            BYTE *destination = nullptr;
+            hr = render->GetBuffer(available, &destination);
+            if (FAILED(hr)) return failure(RB_AUDIO_DEVICE, hr);
+            result = active_stream->consume(reinterpret_cast<float *>(destination), actual);
+            if (result) { render->ReleaseBuffer(available, AUDCLNT_BUFFERFLAGS_SILENT); return failure(result, E_UNEXPECTED); }
+            if (actual < available)
+                std::memset(destination + static_cast<size_t>(actual) * 8, 0, static_cast<size_t>(available - actual) * 8);
+            hr = render->ReleaseBuffer(available, 0);
+            if (FAILED(hr)) return failure(RB_AUDIO_DEVICE, hr);
+            active_stream->submitted(actual);
+            return RB_AUDIO_OK;
+        }
         UINT32 actual = cursor.next(available);
         if (!actual) return RB_AUDIO_OK;
         BYTE *destination = nullptr;
@@ -242,12 +294,12 @@ struct RBAudio {
         HRESULT hr;
         switch (command.operation) {
         case Operation::Format: {
-            if (cursor.playing()) return RB_AUDIO_STATE;
+            if (playing()) return RB_AUDIO_STATE;
             Com<IAudioClient> temporary;
             return activate(temporary, command.format, hr);
         }
         case Operation::Source: {
-            close_device(); std::vector<float>().swap(samples);
+            close_device(); retire_stream(); std::vector<float>().swap(samples);
             uint32_t endpoint_rate = 0;
             int result = open_device(endpoint_rate);
             if (result) return result;
@@ -261,6 +313,7 @@ struct RBAudio {
             return result ? failure(result, E_UNEXPECTED) : RB_AUDIO_OK;
         }
         case Operation::Play: {
+            if (active_stream) return RB_AUDIO_STATE;
             if (cursor.playing()) return RB_AUDIO_OK;
             if (!client || (cursor.status().phase != RB_AUDIO_READY && cursor.status().phase != RB_AUDIO_PAUSED)) return RB_AUDIO_STATE;
             bool resumed = cursor.status().phase == RB_AUDIO_PAUSED;
@@ -271,6 +324,7 @@ struct RBAudio {
             return FAILED(hr) ? failure(RB_AUDIO_DEVICE, hr) : RB_AUDIO_OK;
         }
         case Operation::Pause: {
+            if (active_stream) return RB_AUDIO_STATE;
             if (cursor.status().phase == RB_AUDIO_PAUSED) return RB_AUDIO_OK;
             if (!cursor.playing()) return RB_AUDIO_STATE;
             // Freeze first, then read the frozen clock; queued samples remain.
@@ -281,6 +335,7 @@ struct RBAudio {
             return cursor.status().phase == RB_AUDIO_FINISHED ? RB_AUDIO_OK : cursor.pause();
         }
         case Operation::Stop: {
+            if (active_stream) return RB_AUDIO_STATE;
             if (!cursor.configured() || !client) return RB_AUDIO_STATE;
             hr = client->Stop();
             if (FAILED(hr)) return failure(RB_AUDIO_DEVICE, hr);
@@ -290,6 +345,7 @@ struct RBAudio {
             return cursor.stop();
         }
         case Operation::Seek: {
+            if (active_stream) return RB_AUDIO_STATE;
             if (!cursor.configured() || !client) return RB_AUDIO_STATE;
             if (command.frame > cursor.status().total_frames) return RB_AUDIO_ARGUMENT;
             bool resumed = cursor.playing();
@@ -305,17 +361,84 @@ struct RBAudio {
             return FAILED(hr) ? failure(RB_AUDIO_DEVICE, hr) : RB_AUDIO_OK;
         }
         case Operation::Status:
+            if (active_stream) return RB_AUDIO_STATE;
             refresh_clock(); // A runtime failure is observable in the returned status.
             command.status = cursor.status();
             command.status.endpoint_buffer_frames = capacity;
             command.status.clock_reading_approximate = clock_approximate ? 1 : 0;
             return RB_AUDIO_OK;
         case Operation::RateInfo:
+            if (active_stream) return RB_AUDIO_STATE;
             refresh_clock();
             command.rate_info = cursor.rate_info();
             return RB_AUDIO_OK;
+        case Operation::StreamBegin: {
+            const auto &descriptor = command.stream_descriptor;
+            if (descriptor.generation <= last_stream_generation) return RB_AUDIO_STALE;
+            if (rebase::validate_stream_descriptor(descriptor)) return RB_AUDIO_ARGUMENT;
+            close_device(); retire_stream(); std::vector<float>().swap(samples);
+            // Consume a generation on attempted admission too: late input from
+            // a failed open may never bind to a retried replacement.
+            last_stream_generation = descriptor.generation;
+            uint32_t endpoint_rate = 0;
+            int result = open_device(endpoint_rate);
+            if (result) return result;
+            uint64_t upper = 0;
+            if (!rebase::rate_frame_bound(descriptor.source_frames, descriptor.source_rate, endpoint_rate, upper))
+                return failure(RB_AUDIO_CAPACITY, E_INVALIDARG);
+            const uint64_t prime = descriptor.prime_endpoint_frames ? descriptor.prime_endpoint_frames : std::max<uint64_t>(4096, uint64_t(capacity) * 2);
+            if (prime < capacity || prime > descriptor.endpoint_queue_frames) return failure(RB_AUDIO_ARGUMENT, E_INVALIDARG);
+            std::shared_ptr<rebase::StreamEngine> next;
+            result = rebase::create_stream_engine(descriptor, endpoint_rate, capacity, next);
+            // Begin transfers installation ownership only on success. Failed
+            // startup has already joined/discarded its unpublished producer.
+            if (result) return failure(result, E_FAIL);
+            active_stream = next.get(); std::atomic_store(&stream_owner, std::move(next));
+            return RB_AUDIO_OK;
+        }
+        case Operation::StreamPlay: {
+            if (!active_stream || command.frame != active_stream->generation()) return RB_AUDIO_STALE;
+            if (!client) return RB_AUDIO_STATE;
+            if (active_stream->playing()) return RB_AUDIO_OK;
+            const bool resumed = active_stream->status().phase == RB_AUDIO_PAUSED;
+            int result = active_stream->play(); if (result) return result;
+            if (!resumed && (result = fill()) != RB_AUDIO_OK) return result;
+            hr = client->Start(); return FAILED(hr) ? failure(RB_AUDIO_DEVICE, hr) : RB_AUDIO_OK;
+        }
+        case Operation::StreamPause: {
+            if (!active_stream || command.frame != active_stream->generation()) return RB_AUDIO_STALE;
+            const auto phase = active_stream->status().phase;
+            if (phase == RB_AUDIO_PAUSED || phase == RB_AUDIO_FINISHED) return RB_AUDIO_OK;
+            if (!client || !active_stream->playing()) return RB_AUDIO_STATE;
+            hr = client->Stop(); if (FAILED(hr)) return failure(RB_AUDIO_DEVICE, hr);
+            int result = refresh_clock(); if (result) return result;
+            return active_stream->pause();
+        }
+        case Operation::StreamCancel: {
+            if (!active_stream || command.frame != active_stream->generation()) return RB_AUDIO_STALE;
+            if (active_stream->status().phase == RB_AUDIO_CANCELLED) return RB_AUDIO_OK;
+            const auto stop = [](void *context) noexcept -> rebase::StreamDeviceResult {
+                auto *self = static_cast<RBAudio *>(context);
+                const HRESULT value = self->client ? self->client->Stop() : S_OK;
+                return {FAILED(value) ? RB_AUDIO_DEVICE : RB_AUDIO_OK, static_cast<int32_t>(value)};
+            };
+            const auto reset = [](void *context) noexcept -> rebase::StreamDeviceResult {
+                auto *self = static_cast<RBAudio *>(context);
+                const HRESULT value = self->client ? self->client->Reset() : S_OK;
+                return {FAILED(value) ? RB_AUDIO_DEVICE : RB_AUDIO_OK, static_cast<int32_t>(value)};
+            };
+            const int result = rebase::cancel_stream_device(*active_stream, this, stop, reset);
+            if (!result) close_device();
+            return result;
+        }
+        case Operation::StreamStatus:
+            if (!active_stream || command.frame != active_stream->generation()) return RB_AUDIO_STALE;
+            refresh_clock();
+            command.stream_status = active_stream->status();
+            command.stream_status.clock_approximate = clock_approximate ? 1u : 0u;
+            return RB_AUDIO_OK;
         case Operation::Quit:
-            close_device(); samples.clear(); return RB_AUDIO_OK;
+            close_device(); retire_stream(); samples.clear(); return RB_AUDIO_OK;
         }
         return RB_AUDIO_INTERNAL;
     }
@@ -327,7 +450,7 @@ struct RBAudio {
         try {
             while (running.load()) {
                 HANDLE events[] = {command_event, audio_event};
-                DWORD event = WaitForMultipleObjects(2, events, FALSE, cursor.playing() ? 5000 : INFINITE);
+                DWORD event = WaitForMultipleObjects(2, events, FALSE, playing() ? 5000 : INFINITE);
                 if (event == WAIT_OBJECT_0) {
                     Command *command;
                     { std::lock_guard<std::mutex> lock(queue); command = pending; pending = nullptr; }
@@ -340,17 +463,17 @@ struct RBAudio {
                     if (quit) break;
                     // Service a signalled device event even under sustained UI
                     // command traffic; command priority must not starve output.
-                    if (cursor.playing() && WaitForSingleObject(audio_event, 0) == WAIT_OBJECT_0 &&
-                        refresh_clock() == RB_AUDIO_OK && cursor.playing()) fill();
+                    if (playing() && WaitForSingleObject(audio_event, 0) == WAIT_OBJECT_0 &&
+                        refresh_clock() == RB_AUDIO_OK && playing()) fill();
                 } else if (event == WAIT_OBJECT_0 + 1) {
-                    if (cursor.playing() && refresh_clock() == RB_AUDIO_OK && cursor.playing()) fill();
+                    if (refresh_clock() == RB_AUDIO_OK && playing()) fill();
                 } else {
                     failure(RB_AUDIO_DEVICE, HRESULT_FROM_WIN32(event == WAIT_TIMEOUT ? ERROR_TIMEOUT : GetLastError()));
                     if (event != WAIT_TIMEOUT) break;
                 }
             }
         } catch (...) { failure(RB_AUDIO_INTERNAL, E_FAIL); }
-        close_device();
+        close_device(); retire_stream();
         if (com_initialized) CoUninitialize();
         running.store(false);
         SetEvent(exited_event);
@@ -399,6 +522,35 @@ int32_t rb_audio_status(RBAudio *audio, RBAudioStatus *output) {
 int32_t rb_audio_rate_info(RBAudio *audio, RBAudioRateInfo *output) {
     if (!audio || !output) return RB_AUDIO_ARGUMENT;
     try { Command command{Operation::RateInfo}; int result = audio->submit(command); if (!result) *output = command.rate_info; return result; }
+    catch (...) { return RB_AUDIO_INTERNAL; }
+}
+
+int32_t rb_audio_stream_begin(RBAudio *audio, const RBAudioStreamDescriptor *descriptor) {
+    if (!audio || !descriptor || rebase::validate_stream_descriptor(*descriptor)) return RB_AUDIO_ARGUMENT;
+    try { Command command{Operation::StreamBegin}; command.stream_descriptor = *descriptor; return audio->submit(command); }
+    catch (const std::bad_alloc &) { return RB_AUDIO_MEMORY; }
+    catch (...) { return RB_AUDIO_INTERNAL; }
+}
+int32_t rb_audio_stream_submit(RBAudio *audio, uint64_t generation, uint64_t sequence,
+                              uint64_t start, const float *samples, uint32_t frames) {
+    if (!audio) return RB_AUDIO_ARGUMENT;
+    try { auto stream = std::atomic_load(&audio->stream_owner);
+        return stream ? stream->submit(generation, sequence, start, samples, frames) : RB_AUDIO_STALE; }
+    catch (...) { return RB_AUDIO_INTERNAL; }
+}
+int32_t rb_audio_stream_finish(RBAudio *audio, uint64_t generation, uint64_t sequence, uint64_t committed) {
+    if (!audio) return RB_AUDIO_ARGUMENT;
+    try { auto stream = std::atomic_load(&audio->stream_owner);
+        return stream ? stream->finish(generation, sequence, committed) : RB_AUDIO_STALE; }
+    catch (...) { return RB_AUDIO_INTERNAL; }
+}
+int32_t rb_audio_stream_play(RBAudio *audio, uint64_t generation) { return simple(audio, Operation::StreamPlay, generation); }
+int32_t rb_audio_stream_pause(RBAudio *audio, uint64_t generation) { return simple(audio, Operation::StreamPause, generation); }
+int32_t rb_audio_stream_cancel(RBAudio *audio, uint64_t generation) { return simple(audio, Operation::StreamCancel, generation); }
+int32_t rb_audio_stream_status(RBAudio *audio, uint64_t generation, RBAudioStreamStatus *output) {
+    if (!audio || !output) return RB_AUDIO_ARGUMENT;
+    try { Command command{Operation::StreamStatus}; command.frame = generation;
+        const int result = audio->submit(command); if (!result) *output = command.stream_status; return result; }
     catch (...) { return RB_AUDIO_INTERNAL; }
 }
 }

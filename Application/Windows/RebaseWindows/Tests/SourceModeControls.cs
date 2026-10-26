@@ -26,7 +26,7 @@ static class SourceModeControls
         Revision = revision, EventID = Anchor, SourceSHA256 = SourceHash,
         AvailabilityScope = "preparation-only", MaximumFrames = 32_000_000,
         Modes = SourceAuditionMode.All.Select(mode => new SourceModeAvailability { Mode = mode.Id,
-            Available = true, SampleRate = Rate(mode.Id), SourceSampleRate = 48000, Frames = Rate(mode.Id) / 10,
+            Available = true, LiveAvailable = true, SnapshotExportAvailable = true, SampleRate = Rate(mode.Id), SourceSampleRate = 48000, Frames = Rate(mode.Id) / 10,
             MediaSHA256 = MediaHash, ContributorCount = mode.Id == SourceAuditionMode.CompleteTrack ? 2 : 1,
             FragmentCount = 1 }).ToArray() };
 
@@ -106,7 +106,7 @@ static class SourceModeControls
             Reject(() => Validate(duplicate,SourceAuditionMode.Original));
 
             var session = new ControlSession(project); var audio = new ControlAudio();
-            await using var model = new StudioViewModel(session,audio);
+            await using var model = new StudioViewModel(session,new AuthoredStreamingAudio(audio),SourceStreamControlData.Streams);
             await model.Open("authored-modes",false,false);
             var original = JsonSerializer.Serialize(model.State,ProtocolJson.Options);
             await model.InspectSource(); Check(model.SourceInspection?.Modes.Length == 8 && session.Inspections == 1);
@@ -157,11 +157,20 @@ static class SourceModeControls
         {
             var response=new SessionResponse { Protocol=1,Id=request.Id,Ok=true, State=new() { Revision=1,Project=project,Selection=new() { TrackID="track",ClipID=Anchor } } };
             if(request.Command=="inspectSourceEvent") { Inspections++; response.SourceInspection=Inspection(project); }
-            if(request.Command=="renderSourceEvent")
+            if(request.Command is "renderSourceEvent" or "prepareSourceStream")
             {
                 Last=request; Renders++;
                 if(Fail) { response.Ok=false; response.Error=new() { Message="Source proof changed." }; }
-                else { var mode=request.Mode??SourceAuditionMode.Original; response.Render=SourceControlData.Render(project,SourceEventView.Read(project).Single(s=>s.Id==Anchor),request,Stale?2UL:1UL,Rate(mode),Rate(mode)/10,sourceRate:48000); if(WrongMode)response.Render.Mode=SourceAuditionMode.Original; }
+                else
+                {
+                    var mode=request.Mode??SourceAuditionMode.Original;
+                    if(request.Command=="prepareSourceStream")
+                    {
+                        response.SourceStream=SourceStreamControlData.Build(project,SourceEventView.Read(project).Single(s=>s.Id==Anchor),request,Stale?2UL:1UL,Rate(mode),Rate(mode)/10,sourceRate:48000).Ticket;
+                        if(WrongMode)response.SourceStream=JsonSerializer.Deserialize<SourceStreamTicket>(JsonSerializer.Serialize(response.SourceStream,ProtocolJson.Options).Replace(mode,SourceAuditionMode.Original),ProtocolJson.Options);
+                    }
+                    else { response.Render=SourceControlData.Render(project,SourceEventView.Read(project).Single(s=>s.Id==Anchor),request,Stale?2UL:1UL,Rate(mode),Rate(mode)/10,sourceRate:48000); if(WrongMode)response.Render.Mode=SourceAuditionMode.Original; }
+                }
             }
             return Task.FromResult(response);
         }

@@ -23,13 +23,16 @@ public sealed class SourceInspectionSnapshot
             {
                 if (item.Reason is not null || item.SampleRate is not { } rate || !double.IsFinite(rate) ||
                     rate < 8000 || rate > 192000 || rate != Math.Truncate(rate) ||
-                    item.Frames is not { } frames || frames == 0 || frames > 32_000_000 ||
+                    item.Frames is not { } frames || frames == 0 || frames > (ulong)rate * 86400 ||
                     item.SourceSampleRate is not { } sourceRate || !double.IsFinite(sourceRate) ||
                     sourceRate < 8000 || sourceRate > 192000 || sourceRate != Math.Truncate(sourceRate) ||
                     source.MediaSHA256 is null || !string.Equals(item.MediaSHA256, source.MediaSHA256, StringComparison.OrdinalIgnoreCase))
                     throw new InvalidDataException("The source inspection contains inconsistent playback metadata.");
+                if (!item.LiveAvailable || item.LiveReason is not null || item.SnapshotExportAvailable != (frames <= MaximumFrames) ||
+                    (item.SnapshotExportAvailable ? item.SnapshotExportReason is not null : string.IsNullOrWhiteSpace(item.SnapshotExportReason)))
+                    throw new InvalidDataException("The source inspection confused live and snapshot-export availability.");
             }
-            else if (string.IsNullOrWhiteSpace(item.Reason) || item.Reason.Length > 16_384)
+            else if (item.LiveAvailable || item.SnapshotExportAvailable || string.IsNullOrWhiteSpace(item.Reason) || item.Reason.Length > 16_384)
                 throw new InvalidDataException("An unavailable source mode omitted its reason.");
         }
     }
@@ -39,6 +42,10 @@ public sealed class SourceModeAvailability
 {
     public string Mode { get; set; } = "";
     public bool Available { get; set; }
+    public bool LiveAvailable { get; set; }
+    public bool SnapshotExportAvailable { get; set; }
+    public string? LiveReason { get; set; }
+    public string? SnapshotExportReason { get; set; }
     public string? Reason { get; set; }
     public double? SampleRate { get; set; }
     public ulong? Frames { get; set; }

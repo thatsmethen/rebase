@@ -66,7 +66,7 @@ static class PlaybackRateControls
         identity.EndpointFrames--; Reject(identity, source);
 
         var session = new ControlSession(); var audio = new ControlAudio();
-        await using (var model = new StudioViewModel(session, audio))
+        await using (var model = new StudioViewModel(session, new AuthoredStreamingAudio(audio), SourceStreamControlData.Streams))
         {
             await model.Open("authored-rate-control", false, false);
             var before = JsonSerializer.Serialize(model.State, ProtocolJson.Options);
@@ -142,34 +142,34 @@ static class PlaybackRateControls
             new() { SampleRate = 192001, Channels = 2, Float32 = 1 } })
         {
             var fakeSession = new ControlSession(); var fakeAudio = new ControlAudio { FormatOverride = badFormat };
-            await using var model = new StudioViewModel(fakeSession, fakeAudio);
+            await using var model = new StudioViewModel(fakeSession, new AuthoredStreamingAudio(fakeAudio), SourceStreamControlData.Streams);
             await model.Open("authored-format-control", false, false); await model.PlayProject();
             Check(!model.IsPlaying && fakeSession.ProjectRenders == 0 && fakeAudio.SourceCopies == 0 && fakeAudio.Plays == 0);
         }
         foreach (var code in new[] { 3, 4, 9, 10, 11, 12 })
         {
             var fakeSession = new ControlSession(); var fakeAudio = new ControlAudio { SourceFailure = code };
-            await using var model = new StudioViewModel(fakeSession, fakeAudio);
+            await using var model = new StudioViewModel(fakeSession, new AuthoredStreamingAudio(fakeAudio), SourceStreamControlData.Streams);
             await model.Open("authored-failure-control", false, false); await model.AuditionSource();
             Check(!model.IsPlaying && model.PlaybackRateInfo is null && fakeAudio.Plays == 0 && fakeSession.SourceRenders == 1);
         }
         foreach (var invalidReceipt in new[] { false, true })
         {
             var fakeAudio = new ControlAudio { FailRateInfo = !invalidReceipt, WrongRateInfo = invalidReceipt };
-            await using var model = new StudioViewModel(new ControlSession(), fakeAudio);
+            await using var model = new StudioViewModel(new ControlSession(), new AuthoredStreamingAudio(fakeAudio), SourceStreamControlData.Streams);
             await model.Open("authored-receipt-control", false, false); await model.AuditionSource();
             Check(!model.IsPlaying && model.PlaybackRateInfo is null && fakeAudio.Plays == 0 && fakeAudio.Stops == 1);
         }
         // Endpoint discovery is advisory: source installation owns the actual
         // current endpoint, which can legitimately change between the calls.
         var changedDevice = new ControlAudio { FormatOverride = new() { SampleRate = 96000, Channels = 2, Float32 = 1 }, EndpointRate = 48000 };
-        await using (var model = new StudioViewModel(new ControlSession(), changedDevice))
+        await using (var model = new StudioViewModel(new ControlSession(), new AuthoredStreamingAudio(changedDevice), SourceStreamControlData.Streams))
         {
             await model.Open("authored-device-change", false, false); await model.AuditionSource();
             Check(model.IsPlaying && model.PlaybackRateInfo?.EndpointRate == 48000 && !model.Status.Contains("96000", StringComparison.Ordinal));
         }
         var endAudio = new ControlAudio { EndpointRate = 8000, QuantizedEndFrom = 4408 };
-        await using (var model = new StudioViewModel(new ControlSession(), endAudio))
+        await using (var model = new StudioViewModel(new ControlSession(), new AuthoredStreamingAudio(endAudio), SourceStreamControlData.Streams))
         {
             await model.Open("authored-rounded-eof", false, false); await model.AuditionSource();
             var plays = endAudio.Plays;
@@ -254,16 +254,18 @@ static class PlaybackRateControls
             if (request.Command == "attachSourceMedia") revision++;
             var response = new SessionResponse { Protocol = 1, Id = request.Id, Ok = true,
                 State = new() { Revision = revision, Project = project, Selection = new() { TrackID = "track", ClipID = EventID } } };
-            if (request.Command is "renderSourceEvent" or "render")
+            if (request.Command is "renderSourceEvent" or "render" or "prepareSourceStream")
             {
-                var isSource = request.Command == "renderSourceEvent";
+                var isSource = request.Command is "renderSourceEvent" or "prepareSourceStream";
                 if (isSource) SourceRenders++; else ProjectRenders++;
                 if (isSource && SourceChanged) { response.Ok = false; response.Error = new() { Message = "Source changed outside the session." }; return Task.FromResult(response); }
                 uint rate = isSource ? 44100u : 48000u; uint frames = rate / 10;
                 if (isSource)
                 {
                     LastSourceStart = request.StartSeconds ?? 0;
-                    response.Render = SourceControlData.Render(project, SourceEventView.Read(project).Single(), request,
+                    if (request.Command == "prepareSourceStream") response.SourceStream = SourceStreamControlData.Build(project, SourceEventView.Read(project).Single(), request,
+                        revision, rate, frames, WrongMedia ? new string('c', 64) : MediaHash).Ticket;
+                    else response.Render = SourceControlData.Render(project, SourceEventView.Read(project).Single(), request,
                         revision, rate, frames, WrongMedia ? new string('c', 64) : MediaHash);
                 }
                 else

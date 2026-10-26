@@ -1,6 +1,7 @@
 #ifndef REBASE_WINDOWS_AUDIO_H
 #define REBASE_WINDOWS_AUDIO_H
 #include <stdint.h>
+#include <stddef.h>
 #if defined(_WIN32) && defined(REBASE_AUDIO_BUILD)
 #define RB_AUDIO_API __declspec(dllexport)
 #elif defined(_WIN32)
@@ -17,11 +18,13 @@ enum RBAudioResult {
     RB_AUDIO_NO_ENDPOINT = 3, RB_AUDIO_FORMAT = 4, RB_AUDIO_DEVICE = 5,
     RB_AUDIO_MEMORY = 6, RB_AUDIO_INTERNAL = 7, RB_AUDIO_UNDERRUN = 8,
     RB_AUDIO_CONVERSION = 9, RB_AUDIO_CAPACITY = 10,
-    RB_AUDIO_ENVIRONMENT = 11, RB_AUDIO_RATE_EMPTY = 12
+    RB_AUDIO_ENVIRONMENT = 11, RB_AUDIO_RATE_EMPTY = 12,
+    RB_AUDIO_BACKPRESSURE = 13, RB_AUDIO_STALE = 14, RB_AUDIO_PROTOCOL = 15
 };
 enum RBAudioPhase {
     RB_AUDIO_EMPTY = 0, RB_AUDIO_READY = 1, RB_AUDIO_PLAYING = 2,
-    RB_AUDIO_PAUSED = 3, RB_AUDIO_FINISHED = 4, RB_AUDIO_FAULT = 5
+    RB_AUDIO_PAUSED = 3, RB_AUDIO_FINISHED = 4, RB_AUDIO_FAULT = 5,
+    RB_AUDIO_PRIMING = 6, RB_AUDIO_DRAINING = 7, RB_AUDIO_CANCELLED = 8
 };
 typedef struct RBAudioDeviceFormat {
     uint32_t sample_rate, channels, float32;
@@ -42,8 +45,32 @@ typedef struct RBAudioRateInfo {
     uint32_t soxr_recipe, reserved;
 } RBAudioRateInfo;
 
+/* Additive bounded stream ABI, 48/160 bytes. Frame positions are relative to
+   this fresh suffix; the host owns the absolute source start. Storage bounds
+   are independent from the nonzero UInt64 source duration. Source/endpoint
+   queue capacities: 4096..262144 frames. max_block_frames: 1..65536 and no
+   greater than source capacity. prime_endpoint_frames=0 selects max(4096,
+   2*device buffer), bounded by capacity; explicit values must cover the device
+   buffer. Generation is nonzero and must increase for each new stream. */
+typedef struct RBAudioStreamDescriptor {
+    uint32_t abi_version, source_rate, channels, max_block_frames;
+    uint64_t generation, source_frames;
+    uint32_t source_queue_frames, endpoint_queue_frames, prime_endpoint_frames, reserved;
+} RBAudioStreamDescriptor;
+typedef struct RBAudioStreamStatus {
+    uint32_t abi_version, phase, source_rate, endpoint_rate;
+    uint64_t generation, source_frames, source_accepted, source_consumed, source_position;
+    uint64_t endpoint_produced, endpoint_submitted, endpoint_position, endpoint_total;
+    uint32_t source_queued, endpoint_queued, source_capacity, endpoint_capacity, source_peak, endpoint_peak;
+    uint32_t primed, source_eof, endpoint_total_final, converted;
+    int32_t result, hresult;
+    float peak_left, peak_right;
+    uint32_t endpoint_buffer_frames, clock_approximate, soxr_recipe, reserved;
+} RBAudioStreamStatus;
+
 /* Native Windows 10+ backend. Opaque handles never cross process boundaries.
-   Calls are synchronous and serialized per handle; never call from an audio
+   Control calls are synchronous and serialized per handle; bounded stream
+   Submit/Finish have separate admission synchronization. Never call from an audio
    callback. Destroy must be exclusive with all other calls on that handle. */
 RB_AUDIO_API int32_t rb_audio_create(RBAudio **output);
 RB_AUDIO_API void rb_audio_destroy(RBAudio *audio);
@@ -81,7 +108,35 @@ RB_AUDIO_API int32_t rb_audio_status(RBAudio *audio, RBAudioStatus *output);
 /* Before configuration rates/counts are zero. Faults retain last configuration;
    a host accepts new rate metadata only after successful set_source. */
 RB_AUDIO_API int32_t rb_audio_rate_info(RBAudio *audio, RBAudioRateInfo *output);
+/* Begin opens the actual endpoint, creates bounded storage and a dedicated
+   converter producer. Failed Begin closes and joins its unpublished state;
+   installation ownership transfers only on success. Submit copies all finite stereo frames or returns
+   BACKPRESSURE without consumption, sequence change or borrowed storage.
+   Sequence starts at zero; start_frame equals source_accepted. Finish requires
+   exact next sequence and declared source total. Neither queue starvation nor
+   process EOF substitutes for finish. Stream calls may race cancellation;
+   generation rejects late data. Destroy remains exclusive with every call.
+   No queue-capacity wait holds the control lock. Conversion/allocation never
+   runs in the device consumer. The endpoint total is zero until final drain.
+   Play requires priming (or a completed short nonempty stream). Pause freezes
+   the actual clock; cancel is a stop/reset and producer-join barrier. A device
+   error remains observable and cancel can be retried; it is not Stopped.
+   Zero-frame suffixes are handled by fresh host EOF without opening a device. */
+RB_AUDIO_API int32_t rb_audio_stream_begin(RBAudio *audio, const RBAudioStreamDescriptor *descriptor);
+RB_AUDIO_API int32_t rb_audio_stream_submit(RBAudio *audio, uint64_t generation, uint64_t sequence,
+                                          uint64_t start_frame, const float *interleaved, uint32_t frames);
+RB_AUDIO_API int32_t rb_audio_stream_finish(RBAudio *audio, uint64_t generation, uint64_t next_sequence,
+                                          uint64_t committed_frames);
+RB_AUDIO_API int32_t rb_audio_stream_play(RBAudio *audio, uint64_t generation);
+RB_AUDIO_API int32_t rb_audio_stream_pause(RBAudio *audio, uint64_t generation);
+RB_AUDIO_API int32_t rb_audio_stream_cancel(RBAudio *audio, uint64_t generation);
+RB_AUDIO_API int32_t rb_audio_stream_status(RBAudio *audio, uint64_t generation, RBAudioStreamStatus *output);
 #ifdef __cplusplus
 }
+static_assert(sizeof(RBAudioStreamDescriptor) == 48, "stream descriptor ABI");
+static_assert(sizeof(RBAudioStreamStatus) == 160, "stream status ABI");
+static_assert(offsetof(RBAudioStreamDescriptor, generation) == 16 && offsetof(RBAudioStreamDescriptor, source_queue_frames) == 32, "stream descriptor field ABI");
+static_assert(offsetof(RBAudioStreamStatus, generation) == 16 && offsetof(RBAudioStreamStatus, source_queued) == 88 &&
+              offsetof(RBAudioStreamStatus, result) == 128 && offsetof(RBAudioStreamStatus, endpoint_buffer_frames) == 144, "stream status field ABI");
 #endif
 #endif

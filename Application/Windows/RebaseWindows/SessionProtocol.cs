@@ -41,6 +41,7 @@ public sealed class SessionResponse
     public RulerSnapshot? Ruler { get; set; }
     public CPRReviewSnapshot? CprReview { get; set; }
     public SourceInspectionSnapshot? SourceInspection { get; set; }
+    public SourceStreamTicket? SourceStream { get; set; }
     public SessionError? Error { get; set; }
 }
 public sealed class SessionError { public string Code { get; set; } = "error"; public string Message { get; set; } = "The session request failed."; }

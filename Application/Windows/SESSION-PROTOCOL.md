@@ -8,6 +8,13 @@
 
 Every command except `state` includes the current `expectedRevision`. The helper owns the full project, selection, validation, edit history, media checks, persistence, and rendering. The frontend owns display geometry, dialogs, view zoom, and native transport. It never reconstructs project edits from a returned DTO or writes project JSON itself.
 
+Internal `asCopy` packages use the platform temporary directory on Windows and
+the user's `Caches/Rebase/SessionCopies` runtime directory on macOS. Each copy
+has an exclusively created UUID folder and is removed when its owning session
+exits. The macOS runtime cache avoids Foundation's retained `/var` alias; every
+managed parent must be a real directory. This application-managed cache does
+not change project, media, ticket, or worker symlink/reparse admission rules.
+
 | Command | Additional fields |
 | --- | --- |
 | `state` | None. |
@@ -32,6 +39,7 @@ Every command except `state` includes the current `expectedRevision`. The helper
 | `attachSourceMedia` | `clipID`: retained event; `path`: explicitly selected matching PCM24 WAV. Shared history records the association and selects the event. |
 | `inspectSourceEvent` | `clipID`: retained event. Read-only preparation availability for all eight source modes. |
 | `renderSourceEvent` | `clipID`: retained event; `path`: a new WAV outside the package. Optional `mode` (default `sourceRate`), `startSeconds` (default 0), `rewindAtEnd` (default false). |
+| `prepareSourceStream` | `clipID`: retained event; `path`: a new ephemeral ticket outside the package. Optional `mode` (default `sourceRate`), `startSeconds` (default 0), `rewindAtEnd` (default false). Read-only preparation for the dedicated worker described below. |
 | `waveform` | `clipID`: ordinary clip. Read-only source envelope, no revision change. |
 | `ruler` | Required finite `value`: pixels per second in 4…420. Optional finite `duration`: extent in seconds in 0…86,400. Read-only musical ticks, no revision change. |
 
@@ -138,12 +146,18 @@ The frontend verifies the returned path, revision, byte count, SHA-256, exact Fl
 `inspectSourceEvent` returns `sourceInspection:{revision,eventID,sourceSHA256,
 availabilityScope:"preparation-only",maximumFrames:32000000,modes:[...]}`. There
 are exactly eight mode entries, in the order below. Each has `mode`, `available`,
-and an optional refusal `reason`. Successful preparation additionally supplies
+and an optional refusal `reason`. `available` describes semantic preparation;
+`liveAvailable` and `snapshotExportAvailable` independently describe admission
+to the bounded stream and the 32-million-frame snapshot exporter. The optional
+`liveReason` and `snapshotExportReason` explain each refusal; failed semantic
+preparation repeats its reason in both and sets both flags false. A valid long
+timeline can therefore enable live playback while snapshot export is refused.
+Successful preparation additionally supplies
 `sampleRate`, `frames`, `sourceSampleRate`, `mediaSHA256`, optional
 `timelineRange` and `savedProjectAudioSetup`, `contributorCount`, and
 `fragmentCount`. The complete inspection is bounded to 128 KiB; it is never
 truncated. Inspection prepares each mode without draining converter output or
-writing files. Availability is provisional until a fresh render succeeds; it
+writing files. Availability is provisional until fresh stream admission or render succeeds; it
 does not establish device playback. Missing media or an unsupported mode-specific
 source shape is an explicit unavailable entry. Invalid preserved source/report
 provenance fails the inspection itself.
@@ -235,3 +249,17 @@ Neither source conversion controls nor an unavailable CI endpoint establish
 audible output or reference-runtime fidelity.
 
 A waveform reply adds `waveform:{revision,clipID,sampleRate,sourceStartFrame,sourceFrames,mediaSHA256,peaks}`. Peaks are finite, nonnegative, source-domain maxima across channels, with at most 1,600 bins. Source start truncates `sourceOffset*sourceRate`; count truncates the bounded source duration. The frontend validates receipt identity/interval and finite limits, draws those peaks, and never synthesizes an envelope. It sends at most one background envelope request at a time, yields between requests, and never applies a background reply's document state. Open/Save As clear cached envelopes; trim, split, and deletion invalidate changed source intervals. Move/mixer/zoom changes can reuse unchanged source ranges.
+
+### Bounded source-stream worker (v1)
+
+`prepareSourceStream` is a revision-checked, read-only command with `clipID`, `path` (a new ticket file outside the project), `mode`, `startSeconds`, and `rewindAtEnd`. Defaults match `renderSourceEvent`. Its `sourceStream` response contains `generation`, `revision`, `eventID`, `mode`, `ticketPath`, `ticketSHA256`, `capability`, `proofSHA256`, `sampleRate`, `startFrame`, `totalFrames`, `frames`, and `maximumChunkFrames` (65536). Generation and capability are independent UUIDs. Tickets bind the exact current dirty project and all saved-source provenance; no project changes are made. The helper retains one pending ticket and safely revokes it on replacement or state change. Host revision/generation checks remain required because a worker may already own an admitted immutable snapshot.
+
+Launch the same packaged helper with `--source-stream`; write one LF-terminated UTF8 startup JSON line (at most64KiB): `{ "schema":"rebase.source-stream-start.v1", "ticketPath":..., "ticketSHA256":..., "capability":..., "generation":..., "maximumChunkFrames":65536 }`. The optional chunk bound is an integer1...65536, default65536. Closing stdin after the line is allowed and does not cancel playback. Cancel through the dedicated process/output reader and join it; the editing helper is independent.
+
+Every stdout record begins with16little-endian bytes: `RBAS`, u16version1, u16kind, u32metadataBytes, u32payloadBytes. Kinds1/2/3/4 mean admission/PCM/EOF/failure. Metadata is canonical compact sorted-key UTF8 JSON (unescaped slashes), at most8MiB. Only PCM has payload: finite interleaved Float32 LE stereo, at most65536frames and exactly `frames*8` bytes. Never interpret pipe EOF as successful audio EOF.
+
+Admission fields are `schema:"rebase.source-stream-admission.v1"`, `generation`, `revision`, `eventID`, `mode`, `sampleRate`, `startFrame`, `totalFrames`, `frames`, `channels:2`, `maximumChunkFrames`, `proofSHA256`, `proof`. The complete raw embedded proof object hashes to `proofSHA256`. Proof schema `rebase.source-stream-proof.v1` retains every existing WAV-manifest source/current-project/saved-manifest/report/clock/setup/contributor/fragment field, plus start/total/remaining frames; it omits all WAV-specific fields and `maximumFrames`. Optional nil fields are omitted. Contributors are never truncated; full admission must meet its encoded bound. Worker validation freshly checks the ticket, model, source/report, all covered media and complete proof before admission, then owns immutable source samples.
+
+PCM metadata fields are `generation`, zero-based `sequence`, `absoluteFrame`, `frames`, zero-based `logicalBlock`, `logicalOffset`, `logicalFrames`, `sha256`. Blocks are contiguous and may be split for transport only after the entire shared gain/conversion/ring/callback output stage. No chunk spans logical blocks. EOF fields are `generation`, `nextSequence`, `nextAbsoluteFrame`, emitted `frames`, and incremental concatenated `pcmSHA256`, plus producer diagnostics `peakLogicalFrames`, `peakPayloadFrames`, `emittedLogicalBlocks` (all zero at EOF-only). Zero-output EOF is admitted only at the freshly validated source end. Failure fields are optional `generation`, `code`, bounded path-free `message`, optional last successfully emitted `lastSequence`, and optional next committed `lastAbsoluteFrame`. Codes are `startup`, `ticket`, `sourceChanged`, `preparation`, `producer`, `output`. EOF/failure is terminal. Exit0 requires complete EOF emission.
+
+The live stream removes the whole-output snapshot frame bound; shared source/semantic admission remains unchanged. Existing snapshot export byte contracts and refusal behavior remain independent.

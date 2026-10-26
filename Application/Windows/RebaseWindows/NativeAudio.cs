@@ -50,14 +50,14 @@ public interface IAudioOutput : IAsyncDisposable
     Task Stop();
     Task Seek(ulong frame);
 }
-public sealed class NativeAudio : IAudioOutput
+public sealed partial class NativeAudio : IAudioOutput
 {
     private sealed class AudioHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
         public AudioHandle(IntPtr value) : base(true) { SetHandle(value); }
         protected override bool ReleaseHandle() { Api.Destroy(handle); return true; }
     }
-    private static class Api
+    private static partial class Api
     {
         private const string Dll = "RebaseWindowsAudio.dll";
         [DllImport(Dll, EntryPoint = "rb_audio_create", CallingConvention = CallingConvention.Cdecl)] public static extern int Create(out IntPtr handle);
@@ -74,7 +74,7 @@ public sealed class NativeAudio : IAudioOutput
     static NativeAudio()
     {
         NativeLibrary.SetDllImportResolver(typeof(NativeAudio).Assembly, Resolve);
-        if (Marshal.SizeOf<DeviceFormat>() != 12 || Marshal.SizeOf<AudioStatus>() != 72 || Marshal.SizeOf<AudioRateInfo>() != 56)
+        if (Marshal.SizeOf<DeviceFormat>() != 12 || Marshal.SizeOf<AudioStatus>() != 72 || Marshal.SizeOf<AudioRateInfo>() != 56 || Marshal.SizeOf<AudioStreamDescriptor>() != 48 || Marshal.SizeOf<AudioStreamStatus>() != 160)
             throw new InvalidOperationException("The native audio ABI layout does not match this build.");
     }
     private static IntPtr Resolve(string name, Assembly assembly, DllImportSearchPath? path) => name == "RebaseWindowsAudio.dll"
@@ -97,6 +97,8 @@ public sealed class NativeAudio : IAudioOutput
             9 => "The endpoint-rate conversion failed. Prepare playback again.",
             10 => "The converted audio exceeds the supported playback snapshot size.",
             11 => "The audio converter requires the supported floating-point environment.",
+            14 => "This source stream generation has been replaced.",
+            15 => "The source stream violated the native producer protocol.",
             12 => "This source is too short to produce an output frame at the device rate.",
             _ => "The native audio service stopped unexpectedly (code " + result + ")."
         });

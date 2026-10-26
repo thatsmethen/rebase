@@ -57,6 +57,7 @@ public struct PortableSessionReply: Encodable {
     public let ruler: Ruler?
     public let cprReview: PortableCPRReview?
     public var sourceInspection: SourceInspection? = nil
+    public var sourceStream: PortableSourceStream.Receipt? = nil
     public let error: Failure?
     public struct SourceInspection: Encodable {
         public let revision: UInt64
@@ -70,6 +71,10 @@ public struct PortableSessionReply: Encodable {
         public let mode: String
         public let available: Bool
         public let reason: String?
+        public let liveAvailable: Bool
+        public let snapshotExportAvailable: Bool
+        public let liveReason: String?
+        public let snapshotExportReason: String?
         public let sampleRate: Double?
         public let frames: Int64?
         public let sourceSampleRate: Double?
@@ -114,7 +119,7 @@ public struct PortableSessionReply: Encodable {
         public var totalFrames: Int64? = nil
     }
     public struct Failure: Encodable { public let code: String; public let message: String }
-    enum CodingKeys: String, CodingKey { case protocolVersion = "protocol"; case id, ok, state, render, waveform, ruler, cprReview, sourceInspection, error }
+    enum CodingKeys: String, CodingKey { case protocolVersion = "protocol"; case id, ok, state, render, waveform, ruler, cprReview, sourceInspection, sourceStream, error }
 }
 
 /// Complete, ephemeral audition provenance. Stored beside a newly rendered WAV,
@@ -223,6 +228,7 @@ public final class PortableSession {
         let historicalRoot: URL?
     }
     private var reviewedCPR: ReviewedCPR?
+    private var pendingSourceStream: PortableSourceStream.OwnedTicket?
     private let importedSnapshotLoader: (URL) throws -> (project: Project, manifest: Data)
     public init() { importedSnapshotLoader = { try ProjectStore.loadSnapshot(from: $0) } }
     // A readback dependency permits deterministic verification of the
@@ -230,7 +236,10 @@ public final class PortableSession {
     init(importedSnapshotLoader: @escaping (URL) throws -> (project: Project, manifest: Data)) {
         self.importedSnapshotLoader = importedSnapshotLoader
     }
-    deinit { for url in ownedScratch { try? FileManager.default.removeItem(at: url) } }
+    deinit {
+        pendingSourceStream?.removeIfOwned()
+        for url in ownedScratch { try? FileManager.default.removeItem(at: url) }
+    }
 
     private var state: PortableSessionState {
         PortableSessionState(revision: revision, dirty: project != savedProject,
@@ -246,6 +255,12 @@ public final class PortableSession {
     private func failure(_ code: String, _ message: String) -> SessionError { .init(code: code, message: message) }
 
     public func process(_ bytes: Data) -> Data {
+        let previousRevision = revision, previousSelection = selection
+        defer {
+            if revision != previousRevision || selection != previousSelection {
+                pendingSourceStream?.removeIfOwned(); pendingSourceStream = nil
+            }
+        }
         var id: UInt64?
         let reply: PortableSessionReply
         do {
@@ -258,7 +273,19 @@ public final class PortableSession {
             if request.command != "state" {
                 guard request.expectedRevision == revision else { throw failure("staleRevision", "The project changed. Refresh its state before retrying.") }
             }
-            if request.command == "inspectSourceEvent" {
+            if request.command == "prepareSourceStream" {
+                guard let current = project, let root, let manifestDigest else { throw failure("noProject", "Open a project first.") }
+                try checkSourceUnchanged(root)
+                guard let eventID = request.clipID else { throw failure("selection", "Choose a source event.") }
+                guard let mode = CPRSourceEventPlaybackMode(rawValue: request.mode ?? "sourceRate") else { throw failure("sourceMode", "Choose a supported source playback mode.") }
+                let next = try PortableSourceStream.issue(project: current, root: root, revision: revision,
+                    eventID: eventID, mode: mode, startSeconds: request.startSeconds ?? 0,
+                    rewindAtEnd: request.rewindAtEnd ?? false, manifestSHA: manifestDigest,
+                    destination: requiredURL(request.path))
+                pendingSourceStream?.removeIfOwned(); pendingSourceStream = next
+                reply = .init(id: id, ok: true, state: state, render: nil, waveform: nil, ruler: nil,
+                    cprReview: nil, sourceStream: next.receipt, error: nil)
+            } else if request.command == "inspectSourceEvent" {
                 let inspection = try inspectSourceEvent(request)
                 reply = .init(id: id, ok: true, state: state, render: nil, waveform: nil, ruler: nil,
                     cprReview: nil, sourceInspection: inspection, error: nil)
@@ -277,7 +304,7 @@ public final class PortableSession {
             }
         } catch {
             reply = .init(id: id, ok: false, state: state, render: nil, waveform: nil, ruler: nil, cprReview: nil,
-                error: .init(code: (error as? SessionError)?.code ?? (error as? PortableCPRReviewError)?.code ?? "operationFailed", message: error.localizedDescription))
+                error: .init(code: (error as? SessionError)?.code ?? (error as? PortableCPRReviewError)?.code ?? (error as? PortableSourceStream.Failure)?.code ?? "operationFailed", message: error.localizedDescription))
         }
         // Validated models contain only finite numbers and bounded strings.
         // The host treats an encoding failure as a failed protocol exchange.
@@ -429,7 +456,7 @@ public final class PortableSession {
             var accepted = false
             defer { if !accepted, let scratch { try? FileManager.default.removeItem(at: scratch) } }
             if let snapshot {
-                let temp = FileManager.default.temporaryDirectory.appendingPathComponent("RebaseSession-" + UUID().uuidString + ".rebaseproj")
+                let temp = try scratchProjectURL()
                 destination = try copyPackage(source, to: temp, snapshot: snapshot)
                 scratch = destination
                 let copied = try ProjectStore.loadSnapshot(from: destination)
@@ -649,15 +676,26 @@ public final class PortableSession {
                 guard info.sourceSHA256 == verified.container.sha256 else {
                     throw failure("externalChange", "The preserved source changed during inspection.")
                 }
-                let available = info.frameCount > 0 && info.frameCount <= Self.maximumSourceAuditionFrames
+                let available = info.frameCount > 0
+                let liveAvailable = available && info.sampleRate.isFinite && info.sampleRate.rounded() == info.sampleRate
+                    && (8_000...192_000).contains(info.sampleRate)
+                    && info.frameCount <= Int64(info.sampleRate) * 86_400
+                    && (info.sourceTrack?.events.count ?? 1) <= 4096
+                    && (info.sourceTrack?.fragments.count ?? 0) <= 16_384
+                let snapshotAvailable = available && info.frameCount <= Self.maximumSourceAuditionFrames
                 modes.append(.init(mode: mode.rawValue, available: available,
-                    reason: available ? nil : "This preview exceeds the 32 million frame snapshot limit; streaming is required.",
+                    reason: available ? nil : "The source contains no playback frames.",
+                    liveAvailable: liveAvailable, snapshotExportAvailable: snapshotAvailable,
+                    liveReason: liveAvailable ? nil : "The source exceeds the validated live stream admission bounds.",
+                    snapshotExportReason: snapshotAvailable ? nil : "This preview exceeds the 32 million frame snapshot export limit.",
                     sampleRate: info.sampleRate, frames: info.frameCount, sourceSampleRate: info.sourceSampleRate,
                     mediaSHA256: info.mediaSHA256, timelineRange: info.timelineRange.map(PortableSourceAuditionManifest.Range.init),
                     savedProjectAudioSetup: info.savedProjectAudioSetup, contributorCount: info.sourceTrack?.events.count ?? 1,
                     fragmentCount: info.sourceTrack?.fragments.count ?? (info.timelineRange == nil ? 0 : 1)))
             } catch {
                 modes.append(.init(mode: mode.rawValue, available: false, reason: error.localizedDescription,
+                    liveAvailable: false, snapshotExportAvailable: false,
+                    liveReason: error.localizedDescription, snapshotExportReason: error.localizedDescription,
                     sampleRate: nil, frames: nil, sourceSampleRate: nil, mediaSHA256: nil, timelineRange: nil,
                     savedProjectAudioSetup: nil, contributorCount: nil, fragmentCount: nil))
             }
@@ -885,6 +923,44 @@ public final class PortableSession {
     }
     private func copyPackage(_ source: URL, to destination: URL, snapshot: PortablePackageSnapshot) throws -> URL {
         try snapshot.copy(from: source, to: destination)
+    }
+
+    private func scratchProjectURL() throws -> URL {
+        var parent = FileManager.default.temporaryDirectory
+        #if canImport(Darwin)
+        // Foundation canonicalization retains the /var system alias in its
+        // temporary directory. Use an application-managed runtime cache for
+        // internal copies, leaving all user/worker path admission unchanged.
+        // These packages remain ownedScratch and are removed on session exit.
+        parent = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask,
+            appropriateFor: nil, create: false).appendingPathComponent("Rebase").appendingPathComponent("SessionCopies")
+        try Self.prepareScratchDirectories(parent)
+        #endif
+        return parent.appendingPathComponent("RebaseSession-" + UUID().uuidString + ".rebaseproj")
+    }
+
+    static func prepareScratchDirectories(_ parent: URL) throws {
+        var directories: [URL] = [], current = parent.standardizedFileURL
+        while true {
+            directories.append(current)
+            if current.pathComponents.count <= 1 { break }
+            let next = current.deletingLastPathComponent().standardizedFileURL
+            guard next.pathComponents.count < current.pathComponents.count else {
+                throw RebaseCoreError.invalidProject("The runtime cache parent could not be inspected.")
+            }
+            current = next
+        }
+        for directory in directories.reversed() {
+            if !FileManager.default.fileExists(atPath: directory.path) {
+                do { try ProjectFileIO.createNewDirectory(directory) }
+                catch {
+                    // Another session may create the shared cache directory.
+                    // Accept only a freshly rechecked real directory.
+                    try ProjectFileIO.requireRealDirectory(directory)
+                }
+            }
+            try ProjectFileIO.requireRealDirectory(directory)
+        }
     }
 
     private func render(_ project: Project, root: URL, destination: URL) throws -> PortableSessionReply.Render {

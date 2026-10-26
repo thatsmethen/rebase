@@ -40,7 +40,7 @@ static class SourceAuditionControls
         project.CprMediaAttachments = duplicate;
 
         var session = new ControlSession(project); var audio = new ControlAudio();
-        await using var model = new StudioViewModel(session, audio);
+        await using var model = new StudioViewModel(session, new AuthoredStreamingAudio(audio), SourceStreamControlData.Streams);
         await model.Open("synthetic-control", false, false);
         var export = Path.Combine(Path.GetTempPath(), "rebase-source-control-" + Guid.NewGuid().ToString("N") + ".wav");
         try
@@ -100,13 +100,15 @@ static class SourceAuditionControls
             var response = new SessionResponse { Protocol = 1, Id = request.Id, Ok = true,
                 State = new() { Revision = state.Revision, Project = project, Selection = state.Selection } };
             if (request.Command == "render") { ProjectRenders++; response.Ok = false; response.Error = new() { Message = "Native CPR project playback is unavailable." }; }
-            if (request.Command == "renderSourceEvent")
+            if (request.Command is "renderSourceEvent" or "prepareSourceStream")
             {
                 SourceRenders++; LastSourceStart = request.StartSeconds ?? 0;
                 if (FailSourceRender) { response.Ok = false; response.Error = new() { Message = "Source changed outside the session." }; }
                 else
                 {
-                    response.Render = SourceControlData.Render(project, SourceEventView.Read(project).Single(), request,
+                    if (request.Command == "prepareSourceStream") response.SourceStream = SourceStreamControlData.Build(project, SourceEventView.Read(project).Single(), request,
+                        state.Revision, 48000, 480, WrongMediaReceipt ? new string('c', 64) : MediaHash).Ticket;
+                    else response.Render = SourceControlData.Render(project, SourceEventView.Read(project).Single(), request,
                         state.Revision, 48000, 480, WrongMediaReceipt ? new string('c', 64) : MediaHash);
                 }
             }
