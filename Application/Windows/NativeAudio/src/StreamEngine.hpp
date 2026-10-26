@@ -42,7 +42,8 @@ class StreamEngine {
     std::atomic<uint64_t> accepted_{0}, consumed_{0}, produced_{0}, submitted_{0}, position_{0}, total_{0};
     std::atomic<float> left_{0}, right_{0};
     void run() noexcept;
-    void wait_for_work();
+    void wait_for_source(uint32_t frames);
+    void wait_for_endpoint();
     bool flush(const float *samples, uint32_t count);
     void update_prime();
 public:

@@ -254,6 +254,12 @@ A waveform reply adds `waveform:{revision,clipID,sampleRate,sourceStartFrame,sou
 
 `prepareSourceStream` is a revision-checked, read-only command with `clipID`, `path` (a new ticket file outside the project), `mode`, `startSeconds`, and `rewindAtEnd`. Defaults match `renderSourceEvent`. Its `sourceStream` response contains `generation`, `revision`, `eventID`, `mode`, `ticketPath`, `ticketSHA256`, `capability`, `proofSHA256`, `sampleRate`, `startFrame`, `totalFrames`, `frames`, and `maximumChunkFrames` (65536). Generation and capability are independent UUIDs. Tickets bind the exact current dirty project and all saved-source provenance; no project changes are made. The helper retains one pending ticket and safely revokes it on replacement or state change. Host revision/generation checks remain required because a worker may already own an admitted immutable snapshot.
 
+Every stream input and output ancestor is checked through its filesystem root.
+Windows streaming currently admits absolute local drive paths; UNC shares,
+device namespaces and drive-relative paths are rejected. The checked drive root
+terminates traversal before Foundation can remove its drive component. POSIX
+root and all intervening directories retain the same link/reparse refusal.
+
 Launch the same packaged helper with `--source-stream`; write one LF-terminated UTF8 startup JSON line (at most64KiB): `{ "schema":"rebase.source-stream-start.v1", "ticketPath":..., "ticketSHA256":..., "capability":..., "generation":..., "maximumChunkFrames":65536 }`. The optional chunk bound is an integer1...65536, default65536. Closing stdin after the line is allowed and does not cancel playback. Cancel through the dedicated process/output reader and join it; the editing helper is independent.
 
 Every stdout record begins with16little-endian bytes: `RBAS`, u16version1, u16kind, u32metadataBytes, u32payloadBytes. Kinds1/2/3/4 mean admission/PCM/EOF/failure. Metadata is canonical compact sorted-key UTF8 JSON (unescaped slashes), at most8MiB. Only PCM has payload: finite interleaved Float32 LE stereo, at most65536frames and exactly `frames*8` bytes. Never interpret pipe EOF as successful audio EOF.

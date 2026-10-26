@@ -92,11 +92,21 @@ int StreamEngine::start() {
     while (!started_.load()) wake_.wait_for(lock, std::chrono::milliseconds(1));
     return result_.load();
 }
-void StreamEngine::wait_for_work() {
-    // A bounded producer-only timed wait avoids lost notifications without
-    // taking a lock on the audio consumer. Cancellation always wakes it.
+void StreamEngine::wait_for_source(uint32_t frames) {
+    // Notifications must satisfy the actual awaited work condition. A
+    // stop-only predicate would ignore submitted input until the timeout.
+    // The bounded fallback covers a notification racing the wait without
+    // requiring the audio consumer to take this mutex.
     std::unique_lock<std::mutex> lock(wake_mutex_);
-    wake_.wait_for(lock, std::chrono::milliseconds(1), [this] { return stop_.load(); });
+    wake_.wait_for(lock, std::chrono::milliseconds(1), [this, frames] {
+        return stop_.load() || (frames ? source_.size() >= frames : eof_.load(std::memory_order_acquire));
+    });
+}
+void StreamEngine::wait_for_endpoint() {
+    std::unique_lock<std::mutex> lock(wake_mutex_);
+    wake_.wait_for(lock, std::chrono::milliseconds(1), [this] {
+        return stop_.load() || endpoint_.size() < endpoint_.capacity();
+    });
 }
 int StreamEngine::submit(uint64_t generation, uint64_t sequence, uint64_t start, const float *samples, uint32_t frames) {
     std::lock_guard<std::mutex> lock(submission_);
@@ -142,7 +152,7 @@ bool StreamEngine::flush(const float *samples, uint32_t count) {
     while (offset < count && !stop_.load()) {
         const uint32_t added = endpoint_.append(samples + size_t(offset) * 2, count - offset);
         offset += added; update_prime();
-        if (!added) wait_for_work();
+        if (!added) wait_for_endpoint();
     }
     return offset == count;
 }
@@ -172,7 +182,7 @@ void StreamEngine::run() noexcept {
             // call, regardless of transport chunks or ring wrap boundaries.
             const uint32_t wanted = static_cast<uint32_t>(std::min<uint64_t>(4096, descriptor_.source_frames - consumed_.load()));
             retained += source_.take(input.data() + size_t(retained) * 2, wanted - retained);
-            if (retained < wanted || (!wanted && !eof_.load(std::memory_order_acquire))) { wait_for_work(); continue; }
+            if (retained < wanted || (!wanted && !eof_.load(std::memory_order_acquire))) { wait_for_source(wanted - retained); continue; }
             size_t used = 0, made = 0;
             const size_t capacity = static_cast<size_t>(std::min<uint64_t>(4096, upper_ - produced_.load()));
             if (!converted) {

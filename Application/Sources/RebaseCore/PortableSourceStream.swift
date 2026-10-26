@@ -165,15 +165,38 @@ public enum PortableSourceStream {
         guard ProjectFileIO.samePath(url, try ProjectFileIO.canonicalRoot(url)) else { throw Failure(code: "ticket") }
         return url
     }
-    private static func realAncestors(_ url: URL) throws {
+    /// Windows drive roots must terminate the walk before Foundation removes
+    /// the drive component and produces a different, drive-less path. Network
+    /// and device namespaces need their own custody contract and are refused.
+    static func isWindowsDriveRoot(_ path: String) throws -> Bool {
+        let bytes = Array(path.replacingOccurrences(of: "/", with: "\\").utf8)
+        guard bytes.count >= 3, (65...90).contains(bytes[0]) || (97...122).contains(bytes[0]),
+              bytes[1] == 58, bytes[2] == 92, !bytes.contains(0) else {
+            throw RebaseCoreError.invalidProject("Source streams require an absolute local drive path on Windows.")
+        }
+        return bytes.count == 3
+    }
+
+    /// Returns nil only for the filesystem root. Callers still inspect that
+    /// root; this function does not bypass link/reparse-point checks.
+    static func parentDirectory(of directory: URL) throws -> URL? {
+        #if os(Windows)
+        if try isWindowsDriveRoot(nativePath(directory)) { return nil }
+        #else
+        if directory.path == "/" { return nil }
+        #endif
+        let parent = directory.deletingLastPathComponent()
+        guard parent.pathComponents.count < directory.pathComponents.count else {
+            throw RebaseCoreError.invalidProject("The source stream parent could not be inspected.")
+        }
+        return parent
+    }
+
+    static func realAncestors(_ url: URL) throws {
         var parent = url.deletingLastPathComponent()
         while true {
             try ProjectFileIO.requireRealDirectory(parent)
-            // A bridged Foundation URL can append ".." when deleting the
-            // root's last component. The root itself has just been checked.
-            if parent.pathComponents.count <= 1 { break }
-            let next = parent.deletingLastPathComponent()
-            if ProjectFileIO.samePath(next, parent) { break }
+            guard let next = try parentDirectory(of: parent) else { break }
             parent = next
         }
     }

@@ -943,11 +943,7 @@ public final class PortableSession {
         var directories: [URL] = [], current = parent.standardizedFileURL
         while true {
             directories.append(current)
-            if current.pathComponents.count <= 1 { break }
-            let next = current.deletingLastPathComponent().standardizedFileURL
-            guard next.pathComponents.count < current.pathComponents.count else {
-                throw RebaseCoreError.invalidProject("The runtime cache parent could not be inspected.")
-            }
+            guard let next = try PortableSourceStream.parentDirectory(of: current) else { break }
             current = next
         }
         for directory in directories.reversed() {

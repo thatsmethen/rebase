@@ -17,7 +17,13 @@ struct PortableSourceStreamTests {
     }
     private struct Record { let kind: Int; let metadata: [String: Any]; let payload: Data }
     private func scratch() throws -> URL {
-        let parent = ProcessInfo.processInfo.environment["REBASE_TEST_WORK_ROOT"].map { URL(fileURLWithPath: $0) } ?? FileManager.default.temporaryDirectory
+        // Foundation's Darwin temporaryDirectory retains the /var symlink.
+        // Authored fixtures require real ancestors, just like user packages;
+        // keep them inside the checkout even without a test environment override.
+        let checkout = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let parent = ProcessInfo.processInfo.environment["REBASE_TEST_WORK_ROOT"].map { URL(fileURLWithPath: $0) }
+            ?? checkout.appendingPathComponent(".local/work")
         let root = parent.appendingPathComponent("portable-source-stream-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         return root
@@ -85,9 +91,7 @@ struct PortableSourceStreamTests {
             var directory = copiedRoot
             while true {
                 try ProjectFileIO.requireRealDirectory(directory)
-                if directory.pathComponents.count <= 1 { break }
-                let parent = directory.deletingLastPathComponent()
-                if ProjectFileIO.samePath(directory, parent) { break }
+                guard let parent = try PortableSourceStream.parentDirectory(of: directory) else { break }
                 directory = parent
             }
             let (result, records) = try run(startup(receipt, chunk: 257))
@@ -100,6 +104,39 @@ struct PortableSourceStreamTests {
             #expect(try state(client.send("state")) == stable)
         }
         #expect(try PortablePackageSnapshot.capture(in: fixture.root) == sourceBefore)
+    }
+
+    @Test func windowsDriveRootSyntaxDoesNotAdmitRelativeOrNetworkRoots() throws {
+        for path in ["C:\\", "d:/"] {
+            #expect(try PortableSourceStream.isWindowsDriveRoot(path))
+        }
+        for path in ["C:\\Users\\runner", "D:/a/project", "Z:\\folder\\"] {
+            #expect(try !PortableSourceStream.isWindowsDriveRoot(path))
+        }
+        for path in ["", "/", "C:", "C:relative", "/C:/", "1:\\", "\\\\server\\share\\",
+                     "\\\\?\\C:\\", "\\\\.\\C:\\", "C:\\\0"] {
+            #expect(throws: (any Error).self) { try PortableSourceStream.isWindowsDriveRoot(path) }
+        }
+    }
+
+    @Test func realAncestorWalkChecksTheVolumeRootAndStopsThere() throws {
+        let root = try scratch(); defer { try? FileManager.default.removeItem(at: root) }
+        try PortableSourceStream.realAncestors(root.appendingPathComponent("unpublished.ticket"))
+        var directory = root, visited = Set<String>()
+        while true {
+            #expect(visited.insert(directory.absoluteString).inserted)
+            try ProjectFileIO.requireRealDirectory(directory)
+            guard let parent = try PortableSourceStream.parentDirectory(of: directory) else { break }
+            directory = parent
+        }
+        #if os(Windows)
+        let native = directory.withUnsafeFileSystemRepresentation { $0.map { String(cString: $0) } }
+        let nativeRoot = try #require(native)
+        #expect(try PortableSourceStream.isWindowsDriveRoot(nativeRoot))
+        #else
+        #expect(directory.path == "/")
+        #endif
+        #expect(try PortableSourceStream.parentDirectory(of: directory) == nil)
     }
 
     @Test func everyModeStreamsExactSharedOutputAndPreservesDirtySession() throws {

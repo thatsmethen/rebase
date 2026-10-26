@@ -1,0 +1,78 @@
+{
+  "schema": "rebase.source-stream-filesystem-correction.v1",
+  "base_commit": "328849cfbe4ad26b5c2d441cbc08d32ec8b0b0bd",
+  "scope": "Authored macOS portable tests with default process temp environment; Windows path-boundary syntax controls plus cross-platform real-root test, not Windows execution. No DSP, source fixture, proof schema or output-lock changes.",
+  "corrections": [
+    "Default authored test scratch resides in checkout .local/work when no override is set; Foundation Darwin temporaryDirectory retains the /var link.",
+    "Every source-stream ancestor remains checked; local Windows drive roots terminate the walk before deleting the drive component. UNC/device namespaces are explicitly unsupported.",
+    "Managed runtime cache parent traversal shares the same checked root boundary."
+  ],
+  "environment_overrides_removed": [
+    "TMPDIR",
+    "REBASE_TEST_WORK_ROOT"
+  ],
+  "observations": [
+    {
+      "name": "default-temp-before-01",
+      "files": {
+        "default-temp-before-01.log": "731f12270c818af8a6e8e8c54e3a922cc46cb00010f5134268a281ffbff838e2",
+        "default-temp-before-01.xml": "e60c56374db022877ed6bf0e80b40173b83fc8541e9de71eb4ebc545694fdf56"
+      },
+      "counts": {
+        "reported": 1,
+        "executed": 1,
+        "failed": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "default-temp-after-01",
+      "files": {
+        "default-temp-after-01.log": "5bc8549b4de5a98d7a3b8de6a4444d66d9a4519a97379d92650433aa468690f1",
+        "default-temp-after-01.xml": "d3cc86623c36fdbe912be6fdb642bb2044a2c6476163a09f25da6252a20aadf2"
+      },
+      "counts": {
+        "reported": 12,
+        "executed": 12,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "default-temp-full-01",
+      "files": {
+        "default-temp-full-01.log": "9775ffd95b07c35a28c372d074409d5c1b5ba1044ac8f863a96fac19e0177b6d",
+        "default-temp-full-01.xml": "911ea4563e9320fb5ac359f2fe32cc340830f11eb6593b4118927a1af41e99ff"
+      },
+      "counts": {
+        "reported": 136,
+        "executed": 133,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 3
+      }
+    }
+  ],
+  "release_build": {
+    "exit_code": 0,
+    "log": "release-03.log",
+    "log_sha256": "f9492c805f6935c19898b8c43b9f10663dfd13ab91a50a889234594a8dc04e24",
+    "helper_sha256": "d224f5c9795c7fa5d5b2e229bacb9ba9ad4ce677e10d93d6b33f251f085c17f7",
+    "previous_helper_sha256": "6cc3d0f572d38a2d44f41fa3d07fb9a50c3db3e87edafb0ab6980747fa10f4a1"
+  },
+  "sources": {
+    "Application/Sources/RebaseCore/PortableSourceStream.swift": "f65b92539d0c62273042dc9d4a22bce830231649b5bcf025c550c2a8942d8dfd",
+    "Application/Sources/RebaseCore/PortableSession.swift": "61bcdb1b737eb0cbafeea47376c6aa3266bf6b5a1c878a56f92e1428232115bc",
+    "Application/Tests/RebasePortableTests/PortableSourceStreamTests.swift": "b9dfbc0883f4e16a1ccda22934da84eb5661afaa42ce1e2ef634cfa6878d5362",
+    "Application/Windows/SESSION-PROTOCOL.md": "b2193571b9c324677b0c9585acc74295702e7ef072f84f7b3ead66288253641d"
+  },
+  "package_resolved_restored": true,
+  "package_resolved_sha256": "54dfc287a961499b655eb1609cc15e585f3bca682554b6f96dd9064fc85df6ae",
+  "limits": [
+    "Actual Windows drive-root behavior requires the next native Windows CI run.",
+    "Raw test/build logs and XML may contain local toolchain paths and remain private originals; publish only reviewed derivatives.",
+    "Previous intermittent failures have not been attributed to this correction."
+  ]
+}

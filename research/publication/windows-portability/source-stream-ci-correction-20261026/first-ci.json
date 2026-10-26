@@ -1,0 +1,1148 @@
+{
+  "schema": "rebase.source-stream-first-ci.v1",
+  "source_commit": "328849cfbe4ad26b5c2d441cbc08d32ec8b0b0bd",
+  "evidence_class": "authored-implementation-ci-failure",
+  "status": "failed",
+  "released": false,
+  "reference_execution": false,
+  "physical_playback_tested": false,
+  "application_run": 40255436855,
+  "component_run": 40255436874,
+  "component_conclusion": "failure",
+  "jobs": [
+    {
+      "databaseId": 121356160298,
+      "name": "Public SoXR DLL / Windows x64",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 121356160375,
+      "name": "c / windows-2025 / Release",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 121356160426,
+      "name": "c / macos-15 / Release",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 121356160432,
+      "name": "swift / windows-2025 / Release",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "databaseId": 121356160468,
+      "name": "Existing public macOS application tests",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 121356160470,
+      "name": "Native audio foundation / Windows x64 / Debug",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "databaseId": 121356160486,
+      "name": "c / macos-15 / Debug",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 121356160496,
+      "name": "c / windows-2025 / Debug",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 121356160498,
+      "name": "swift / windows-2025 / Debug",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "databaseId": 121356160506,
+      "name": "swift / macos-15 / Release",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "databaseId": 121356160508,
+      "name": "Native audio foundation / Windows x64 / Release",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "databaseId": 121356160614,
+      "name": "swift / macos-15 / Debug",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "databaseId": 121358040222,
+      "name": "Compare Windows and macOS authored PCM",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "observations": [
+    {
+      "artifact": "conformance-c-macos-15-Debug",
+      "test_reports": [
+        {
+          "report_sha256": "58421fc8b0102511d704bcc7d6dca1cd0c2e71c74b02a3a3df6bb2f0463e4156",
+          "reported": 1,
+          "executed": 1,
+          "skipped": 0,
+          "failed_cases": []
+        }
+      ]
+    },
+    {
+      "artifact": "conformance-c-macos-15-Release",
+      "test_reports": [
+        {
+          "report_sha256": "278ecb83559168294e3d2bdf70e76944c7d568f249b9946b44a8078d1c50c5e9",
+          "reported": 1,
+          "executed": 1,
+          "skipped": 0,
+          "failed_cases": []
+        }
+      ]
+    },
+    {
+      "artifact": "conformance-c-windows-2025-Debug",
+      "test_reports": [
+        {
+          "report_sha256": "c6306d4906154c1681bf9e08bb56881e8ed54cb64ad91b773ff5415b470630f0",
+          "reported": 1,
+          "executed": 1,
+          "skipped": 0,
+          "failed_cases": []
+        }
+      ]
+    },
+    {
+      "artifact": "conformance-c-windows-2025-Release",
+      "test_reports": [
+        {
+          "report_sha256": "03f6837866216199a0a91ecc111d632773010e23e638aff07e091fcc3eb6a471",
+          "reported": 1,
+          "executed": 1,
+          "skipped": 0,
+          "failed_cases": []
+        }
+      ]
+    },
+    {
+      "artifact": "conformance-macos-application-public",
+      "test_reports": [
+        {
+          "report_sha256": "cfc710a71eb5a676a3dd30caa61e748e1bec5647fd24d712067ab15701ee051d",
+          "reported": 399,
+          "executed": 280,
+          "skipped": 119,
+          "failed_cases": []
+        }
+      ]
+    },
+    {
+      "artifact": "conformance-native-audio-windows-x64-Debug",
+      "test_reports": [
+        {
+          "report_sha256": "a58a1974fd3e2d10be568a6138dbfceffe9cbc257711056c5cbb127e5214b1a5",
+          "reported": 3,
+          "executed": 3,
+          "skipped": 0,
+          "failed_cases": [
+            "native_audio_bounded_stream"
+          ]
+        }
+      ],
+      "failure": "The bounded-stream control failed its original long-drain deadline; lifecycle and rate-conversion controls passed."
+    },
+    {
+      "artifact": "conformance-native-audio-windows-x64-Release",
+      "test_reports": [
+        {
+          "report_sha256": "6ef428f5106c8014bcdf99b344b5bfec982751fbfe29ef273de42036d9d06190",
+          "reported": 3,
+          "executed": 3,
+          "skipped": 0,
+          "failed_cases": [
+            "native_audio_bounded_stream"
+          ]
+        }
+      ],
+      "failure": "The bounded-stream control failed its original long-drain deadline; lifecycle and rate-conversion controls passed."
+    },
+    {
+      "artifact": "conformance-soxr-windows-x64",
+      "test_reports": []
+    },
+    {
+      "artifact": "conformance-swift-macos-15-Debug",
+      "test_reports": [
+        {
+          "report_sha256": "ce3a7b55261aa284b340bc4448289d5d11eee01fa2ba098f5bfca021bbcbec3c",
+          "reported": 134,
+          "executed": 131,
+          "skipped": 3,
+          "failed_cases": [
+            "malformedStartupAndOutputFailureAreTerminalAndPathFree()",
+            "ticketAndParentSymlinksAreRejectedWithoutFollowingThem()",
+            "everyModeStreamsExactSharedOutputAndPreservesDirtySession()",
+            "ticketsRejectTamperingExistingDestinationsAndRevokeOnStateChanges()",
+            "internalProjectCopyStreamsEveryModeWithRealParentsAndUnchangedSource()",
+            "oddSeekEOFRoundedRewindAndTransportPartitionAreIndependent()",
+            "managedScratchParentsRejectLinksWithoutCreatingRedirectedContents()",
+            "longTimelineTailAndEOFHaveNoSnapshotDurationLimit()",
+            "changedCoveredMediaSourceReportAndManifestFailBeforeAdmission()"
+          ]
+        }
+      ],
+      "failure": "Source-stream ticket preparation rejected an ancestor directory before worker admission."
+    },
+    {
+      "artifact": "conformance-swift-macos-15-Release",
+      "test_reports": [
+        {
+          "report_sha256": "ac6aee8f167478a08b94de935b8f395f2f1d6131440e7b13bc12c57fe090deb3",
+          "reported": 134,
+          "executed": 131,
+          "skipped": 3,
+          "failed_cases": [
+            "ticketsRejectTamperingExistingDestinationsAndRevokeOnStateChanges()",
+            "oddSeekEOFRoundedRewindAndTransportPartitionAreIndependent()",
+            "everyModeStreamsExactSharedOutputAndPreservesDirtySession()",
+            "managedScratchParentsRejectLinksWithoutCreatingRedirectedContents()",
+            "internalProjectCopyStreamsEveryModeWithRealParentsAndUnchangedSource()",
+            "changedCoveredMediaSourceReportAndManifestFailBeforeAdmission()",
+            "longTimelineTailAndEOFHaveNoSnapshotDurationLimit()",
+            "ticketAndParentSymlinksAreRejectedWithoutFollowingThem()",
+            "malformedStartupAndOutputFailureAreTerminalAndPathFree()"
+          ]
+        }
+      ],
+      "failure": "Source-stream ticket preparation rejected an ancestor directory before worker admission."
+    },
+    {
+      "artifact": "conformance-swift-windows-2025-Debug",
+      "test_reports": [
+        {
+          "report_sha256": "c798650ac26e889f415c847fc962a277d785c2725a256f937a4c148b0b15cc45",
+          "reported": 130,
+          "executed": 127,
+          "skipped": 3,
+          "failed_cases": [
+            "everyModeStreamsExactSharedOutputAndPreservesDirtySession()",
+            "oddSeekEOFRoundedRewindAndTransportPartitionAreIndependent()",
+            "internalProjectCopyStreamsEveryModeWithRealParentsAndUnchangedSource()",
+            "longTimelineTailAndEOFHaveNoSnapshotDurationLimit()",
+            "malformedStartupAndOutputFailureAreTerminalAndPathFree()",
+            "ticketsRejectTamperingExistingDestinationsAndRevokeOnStateChanges()",
+            "changedCoveredMediaSourceReportAndManifestFailBeforeAdmission()"
+          ]
+        }
+      ],
+      "failure": "Source-stream ticket preparation rejected an ancestor directory before worker admission."
+    },
+    {
+      "artifact": "conformance-swift-windows-2025-Release",
+      "test_reports": [
+        {
+          "report_sha256": "057dba022959ea53eada8b96c9d8f75606e5c2934abe9e9314f755f90251af06",
+          "reported": 130,
+          "executed": 127,
+          "skipped": 3,
+          "failed_cases": [
+            "malformedStartupAndOutputFailureAreTerminalAndPathFree()",
+            "oddSeekEOFRoundedRewindAndTransportPartitionAreIndependent()",
+            "everyModeStreamsExactSharedOutputAndPreservesDirtySession()",
+            "longTimelineTailAndEOFHaveNoSnapshotDurationLimit()",
+            "ticketsRejectTamperingExistingDestinationsAndRevokeOnStateChanges()",
+            "changedCoveredMediaSourceReportAndManifestFailBeforeAdmission()",
+            "internalProjectCopyStreamsEveryModeWithRealParentsAndUnchangedSource()"
+          ]
+        }
+      ],
+      "failure": "Source-stream ticket preparation rejected an ancestor directory before worker admission."
+    }
+  ],
+  "original_custody": [
+    {
+      "path": "app-evidence/application-build.json",
+      "bytes": 3268,
+      "sha256": "f2495c7132fe10afbfb27dece2183d1e0bb05ac6f81c77760cda1dd6048f4940"
+    },
+    {
+      "path": "app-evidence/dependency-controls/controls.log",
+      "bytes": 3491,
+      "sha256": "1076cc71a9f4baa7e2f4000b1dc8e89c57b534ed35afb5944aba83ae30b7ddbe"
+    },
+    {
+      "path": "app-evidence/dependency-controls/observation.json",
+      "bytes": 488,
+      "sha256": "424ee82ea5a292913417b584892d8ba01041472e9ecc9c767a1178ee91f012bb"
+    },
+    {
+      "path": "app-evidence/dependency-package-controls.log",
+      "bytes": 488,
+      "sha256": "424ee82ea5a292913417b584892d8ba01041472e9ecc9c767a1178ee91f012bb"
+    },
+    {
+      "path": "app-evidence/dotnet-version.log",
+      "bytes": 10,
+      "sha256": "6d5ab2a4ef35ceec908f01287257f530b0c0d68f0e84326df2ebcea641f9134b"
+    },
+    {
+      "path": "app-evidence/host-controls.json",
+      "bytes": 164,
+      "sha256": "f14dd622cdee2b700bfd40b69335508e08b4ae50ae8aa72431a966d370269df3"
+    },
+    {
+      "path": "app-evidence/host-controls.log",
+      "bytes": 132,
+      "sha256": "deabb4c57a80f94d1dc1e81431867b2d090d2d7cebcaa808ca7754aa158ddcc4"
+    },
+    {
+      "path": "app-evidence/native/build-pinned-soxr.log",
+      "bytes": 38405,
+      "sha256": "23f5cd406f7b67f58968701b8c915a6463fc62220d90dd30fa1fb508eaba1817"
+    },
+    {
+      "path": "app-evidence/native/build.log",
+      "bytes": 6588,
+      "sha256": "d3568660ec85a0d4a4ac206a62629b466a053141603b3b6cd28a9476a18a9574"
+    },
+    {
+      "path": "app-evidence/native/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "app-evidence/native/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+    },
+    {
+      "path": "app-evidence/native/configure.log",
+      "bytes": 789,
+      "sha256": "24fa995dca636c2a56ca2c2f063f28cfb4a7f1cf7ec9368fbfed6efd1bb22e5c"
+    },
+    {
+      "path": "app-evidence/native/conformance.json",
+      "bytes": 4398,
+      "sha256": "a749971d2d2f7686cb0ce3a9f12a1cc754fbf0e4477148670d8f6f007c393589"
+    },
+    {
+      "path": "app-evidence/native/lifecycle-ctest.log",
+      "bytes": 747,
+      "sha256": "aaea48b54fedb747137af6bfea4fe79345c26929a445123439615af8fdf90be6"
+    },
+    {
+      "path": "app-evidence/native/lifecycle.xml",
+      "bytes": 2078,
+      "sha256": "ef48b2b6b4550720fa3aab17cae2fe93765d3c706a4cc10775b795c0ac40e494"
+    },
+    {
+      "path": "app-evidence/native/soxr/build.log",
+      "bytes": 32919,
+      "sha256": "86bccef25ac50f3a346b66ec8c87070bfce8589c0abd2772294ff5485d05753f"
+    },
+    {
+      "path": "app-evidence/native/soxr/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "app-evidence/native/soxr/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+    },
+    {
+      "path": "app-evidence/native/soxr/configure.log",
+      "bytes": 5146,
+      "sha256": "83fe04a9d7d7a4a1dc04612abc304375512d03c204e28da11a625063e33a409b"
+    },
+    {
+      "path": "app-evidence/native/soxr/conformance.json",
+      "bytes": 2932,
+      "sha256": "d2dadbfb544b93984e53dfa3689897522cca6e8a0dcbb137cab9f24694b9f507"
+    },
+    {
+      "path": "app-evidence/native/soxr/install.log",
+      "bytes": 615,
+      "sha256": "ddc4dcb35d742788de2fcfa4e8d35188c2e386a9775f74884be67a9230f2e37d"
+    },
+    {
+      "path": "app-evidence/native/soxr/probe-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "app-evidence/native/soxr/probe.log",
+      "bytes": 313,
+      "sha256": "62fae0aea95ca4c330afeb972a3465ed8050a4985470d238bac92b8234ba1aa2"
+    },
+    {
+      "path": "app-evidence/native/soxr/soxr-conformance.json",
+      "bytes": 372,
+      "sha256": "c7f6a8e9428d094f1d44bbecaa7248f865e7163c1d5c44040ff994b269c8fc72"
+    },
+    {
+      "path": "app-evidence/native-audio-conformance.log",
+      "bytes": 46547,
+      "sha256": "522f5341ec4d26e48cbfd41650b97f7a0d4f1a545f376663f71314736ec968d1"
+    },
+    {
+      "path": "app-evidence/native-package-controls/controls.log",
+      "bytes": 1064,
+      "sha256": "35c204da6adfd2efc9c6793c2b2f751e3af894b2ca577371cf6fc004d615b1d8"
+    },
+    {
+      "path": "app-evidence/native-package-controls/observation.json",
+      "bytes": 552,
+      "sha256": "13d88a9e700760018819064ef53e7d3f96bdac4900bb429521a2879539e43400"
+    },
+    {
+      "path": "app-evidence/native-package-controls.log",
+      "bytes": 510,
+      "sha256": "a21f2e5ecd96cf1185cb455c2c48e45a8d96f2d62a212c735fa636e3e2231f94"
+    },
+    {
+      "path": "app-evidence/native-receipt-controls.log",
+      "bytes": 112,
+      "sha256": "7035d654f35d112a93ab5cf1b556904bb8ccfd02dc818bbe02972c0e8a94433b"
+    },
+    {
+      "path": "app-evidence/swift-version.log",
+      "bytes": 107,
+      "sha256": "6a514523e3039e37cd769c4bf8f56b23689ceb2a3e0f3048a06f0024a1d9cfd7"
+    },
+    {
+      "path": "artifacts-40255436855.json",
+      "bytes": 723,
+      "sha256": "40005893de2f6d6869b6623952426ed98f8eac04d8cb471db70de3552f138770"
+    },
+    {
+      "path": "artifacts-40255436874.json",
+      "bytes": 7707,
+      "sha256": "5fb8c6e1474ce5da3ec352c9e94255b619108bc4f29c30d205f8452f18d8b50b"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Debug/build.log",
+      "bytes": 2087,
+      "sha256": "6256be9b41b7cdeaead726b7eb8f05896a3c2f2b785a3faa1f0079f4f6fb4e70"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Debug/cmake-version.log",
+      "bytes": 91,
+      "sha256": "f6e81c2559f3ce00c5fdad01d7b226c301f5d6b07ee04f65db6dbfdc1cc5970b"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Debug/compiler-version.log",
+      "bytes": 207,
+      "sha256": "437af36733a38eb62eaf1c452049465d9f0296035b1cf05d67676913ed06bc38"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Debug/configure.log",
+      "bytes": 398,
+      "sha256": "f463c0893c39243facbcc9642d098698fb168a6e9b595ebd83c8350d584daa97"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Debug/conformance.json",
+      "bytes": 2754,
+      "sha256": "754da0419e1097dd1e78aacf1ff32162343ddbc0b05ccb67fca70cda73c9d0f5"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Debug/ctest.log",
+      "bytes": 327,
+      "sha256": "eef4181d1067dfbd1d8bddc098243991b46c8776c8a840851bb88ee8715c48fb"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Debug/kernel-conformance.json",
+      "bytes": 951,
+      "sha256": "9561773ff98604547e639448eacdb1b45121a70e6ae986c0a8bfb5f6a3049e8b"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Debug/kernel-conformance.log",
+      "bytes": 951,
+      "sha256": "9561773ff98604547e639448eacdb1b45121a70e6ae986c0a8bfb5f6a3049e8b"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Debug/oracle-fixtures.log",
+      "bytes": 406,
+      "sha256": "d4b908cef873b212489d70753cca30ba583f55fc0f0a8b38451e1cc7a7cdb907"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Debug/tests.xml",
+      "bytes": 1381,
+      "sha256": "58421fc8b0102511d704bcc7d6dca1cd0c2e71c74b02a3a3df6bb2f0463e4156"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Release/build.log",
+      "bytes": 2087,
+      "sha256": "8d1c781df6e8ed60017aa5b4b2d7d95280f38cbe765c88ee02626175c92e8ab9"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Release/cmake-version.log",
+      "bytes": 91,
+      "sha256": "f6e81c2559f3ce00c5fdad01d7b226c301f5d6b07ee04f65db6dbfdc1cc5970b"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Release/compiler-version.log",
+      "bytes": 207,
+      "sha256": "437af36733a38eb62eaf1c452049465d9f0296035b1cf05d67676913ed06bc38"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Release/configure.log",
+      "bytes": 398,
+      "sha256": "50b8fa43be33cd34b153966c0105727b1d925351325eb8f22658acb6c4aa82cc"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Release/conformance.json",
+      "bytes": 2757,
+      "sha256": "d369241d18ec993ba3e8f2557ad94ecb1bc43e6de2a1c3a9b11d83e9d639fbf6"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Release/ctest.log",
+      "bytes": 327,
+      "sha256": "eef4181d1067dfbd1d8bddc098243991b46c8776c8a840851bb88ee8715c48fb"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Release/kernel-conformance.json",
+      "bytes": 951,
+      "sha256": "9561773ff98604547e639448eacdb1b45121a70e6ae986c0a8bfb5f6a3049e8b"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Release/kernel-conformance.log",
+      "bytes": 951,
+      "sha256": "9561773ff98604547e639448eacdb1b45121a70e6ae986c0a8bfb5f6a3049e8b"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Release/oracle-fixtures.log",
+      "bytes": 406,
+      "sha256": "d4b908cef873b212489d70753cca30ba583f55fc0f0a8b38451e1cc7a7cdb907"
+    },
+    {
+      "path": "component-evidence/conformance-c-macos-15-Release/tests.xml",
+      "bytes": 1381,
+      "sha256": "278ecb83559168294e3d2bdf70e76944c7d568f249b9946b44a8078d1c50c5e9"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Debug/build.log",
+      "bytes": 3472,
+      "sha256": "fba09dd18e6d33d9c04badd0295c87f709e00965208c6aff4b29879e39469713"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Debug/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Debug/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Debug/configure.log",
+      "bytes": 435,
+      "sha256": "e2b1f243e4623731a78ade6af0c7bec9fc77f3edecb8e2ca36aaabd955a1478d"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Debug/conformance.json",
+      "bytes": 2871,
+      "sha256": "96fe2d4e3cd80181e0773117206630a479ad9fd611071174672a6d78e5c65379"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Debug/ctest.log",
+      "bytes": 321,
+      "sha256": "eee872f2ae9d1294c40c8f2a12cce10879d26c06b98fd2c49511ee4e1c2b5f91"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Debug/kernel-conformance.json",
+      "bytes": 961,
+      "sha256": "bcd1f80edbd6377f97d0630c340b9551446df7c4f4157682b55369b8f6056064"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Debug/kernel-conformance.log",
+      "bytes": 984,
+      "sha256": "092c2b45375c84996c1741145564d35184fbd602da02fef940da12af7c2fc1aa"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Debug/oracle-fixtures.log",
+      "bytes": 407,
+      "sha256": "d96f0c781bc3d5920b11833e0fbc5fd6ff684088917013a14e3af3167571356c"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Debug/tests.xml",
+      "bytes": 1372,
+      "sha256": "c6306d4906154c1681bf9e08bb56881e8ed54cb64ad91b773ff5415b470630f0"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Release/build.log",
+      "bytes": 3472,
+      "sha256": "101e5a5dfbb6c825a4ea325349ba003d817a4ba3d5d8d4d58da664cae6f77d14"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Release/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Release/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Release/configure.log",
+      "bytes": 434,
+      "sha256": "56d29e01a859c7718cb45b3809a7b4d845cb3692e93bcecf5176f730b58d118f"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Release/conformance.json",
+      "bytes": 2871,
+      "sha256": "8c6376ec74718740696f32ee8776ec2ae508eca24bbc376af30188e59bfc2c49"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Release/ctest.log",
+      "bytes": 321,
+      "sha256": "cbd5ef0e3e60fdeee3ce9cd74118848f66cbaeaa113c027f7bba2aad670a77ee"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Release/kernel-conformance.json",
+      "bytes": 961,
+      "sha256": "bcd1f80edbd6377f97d0630c340b9551446df7c4f4157682b55369b8f6056064"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Release/kernel-conformance.log",
+      "bytes": 984,
+      "sha256": "092c2b45375c84996c1741145564d35184fbd602da02fef940da12af7c2fc1aa"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Release/oracle-fixtures.log",
+      "bytes": 407,
+      "sha256": "d96f0c781bc3d5920b11833e0fbc5fd6ff684088917013a14e3af3167571356c"
+    },
+    {
+      "path": "component-evidence/conformance-c-windows-2025-Release/tests.xml",
+      "bytes": 1373,
+      "sha256": "03f6837866216199a0a91ecc111d632773010e23e638aff07e091fcc3eb6a471"
+    },
+    {
+      "path": "component-evidence/conformance-macos-application-public/cmake-version.log",
+      "bytes": 91,
+      "sha256": "f6e81c2559f3ce00c5fdad01d7b226c301f5d6b07ee04f65db6dbfdc1cc5970b"
+    },
+    {
+      "path": "component-evidence/conformance-macos-application-public/conformance.json",
+      "bytes": 1416,
+      "sha256": "595cb80049fd40bad3c0173bbb0778a324da061b0ac463206d044cfd109389b4"
+    },
+    {
+      "path": "component-evidence/conformance-macos-application-public/swift-version.log",
+      "bytes": 129,
+      "sha256": "d50941a3bc772a1351f4908eca5d71f36f061db39c04ec5a4d7187fe452f7eed"
+    },
+    {
+      "path": "component-evidence/conformance-macos-application-public/tests-swift-testing.xml",
+      "bytes": 81573,
+      "sha256": "cfc710a71eb5a676a3dd30caa61e748e1bec5647fd24d712067ab15701ee051d"
+    },
+    {
+      "path": "component-evidence/conformance-macos-application-public/tests.log",
+      "bytes": 101762,
+      "sha256": "585f39fe3b933a713f6e754884e92549f04b141c706166b4c5a9e130456cd9fa"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/build-pinned-soxr.log",
+      "bytes": 38231,
+      "sha256": "b48e568dfd9e844f911bf6c3f0dcc3fb93d9aeecf5661e5eb734bee4ed0abaf5"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/build.log",
+      "bytes": 6588,
+      "sha256": "e203aa7f775d365a9782c7f841979cd28f1e7f72b02aa9e808363884712d27e3"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/configure.log",
+      "bytes": 766,
+      "sha256": "c4ef04d3ed158dfb5a9b725091ee584e56244bcd23c40eee598edf7705c81d8f"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/conformance.json",
+      "bytes": 4218,
+      "sha256": "b165a850c8453c827a4f958c9f0cf91e64d49358cdf7e0da4b699fdb965ff9b3"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/lifecycle-ctest.log",
+      "bytes": 701,
+      "sha256": "463a52ec9060d3e451af08086159e09ba06141563772f0d9e550e5f06c6fb37d"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/lifecycle.xml",
+      "bytes": 2076,
+      "sha256": "a58a1974fd3e2d10be568a6138dbfceffe9cbc257711056c5cbb127e5214b1a5"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/soxr/build.log",
+      "bytes": 32905,
+      "sha256": "db3d3c51d6c77d701dc87dd9b7a89b8aeb4e4041ca8236c2624aab0a59abad92"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/soxr/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/soxr/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/soxr/configure.log",
+      "bytes": 5124,
+      "sha256": "089aa420a1ff7c87149dcd94b09f1c94fbf088e4195d597fe65d10dacdda5ef4"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/soxr/conformance.json",
+      "bytes": 2932,
+      "sha256": "3d5418438ef88fefacf82facddf5777e71c0bec002f58026f0f9ac75e74caec3"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/soxr/install.log",
+      "bytes": 477,
+      "sha256": "0a0bcfc6f14fa6439efd8cbd74a61c8ba91f351ee5ce035a4d52c1ed94f5bac1"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/soxr/probe-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/soxr/probe.log",
+      "bytes": 313,
+      "sha256": "62fae0aea95ca4c330afeb972a3465ed8050a4985470d238bac92b8234ba1aa2"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Debug/soxr/soxr-conformance.json",
+      "bytes": 372,
+      "sha256": "c7f6a8e9428d094f1d44bbecaa7248f865e7163c1d5c44040ff994b269c8fc72"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/build-pinned-soxr.log",
+      "bytes": 38230,
+      "sha256": "3ebcd426b0a7634cc4d7b4383b03660d684ae11b9e01f1146255977c04690d60"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/build.log",
+      "bytes": 6588,
+      "sha256": "d3568660ec85a0d4a4ac206a62629b466a053141603b3b6cd28a9476a18a9574"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/configure.log",
+      "bytes": 766,
+      "sha256": "c4ef04d3ed158dfb5a9b725091ee584e56244bcd23c40eee598edf7705c81d8f"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/conformance.json",
+      "bytes": 4222,
+      "sha256": "b42391e383c4c5390fe9788ba347ede711cdc441fd91d91c821fa24205884d88"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/lifecycle-ctest.log",
+      "bytes": 701,
+      "sha256": "f27a362aef91303d9b3ff8ad87c138b9b30f9cbae1938ec591800b62052104e3"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/lifecycle.xml",
+      "bytes": 2077,
+      "sha256": "6ef428f5106c8014bcdf99b344b5bfec982751fbfe29ef273de42036d9d06190"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/soxr/build.log",
+      "bytes": 32905,
+      "sha256": "db3d3c51d6c77d701dc87dd9b7a89b8aeb4e4041ca8236c2624aab0a59abad92"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/soxr/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/soxr/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/soxr/configure.log",
+      "bytes": 5123,
+      "sha256": "f34c65f68c0b43a3818d9c94f6727a0b4fab4487c727d16fe16374b8c0209e65"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/soxr/conformance.json",
+      "bytes": 2932,
+      "sha256": "a357c30114d2678f89bba67c29f842e470b1c06052c4fdcbf775c83b01067517"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/soxr/install.log",
+      "bytes": 477,
+      "sha256": "0a0bcfc6f14fa6439efd8cbd74a61c8ba91f351ee5ce035a4d52c1ed94f5bac1"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/soxr/probe-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/soxr/probe.log",
+      "bytes": 313,
+      "sha256": "62fae0aea95ca4c330afeb972a3465ed8050a4985470d238bac92b8234ba1aa2"
+    },
+    {
+      "path": "component-evidence/conformance-native-audio-windows-x64-Release/soxr/soxr-conformance.json",
+      "bytes": 372,
+      "sha256": "c7f6a8e9428d094f1d44bbecaa7248f865e7163c1d5c44040ff994b269c8fc72"
+    },
+    {
+      "path": "component-evidence/conformance-soxr-windows-x64/build.log",
+      "bytes": 32919,
+      "sha256": "86bccef25ac50f3a346b66ec8c87070bfce8589c0abd2772294ff5485d05753f"
+    },
+    {
+      "path": "component-evidence/conformance-soxr-windows-x64/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "component-evidence/conformance-soxr-windows-x64/compiler-version.log",
+      "bytes": 116,
+      "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+    },
+    {
+      "path": "component-evidence/conformance-soxr-windows-x64/configure.log",
+      "bytes": 5110,
+      "sha256": "b62b15314e521741ccac3c7944d06572b06e58c5e044f7a6adb1053167fcec03"
+    },
+    {
+      "path": "component-evidence/conformance-soxr-windows-x64/conformance.json",
+      "bytes": 2932,
+      "sha256": "23e06cb66fa0d7ae80389b63f00080282932e234f073e3cd1ab5980f16c72d57"
+    },
+    {
+      "path": "component-evidence/conformance-soxr-windows-x64/install.log",
+      "bytes": 399,
+      "sha256": "b516d15394e2190714b9b029b1ef1d3ab9c86011b3740c1ccd626bbfa9cce3ce"
+    },
+    {
+      "path": "component-evidence/conformance-soxr-windows-x64/probe-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "component-evidence/conformance-soxr-windows-x64/probe.log",
+      "bytes": 313,
+      "sha256": "62fae0aea95ca4c330afeb972a3465ed8050a4985470d238bac92b8234ba1aa2"
+    },
+    {
+      "path": "component-evidence/conformance-soxr-windows-x64/soxr-conformance.json",
+      "bytes": 372,
+      "sha256": "c7f6a8e9428d094f1d44bbecaa7248f865e7163c1d5c44040ff994b269c8fc72"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Debug/cmake-version.log",
+      "bytes": 91,
+      "sha256": "f6e81c2559f3ce00c5fdad01d7b226c301f5d6b07ee04f65db6dbfdc1cc5970b"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Debug/conformance.json",
+      "bytes": 3994,
+      "sha256": "66cec66a36ccdc9b73473670200bbfef149ea65d7c95729d7948c0385fe37780"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Debug/developer-directory.log",
+      "bytes": 50,
+      "sha256": "8b3c5b12fe722b6f39d373427048275debf267cc0eafc74c6c77035b87dfed94"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Debug/portable-soxr-controls/controls.log",
+      "bytes": 1503,
+      "sha256": "35e3c564d6b15c661328b87afd1670277cae4b48b7676045bf5c8c828f52f2a9"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Debug/portable-soxr-controls/observation.json",
+      "bytes": 445,
+      "sha256": "a9d3ccc618a9b9ebc98d306588f769c88d4b82793633e189b596606e2aade5fd"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Debug/portable-soxr-controls.log",
+      "bytes": 423,
+      "sha256": "538f5bd65003d647c79982e0d2ec949d68cbff658fdab9b82fac26f90cc0a857"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Debug/soxr-build.log",
+      "bytes": 7372,
+      "sha256": "c468f412be35840341f2c3efde667cca66e87896f06490c6efdb60ec4429430c"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Debug/soxr-dependency.json",
+      "bytes": 1275,
+      "sha256": "76e33e331c5b19edbc5e6e2bcba19ff0a983130c606e4a40b43537de1b4bd926"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Debug/swift-version.log",
+      "bytes": 129,
+      "sha256": "d50941a3bc772a1351f4908eca5d71f36f061db39c04ec5a4d7187fe452f7eed"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Debug/tests-swift-testing.xml",
+      "bytes": 23773,
+      "sha256": "ce3a7b55261aa284b340bc4448289d5d11eee01fa2ba098f5bfca021bbcbec3c"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Debug/tests.log",
+      "bytes": 38205,
+      "sha256": "be862bc84ad8f9146394a7e64e64eaf783f8168937c18a03cc8c1ee2df74fffa"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Release/cmake-version.log",
+      "bytes": 91,
+      "sha256": "f6e81c2559f3ce00c5fdad01d7b226c301f5d6b07ee04f65db6dbfdc1cc5970b"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Release/conformance.json",
+      "bytes": 3998,
+      "sha256": "aae260e5588a7721b08576f268cf72f6c8c84f393d0012eb0aacec91a218c2e9"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Release/developer-directory.log",
+      "bytes": 50,
+      "sha256": "8b3c5b12fe722b6f39d373427048275debf267cc0eafc74c6c77035b87dfed94"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Release/portable-soxr-controls/controls.log",
+      "bytes": 1503,
+      "sha256": "48a0ede38e79dc3afcef8a7697814039890181a7a6dc74b5f24406fde25648dc"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Release/portable-soxr-controls/observation.json",
+      "bytes": 445,
+      "sha256": "a9d3ccc618a9b9ebc98d306588f769c88d4b82793633e189b596606e2aade5fd"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Release/portable-soxr-controls.log",
+      "bytes": 423,
+      "sha256": "538f5bd65003d647c79982e0d2ec949d68cbff658fdab9b82fac26f90cc0a857"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Release/soxr-build.log",
+      "bytes": 7372,
+      "sha256": "181d0903f3df7c633ce35a6ba70625b954f1279ee510b20bb20f71862839133f"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Release/soxr-dependency.json",
+      "bytes": 1275,
+      "sha256": "76e33e331c5b19edbc5e6e2bcba19ff0a983130c606e4a40b43537de1b4bd926"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Release/swift-version.log",
+      "bytes": 129,
+      "sha256": "d50941a3bc772a1351f4908eca5d71f36f061db39c04ec5a4d7187fe452f7eed"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Release/tests-swift-testing.xml",
+      "bytes": 23636,
+      "sha256": "ac6aee8f167478a08b94de935b8f395f2f1d6131440e7b13bc12c57fe090deb3"
+    },
+    {
+      "path": "component-evidence/conformance-swift-macos-15-Release/tests.log",
+      "bytes": 33107,
+      "sha256": "55bdcd63c75e84e19f15c18dcaaf90fcb970b21fd31202cb29d047068b2d1225"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Debug/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Debug/conformance.json",
+      "bytes": 4510,
+      "sha256": "f1b5ba7d54e2216d94241704aaaac94ccfbcbae6f9e3db068e26d206a9ed7ca9"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Debug/portable-soxr-controls/controls.log",
+      "bytes": 2566,
+      "sha256": "9c64ff5b4e7f55a4897de3a2f2b4017a926539bb778e6f5899a8a6e9c044794b"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Debug/portable-soxr-controls/observation.json",
+      "bytes": 458,
+      "sha256": "961f952f15ed4c27a84fc305c8f31c898312afa4970701f24c6c46b42a7c2301"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Debug/portable-soxr-controls.log",
+      "bytes": 425,
+      "sha256": "d65089f58bf3a4ded997de97a4e73037829771983334da8ecb77b763bb31cd31"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Debug/soxr-build.log",
+      "bytes": 39022,
+      "sha256": "9b3f452a1bd6486e828d985bb8b42779a0f8f627665e375a0d533d9fb0b22191"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Debug/soxr-dependency.json",
+      "bytes": 1169,
+      "sha256": "24ce736a80a2cccb032f116578a70e3993063f5980c6cecd5dc4ad0c2c4d5720"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Debug/swift-version.log",
+      "bytes": 107,
+      "sha256": "6a514523e3039e37cd769c4bf8f56b23689ceb2a3e0f3048a06f0024a1d9cfd7"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Debug/test-products-path.log",
+      "bytes": 71,
+      "sha256": "d8b3bf7b3cf5be7c2c076592ad7cfe4f7ead73a5424316e237dcc00ae04cc4bd"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Debug/tests-swift-testing.xml",
+      "bytes": 22195,
+      "sha256": "c798650ac26e889f415c847fc962a277d785c2725a256f937a4c148b0b15cc45"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Debug/tests.log",
+      "bytes": 39551,
+      "sha256": "757591f9f2af992325eac34ad281d880e26cc2fd64206c162ff354ac422f6d5a"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Release/cmake-version.log",
+      "bytes": 94,
+      "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Release/conformance.json",
+      "bytes": 4811,
+      "sha256": "93229dc1ad43b6a5f8e7cf44f0dee20e3035fdeeb70e9d46db95a6bca4dead81"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Release/portable-soxr-controls/controls.log",
+      "bytes": 2566,
+      "sha256": "a3cba9728521d843c5da210d21595419f45c5287f4e92f9bd42622abdc4062b3"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Release/portable-soxr-controls/observation.json",
+      "bytes": 458,
+      "sha256": "961f952f15ed4c27a84fc305c8f31c898312afa4970701f24c6c46b42a7c2301"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Release/portable-soxr-controls.log",
+      "bytes": 425,
+      "sha256": "d65089f58bf3a4ded997de97a4e73037829771983334da8ecb77b763bb31cd31"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Release/soxr-build.log",
+      "bytes": 39022,
+      "sha256": "e6d62eb89fa870e717b323de96a23be0061cf6ba6081fe17258e938d7ef2dd19"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Release/soxr-dependency.json",
+      "bytes": 1169,
+      "sha256": "b268cb1b3cdf00f5fb6ec7ab4fd52494a2fe185b4848d240a5a009d151c96d8c"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Release/swift-version.log",
+      "bytes": 107,
+      "sha256": "6a514523e3039e37cd769c4bf8f56b23689ceb2a3e0f3048a06f0024a1d9cfd7"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Release/test-products-path.log",
+      "bytes": 73,
+      "sha256": "db7304dc9884e30f7933f46590c36bfa2683d88b473a4bbb10f5f23281ca6d91"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Release/tests-swift-testing.xml",
+      "bytes": 22074,
+      "sha256": "057dba022959ea53eada8b96c9d8f75606e5c2934abe9e9314f755f90251af06"
+    },
+    {
+      "path": "component-evidence/conformance-swift-windows-2025-Release/tests.log",
+      "bytes": 179412,
+      "sha256": "0d9ded8c4e7cbc3f37d595dde7f633692bb2b5747c0f6c6af391fb759122c624"
+    },
+    {
+      "path": "job-121356159841.log",
+      "bytes": 253552,
+      "sha256": "266773b240f5ce79aedf476c27fde5d88b82540fe4497231ad22509668ee40f9"
+    },
+    {
+      "path": "job-121356160498.log",
+      "bytes": 286274,
+      "sha256": "0142007671e154ef5a11b9e5f1b46a8478656357273d28a4c72a552bb6d04426"
+    },
+    {
+      "path": "job-121356160506.log",
+      "bytes": 81818,
+      "sha256": "626d47229d18f853c5e0cda179ad1f9b42c5bd9fed462af01f9c61dab6f86ecd"
+    },
+    {
+      "path": "job-121356160614.log",
+      "bytes": 89000,
+      "sha256": "6ee1c74dcf1bae52301d9af6403f06a22c1eed6ba47d346ee7951c383cb93543"
+    },
+    {
+      "path": "status-01.json",
+      "bytes": 29188,
+      "sha256": "e0ed2a0f195f05e5f7fc38dc7eac3dfb3fd7dfd5633b215c9898388aa3004d68"
+    },
+    {
+      "path": "status-02.json",
+      "bytes": 29350,
+      "sha256": "ddf869cc59a1ec8be7f10812332ca22e9baa6576979dd6eb5ad9a828cb85629f"
+    },
+    {
+      "path": "status-final.json",
+      "bytes": 29835,
+      "sha256": "fb41f86ef2b2ecbbd0f54ac83a3717f1d0043cf568250973c71a1e697455a786"
+    }
+  ],
+  "application": {
+    "status": "failed",
+    "error": "native-audio-conformance failed with exit 1",
+    "host_controls": {
+      "schema": 1,
+      "suite": "windows-host-portable-controls",
+      "checks": 524,
+      "failures": 0,
+      "wpf_runtime_tested": false,
+      "playback_tested": false
+    },
+    "native_stream_test_failure": "long deadline",
+    "actual_window_run": false,
+    "package_created": false
+  }
+}
