@@ -174,7 +174,10 @@ def _validate(smoke, evidence, example_manifest_bytes, expected_helper_sha256):
                 number(phase.get("position_seconds"), 0, 0), "phase state or revision differs: " + phase["phase"])
         require(digest(phase.get("state_sha256")) and digest(phase.get("project_sha256")), "missing phase identities")
         counts(phase.get("requests"), requests)
-        selected = None if tracks == 0 else copied[0 if phase["phase"] == "reopened" else 1]
+        # Import selects the appended track. Undo removes both tracks, so the
+        # established shared reconciliation selects the first track on redo;
+        # cancellation/save preserve it, and reopen also selects the first.
+        selected = None if tracks == 0 else copied[1 if phase["phase"] == "imported" else 0]
         require("track_id" in phase and "clip_id" in phase and
                 phase.get("track_id") == (selected["track_id"] if selected else None) and
                 phase.get("clip_id") == (selected["clip_id"] if selected else None), "selected event differs")

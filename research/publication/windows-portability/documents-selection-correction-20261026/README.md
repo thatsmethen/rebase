@@ -1,0 +1,9 @@
+# Documents selection expectation correction
+
+Application run [40263946681](https://github.com/thatsmethen/rebase/actions/runs/40263946681), at `80f0851887fa5cb387f8858f94d84e2357150348`, remains failed. It completed all 165 WPF checks, including all 15 New/import checks. The new log byte/hash correction passed on Windows. Packaging then stopped at the documents validator's selected-event expectation.
+
+Import selects the last appended track. Undo removes both imported tracks and empties selection. The existing shared `ProjectSelection.reconciled` behavior selects the first restored track on redo; rejected imports, cancellations and save preserve that selection, and reopen selects the first track too. The validator had incorrectly required the last imported track after redo and through save. The actual eleven phase records agree with the shared implementation. Production selection and undo behavior are unchanged.
+
+The corrected validator checks the established selection at every phase. Its authored controls now include an explicit rejection for incorrectly selecting the last imported event after redo: 93 controls pass, with no WPF execution claimed for those controls. Applying the corrected validator to the unchanged native receipt passes all fifteen document checks and the pixel/geometry/hash checks. This is a separately recorded reanalysis, not a rerun or replacement of the failed result.
+
+The actual import capture was visually reviewed: two tracks and waveforms are visible, the first restored event is selected, and the inspector/mixer/transport fit the client. This review does not establish physical input or reference UI fidelity. No ZIP was produced or accepted; a new exact-source application run and full package review remain required. Original logs, receipts and all seventeen PNGs remain retained.

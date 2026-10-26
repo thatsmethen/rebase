@@ -1097,8 +1097,8 @@ def main():
              "--output", str(documents_controls_path)], "documents-window-controls", restricted, cwd=stage)
         documents_controls = json.loads((documents_controls_path / "observation.json").read_text(encoding="utf-8"))
         if (documents_controls.get("schema") != "rebase.documents-window-gate-controls.v1"
-                or documents_controls.get("outcome") != "passed" or documents_controls.get("control_count") != 92
-                or len(documents_controls.get("checks", [])) != 92
+                or documents_controls.get("outcome") != "passed" or documents_controls.get("control_count") != 93
+                or len(documents_controls.get("checks", [])) != 93
                 or any(check.get("passed") is not True for check in documents_controls["checks"])
                 or documents_controls.get("evidence_class") != "authored-receipt-and-pixel-mutation-controls"
                 or documents_controls.get("example_manifest_sha256") != digest(stage / "Examples/example.json")

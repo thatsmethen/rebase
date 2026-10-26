@@ -56,7 +56,7 @@ def authored(example_bytes, helper_sha, image):
     for index, phase in enumerate(PHASES):
         if index in actions: requests[actions[index]] += 1
         empty = index in (0, 1, 3, 9)
-        selected = None if empty else copied[0 if index == 10 else 1]
+        selected = None if empty else copied[1 if index == 2 else 0]
         project_key = "new" if index in (0, 1, 3) else "another-new" if index == 9 else "imported"
         state_key = "new" if index in (0, 1) else "redone" if index in (4, 5, 6, 7) else phase
         phases.append({"phase": phase, "revision": revisions[index], "track_count": 0 if empty else 2,
@@ -187,6 +187,9 @@ def main():
         run("reordered-labels", lambda value: value["checks"].reverse())
         run("missing-phase", lambda value: value["documents"]["phases"].pop())
         run("omitted-empty-selection", lambda value: value["documents"]["phases"][0].pop("clip_id"))
+        run("redo-incorrectly-selects-last-import", lambda value: value["documents"]["phases"][4].update(
+            track_id=value["documents"]["copied_media"][1]["track_id"],
+            clip_id=value["documents"]["copied_media"][1]["clip_id"]))
         run("omitted-header-selection", lambda value: value["documents"]["capture"]["headers"][0].pop("clip_id"))
         run("reordered-phases", lambda value: value["documents"]["phases"].reverse())
         run("duplicate-media-id", lambda value: value["documents"]["copied_media"][1].update(track_id=value["documents"]["copied_media"][0]["track_id"]))
