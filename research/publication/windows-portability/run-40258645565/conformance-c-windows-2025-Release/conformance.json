@@ -1,0 +1,118 @@
+{
+  "schema": "rebase.portable-ci.v1",
+  "scope": "Authored portable component conformance; no desktop app parity or reference-runtime claim",
+  "lane": "c",
+  "configuration": "Release",
+  "platform": "Windows",
+  "architecture": "AMD64",
+  "runner_image": {
+    "ImageOS": "win25-vs2026",
+    "ImageVersion": "20261021.278.1"
+  },
+  "commit": "e29460f87373dae6f3782050d0b356a2abd5b50f",
+  "commands": [
+    {
+      "name": "cmake-version",
+      "argv": [
+        "cmake",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.188,
+      "log": "cmake-version.log"
+    },
+    {
+      "name": "oracle-fixtures",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\Tests\\PortableDSP\\generate_controls.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.109,
+      "log": "oracle-fixtures.log"
+    },
+    {
+      "name": "compiler-version",
+      "argv": [
+        "clang",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.281,
+      "log": "compiler-version.log"
+    },
+    {
+      "name": "configure",
+      "argv": [
+        "cmake",
+        "-S",
+        "<workspace>\\Application",
+        "-B",
+        "D:\\a\\_temp\\rebase-conformance\\build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_C_COMPILER=clang",
+        "-DREBASE_BUILD_SOXR=OFF"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 9.11,
+      "log": "configure.log"
+    },
+    {
+      "name": "build",
+      "argv": [
+        "cmake",
+        "--build",
+        "D:\\a\\_temp\\rebase-conformance\\build",
+        "--parallel",
+        "2"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.156,
+      "log": "build.log"
+    },
+    {
+      "name": "ctest",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "D:\\a\\_temp\\rebase-conformance\\build",
+        "--output-on-failure",
+        "--output-junit",
+        "D:\\a\\_temp\\rebase-conformance\\tests.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.172,
+      "log": "ctest.log"
+    },
+    {
+      "name": "kernel-conformance",
+      "argv": [
+        "D:\\a\\_temp\\rebase-conformance\\build\\rebase_portable_dsp_tests.exe",
+        "--json",
+        "D:\\a\\_temp\\rebase-conformance\\kernel-conformance.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.0,
+      "log": "kernel-conformance.log"
+    }
+  ],
+  "status": "passed",
+  "tests": {
+    "count": 1,
+    "executed": 1,
+    "skipped": 0,
+    "failures": 0,
+    "reports": [
+      {
+        "report": "tests.xml",
+        "count": 1,
+        "executed": 1,
+        "skipped": 0,
+        "failures": 0
+      }
+    ]
+  }
+}
