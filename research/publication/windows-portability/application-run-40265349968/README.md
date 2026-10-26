@@ -1,0 +1,11 @@
+# Windows application run 40265349968
+
+This reviewed derivative binds source `2934b9a0b6e96a5b3bd654a3e6a4fb00abe64e31` to the native application run, downloaded package and Windows preview 9. The original candidate observation remains unchanged, including its pre-publication `publication_accepted: false`. The subsequent [publication acceptance](../release-preview9/acceptance.json) records the decision to publish.
+
+The package contains 444 files; its internal manifest covers the other 443 files. Independent review checked archive integrity and file hashes, 418 PE images and 661 imports, runtime notices and app-local loaded modules, the seven unchanged example files, and exclusion of authored control fixtures. All 17 native client captures received two independent visual reviews. The recorded checks passed: 165 WPF, 574 host, 853 streaming helper checks across 85 scenarios, 425 source-mode helper checks across 48 scenarios and the existing 169-check helper journey.
+
+The `raw_records` array in [observation.json](observation.json) records original and published hashes for 133 retained records. Text redactions are explicit, while all PNGs retain their original bytes. Workflow metadata is an allowlisted derivative. Original records remain in private local custody; proprietary programs, private fixtures, credentials and private audit rules are not included here.
+
+The first package audit failed because it treated the deliberately refused example overwrite as an unexpected nonzero command. Its failure and instruments remain under `audit-correction/`. The corrected audit admits only the exact named refusal and independently validates the example render receipt and locked PCM fields. It does not claim to have downloaded the rendered WAV. Earlier interrupted download observations remain in the transfer record.
+
+These checks establish the exercised implementation and package boundaries. The hosted runner had no audio endpoint. They do not establish audible output, physical input, native file-picker behavior, wider-display geometry, reference sample equivalence, full project playback or complete platform parity. The saved-structure inspector is later development and is not in this package.

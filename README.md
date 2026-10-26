@@ -14,9 +14,9 @@ Windows development follows the [Windows reference interface](docs/development/w
 
 ## Release
 
-**[Download Rebase for Windows](https://github.com/thatsmethen/rebase/releases/download/v0.21.1-windows-preview.8/Rebase-0.21.1-windows-preview.8-x64.zip)**
+**[Download Rebase for Windows](https://github.com/thatsmethen/rebase/releases/download/v0.21.1-windows-preview.9/Rebase-0.21.1-windows-preview.9-x64.zip)**
 
-The **Windows x64 development preview** includes its runtimes and the example beat. Preview.8 adds all eight shared source-audio modes, including saved/current timeline clocks, complete overlap tracks and explicit rate conversion. The Source Audio dialog rechecks provenance on export, playback and seek. The Volume/Pan automation editor retains real curves, point editing, Read controls and shared undo/redo; successful edits apply immediately. It retains compact/normal track rows, adjustable panels and the mixer. Reviewed CPR import preserves the original source and interpretation report. Extract the entire archive, open `Rebase.exe`, and choose **File → Open example**. See the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.8) and [Windows installation guide](docs/install/windows.md). This unsigned preview targets Windows 11; native automated checks ran on Windows Server 2025. Audio-device output and physical input still need interactive verification.
+The **Windows x64 development preview** includes its runtimes and the example beat. Preview.9 adds New Project, atomic PCM WAV batch import and streaming of supported long source auditions. All eight source-audio modes retain their explicit clocks and processing boundaries. The Source Audio dialog rechecks provenance on export, playback and seek. The Volume/Pan automation editor retains real curves, point editing, Read controls and shared undo/redo; successful edits apply immediately. It retains compact/normal track rows, adjustable panels and the mixer. Reviewed CPR import preserves the original source and interpretation report. Extract the entire archive, open `Rebase.exe`, and choose **File → Open example**. See the [release page](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.9) and [Windows installation guide](docs/install/windows.md). This unsigned preview targets Windows 11; native automated checks ran on Windows Server 2025. Audio-device output and physical input still need interactive verification.
 
 **[Download Rebase for Mac](https://github.com/thatsmethen/rebase/releases/download/v0.21.1/Rebase-0.21.1-macos-arm64.zip)**
 
@@ -30,7 +30,7 @@ The Windows preview, showing the included four-track beat, real waveforms, separ
 
 ![Rebase Windows arrangement, inspector and mixer](docs/screenshots/windows-arrangement.png)
 
-[Source Audio modes](docs/screenshots/windows-source-modes.png) · [Complete source track](docs/screenshots/windows-source-track.png) · [Windows automation editor](docs/screenshots/windows-automation.png) · [Normal track density](docs/screenshots/windows-workspace-normal.png) · [Expanded arrangement](docs/screenshots/windows-workspace-expanded.png) · [Windows source-event view](docs/screenshots/windows-source.png) · [Windows zoom and scrolling](docs/screenshots/windows-scrolled.png) · [CPR import review](docs/screenshots/windows-cpr-review.png)
+[New project and audio import](docs/screenshots/windows-new-import.png) · [Streaming source audition](docs/screenshots/windows-source-stream.png) · [Source Audio modes](docs/screenshots/windows-source-modes.png) · [Complete source track](docs/screenshots/windows-source-track.png) · [Windows automation editor](docs/screenshots/windows-automation.png) · [Normal track density](docs/screenshots/windows-workspace-normal.png) · [Expanded arrangement](docs/screenshots/windows-workspace-expanded.png) · [Windows source-event view](docs/screenshots/windows-source.png) · [Windows zoom and scrolling](docs/screenshots/windows-scrolled.png) · [CPR import review](docs/screenshots/windows-cpr-review.png)
 
 The Mac app, showing the same eight-bar session of synthesized audio.
 

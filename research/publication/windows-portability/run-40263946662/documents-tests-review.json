@@ -1,0 +1,197 @@
+{
+  "schema": "rebase.component-documents-tests-review.v1",
+  "status": "passed",
+  "source_commit": "80f0851887fa5cb387f8858f94d84e2357150348",
+  "run_id": 40263946662,
+  "predeclared_source_inventory": {
+    "source_commit": "80f0851887fa5cb387f8858f94d84e2357150348",
+    "evidence": "Exact committed source inventory declared before observing test XML; mac-only guard inspected in source.",
+    "groups": [
+      {
+        "group": "SharedAudioImportTests",
+        "path": "Application/Tests/SharedDocumentTests/SharedAudioImportTests.swift",
+        "sha256": "5f0724082571f997759a4634b71852a9dabea5001502a0fd746f2f525c73d35e",
+        "all_names": [
+          "exclusiveCreationRefusesEveryExistingDestinationAndReturnsReopenableDefaults",
+          "monoStereoBatchCopiesExactBytesAndSnapsAsOneReversibleEdit",
+          "invalidSecondFileRollsBackBatchAndPreservesPriorMediaAndManifest",
+          "nonfiniteAndOversizeFilesAndInvalidPositionsLeaveNoAssets",
+          "changedSourceAndChangedSavedManifestAreRejectedBeforePublication",
+          "emptyProjectWithoutMediaCreatesItOnlyForSuccessfulTransaction",
+          "publicationCollisionAndReviewedManifestMismatchNeverReplaceOtherAssets",
+          "macAdapterKeepsAIFFImportSupportThroughSharedTransaction"
+        ],
+        "mac_only_names": [
+          "macAdapterKeepsAIFFImportSupportThroughSharedTransaction"
+        ]
+      },
+      {
+        "group": "PortableAudioImportTests",
+        "path": "Application/Tests/RebasePortableTests/PortableAudioImportTests.swift",
+        "sha256": "0cc01c4a8f4caa7fc808ed84ae546189fdfa2adb9f63855c30b1d5846a788294",
+        "all_names": [
+          "newImportUndoRedoSaveAsReopenUsesOneBatchAndKeepsOwnedMedia",
+          "staleDirtyExistingAndInvalidRequestsPreserveStateHistoryAndFiles",
+          "externallyChangedManifestBlocksNewAndImportWithoutLosingDirtyEdits",
+          "successfulImportsAndNewRevokeSourceTicketsButFailedBatchDoesNot"
+        ],
+        "mac_only_names": []
+      }
+    ]
+  },
+  "lanes": [
+    {
+      "artifact": "conformance-macos-application-public",
+      "new_tests_executed": 8,
+      "prior_case_inventory_and_outcomes_preserved": true,
+      "groups": [
+        {
+          "group": "SharedAudioImportTests",
+          "executed": 8,
+          "names": [
+            "changedSourceAndChangedSavedManifestAreRejectedBeforePublication",
+            "emptyProjectWithoutMediaCreatesItOnlyForSuccessfulTransaction",
+            "exclusiveCreationRefusesEveryExistingDestinationAndReturnsReopenableDefaults",
+            "invalidSecondFileRollsBackBatchAndPreservesPriorMediaAndManifest",
+            "macAdapterKeepsAIFFImportSupportThroughSharedTransaction",
+            "monoStereoBatchCopiesExactBytesAndSnapsAsOneReversibleEdit",
+            "nonfiniteAndOversizeFilesAndInvalidPositionsLeaveNoAssets",
+            "publicationCollisionAndReviewedManifestMismatchNeverReplaceOtherAssets"
+          ]
+        },
+        {
+          "group": "PortableAudioImportTests",
+          "executed": 0,
+          "names": []
+        }
+      ],
+      "xml_sha256": "8d0b933dd1795ca2d7fe637e0a7befbdb6e56bbdc89708b466dfeaba7de6d1f2"
+    },
+    {
+      "artifact": "conformance-swift-macos-15-Debug",
+      "new_tests_executed": 11,
+      "prior_case_inventory_and_outcomes_preserved": true,
+      "groups": [
+        {
+          "group": "SharedAudioImportTests",
+          "executed": 7,
+          "names": [
+            "changedSourceAndChangedSavedManifestAreRejectedBeforePublication",
+            "emptyProjectWithoutMediaCreatesItOnlyForSuccessfulTransaction",
+            "exclusiveCreationRefusesEveryExistingDestinationAndReturnsReopenableDefaults",
+            "invalidSecondFileRollsBackBatchAndPreservesPriorMediaAndManifest",
+            "monoStereoBatchCopiesExactBytesAndSnapsAsOneReversibleEdit",
+            "nonfiniteAndOversizeFilesAndInvalidPositionsLeaveNoAssets",
+            "publicationCollisionAndReviewedManifestMismatchNeverReplaceOtherAssets"
+          ]
+        },
+        {
+          "group": "PortableAudioImportTests",
+          "executed": 4,
+          "names": [
+            "externallyChangedManifestBlocksNewAndImportWithoutLosingDirtyEdits",
+            "newImportUndoRedoSaveAsReopenUsesOneBatchAndKeepsOwnedMedia",
+            "staleDirtyExistingAndInvalidRequestsPreserveStateHistoryAndFiles",
+            "successfulImportsAndNewRevokeSourceTicketsButFailedBatchDoesNot"
+          ]
+        }
+      ],
+      "xml_sha256": "f5a3a8b9ced13eab04bbad9e9d48e1e3b984d2a8f5f88559d8fc8dc8f96e6310"
+    },
+    {
+      "artifact": "conformance-swift-macos-15-Release",
+      "new_tests_executed": 11,
+      "prior_case_inventory_and_outcomes_preserved": true,
+      "groups": [
+        {
+          "group": "SharedAudioImportTests",
+          "executed": 7,
+          "names": [
+            "changedSourceAndChangedSavedManifestAreRejectedBeforePublication",
+            "emptyProjectWithoutMediaCreatesItOnlyForSuccessfulTransaction",
+            "exclusiveCreationRefusesEveryExistingDestinationAndReturnsReopenableDefaults",
+            "invalidSecondFileRollsBackBatchAndPreservesPriorMediaAndManifest",
+            "monoStereoBatchCopiesExactBytesAndSnapsAsOneReversibleEdit",
+            "nonfiniteAndOversizeFilesAndInvalidPositionsLeaveNoAssets",
+            "publicationCollisionAndReviewedManifestMismatchNeverReplaceOtherAssets"
+          ]
+        },
+        {
+          "group": "PortableAudioImportTests",
+          "executed": 4,
+          "names": [
+            "externallyChangedManifestBlocksNewAndImportWithoutLosingDirtyEdits",
+            "newImportUndoRedoSaveAsReopenUsesOneBatchAndKeepsOwnedMedia",
+            "staleDirtyExistingAndInvalidRequestsPreserveStateHistoryAndFiles",
+            "successfulImportsAndNewRevokeSourceTicketsButFailedBatchDoesNot"
+          ]
+        }
+      ],
+      "xml_sha256": "320d9f1107212cbe64191425e73f3386c8d09b950bb1e3d6fb65f6ee320efe2f"
+    },
+    {
+      "artifact": "conformance-swift-windows-2025-Debug",
+      "new_tests_executed": 11,
+      "prior_case_inventory_and_outcomes_preserved": true,
+      "groups": [
+        {
+          "group": "SharedAudioImportTests",
+          "executed": 7,
+          "names": [
+            "changedSourceAndChangedSavedManifestAreRejectedBeforePublication",
+            "emptyProjectWithoutMediaCreatesItOnlyForSuccessfulTransaction",
+            "exclusiveCreationRefusesEveryExistingDestinationAndReturnsReopenableDefaults",
+            "invalidSecondFileRollsBackBatchAndPreservesPriorMediaAndManifest",
+            "monoStereoBatchCopiesExactBytesAndSnapsAsOneReversibleEdit",
+            "nonfiniteAndOversizeFilesAndInvalidPositionsLeaveNoAssets",
+            "publicationCollisionAndReviewedManifestMismatchNeverReplaceOtherAssets"
+          ]
+        },
+        {
+          "group": "PortableAudioImportTests",
+          "executed": 4,
+          "names": [
+            "externallyChangedManifestBlocksNewAndImportWithoutLosingDirtyEdits",
+            "newImportUndoRedoSaveAsReopenUsesOneBatchAndKeepsOwnedMedia",
+            "staleDirtyExistingAndInvalidRequestsPreserveStateHistoryAndFiles",
+            "successfulImportsAndNewRevokeSourceTicketsButFailedBatchDoesNot"
+          ]
+        }
+      ],
+      "xml_sha256": "152b4e7fcf71e02417e984a7d4b9f4e7b3c45d10ec3e0c2f4da76bf038a8ef5d"
+    },
+    {
+      "artifact": "conformance-swift-windows-2025-Release",
+      "new_tests_executed": 11,
+      "prior_case_inventory_and_outcomes_preserved": true,
+      "groups": [
+        {
+          "group": "SharedAudioImportTests",
+          "executed": 7,
+          "names": [
+            "changedSourceAndChangedSavedManifestAreRejectedBeforePublication",
+            "emptyProjectWithoutMediaCreatesItOnlyForSuccessfulTransaction",
+            "exclusiveCreationRefusesEveryExistingDestinationAndReturnsReopenableDefaults",
+            "invalidSecondFileRollsBackBatchAndPreservesPriorMediaAndManifest",
+            "monoStereoBatchCopiesExactBytesAndSnapsAsOneReversibleEdit",
+            "nonfiniteAndOversizeFilesAndInvalidPositionsLeaveNoAssets",
+            "publicationCollisionAndReviewedManifestMismatchNeverReplaceOtherAssets"
+          ]
+        },
+        {
+          "group": "PortableAudioImportTests",
+          "executed": 4,
+          "names": [
+            "externallyChangedManifestBlocksNewAndImportWithoutLosingDirtyEdits",
+            "newImportUndoRedoSaveAsReopenUsesOneBatchAndKeepsOwnedMedia",
+            "staleDirtyExistingAndInvalidRequestsPreserveStateHistoryAndFiles",
+            "successfulImportsAndNewRevokeSourceTicketsButFailedBatchDoesNot"
+          ]
+        }
+      ],
+      "xml_sha256": "fdd11dc642dd017054e18d8ace7b27fa20d459119b9dda91d4f476d8fc7872e1"
+    }
+  ],
+  "scope": "Actual CI XML and immutable source validation only; not a native UI or physical playback observation.",
+  "audit_instrument_sha256": "eb09143f86b48abdf95830674686b116bca76d81957fa59a49d57d8f0e42d808"
+}

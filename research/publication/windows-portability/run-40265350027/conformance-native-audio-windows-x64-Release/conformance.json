@@ -1,0 +1,389 @@
+{
+  "schema": "rebase.windows-native-audio-ci.v1",
+  "status": "passed",
+  "scope": "Authored adapter compilation, lifecycle and device-rate controls; endpoint discovery does not establish playback",
+  "mode": "windows-native",
+  "configuration": "Release",
+  "platform": "Windows",
+  "architecture": "AMD64",
+  "commit": "2934b9a0b6e96a5b3bd654a3e6a4fb00abe64e31",
+  "runner_image": {
+    "ImageOS": "win25-vs2026",
+    "ImageVersion": "20261021.278.1"
+  },
+  "commands": [
+    {
+      "name": "compiler-version",
+      "argv": [
+        "clang-cl",
+        "--version"
+      ],
+      "log": "compiler-version.log",
+      "exit_code": 0,
+      "elapsed_seconds": 1.656
+    },
+    {
+      "name": "cmake-version",
+      "argv": [
+        "cmake",
+        "--version"
+      ],
+      "log": "cmake-version.log",
+      "exit_code": 0,
+      "elapsed_seconds": 0.188
+    },
+    {
+      "name": "build-pinned-soxr",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\build-windows-soxr.py",
+        "--output",
+        "D:\\a\\_temp\\rebase-native-audio\\soxr"
+      ],
+      "log": "build-pinned-soxr.log",
+      "exit_code": 0,
+      "elapsed_seconds": 15.546
+    },
+    {
+      "name": "configure",
+      "argv": [
+        "cmake",
+        "-S",
+        "<workspace>\\Application\\Windows\\NativeAudio",
+        "-B",
+        "D:\\a\\_temp\\rebase-native-audio\\build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_CXX_COMPILER=clang-cl",
+        "-DBUILD_TESTING=ON",
+        "-DREBASE_RUN_AUDIO_DEVICE_TESTS=OFF",
+        "-DREBASE_SOXR_LIBRARY=D:\\a\\_temp\\rebase-native-audio\\soxr\\install\\lib\\soxr.lib",
+        "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>DLL",
+        "-DREBASE_SOXR_RUNTIME=D:\\a\\_temp\\rebase-native-audio\\soxr\\install\\bin\\soxr.dll"
+      ],
+      "log": "configure.log",
+      "exit_code": 0,
+      "elapsed_seconds": 2.797
+    },
+    {
+      "name": "build",
+      "argv": [
+        "cmake",
+        "--build",
+        "D:\\a\\_temp\\rebase-native-audio\\build",
+        "--parallel",
+        "2"
+      ],
+      "log": "build.log",
+      "exit_code": 0,
+      "elapsed_seconds": 6.781
+    },
+    {
+      "name": "lifecycle-ctest",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "D:\\a\\_temp\\rebase-native-audio\\build",
+        "--output-on-failure",
+        "--timeout",
+        "30",
+        "--output-junit",
+        "D:\\a\\_temp\\rebase-native-audio\\lifecycle.xml"
+      ],
+      "log": "lifecycle-ctest.log",
+      "exit_code": 0,
+      "elapsed_seconds": 10.703
+    },
+    {
+      "name": "lifecycle-controls",
+      "argv": [
+        "D:\\a\\_temp\\rebase-native-audio\\build\\rebase_audio_lifecycle_tests.exe",
+        "--json",
+        "D:\\a\\_temp\\rebase-native-audio\\lifecycle.json"
+      ],
+      "log": "lifecycle-controls.log",
+      "exit_code": 0,
+      "elapsed_seconds": 0.016
+    },
+    {
+      "name": "rate-conversion-controls",
+      "argv": [
+        "D:\\a\\_temp\\rebase-native-audio\\build\\rebase_audio_conversion_tests.exe",
+        "--json",
+        "D:\\a\\_temp\\rebase-native-audio\\rate-conversion.json"
+      ],
+      "log": "rate-conversion-controls.log",
+      "exit_code": 0,
+      "elapsed_seconds": 0.125
+    },
+    {
+      "name": "bounded-stream-controls",
+      "argv": [
+        "D:\\a\\_temp\\rebase-native-audio\\build\\rebase_audio_stream_tests.exe",
+        "--json",
+        "D:\\a\\_temp\\rebase-native-audio\\bounded-stream.json"
+      ],
+      "log": "bounded-stream-controls.log",
+      "exit_code": 0,
+      "elapsed_seconds": 10.359
+    },
+    {
+      "name": "endpoint-probe",
+      "argv": [
+        "D:\\a\\_temp\\rebase-native-audio\\build\\rebase_wasapi_probe.exe",
+        "--json",
+        "D:\\a\\_temp\\rebase-native-audio\\endpoint-probe.json"
+      ],
+      "log": "endpoint-probe.log",
+      "exit_code": 77,
+      "elapsed_seconds": 0.031
+    }
+  ],
+  "native_library_built": true,
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "endpoint_probe": {
+    "outcome": "unavailable-no-endpoint",
+    "exit_code": 77,
+    "playback_tested": false
+  },
+  "soxr": {
+    "schema": "rebase.windows-soxr-dependency.v1",
+    "status": "passed",
+    "scope": "Pinned public SoXR build bytes; no reference-library equivalence claim",
+    "source_version": "0.1.3",
+    "source_commit": "945b592b70470e29f917f4de89b4281fbbd540c0",
+    "source_manifest_sha256": "faeba8d39aa6eb0c4117291be67a99c207f3e0027bd3f79c1184309eca27a66d",
+    "source_entries_verified": 138,
+    "application_commit": "2934b9a0b6e96a5b3bd654a3e6a4fb00abe64e31",
+    "build_report_sha256": "efb2b9c1208e6ae73d792d04b7090e223647b234d2e7d645443d9c5e3396961f",
+    "plumbing_report_sha256": "c7f6a8e9428d094f1d44bbecaa7248f865e7163c1d5c44040ff994b269c8fc72",
+    "artifacts": [
+      {
+        "path": "install/bin/soxr.dll",
+        "bytes": 165888,
+        "sha256": "242e38577db697199ece43dcfd978c71c51f2ee24c04e36c4316475a622b9378"
+      },
+      {
+        "path": "install/lib/soxr.lib",
+        "bytes": 4544,
+        "sha256": "159547ca7ca894ad01df568a691a96b135b7b68fdf4bd54bea02f607af032ac4"
+      },
+      {
+        "path": "install/bin/rebase-soxr-probe.exe",
+        "bytes": 11776,
+        "sha256": "5c4f9c27a664351a34673ab837cf6c176fa0a9e8883cb090d9f89876b6c84b74"
+      }
+    ]
+  },
+  "tests": {
+    "count": 3,
+    "skipped": 0,
+    "failures": 0
+  },
+  "portable_lifecycle": {
+    "schema": 1,
+    "suite": "native-audio-portable-lifecycle",
+    "checks": 89,
+    "failures": 0,
+    "wasapi_compiled": false,
+    "playback_tested": false
+  },
+  "portable_rate_conversion": {
+    "schema": 1,
+    "suite": "native-audio-rate-conversion",
+    "checks": 41370,
+    "failures": 0,
+    "wasapi_compiled": false,
+    "playback_tested": false,
+    "audible_output_measured": false,
+    "soxr_version": "libsoxr-0.1.3",
+    "profile": {
+      "recipe": 6,
+      "channels": 2,
+      "linear_phase": true,
+      "runtime_threads": 1,
+      "implicit_os_conversion": false
+    },
+    "cases": [
+      {
+        "name": "identity-bits",
+        "source_rate": 48000,
+        "endpoint_rate": 48000,
+        "source_frames": 3,
+        "endpoint_frames": 3,
+        "failures": 0
+      },
+      {
+        "name": "44100-to-48000",
+        "source_rate": 44100,
+        "endpoint_rate": 48000,
+        "source_frames": 4410,
+        "endpoint_frames": 4800,
+        "failures": 0
+      },
+      {
+        "name": "48000-to-44100",
+        "source_rate": 48000,
+        "endpoint_rate": 44100,
+        "source_frames": 4800,
+        "endpoint_frames": 4410,
+        "failures": 0
+      },
+      {
+        "name": "8000-to-192000",
+        "source_rate": 8000,
+        "endpoint_rate": 192000,
+        "source_frames": 256,
+        "endpoint_frames": 6144,
+        "failures": 0
+      },
+      {
+        "name": "192000-to-8000",
+        "source_rate": 192000,
+        "endpoint_rate": 8000,
+        "source_frames": 6144,
+        "endpoint_frames": 256,
+        "failures": 0
+      },
+      {
+        "name": "fractional-frame-count",
+        "source_rate": 44100,
+        "endpoint_rate": 48000,
+        "source_frames": 137,
+        "endpoint_frames": 149,
+        "failures": 0
+      },
+      {
+        "name": "short-empty-downsample",
+        "source_rate": 192000,
+        "endpoint_rate": 8000,
+        "source_frames": 1,
+        "endpoint_frames": 0,
+        "failures": 0
+      },
+      {
+        "name": "zero-isolation-tail-drain",
+        "source_rate": 48000,
+        "endpoint_rate": 44100,
+        "source_frames": 4800,
+        "endpoint_frames": 4410,
+        "failures": 0
+      },
+      {
+        "name": "seek-phase-preserved",
+        "source_rate": 44100,
+        "endpoint_rate": 48000,
+        "source_frames": 137,
+        "endpoint_frames": 149,
+        "failures": 0
+      },
+      {
+        "name": "pause-reset-drain",
+        "source_rate": 44100,
+        "endpoint_rate": 48000,
+        "source_frames": 4410,
+        "endpoint_frames": 4800,
+        "failures": 0
+      },
+      {
+        "name": "allocation-failure",
+        "source_rate": 48000,
+        "endpoint_rate": 44100,
+        "source_frames": 32,
+        "endpoint_frames": 0,
+        "failures": 0
+      },
+      {
+        "name": "converter-failure",
+        "source_rate": 48000,
+        "endpoint_rate": 44100,
+        "source_frames": 32,
+        "endpoint_frames": 0,
+        "failures": 0
+      },
+      {
+        "name": "capacity-rejection",
+        "source_rate": 8000,
+        "endpoint_rate": 192000,
+        "source_frames": 1333334,
+        "endpoint_frames": 0,
+        "failures": 0
+      },
+      {
+        "name": "environment-rejection",
+        "source_rate": 48000,
+        "endpoint_rate": 44100,
+        "source_frames": 32,
+        "endpoint_frames": 0,
+        "failures": 0
+      }
+    ]
+  },
+  "portable_bounded_stream": {
+    "schema": "rebase.native-bounded-stream-controls.v1",
+    "status": "passed",
+    "checks": 1141505,
+    "oracle_cases": 28,
+    "status_race_cycles": 300,
+    "status_samples": 623762,
+    "cancel_race_cycles": 40,
+    "pause_final_race_cycles": 200,
+    "fault_injection_cases": 9,
+    "long_stream_frames": 32004240,
+    "long_fnv1a64": "9856751957304272980",
+    "long_source_peak_frames": 8192,
+    "long_endpoint_peak_frames": 8192,
+    "duration_admission_frames": 16588800000,
+    "source_queue_bound_frames": 65536,
+    "endpoint_queue_bound_frames": 8192,
+    "fixed_pcm_storage_bound_bytes": 622592,
+    "max_pcm_storage_case": {
+      "source_capacity_frames": 65536,
+      "endpoint_capacity_frames": 4096,
+      "rolling_input_frames": 4096,
+      "pending_output_frames": 4096,
+      "bytes": 622592
+    },
+    "gates": {
+      "snapshot_exact": true,
+      "canonical_partitions": true,
+      "coherent_status_publication": true,
+      "identity_bits": true,
+      "exact_eof": true,
+      "zero_output_not_eof": true,
+      "deferred_eof_clock_completion": true,
+      "maximum_block_owned_copy": true,
+      "bounded_backpressure": true,
+      "starvation_fault": true,
+      "u64_duration_mapping": true,
+      "cancel_join_barrier": true,
+      "pause_freezes_position": true,
+      "pause_final_drain_race": true,
+      "stop_reset_failure_retry": true,
+      "converter_failures": true,
+      "allocation_failures": true,
+      "failed_startup_unpublished": true,
+      "long_incremental_hash": true
+    },
+    "physical_playback_tested": false
+  },
+  "build_products": [
+    {
+      "name": "RebaseWindowsAudio.dll",
+      "bytes": 55296,
+      "sha256": "97186c575b202b00faf9bfa391dd39c22c332c7735585f03160f2c264bc1a5ba"
+    },
+    {
+      "name": "RebaseWindowsAudio.lib",
+      "bytes": 5206,
+      "sha256": "744ce08d44bdf0cb12608fa6e6c18cb8e1218c6f17f5345cd45cc133d8747cfd"
+    },
+    {
+      "name": "rebase_wasapi_probe.exe",
+      "bytes": 20480,
+      "sha256": "d97d0b60fe5a491c43f2256750c9bc256c1e33400d09946e131617d19a37aac9"
+    }
+  ]
+}

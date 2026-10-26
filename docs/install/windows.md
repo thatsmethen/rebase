@@ -4,15 +4,21 @@ This experimental x64 preview is intended for Windows 11. It includes its requir
 
 ## Open the app
 
-1. Download `Rebase-0.21.1-windows-preview.8-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.8).
+1. Download `Rebase-0.21.1-windows-preview.9-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.9).
 2. Use **Extract All** to unpack the complete archive.
 3. Open **Rebase.exe** inside the extracted `Rebase` folder. Keep the DLLs, notices and `Examples` folder beside the executable.
 4. Choose **File → Open example**. The four-track beat opens as a separate editable copy.
 5. Use **Save As** to save your project in a new `.rebaseproj` folder.
 
-The preview is unsigned. The archive is 99,687,380 bytes; its SHA-256 is `b8c070d7bb17e85ee38a9293af0c568730962feb842ef448522fba3ac73613d4`. The release page includes the checksum and exact validation record.
+The preview is unsigned. The archive is 99,930,466 bytes; its SHA-256 is `fc1d90aaff8f5179cef008b12bb3b3b55fce45e6dde480b2a0aaa2a4160fb6c4`. The release page includes the checksum and exact validation record.
 
 To reopen a saved project, choose **File → Open project…**, enter its `.rebaseproj` folder, and select `Project.json`. To share a project, copy the complete project folder, including its media and compatibility data.
+
+## Create a project and import audio
+
+Choose **File → New project** (Ctrl+N), then **File → Import audio…** (Ctrl+I). Select 1–32 supported mono/stereo PCM WAV files. Rebase copies their bytes into the project and imports the batch as one undoable edit at the playhead, using the current snap setting. Invalid batches leave the project unchanged. **Save** on a new project asks for its permanent location; **Save As** preserves the original project.
+
+The Windows importer currently accepts PCM16/24/32 and float32/64 WAV at 8–192 kHz, up to 256 MiB per batch and 16 million frames per file. Compressed audio, extensible WAV, RF64 and the broader Mac format range remain unsupported.
 
 ## Adjust the workspace
 
@@ -40,7 +46,7 @@ The project keeps the original CPR file and its import report. **File → Import
 
 Playback accepts Float32 stereo output devices from **8 to 192 kHz**. The included beat uses **48 kHz**. When the device rate differs, Rebase prepares a converted snapshot before playback and shows the source and output rates in the status line. Transport positions remain in project/source time. Pause reads the frozen source position before resume; a seek that rounds to the end finishes without trying to restart beyond it.
 
-Both the source and converted snapshots are limited to **32 million frames**. Unsupported formats, unavailable devices and snapshots beyond those limits produce an error. Conversion does not change the saved project or exported render.
+Ordinary-project source and converted snapshots are limited to **32 million frames**. Supported CPR source auditions now use a separate shared streaming worker and bounded source/device queues; source WAV exports retain their snapshot limit. Unsupported formats and unavailable devices produce an error. Device conversion does not change the saved project or exported render.
 
 Select a retained source event and attach its matching PCM24 WAV, then choose **Source audio…**. Choose an available mode and use **Play** or **Export WAV…**. The eight choices cover original rate, source/current/saved timeline clocks, complete saved-clock track and conversion modes 0/1/2. The dialog explains the selected clock; unconverted clock changes can alter speed and pitch.
 
@@ -48,9 +54,9 @@ Each play, resume, seek and export checks the source and required attachments ag
 
 ## What has been checked
 
-Preview.8 comes from commit `81e96c9b29b6e3d87184e067af58f4ab2973db89` and [native Windows run 40051952551](../../research/publication/windows-portability/application-run-40051952551/observation.json) on a Windows Server 2025 GitHub runner. It passed 133 actual-window checks, 421 authored host controls, 425 source-mode helper checks across 48 scenarios and the existing 169-check helper suite. The shared Release gate executed 116 tests with two explicit skips and no failures. The [component run](../../research/publication/windows-portability/run-40051952508/observation.json) passed all 13 jobs; the source-mode outputs matched across four Windows/macOS Debug/Release lanes. Windows native Debug and Release each retained 89 lifecycle controls and 41,370 conversion assertions.
+Preview.9 comes from commit `2934b9a0b6e96a5b3bd654a3e6a4fb00abe64e31` and [native Windows run 40265349968](../../research/publication/windows-portability/application-run-40265349968) on a Windows Server 2025 GitHub runner. It passed 165 actual-window checks, 574 host controls, 853 streaming-helper checks across 85 scenarios, 425 source-mode checks across 48 scenarios and the existing 169-check helper suite. The shared Windows Release gate executed 140 tests with three explicit skips. The [component run](../../research/publication/windows-portability/run-40265350027) passed all 13 jobs and compared authored output/provenance across Windows/macOS Debug/Release.
 
-The [downloaded archive audit](../../research/publication/windows-portability/application-run-40051952551/publication-review.json) checks all 444 files, runtime dependencies, notices and unchanged example audio. [Fifteen screenshots](../screenshots/README.md) show the actual client area, including the new Source Audio dialog at minimum size. They exclude the operating-system frame. The hosted display constrained the wider-window request; larger-display behavior remains unverified.
+The independent downloaded-package review checked all 444 files, dependency closure, app-local loaded modules, notices and seven unchanged example files. [Seventeen screenshots](../screenshots/README.md) show the actual client area, including New/import and streaming source audition. Both reviewers inspected every image. The hosted display constrained the wider-window request; larger-display behavior remains unverified.
 
 The hosted runner had no playback endpoint. Conversion and pause/seek controls passed, but they do not establish sound through a real device. Physical mouse/keyboard input, native file dialogs and device audio still require interactive Windows verification. Recording, plugins, inline automation lanes, automation writing modes and the remaining Mac workflows are not yet integrated. The [parity ledger](../development/windows-parity.md) records those boundaries.
 

@@ -1,0 +1,348 @@
+{
+  "schema": "rebase.downloaded-source-stream-runtime-verification.v1",
+  "stream_audit": {
+    "host_controls": 574,
+    "native_window_checks": 165,
+    "snapshot_checks": 425,
+    "snapshot_scenarios": 48,
+    "stream_checks": 853,
+    "stream_scenarios": 85,
+    "managed_reader_checks": 19,
+    "managed_reader_workers": 9,
+    "window_gate_checks": 115,
+    "window_gate_real_workers": 3,
+    "documents_gate_checks": 93,
+    "documents_window": {
+      "schema": "rebase.documents-window-summary.v1",
+      "native_checks": 15,
+      "phases": 11,
+      "helper_sha256": "3408e4e845d2cf0b6333ef909d25f7e068335b160c4f3172cf2ccff767bd0930",
+      "example_manifest_sha256": "de62d0ef9106e35b6ffe6fd982b9f92f6879fa8184a625636657c61b0377a748",
+      "source_sha256": [
+        "1dca2a5d261b56bc30cf714ba4161f7a7f3f2014ec286d9b9f7519535ed10275",
+        "1b66fce5220aea385762380c55dcb54c017f029078c78fdabc227c66d638fc55"
+      ],
+      "copied_media_bound": true,
+      "single_batch_history_bound": true,
+      "requests": {
+        "newProject": 2,
+        "importAudio": 2,
+        "saveAs": 1,
+        "undo": 1,
+        "redo": 1,
+        "open": 1
+      },
+      "capture": {
+        "file": "native-audio-import-visual.png",
+        "sha256": "2347a87ac86c9b7914ce03cf8ea06ddc02454e3322ba698301789058be383558",
+        "width": 1084,
+        "height": 749,
+        "alpha_coverage": {
+          "root_background_alpha": 255,
+          "alpha_minimum": 254,
+          "alpha_254_pixels": 4667,
+          "alpha_255_pixels": 807249,
+          "alpha_below_254_pixels": 0,
+          "total_pixels": 811916
+        },
+        "crc_and_pixels_verified": true
+      },
+      "physical_input_tested": false,
+      "native_file_pickers_tested": false,
+      "playback_tested": false,
+      "visual_acceptance_claimed": false
+    },
+    "capture_alpha_diagnostics_match_decoded_pixels": true,
+    "packaged_and_shared_output_and_logical_order_match": true,
+    "full_window_proofs_and_capture_bounds_validated": true,
+    "long_fixture_sha256": "f1607f267c7ed55ff70ebf287fd29623d7c67c70c9a2b858cc2f04e6d046014f",
+    "short_fixture_sha256": "35c6781f8644c30308497db8f1dc3afb1198034363645bf3387c1c23f57be485",
+    "native_stream_package": {
+      "schema": "rebase.native-stream-package.v1",
+      "status": "passed",
+      "commit": "2934b9a0b6e96a5b3bd654a3e6a4fb00abe64e31",
+      "configuration": "Release",
+      "native_dll": {
+        "name": "RebaseWindowsAudio.dll",
+        "bytes": 55296,
+        "sha256": "e8d6bd7d711b2afb41278e7853de42f5ad76b5aa9f645f94ed91829032fe5555"
+      },
+      "required_exports": [
+        "rb_audio_stream_begin",
+        "rb_audio_stream_submit",
+        "rb_audio_stream_finish",
+        "rb_audio_stream_play",
+        "rb_audio_stream_pause",
+        "rb_audio_stream_cancel",
+        "rb_audio_stream_status"
+      ],
+      "native_tests": {
+        "count": 3,
+        "skipped": 0,
+        "failures": 0
+      },
+      "native_report_sha256": "8b5357c44b77d57ca7b0b2cca21daf13f2d908abd5bc1a0d8a7c979b15438a8a",
+      "bounded_stream_report_sha256": "de9d9f5a38981716576ecfe90be9189fa00b733d1c53a9f308a7129ad46bca59",
+      "ctest_xml_sha256": "bb34b5072dc8cbb30df6f29b8a9122aed03207ca4603db62f26573edf6ccfbe1",
+      "dll_loaded_by_guard": false,
+      "physical_playback_tested": false
+    },
+    "native_verification_view": {
+      "schema": "rebase.derived-native-audit-view.v1",
+      "source_commit": "2934b9a0b6e96a5b3bd654a3e6a4fb00abe64e31",
+      "workflow_id": 40265349968,
+      "original_downloaded_evidence_modified": false,
+      "build_binary_independently_downloaded": false,
+      "dll_origin": "Rebase/RebaseWindowsAudio.dll from the audited package ZIP",
+      "derived_view_path": "native-verification-view/build/RebaseWindowsAudio.dll",
+      "dll": {
+        "name": "RebaseWindowsAudio.dll",
+        "bytes": 55296,
+        "sha256": "e8d6bd7d711b2afb41278e7853de42f5ad76b5aa9f645f94ed91829032fe5555"
+      },
+      "zip_sha256": "fc1d90aaff8f5179cef008b12bb3b3b55fce45e6dde480b2a0aaa2a4160fb6c4",
+      "native_build_product_receipt_sha256": "8b5357c44b77d57ca7b0b2cca21daf13f2d908abd5bc1a0d8a7c979b15438a8a",
+      "final_ci_package_receipt_sha256": "587431bb7ab5097ce6b62fc696e8d3baf1b077b1b1cafc0b2578b21a03336e29",
+      "raw_evidence_copies": [
+        {
+          "path": "native/bounded-stream-controls.log",
+          "bytes": 1253,
+          "sha256": "039b1c6173148253cf8914dd6a6a1493d0dd14920e77345d5a0d0412f345955c"
+        },
+        {
+          "path": "native/bounded-stream.json",
+          "bytes": 1531,
+          "sha256": "de9d9f5a38981716576ecfe90be9189fa00b733d1c53a9f308a7129ad46bca59"
+        },
+        {
+          "path": "native/build-pinned-soxr.log",
+          "bytes": 38391,
+          "sha256": "8f1e5457afc3d24c1cd904d541576a0e02fa48a358247a5f6cd2b1e4a5c05d18"
+        },
+        {
+          "path": "native/build.log",
+          "bytes": 6588,
+          "sha256": "ab0080c8349bed5615067fcf28342efa25c4b2243baa0ae3c302dd07362b1656"
+        },
+        {
+          "path": "native/cmake-version.log",
+          "bytes": 94,
+          "sha256": "954b7d134738f0bd4b8a873aa09ca30337f2f42631f4214b74bee2e249c40069"
+        },
+        {
+          "path": "native/compiler-version.log",
+          "bytes": 116,
+          "sha256": "68c8e9d9a49a718848d76234be066e1a526918e90849c51719c390e192d12500"
+        },
+        {
+          "path": "native/configure.log",
+          "bytes": 789,
+          "sha256": "eed92eb7724f2340d853971895a858a2c7261a2e76dfbdc02c3b2f883bb93e16"
+        },
+        {
+          "path": "native/conformance.json",
+          "bytes": 11831,
+          "sha256": "8b5357c44b77d57ca7b0b2cca21daf13f2d908abd5bc1a0d8a7c979b15438a8a"
+        },
+        {
+          "path": "native/endpoint-probe.json",
+          "bytes": 622,
+          "sha256": "d1c1ce9691e7378a1b86b74cb43468192fea3f4c4554931a62ed665bfdc6bc43"
+        },
+        {
+          "path": "native/endpoint-probe.log",
+          "bytes": 510,
+          "sha256": "40ad4b36ca7d16e5bb9f26563b4fc28306581b6aa332d7f838afd119eb2ed7e8"
+        },
+        {
+          "path": "native/lifecycle-controls.log",
+          "bytes": 129,
+          "sha256": "7005a5e46c1e84003cdfff83de9a770ccbafd9e851b07ec3e18dab999d81c5ef"
+        },
+        {
+          "path": "native/lifecycle-ctest.log",
+          "bytes": 604,
+          "sha256": "f76f93240539fbf00c5271a862e97e2e175cd93644c4c8455ef3fb5168583fe2"
+        },
+        {
+          "path": "native/lifecycle.xml",
+          "bytes": 3129,
+          "sha256": "bb34b5072dc8cbb30df6f29b8a9122aed03207ca4603db62f26573edf6ccfbe1"
+        },
+        {
+          "path": "native/rate-conversion-controls.log",
+          "bytes": 2079,
+          "sha256": "c9fb5897c67f52903067d5043a2467e6089d0dfc9ee2c375879feee3b7323353"
+        }
+      ],
+      "boundary": "The derived build-path DLL is copied from the audited ZIP after exact CI product/final-package hash checks. It is not an independently downloaded build product. PE exports are reparsed from these archived bytes."
+    },
+    "build_binary_independently_downloaded": false,
+    "source_gate_files": [
+      {
+        "path": "Application/scripts/build-windows-app.py",
+        "sha256": "be22b9c8e0746d402fba30483302354ef77c1b64d8964e2d9e431e4a75f6291d"
+      },
+      {
+        "path": "Application/scripts/build-windows-soxr.py",
+        "sha256": "c97a9a100affb84ae3e32a307825d48fb242375719778d1d778d1b521bdd3282"
+      },
+      {
+        "path": "Application/scripts/check-cpr-audition-modes.py",
+        "sha256": "a521f6d0281627be357cf1cad9a0ae3a2a2bcf605b70b2f681756541dccfa8df"
+      },
+      {
+        "path": "Application/scripts/check-session-protocol.py",
+        "sha256": "0af693a65ed487c4979546bf6d6d477efac574ea8d8401dcb522b49372971282"
+      },
+      {
+        "path": "Application/scripts/check-source-stream.py",
+        "sha256": "7457f3fbb180d20375a8b8091b8fc65b376975e6aab276762f29208c89f7db9f"
+      },
+      {
+        "path": "Application/scripts/compare-portable-renders.py",
+        "sha256": "c1ff9f09d2a860b65806da36297f1e34788c7ad468cef83975fcce8ac54140ae"
+      },
+      {
+        "path": "Application/scripts/cpr_audition_gate.py",
+        "sha256": "32917446086f87501cf66fd02a81c0af495d79da250152d678b9009d19b5d37a"
+      },
+      {
+        "path": "Application/scripts/documents_window_gate.py",
+        "sha256": "913e0681a808c9344eb1c9b17ecabb001f0672d7c3ccd0906cb69f37b052951c"
+      },
+      {
+        "path": "Application/scripts/native_stream_package.py",
+        "sha256": "da4b0597bc85c234d3e370fa864307e967fd5885cd9cd42ec59680db23417e6d"
+      },
+      {
+        "path": "Application/scripts/portable_soxr.py",
+        "sha256": "b32789639c81693d03b747e1f29e833d750c43a70b96a7c2fbefa167f0119bd7"
+      },
+      {
+        "path": "Application/scripts/run-portable-ci.py",
+        "sha256": "f3825aef705f200f9d20bf8554aea777fedffd24a040b60057f9de3966add763"
+      },
+      {
+        "path": "Application/scripts/run-windows-native-audio-ci.py",
+        "sha256": "aca04b70eb0b64da3963b24fef9d642113fe53365c97fbc91667ae85565a4c23"
+      },
+      {
+        "path": "Application/scripts/source_stream_gate.py",
+        "sha256": "f3b92739f2265ee47bf3f1e1068f8991a697cc83cbc3ccf5d2881d0f1a083072"
+      },
+      {
+        "path": "Application/scripts/source_stream_window_gate.py",
+        "sha256": "7ebccd4b32e5fe4fa94d09ef797eb5db804300aa12088da96433d5d6e881acd4"
+      },
+      {
+        "path": "Application/scripts/test_cpr_audition_gate.py",
+        "sha256": "b40777bffb6a57c01932e60143768995afe8107c38a19974af4e6206b7b32273"
+      },
+      {
+        "path": "Application/scripts/test_documents_window_gate.py",
+        "sha256": "8c4019288e55e3f0af5734dd25364b17434d8f01eaae995cb6d2d974e5833832"
+      },
+      {
+        "path": "Application/scripts/test_native_stream_package.py",
+        "sha256": "4ecf6af2a95938732eb2fc859f4dd1c21687335f57d5e0f62793263e64b7fbac"
+      },
+      {
+        "path": "Application/scripts/test_portable_soxr.py",
+        "sha256": "3d2ae8c9bdbf4394f21935e352b7f0680920a3b69ad80a5056145a13f0fb0185"
+      },
+      {
+        "path": "Application/scripts/test_source_stream_gate.py",
+        "sha256": "bccee1ad24a1a1bb3e7dcdea01ac3125c23e109fe3cbf58611732c53770d3e53"
+      },
+      {
+        "path": "Application/scripts/test_source_stream_receipt.py",
+        "sha256": "1a69980f0b326ceecb3eda78067ec7eddf477b0b69ec19d1a5c8f037cbcb48f0"
+      },
+      {
+        "path": "Application/scripts/test_source_stream_window_gate.py",
+        "sha256": "e51f5d0eeac9081f93159cdb71c70f859ddf8ea166bc2246499484ae8429f9e1"
+      },
+      {
+        "path": "Application/scripts/test_windows_native_audio_gate.py",
+        "sha256": "7157f27985ac166c9005827b976b4d5ff24d0ab4fe27fa4644bb1cd667c081a1"
+      },
+      {
+        "path": "Application/scripts/test_windows_soxr_package.py",
+        "sha256": "3b736285d10556ee0f838f8392b3cc1339924ca7c98285a1b96e501b1e7ecb8e"
+      },
+      {
+        "path": "Application/scripts/windows_automation_gate.py",
+        "sha256": "ab8926d0e10af4c843c7314997d7adfbf9d1aa8ed10114774192ea33972655c2"
+      },
+      {
+        "path": "Application/scripts/windows_soxr_package.py",
+        "sha256": "6317558c0d511f137956f17cc5504503537629195d73f294e49cc09a2b22c012"
+      },
+      {
+        "path": "Application/Tests/Fixtures/SourceAuditionModes/expected.json",
+        "sha256": "35c6781f8644c30308497db8f1dc3afb1198034363645bf3387c1c23f57be485"
+      }
+    ],
+    "physical_input_tested_by_audit": false,
+    "device_playback_tested_by_audit": false,
+    "binaries_executed_by_audit": false,
+    "pixel_content_human_review": "separate"
+  },
+  "source_commit": "2934b9a0b6e96a5b3bd654a3e6a4fb00abe64e31",
+  "workflow_id": 40265349968,
+  "pe_images_reparsed": 418,
+  "pe_imports_matched_to_ci": 661,
+  "dependency_closure_matches_archive": true,
+  "runtime_notices_verified": 7,
+  "app_local_module_counts": {
+    "process": {
+      "total": 136,
+      "app_local": 70
+    },
+    "helper": {
+      "total": 51,
+      "app_local": 20
+    }
+  },
+  "app_local_module_hashes_match_archive": true,
+  "soxr_dll_hash_matches_build_manifest_and_loaded_module": true,
+  "public_soxr_source_entries_verified": 138,
+  "public_soxr_archive_entries_verified": 141,
+  "public_soxr_packaged_files_verified": 7,
+  "public_soxr_notice_files_verified": 3,
+  "source_archive_sha256": "b6bc76f1e733a1b128d067570eed3a8e54f511ec6724d299a05bf38172b2dd94",
+  "upstream_link_stored_as_regular_text": true,
+  "exact_rebuild_script_probe_and_manifest_in_source_archive": true,
+  "host_controls": 574,
+  "packaged_helper_checks": 169,
+  "shared_release_tests": {
+    "count": 143,
+    "executed": 140,
+    "skipped": 3,
+    "failures": 0
+  },
+  "shared_release_subset_counts": {
+    "PortableAutomationSessionTests": 5,
+    "AutomationRenderingTests": 3,
+    "PortableCPRReviewTests": 14,
+    "SharedCPRImportTests": 6,
+    "PortableSourceStreamTests": 10,
+    "PortableAudioImportTests": 4,
+    "SharedAudioImportTests": 7
+  },
+  "native_ctest_count": 3,
+  "native_conversion_controls": 41370,
+  "native_conversion_cases": 14,
+  "dependency_package_controls": {
+    "count": 50,
+    "executed": 45,
+    "skipped": 5,
+    "failures": 0
+  },
+  "source_waveform_ruler_and_render_locks_match": true,
+  "shared_example_refusal_and_predeclared_hash_bound": true,
+  "playback_tested": false,
+  "audio_endpoint": "unavailable-no-endpoint",
+  "boundary": "Downloaded PE imports/source/archive/module hashes independently verified; actual Windows build and module observations come from exact-source CI. This audit did not execute native binaries or measure device/audio output. Visual review is separate."
+}
