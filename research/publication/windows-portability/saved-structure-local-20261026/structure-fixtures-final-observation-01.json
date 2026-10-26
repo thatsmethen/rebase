@@ -1,0 +1,266 @@
+{
+  "schema": "rebase.saved-structure-fixture-correction.v1",
+  "status": "passed-with-original-failed-attempts-preserved",
+  "evidence_class": "authored-fixture-and-local-macos-shared-managed-helper-controls",
+  "scope": "These controls validate the independently implemented decoder, byte custody, paging and managed client. They do not execute the reference or native Windows UI and do not establish full project compatibility or playback.",
+  "toolchain": "Apple Swift 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1), arm64-apple-macosx28.0; .NET SDK 10.0.100",
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "failed",
+      "reported": 6,
+      "executed": 6,
+      "failed_testcases": 1,
+      "failure_elements": 2,
+      "skipped": 0,
+      "exit_code": 1,
+      "interpretation": "The authored large text exceeded the decoder's admitted string bound, so the resource remained opaque and the complete report was only 7,456 bytes. One exporter testcase failed two expectations; the other five selected tests passed. This is a fixture admission failure, not permission to widen parsing.",
+      "source_sha256": {
+        "Application/Sources/RebaseCore/CPRProjectStructureSnapshot.swift": "18449e1a90f86b28ce0dc637d8dc2c9041fb6cc551d038a2ffafb125bb5da4ae",
+        "Application/Sources/RebaseCore/PortableSession.swift": "7ca16e3813cf89b3cbd570a91e5f4a038567061561a2f90ad4594bb9ae73ce7e",
+        "Application/Tests/RebasePortableTests/PortableProjectStructureTests.swift": "fcece0b0885692b8e9681eb434c48e0fe57d4e5644af4a5a2cbf8cefc55e9817",
+        "Application/Tests/SharedCPRAudioTests/CPRProjectStructureSnapshotTests.swift": "78d936f0218e1772a025ede562fa6ec89e93dc7aedcb37df7674a101ef765735",
+        "Application/Package.swift": "79b7c61eca022e40fba13863c62ccc08263b6c230b4a3a23d3d8ccd99cd380ad",
+        "Application/Sources/RebaseCore/CPRNativeProjectBindings.swift": "0fb1bcb3e33c936e375cc45ba06fa6c01db114f5f729df35b96c16c2d3316423",
+        "Application/Tests/SharedCPRAudioTests/CPRNativeProjectBindingsTests.swift": "8c617c73035f8757d1411b983580a3bfde00b629af4b040f6c64e3e2a50cb645"
+      },
+      "records": [
+        {
+          "path": "structure-fixtures-tests-01.json",
+          "bytes": 2285,
+          "sha256": "0c2526e010fc929b83e6919b1da55ee5a624297a3b62ff7d23b3b971fb39bc6d"
+        },
+        {
+          "path": "structure-fixtures-tests-01.xml",
+          "bytes": 1559,
+          "sha256": "6c1fb45b4c67d3b02e52c211ace897c163a8e7776efb2eef4c539017d7ca3c48"
+        },
+        {
+          "path": "structure-fixtures-tests-01.log",
+          "bytes": 3419,
+          "sha256": "ab49918ccccf7cbde1f1355fc676a8deafc25c186a4b169f941ba0e0e9eef69f"
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "status": "failed",
+      "reported": 6,
+      "executed": 6,
+      "failed_testcases": 1,
+      "failure_elements": 1,
+      "skipped": 0,
+      "exit_code": 1,
+      "interpretation": "The authored unmarked native text included non-ASCII characters. The decoder correctly kept its unsupported codepage content opaque; the report did not cross 65,536 bytes. One exporter testcase failed one expectation; the other five selected tests passed.",
+      "source_sha256": {
+        "Application/Sources/RebaseCore/CPRProjectStructureSnapshot.swift": "18449e1a90f86b28ce0dc637d8dc2c9041fb6cc551d038a2ffafb125bb5da4ae",
+        "Application/Sources/RebaseCore/PortableSession.swift": "7ca16e3813cf89b3cbd570a91e5f4a038567061561a2f90ad4594bb9ae73ce7e",
+        "Application/Tests/RebasePortableTests/PortableProjectStructureTests.swift": "fcece0b0885692b8e9681eb434c48e0fe57d4e5644af4a5a2cbf8cefc55e9817",
+        "Application/Tests/SharedCPRAudioTests/CPRProjectStructureSnapshotTests.swift": "78e6d9d5fb895a449006bd5f58afa863ef7c03c11169aa17361f515bdb52368e",
+        "Application/Package.swift": "79b7c61eca022e40fba13863c62ccc08263b6c230b4a3a23d3d8ccd99cd380ad",
+        "Application/Sources/RebaseCore/CPRNativeProjectBindings.swift": "0fb1bcb3e33c936e375cc45ba06fa6c01db114f5f729df35b96c16c2d3316423",
+        "Application/Tests/SharedCPRAudioTests/CPRNativeProjectBindingsTests.swift": "8c617c73035f8757d1411b983580a3bfde00b629af4b040f6c64e3e2a50cb645"
+      },
+      "records": [
+        {
+          "path": "structure-fixtures-tests-02.json",
+          "bytes": 2285,
+          "sha256": "cf733d264c7aaac4f08343580e3bd9ce82b39e84cf7234e44f84a0cd0f4a8ccb"
+        },
+        {
+          "path": "structure-fixtures-tests-02.xml",
+          "bytes": 1367,
+          "sha256": "bf289c77e6a7c54afe4cceeb6df8fe786bdf0aadf1aafeb19f4fed46d26c800e"
+        },
+        {
+          "path": "structure-fixtures-tests-02.log",
+          "bytes": 2082,
+          "sha256": "a83838d10af6fb1705b0a2366320a33653afd4133c973cf8c08fe761caec442b"
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "status": "passed",
+      "reported": 6,
+      "executed": 6,
+      "failed_testcases": 0,
+      "failure_elements": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "interpretation": "Three bounded ASCII child-bus names admit the intended typed fields. The final large canonical report is 102,898 bytes and crosses two pages. Both exported cases are generated twice byte-identically; attempted destination reuse is rejected without replacing files.",
+      "source_sha256": {
+        "Application/Sources/RebaseCore/CPRProjectStructureSnapshot.swift": "18449e1a90f86b28ce0dc637d8dc2c9041fb6cc551d038a2ffafb125bb5da4ae",
+        "Application/Sources/RebaseCore/PortableSession.swift": "7ca16e3813cf89b3cbd570a91e5f4a038567061561a2f90ad4594bb9ae73ce7e",
+        "Application/Tests/RebasePortableTests/PortableProjectStructureTests.swift": "fcece0b0885692b8e9681eb434c48e0fe57d4e5644af4a5a2cbf8cefc55e9817",
+        "Application/Tests/SharedCPRAudioTests/CPRProjectStructureSnapshotTests.swift": "9780c78e29df446f40d5afc5c12c7ce27cf327907fe70c94bddf0d14051c843e",
+        "Application/Package.swift": "79b7c61eca022e40fba13863c62ccc08263b6c230b4a3a23d3d8ccd99cd380ad",
+        "Application/Sources/RebaseCore/CPRNativeProjectBindings.swift": "0fb1bcb3e33c936e375cc45ba06fa6c01db114f5f729df35b96c16c2d3316423",
+        "Application/Tests/SharedCPRAudioTests/CPRNativeProjectBindingsTests.swift": "8c617c73035f8757d1411b983580a3bfde00b629af4b040f6c64e3e2a50cb645"
+      },
+      "records": [
+        {
+          "path": "structure-fixtures-tests-03.json",
+          "bytes": 2285,
+          "sha256": "f5d494265e7723138ad9b1bc9466736d050061c5ea6f72e6916846458ce3ac92"
+        },
+        {
+          "path": "structure-fixtures-tests-03.xml",
+          "bytes": 1161,
+          "sha256": "f69153323a2fb1c8ac885182cd3b5b2be7640c1080585a974c9b2f3acb226b44"
+        },
+        {
+          "path": "structure-fixtures-tests-03.log",
+          "bytes": 1790,
+          "sha256": "3d55cad2cec28b0d2c9693123249c7ad5e0ac252cdfdc8b427c40e3e8b5aeab0"
+        }
+      ]
+    }
+  ],
+  "sources_match_final_test_record": true,
+  "current_sources": {
+    "Application/Sources/RebaseCore/CPRProjectStructureSnapshot.swift": "18449e1a90f86b28ce0dc637d8dc2c9041fb6cc551d038a2ffafb125bb5da4ae",
+    "Application/Sources/RebaseCore/PortableSession.swift": "7ca16e3813cf89b3cbd570a91e5f4a038567061561a2f90ad4594bb9ae73ce7e",
+    "Application/Tests/RebasePortableTests/PortableProjectStructureTests.swift": "fcece0b0885692b8e9681eb434c48e0fe57d4e5644af4a5a2cbf8cefc55e9817",
+    "Application/Tests/SharedCPRAudioTests/CPRProjectStructureSnapshotTests.swift": "9780c78e29df446f40d5afc5c12c7ce27cf327907fe70c94bddf0d14051c843e",
+    "Application/Package.swift": "79b7c61eca022e40fba13863c62ccc08263b6c230b4a3a23d3d8ccd99cd380ad",
+    "Application/Sources/RebaseCore/CPRNativeProjectBindings.swift": "0fb1bcb3e33c936e375cc45ba06fa6c01db114f5f729df35b96c16c2d3316423",
+    "Application/Tests/SharedCPRAudioTests/CPRNativeProjectBindingsTests.swift": "8c617c73035f8757d1411b983580a3bfde00b629af4b040f6c64e3e2a50cb645"
+  },
+  "fixture_manifest_sha256": "5bbc30f84ad67a0377acd511b82b9d83af6c28aa6de460dfcc6804ac827984e9",
+  "fixtures": [
+    {
+      "name": "small",
+      "source_bytes": 768,
+      "source_sha256": "6c2008fc5308db1391754139e2f1743489ad771c6961fc5b535df8f6ed58609a",
+      "report_bytes": 10681,
+      "report_sha256": "cd77959e84d216dc2621e70a94ee5ee91f1ea18dbc387202e58f75a60ecfa247",
+      "pages": 1,
+      "counts": {
+        "entries": 1,
+        "issues": 1,
+        "lists": 2,
+        "nativeObjects": 7,
+        "resourceAssociations": 0,
+        "tracks": 1
+      }
+    },
+    {
+      "name": "large",
+      "source_bytes": 92053,
+      "source_sha256": "52250aa72f573fc706f3a2efc902ca461ae817014a00ccd418d8bab61342301c",
+      "report_bytes": 102898,
+      "report_sha256": "ecfe82e806b7ad2cb6bb31874c40c6b86ab529f75a3c2753eb873469db10db09",
+      "pages": 2,
+      "counts": {
+        "entries": 1,
+        "issues": 1,
+        "lists": 2,
+        "nativeObjects": 7,
+        "resourceAssociations": 0,
+        "tracks": 1
+      }
+    }
+  ],
+  "fixture_inventory": [
+    {
+      "path": "Large.rebaseproj/Compatibility/CPR/ImportReport.json",
+      "bytes": 4296,
+      "sha256": "3cc8aa91e61636f7dcb0bb7d4f04be3a49492d8ceb79612f8244d7779ecb9b1a"
+    },
+    {
+      "path": "Large.rebaseproj/Compatibility/CPR/Original.cpr",
+      "bytes": 92053,
+      "sha256": "52250aa72f573fc706f3a2efc902ca461ae817014a00ccd418d8bab61342301c"
+    },
+    {
+      "path": "Large.rebaseproj/Project.json",
+      "bytes": 801,
+      "sha256": "090fb43cff656c4643d0a18e2adb750a51f68f6a8b0a16a467068968c09a36a1"
+    },
+    {
+      "path": "Large.structure.json",
+      "bytes": 102898,
+      "sha256": "ecfe82e806b7ad2cb6bb31874c40c6b86ab529f75a3c2753eb873469db10db09"
+    },
+    {
+      "path": "Small.rebaseproj/Compatibility/CPR/ImportReport.json",
+      "bytes": 4284,
+      "sha256": "1190fdeead09807c59a6859a25ac73fc5c35c608856ccd84ea992a1202766847"
+    },
+    {
+      "path": "Small.rebaseproj/Compatibility/CPR/Original.cpr",
+      "bytes": 768,
+      "sha256": "6c2008fc5308db1391754139e2f1743489ad771c6961fc5b535df8f6ed58609a"
+    },
+    {
+      "path": "Small.rebaseproj/Project.json",
+      "bytes": 801,
+      "sha256": "c1e8ce3d2ceb38805694d480c4656c665bf8ab789988f87efcfab804d2527215"
+    },
+    {
+      "path": "Small.structure.json",
+      "bytes": 10681,
+      "sha256": "cd77959e84d216dc2621e70a94ee5ee91f1ea18dbc387202e58f75a60ecfa247"
+    },
+    {
+      "path": "expected.json",
+      "bytes": 3205,
+      "sha256": "5bbc30f84ad67a0377acd511b82b9d83af6c28aa6de460dfcc6804ac827984e9"
+    }
+  ],
+  "managed_client": {
+    "schema": "rebase.saved-structure-final-managed-control.v1",
+    "status": "passed",
+    "helper_sha256": "97139dd409236ffad4a2b49688ec474eca75e8e3310192c4a0d18524dbe6286b",
+    "helper_unchanged": true,
+    "fixtures_unchanged": true,
+    "fixture_manifest_sha256": "5bbc30f84ad67a0377acd511b82b9d83af6c28aa6de460dfcc6804ac827984e9",
+    "cases": [
+      {
+        "name": "small",
+        "exit_code": 0,
+        "receipt_sha256": "f2f64347d8f0db0cb1b0c3a4dc6239c90ef1cbd06ca9f78d10ebee6b1901a2e8"
+      },
+      {
+        "name": "large",
+        "exit_code": 0,
+        "receipt_sha256": "c9f7855fb96d3402b664a189ef0888610fb9eddf7486440bb3fe95e0e93bfa46"
+      }
+    ],
+    "native_windows_tested": false,
+    "playback_tested": false
+  },
+  "managed_records": [
+    {
+      "path": "windows-structure/actual-final/large.json",
+      "bytes": 890,
+      "sha256": "c9f7855fb96d3402b664a189ef0888610fb9eddf7486440bb3fe95e0e93bfa46"
+    },
+    {
+      "path": "windows-structure/actual-final/large.log",
+      "bytes": 54,
+      "sha256": "1186f1992a8a601551dbe0359092832d9d370cab6dba5ba083ebe1153bbe3de6"
+    },
+    {
+      "path": "windows-structure/actual-final/small.json",
+      "bytes": 833,
+      "sha256": "f2f64347d8f0db0cb1b0c3a4dc6239c90ef1cbd06ca9f78d10ebee6b1901a2e8"
+    },
+    {
+      "path": "windows-structure/actual-final/small.log",
+      "bytes": 54,
+      "sha256": "1186f1992a8a601551dbe0359092832d9d370cab6dba5ba083ebe1153bbe3de6"
+    },
+    {
+      "path": "windows-structure/actual-final/summary.json",
+      "bytes": 707,
+      "sha256": "e267039a5f0e3694b8197327c8f522d582b4dfe9d5a2f5d208c5e9bb045f090d"
+    }
+  ],
+  "exact_import_report_whitespace_tamper_rejected": true,
+  "package_resolved_restored": true,
+  "reference_execution": false,
+  "native_windows_tested": false,
+  "audio_playback_tested": false
+}

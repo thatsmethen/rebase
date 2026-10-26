@@ -1,0 +1,71 @@
+{
+  "schema": "rebase.independent-structure-window-review.v1",
+  "outcome": "reviewed-no-open-material-findings",
+  "scope": "Independent read-only review of saved-structure window producer, strict receipt gate, fixture/full-report/state custody and PNG geometry/alpha admission. Authored local controls only; actual native CI receipt, RGB pixel appearance and visual acceptance remain separate. Decoder implementation is excluded from this independent review.",
+  "source_files": [
+    {
+      "path": "Application/scripts/structure_window_gate.py",
+      "sha256": "20f0dd6a7a4e3d819a04fd267db2b5bc19c3f7403210e568b0ed33d443cbf90c"
+    },
+    {
+      "path": "Application/scripts/test_structure_window_gate.py",
+      "sha256": "e1ef8e191aa11ab87d3d1924e41d6b82c7f90b5496f0a84e05ce9816c69608be"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.StructureSmoke.cs",
+      "sha256": "c64e9babfc92b106a5ec67f4e56cf026e255325aba96f432494c57181482b08f"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/ProjectStructureWindow.cs",
+      "sha256": "7e5ac65e82f6871a66184fb5af9279616109fe63e378eaa3637d645ed218483b"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/MainWindow.Structure.cs",
+      "sha256": "50379481fa3fc135b159f6ccbbbf9a6206b79d53c37fdb4604fc3f9f13720a24"
+    },
+    {
+      "path": "Application/Windows/RebaseWindows/StudioViewModel.Structure.cs",
+      "sha256": "f6863e45c3fcd93088d335234468077ed90b71457960b7fe61ebc20177cc38e5"
+    },
+    {
+      "path": "Application/scripts/source_stream_window_gate.py",
+      "sha256": "7ebccd4b32e5fe4fa94d09ef797eb5db804300aa12088da96433d5d6e881acd4"
+    }
+  ],
+  "reviewed_boundaries": [
+    "Generated fixture exact inventory, source/generator/report/manifest byte hashes and expected report shape.",
+    "Current helper identity, complete report hash/count and revision/selection/history bindings across clean, dirty and large phases.",
+    "Exact inspection/page/close request counts, complete read-only JSON text hash and scroll-to-end receipt.",
+    "Two client-root PNG captures with actual bytes, chunk CRC, decoded alpha, dimensions and DPI validation.",
+    "Minimum window geometry, report/footer containment and usable distinct tab geometry including wrapped headers.",
+    "Document/window suspension and owner lifecycle source flow; no source edits."
+  ],
+  "findings": [
+    {
+      "id": "tab-header-geometry",
+      "status": "closed-by-owner-correction",
+      "original": "Gate accepted overlapping tabs, one-DIP-square tabs and tabs over report content.",
+      "correction": "Tabs now require 40x24 DIP, Sections containment, pairwise nonoverlap and bottoms above report content, with wrapping permitted.",
+      "first_probe": {
+        "path": ".local/work/rebase-project-composition-20261026/structure-window-independent-geometry-probe-01.json",
+        "sha256": "b286552f75f6afbc81ab3dc5256ea5e033e1445b13f5a2f9b4c68dce4ddd68e0"
+      },
+      "correction_probe": {
+        "path": ".local/work/rebase-project-composition-20261026/structure-window-independent-geometry-probe-02.json",
+        "sha256": "8b4ab7723513e114afdb7f111da03e2d6381ef109b7285ae9c008d1812d4f879",
+        "checks": 8,
+        "passed": 8
+      }
+    }
+  ],
+  "native_wpf_executed": false,
+  "helper_executed": false,
+  "visual_acceptance_claimed": false,
+  "proprietary_reference_executed": false,
+  "repository_sources_modified": false,
+  "limitations": [
+    "Authored receipt/PNG controls validate rejection logic, not actual native layout or behavior.",
+    "The gate measures geometry and alpha integrity; RGB appearance still requires image review.",
+    "Static source review and bounded controls cannot establish full application or reference fidelity."
+  ]
+}

@@ -40,6 +40,8 @@ struct RebaseApp: App {
                 Button("Import CPR Project…") { session.importCPRProject() }
                 Button("CPR Import Report…") { session.showCPRCompatibility() }
                     .disabled(session.cprCompatibility == nil)
+                Button("Saved Project Structure…") { session.showCPRProjectStructure() }
+                    .disabled(session.cprCompatibility == nil || session.inspectingProjectStructure)
                 Divider()
                 Button("Convert Ambisonics…") { AmbisonicExport.present() }
             }
@@ -138,6 +140,9 @@ struct StudioView: View {
             CPRImportReviewView(preview: preview,
                 onImport: { session.confirmCPRImport(preview) },
                 onCancel: { session.cprImportPreview = nil })
+        }
+        .sheet(item: $session.cprProjectStructure) { preview in
+            CPRProjectStructureView(preview: preview, onClose: { session.cprProjectStructure = nil })
         }
         .sheet(item: $session.cprSourceAudioInspection, onDismiss: session.completeCPRSourceInspectionDismissal) { inspection in
             CPRSourceAudioView(inspection: inspection,

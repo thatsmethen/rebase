@@ -4,6 +4,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
+if (args.Length == 4 && args[0] == "--actual-project-structure")
+{
+    await ProjectStructureControls.Actual(args[1], args[2], args[3]);
+    return;
+}
+
 if (args.Contains("--authored-unread-source-child"))
 {
     Console.Error.WriteLine("authored-child-started");
@@ -85,6 +91,7 @@ checks += await SourceAuditionControls.Run();
 checks += await WaveformControls.Run();
 checks += await RulerControls.Run();
 checks += await CPRReviewControls.Run();
+checks += await ProjectStructureControls.Run();
 checks += await AutomationControls.Run();
 checks += await PlaybackRateControls.Run();
 checks += await SourceModeControls.Run();

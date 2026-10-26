@@ -59,6 +59,7 @@ public struct PortableSessionReply: Encodable {
     public let cprReview: PortableCPRReview?
     public var sourceInspection: SourceInspection? = nil
     public var sourceStream: PortableSourceStream.Receipt? = nil
+    public var projectStructure: PortableProjectStructurePage? = nil
     public let error: Failure?
     public struct SourceInspection: Encodable {
         public let revision: UInt64
@@ -120,7 +121,7 @@ public struct PortableSessionReply: Encodable {
         public var totalFrames: Int64? = nil
     }
     public struct Failure: Encodable { public let code: String; public let message: String }
-    enum CodingKeys: String, CodingKey { case protocolVersion = "protocol"; case id, ok, state, render, waveform, ruler, cprReview, sourceInspection, sourceStream, error }
+    enum CodingKeys: String, CodingKey { case protocolVersion = "protocol"; case id, ok, state, render, waveform, ruler, cprReview, sourceInspection, sourceStream, projectStructure, error }
 }
 
 /// Complete, ephemeral audition provenance. Stored beside a newly rendered WAV,
@@ -229,6 +230,7 @@ public final class PortableSession {
         let historicalRoot: URL?
     }
     private var reviewedCPR: ReviewedCPR?
+    private var reviewedStructure: PortableProjectStructureReview?
     private var pendingSourceStream: PortableSourceStream.OwnedTicket?
     private let importedSnapshotLoader: (URL) throws -> (project: Project, manifest: Data)
     public init() { importedSnapshotLoader = { try ProjectStore.loadSnapshot(from: $0) } }
@@ -258,6 +260,7 @@ public final class PortableSession {
     public func process(_ bytes: Data) -> Data {
         let previousRevision = revision, previousSelection = selection
         defer {
+            if revision != previousRevision { reviewedStructure = nil }
             if revision != previousRevision || selection != previousSelection {
                 pendingSourceStream?.removeIfOwned(); pendingSourceStream = nil
             }
@@ -274,7 +277,11 @@ public final class PortableSession {
             if request.command != "state" {
                 guard request.expectedRevision == revision else { throw failure("staleRevision", "The project changed. Refresh its state before retrying.") }
             }
-            if request.command == "prepareSourceStream" {
+            if ["inspectProjectStructure", "projectStructurePage", "closeProjectStructure"].contains(request.command) {
+                let page = try inspectProjectStructure(request)
+                reply = .init(id: id, ok: true, state: state, render: nil, waveform: nil, ruler: nil,
+                    cprReview: nil, projectStructure: page, error: nil)
+            } else if request.command == "prepareSourceStream" {
                 guard let current = project, let root, let manifestDigest else { throw failure("noProject", "Open a project first.") }
                 try checkSourceUnchanged(root)
                 guard let eventID = request.clipID else { throw failure("selection", "Choose a source event.") }
@@ -312,6 +319,39 @@ public final class PortableSession {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         return (try? encoder.encode(reply)) ?? Data("{\"protocol\":1,\"ok\":false,\"error\":{\"code\":\"encoding\",\"message\":\"Unable to encode session state.\"}}".utf8)
+    }
+
+    private func inspectProjectStructure(_ request: PortableSessionRequest) throws -> PortableProjectStructurePage? {
+        if request.command == "inspectProjectStructure" {
+            reviewedStructure = nil
+            guard let project, let root, let manifestDigest else { throw failure("noProject", "Open a project first.") }
+            try checkSourceUnchanged(root)
+            let snapshot = try CPRProjectStructureSnapshot.inspect(in: root,
+                expectedProjectID: project.id, expectedManifestSHA256: manifestDigest)
+            try checkSourceUnchanged(root)
+            let review = PortableProjectStructureReview(revision: revision, root: root, snapshot: snapshot)
+            let page = try review.page(offset: 0)
+            reviewedStructure = review
+            return page
+        }
+        guard let review = reviewedStructure, request.reviewID == review.reviewID,
+              review.revision == revision, review.root == root,
+              review.snapshot.projectID == project?.id else {
+            throw failure("structureToken", "This saved structure review is no longer current. Inspect it again.")
+        }
+        if request.command == "closeProjectStructure" {
+            reviewedStructure = nil
+            return nil
+        }
+        do {
+            try checkSourceUnchanged(review.root)
+            try review.snapshot.verify(in: review.root)
+        } catch {
+            reviewedStructure = nil
+            throw error
+        }
+        guard let offset = request.reviewOffset else { throw failure("structureOffset", "A saved structure page offset is required.") }
+        return try review.page(offset: offset)
     }
 
     private func reviewCPR(_ request: PortableSessionRequest) throws -> PortableCPRReview? {

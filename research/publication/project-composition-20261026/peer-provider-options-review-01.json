@@ -1,0 +1,92 @@
+{
+  "schema": "rebase.static.peer-review.v1",
+  "scope": "Independent read-only control-flow review of retained native disassemblies; no proprietary execution, provider registration, runtime receiver, effective routing or audio equivalence claim.",
+  "target_sha256": "dda1a4b68a275cf7fa58541022ad02462b17b749a36b819d2c5dcd654bfa67bb",
+  "findings": [
+    {
+      "status": "confirmed-static-chain",
+      "detail": "Named VST Multitrack constructor installs primary table 1047b70b0 and owner+2f8 table1047b7a78. MTrack caller1017435d4..5e4 requests IID10500dbd0; matching query101d9ea10..44 returns owner+2f8. Interface slot+18 thunk101d9bff0 restores owner and branches101d9bef0. Saved index1 selects kind1; factory101dcf544 kind1 allocates0x1aa8 and calls101d3c1fc, a direct branch101d3b918. This closes a possible static factory path, not actual provider registration/global availability/receiver restoration."
+    },
+    {
+      "status": "confirmed-correction",
+      "detail": "Ordinary channel+b0 wrapper101d75844 zero-initializes options.mode=0. Initializer101d758b4 preserves mode0 and sets option+17=true,option+19=false. Mixer101d76550 therefore branches directly101d766f8, bypassing the nonzero/compatibility precheck. OutputBusValue nested restore call101d76708 is attempted on that path. Earlier unconditional precheck wording must be corrected additively; successful restore and effective route remain unresolved."
+    }
+  ],
+  "inputs": [
+    {
+      "path": "pass4-binding/native-10174354c.txt",
+      "bytes": 12999,
+      "sha256": "9dda7455339007e5f9f1567a7df2e5948db7303f52645cab5f5fb143a889bc7f"
+    },
+    {
+      "path": "pass30-provider/native-101d99034.txt",
+      "bytes": 7392,
+      "sha256": "a7bebf96d3d420f56f0718c59e19344366032af4487d53d2776afa05909c7b57"
+    },
+    {
+      "path": "pass30-provider/native-101d9e88c.txt",
+      "bytes": 8883,
+      "sha256": "426636c59cc80c0845f67a72aed0dbaba2b4a58795a1257d4c558f560c8add15"
+    },
+    {
+      "path": "provider-interface-table.json",
+      "bytes": 3221,
+      "sha256": "99da85719de51570be382cccf20aba2e0a663bf136fa5ae887855cd30d0a6926"
+    },
+    {
+      "path": "provider-literal-anchors.json",
+      "bytes": 413,
+      "sha256": "1fb993f1caff58259e2e5af99271755ad07352c88af688bc155c88fe247783d0"
+    },
+    {
+      "path": "pass31-provider-interface/native-101d9bff0.txt",
+      "bytes": 334,
+      "sha256": "1a929eae4c68eca415cca572b742b2f82ffbcbd317f4b291a0793f69d9e1039d"
+    },
+    {
+      "path": "pass32-provider-channel/native-101d9bef0.txt",
+      "bytes": 3336,
+      "sha256": "dea2f35df20f4bbe74d843072b2eeabdf998844e1e46bcc99697b5bd247abca4"
+    },
+    {
+      "path": "provider-index-factory-table.json",
+      "bytes": 1421,
+      "sha256": "e92a15501b44724381a54382a9b1e3f682a41d87448b2bb76d5c7d61126ea802"
+    },
+    {
+      "path": "pass33-channel-factory/native-101dcf544.txt",
+      "bytes": 18872,
+      "sha256": "36bafaece489d253b4fb352b61b7c4e6ff47fa1fb3ab767f44de9d87c35e67a6"
+    },
+    {
+      "path": "provider-factory-dispatch.json",
+      "bytes": 1894,
+      "sha256": "af38dbd2e70ac6f4609295d29875d290f09928abebc896d6dbbee75aad10e6fb"
+    },
+    {
+      "path": "pass34-audio-receiver/native-101d3c1fc.txt",
+      "bytes": 291,
+      "sha256": "a40b0abac33f27d4196c22ad55e807584c8b31e0a3ca0b8702587441e36dfb4f"
+    },
+    {
+      "path": "pass34-audio-receiver/native-101d3b918.txt",
+      "bytes": 20791,
+      "sha256": "3a678604fdefca6ded67f2c1eaa9a581562d51532e86c00802bb075d3b60b934"
+    },
+    {
+      "path": "pass5-channel/native-101d75844.txt",
+      "bytes": 1437,
+      "sha256": "96dc5478720194e8b454be35ef9c4de47e0ea01259c42183777724ae38ba0473"
+    },
+    {
+      "path": "pass6-restore/native-101d758b4.txt",
+      "bytes": 9320,
+      "sha256": "9ec1931a2d34718b33f4f4e9be265227247f7815d612343454e5ff32da7b3d66"
+    },
+    {
+      "path": "pass7-mixer/native-101d75bcc.txt",
+      "bytes": 49962,
+      "sha256": "1db10c21587b78728276857c1f1c8eb4247796e1e0c1c52b564c5d3e4d9b1e71"
+    }
+  ]
+}

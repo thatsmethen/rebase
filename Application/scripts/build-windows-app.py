@@ -14,6 +14,7 @@ import sys
 import time
 import urllib.request
 import zipfile
+import xml.etree.ElementTree as ET
 
 from windows_automation_gate import require_automation_protocol, require_automation_window
 from windows_soxr_package import stage_soxr
@@ -21,6 +22,7 @@ from cpr_audition_gate import require_cpr_audition, require_cpr_audition_window
 from source_stream_gate import require_receipt as require_source_stream
 from source_stream_window_gate import require_source_stream_window
 from documents_window_gate import require_documents_window
+from structure_window_gate import require_structure_fixture, require_structure_window, GENERATOR_FILES
 from native_stream_package import validate_native_stream_package
 
 SDK = "10.0.402"
@@ -888,7 +890,7 @@ def main():
                         "-c", "Release"], "host-controls")
         controls = json.loads(controls.strip().splitlines()[-1])
         if (controls.get("suite") != "windows-host-portable-controls" or controls.get("failures") != 0
-                or type(controls.get("checks")) is not int or controls["checks"] <= 0):
+                or type(controls.get("checks")) is not int or controls["checks"] != 646):
             raise RuntimeError("Missing executed host controls")
         write(evidence / "host-controls.json", controls)
         run([sys.executable, str(app / "scripts/run-windows-native-audio-ci.py"), "--configuration", "Release",
@@ -996,6 +998,38 @@ def main():
         stream_fixture_bytes = {path.relative_to(stream_fixture).as_posix(): digest(path)
                                 for path in stream_fixture.rglob("*") if path.is_file()}
         restricted["REBASE_SMOKE_SOURCE_STREAM_FIXTURE"] = str(stream_fixture)
+        # Generate two deterministic authored inspection packages outside the
+        # shipped tree. The filtered test verifies a second generation byte for
+        # byte and refuses overwrite; an actual executed XML case is mandatory.
+        structure_fixture = out / "structure-fixtures"
+        structure_work = out / "structure-fixture-work"
+        structure_work.mkdir()
+        structure_env = dict(env)
+        structure_env.update(REBASE_SMOKE_PROJECT_STRUCTURE_FIXTURE=str(structure_fixture),
+                             REBASE_TEST_WORK_ROOT=str(structure_work))
+        shutil.copyfile(stage / "soxr.dll", bin_path / "soxr.dll")
+        run(["swift", "test", "--scratch-path", str(scratch), "-c", "release",
+             "--filter", "CPRProjectStructureSnapshotTests/exportDeterministicWindowsStructureFixtures",
+             "--xunit-output", str(evidence / "structure-fixture-export.xml"),
+             "--disable-dead-strip", "-Xlinker", "/OPT:NOREF", "-Xswiftc", "-disable-cmo"],
+            "structure-fixture-export", structure_env, timeout=900)
+        structure_xml = sorted(evidence.glob("structure-fixture-export*.xml"))
+        structure_test_cases = [case for path in structure_xml for case in ET.parse(path).iter("testcase")]
+        if (len(structure_test_cases) != 1 or
+                "exportDeterministicWindowsStructureFixtures" not in structure_test_cases[0].get("name", "") or
+                any(case.find(key) is not None for case in structure_test_cases for key in ("skipped", "failure", "error"))):
+            raise RuntimeError("Authored structure fixture export did not execute exactly one passing test")
+        for path in structure_xml:
+            path.write_text(clean(path.read_text(encoding="utf-8")), encoding="utf-8")
+        generator_hashes = {name: digest(app / "Tests/SharedCPRAudioTests" / name) for name in GENERATOR_FILES}
+        structure_expected, structure_fixture_hash, structure_fixture_bytes = require_structure_fixture(structure_fixture, generator_hashes)
+        if inside(structure_fixture, stage):
+            raise RuntimeError("Authored structure fixtures must stay outside the package")
+        shutil.copyfile(structure_fixture / "expected.json", evidence / "structure-fixture-lock.json")
+        report["project_structure_fixture"] = {"expected_sha256": structure_fixture_hash, "files": structure_fixture_bytes,
+            "generator_sha256": generator_hashes, "export_test_executed": True, "export_test_count": 1,
+            "fixture_shipped": False, "reference_execution": False}
+        restricted["REBASE_SMOKE_PROJECT_STRUCTURE_FIXTURE"] = str(structure_fixture)
         run([sys.executable, str(app / "scripts/check-session-protocol.py"), "--helper", str(stage / "rebase-session.exe"),
              "--example", str(example), "--report", str(evidence / "packaged-session-protocol.json"),
              "--source-project", str(source_project), "--source-media", str(source_media), "--source-lock", str(source_lock)],
@@ -1109,6 +1143,22 @@ def main():
                     ("native_wpf_executed", "helper_executed", "physical_input_tested", "playback_tested"))):
             raise RuntimeError("Documents window receipt rejection controls did not execute successfully")
         report["documents_window_gate_controls"] = documents_controls
+        structure_controls_path = evidence / "structure-window-controls"
+        run([sys.executable, str(app / "scripts/test_structure_window_gate.py"), "--output", str(structure_controls_path)],
+            "structure-window-controls", restricted, cwd=stage)
+        structure_controls = json.loads((structure_controls_path / "observation.json").read_text(encoding="utf-8"))
+        if (structure_controls.get("schema") != "rebase.structure-window-gate-controls.v1"
+                or structure_controls.get("outcome") != "passed" or structure_controls.get("control_count") != 130
+                or len(structure_controls.get("checks", [])) != 130
+                or any(check.get("passed") is not True for check in structure_controls["checks"])
+                or structure_controls.get("evidence_class") != "authored-receipt-and-pixel-mutation-controls"
+                or structure_controls.get("gate_sha256") != digest(app / "scripts/structure_window_gate.py")
+                or structure_controls.get("instrument_sha256") != digest(app / "scripts/test_structure_window_gate.py")
+                or structure_controls.get("controls_log_sha256") != digest(structure_controls_path / "controls.log")
+                or any(structure_controls.get(key) is not False for key in
+                    ("native_wpf_executed", "helper_executed", "physical_input_tested", "visual_acceptance_claimed"))):
+            raise RuntimeError("Saved structure window receipt rejection controls did not execute successfully")
+        report["project_structure_window_gate_controls"] = structure_controls
         smoke_path = evidence / "wpf-smoke.json"
         run([str(stage / "Rebase.exe"), "--smoke", "--smoke-json", str(smoke_path),
              "--smoke-source-project", str(source_project), "--smoke-source-media", str(source_media)],
@@ -1116,7 +1166,8 @@ def main():
         smoke = json.loads(smoke_path.read_text(encoding="utf-8"))
         if (smoke.get("suite") != "windows-wpf-shared-session-smoke" or smoke.get("outcome") != "passed"
                 or smoke.get("stage") != "completed" or smoke.get("playback_tested") is not False
-                or smoke.get("audible_output_measured") is not False or not smoke.get("checks")):
+                or smoke.get("audible_output_measured") is not False or not isinstance(smoke.get("checks"), list)
+                or len(smoke["checks"]) != 179 or len(set(smoke["checks"])) != 179):
             raise RuntimeError("Window smoke receipt is incomplete")
         required_checks = {"real-waveforms-visible", "four-track-rows-fit", "source-package-copy", "source-event-ui-selection",
                            "source-media-ui-attachment", "source-attachment-undo", "source-attachment-redo",
@@ -1167,6 +1218,8 @@ def main():
             json.loads(stream_result_path.read_text(encoding="utf-8")), digest(stream_fixture / "expected.json"))
         report["documents_window_control"] = require_documents_window(smoke, evidence,
             (stage / "Examples/example.json").read_bytes(), digest(stage / "rebase-session.exe"))
+        report["project_structure_window_control"] = require_structure_window(smoke, evidence,
+            structure_fixture, digest(stage / "rebase-session.exe"), generator_hashes)
         modules = {"process": validate_modules(smoke.pop("process_modules", None), stage, windows,
                                                {"rebase.exe", "coreclr.dll", "rebasewindowsaudio.dll", "soxr.dll"}),
                    "helper": validate_modules(smoke.pop("helper_modules", None), stage, windows,
@@ -1208,6 +1261,9 @@ def main():
         if stream_fixture_bytes != {path.relative_to(stream_fixture).as_posix(): digest(path)
                                     for path in stream_fixture.rglob("*") if path.is_file()}:
             raise RuntimeError("A package check changed the authored long-timeline fixture")
+        _, final_structure_hash, final_structure_files = require_structure_fixture(structure_fixture, generator_hashes)
+        if final_structure_hash != structure_fixture_hash or final_structure_files != structure_fixture_bytes:
+            raise RuntimeError("A package check changed the authored saved-structure fixtures")
         # Keep this mandatory gate after window diagnostics, before any downloadable ZIP.
         # An application smoke pass cannot turn a failed/empty Release suite into success.
         run([sys.executable, str(app / "scripts/run-portable-ci.py"), "swift", "--configuration", "Release",
@@ -1221,8 +1277,9 @@ def main():
                                   ("sourceSHA256", "mediaSHA256", "manifestSHA256", "reportSHA256", "outputSHA256")}
         fixture_payload_hashes.update(modes_fixture_bytes.values())
         fixture_payload_hashes.update(stream_fixture_bytes.values())
+        fixture_payload_hashes.update(structure_fixture_bytes.values())
         if any(item["sha256"] in fixture_payload_hashes for item in files):
-            raise RuntimeError("A source-audition test payload was copied into the application package")
+            raise RuntimeError("An authored source/structure test payload was copied into the application package")
         if any(path.is_symlink() for path in stage.rglob("*")):
             raise RuntimeError("Package contains a symbolic link")
         write(stage / "package-manifest.json", {"schema": "rebase.windows-package.v1", "commit": env.get("GITHUB_SHA"),
@@ -1243,6 +1300,7 @@ def main():
                       dialogs_tested=False, dependency_closure_checked=True, app_local_modules_observed=True)
         report.update(source_journey_tested=True, source_fixture_shipped=False, real_waveform_checks_passed=True)
         report["source_modes_fixture_shipped"] = False
+        report["project_structure_fixture_shipped"] = False
         report["pinned_track_headers_scroll_checked"] = True
         report["musical_ruler_placement_checked"] = True
     except Exception as error:

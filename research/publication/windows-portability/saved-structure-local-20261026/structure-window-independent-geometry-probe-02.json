@@ -1,0 +1,75 @@
+{
+  "schema": "rebase.independent-structure-geometry-controls.v1",
+  "outcome": "passed",
+  "check_count": 8,
+  "evidence_class": "authored-receipt-mutation-controls",
+  "native_wpf_executed": false,
+  "helper_executed": false,
+  "physical_input_tested": false,
+  "visual_acceptance_claimed": false,
+  "scope": "Independent narrow regression for previously accepted unusable tab geometry; reuses original preserved synthetic fixture and PNG bytes without modification. Does not establish actual WPF layout or visual acceptance.",
+  "gate_path": "Application/scripts/structure_window_gate.py",
+  "gate_sha256": "20f0dd6a7a4e3d819a04fd267db2b5bc19c3f7403210e568b0ed33d443cbf90c",
+  "instrument_sha256": "e1ef8e191aa11ab87d3d1924e41d6b82c7f90b5496f0a84e05ce9816c69608be",
+  "baseline_sha256": "42c94ae09835f16442f6f544ab9882591e0ccf9292625581d09f239646ff4739",
+  "preserved_seed_files": 16,
+  "preserved_seed_unchanged": true,
+  "checks": [
+    {
+      "name": "preserved-original-baseline",
+      "expected": "accepted",
+      "observed": "accepted",
+      "passed": true,
+      "error": null
+    },
+    {
+      "name": "all-tabs-overlap",
+      "expected": "rejected",
+      "observed": "rejected",
+      "passed": true,
+      "error": "Structure window: tab headers overlap"
+    },
+    {
+      "name": "all-tabs-one-dip-square",
+      "expected": "rejected",
+      "observed": "rejected",
+      "passed": true,
+      "error": "Structure window: tab header is too small, outside sections or over the report"
+    },
+    {
+      "name": "tabs-over-report",
+      "expected": "rejected",
+      "observed": "rejected",
+      "passed": true,
+      "error": "Structure window: tab header is too small, outside sections or over the report"
+    },
+    {
+      "name": "tabs-outside-sections",
+      "expected": "rejected",
+      "observed": "rejected",
+      "passed": true,
+      "error": "Structure window: tab header is too small, outside sections or over the report"
+    },
+    {
+      "name": "tab-width-below-minimum",
+      "expected": "rejected",
+      "observed": "rejected",
+      "passed": true,
+      "error": "Structure window: tab header is too small, outside sections or over the report"
+    },
+    {
+      "name": "tab-height-below-minimum",
+      "expected": "rejected",
+      "observed": "rejected",
+      "passed": true,
+      "error": "Structure window: tab header is too small, outside sections or over the report"
+    },
+    {
+      "name": "valid-wrapped-headers",
+      "expected": "accepted",
+      "observed": "accepted",
+      "passed": true,
+      "error": null
+    }
+  ]
+}

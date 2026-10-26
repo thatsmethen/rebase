@@ -7,6 +7,7 @@ This is the research behind Rebase: a static investigation of Cubase Pro 15.0.30
 - [Study and evidence definitions](study.json): target identity, tools, hypotheses, acceptance rules and findings.
 - [Coverage ledger](coverage.json): what has been investigated, admitted, rejected or left unresolved.
 - [Research steering](rea-steering.json): investigation priorities, constraints and retained decisions.
+- [Counted project structure and output routing](publication/project-composition-20261026/README.md): later REA findings, corrected binding decoder boundaries, provider/device restoration and unresolved processing. The associated [saved-structure inspector](../docs/development/saved-project-structure.md) has separate application validation.
 - [Development overview at APP020](development-overview-APP020.md): the detailed application and research narrative before the current overlap implementation.
 - [Experiment protocols](protocols/) and [research instruments](../scripts/): acquisition, byte verification, project inspection and deterministic audio checks.
 - [Candidate DSP experiments](../candidate/): scoped implementations and their controls.

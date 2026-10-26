@@ -85,6 +85,7 @@ public partial class MainWindow : Window
             InspectorTrackControls.IsEnabled = !model.Busy && model.SelectedTrack is not null;
             AutomationMenu.IsEnabled = InspectorTrackControls.IsEnabled;
             ImportAudioMenu.IsEnabled = !model.Busy && model.Project is not null;
+            ProjectStructureMenu.IsEnabled = !model.Busy && model.Project is not null;
             UndoButton.IsEnabled = !model.Busy && model.State.CanUndo;
             RedoButton.IsEnabled = !model.Busy && model.State.CanRedo;
             RestoreMixerFocus();
@@ -106,6 +107,7 @@ public partial class MainWindow : Window
         UndoButton.IsEnabled = model.State.CanUndo && !model.Busy;
         RedoButton.IsEnabled = model.State.CanRedo && !model.Busy;
         ImportAudioMenu.IsEnabled = model.Project is not null && !model.Busy;
+        ProjectStructureMenu.IsEnabled = model.Project is not null && !model.Busy;
         TempoBox.Text = (model.Project?.Tempo ?? 120).ToString("0.###", CultureInfo.CurrentCulture);
         SelectionName.Text = model.SelectedClip?.Name ?? model.SelectedSourceEvent?.Name ?? "No event selected";
         SelectionName.ToolTip = SelectionName.Text;
@@ -423,6 +425,7 @@ public partial class MainWindow : Window
         if (closeFinished) return;
         e.Cancel = true;
         if (documentOperation) return;
+        if (openingProjectStructure) { activeProjectStructure?.Activate(); return; }
         if (reviewingCPR) { activeCPRReview?.Activate(); return; }
         if (openingAutomation) { activeAutomationEditor?.Activate(); return; }
         if (openingSourceAudio) { activeSourceAudio?.Activate(); return; }

@@ -26,7 +26,7 @@ let portableSources = [
     "CPRNativeTimelineStream.swift", "CPRRateConvertedStream.swift", "CPRLiveStereoTransfer.swift",
     "CPRLiveCallbackAdapter.swift", "CPRNativeAudioAccessor.swift", "CPRPlacedSourceEventPlan.swift",
     "CPRSourceTrackPlan.swift", "CPRTrackOverlapNormalizer.swift", "CPRTimelineSelection.swift",
-    "CPRSourceAudioInspection.swift",
+    "CPRSourceAudioInspection.swift", "CPRNativeProjectBindings.swift", "CPRProjectStructureSnapshot.swift",
     "MusicalTime.swift", "MusicalRuler.swift", "NativeTempoClock.swift", "PCMRendering.swift", "PortableSHA256.swift", "Project.swift", "ProjectEditing.swift",
     "PortablePackageSnapshot.swift", "PortableSession.swift", "PortableSourceStream.swift", "PortableCPRReview.swift", "ProjectFileIO.swift", "ProjectStore.swift", "ProjectStorePortableAudio.swift", "ProjectAudioImport.swift",
     "UnresolvedCPRAudioEvent.swift", "WAVPCMSource.swift", "WaveformPeaks.swift"

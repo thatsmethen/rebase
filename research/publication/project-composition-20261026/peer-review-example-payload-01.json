@@ -1,0 +1,44 @@
+{
+  "schema": "rebase.native-project-bindings-peer-review.v1",
+  "reviewed_at_utc": "2026-10-26T03:39:09.246255+00:00",
+  "scope": "Read-only source, tests and bounded private static findings review; no compilation, reference execution, or actual-template decoder execution by this reviewer.",
+  "sources": [
+    {
+      "path": "Application/Sources/RebaseCore/CPRNativeProjectBindings.swift",
+      "sha256": "0fb1bcb3e33c936e375cc45ba06fa6c01db114f5f729df35b96c16c2d3316423"
+    },
+    {
+      "path": "Application/Tests/SharedCPRAudioTests/CPRNativeProjectBindingsTests.swift",
+      "sha256": "9dddb5836346993b0545eeb1ccdb6c2529762b9d6e0103edd3521ede81827676"
+    }
+  ],
+  "findings": [
+    {
+      "code": "later-sibling-version-admission",
+      "issue": "Deferred audio-resource decoding could borrow MTrack declarations from later device resources.",
+      "correction_observed": "Audio resources decoded during the counted walk at the resource position."
+    },
+    {
+      "code": "later-tail-version-admission",
+      "issue": "Version lookup after automation/fade tail parsing could borrow a later declaration.",
+      "correction_observed": "MTrack version set snapshotted immediately after the resource envelope, before tail parsing."
+    }
+  ],
+  "preservation": "Stored pre-recursion ordinal and final ordering preserve counted track preorder despite serialized resource parsing order; later version conflicts still reject.",
+  "additional_review": [
+    "Preserved-source inspection replays the historical report before binding the new source snapshot by digest, size and sections.",
+    "Corrected Child Bus subtype5/FSubList handling is distinct from subtype201/FObjectList and matches the retained getter/type findings.",
+    "Conditional saved route/Volume/bus candidates do not authorize runtime routing, processing or playback."
+  ],
+  "private_findings_read": [
+    "child-bus-receiver-correction.md",
+    "common-resource-addendum.md",
+    "bus-identity-addendum.md",
+    "field-encoding-addendum.md",
+    "finding.md",
+    "binary-state-reader-anchor.json",
+    "pass24-field-values/native-1031a0ce8.txt"
+  ],
+  "remaining_concrete_findings": 0,
+  "author_reported_tests": "Focused20/20 reported by implementation owner; not rerun by this reviewer."
+}

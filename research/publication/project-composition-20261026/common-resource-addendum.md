@@ -1,0 +1,13 @@
+# Common track resource prefix
+
+This extends the earlier field/root correction; it does not replace any retained result. `common-track-reader-anchors.json` records exact mangled RTTI names, typeinfo pointers, zero offset-to-top prefixes and primary reader slots from the pinned target. `verification-common-prefix-01.json` verifies 95 functions and all 95 complete REA slice readbacks against original bytes. No proprietary code was executed.
+
+MDeviceTrackEvent and MTrackEvent both have primary archive-reader slot +0x98 = `10174b638`. This directly calls MEvent reader `1017017a0`, then at `10174b680..10174b69c` requests the required MTrack resource. The versioned signed32/double/automation and callbacks follow that resource. This permits registration of the typed resource object after the already bounded event prefix, counted node and numeric attributes, without interpreting the remaining tail.
+
+Fresh REA also retained MMidiTrackEvent and MInstrumentTrackEvent reader `101021c0c`, which calls that common reader at `101021c30`; MSamplerTrackEvent reader `100bacd90` calls the MIDI reader at `100bacda8`; MFolderTrack reader `101785e4c` calls the common reader at `101785e6c`. These extra entries are evidence for later extension, not a claim that all subclass tails or receiver roles are decoded. The locator did not establish a primary MDrumTrackEvent table, so no common-reader claim is made for that class.
+
+The private common-prefix probe follows registered counted hierarchy objects and the exact supported numeric-attribute prefix. Across ten unchanged templates, it reaches seventeen MDeviceTrackEvent resource slots. Every non-reference definition is MTrack v2; later slots can refer backward to that declaration. This is the concrete earlier declaration missing from the initial audio-only binding traversal.
+
+The source addition consumes only the verified MDeviceTrackEvent common prefix. It records the track, typed resource, exact prefix hash and complete remaining-tail hash. It does not decode the device resource body, channel state or tail. Capturing a real earlier MTrack declaration can then satisfy the separate audio-track resource version guard. Unsupported device versions remain opaque and cannot register nested decoy declarations. The authored regression checks these distinctions and rejects truncated common prefixes.
+
+A `--help` probe of the existing REA session wrapper was an instrument invocation error: that wrapper treats its first argument as an output directory. It initialized/listed tools without opening a binary. Its unchanged request/response files were moved immediately from the accidental checkout `--help` directory into `rea-cli-help-attempt`; no target or sealed research was modified.

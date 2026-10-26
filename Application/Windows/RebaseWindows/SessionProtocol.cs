@@ -41,6 +41,7 @@ public sealed class SessionResponse
     public WaveformSnapshot? Waveform { get; set; }
     public RulerSnapshot? Ruler { get; set; }
     public CPRReviewSnapshot? CprReview { get; set; }
+    public ProjectStructurePage? ProjectStructure { get; set; }
     public SourceInspectionSnapshot? SourceInspection { get; set; }
     public SourceStreamTicket? SourceStream { get; set; }
     public SessionError? Error { get; set; }
@@ -138,6 +139,15 @@ public static class ProtocolJson
                     property.Value.ValueKind != JsonValueKind.Null &&
                     System.Text.Encoding.UTF8.GetByteCount(property.Value.GetRawText()) > CPRReviewSnapshot.MaximumBytes)
                     throw new InvalidDataException("The CPR review page exceeds 128 KiB.");
+                if (string.Equals(property.Name, "projectStructure", StringComparison.OrdinalIgnoreCase) &&
+                    property.Value.ValueKind != JsonValueKind.Null && System.Text.Encoding.UTF8.GetByteCount(property.Value.GetRawText()) > 128 * 1024)
+                    throw new InvalidDataException("The saved structure page exceeds 128 KiB.");
+                if (string.Equals(property.Name, "projectStructure", StringComparison.OrdinalIgnoreCase) && property.Value.ValueKind == JsonValueKind.Object)
+                {
+                    var pageFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var field in property.Value.EnumerateObject())
+                        if (!pageFields.Add(field.Name)) throw new InvalidDataException("The saved structure page contains duplicate fields.");
+                }
             }
         }
         var response = JsonSerializer.Deserialize<SessionResponse>(text, Options)
@@ -146,6 +156,7 @@ public static class ProtocolJson
             throw new InvalidDataException("The session protocol or response identifier does not match.");
         if (response.Ok && response.State is null) throw new InvalidDataException("The session omitted its document state.");
         response.CprReview?.Validate();
+        response.ProjectStructure?.Validate();
         return response;
     }
 }

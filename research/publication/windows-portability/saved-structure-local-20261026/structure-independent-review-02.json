@@ -1,0 +1,44 @@
+{
+  "schema": "rebase.saved-structure.independent-source-review.v2",
+  "observed_at": "2026-10-26T05:26:50.228431+00:00",
+  "supersedes_finding_status_only": {
+    "receipt": "structure-independent-review-01.json",
+    "sha256": "31f646a2c49a2e89c7f59ad669ca14af7ec4da126587e98c88d09527927873f5"
+  },
+  "scope": "Independent read-only integration correction review plus narrow native executable controls of actual current Mac application sources. No proprietary execution, no new pixel review, no independent review of reviewer-authored decoder.",
+  "sources_sha256": {
+    "Application/Sources/RebaseCore/CPRProjectStructureSnapshot.swift": "18449e1a90f86b28ce0dc637d8dc2c9041fb6cc551d038a2ffafb125bb5da4ae",
+    "Application/Sources/Rebase/StudioSession.swift": "04eb2dc9be4993208509ebd234f87f8568deb69c18a56a15642ab0e8f7390ee7",
+    "Application/Sources/Rebase/CPRProjectStructureView.swift": "603b0610948446be254f85b83c81c01c4e7b2da94d589af329a8a43059bf4f00",
+    "Application/Tests/RebasePortableTests/PortableProjectStructureTests.swift": "fcece0b0885692b8e9681eb434c48e0fe57d4e5644af4a5a2cbf8cefc55e9817",
+    "Application/Tests/SharedCPRAudioTests/CPRProjectStructureSnapshotTests.swift": "9780c78e29df446f40d5afc5c12c7ce27cf327907fe70c94bddf0d14051c843e"
+  },
+  "findings": [
+    {
+      "id": "mac-inspection-generation",
+      "status": "closed",
+      "correction": "project/projectRoot assignments and accepted Save invalidate generation, busy state and visible preview; per-request result, defer and error handling require matching generation.",
+      "execution": "18 passed assertions with current app source; pending equal-value reopen, edit then undo, accepted Save, subsequent fresh inspections and visible document replacement."
+    }
+  ],
+  "report_custody_correction": "Exact bounded ImportReport bytes are hash-bound before inspection and before/after replay verification; valid whitespace rewrite controls added by owner.",
+  "additional_material_findings": [],
+  "execution": {
+    "normal_mac_build_exit": 0,
+    "harness_compile_exit": 0,
+    "harness_run_exit": 0,
+    "checks": 18,
+    "binary_sha256": "ac4d194941700e2e3f6b8b40726100ec93928b444ac60a5cd6ef5c4fbd1a351f",
+    "controls_receipt": "mac-structure-lifecycle-controls/controls-01.json",
+    "controls_sha256": "5174cd1d8b920c0c7cb9439687e94d389fb660e75f33f3ef2ef25a5f4afa8755",
+    "compile_input_count": 114,
+    "compile_inputs_unchanged": true,
+    "original_authored_fixture_unchanged": true,
+    "package_resolved_restored": true
+  },
+  "limits": [
+    "Detached discarded Tasks are not exposed or joinable; stale-result checks observe one second per invalidation scenario and complement source-level generation-guard review.",
+    "No physical input, rendered-window or proprietary runtime equality claimed.",
+    "Snapshot initial Mac admission intentionally samples the current same-ID saved manifest; it does not receive a session-held expected manifest digest."
+  ]
+}

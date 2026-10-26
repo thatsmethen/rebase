@@ -6,7 +6,7 @@ import UniformTypeIdentifiers
 
 @MainActor
 final class StudioSession: ObservableObject {
-    @Published var project = Project()
+    @Published var project = Project() { didSet { invalidateProjectStructure() } }
     @Published var selectedClipID: UUID?
     @Published var selectedTrackID: UUID?
     @Published var playhead = 0.0
@@ -20,13 +20,16 @@ final class StudioSession: ObservableObject {
     @Published var showAutomationEditor = false
     @Published var cprImportPreview: CPRImportPreview?
     @Published var cprSourceAudioInspection: CPRSourceAudioInspection?
+    @Published var cprProjectStructure: CPRProjectStructurePreview?
+    @Published private(set) var inspectingProjectStructure = false
     @Published private(set) var sourceEventPlaybackInfo: CPRSourceEventPlaybackInfo?
     @Published private(set) var cprCompatibility: CPRInspection?
     @Published var status = "Ready"
     @Published var errorMessage: String?
     @Published var waveformPeaks: [UUID: [Float]] = [:]
     @Published private var editHistory = ProjectEditHistory()
-    private var projectRoot: URL!
+    private var projectRoot: URL! { didSet { invalidateProjectStructure() } }
+    private var projectStructureGeneration = UUID()
     private var isScratch = true
     private let engine = AudioTransportEngine()
     private var timer: Timer?
@@ -159,6 +162,7 @@ final class StudioSession: ObservableObject {
         if isScratch { return saveProjectAs() }
         do {
             try ProjectStore.save(project, to: projectRoot)
+            invalidateProjectStructure()
             isDirty = false; status = "Saved \(project.name)"; return true
         } catch { show(error); return false }
     }
@@ -559,6 +563,36 @@ final class StudioSession: ObservableObject {
             let report = try CPRProject.inspect(from: source)
             cprImportPreview = cprPreview(report, source: source)
         } catch { show(error) }
+    }
+
+    func showCPRProjectStructure() {
+        guard !inspectingProjectStructure, let root = projectRoot else { return }
+        let inspectedProject = project
+        let generation = UUID()
+        projectStructureGeneration = generation
+        inspectingProjectStructure = true
+        status = "Inspecting preserved project structure…"
+        Task {
+            defer { if projectStructureGeneration == generation { inspectingProjectStructure = false } }
+            do {
+                let snapshot = try await Task.detached(priority: .userInitiated) {
+                    try CPRProjectStructureSnapshot.inspect(in: root, expectedProjectID: inspectedProject.id)
+                }.value
+                guard projectStructureGeneration == generation,
+                      project == inspectedProject, projectRoot == root else { return }
+                try snapshot.verify(in: root)
+                cprProjectStructure = .init(snapshot: snapshot)
+                status = "Showing saved project structure · routing and processing unresolved"
+            } catch { if projectStructureGeneration == generation { show(error) } }
+        }
+    }
+
+    private func invalidateProjectStructure() {
+        // A same-value reopen or edit followed by Undo is still a new document
+        // generation. An earlier detached inspection must never publish into it.
+        projectStructureGeneration = UUID()
+        cprProjectStructure = nil
+        inspectingProjectStructure = false
     }
 
     func showCPRCompatibility() {

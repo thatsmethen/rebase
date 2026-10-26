@@ -1,0 +1,55 @@
+{
+  "schema": "rebase.saved-structure.independent-source-review.v1",
+  "observed_at": "2026-10-26T05:14:36.826644+00:00",
+  "scope": "Read-only independent integration review. Existing tests/results inspected, no new build or native UI run; prior decoder is reviewer-authored and is not independently certified here.",
+  "sources": {
+    "Application/Sources/RebaseCore/CPRProjectStructureSnapshot.swift": "fa1cc71aa187f7687bfc4acd511a863ed71dba9b981e4c19021e1d4240895bf3",
+    "Application/Sources/RebaseCore/PortableSession.swift": "7ca16e3813cf89b3cbd570a91e5f4a038567061561a2f90ad4594bb9ae73ce7e",
+    "Application/Sources/Rebase/CPRProjectStructureView.swift": "603b0610948446be254f85b83c81c01c4e7b2da94d589af329a8a43059bf4f00",
+    "Application/Sources/Rebase/StudioSession.swift": "640309547460770944a5c7c4d884faf65c6841e7e04e34c6b53640cd3e97f9c3",
+    "Application/Sources/Rebase/RebaseApp.swift": "fcc2d386684d2d21bde51ee8d12b2a9d04b7fcf0e5c7182f34a44ebeca64b129",
+    "Application/Tests/RebasePortableTests/PortableProjectStructureTests.swift": "28161f768a3aeb6634c1008b7657f3818ad0ca36ad363ab252053d6e524121ba",
+    "Application/Tests/SharedCPRAudioTests/CPRProjectStructureSnapshotTests.swift": "2e66c233cd24408aae9aabb188375e56f1fb0cae69062856e6ce115f48bacd38"
+  },
+  "findings": [
+    {
+      "id": "mac-inspection-generation",
+      "status": "accepted-by-integration-owner-correction-pending",
+      "file": "Application/Sources/Rebase/StudioSession.swift",
+      "line": 566,
+      "detail": "Pending completion tests only Project equality and root equality. No generation invalidation or visible-preview clearing on document/edit lifecycle; equal-value reopen or edit-and-undo can let a stale request publish. Parent is implementing generation-bound completion, cleanup and errors plus lifecycle invalidation."
+    }
+  ],
+  "reviewed_boundaries": [
+    "Portable revision and token binding; fresh inspection supersedes prior token",
+    "Raw-byte Base64 paging, exact offsets, immutable full-report hash",
+    "Encoded report greater than 8388608 bytes refused without partial publication",
+    "Continuation manifest/source/replayed historical-report checks, failure revocation",
+    "Read-only project, dirty history and selection behavior",
+    "Mac read-only presentation and full JSON availability"
+  ],
+  "scope_notes": [
+    "Mac call currently passes no expected saved manifest digest; it captures same-ID saved manifest at inspection time.",
+    "Historical import report is replay-validated but its exact raw bytes/hash are not part of snapshot identity. A valid reserialization does not itself revoke the review."
+  ],
+  "existing_results": {
+    "portable": {
+      "reported": 175,
+      "executed": 172,
+      "skipped": 3,
+      "structure_tests_executed": 8,
+      "xml": "structure-full-portable-01.xml",
+      "xml_sha256": "c6e267631d8878b3e4bbd0bb99591dc47ee1425ebb2e2183bd01c5a3cad868bb"
+    },
+    "normal_mac": {
+      "reported": 431,
+      "executed": 312,
+      "skipped": 119,
+      "shared_structure_tests_executed": 4,
+      "xml": "structure-full-mac-01.xml",
+      "xml_sha256": "d2241b8b67dc8e024cc10b78131042f8d64d85ac3662a7fb0ec663b53b0b6e3f"
+    }
+  },
+  "new_execution_claims": false,
+  "no_additional_material_finding": true
+}
