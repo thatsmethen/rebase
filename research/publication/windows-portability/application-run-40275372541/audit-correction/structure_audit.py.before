@@ -1,0 +1,51 @@
+"""Independent saved-structure audit using committed gates and preserved fixture bytes."""
+import hashlib
+import json
+import xml.etree.ElementTree as ET
+
+
+def verify(context, app, smoke, package_files):
+    from structure_window_gate import require_structure_fixture, require_structure_window, GENERATOR_FILES
+    def sha(data): return hashlib.sha256(data).hexdigest()
+    def read(name): return json.loads((context.evidence/name).read_bytes())
+    helper = package_files['rebase-session.exe']['sha256']
+    generators = {name:sha(context.source('Application/Tests/SharedCPRAudioTests/'+name)) for name in GENERATOR_FILES}
+    expected, fixture_hash, inventory = require_structure_fixture(context.structure_fixture,generators)
+    assert (context.evidence/'structure-fixture-lock.json').read_bytes() == (context.structure_fixture/'expected.json').read_bytes()
+    assert app['project_structure_fixture'] == {'expected_sha256':fixture_hash,'files':inventory,
+        'generator_sha256':generators,'export_test_executed':True,'export_test_count':1,
+        'fixture_shipped':False,'reference_execution':False}
+    exports = [case for path in context.evidence.glob('structure-fixture-export*.xml') for case in ET.parse(path).iter('testcase')]
+    assert len(exports)==1 and 'exportDeterministicWindowsStructureFixtures' in exports[0].get('name','')
+    assert all(exports[0].find(k) is None for k in ('failure','error','skipped'))
+    shared = [case for path in context.evidence.glob('shared/tests*.xml') for case in ET.parse(path).iter('testcase')]
+    snapshot = [case for case in shared if 'CPRProjectStructureSnapshotTests' in case.get('classname','') or 'CPRProjectStructureSnapshotTests' in case.get('name','')]
+    assert len(snapshot)==5 and sum(case.find('skipped') is not None for case in snapshot)==1
+    skipped = next(case for case in snapshot if case.find('skipped') is not None)
+    assert 'exportDeterministicWindowsStructureFixtures' in skipped.get('name','')
+    controls = read('structure-window-controls/observation.json')
+    assert controls == app['project_structure_window_gate_controls']
+    assert controls['schema']=='rebase.structure-window-gate-controls.v1' and controls['outcome']=='passed'
+    assert controls['evidence_class']=='authored-receipt-and-pixel-mutation-controls'
+    assert controls['control_count']==len(controls['checks'])==context.counts['structure_gate_checks']
+    assert len({row['name'] for row in controls['checks']})==len(controls['checks'])
+    assert all(row['passed'] is True and row['observed'] in ('accepted','rejected') for row in controls['checks'])
+    assert all(controls[k] is False for k in ('native_wpf_executed','helper_executed','physical_input_tested','visual_acceptance_claimed'))
+    assert controls['gate_sha256']==sha(context.source('Application/scripts/structure_window_gate.py'))
+    assert controls['instrument_sha256']==sha(context.source('Application/scripts/test_structure_window_gate.py'))
+    log=(context.evidence/'structure-window-controls/controls.log').read_bytes()
+    assert controls['controls_log_sha256']==sha(log)
+    assert log==('\n'.join(row['name']+': '+row['observed'] for row in controls['checks'])+'\n').encode()
+    summary=require_structure_window(smoke,context.evidence,context.structure_fixture,helper,generators)
+    assert summary==app['project_structure_window_control'] and summary['native_checks']==context.counts['structure_window_checks']
+    assert summary['phases']==3 and summary['page_counts']==[1,1,2]
+    assert app['project_structure_fixture_shipped'] is False
+    assert not any(row['sha256'] in set(inventory.values()) for row in package_files.values())
+    for capture in smoke['project_structure']['captures']:
+        diagnostic=read(capture['file'].replace('.png','-alpha.json'))
+        assert diagnostic=={'screenshot':capture['file'],'png_sha256':capture['sha256'],'alpha_coverage':capture['alpha_coverage']}
+    return {'gate_controls':controls['control_count'],'filtered_export_tests':1,'filtered_export_skipped':0,
+        'fixture_files':len(inventory),'fixture_sha256':fixture_hash,'report_bytes':[row['reportBytes'] for row in expected['cases']],
+        'window':summary,'unchanged_sources_and_copies':True,'fixture_exclusion_verified':True,
+        'fixture_origin':'Independent local deterministic authored export, byte-identical expected lock to actual Windows CI; source-generator hashes bound to exact audited commit.',
+        'native_execution_performed_by_audit':False,'visual_acceptance_claimed':False}

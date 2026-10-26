@@ -4,13 +4,13 @@ This experimental x64 preview is intended for Windows 11. It includes its requir
 
 ## Open the app
 
-1. Download `Rebase-0.21.1-windows-preview.9-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-windows-preview.9).
+1. Download `Rebase-0.21.1-structure-preview.1-windows-x64.zip` from the [Windows preview release](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-structure-preview.1).
 2. Use **Extract All** to unpack the complete archive.
 3. Open **Rebase.exe** inside the extracted `Rebase` folder. Keep the DLLs, notices and `Examples` folder beside the executable.
 4. Choose **File → Open example**. The four-track beat opens as a separate editable copy.
 5. Use **Save As** to save your project in a new `.rebaseproj` folder.
 
-The preview is unsigned. The archive is 99,930,466 bytes; its SHA-256 is `fc1d90aaff8f5179cef008b12bb3b3b55fce45e6dde480b2a0aaa2a4160fb6c4`. The release page includes the checksum and exact validation record.
+The preview is unsigned. The archive is 100,149,693 bytes; its SHA-256 is `ae8fef10e7d9f23f9747ad82504a229dcd05330222106312609f38646e216cdd`. The release page includes the checksum and exact validation record.
 
 To reopen a saved project, choose **File → Open project…**, enter its `.rebaseproj` folder, and select `Project.json`. To share a project, copy the complete project folder, including its media and compatibility data.
 
@@ -42,6 +42,10 @@ This editor operates on the selected track. Inline arrangement lanes and automat
 
 The project keeps the original CPR file and its import report. **File → Import Report…** reopens that preserved baseline; later edits do not rewrite it. Cancel leaves the current project unchanged. Unresolved audio remains unresolved until its supported source workflow is completed; import does not restore effects, routing or other unsupported processing.
 
+## Inspect preserved project structure
+
+Choose **Project → Saved Project Structure** after opening an imported CPR project. The five sections show the counted hierarchy, audio-resource bindings, unresolved conditions and complete JSON. Inspection preserves edits, selection and Undo. The complete report is verified before display and remains read-only; it describes the preserved source, excluding later Rebase edits. Raw bus and Volume values do not establish working routing or processing.
+
 ## Audio output
 
 Playback accepts Float32 stereo output devices from **8 to 192 kHz**. The included beat uses **48 kHz**. When the device rate differs, Rebase prepares a converted snapshot before playback and shows the source and output rates in the status line. Transport positions remain in project/source time. Pause reads the frozen source position before resume; a seek that rounds to the end finishes without trying to restart beyond it.
@@ -54,9 +58,9 @@ Each play, resume, seek and export checks the source and required attachments ag
 
 ## What has been checked
 
-Preview.9 comes from commit `2934b9a0b6e96a5b3bd654a3e6a4fb00abe64e31` and [native Windows run 40265349968](../../research/publication/windows-portability/application-run-40265349968) on a Windows Server 2025 GitHub runner. It passed 165 actual-window checks, 574 host controls, 853 streaming-helper checks across 85 scenarios, 425 source-mode checks across 48 scenarios and the existing 169-check helper suite. The shared Windows Release gate executed 140 tests with three explicit skips. The [component run](../../research/publication/windows-portability/run-40265350027) passed all 13 jobs and compared authored output/provenance across Windows/macOS Debug/Release.
+The saved-structure preview comes from commit `bbc16cf2d19fc1e7cf31bd8edec816d99b7fc50a` and [native Windows run 40275372541](../../research/publication/windows-portability/application-run-40275372541) on a Windows Server 2025 GitHub runner. It passed 179 actual-window checks, 646 host controls, 853 streaming-helper checks across 85 scenarios, 425 source-mode checks across 48 scenarios and the existing 169-check helper suite. The shared Windows Release gate executed 168 tests with four explicit skips. The [component run](../../research/publication/windows-portability/run-40275372542) passed all 13 jobs and compared authored output/provenance across Windows/macOS Debug/Release.
 
-The independent downloaded-package review checked all 444 files, dependency closure, app-local loaded modules, notices and seven unchanged example files. [Seventeen screenshots](../screenshots/README.md) show the actual client area, including New/import and streaming source audition. Both reviewers inspected every image. The hosted display constrained the wider-window request; larger-display behavior remains unverified.
+The independent downloaded-package review checked all 444 files, dependency closure, app-local loaded modules, notices and seven unchanged example files. [Nineteen screenshots](../../research/publication/windows-portability/application-run-40275372541/README.md) show the actual client area, including New/import, streaming source audition and the saved-structure inspector. Both reviewers inspected every image. The hosted display constrained the wider-window request; larger-display behavior remains unverified.
 
 The hosted runner had no playback endpoint. Conversion and pause/seek controls passed, but they do not establish sound through a real device. Physical mouse/keyboard input, native file dialogs and device audio still require interactive Windows verification. Recording, plugins, inline automation lanes, automation writing modes and the remaining Mac workflows are not yet integrated. The [parity ledger](../development/windows-parity.md) records those boundaries.
 

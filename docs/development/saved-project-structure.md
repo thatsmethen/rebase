@@ -1,6 +1,6 @@
 # Saved Project Structure
 
-The shared decoder now exposes preserved CPR project structure in both applications. This is development work following Windows preview 9; that released ZIP does not contain the inspector. Native Windows acceptance of this integration remains pending.
+The shared decoder now exposes preserved CPR project structure in both applications. The [saved-structure preview](https://github.com/thatsmethen/rebase/releases/tag/v0.21.1-structure-preview.1) provides both platform builds from `bbc16cf`. Its native Windows checks and actual Mac Release inspection passed; full platform parity remains ongoing work.
 
 On macOS, use **File → Saved Project Structure**. On Windows, use **Project → Saved Project Structure**. The read-only view includes counted hierarchy order, typed audio-resource bindings, unresolved conditions and the complete JSON report. It describes the preserved source, including null, repeated and unknown objects, rather than subsequent Rebase edits. The existing historical import report and original CPR remain unchanged.
 
@@ -16,7 +16,7 @@ macOS uses the same snapshot directly. A separate document generation invalidate
 
 ## Validation boundary
 
-Shared authored tests cover counted structure, declaration chronology, raw numeric state, paging, stale tokens, external changes, complete JSON and oversized refusal. Windows managed controls exercise the actual helper protocol and failure cases. Native window checks cover the real menu, all sections, read-only text, small-window geometry, a multi-page report, scrolling to its end and a dirty-edit/inspection/Undo journey. Their source is committed so Windows CI can execute them; cross-compilation or authored receipt tests alone do not establish native success.
+Shared authored tests cover counted structure, declaration chronology, raw numeric state, paging, stale tokens, external changes, complete JSON and oversized refusal. Windows managed controls exercise the actual helper protocol and failure cases. Native window checks cover the real menu, all sections, read-only text, small-window geometry, a multi-page report, scrolling to its end and a dirty-edit/inspection/Undo journey. The [Windows application run](../../research/publication/windows-portability/application-run-40275372541/README.md) executed these checks, and both reviewers inspected all 19 client screenshots. The [Mac Release review](../../research/publication/windows-portability/macos-inspector-bbc16cf/README.md) verified all sections, complete JSON, dirty edits and Undo. These observations remain narrower than whole-project playback or physical Windows input/audio validation.
 
 The fixture generator creates deterministic, forward-authored packages separately from the downloadable application. It uses a historical interpretation profile solely to exercise preserved-report replay and the new structural decoder. These fixtures do not establish that the reference program accepts them. Private templates and the proprietary runtime are excluded from the package.
 

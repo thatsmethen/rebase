@@ -1,0 +1,2090 @@
+{
+  "schema": "rebase.windows-application-build.v1",
+  "status": "passed",
+  "commit": "bbc16cf2d19fc1e7cf31bd8edec816d99b7fc50a",
+  "development_build": true,
+  "signed": false,
+  "playback_tested": false,
+  "audible_output_measured": false,
+  "commands": [
+    {
+      "name": "dotnet-version",
+      "argv": [
+        "dotnet",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.218
+    },
+    {
+      "name": "swift-version",
+      "argv": [
+        "swift",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.078
+    },
+    {
+      "name": "native-receipt-controls",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\test_windows_native_audio_gate.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.125
+    },
+    {
+      "name": "native-package-controls",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\test_native_stream_package.py",
+        "--output",
+        "<build-output>\\evidence\\native-package-controls"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.625
+    },
+    {
+      "name": "dependency-package-controls",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\test_windows_soxr_package.py",
+        "--output",
+        "<build-output>\\evidence\\dependency-controls"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.11
+    },
+    {
+      "name": "host-controls",
+      "argv": [
+        "dotnet",
+        "run",
+        "--project",
+        "<workspace>\\Application\\Windows\\RebaseWindows\\Tests\\RebaseWindows.Controls.csproj",
+        "-c",
+        "Release"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 24.515
+    },
+    {
+      "name": "native-audio-conformance",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\run-windows-native-audio-ci.py",
+        "--configuration",
+        "Release",
+        "--output",
+        "<build-output>\\evidence\\native"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 66.25
+    },
+    {
+      "name": "publish-wpf",
+      "argv": [
+        "dotnet",
+        "publish",
+        "<workspace>\\Application\\Windows\\RebaseWindows\\RebaseWindows.csproj",
+        "-c",
+        "Release",
+        "-r",
+        "win-x64",
+        "--self-contained",
+        "true",
+        "-p:PublishTrimmed=false",
+        "-p:PublishSingleFile=false",
+        "-p:DebugType=None",
+        "-p:DebugSymbols=false",
+        "-p:ContinuousIntegrationBuild=true",
+        "-p:PathMap=<workspace>=/_/Rebase",
+        "-p:RuntimeFrameworkVersion=10.0.13",
+        "-o",
+        "<build-output>\\package\\Rebase"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 21.219
+    },
+    {
+      "name": "build-session",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "<build-output>\\session-build",
+        "-c",
+        "release",
+        "--product",
+        "rebase-session",
+        "-Xswiftc",
+        "-file-prefix-map",
+        "-Xswiftc",
+        "<workspace>=/_/Rebase",
+        "-Xswiftc",
+        "-debug-prefix-map",
+        "-Xswiftc",
+        "<workspace>=/_/Rebase",
+        "-Xcc",
+        "-ffile-prefix-map=<workspace>=/_/Rebase"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 107.047
+    },
+    {
+      "name": "session-bin-path",
+      "argv": [
+        "swift",
+        "build",
+        "--scratch-path",
+        "<build-output>\\session-build",
+        "-c",
+        "release",
+        "--show-bin-path"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.031
+    },
+    {
+      "name": "structure-fixture-export",
+      "argv": [
+        "swift",
+        "test",
+        "--scratch-path",
+        "<build-output>\\session-build",
+        "-c",
+        "release",
+        "--filter",
+        "CPRProjectStructureSnapshotTests/exportDeterministicWindowsStructureFixtures",
+        "--xunit-output",
+        "<build-output>\\evidence\\structure-fixture-export.xml",
+        "--disable-dead-strip",
+        "-Xlinker",
+        "/OPT:NOREF",
+        "-Xswiftc",
+        "-disable-cmo"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 221.422
+    },
+    {
+      "name": "packaged-session-protocol",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\check-session-protocol.py",
+        "--helper",
+        "<build-output>\\package\\Rebase\\rebase-session.exe",
+        "--example",
+        "<build-output>\\package\\Rebase\\Examples\\Rebase Preview.rebaseproj",
+        "--report",
+        "<build-output>\\evidence\\packaged-session-protocol.json",
+        "--source-project",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceAudition\\AuthoredSource.rebaseproj",
+        "--source-media",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceAudition\\SelectedSource.wav",
+        "--source-lock",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceAudition\\expected.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.437
+    },
+    {
+      "name": "packaged-cpr-audition-modes",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\check-cpr-audition-modes.py",
+        "--helper",
+        "<build-output>\\package\\Rebase\\rebase-session.exe",
+        "--fixtures",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceAuditionModes",
+        "--report",
+        "<build-output>\\evidence\\packaged-cpr-audition-modes.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.813
+    },
+    {
+      "name": "packaged-source-stream",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\check-source-stream.py",
+        "--helper",
+        "<build-output>\\package\\Rebase\\rebase-session.exe",
+        "--fixtures",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceAuditionModes",
+        "--long-fixtures",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceStreamTimelines",
+        "--report",
+        "<build-output>\\evidence\\packaged-source-stream.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 18.344
+    },
+    {
+      "name": "managed-source-stream-reader",
+      "argv": [
+        "C:\\Program Files\\dotnet\\dotnet.exe",
+        "<workspace>\\Application\\Windows\\RebaseWindows\\Tests\\bin\\Release\\net10.0\\RebaseWindows.Controls.dll",
+        "--actual-source-stream-reader",
+        "<build-output>\\package\\Rebase\\rebase-session.exe",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceStreamTimelines",
+        "<build-output>\\evidence\\managed-source-stream-reader.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.406
+    },
+    {
+      "name": "source-stream-window-controls",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\test_source_stream_window_gate.py",
+        "--receipt",
+        "<build-output>\\evidence\\packaged-source-stream.json",
+        "--fixture",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceStreamTimelines\\expected.json",
+        "--helper",
+        "<build-output>\\package\\Rebase\\rebase-session.exe",
+        "--output",
+        "<build-output>\\evidence\\source-stream-window-controls"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 9.547
+    },
+    {
+      "name": "documents-window-controls",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\test_documents_window_gate.py",
+        "--output",
+        "<build-output>\\evidence\\documents-window-controls"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.11
+    },
+    {
+      "name": "structure-window-controls",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\test_structure_window_gate.py",
+        "--output",
+        "<build-output>\\evidence\\structure-window-controls"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.703
+    },
+    {
+      "name": "packaged-window-smoke",
+      "argv": [
+        "<build-output>\\package\\Rebase\\Rebase.exe",
+        "--smoke",
+        "--smoke-json",
+        "<build-output>\\evidence\\wpf-smoke.json",
+        "--smoke-source-project",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceAudition\\AuthoredSource.rebaseproj",
+        "--smoke-source-media",
+        "<workspace>\\Application\\Tests\\Fixtures\\SourceAudition\\SelectedSource.wav"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 29.344
+    },
+    {
+      "name": "shared-release-conformance",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\python.exe",
+        "<workspace>\\Application\\scripts\\run-portable-ci.py",
+        "swift",
+        "--configuration",
+        "Release",
+        "--output",
+        "<build-output>\\evidence\\shared",
+        "--soxr-build",
+        "<build-output>\\evidence\\native\\soxr"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 343.75
+    }
+  ],
+  "toolchain": {
+    "dotnet_sdk": "10.0.402",
+    "dotnet_runtime": "10.0.13",
+    "swift": "6.4.1"
+  },
+  "runner_image": {
+    "ImageOS": "win25-vs2026",
+    "ImageVersion": "20261021.278.1"
+  },
+  "native_stream_package_gate_controls": {
+    "schema": "rebase.native-stream-package-authored-controls.v1",
+    "status": "passed",
+    "evidence_class": "authored-synthetic-build-and-pe-metadata-controls",
+    "test_methods": 13,
+    "scenarios": 80,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1,
+    "real_pe_parser_exercised": false,
+    "windows_execution_tested": false,
+    "physical_playback_tested": false,
+    "guard_sha256": "da4b0597bc85c234d3e370fa864307e967fd5885cd9cd42ec59680db23417e6d",
+    "harness_sha256": "4ecf6af2a95938732eb2fc859f4dd1c21687335f57d5e0f62793263e64b7fbac"
+  },
+  "device_resampler": {
+    "schema": "rebase.windows-soxr-dependency.v1",
+    "status": "passed",
+    "scope": "Pinned public SoXR build bytes; no reference-library equivalence claim",
+    "source_version": "0.1.3",
+    "source_commit": "945b592b70470e29f917f4de89b4281fbbd540c0",
+    "source_manifest_sha256": "faeba8d39aa6eb0c4117291be67a99c207f3e0027bd3f79c1184309eca27a66d",
+    "source_entries_verified": 138,
+    "application_commit": "bbc16cf2d19fc1e7cf31bd8edec816d99b7fc50a",
+    "build_report_sha256": "7825368c7c936942153e21f2bb20b288b86098a324e1a70e62638c6eadebb931",
+    "plumbing_report_sha256": "c7f6a8e9428d094f1d44bbecaa7248f865e7163c1d5c44040ff994b269c8fc72",
+    "artifacts": [
+      {
+        "path": "install/bin/soxr.dll",
+        "bytes": 165888,
+        "sha256": "02581c7b26745fb5748ea7fde05ca723fc04a4ef7b2f060c2b4b42215bdb3e18"
+      },
+      {
+        "path": "install/lib/soxr.lib",
+        "bytes": 4544,
+        "sha256": "159547ca7ca894ad01df568a691a96b135b7b68fdf4bd54bea02f607af032ac4"
+      },
+      {
+        "path": "install/bin/rebase-soxr-probe.exe",
+        "bytes": 11776,
+        "sha256": "45e6440c7d4619a3e74c7feaed79355150bb1caf2f1eb716e740f62bf523fb08"
+      }
+    ],
+    "runtime_path": "soxr.dll",
+    "notices_directory": "ThirdPartyNotices/SoXR",
+    "packaged_files": [
+      {
+        "path": "ThirdPartyNotices/SoXR/AUTHORS",
+        "bytes": 39,
+        "sha256": "e5d53cd6c716dfeabe47a9f3613a8c6815aa4a67f0f77900787c59445396aeff"
+      },
+      {
+        "path": "ThirdPartyNotices/SoXR/COPYING.LGPL",
+        "bytes": 26432,
+        "sha256": "f2f118b9029ec1871b953639ecc46651b2fc7b62e295e6cf3ef2ac4c9a058b33"
+      },
+      {
+        "path": "ThirdPartyNotices/SoXR/LICENCE",
+        "bytes": 1024,
+        "sha256": "dc98676341fdcd29d9f279c9679d6a75288785b174ded8d1b2e316c366166135"
+      },
+      {
+        "path": "ThirdPartyNotices/SoXR/REBUILD-AND-REPLACE.txt",
+        "bytes": 2007,
+        "sha256": "611b2d85e2812877bfe97375ea36002c6cd0c8199deb3533710cf40c1a86d4f0"
+      },
+      {
+        "path": "ThirdPartyNotices/SoXR/soxr-0.1.3-source.zip",
+        "bytes": 213385,
+        "sha256": "b6bc76f1e733a1b128d067570eed3a8e54f511ec6724d299a05bf38172b2dd94"
+      },
+      {
+        "path": "ThirdPartyNotices/SoXR/soxr-source-manifest.json",
+        "bytes": 24807,
+        "sha256": "faeba8d39aa6eb0c4117291be67a99c207f3e0027bd3f79c1184309eca27a66d"
+      },
+      {
+        "path": "soxr.dll",
+        "bytes": 165888,
+        "sha256": "02581c7b26745fb5748ea7fde05ca723fc04a4ef7b2f060c2b4b42215bdb3e18"
+      }
+    ],
+    "source_archive": {
+      "path": "ThirdPartyNotices/SoXR/soxr-0.1.3-source.zip",
+      "sha256": "b6bc76f1e733a1b128d067570eed3a8e54f511ec6724d299a05bf38172b2dd94",
+      "entry_count": 141,
+      "source_entries": 138,
+      "symlink_entries": [
+        {
+          "path": "inst-check-soxr-lsr",
+          "target": "inst-check-soxr",
+          "representation": "regular link-text"
+        }
+      ]
+    }
+  },
+  "project_structure_fixture": {
+    "expected_sha256": "5bbc30f84ad67a0377acd511b82b9d83af6c28aa6de460dfcc6804ac827984e9",
+    "files": {
+      "expected.json": "5bbc30f84ad67a0377acd511b82b9d83af6c28aa6de460dfcc6804ac827984e9",
+      "Small.rebaseproj/Project.json": "c1e8ce3d2ceb38805694d480c4656c665bf8ab789988f87efcfab804d2527215",
+      "Small.rebaseproj/Compatibility/CPR/Original.cpr": "6c2008fc5308db1391754139e2f1743489ad771c6961fc5b535df8f6ed58609a",
+      "Small.rebaseproj/Compatibility/CPR/ImportReport.json": "1190fdeead09807c59a6859a25ac73fc5c35c608856ccd84ea992a1202766847",
+      "Small.structure.json": "cd77959e84d216dc2621e70a94ee5ee91f1ea18dbc387202e58f75a60ecfa247",
+      "Large.rebaseproj/Project.json": "090fb43cff656c4643d0a18e2adb750a51f68f6a8b0a16a467068968c09a36a1",
+      "Large.rebaseproj/Compatibility/CPR/Original.cpr": "52250aa72f573fc706f3a2efc902ca461ae817014a00ccd418d8bab61342301c",
+      "Large.rebaseproj/Compatibility/CPR/ImportReport.json": "3cc8aa91e61636f7dcb0bb7d4f04be3a49492d8ceb79612f8244d7779ecb9b1a",
+      "Large.structure.json": "ecfe82e806b7ad2cb6bb31874c40c6b86ab529f75a3c2753eb873469db10db09"
+    },
+    "generator_sha256": {
+      "CPRNativeProjectBindingsTests.swift": "8c617c73035f8757d1411b983580a3bfde00b629af4b040f6c64e3e2a50cb645",
+      "CPRProjectStructureSnapshotTests.swift": "9780c78e29df446f40d5afc5c12c7ce27cf327907fe70c94bddf0d14051c843e"
+    },
+    "export_test_executed": true,
+    "export_test_count": 1,
+    "fixture_shipped": false,
+    "reference_execution": false
+  },
+  "cpr_audition_control": {
+    "fixture_manifest_sha256": "35c6781f8644c30308497db8f1dc3afb1198034363645bf3387c1c23f57be485",
+    "helper_sha256": "c22506086c293acd98f87efa062c95816b5e6037ea9a983a7b42ccc60d235fef",
+    "scenarios": 48,
+    "checks": 425,
+    "gates": {
+      "all_eight_modes": true,
+      "complete_track_provenance": true,
+      "covered_media_rejected": true,
+      "eof_revalidated": true,
+      "explicit_mode": true,
+      "invalid_rejected": true,
+      "new_outputs_only": true,
+      "read_only": true,
+      "seek_fresh_cursor": true,
+      "source_unchanged": true,
+      "stale_rejected": true
+    },
+    "receipt_sha256": "54463b0ea35e28b81a5523a8f1341a622eb674a3fd4f847f12e0d07b8ca8fb73"
+  },
+  "source_stream_control": {
+    "schema": "rebase.source-stream-summary.v1",
+    "scenarios": 85,
+    "checks": 853,
+    "fixture_manifest_sha256": "35c6781f8644c30308497db8f1dc3afb1198034363645bf3387c1c23f57be485",
+    "long_fixture_manifest_sha256": "f1607f267c7ed55ff70ebf287fd29623d7c67c70c9a2b858cc2f04e6d046014f",
+    "helper_sha256": "c22506086c293acd98f87efa062c95816b5e6037ea9a983a7b42ccc60d235fef",
+    "playback_tested": false,
+    "reference_execution": false,
+    "receipt_sha256": "818ad25d99fc10b062ccbf5a6109ab33b81d4e5935cab62870c89a8702d6948c"
+  },
+  "managed_source_stream_reader": {
+    "receipt_sha256": "9c28bfe6cba950162bd5dda9011a3582be440217ecc89099174034907a2b9f1f",
+    "workers": 9,
+    "checks": 19,
+    "helper_sha256": "c22506086c293acd98f87efa062c95816b5e6037ea9a983a7b42ccc60d235fef",
+    "device_playback_tested": false
+  },
+  "source_stream_window_gate_controls": {
+    "audio_device_playback_measured": false,
+    "check_count": 115,
+    "checks": [
+      "authored unavailable endpoint receipt accepted",
+      "authored started endpoint receipt accepted without physical claim",
+      "opaque PNG predictor 1",
+      "opaque PNG predictor 2",
+      "opaque PNG predictor 3",
+      "opaque PNG predictor 4",
+      "measured near-opaque254 PNG predictor 0",
+      "measured near-opaque254 PNG predictor 1",
+      "measured near-opaque254 PNG predictor 2",
+      "measured near-opaque254 PNG predictor 3",
+      "measured near-opaque254 PNG predictor 4",
+      "measured mixed254 and255 coverage accepted",
+      "incorrect alpha coverage root_background_alpha 254",
+      "incorrect alpha coverage root_background_alpha True",
+      "incorrect alpha coverage alpha_minimum 254",
+      "incorrect alpha coverage alpha_254_pixels 1",
+      "incorrect alpha coverage alpha_255_pixels 0",
+      "incorrect alpha coverage alpha_below_254_pixels 1",
+      "incorrect alpha coverage total_pixels 0",
+      "missing alpha coverage",
+      "extra alpha coverage member",
+      "measured253 pixel rejected",
+      "measured uncovered pixel rejected",
+      "nonobject window",
+      "nonobject case",
+      "nonobject availability",
+      "nonobject cancellation",
+      "nonobject admission",
+      "nonobject capture",
+      "malformed field 01 outcome",
+      "malformed field 02 checks",
+      "malformed field 03 checks",
+      "malformed field 04 source_stream_window/tested",
+      "malformed field 05 source_stream_window/fixture_sha256",
+      "malformed field 06 source_stream_window/audio_device_playback_measured",
+      "malformed field 07 source_stream_window/physical_input_tested",
+      "malformed field 08 source_stream_window/native_frame_visual_tested",
+      "malformed field 09 source_stream_window/cases",
+      "malformed field 10 source_stream_window/cases/0/mode",
+      "malformed field 11 source_stream_window/cases/0/revision",
+      "malformed field 12 source_stream_window/cases/0/after_state_sha256",
+      "malformed field 13 source_stream_window/cases/0/prepare_requests",
+      "malformed field 14 source_stream_window/cases/0/snapshot_render_requests",
+      "malformed field 15 source_stream_window/cases/0/inspection_requests",
+      "malformed field 16 source_stream_window/cases/0/helper_responsive",
+      "malformed field 17 source_stream_window/cases/0/cancel_joined",
+      "malformed field 18 source_stream_window/cases/0/availability/live_available",
+      "malformed field 19 source_stream_window/cases/0/availability/available",
+      "malformed field 20 source_stream_window/cases/0/availability/snapshot_export_available",
+      "malformed field 21 source_stream_window/cases/0/availability/play_enabled",
+      "malformed field 22 source_stream_window/cases/0/availability/export_enabled",
+      "malformed field 23 source_stream_window/cases/0/availability/snapshot_export_reason",
+      "malformed field 24 source_stream_window/cases/0/availability/sample_rate",
+      "malformed field 25 source_stream_window/cases/0/availability/total_frames",
+      "malformed field 26 source_stream_window/cases/0/after_cancel/position_seconds",
+      "malformed field 27 source_stream_window/cases/0/after_cancel/is_playing",
+      "malformed field 28 source_stream_window/cases/0/after_cancel/worker_joined",
+      "malformed field 29 source_stream_window/cases/0/after_cancel/inspection_revision",
+      "malformed field 30 source_stream_window/cases/0/admissions/0/action",
+      "malformed field 31 source_stream_window/cases/0/admissions/0/generation",
+      "malformed field 32 source_stream_window/cases/0/admissions/0/revision",
+      "malformed field 33 source_stream_window/cases/0/admissions/0/start_frame",
+      "malformed field 34 source_stream_window/cases/0/admissions/0/total_frames",
+      "malformed field 35 source_stream_window/cases/0/admissions/0/remaining_frames",
+      "malformed field 36 source_stream_window/cases/0/admissions/0/state_sha256",
+      "malformed field 37 source_stream_window/cases/0/admissions/0/worker_admission_valid",
+      "malformed field 38 source_stream_window/cases/0/admissions/0/endpoint_outcome",
+      "malformed field 39 source_stream_window/cases/0/admissions/0/native_started",
+      "malformed field 40 source_stream_window/cases/0/admissions/0/worker_joined",
+      "malformed field 41 source_stream_window/cases/0/admissions/0/proof_sha256",
+      "malformed field 42 source_stream_window/cases/0/admissions/0/source_sha256",
+      "malformed field 43 source_stream_window/cases/0/admissions/0/report_sha256",
+      "malformed field 44 source_stream_window/cases/0/admissions/0/current_project_sha256",
+      "malformed field 45 source_stream_window/cases/0/admissions/0/project_manifest_sha256",
+      "malformed field 46 source_stream_window/cases/0/admissions/0/contributors",
+      "malformed field 47 source_stream_window/cases/0/admissions/0/fragment_event_ids",
+      "generation reused across separate fixtures",
+      "covered contributor removed",
+      "contributor priority changed",
+      "track fragments removed",
+      "current project hash changed",
+      "saved setup discarded",
+      "extra proof member admitted",
+      "snapshot hash fabricated",
+      "proof anchor changed",
+      "proof start changed",
+      "duplicate raw proof member",
+      "failed independent worker receipt",
+      "missing independent scenario",
+      "independent worker proof hash changed",
+      "malformed geometry 01",
+      "malformed geometry 02",
+      "malformed geometry 03",
+      "malformed geometry 04",
+      "malformed geometry 05",
+      "malformed geometry 06",
+      "malformed geometry 07",
+      "malformed geometry 08",
+      "malformed geometry 09",
+      "malformed geometry 10",
+      "malformed geometry 11",
+      "malformed geometry 12",
+      "malformed geometry 13",
+      "malformed geometry 14",
+      "malformed geometry 15",
+      "malformed geometry 16",
+      "transparent pixel coverage",
+      "bad PNG CRC",
+      "trailing PNG bytes",
+      "incorrect PNG DPI",
+      "short decoded pixels",
+      "excess decoded pixels",
+      "invalid row predictor",
+      "truncated PNG",
+      "unbound PNG hash"
+    ],
+    "controls_log_sha256": "2451a106e6386cd2fee20f3ff40b1a5eb63758587306e3e9236ebce604cfffd7",
+    "evidence_class": "authored-gate-controls-with-real-helper-tail-proofs",
+    "fixture_sha256": "f1607f267c7ed55ff70ebf287fd29623d7c67c70c9a2b858cc2f04e6d046014f",
+    "gate_sha256": "7ebccd4b32e5fe4fa94d09ef797eb5db804300aa12088da96433d5d6e881acd4",
+    "helper_sha256": "c22506086c293acd98f87efa062c95816b5e6037ea9a983a7b42ccc60d235fef",
+    "instrument_sha256": "e51f5d0eeac9081f93159cdb71c70f859ddf8ea166bc2246499484ae8429f9e1",
+    "native_wpf_executed": false,
+    "outcome": "passed",
+    "physical_input_tested": false,
+    "process_receipt_sha256": "818ad25d99fc10b062ccbf5a6109ab33b81d4e5935cab62870c89a8702d6948c",
+    "real_workers": [
+      {
+        "case": "boundary",
+        "frames": 1000,
+        "mode": "nativeTrackSavedProjectClock",
+        "pcm_sha256": "371049ee227ed91051cdbee55e1df5d610258f4bb49896635af073ab7af45781",
+        "proof_sha256": "7e30027f0c9ce4d0ab042ef43e107c8c6d8f72e93e7914d939c01d16adb60dff"
+      },
+      {
+        "case": "overlap",
+        "frames": 1000,
+        "mode": "nativeTrackSavedProjectClock",
+        "pcm_sha256": "71487fac97f5ecb6c700cd7cb2385cfdcc4f303905a4d8826c758a1147ed6619",
+        "proof_sha256": "d242ee9341c937b19b742392ef6c58e06bc966760f49350b4f47318020a6c723"
+      },
+      {
+        "case": "near-day",
+        "frames": 1000,
+        "mode": "nativeTrackSavedProjectClock",
+        "pcm_sha256": "371049ee227ed91051cdbee55e1df5d610258f4bb49896635af073ab7af45781",
+        "proof_sha256": "54fbcf8f0383509b7778d21aa342ad830f1c9ffd2025cf602db709e1b9c29339"
+      }
+    ],
+    "reference_execution": false,
+    "schema": "rebase.source-stream-window-gate-controls.v1"
+  },
+  "documents_window_gate_controls": {
+    "schema": "rebase.documents-window-gate-controls.v1",
+    "outcome": "passed",
+    "evidence_class": "authored-receipt-and-pixel-mutation-controls",
+    "native_wpf_executed": false,
+    "helper_executed": false,
+    "physical_input_tested": false,
+    "playback_tested": false,
+    "example_manifest_sha256": "de62d0ef9106e35b6ffe6fd982b9f92f6879fa8184a625636657c61b0377a748",
+    "gate_sha256": "913e0681a808c9344eb1c9b17ecabb001f0672d7c3ccd0906cb69f37b052951c",
+    "instrument_sha256": "8c4019288e55e3f0af5734dd25364b17434d8f01eaae995cb6d2d974e5833832",
+    "checks": [
+      {
+        "name": "complete-authored-control",
+        "expected": "accepted",
+        "observed": "accepted",
+        "passed": true
+      },
+      {
+        "name": "failed-smoke",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "no-record",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "boolean-test-counter",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong-helper",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong-example",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "unperformed",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "physical-claim",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "dialog-claim",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "playback-claim",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "input-provenance",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "invalid-control-hash",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "invalid-control-size",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "source-hash",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "source-path",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "source-size",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "saved-hash",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "saved-source-hash",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "saved-bool-size",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "saved-index",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "saved-traversal",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "two-clips-per-track",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong-insertion",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "short-duration",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "trimmed-source",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "invalid-uuid",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "bad-state-hash",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "extra-import-revision",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "missing-dirty",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "missing-save-as",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "partial-undo",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "more-than-one-undo",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "redo-lost-identity",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "failed-batch-mutates",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "dirty-cancel-mutates",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "save-cancel-dispatches",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "save-remains-dirty",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "clean-new-history",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "reopen-lost-project",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "reopen-history-leak",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "incorrect-selection",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "picker-cancel-dispatches",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "total-request-count",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "missing-waveforms",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "capture-unsafe-path",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "capture-unbound-hash",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "frame-not-excluded",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "zoom-mismatch",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "scrolled-viewport",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "bool-pixels",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "DPI-mismatch",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "nonfinite-geometry",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "clipped-event",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "short-event-geometry",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "overlapping-rows",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "unbound-geometry-id",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "missing-label",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "duplicate-label",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "reordered-labels",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "missing-phase",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "omitted-empty-selection",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "redo-incorrectly-selects-last-import",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "omitted-header-selection",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "reordered-phases",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "duplicate-media-id",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "split-batch",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "unexpected-command",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "missing-client-image",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong-pixel-extent",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "uncovered-alpha",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "transparent-pixel",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "measured-alpha254",
+        "expected": "accepted",
+        "observed": "accepted",
+        "passed": true
+      },
+      {
+        "name": "measured-alpha254-and255",
+        "expected": "accepted",
+        "observed": "accepted",
+        "passed": true
+      },
+      {
+        "name": "missing-alpha-coverage",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "null-alpha-coverage",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "nonopaque-root",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "boolean-alpha-count",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "negative-alpha-count",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong-alpha254-count",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong-alpha255-count",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong-alpha-total",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong-alpha-minimum",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "false-alpha-hole",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "extra-alpha-field",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "bad-pixel-filter",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong-PNG-DPI",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "truncated-image",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "trailing-image-data",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "image-CRC-mismatch",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "invalid-example-JSON",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "duplicate-example-JSON",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "invalid-expected-helper",
+        "expected": "rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "valid-normal-density",
+        "expected": "accepted",
+        "observed": "accepted",
+        "passed": true
+      }
+    ],
+    "baseline_summary": {
+      "schema": "rebase.documents-window-summary.v1",
+      "native_checks": 15,
+      "phases": 11,
+      "helper_sha256": "5cacb7ab858284f34fb23f14b07ebc446c60f274d3dccf9e538a301041a6ca40",
+      "example_manifest_sha256": "de62d0ef9106e35b6ffe6fd982b9f92f6879fa8184a625636657c61b0377a748",
+      "source_sha256": [
+        "1dca2a5d261b56bc30cf714ba4161f7a7f3f2014ec286d9b9f7519535ed10275",
+        "1b66fce5220aea385762380c55dcb54c017f029078c78fdabc227c66d638fc55"
+      ],
+      "copied_media_bound": true,
+      "single_batch_history_bound": true,
+      "requests": {
+        "newProject": 2,
+        "importAudio": 2,
+        "saveAs": 1,
+        "undo": 1,
+        "redo": 1,
+        "open": 1
+      },
+      "capture": {
+        "file": "native-audio-import-visual.png",
+        "sha256": "dca111666d3f0ffc663bdc22f64434ebf308a988496549776f62c9923f6d98f7",
+        "width": 1024,
+        "height": 704,
+        "alpha_coverage": {
+          "root_background_alpha": 255,
+          "alpha_minimum": 255,
+          "alpha_254_pixels": 0,
+          "alpha_255_pixels": 720896,
+          "alpha_below_254_pixels": 0,
+          "total_pixels": 720896
+        },
+        "crc_and_pixels_verified": true
+      },
+      "physical_input_tested": false,
+      "native_file_pickers_tested": false,
+      "playback_tested": false,
+      "visual_acceptance_claimed": false
+    },
+    "control_count": 93,
+    "controls_log_sha256": "5ae9831b41ba2a06dab02819ff9b337e28e733095b68461a6d455bb5db67711f"
+  },
+  "project_structure_window_gate_controls": {
+    "schema": "rebase.structure-window-gate-controls.v1",
+    "outcome": "passed",
+    "checks": [
+      {
+        "name": "valid-authored-control",
+        "observed": "accepted",
+        "passed": true
+      },
+      {
+        "name": "missing-tested",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "unsupported-physical_input_tested",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "unsupported-native_file_pickers_tested",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "unsupported-playback_tested",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "unbound-fixture_sha256",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "unbound-helper_sha256",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "false-input-claim",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "failed-native-journey",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "missing-label",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "duplicate-label",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "reordered-labels",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "extra-receipt-field",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "missing-phase",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-page-count",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-report-hash",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-report-bool-bytes",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-inspection-count",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-missing-cleanup",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-unfetched-page",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-opened-revision-drift",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-closed-state-drift",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-changed-selection",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-invented-event",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-snapshot-source",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-snapshot-count",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-snapshot-manifest",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-snapshot-revision",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-page-count",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-report-hash",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-report-bool-bytes",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-inspection-count",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-missing-cleanup",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-unfetched-page",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-opened-revision-drift",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-closed-state-drift",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-changed-selection",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-invented-event",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-snapshot-source",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-snapshot-count",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-snapshot-manifest",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-snapshot-revision",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-page-count",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-report-hash",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-report-bool-bytes",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-inspection-count",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-missing-cleanup",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-unfetched-page",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-opened-revision-drift",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-closed-state-drift",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-changed-selection",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-invented-event",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-snapshot-source",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-snapshot-count",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-snapshot-manifest",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "2-snapshot-revision",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "clean-has-history",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "dirty-lost-flag",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "undo-lost-project",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "undo-lost-redo",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "undo-extra-revision",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "missing-tab",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "editable-json-is_read_only",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "editable-json-provider_read_only",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "editable-json-write_rejected",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "changed-json",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "scroll-after_offset",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "scroll-last_visible_line",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "scroll-viewport_height",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "scroll-extent_height",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "scroll-json_sha256",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "scroll-json_bytes",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "scroll-read_only",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "scroll-before_offset",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "missing-custody",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "custody-changed-copy",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "custody-changed-original",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "custody-bool-bytes",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-wrong-file",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-wrong-report",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-wrong-tab",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-false-scope",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-frame-claim",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-wrong-DPI",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-bool-pixels",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-not-minimum",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-clipped-close",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-hidden-tab",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-disabled-close",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-tiny-report",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-nan-coordinate",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-unbound-histogram",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "0-nonopaque-root",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-wrong-file",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-wrong-report",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-wrong-tab",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-false-scope",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-frame-claim",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-wrong-DPI",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-bool-pixels",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-not-minimum",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-clipped-close",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-hidden-tab",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-disabled-close",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-tiny-report",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-nan-coordinate",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-unbound-histogram",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "1-nonopaque-root",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "tiny-tab-width",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "tiny-tab-height",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "tab-outside-section",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "tab-over-report",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "all-tabs-overlap",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrapped-tab-headers-remain-usable",
+        "observed": "accepted",
+        "passed": true
+      },
+      {
+        "name": "missing-capture",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "missing-alpha",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "alpha254-measured",
+        "observed": "accepted",
+        "passed": true
+      },
+      {
+        "name": "alpha253-refused",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "transparent-pixel",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong-pixel-size",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong-PNG-DPI",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "invalid-filter",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "truncated-PNG",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "trailing-PNG",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "CRC-mismatch",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "changed-fixture-source",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "changed-full-report",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "changed-manifest",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "duplicate-fixture-JSON",
+        "observed": "rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong-generator",
+        "observed": "rejected",
+        "passed": true
+      }
+    ],
+    "evidence_class": "authored-receipt-and-pixel-mutation-controls",
+    "native_wpf_executed": false,
+    "helper_executed": false,
+    "physical_input_tested": false,
+    "visual_acceptance_claimed": false,
+    "gate_sha256": "20f0dd6a7a4e3d819a04fd267db2b5bc19c3f7403210e568b0ed33d443cbf90c",
+    "instrument_sha256": "e1ef8e191aa11ab87d3d1924e41d6b82c7f90b5496f0a84e05ce9816c69608be",
+    "control_count": 130,
+    "controls_log_sha256": "9f9c8fae4a5872e6f85819111b0640b591fba7786559dc07d22c616fa6eb8648"
+  },
+  "source_modes_window_control": {
+    "exports": 9,
+    "captures": 3,
+    "checks": 31,
+    "read_only": true,
+    "wav_hashes_match_independent_helper": true
+  },
+  "source_stream_window_control": {
+    "schema": "rebase.source-stream-window-summary.v1",
+    "cases": 3,
+    "admissions": 9,
+    "native_checks": 17,
+    "fixture_sha256": "f1607f267c7ed55ff70ebf287fd29623d7c67c70c9a2b858cc2f04e6d046014f",
+    "helper_sha256": "c22506086c293acd98f87efa062c95816b5e6037ea9a983a7b42ccc60d235fef",
+    "independent_worker_scenarios": 85,
+    "endpoint_outcomes": {
+      "unavailable": 9,
+      "started": 0
+    },
+    "capture": {
+      "file": "native-source-stream-visual.png",
+      "sha256": "4422b9e003751a4dfcbcd2c15a4db4c542600cb295ad18165953e6a25911631a",
+      "width": 724,
+      "height": 501,
+      "alpha_coverage": {
+        "root_background_alpha": 255,
+        "alpha_minimum": 254,
+        "alpha_254_pixels": 1365,
+        "alpha_255_pixels": 361359,
+        "alpha_below_254_pixels": 0,
+        "total_pixels": 362724
+      },
+      "crc_and_pixels_verified": true
+    },
+    "complete_proof_bound": true,
+    "snapshot_render_requests": 0,
+    "audio_device_playback_measured": false,
+    "physical_input_tested": false,
+    "native_frame_visual_tested": false,
+    "visual_acceptance_claimed": false
+  },
+  "documents_window_control": {
+    "schema": "rebase.documents-window-summary.v1",
+    "native_checks": 15,
+    "phases": 11,
+    "helper_sha256": "c22506086c293acd98f87efa062c95816b5e6037ea9a983a7b42ccc60d235fef",
+    "example_manifest_sha256": "de62d0ef9106e35b6ffe6fd982b9f92f6879fa8184a625636657c61b0377a748",
+    "source_sha256": [
+      "1dca2a5d261b56bc30cf714ba4161f7a7f3f2014ec286d9b9f7519535ed10275",
+      "1b66fce5220aea385762380c55dcb54c017f029078c78fdabc227c66d638fc55"
+    ],
+    "copied_media_bound": true,
+    "single_batch_history_bound": true,
+    "requests": {
+      "newProject": 2,
+      "importAudio": 2,
+      "saveAs": 1,
+      "undo": 1,
+      "redo": 1,
+      "open": 1
+    },
+    "capture": {
+      "file": "native-audio-import-visual.png",
+      "sha256": "2347a87ac86c9b7914ce03cf8ea06ddc02454e3322ba698301789058be383558",
+      "width": 1084,
+      "height": 749,
+      "alpha_coverage": {
+        "root_background_alpha": 255,
+        "alpha_minimum": 254,
+        "alpha_254_pixels": 4667,
+        "alpha_255_pixels": 807249,
+        "alpha_below_254_pixels": 0,
+        "total_pixels": 811916
+      },
+      "crc_and_pixels_verified": true
+    },
+    "physical_input_tested": false,
+    "native_file_pickers_tested": false,
+    "playback_tested": false,
+    "visual_acceptance_claimed": false
+  },
+  "project_structure_window_control": {
+    "schema": "rebase.structure-window-summary.v1",
+    "native_checks": 14,
+    "helper_sha256": "c22506086c293acd98f87efa062c95816b5e6037ea9a983a7b42ccc60d235fef",
+    "fixture_sha256": "5bbc30f84ad67a0377acd511b82b9d83af6c28aa6de460dfcc6804ac827984e9",
+    "fixture_files": 9,
+    "phases": 3,
+    "page_counts": [
+      1,
+      1,
+      2
+    ],
+    "report_sha256": [
+      "cd77959e84d216dc2621e70a94ee5ee91f1ea18dbc387202e58f75a60ecfa247",
+      "ecfe82e806b7ad2cb6bb31874c40c6b86ab529f75a3c2753eb873469db10db09"
+    ],
+    "captures": [
+      {
+        "file": "native-project-structure-minimum-visual.png",
+        "sha256": "b4f9ef753029dada27f2ae8094b46113861a34da0c82cccee889e4284546d23e",
+        "width": 644,
+        "height": 441,
+        "alpha_coverage": {
+          "root_background_alpha": 255,
+          "alpha_minimum": 254,
+          "alpha_254_pixels": 4527,
+          "alpha_255_pixels": 279477,
+          "alpha_below_254_pixels": 0,
+          "total_pixels": 284004
+        },
+        "crc_and_pixels_verified": true
+      },
+      {
+        "file": "native-project-structure-json-visual.png",
+        "sha256": "58e19a7c190825ecdf49c8a397b3620c3a24b3b7e5d770072cea420b0539abea",
+        "width": 644,
+        "height": 441,
+        "alpha_coverage": {
+          "root_background_alpha": 255,
+          "alpha_minimum": 254,
+          "alpha_254_pixels": 4527,
+          "alpha_255_pixels": 279477,
+          "alpha_below_254_pixels": 0,
+          "total_pixels": 284004
+        },
+        "crc_and_pixels_verified": true
+      }
+    ],
+    "complete_report_bound": true,
+    "source_custody_bound": true,
+    "physical_input_tested": false,
+    "native_file_pickers_tested": false,
+    "playback_tested": false,
+    "visual_acceptance_claimed": false
+  },
+  "native_stream_package": {
+    "schema": "rebase.native-stream-package.v1",
+    "status": "passed",
+    "commit": "bbc16cf2d19fc1e7cf31bd8edec816d99b7fc50a",
+    "configuration": "Release",
+    "native_dll": {
+      "name": "RebaseWindowsAudio.dll",
+      "bytes": 55296,
+      "sha256": "95c8a76410d494be58555e4120236127bdace34d00b6ccc252c07c59b209e753"
+    },
+    "required_exports": [
+      "rb_audio_stream_begin",
+      "rb_audio_stream_submit",
+      "rb_audio_stream_finish",
+      "rb_audio_stream_play",
+      "rb_audio_stream_pause",
+      "rb_audio_stream_cancel",
+      "rb_audio_stream_status"
+    ],
+    "native_tests": {
+      "count": 3,
+      "skipped": 0,
+      "failures": 0
+    },
+    "native_report_sha256": "78856845b443b78c408673e6e766de651c9ebe0d1f22c0a7492f9354b29c0bf1",
+    "bounded_stream_report_sha256": "2adbae7cee96e4251aa0bd20141015b1838f1c2594156a695f29895a2521d2ce",
+    "ctest_xml_sha256": "65e4f47968e8cadd49d80f68644f2800d2791fdc45f2953e8e1fc530eadbaba3",
+    "dll_loaded_by_guard": false,
+    "physical_playback_tested": false
+  },
+  "package": {
+    "name": "Rebase-Windows-x64-development-bbc16cf2d19f.zip",
+    "bytes": 100149693,
+    "sha256": "ae8fef10e7d9f23f9747ad82504a229dcd05330222106312609f38646e216cdd"
+  },
+  "window_smoke_tested": true,
+  "dialogs_tested": false,
+  "dependency_closure_checked": true,
+  "app_local_modules_observed": true,
+  "source_journey_tested": true,
+  "source_fixture_shipped": false,
+  "real_waveform_checks_passed": true,
+  "source_modes_fixture_shipped": false,
+  "project_structure_fixture_shipped": false,
+  "pinned_track_headers_scroll_checked": true,
+  "musical_ruler_placement_checked": true
+}

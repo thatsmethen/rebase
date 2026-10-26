@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "<workspace>/.local/work/rebase-project-composition-20261026/ci-bbc16cf/application/audit-v4/verify_archive.py", line 117, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "<workspace>/.local/work/rebase-project-composition-20261026/ci-bbc16cf/application/audit-v4/verify_archive.py", line 42, in main
+    generated, generated_hash, generated_files = require_structure_fixture(CONTEXT.structure_fixture,
+                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        {name:sha(source('Application/Tests/SharedCPRAudioTests/'+name)) for name in GENERATOR_FILES})
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<workspace>/.local/work/rebase-project-composition-20261026/ci-bbc16cf/application/package-audit-v4/source-bound-gates/Application/scripts/structure_window_gate.py", line 99, in require_structure_fixture
+    require(actual == set(inventory), "unexpected or missing fixture file")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<workspace>/.local/work/rebase-project-composition-20261026/ci-bbc16cf/application/package-audit-v4/source-bound-gates/Application/scripts/structure_window_gate.py", line 29, in require
+    raise ValueError("Structure window: " + message)
+ValueError: Structure window: unexpected or missing fixture file
