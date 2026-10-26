@@ -4,4 +4,6 @@
 
 [SHA256SUMS.txt](SHA256SUMS.txt) covers the ZIP and 17 unmodified native screenshots. [asset-map.json](asset-map.json) maps the native capture names to release names. The application [candidate observation](../application-run-40265349968/observation.json) is preserved with its original pre-publication status.
 
+[Publication confirmation](publication-confirmed.json) records the public prerelease, exact source tag and 19 assets. Unauthenticated HEAD requests to the release page and downloadable app both returned HTTP 200 after publication.
+
 The release adds New Project, atomic PCM WAV batch import and streaming source audition. It retains the limitations stated in the notes; it does not establish complete Windows/macOS parity or complete reference compatibility. Existing releases remain available.

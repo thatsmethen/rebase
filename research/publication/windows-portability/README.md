@@ -2,6 +2,8 @@
 
 These records concern the authored Rebase implementation running on Windows. They do not execute or establish equivalence with a proprietary Windows reference, and they do not certify desktop or audio-device behavior.
 
+The latest accepted download is [Windows preview 9](release-preview9/README.md), built from `2934b9a`. It adds streaming source audition and New Project/PCM WAV import. The [application/package review](application-run-40265349968/README.md) and [component comparison](run-40265350027/README.md) retain the exact checks and limitations. Earlier observations below remain unchanged.
+
 - [Run 39915872920](run-39915872920/observation.json): the Windows x64 C controls passed in Debug and Release (5,442 cases, 18,380 checks per configuration). All six attempted hardware floating-point mode controls were available. The overall milestone remained unaccepted because other lanes exposed SoXR linking and Swift output/reporting failures. Retained JSON records are the downloaded CI artifacts, with hashes in the observation file.
 
 - [Local shared editing](local-shared-editing-20261023/observation.json): 344 Mac tests, 23 portable tests, and observed Mac editing/transport journeys. Source hashes identify the checked implementation. This does not verify a Windows interface.
